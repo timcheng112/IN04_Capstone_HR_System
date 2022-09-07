@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://conceiversolutions.database.windows.net:1433;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: conceiversolutions
+    password: Kxy414027
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.SQLServer2012Dialect
+
+server:
+  port: 9191
