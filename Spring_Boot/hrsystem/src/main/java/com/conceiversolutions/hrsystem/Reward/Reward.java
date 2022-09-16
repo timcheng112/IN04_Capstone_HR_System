@@ -7,43 +7,56 @@ import java.time.LocalDate;
 @Entity
 @Table
 public class Reward {
+
+    //attributes
     @Id
-    @SequenceGenerator(
-            name="reward_sequence",
-            sequenceName = "reward_sequence",
-            allocationSize = 1
-    )
     @GeneratedValue(
-            strategy = GenerationType.IDENTITY,
-            generator = "rewards_reward_sequence"
+            strategy = GenerationType.IDENTITY
     )
-    private Long id;
+    @Column(name="reward_id")
+    private Long rewardId;
+    @Column(name="reward_name")
     private String name;
+    @Column(name="reward_description")
     private String description;
+    @Column(name="reward_image")
     private Blob image;
+    @Column(name="date_claimed")
     private LocalDate dateClaimed;
 
-    public Reward(String name, String description, Blob image, LocalDate dateClaimed) {
+    @Column(name="expiry_date")
+    private LocalDate expiryDate;
+
+    //relationships
+
+    //constructors
+    public Reward(String name, String description, Blob image, LocalDate dateClaimed, LocalDate expiryDate) {
         this.name = name;
         this.description = description;
         this.image = image;
         this.dateClaimed = dateClaimed;
+        this.expiryDate = expiryDate;
     }
 
-    public Reward(Long id, String name, String description, Blob image, LocalDate dateClaimed) {
-        this.id = id;
+    public Reward() {
+    }
+
+    public Reward(Long rewardId, String name, String description, Blob image, LocalDate dateClaimed, LocalDate expiryDate) {
+        this.rewardId = rewardId;
         this.name = name;
         this.description = description;
         this.image = image;
         this.dateClaimed = dateClaimed;
+        this.expiryDate = expiryDate;
     }
 
-    public Long getId() {
-        return id;
+    //getters and setters
+    public Long getRewardId() {
+        return rewardId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setRewardId(Long rewardId) {
+        this.rewardId = rewardId;
     }
 
     public String getName() {
@@ -78,10 +91,18 @@ public class Reward {
         this.dateClaimed = dateClaimed;
     }
 
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
     @Override
     public String toString() {
         return "Reward{" +
-                "id=" + id +
+                "id=" + rewardId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", image=" + image +
