@@ -1,43 +1,44 @@
 package com.conceiversolutions.hrsystem.user;
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
+import org.hibernate.jdbc.Work;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name= "qualification_information")
 public class QualificationInformation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long infoId;
-    private byte[] cv;
+    @Column(length = 1000)
+    private Byte[] cv;
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
     private EducationEnum highestEducation;
+    @Column(nullable = true)
     private String personalStatement;
+    @Column(nullable = false)
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     private List<String> languagesSpoken;
+    @Column(nullable = true, length = 32)
     private String bankAccNo;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "qualificationInformation", targetEntity = WorkExperience.class)
     private List<WorkExperience> workExperiences;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "qualificationInformation", targetEntity = Recommendation.class)
     private List<Recommendation> recommendations;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "qualificationInformation")
+    private User user;
 
     public QualificationInformation() {
+        this.languagesSpoken = new ArrayList<String>();
+        this.workExperiences = new ArrayList<>();
+        this.recommendations = new ArrayList<>();
     }
 
-    public QualificationInformation(byte[] cv, EducationEnum highestEducation, String personalStatement, List<String> languagesSpoken, String bankAccNo, List<WorkExperience> workExperiences, List<Recommendation> recommendations) {
-        this.cv = cv;
-        this.highestEducation = highestEducation;
-        this.personalStatement = personalStatement;
-        this.languagesSpoken = languagesSpoken;
-        this.bankAccNo = bankAccNo;
-        this.workExperiences = workExperiences;
-        this.recommendations = recommendations;
-    }
-
-    public QualificationInformation(Long infoId, byte[] cv, EducationEnum highestEducation, String personalStatement, List<String> languagesSpoken, String bankAccNo, List<WorkExperience> workExperiences, List<Recommendation> recommendations) {
-        this.infoId = infoId;
-        this.cv = cv;
-        this.highestEducation = highestEducation;
-        this.personalStatement = personalStatement;
-        this.languagesSpoken = languagesSpoken;
-        this.bankAccNo = bankAccNo;
-        this.workExperiences = workExperiences;
-        this.recommendations = recommendations;
-    }
 
     public Long getInfoId() {
         return infoId;
@@ -47,11 +48,11 @@ public class QualificationInformation {
         this.infoId = infoId;
     }
 
-    public byte[] getCv() {
+    public Byte[] getCv() {
         return cv;
     }
 
-    public void setCv(byte[] cv) {
+    public void setCv(Byte[] cv) {
         this.cv = cv;
     }
 
@@ -103,11 +104,18 @@ public class QualificationInformation {
         this.recommendations = recommendations;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "QualificationInformation{" +
                 "infoId=" + infoId +
-                ", highestEducation=" + highestEducation +
                 ", personalStatement='" + personalStatement + '\'' +
                 '}';
     }

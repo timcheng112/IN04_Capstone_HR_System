@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:sqlserver://conceiversolutions.database.windows.net:1433;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    url: jdbc:sqlserver://conceiversolutions.database.windows.net:1433;database=conceiversolutionsdb;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
     username: conceiversolutions
     password: Kxy414027
   jpa:

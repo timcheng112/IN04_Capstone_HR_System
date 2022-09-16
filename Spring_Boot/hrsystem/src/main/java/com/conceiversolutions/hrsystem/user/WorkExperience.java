@@ -1,15 +1,29 @@
 package com.conceiversolutions.hrsystem.user;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table
 public class WorkExperience {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long experienceId;
+    @Column(nullable = false, length = 64)
     private String positionName;
+    @Column(nullable = false, length = 64)
     private String companyName;
+    @Column(nullable = false)
     private LocalDate startDate;
+    @Column(nullable = true)
     private LocalDate endDate;
+    @Column(nullable=false)
     private Boolean currentlyWorking;
+    @Column(nullable = false)
     private String description;
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true)
+    private QualificationInformation qualificationInformation;
 
     public WorkExperience() {
     }
@@ -87,6 +101,14 @@ public class WorkExperience {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public QualificationInformation getQualificationInformation() {
+        return qualificationInformation;
+    }
+
+    public void setQualificationInformation(QualificationInformation qualificationInformation) {
+        this.qualificationInformation = qualificationInformation;
     }
 
     @Override

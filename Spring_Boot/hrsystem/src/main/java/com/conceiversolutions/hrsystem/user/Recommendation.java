@@ -1,11 +1,24 @@
 package com.conceiversolutions.hrsystem.user;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "recommendations")
 public class Recommendation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long recommendationId;
+    @Column(nullable = false, length = 64)
     private String name;
+    @Column(length = 16)
     private Integer phone;
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = false, length = 64)
     private String relationship;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true)
+    private QualificationInformation qualificationInformation;
 
     public Recommendation() {
     }
@@ -63,6 +76,14 @@ public class Recommendation {
 
     public void setRelationship(String relationship) {
         this.relationship = relationship;
+    }
+
+    public QualificationInformation getQualificationInformation() {
+        return qualificationInformation;
+    }
+
+    public void setQualificationInformation(QualificationInformation qualificationInformation) {
+        this.qualificationInformation = qualificationInformation;
     }
 
     @Override
