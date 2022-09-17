@@ -1,5 +1,7 @@
 package com.conceiversolutions.hrsystem.Reward;
 
+import com.conceiversolutions.hrsystem.RewardTrack.RewardTrack;
+
 import javax.persistence.*;
 import java.sql.Blob;
 import java.time.LocalDate;
@@ -28,6 +30,9 @@ public class Reward {
     private LocalDate expiryDate;
 
     //relationships
+    @ManyToOne
+    @JoinColumn(name="reward_track_id")
+    private RewardTrack rewardTrack;
 
     //constructors
     public Reward(String name, String description, Blob image, LocalDate dateClaimed, LocalDate expiryDate) {

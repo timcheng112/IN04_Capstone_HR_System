@@ -1,7 +1,11 @@
 package com.conceiversolutions.hrsystem.RewardTrack;
 
+import com.conceiversolutions.hrsystem.Reward.Reward;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -19,14 +23,18 @@ public class RewardTrack {
     private LocalDate endDate;
 
     //relationships
+    @OneToMany(mappedBy ="rewardTrack")
+    private List<Reward> rewards;
 
     //constructors
     public RewardTrack() {
+        this.rewards = new ArrayList<>();
     }
 
     public RewardTrack(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
+        this.rewards = new ArrayList<>();
     }
 
     //getters and setters
