@@ -1,5 +1,7 @@
 package com.conceiversolutions.hrsystem.user;
 
+import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -18,29 +20,35 @@ public class Position {
     private LocalDate startDate;
     @Column(nullable = true)
     private LocalDate endDate;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private JobTypeEnum jobType;
 
     public Position() {
     }
 
-    public Position(Long positionId, String positionName, String description) {
+    public Position(Long positionId, String positionName, String description, JobTypeEnum jobType) {
         this.positionId = positionId;
         this.positionName = positionName;
         this.description = description;
+        this.jobType = jobType;
     }
 
-    public Position(Long positionId, String positionName, String description, LocalDate startDate) {
+    public Position(Long positionId, String positionName, String description, LocalDate startDate, JobTypeEnum jobType) {
         this.positionId = positionId;
         this.positionName = positionName;
         this.description = description;
         this.startDate = startDate;
+        this.jobType = jobType;
     }
 
-    public Position(Long positionId, String positionName, String description, LocalDate startDate, LocalDate endDate) {
+    public Position(Long positionId, String positionName, String description, LocalDate startDate, LocalDate endDate, JobTypeEnum jobType) {
         this.positionId = positionId;
         this.positionName = positionName;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.jobType = jobType;
     }
 
     public Long getPositionId() {
@@ -83,6 +91,14 @@ public class Position {
         this.endDate = endDate;
     }
 
+    public JobTypeEnum getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(JobTypeEnum jobType) {
+        this.jobType = jobType;
+    }
+
     @Override
     public String toString() {
         return "Position{" +
@@ -91,6 +107,7 @@ public class Position {
                 ", description='" + description + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", jobType=" + jobType +
                 '}';
     }
 }

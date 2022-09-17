@@ -2,6 +2,8 @@ package com.conceiversolutions.hrsystem.user;
 
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.jobManagement.JobApplication;
+import com.conceiversolutions.hrsystem.jobManagement.JobRequest;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -22,7 +24,7 @@ public class User {
     private String password;
     @Column(nullable = false, length = 16)
     private Integer phone;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     private String workEmail;
@@ -50,10 +52,16 @@ public class User {
     @Column(length = 1000, nullable = true)
     private Byte[] profilePic;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Position.class)
-    @JoinColumn()
+    @JoinColumn(name = "positionId", referencedColumnName = "userId")
     private List<Position> positions;
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
     private QualificationInformation qualificationInformation;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicant")
+    private List<JobApplication> applications;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = JobRequest.class, mappedBy = "requestedBy")
+    private List<JobApplication> jobRequests;
+
+//    TODO add on other relationships to other classes
 
     public User() {
     }
@@ -77,6 +85,8 @@ public class User {
         this.profilePic = null;
         this.positions = new ArrayList<>();
         this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
     }
 
     public Long getUserId() {
@@ -221,6 +231,22 @@ public class User {
 
     public void setQualificationInformation(QualificationInformation qualificationInformation) {
         this.qualificationInformation = qualificationInformation;
+    }
+
+    public List<JobApplication> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<JobApplication> applications) {
+        this.applications = applications;
+    }
+
+    public List<JobApplication> getJobRequests() {
+        return jobRequests;
+    }
+
+    public void setJobRequests(List<JobApplication> jobRequests) {
+        this.jobRequests = jobRequests;
     }
 
     @Override

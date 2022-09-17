@@ -1,7 +1,7 @@
 package com.conceiversolutions.hrsystem.user;
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
-import org.hibernate.jdbc.Work;
+import com.conceiversolutions.hrsystem.skillset.UserSkillset;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,6 +32,9 @@ public class QualificationInformation {
     private List<Recommendation> recommendations;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "qualificationInformation")
     private User user;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = UserSkillset.class)
+    @JoinColumn(name = "userSkillsetId", referencedColumnName = "infoId")
+    private List<UserSkillset> userSkills;
 
     public QualificationInformation() {
         this.languagesSpoken = new ArrayList<String>();

@@ -16,8 +16,8 @@ public class Recommendation {
     private String email;
     @Column(nullable = false, length = 64)
     private String relationship;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "qualificationId")
     private QualificationInformation qualificationInformation;
 
     public Recommendation() {
