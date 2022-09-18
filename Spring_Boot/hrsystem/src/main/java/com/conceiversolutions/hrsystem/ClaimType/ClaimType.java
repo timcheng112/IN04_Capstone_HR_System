@@ -24,18 +24,14 @@ public class ClaimType {
     private int claimLimit;
 
     //relationships
-    @OneToMany(mappedBy = "claimType")
-    private List<Claim> claims;
 
     //constructors
     public ClaimType() {
-        claims= new ArrayList<>();
     }
 
     public ClaimType(String description, int claimLimit) {
         this.description = description;
         this.claimLimit = claimLimit;
-        claims = new ArrayList<>();
     }
 
     //getters and setters

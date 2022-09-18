@@ -1,7 +1,7 @@
 package com.conceiversolutions.hrsystem.Claim;
 
 import com.conceiversolutions.hrsystem.ClaimType.ClaimType;
-import com.conceiversolutions.hrsystem.Enums.ApprovalStatus;
+import com.conceiversolutions.hrsystem.Enums.ApprovalStatusEnum;
 
 import javax.persistence.*;
 import java.sql.Blob;
@@ -29,12 +29,13 @@ public class Claim {
     @Column(name="claim_supporting_docs")
     private Blob supportingDocs;
     @Column(name="approval_status")
-    private ApprovalStatus approvalStatus;
+    @Enumerated(EnumType.STRING)
+    private ApprovalStatusEnum approvalStatusEnum;
     @Column(name="approval_remarks")
     private String approvalRemarks;
 
     //relationships
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name="claim_type")
     private ClaimType claimType;
 
@@ -43,12 +44,12 @@ public class Claim {
     public Claim() {
     }
 
-    public Claim(LocalDate claimDate, String description, String remarks, Blob supportingDocs, ApprovalStatus approvalStatus, String approvalRemarks) {
+    public Claim(LocalDate claimDate, String description, String remarks, Blob supportingDocs, ApprovalStatusEnum approvalStatusEnum, String approvalRemarks) {
         this.claimDate = claimDate;
         this.description = description;
         this.remarks = remarks;
         this.supportingDocs = supportingDocs;
-        this.approvalStatus = approvalStatus;
+        this.approvalStatusEnum = approvalStatusEnum;
         this.approvalRemarks = approvalRemarks;
     }
 
@@ -101,12 +102,12 @@ public class Claim {
         this.supportingDocs = supportingDocs;
     }
 
-    public ApprovalStatus getClaimStatus() {
-        return approvalStatus;
+    public ApprovalStatusEnum getClaimStatus() {
+        return approvalStatusEnum;
     }
 
-    public void setClaimStatus(ApprovalStatus approvalStatus) {
-        this.approvalStatus = approvalStatus;
+    public void setClaimStatus(ApprovalStatusEnum approvalStatusEnum) {
+        this.approvalStatusEnum = approvalStatusEnum;
     }
 
     public String getApprovalRemarks() {
@@ -125,7 +126,7 @@ public class Claim {
                 ", description='" + description + '\'' +
                 ", remarks='" + remarks + '\'' +
                 ", supportingDocs=" + supportingDocs +
-                ", claimStatus=" + approvalStatus +
+                ", claimStatus=" + approvalStatusEnum +
                 ", approvalRemarks='" + approvalRemarks + '\'' +
                 '}';
     }

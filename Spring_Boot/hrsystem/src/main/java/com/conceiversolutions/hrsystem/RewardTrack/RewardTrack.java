@@ -23,7 +23,7 @@ public class RewardTrack {
     private LocalDate endDate;
 
     //relationships
-    @OneToMany(mappedBy ="rewardTrack")
+    @OneToMany(mappedBy ="rewardTrack", targetEntity = Reward.class)
     private List<Reward> rewards;
 
     //constructors

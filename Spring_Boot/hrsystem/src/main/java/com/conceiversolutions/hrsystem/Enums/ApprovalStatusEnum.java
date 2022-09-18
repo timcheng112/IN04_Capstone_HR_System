@@ -1,6 +1,6 @@
 package com.conceiversolutions.hrsystem.Enums;
 
-public enum ApprovalStatus {
+public enum ApprovalStatusEnum {
     APPROVED,
     REJECTED,
     PENDING
