@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.MedicalCertificate;
+package com.conceiversolutions.hrsystem.engagement.medicalcertificate;
 
 import javax.persistence.*;
 import java.sql.Blob;

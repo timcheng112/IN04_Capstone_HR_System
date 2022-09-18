@@ -1,10 +1,6 @@
-package com.conceiversolutions.hrsystem.ClaimType;
-
-import com.conceiversolutions.hrsystem.Claim.Claim;
+package com.conceiversolutions.hrsystem.engagement.claimtype;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table

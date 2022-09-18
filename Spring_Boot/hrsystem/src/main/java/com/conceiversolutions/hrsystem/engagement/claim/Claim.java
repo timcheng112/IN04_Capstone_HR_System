@@ -1,6 +1,6 @@
-package com.conceiversolutions.hrsystem.Claim;
+package com.conceiversolutions.hrsystem.engagement.claim;
 
-import com.conceiversolutions.hrsystem.ClaimType.ClaimType;
+import com.conceiversolutions.hrsystem.engagement.claimtype.ClaimType;
 import com.conceiversolutions.hrsystem.Enums.ApprovalStatusEnum;
 
 import javax.persistence.*;

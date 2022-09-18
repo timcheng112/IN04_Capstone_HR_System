@@ -1,6 +1,6 @@
-package com.conceiversolutions.hrsystem.RewardTrack;
+package com.conceiversolutions.hrsystem.engagement.rewardtrack;
 
-import com.conceiversolutions.hrsystem.Reward.Reward;
+import com.conceiversolutions.hrsystem.engagement.reward.Reward;
 
 import javax.persistence.*;
 import java.time.LocalDate;

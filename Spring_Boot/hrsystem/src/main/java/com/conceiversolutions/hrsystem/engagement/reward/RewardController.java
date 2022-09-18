@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.Reward;
+package com.conceiversolutions.hrsystem.engagement.reward;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

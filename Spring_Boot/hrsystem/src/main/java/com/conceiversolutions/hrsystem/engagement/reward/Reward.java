@@ -1,6 +1,6 @@
-package com.conceiversolutions.hrsystem.Reward;
+package com.conceiversolutions.hrsystem.engagement.reward;
 
-import com.conceiversolutions.hrsystem.RewardTrack.RewardTrack;
+import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrack;
 
 import javax.persistence.*;
 import java.sql.Blob;
