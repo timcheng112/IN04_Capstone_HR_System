@@ -1,24 +1,26 @@
 package com.conceiversolutions.hrsystem.notification;
 
-import java.time.LocalDate;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
+@Entity
+@Table(name="notifications")
 public class Notification {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notification_id")
     public Long notificationId;
-    public LocalDate notifTime;
+    @Column(name = "notif_time", nullable = false)
+    public LocalDateTime notifTime;
+    @Column(name = "title", nullable = false, length = 64)
     public String title;
+    @Column(name = "description", nullable = false)
     public String description;
 
     public Notification() {
     }
 
-    public Notification(LocalDate notifTime, String title, String description) {
-        this.notifTime = notifTime;
-        this.title = title;
-        this.description = description;
-    }
-
-    public Notification(Long notificationId, LocalDate notifTime, String title, String description) {
-        this.notificationId = notificationId;
+    public Notification(LocalDateTime notifTime, String title, String description) {
         this.notifTime = notifTime;
         this.title = title;
         this.description = description;
@@ -32,11 +34,11 @@ public class Notification {
         this.notificationId = notificationId;
     }
 
-    public LocalDate getNotifTime() {
+    public LocalDateTime getNotifTime() {
         return notifTime;
     }
 
-    public void setNotifTime(LocalDate notifTime) {
+    public void setNotifTime(LocalDateTime notifTime) {
         this.notifTime = notifTime;
     }
 

@@ -1,46 +1,46 @@
-package com.conceiversolutions.hrsystem.jobManagement;
+package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
-import com.conceiversolutions.hrsystem.skillset.JobSkillset;
-import com.conceiversolutions.hrsystem.user.User;
+import com.conceiversolutions.hrsystem.skillset.jobskillset.JobSkillset;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name="jobRequests")
+@Table(name="job_requests")
 public class JobRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "request_id")
     private Long requestId;
-    @Column(nullable = false, length = 64)
+    @Column(name = "job_title", nullable = false, length = 64)
     private String jobTitle;
-    @Column(nullable = false, length = 255)
+    @Column(name = "job_description", nullable = false, length = 255)
     private String jobDescription;
-    @Column(nullable = false, length = 255)
+    @Column(name = "reason", nullable = false, length = 255)
     private String reason;
-    @Column(nullable = false)
+    @Column(name = "request_date", nullable = false)
     private LocalDate requestDate;
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private JobStatusEnum status;
 
     @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "requestorId")
+    @JoinColumn(name = "requested_by")
     private User requestedBy;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobSkillset.class)
-    @JoinColumn(name = "jobSkillsetId", referencedColumnName = "requestId")
+    @JoinColumn(name = "job_skillset_id", referencedColumnName = "request_id")
     private List<JobSkillset> jobRequirements;
 
-//    TODO
+//    TODO add department
 //    private Department department;
 
     public JobRequest() {
     }
 
-    public JobRequest(Long requestId, String jobTitle, String jobDescription, String reason, LocalDate requestDate, JobStatusEnum status, User requestedBy, List<JobSkillset> jobRequirements) {
-        this.requestId = requestId;
+    public JobRequest(String jobTitle, String jobDescription, String reason, LocalDate requestDate, JobStatusEnum status, User requestedBy, List<JobSkillset> jobRequirements) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.reason = reason;

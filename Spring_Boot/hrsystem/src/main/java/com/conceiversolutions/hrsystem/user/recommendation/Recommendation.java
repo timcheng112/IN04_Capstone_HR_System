@@ -1,4 +1,6 @@
-package com.conceiversolutions.hrsystem.user;
+package com.conceiversolutions.hrsystem.user.recommendation;
+
+import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 
 import javax.persistence.*;
 
@@ -7,17 +9,18 @@ import javax.persistence.*;
 public class Recommendation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "recommendation_id")
     private Long recommendationId;
-    @Column(nullable = false, length = 64)
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
-    @Column(length = 16)
+    @Column(name = "phone", length = 16)
     private Integer phone;
-    @Column(nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
-    @Column(nullable = false, length = 64)
+    @Column(name = "relationship", nullable = false, length = 64)
     private String relationship;
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "qualificationId")
+    @JoinColumn(name = "qualification_information")
     private QualificationInformation qualificationInformation;
 
     public Recommendation() {
@@ -30,12 +33,12 @@ public class Recommendation {
         this.relationship = relationship;
     }
 
-    public Recommendation(Long recommendationId, String name, Integer phone, String email, String relationship) {
-        this.recommendationId = recommendationId;
+    public Recommendation(String name, Integer phone, String email, String relationship, QualificationInformation qualificationInformation) {
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.relationship = relationship;
+        this.qualificationInformation = qualificationInformation;
     }
 
     public Long getRecommendationId() {

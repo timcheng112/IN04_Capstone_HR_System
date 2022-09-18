@@ -1,9 +1,11 @@
-package com.conceiversolutions.hrsystem.user;
+package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
-import com.conceiversolutions.hrsystem.jobManagement.JobApplication;
-import com.conceiversolutions.hrsystem.jobManagement.JobRequest;
+import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
+import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
+import com.conceiversolutions.hrsystem.user.position.Position;
+import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,59 +17,64 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
-    @Column(nullable = false, length = 64)
+    @Column(name = "first_name", nullable = false, length = 64)
     private String firstName;
-    @Column(nullable = false, length = 64)
+    @Column(name = "last_name",nullable = false, length = 64)
     private String lastName;
-    @Column(nullable = false, length = 64)
+    @Column(name = "password",nullable = false, length = 64)
     private String password;
-    @Column(nullable = false, length = 16)
+    @Column(name = "phone",nullable = false, length = 16)
     private Integer phone;
-    @Column(nullable = false, unique = true)
+    @Column(name = "email",nullable = false, unique = true)
     private String email;
-    @Column(nullable = false)
+    @Column(name = "work_email",nullable = false)
     private String workEmail;
-    @Column(nullable = false)
+    @Column(name = "dob",nullable = false)
     private LocalDate dob;
-    @Column(nullable = false)
+    @Column(name = "gender",nullable = false)
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 
-    @Column(nullable = false)
+    @Column(name = "user_role",nullable = false)
     @Enumerated(EnumType.STRING)
-    private RoleEnum role;
-    @Column(nullable = false)
+    private RoleEnum userRole;
+    @Column(name = "is_partTimer",nullable = false)
     private Boolean isPartTimer;
-    @Column(nullable = false)
+    @Column(name = "is_hrEmployee",nullable = false)
     private Boolean isHrEmployee;
 
-    @Column(nullable = false)
+    @Column(name = "is_blackListed",nullable = false)
     private Boolean isBlackListed;
-    @Column(nullable = false)
+    @Column(name = "is_enabled",nullable = false)
     private Boolean isEnabled;
-    @Column(nullable = false)
+    @Column(name = "date_joined",nullable = false)
     private LocalDate dateJoined;
 
-    @Column(length = 1000, nullable = true)
+    @Column(name = "profile_pic",length = 1000, nullable = true)
     private Byte[] profilePic;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Position.class)
-    @JoinColumn(name = "positionId", referencedColumnName = "userId")
+    @JoinColumn(name = "position_id", referencedColumnName = "user_id")
     private List<Position> positions;
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
+    @Column(name = "qualification_information")
     private QualificationInformation qualificationInformation;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicant")
+    @Column(name = "applications")
     private List<JobApplication> applications;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobRequest.class, mappedBy = "requestedBy")
+    @Column(name = "job_requests")
     private List<JobApplication> jobRequests;
 
 //    TODO add on other relationships to other classes
+//    TODO add hashing for password
 
     public User() {
     }
 
     /* Main Constructor without the optional fields */
-    public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob, GenderEnum gender, RoleEnum role, Boolean isPartTimer, Boolean isHrEmployee) {
+    public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -76,7 +83,7 @@ public class User {
         this.workEmail = "";
         this.dob = dob;
         this.gender = gender;
-        this.role = role;
+        this.userRole = userRole;
         this.isPartTimer = isPartTimer;
         this.isHrEmployee = isHrEmployee;
         this.isBlackListed = false;
@@ -161,12 +168,12 @@ public class User {
         this.gender = gender;
     }
 
-    public RoleEnum getRole() {
-        return role;
+    public RoleEnum getUserRole() {
+        return userRole;
     }
 
-    public void setRole(RoleEnum role) {
-        this.role = role;
+    public void setUserRole(RoleEnum userRole) {
+        this.userRole = userRole;
     }
 
     public Boolean getPartTimer() {

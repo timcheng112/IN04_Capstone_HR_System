@@ -1,42 +1,45 @@
-package com.conceiversolutions.hrsystem.jobManagement;
+package com.conceiversolutions.hrsystem.jobmanagement.jobposting;
 
-import com.conceiversolutions.hrsystem.skillset.JobSkillset;
-import com.conceiversolutions.hrsystem.user.User;
+import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
+import com.conceiversolutions.hrsystem.skillset.jobskillset.JobSkillset;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name="jobPostings")
+@Table(name="job_postings")
 public class JobPosting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "posting_id")
     private Long postingId;
-    @Column(nullable = false, length = 64)
+    @Column(name = "job_title", nullable = false, length = 64)
     private String jobTitle;
-    @Column(nullable = false, length = 255)
+    @Column(name = "job_description", nullable = false, length = 255)
     private String jobDescription;
-    @Column(nullable = false, length = 64)
+    @Column(name = "remuneration", nullable = false, length = 64)
     private String remuneration;
-    @Column(nullable = false)
+    @Column(name = "post_date", nullable = false)
     private LocalDate postDate;
-    @Column(nullable = false)
+    @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
     @OneToOne(targetEntity = User.class, optional = false, fetch = FetchType.LAZY)
+    @Column(name = "posted_by")
     private User postedBy;
     @OneToOne(targetEntity = JobRequest.class, fetch = FetchType.LAZY, optional = false)
+    @Column(name = "job_request")
     private JobRequest jobRequest;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobSkillset.class)
-    @JoinColumn(name = "jobSkillsetId", referencedColumnName = "postingId")
+    @JoinColumn(name = "job_skillset_id", referencedColumnName = "posting_id")
     private List<JobSkillset> jobRequirements;
 
     public JobPosting() {
     }
 
-    public JobPosting(Long postingId, String jobTitle, String jobDescription, String remuneration, LocalDate postDate, Boolean isActive, User postedBy, JobRequest jobRequest, List<JobSkillset> jobRequirements) {
-        this.postingId = postingId;
+    public JobPosting(String jobTitle, String jobDescription, String remuneration, LocalDate postDate, Boolean isActive, User postedBy, JobRequest jobRequest, List<JobSkillset> jobRequirements) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.remuneration = remuneration;

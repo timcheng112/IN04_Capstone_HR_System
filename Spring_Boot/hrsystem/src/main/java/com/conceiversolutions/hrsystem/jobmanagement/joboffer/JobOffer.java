@@ -1,29 +1,32 @@
-package com.conceiversolutions.hrsystem.jobManagement;
+package com.conceiversolutions.hrsystem.jobmanagement.joboffer;
 
-import com.conceiversolutions.hrsystem.user.Position;
+import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
+import com.conceiversolutions.hrsystem.user.position.Position;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="jobOffers")
+@Table(name="job_offers")
 public class JobOffer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "offer_id")
     private Long offerId;
-    @Column(nullable = false)
+    @Column(name = "offer_date", nullable = false)
     private LocalDate offerDate;
-    @Column(nullable = false)
+    @Column(name = "pay_offered", nullable = false)
     private BigDecimal payOffered;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Position.class)
+    @Column(name = "position")
     private Position position;
     @OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = JobApplication.class)
+    @Column(name = "application")
     private JobApplication application;
 
-    public JobOffer(Long offerId, LocalDate offerDate, BigDecimal payOffered, Position position, JobApplication application) {
-        this.offerId = offerId;
+    public JobOffer(LocalDate offerDate, BigDecimal payOffered, Position position, JobApplication application) {
         this.offerDate = offerDate;
         this.payOffered = payOffered;
         this.position = position;

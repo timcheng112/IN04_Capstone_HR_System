@@ -1,28 +1,31 @@
-package com.conceiversolutions.hrsystem.user;
+package com.conceiversolutions.hrsystem.user.workexperience;
+
+import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table
+@Table(name = "work_experiences")
 public class WorkExperience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "experience_id")
     private Long experienceId;
-    @Column(nullable = false, length = 64)
+    @Column(name = "position_name", nullable = false, length = 64)
     private String positionName;
-    @Column(nullable = false, length = 64)
+    @Column(name = "company_name", nullable = false, length = 64)
     private String companyName;
-    @Column(nullable = false)
+    @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
-    @Column(nullable = true)
+    @Column(name = "end_date", nullable = true)
     private LocalDate endDate;
-    @Column(nullable=false)
+    @Column(name = "currently_working", nullable = false)
     private Boolean currentlyWorking;
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "qualificationId")
+    @JoinColumn(name = "qualification_information")
     private QualificationInformation qualificationInformation;
 
     public WorkExperience() {
