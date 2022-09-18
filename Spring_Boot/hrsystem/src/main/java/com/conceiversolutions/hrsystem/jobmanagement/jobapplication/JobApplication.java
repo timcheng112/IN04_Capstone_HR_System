@@ -30,7 +30,6 @@ public class JobApplication {
     @JoinColumn(name = "user_skillset_id", referencedColumnName = "application_id")
     private List<UserSkillset> userSkills;
     @OneToOne(targetEntity = JobPosting.class, fetch = FetchType.LAZY, optional = false)
-    @Column(name = "posting")
     private JobPosting posting;
 
     public JobApplication() {

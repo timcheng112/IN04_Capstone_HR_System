@@ -27,10 +27,8 @@ public class JobPosting {
     private Boolean isActive;
 
     @OneToOne(targetEntity = User.class, optional = false, fetch = FetchType.LAZY)
-    @Column(name = "posted_by")
     private User postedBy;
     @OneToOne(targetEntity = JobRequest.class, fetch = FetchType.LAZY, optional = false)
-    @Column(name = "job_request")
     private JobRequest jobRequest;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobSkillset.class)
     @JoinColumn(name = "job_skillset_id", referencedColumnName = "posting_id")

@@ -16,7 +16,6 @@ public class UserSkillset {
     @Column(name = "skill_description", nullable = true, length = 255)
     private String skillDescription;
     @OneToOne(targetEntity = Skillset.class, fetch = FetchType.LAZY, optional = false)
-    @Column(name = "skillset")
     private Skillset skillset;
 
     public UserSkillset() {

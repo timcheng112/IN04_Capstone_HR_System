@@ -58,7 +58,6 @@ public class User {
     @JoinColumn(name = "position_id", referencedColumnName = "user_id")
     private List<Position> positions;
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
-    @Column(name = "qualification_information")
     private QualificationInformation qualificationInformation;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicant")
     @Column(name = "applications")

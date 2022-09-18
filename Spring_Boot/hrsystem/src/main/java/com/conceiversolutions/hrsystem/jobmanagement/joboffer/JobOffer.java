@@ -20,11 +20,12 @@ public class JobOffer {
     private BigDecimal payOffered;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Position.class)
-    @Column(name = "position")
     private Position position;
     @OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = JobApplication.class)
-    @Column(name = "application")
     private JobApplication application;
+
+    public JobOffer() {
+    }
 
     public JobOffer(LocalDate offerDate, BigDecimal payOffered, Position position, JobApplication application) {
         this.offerDate = offerDate;
