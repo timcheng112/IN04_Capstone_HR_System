@@ -1,8 +1,6 @@
 package com.conceiversolutions.hrsystem.engagement.rewardtrack;
 
 import com.conceiversolutions.hrsystem.engagement.reward.Reward;
-import org.springframework.context.annotation.Lazy;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;

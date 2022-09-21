@@ -1,7 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.claim;
 
 import com.conceiversolutions.hrsystem.engagement.claimtype.ClaimType;
-import com.conceiversolutions.hrsystem.Enums.ApprovalStatusEnum;
+import com.conceiversolutions.hrsystem.enums.ApprovalStatusEnum;
 
 import javax.persistence.*;
 import java.sql.Blob;
