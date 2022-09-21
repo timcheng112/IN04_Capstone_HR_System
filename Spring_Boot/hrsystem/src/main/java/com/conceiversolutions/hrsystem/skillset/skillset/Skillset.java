@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.skillset;
+package com.conceiversolutions.hrsystem.skillset.skillset;
 
 import javax.persistence.*;
 
@@ -7,17 +7,17 @@ import javax.persistence.*;
 public class Skillset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "skillset_id")
     private Long skillsetId;
-    @Column(nullable = false, length = 64)
+    @Column(name = "skillset_name", nullable = false, length = 64)
     private String skillsetName;
-    @Column(nullable = false)
+    @Column(name = "open_ended", nullable = false)
     private Boolean openEnded;
 
     public Skillset() {
     }
 
-    public Skillset(Long skillsetId, String skillsetName, Boolean openEnded) {
-        this.skillsetId = skillsetId;
+    public Skillset(String skillsetName, Boolean openEnded) {
         this.skillsetName = skillsetName;
         this.openEnded = openEnded;
     }

@@ -1,7 +1,10 @@
-package com.conceiversolutions.hrsystem.user;
+package com.conceiversolutions.hrsystem.user.qualificationinformation;
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
-import com.conceiversolutions.hrsystem.skillset.UserSkillset;
+import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
+import com.conceiversolutions.hrsystem.user.recommendation.Recommendation;
+import com.conceiversolutions.hrsystem.user.user.User;
+import com.conceiversolutions.hrsystem.user.workexperience.WorkExperience;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,36 +15,43 @@ import java.util.List;
 public class QualificationInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "info_id")
     private Long infoId;
-    @Column(length = 1000)
+    @Column(name = "cv",length = 1000)
     private Byte[] cv;
-    @Column(nullable = true)
+    @Column(name = "highest_education",nullable = true)
     @Enumerated(EnumType.STRING)
     private EducationEnum highestEducation;
-    @Column(nullable = true)
+    @Column(name = "personal_statement",nullable = true)
     private String personalStatement;
-    @Column(nullable = false)
+    @Column(name = "languages_spoken", nullable = false)
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     private List<String> languagesSpoken;
-    @Column(nullable = true, length = 32)
+    @Column(name = "bank_acc_no", nullable = true, length = 32)
     private String bankAccNo;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qualificationInformation", targetEntity = WorkExperience.class)
+    @Column(name = "work_experiences")
     private List<WorkExperience> workExperiences;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qualificationInformation", targetEntity = Recommendation.class)
+    @Column(name = "recommendations")
     private List<Recommendation> recommendations;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "qualificationInformation")
     private User user;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserSkillset.class)
-    @JoinColumn(name = "userSkillsetId", referencedColumnName = "infoId")
+    @JoinColumn(name = "user_skillset_id", referencedColumnName = "info_id")
     private List<UserSkillset> userSkills;
 
     public QualificationInformation() {
-        this.languagesSpoken = new ArrayList<String>();
-        this.workExperiences = new ArrayList<>();
-        this.recommendations = new ArrayList<>();
     }
 
+    public QualificationInformation(User user) {
+        this.user = user;
+        this.languagesSpoken = new ArrayList<>();
+        this.workExperiences = new ArrayList<>();
+        this.recommendations = new ArrayList<>();
+        this.userSkills = new ArrayList<>();
+    }
 
     public Long getInfoId() {
         return infoId;
@@ -113,6 +123,14 @@ public class QualificationInformation {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<UserSkillset> getUserSkills() {
+        return userSkills;
+    }
+
+    public void setUserSkills(List<UserSkillset> userSkills) {
+        this.userSkills = userSkills;
     }
 
     @Override

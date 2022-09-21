@@ -1,18 +1,19 @@
-package com.conceiversolutions.hrsystem.skillset;
+package com.conceiversolutions.hrsystem.skillset.userskillset;
 
-import com.conceiversolutions.hrsystem.jobManagement.JobRequest;
+import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name="userSkillsets")
+@Table(name="user_skillsets")
 public class UserSkillset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_skillset_id")
     private Long userSkillsetId;
-    @Column(nullable = true, length = 1)
+    @Column(name = "skill_level", nullable = true, length = 1)
     private Integer skillLevel;
-    @Column(nullable = true, length = 255)
+    @Column(name = "skill_description", nullable = true, length = 255)
     private String skillDescription;
     @OneToOne(targetEntity = Skillset.class, fetch = FetchType.LAZY, optional = false)
     private Skillset skillset;
@@ -20,8 +21,7 @@ public class UserSkillset {
     public UserSkillset() {
     }
 
-    public UserSkillset(Long userSkillsetId, Integer skillLevel, String skillDescription, Skillset skillset) {
-        this.userSkillsetId = userSkillsetId;
+    public UserSkillset(Integer skillLevel, String skillDescription, Skillset skillset) {
         this.skillLevel = skillLevel;
         this.skillDescription = skillDescription;
         this.skillset = skillset;

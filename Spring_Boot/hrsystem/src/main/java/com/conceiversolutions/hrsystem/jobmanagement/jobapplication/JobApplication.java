@@ -1,8 +1,9 @@
-package com.conceiversolutions.hrsystem.jobManagement;
+package com.conceiversolutions.hrsystem.jobmanagement.jobapplication;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
-import com.conceiversolutions.hrsystem.skillset.UserSkillset;
-import com.conceiversolutions.hrsystem.user.User;
+import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
+import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,22 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="jobApplications")
+@Table(name="job_applications")
 public class JobApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "application_id")
     private Long applicationId;
-    @Column(nullable = false)
+    @Column(name = "apply_date", nullable = false)
     private LocalDate applyDate;
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private JobStatusEnum status;
 
     @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "applicantId")
+    @JoinColumn(name = "applicant")
     private User applicant;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserSkillset.class)
-    @JoinColumn(name = "userSkillsetId", referencedColumnName = "applicationId")
+    @JoinColumn(name = "user_skillset_id", referencedColumnName = "application_id")
     private List<UserSkillset> userSkills;
     @OneToOne(targetEntity = JobPosting.class, fetch = FetchType.LAZY, optional = false)
     private JobPosting posting;
@@ -33,8 +35,7 @@ public class JobApplication {
     public JobApplication() {
     }
 
-    public JobApplication(Long applicationId, LocalDate applyDate, JobStatusEnum status, User applicant, JobPosting posting) {
-        this.applicationId = applicationId;
+    public JobApplication(LocalDate applyDate, JobStatusEnum status, User applicant, JobPosting posting) {
         this.applyDate = applyDate;
         this.status = status;
         this.applicant = applicant;
@@ -42,8 +43,7 @@ public class JobApplication {
         this.userSkills = new ArrayList<>();
     }
 
-    public JobApplication(Long applicationId, LocalDate applyDate, JobStatusEnum status, User applicant, List<UserSkillset> userSkills, JobPosting posting) {
-        this.applicationId = applicationId;
+    public JobApplication(LocalDate applyDate, JobStatusEnum status, User applicant, List<UserSkillset> userSkills, JobPosting posting) {
         this.applyDate = applyDate;
         this.status = status;
         this.applicant = applicant;

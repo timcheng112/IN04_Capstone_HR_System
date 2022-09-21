@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.user;
+package com.conceiversolutions.hrsystem.user.position;
 
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 
@@ -6,44 +6,41 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table
+@Table(name = "positions")
 public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "position_id")
     private Long positionId;
-
-    @Column(nullable = false, length = 64)
+    @Column(name = "position_name", nullable = false, length = 64)
     private String positionName;
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
-    @Column(nullable = true)
+    @Column(name = "start_date", nullable = true)
     private LocalDate startDate;
-    @Column(nullable = true)
+    @Column(name = "end_date", nullable = true)
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "job_type", nullable = false)
     private JobTypeEnum jobType;
 
     public Position() {
     }
 
-    public Position(Long positionId, String positionName, String description, JobTypeEnum jobType) {
-        this.positionId = positionId;
+    public Position(String positionName, String description, JobTypeEnum jobType) {
         this.positionName = positionName;
         this.description = description;
         this.jobType = jobType;
     }
 
-    public Position(Long positionId, String positionName, String description, LocalDate startDate, JobTypeEnum jobType) {
-        this.positionId = positionId;
+    public Position(String positionName, String description, LocalDate startDate, JobTypeEnum jobType) {
         this.positionName = positionName;
         this.description = description;
         this.startDate = startDate;
         this.jobType = jobType;
     }
 
-    public Position(Long positionId, String positionName, String description, LocalDate startDate, LocalDate endDate, JobTypeEnum jobType) {
-        this.positionId = positionId;
+    public Position(String positionName, String description, LocalDate startDate, LocalDate endDate, JobTypeEnum jobType) {
         this.positionName = positionName;
         this.description = description;
         this.startDate = startDate;
