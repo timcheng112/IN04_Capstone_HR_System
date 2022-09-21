@@ -3,14 +3,21 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name="attendance")
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "attendance_id", nullable = false)
     private Long attendanceId;
+    @Column(name="weekend_hours_worked", nullable = false)
     private Long weekendHoursWorked;
+    @Column(name="overtime_hours_worked", nullable = false)
     private Long overTimeHoursWorked;
+    @Column(name="ph_event_hours_worked", nullable = false)
     private Long phEventHoursWorked;
+    @Column(name="period_start", nullable = false)
     private LocalDate periodStart;
+    @Column(name="period_end", nullable = false)
     private LocalDate periodEnd;
 //    @OneToMany(cascade = {CascadeType.ALL}, fetch =FetchType.EAGER)
 //    private User user;

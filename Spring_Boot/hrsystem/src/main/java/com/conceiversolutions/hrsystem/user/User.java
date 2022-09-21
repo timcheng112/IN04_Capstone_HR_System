@@ -4,6 +4,8 @@ import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobManagement.JobApplication;
 import com.conceiversolutions.hrsystem.jobManagement.JobRequest;
+import com.conceiversolutions.hrsystem.pay.Attendance;
+import com.conceiversolutions.hrsystem.pay.Payslip;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -61,18 +63,29 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobRequest.class, mappedBy = "requestedBy")
     private List<JobApplication> jobRequests;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "payslipId")
+    private List<Payslip>  payslips;
+
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "attendanceId")
+    private List<Attendance> attendances;
+
+
+
+
 //    TODO add on other relationships to other classes
 
     public User() {
     }
 
     /* Main Constructor without the optional fields */
-    public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob, GenderEnum gender, RoleEnum role, Boolean isPartTimer, Boolean isHrEmployee) {
+    public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob, GenderEnum gender, RoleEnum role, Boolean isPartTimer, Boolean isHrEmployee, List<Payslip> payslips, List<Attendance> attendances) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.phone = phone;
         this.email = email;
+        this.payslips = payslips;
+        this.attendances = attendances;
         this.workEmail = "";
         this.dob = dob;
         this.gender = gender;
@@ -248,6 +261,23 @@ public class User {
     public void setJobRequests(List<JobApplication> jobRequests) {
         this.jobRequests = jobRequests;
     }
+
+    public List<Payslip> getPayslips() {
+        return payslips;
+    }
+
+    public void setPayslips(List<Payslip> payslips) {
+        this.payslips = payslips;
+    }
+
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
+    }
+
 
     @Override
     public String toString() {

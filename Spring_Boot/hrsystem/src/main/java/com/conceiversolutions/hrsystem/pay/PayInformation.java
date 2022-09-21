@@ -2,23 +2,34 @@ package com.conceiversolutions.hrsystem.pay;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
+@Table(name="pay_information")
 public class PayInformation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="pay_information_id")
     private Long payInformationId;
+    @Column(name="pay_type", nullable = false)
     private String payType;
+    @Column(name="basic_hourly_pay", nullable = false)
     private BigDecimal basicHourlyPay;
+    @Column(name="weekend_hourly_pay", nullable = false)
     private BigDecimal weekendHourlyPay;
+    @Column(name="event_ph_hourly_pay", nullable = false)
     private BigDecimal eventPhHourlyPay;
+    @Column(name="overtime_hourly_pay", nullable = false)
     private BigDecimal overtimeHourlyPay;
+    @Column(name="pay_method", nullable = false)
     private String paymentMethod;
+    @Column(name="self_help_group_contribution_type", nullable = false)
     private String selfHelpGroupContributionType;
     @OneToOne(mappedBy = "payInformation")
+    //@JoinColumn(name = "payslip_id")
     private Payslip payslip;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "allowanceId")
     private List<Allowance> allowance;
@@ -39,8 +50,8 @@ public class PayInformation {
         this.paymentMethod = paymentMethod;
         this.selfHelpGroupContributionType = selfHelpGroupContributionType;
         this.payslip = payslip;
-        this.allowance = allowance;
-        this.deduction = deduction;
+        this.allowance = new ArrayList<>();
+        this.deduction = new ArrayList<>();
     }
 
     public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, Payslip payslip, List<Allowance> allowance, List<Deduction> deduction) {
@@ -52,8 +63,8 @@ public class PayInformation {
         this.paymentMethod = paymentMethod;
         this.selfHelpGroupContributionType = selfHelpGroupContributionType;
         this.payslip = payslip;
-        this.allowance = allowance;
-        this.deduction = deduction;
+        this.allowance = new ArrayList<>();
+        this.deduction = new ArrayList<>();
     }
 
     public Long getPayInformationId() {

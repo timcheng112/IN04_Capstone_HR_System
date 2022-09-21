@@ -11,14 +11,20 @@ public class Payslip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="payslip_id")
     private Long payslipId;
+    @Column(name="month_of_payment", nullable = false)
     private Integer monthOfPayment;
+    @Column(name="year_of_payslip", nullable = false)
     private Integer yearOfPayslip;
+    @Column(name="date_of_payment" ,nullable = false)
     private LocalDate dateOfPayment;
+    @Column(name="gross_salary", nullable = false)
     private BigDecimal grossSalary;
+    @Column(name="date_generated", nullable = false)
     private LocalDate dateGenerated;
     private Blob payslipPDF;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = PayInformation.class)
     private PayInformation payInformation;
 
 //    @ManyToOne

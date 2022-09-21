@@ -4,16 +4,22 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name="allowance")
 public class Allowance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="allowance_id", nullable = false)
     private Long allowanceId;
+    @Column(name="allowance_name", nullable = false)
     private String allowanceName;
+    @Column(nullable = false)
     private BigDecimal amount;
+    @Column(nullable = false)
     private String remarks;
-    @ManyToOne
-    private PayInformation payinfo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="pay_information_id")
+    private PayInformation payInfo;
 
     public Allowance() {
     }
@@ -63,12 +69,12 @@ public class Allowance {
         this.remarks = remarks;
     }
 
-    public PayInformation getPayinfo() {
-        return payinfo;
+    public PayInformation getPayInfo() {
+        return payInfo;
     }
 
-    public void setPayinfo(PayInformation payinfo) {
-        this.payinfo = payinfo;
+    public void setPayInfo(PayInformation payInfo) {
+        this.payInfo = payInfo;
     }
 
     @Override
@@ -78,7 +84,7 @@ public class Allowance {
                 ", allowanceName='" + allowanceName + '\'' +
                 ", amount=" + amount +
                 ", remarks='" + remarks + '\'' +
-                ", payinfo=" + payinfo +
+                ", payinfo=" + payInfo +
                 '}';
     }
 }
