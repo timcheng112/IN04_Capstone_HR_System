@@ -1,11 +1,7 @@
 package com.conceiversolutions.hrsystem.administration.task;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.conceiversolutions.hrsystem.administration.category.Category;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "tasks")
@@ -17,6 +13,10 @@ public class Task {
 
     private String name;
     private String description;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Category.class)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Task() {
 

@@ -1,9 +1,11 @@
 package com.conceiversolutions.hrsystem.training.video;
 
 import java.sql.Blob;
+import java.util.List;
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.training.module.Module;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "videos")
@@ -16,6 +18,10 @@ public class Video {
     private String description;
     private Blob video;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "user_id")
+    private List<User> watchedBy;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Module.class)
     @JoinColumn(name = "module_id")
     private Module module;
@@ -24,10 +30,11 @@ public class Video {
 
     }
 
-    public Video(String title, String description, Blob video, Module module) {
+    public Video(String title, String description, Blob video, List<User> watchedBy, Module module) {
         this.title = title;
         this.description = description;
         this.video = video;
+        this.watchedBy = watchedBy;
         this.module = module;
     }
 
@@ -71,6 +78,14 @@ public class Video {
         this.module = module;
     }
 
+    public List<User> getWatchedBy() {
+        return watchedBy;
+    }
+
+    public void setWatchedBy(List<User> watchedBy) {
+        this.watchedBy = watchedBy;
+    }
+
     @Override
     public String toString() {
         return "Video{" +
@@ -78,6 +93,7 @@ public class Video {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", video=" + video +
+                ", watchedBy=" + watchedBy +
                 ", module=" + module +
                 '}';
     }

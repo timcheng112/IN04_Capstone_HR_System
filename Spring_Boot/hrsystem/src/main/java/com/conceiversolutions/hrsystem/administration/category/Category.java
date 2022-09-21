@@ -1,19 +1,17 @@
 package com.conceiversolutions.hrsystem.administration.category;
 
-import javax.persistence.CascadeType;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.conceiversolutions.hrsystem.administration.task.Task;
-
-import java.util.List;
 
 @Entity
 @Table(name = "categories")
@@ -21,11 +19,11 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    private Long cateogryId;
+    private Long categoryId;
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Task.class)
-    @JoinColumn(name = "task_id")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Task.class, mappedBy = "taskId")
+    @Column(name = "task_id")
     private List<Task> tasks;
 
     public Category() {
@@ -37,12 +35,12 @@ public class Category {
         this.tasks = tasks;
     }
 
-    public Long getCateogryId() {
-        return cateogryId;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCateogryId(Long cateogryId) {
-        this.cateogryId = cateogryId;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getDescription() {
@@ -64,7 +62,7 @@ public class Category {
     @Override
     public String toString() {
         return "Category{" +
-                "cateogryId=" + cateogryId +
+                "categoryId=" + categoryId +
                 ", description='" + description + '\'' +
                 ", tasks=" + tasks +
                 '}';
