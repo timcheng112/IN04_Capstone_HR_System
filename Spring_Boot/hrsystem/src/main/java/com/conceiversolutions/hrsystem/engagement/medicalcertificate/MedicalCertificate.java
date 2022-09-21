@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name="medical_certificate")
 public class MedicalCertificate {
     //attributes
     @Id

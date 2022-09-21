@@ -3,7 +3,7 @@ package com.conceiversolutions.hrsystem.engagement.claimtype;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="claim_type")
 public class ClaimType {
 
     //attributes
