@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.rewardtrack;
 
 import com.conceiversolutions.hrsystem.engagement.reward.Reward;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name="reward_track")
 public class RewardTrack {
     //attributes
     @Id
@@ -23,7 +24,7 @@ public class RewardTrack {
     private LocalDate endDate;
 
     //relationships
-    @OneToMany(mappedBy ="rewardTrack", targetEntity = Reward.class)
+    @OneToMany(mappedBy ="rewardTrack", fetch = FetchType.LAZY, targetEntity = Reward.class)
     private List<Reward> rewards;
 
     //constructors
