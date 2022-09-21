@@ -4,6 +4,9 @@ import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
+import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
+import com.conceiversolutions.hrsystem.performance.goal.Goal;
+import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 
@@ -65,6 +68,24 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobRequest.class, mappedBy = "requestedBy")
     @Column(name = "job_requests")
     private List<JobApplication> jobRequests;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Appraisal.class, mappedBy = "employee")
+    @Column(name = "employee_appraisals")
+    private List<Appraisal> employeeAppraisals;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Appraisal.class, mappedBy = "managerAppraising")
+    @Column(name = "appraised_by")
+    private List<Appraisal> managerAppraisals;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "manager")
+    @Column(name = "manager_reviews")
+    private List<ManagerReview> managerReviews;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "employeeReviewing")
+    @Column(name = "reviewed_by")
+    private List<ManagerReview> employeeReviews;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Module.class, mappedBy = "employee")
+    @Column(name = "modules")
+    private List<Module> modules;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
+    @Column(name = "goals")
+    private List<Goal> goals;
 
 //    TODO add on other relationships to other classes
 //    TODO add hashing for password
@@ -254,6 +275,54 @@ public class User {
     public void setJobRequests(List<JobApplication> jobRequests) {
         this.jobRequests = jobRequests;
     }
+    public List<Appraisal> getEmployeeAppraisals() {
+        return employeeAppraisals;
+    }
+
+    public void setEmployeeAppraisals(List<Appraisal> employeeAppraisals) {
+        this.employeeAppraisals = employeeAppraisals;
+    }
+
+    public List<Appraisal> getManagerAppraisals() {
+        return managerAppraisals;
+    }
+
+    public void setManagerAppraisals(List<Appraisal> managerAppraisals) {
+        this.managerAppraisals = managerAppraisals;
+    }
+
+    public List<ManagerReview> getManagerReviews() {
+        return managerReviews;
+    }
+
+    public void setManagerReviews(List<ManagerReview> managerReviews) {
+        this.managerReviews = managerReviews;
+    }
+
+    public List<ManagerReview> getEmployeeReviews() {
+        return employeeReviews;
+    }
+
+    public void setEmployeeReviews(List<ManagerReview> employeeReviews) {
+        this.employeeReviews = employeeReviews;
+    }
+
+    public List<Module> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
+    }
+
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(List<Goal> goals) {
+        this.goals = goals;
+    }
+
 
     @Override
     public String toString() {
