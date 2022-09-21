@@ -17,7 +17,7 @@ public class ClaimType {
     @Column(name="claim_type_desc")
     private String description;
     @Column(name="claim_limit")
-    private int claimLimit;
+    private Integer claimLimit;
 
     //relationships
 
@@ -25,7 +25,7 @@ public class ClaimType {
     public ClaimType() {
     }
 
-    public ClaimType(String description, int claimLimit) {
+    public ClaimType(String description, Integer claimLimit) {
         this.description = description;
         this.claimLimit = claimLimit;
     }
@@ -48,11 +48,11 @@ public class ClaimType {
         this.description = description;
     }
 
-    public int getClaimLimit() {
+    public Integer getClaimLimit() {
         return claimLimit;
     }
 
-    public void setClaimLimit(int claimLimit) {
+    public void setClaimLimit(Integer claimLimit) {
         this.claimLimit = claimLimit;
     }
 

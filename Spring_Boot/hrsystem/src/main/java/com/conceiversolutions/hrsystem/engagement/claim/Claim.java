@@ -18,7 +18,7 @@ public class Claim {
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
     )
-    @Column(name="claim id")
+    @Column(name="claim_id")
     private Long claimId;
     @Column(name="claim_date")
     private LocalDate claimDate;
