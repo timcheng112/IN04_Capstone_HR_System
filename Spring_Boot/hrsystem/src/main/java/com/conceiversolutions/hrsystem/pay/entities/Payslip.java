@@ -1,14 +1,14 @@
 package com.conceiversolutions.hrsystem.pay.entities;
 
+import com.conceiversolutions.hrsystem.user.User;
 import javax.persistence.*;
-
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.time.LocalDate;
 
 @Entity
+@Table(name="payslip")
 public class Payslip {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="payslip_id")
@@ -23,14 +23,15 @@ public class Payslip {
     private BigDecimal grossSalary;
     @Column(name="date_generated", nullable = false)
     private LocalDate dateGenerated;
+    //we cant handle blob yet, null - true
+    @Column(name="payslip_pdf", nullable = true)
     private Blob payslipPDF;
     @OneToOne(cascade = CascadeType.ALL, targetEntity = PayInformation.class)
     //@JoinColumn(name="payInformationId")
     private PayInformation payInformation;
-
-//    @ManyToOne
-//    private User employee;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="userId")
+    private User employee;
 
 
     public Payslip() {
@@ -54,6 +55,7 @@ public class Payslip {
         this.dateGenerated = dateGenerated;
         this.payslipPDF = payslipPDF;
         this.payInformation = payInformation;
+        this.employee = employee;
     }
 
     //with id, static offline testing
@@ -66,6 +68,7 @@ public class Payslip {
         this.dateGenerated = dateGenerated;
         this.payslipPDF = payslipPDF;
         this.payInformation = payInformation;
+        this.employee = employee;
     }
     //test payslip -> payInfo ->  Allowance // payslip -> payInfo -> Deduction #3
     public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary,
@@ -86,6 +89,7 @@ public class Payslip {
         this.dateOfPayment = dateOfPayment;
         this.grossSalary = grossSalary;
         this.dateGenerated = dateGenerated;
+        this.employee = employee;
     }
 
 

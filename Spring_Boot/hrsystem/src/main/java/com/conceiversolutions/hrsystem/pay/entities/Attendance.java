@@ -21,28 +21,32 @@ public class Attendance {
     private LocalDate periodStart;
     @Column(name="period_end", nullable = false)
     private LocalDate periodEnd;
-//    @OneToMany(cascade = {CascadeType.ALL}, fetch =FetchType.EAGER)
-//    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 
 
     public Attendance() {
     }
 
-    public Attendance(Long attendanceId, Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd) {
+    public Attendance(Long attendanceId, Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd, User user) {
         this.attendanceId = attendanceId;
         this.weekendHoursWorked = weekendHoursWorked;
         this.overTimeHoursWorked = overTimeHoursWorked;
         this.phEventHoursWorked = phEventHoursWorked;
         this.periodStart = periodStart;
         this.periodEnd = periodEnd;
+        this.user = user;
     }
 
-    public Attendance(Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd) {
+    public Attendance(Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd, User user) {
         this.weekendHoursWorked = weekendHoursWorked;
         this.overTimeHoursWorked = overTimeHoursWorked;
         this.phEventHoursWorked = phEventHoursWorked;
         this.periodStart = periodStart;
         this.periodEnd = periodEnd;
+        this.user = user;
     }
 
     public Attendance(Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd) {
@@ -99,6 +103,14 @@ public class Attendance {
 
     public void setPeriodEnd(LocalDate periodEnd) {
         this.periodEnd = periodEnd;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
