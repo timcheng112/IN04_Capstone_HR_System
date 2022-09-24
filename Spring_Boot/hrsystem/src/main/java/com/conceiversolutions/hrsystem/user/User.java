@@ -4,8 +4,8 @@ import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobManagement.JobApplication;
 import com.conceiversolutions.hrsystem.jobManagement.JobRequest;
-import com.conceiversolutions.hrsystem.pay.Attendance;
-import com.conceiversolutions.hrsystem.pay.Payslip;
+import com.conceiversolutions.hrsystem.pay.entities.Attendance;
+import com.conceiversolutions.hrsystem.pay.entities.Payslip;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -58,6 +58,7 @@ public class User {
     private List<Position> positions;
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
     private QualificationInformation qualificationInformation;
+
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicant")
     private List<JobApplication> applications;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobRequest.class, mappedBy = "requestedBy")
@@ -100,6 +101,33 @@ public class User {
         this.qualificationInformation = null;
         this.applications = new ArrayList<>();
         this.jobRequests = new ArrayList<>();
+    }
+
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
+                LocalDate dob, GenderEnum gender, RoleEnum role, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed,
+                Boolean isEnabled, LocalDate dateJoined, Byte[] profilePic, List<Position> positions, QualificationInformation qualificationInformation,
+                List<JobApplication> applications, List<JobApplication> jobRequests, List<Payslip> payslips, List<Attendance> attendances) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.role = role;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.isBlackListed = isBlackListed;
+        this.isEnabled = isEnabled;
+        this.dateJoined = dateJoined;
+        this.profilePic = profilePic;
+        this.positions = positions;
+        this.qualificationInformation = qualificationInformation;
+        this.applications = applications;
+        this.jobRequests = jobRequests;
+        this.payslips = payslips;
+        this.attendances = attendances;
     }
 
     public Long getUserId() {

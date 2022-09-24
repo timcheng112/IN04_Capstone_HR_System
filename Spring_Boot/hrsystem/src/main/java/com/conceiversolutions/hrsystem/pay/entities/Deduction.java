@@ -1,6 +1,4 @@
-package com.conceiversolutions.hrsystem.pay;
-
-import org.springframework.data.util.Lazy;
+package com.conceiversolutions.hrsystem.pay.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -32,6 +30,12 @@ public class Deduction {
     }
 
     public Deduction() {
+    }
+
+    public Deduction(String deductionName, BigDecimal amount, String remarks) {
+        this.deductionName = deductionName;
+        this.amount = amount;
+        this.remarks = remarks;
     }
 
     public Deduction(String deductionName, BigDecimal amount, String remarks, PayInformation payInfo) {

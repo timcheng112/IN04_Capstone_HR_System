@@ -1,7 +1,6 @@
-package com.conceiversolutions.hrsystem.pay;
+package com.conceiversolutions.hrsystem.pay.entities;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import java.util.List;
 @Entity
 @Table(name="pay_information")
 public class PayInformation {
+    //ali note to self: pay type means MONTHLY, YEARLY... pay method means CASH, CHEQUE, C
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,12 +32,15 @@ public class PayInformation {
     //@JoinColumn(name = "payslip_id")
     private Payslip payslip;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "allowanceId")
+    //@JoinColumn(name="allowanceId") mappedBy ^ over here suffice for linkage
     private List<Allowance> allowance;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deductionId")
+    //@JoinColumn(name ="deductionId")
     private List<Deduction> deduction;
 
     public PayInformation() {
-
+        this.allowance = new ArrayList<>();
+        this.deduction = new ArrayList<>();
     }
 
     public PayInformation(Long payInformationId, String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, Payslip payslip, List<Allowance> allowance, List<Deduction> deduction) {
@@ -66,6 +69,8 @@ public class PayInformation {
         this.allowance = new ArrayList<>();
         this.deduction = new ArrayList<>();
     }
+
+
 
     public Long getPayInformationId() {
         return payInformationId;

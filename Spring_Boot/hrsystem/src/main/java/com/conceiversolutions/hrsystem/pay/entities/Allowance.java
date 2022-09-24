@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.pay;
+package com.conceiversolutions.hrsystem.pay.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -29,12 +29,20 @@ public class Allowance {
         this.allowanceName = allowanceName;
         this.amount = amount;
         this.remarks = remarks;
+
     }
 
     public Allowance(String allowanceName, BigDecimal amount, String remarks) {
         this.allowanceName = allowanceName;
         this.amount = amount;
         this.remarks = remarks;
+    }
+
+    public Allowance(String allowanceName, BigDecimal amount, String remarks, PayInformation payInfo) {
+        this.allowanceName = allowanceName;
+        this.amount = amount;
+        this.remarks = remarks;
+        this.payInfo = payInfo;
     }
 
     public Long getAllowanceId() {

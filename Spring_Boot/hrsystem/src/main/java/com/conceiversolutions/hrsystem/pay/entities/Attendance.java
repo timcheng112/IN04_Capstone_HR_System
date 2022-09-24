@@ -1,6 +1,8 @@
-package com.conceiversolutions.hrsystem.pay;
+package com.conceiversolutions.hrsystem.pay.entities;
 import javax.persistence.*;
 import java.time.LocalDate;
+import com.conceiversolutions.hrsystem.user.User;
+
 
 @Entity
 @Table(name="attendance")
@@ -28,6 +30,14 @@ public class Attendance {
 
     public Attendance(Long attendanceId, Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd) {
         this.attendanceId = attendanceId;
+        this.weekendHoursWorked = weekendHoursWorked;
+        this.overTimeHoursWorked = overTimeHoursWorked;
+        this.phEventHoursWorked = phEventHoursWorked;
+        this.periodStart = periodStart;
+        this.periodEnd = periodEnd;
+    }
+
+    public Attendance(Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd) {
         this.weekendHoursWorked = weekendHoursWorked;
         this.overTimeHoursWorked = overTimeHoursWorked;
         this.phEventHoursWorked = phEventHoursWorked;
