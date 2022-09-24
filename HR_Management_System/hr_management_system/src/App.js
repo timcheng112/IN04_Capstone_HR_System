@@ -1,11 +1,17 @@
-import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello HR Management System!
-    </h1>
+    <BrowserRouter>
+      {/* // <h1 className="text-3xl font-bold underline">
+    //   Hello HR Management System!
+    // </h1> */}
+      <div className="App">
+        <Switch>
+          <Route exact path="/" component={LoginPage} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
