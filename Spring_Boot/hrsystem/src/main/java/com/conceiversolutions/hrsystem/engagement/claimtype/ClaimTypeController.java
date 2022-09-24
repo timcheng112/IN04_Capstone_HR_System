@@ -1,6 +1,5 @@
 package com.conceiversolutions.hrsystem.engagement.claimtype;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +11,6 @@ public class ClaimTypeController {
 
     private final ClaimTypeService claimTypeService;
 
-    @Autowired
     public ClaimTypeController(ClaimTypeService claimTypeService) {
         this.claimTypeService = claimTypeService;
     }

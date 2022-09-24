@@ -1,9 +1,12 @@
 package com.conceiversolutions.hrsystem.organization_structure.team;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.organization_structure.department.Department;
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "teams")

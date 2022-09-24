@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.organization_structure.organization.Organization;
 import com.conceiversolutions.hrsystem.organization_structure.team.Team;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "departments")

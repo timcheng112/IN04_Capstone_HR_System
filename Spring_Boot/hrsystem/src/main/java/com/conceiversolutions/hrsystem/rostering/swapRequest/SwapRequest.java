@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.enums.ProgressionEnum;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "swap_requests")
@@ -27,10 +28,10 @@ public class SwapRequest {
     @JoinColumn(name = "shift_id", referencedColumnName = "swap_request_id")
     private List<Shift> shifts;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "requestor_id")
     private User requestor;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "receiver_id")
     private User receiver;
 
     public SwapRequest() {

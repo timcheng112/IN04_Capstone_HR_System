@@ -2,12 +2,18 @@ package com.conceiversolutions.hrsystem.performance.appraisal;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "appraisals")
@@ -30,12 +36,20 @@ public class Appraisal {
     private String promotionJustification;
     private Boolean submitted;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "employee")
+    private User employee;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "managerAppraising")
+    private User managerAppraising;
+
     public Appraisal() {
 
     }
 
     public Appraisal(String appraisalYear, LocalDate startDate, LocalDate endDate, String strengths, String weaknesses,
-                     Integer rating, Boolean promotion, String promotionJustification, Boolean submitted) {
+                     Integer rating, Boolean promotion, String promotionJustification, Boolean submitted, User employee,
+                     User managerAppraising) {
         this.appraisalYear = appraisalYear;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -45,6 +59,8 @@ public class Appraisal {
         this.promotion = promotion;
         this.promotionJustification = promotionJustification;
         this.submitted = submitted;
+        this.employee = employee;
+        this.managerAppraising = managerAppraising;
     }
 
     public Long getAppraisalId() {
@@ -55,12 +71,12 @@ public class Appraisal {
         this.appraisalId = appraisalId;
     }
 
-    public String getAppriasalYear() {
+    public String getAppraisalYear() {
         return appraisalYear;
     }
 
-    public void setAppriasalYear(String appriasalYear) {
-        this.appraisalYear = appriasalYear;
+    public void setAppraisalYear(String appraisalYear) {
+        this.appraisalYear = appraisalYear;
     }
 
     public LocalDate getStartDate() {
@@ -125,6 +141,22 @@ public class Appraisal {
 
     public void setSubmitted(Boolean submitted) {
         this.submitted = submitted;
+    }
+
+    public User getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(User employee) {
+        this.employee = employee;
+    }
+
+    public User getManagerAppraising() {
+        return managerAppraising;
+    }
+
+    public void setManagerAppraising(User managerAppraising) {
+        this.managerAppraising = managerAppraising;
     }
 
     @Override

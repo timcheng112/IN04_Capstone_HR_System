@@ -7,6 +7,11 @@ import com.conceiversolutions.hrsystem.pay.entities.Attendance;
 import com.conceiversolutions.hrsystem.pay.entities.Payslip;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
+import com.conceiversolutions.hrsystem.organization_structure.team.Team;
+import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
+import com.conceiversolutions.hrsystem.performance.goal.Goal;
+import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
+import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 
@@ -71,11 +76,32 @@ public class User {
     private List<JobRequest> jobRequests;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "payslipId")
-    private List<Payslip>  payslips;
+    private List<Payslip> payslips;
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "attendanceId")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "attendanceId")
     private List<Attendance> attendances;
 
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Appraisal.class, mappedBy = "employee")
+    @Column(name = "employee_appraisals")
+    private List<Appraisal> employeeAppraisals;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Appraisal.class, mappedBy = "managerAppraising")
+    @Column(name = "appraised_by")
+    private List<Appraisal> managerAppraisals;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "manager")
+    @Column(name = "manager_reviews")
+    private List<ManagerReview> managerReviews;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "employeeReviewing")
+    @Column(name = "reviewed_by")
+    private List<ManagerReview> employeeReviews;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Module.class, mappedBy = "employee")
+    @Column(name = "modules")
+    private List<Module> modules;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
+    @Column(name = "goals")
+    private List<Goal> goals;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Team.class)
+    @JoinColumn(name = "team")
+    private Team team;
 
 
 
@@ -296,6 +322,54 @@ public class User {
     public void setJobRequests(List<JobRequest> jobRequests) {
         this.jobRequests = jobRequests;
     }
+    public List<Appraisal> getEmployeeAppraisals() {
+        return employeeAppraisals;
+    }
+
+    public void setEmployeeAppraisals(List<Appraisal> employeeAppraisals) {
+        this.employeeAppraisals = employeeAppraisals;
+    }
+
+    public List<Appraisal> getManagerAppraisals() {
+        return managerAppraisals;
+    }
+
+    public void setManagerAppraisals(List<Appraisal> managerAppraisals) {
+        this.managerAppraisals = managerAppraisals;
+    }
+
+    public List<ManagerReview> getManagerReviews() {
+        return managerReviews;
+    }
+
+    public void setManagerReviews(List<ManagerReview> managerReviews) {
+        this.managerReviews = managerReviews;
+    }
+
+    public List<ManagerReview> getEmployeeReviews() {
+        return employeeReviews;
+    }
+
+    public void setEmployeeReviews(List<ManagerReview> employeeReviews) {
+        this.employeeReviews = employeeReviews;
+    }
+
+    public List<Module> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
+    }
+
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(List<Goal> goals) {
+        this.goals = goals;
+    }
+
 
     public List<Payslip> getPayslips() {
         return payslips;

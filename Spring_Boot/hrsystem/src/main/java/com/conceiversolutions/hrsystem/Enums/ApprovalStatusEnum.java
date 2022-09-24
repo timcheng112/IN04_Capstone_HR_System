@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.Enums;
+package com.conceiversolutions.hrsystem.enums;
 
 public enum ApprovalStatusEnum {
     APPROVED,

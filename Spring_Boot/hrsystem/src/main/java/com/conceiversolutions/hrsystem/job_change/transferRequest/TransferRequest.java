@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.enums.ProgressionEnum;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "transfer_requests")

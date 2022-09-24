@@ -1,6 +1,6 @@
 package com.conceiversolutions.hrsystem.engagement.leave;
 
-import com.conceiversolutions.hrsystem.Enums.ApprovalStatusEnum;
+import com.conceiversolutions.hrsystem.enums.ApprovalStatusEnum;
 
 import javax.persistence.*;
 import java.time.LocalDate;

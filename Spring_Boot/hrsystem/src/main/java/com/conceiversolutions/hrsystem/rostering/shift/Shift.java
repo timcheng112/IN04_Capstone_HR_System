@@ -1,10 +1,12 @@
 package com.conceiversolutions.hrsystem.rostering.shift;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "shifts")
