@@ -2,6 +2,9 @@ package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+
+import com.conceiversolutions.hrsystem.pay.entities.Attendance;
+import com.conceiversolutions.hrsystem.pay.entities.Payslip;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
 import com.conceiversolutions.hrsystem.organization_structure.team.Team;
@@ -64,12 +67,20 @@ public class User {
     private List<Position> positions;
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
     private QualificationInformation qualificationInformation;
+
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicant")
     @Column(name = "applications")
     private List<JobApplication> applications;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobRequest.class, mappedBy = "requestedBy")
     @Column(name = "job_requests")
-    private List<JobApplication> jobRequests;
+    private List<JobRequest> jobRequests;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "payslipId")
+    private List<Payslip> payslips;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "attendanceId")
+    private List<Attendance> attendances;
+
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Appraisal.class, mappedBy = "employee")
     @Column(name = "employee_appraisals")
     private List<Appraisal> employeeAppraisals;
@@ -92,6 +103,8 @@ public class User {
     @JoinColumn(name = "team")
     private Team team;
 
+
+
 //    TODO add on other relationships to other classes
 //    TODO add hashing for password
 
@@ -99,7 +112,9 @@ public class User {
     }
 
     /* Main Constructor without the optional fields */
+
     public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee) {
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -119,6 +134,33 @@ public class User {
         this.qualificationInformation = null;
         this.applications = new ArrayList<>();
         this.jobRequests = new ArrayList<>();
+    }
+
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
+                LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed,
+                Boolean isEnabled, LocalDate dateJoined, Byte[] profilePic, List<Position> positions, QualificationInformation qualificationInformation,
+                List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.userRole = userRole;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.isBlackListed = isBlackListed;
+        this.isEnabled = isEnabled;
+        this.dateJoined = dateJoined;
+        this.profilePic = profilePic;
+        this.positions = positions;
+        this.qualificationInformation = qualificationInformation;
+        this.applications = applications;
+        this.jobRequests = jobRequests;
+        this.payslips = payslips;
+        this.attendances = attendances;
     }
 
     public Long getUserId() {
@@ -273,11 +315,11 @@ public class User {
         this.applications = applications;
     }
 
-    public List<JobApplication> getJobRequests() {
+    public List<JobRequest> getJobRequests() {
         return jobRequests;
     }
 
-    public void setJobRequests(List<JobApplication> jobRequests) {
+    public void setJobRequests(List<JobRequest> jobRequests) {
         this.jobRequests = jobRequests;
     }
     public List<Appraisal> getEmployeeAppraisals() {
@@ -326,6 +368,23 @@ public class User {
 
     public void setGoals(List<Goal> goals) {
         this.goals = goals;
+    }
+
+
+    public List<Payslip> getPayslips() {
+        return payslips;
+    }
+
+    public void setPayslips(List<Payslip> payslips) {
+        this.payslips = payslips;
+    }
+
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
     }
 
 
