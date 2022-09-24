@@ -27,6 +27,12 @@ public class Task {
         this.description = description;
     }
 
+    public Task(String name, String description, Category category) {
+        this.name = name;
+        this.description = description;
+        this.category = category;
+    }
+
     public Long getTaskId() {
         return taskId;
     }
@@ -49,6 +55,14 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override

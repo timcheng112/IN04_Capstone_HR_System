@@ -22,7 +22,7 @@ public class Category {
     private Long categoryId;
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Task.class, mappedBy = "taskId")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Task.class, mappedBy = "category")
     @Column(name = "task_id")
     private List<Task> tasks;
 
