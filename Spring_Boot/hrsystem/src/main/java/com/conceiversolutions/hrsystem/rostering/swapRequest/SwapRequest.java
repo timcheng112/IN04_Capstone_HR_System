@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.enums.ProgressionEnum;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "swap_requests")

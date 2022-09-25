@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "blocks")
@@ -22,7 +23,6 @@ public class Block {
     private String blockTitle;
     @Column(nullable = false, name = "reason")
     private String reason;
-    private User employee;
     @Column(nullable = false)
     private Boolean isPaid;
 
@@ -35,14 +35,14 @@ public class Block {
     public Block() {
     }
 
-    public Block(LocalDate startTime, LocalDate endTime, String blockTitle, String reason, User employee,
-            Boolean isPaid, Roster roster) {
+    public Block(LocalDate startTime, LocalDate endTime, String blockTitle, String reason, Boolean isPaid,
+            User employee, Roster roster) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.blockTitle = blockTitle;
         this.reason = reason;
-        this.employee = employee;
         this.isPaid = isPaid;
+        this.employee = employee;
         this.roster = roster;
     }
 
@@ -84,14 +84,6 @@ public class Block {
 
     public void setReason(String reason) {
         this.reason = reason;
-    }
-
-    public User getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(User employee) {
-        this.employee = employee;
     }
 
     public Boolean getIsPaid() {

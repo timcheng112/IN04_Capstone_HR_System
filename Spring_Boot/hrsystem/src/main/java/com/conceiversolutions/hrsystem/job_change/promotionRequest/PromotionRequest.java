@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.enums.ProgressionEnum;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "promotion_requests")
@@ -38,7 +39,7 @@ public class PromotionRequest {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
-    private User employee
+    private User employee;
 
     public PromotionRequest() {
     }
