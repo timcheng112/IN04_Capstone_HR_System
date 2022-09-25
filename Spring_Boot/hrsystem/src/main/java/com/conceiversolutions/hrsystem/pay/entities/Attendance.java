@@ -1,7 +1,7 @@
 package com.conceiversolutions.hrsystem.pay.entities;
 import javax.persistence.*;
 import java.time.LocalDate;
-import com.conceiversolutions.hrsystem.user.User;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 
 @Entity

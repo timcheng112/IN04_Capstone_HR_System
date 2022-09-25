@@ -1,6 +1,6 @@
 package com.conceiversolutions.hrsystem.pay.entities;
+import com.conceiversolutions.hrsystem.user.user.User;
 
-import com.conceiversolutions.hrsystem.user.User;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Blob;

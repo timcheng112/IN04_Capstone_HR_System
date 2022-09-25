@@ -4,6 +4,7 @@ import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 
 import com.conceiversolutions.hrsystem.pay.entities.Attendance;
+import com.conceiversolutions.hrsystem.pay.entities.PayInformation;
 import com.conceiversolutions.hrsystem.pay.entities.Payslip;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
@@ -103,6 +104,9 @@ public class User {
     @JoinColumn(name = "team")
     private Team team;
 
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = PayInformation.class, mappedBy = "user")
+    private PayInformation currentPayInformation;
+
 
 
 //    TODO add on other relationships to other classes
@@ -161,6 +165,38 @@ public class User {
         this.jobRequests = jobRequests;
         this.payslips = payslips;
         this.attendances = attendances;
+    }
+
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed, Boolean isEnabled, LocalDate dateJoined, Byte[] profilePic, List<Position> positions, QualificationInformation qualificationInformation, List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances, List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<ManagerReview> managerReviews, List<ManagerReview> employeeReviews, List<Module> modules, List<Goal> goals, Team team, PayInformation currentPayInformation) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.userRole = userRole;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.isBlackListed = isBlackListed;
+        this.isEnabled = isEnabled;
+        this.dateJoined = dateJoined;
+        this.profilePic = profilePic;
+        this.positions = positions;
+        this.qualificationInformation = qualificationInformation;
+        this.applications = applications;
+        this.jobRequests = jobRequests;
+        this.payslips = payslips;
+        this.attendances = attendances;
+        this.employeeAppraisals = employeeAppraisals;
+        this.managerAppraisals = managerAppraisals;
+        this.managerReviews = managerReviews;
+        this.employeeReviews = employeeReviews;
+        this.modules = modules;
+        this.goals = goals;
+        this.team = team;
+        this.currentPayInformation = currentPayInformation;
     }
 
     public Long getUserId() {

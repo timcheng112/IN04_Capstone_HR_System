@@ -1,4 +1,6 @@
 package com.conceiversolutions.hrsystem.pay.entities;
+import com.conceiversolutions.hrsystem.user.user.User;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,9 +30,9 @@ public class PayInformation {
     private String paymentMethod;
     @Column(name="self_help_group_contribution_type", nullable = false)
     private String selfHelpGroupContributionType;
-    @OneToOne(mappedBy = "payInformation")
-    //@JoinColumn(name = "payslip_id")
-    private Payslip payslip;
+//    @OneToOne(mappedBy = "payInformation")
+//    //@JoinColumn(name = "payslip_id")
+//    private Payslip payslip;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "allowanceId")
     //@JoinColumn(name="allowanceId") mappedBy ^ over here suffice for linkage
     private List<Allowance> allowance;
@@ -38,12 +40,44 @@ public class PayInformation {
     //@JoinColumn(name ="deductionId")
     private List<Deduction> deduction;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public PayInformation() {
         this.allowance = new ArrayList<>();
         this.deduction = new ArrayList<>();
     }
 
-    public PayInformation(Long payInformationId, String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, Payslip payslip, List<Allowance> allowance, List<Deduction> deduction) {
+//    public PayInformation(Long payInformationId, String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, Payslip payslip, List<Allowance> allowance, List<Deduction> deduction) {
+//        this.payInformationId = payInformationId;
+//        this.payType = payType;
+//        this.basicHourlyPay = basicHourlyPay;
+//        this.weekendHourlyPay = weekendHourlyPay;
+//        this.eventPhHourlyPay = eventPhHourlyPay;
+//        this.overtimeHourlyPay = overtimeHourlyPay;
+//        this.paymentMethod = paymentMethod;
+//        this.selfHelpGroupContributionType = selfHelpGroupContributionType;
+//        this.payslip = payslip;
+//        this.allowance = new ArrayList<>();
+//        this.deduction = new ArrayList<>();
+//    }
+//
+//    public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, Payslip payslip, List<Allowance> allowance, List<Deduction> deduction) {
+//        this.payType = payType;
+//        this.basicHourlyPay = basicHourlyPay;
+//        this.weekendHourlyPay = weekendHourlyPay;
+//        this.eventPhHourlyPay = eventPhHourlyPay;
+//        this.overtimeHourlyPay = overtimeHourlyPay;
+//        this.paymentMethod = paymentMethod;
+//        this.selfHelpGroupContributionType = selfHelpGroupContributionType;
+//        this.payslip = payslip;
+//        this.allowance = new ArrayList<>();
+//        this.deduction = new ArrayList<>();
+//    }
+
+
+    public PayInformation(Long payInformationId, String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, List<Allowance> allowance, List<Deduction> deduction) {
         this.payInformationId = payInformationId;
         this.payType = payType;
         this.basicHourlyPay = basicHourlyPay;
@@ -52,12 +86,11 @@ public class PayInformation {
         this.overtimeHourlyPay = overtimeHourlyPay;
         this.paymentMethod = paymentMethod;
         this.selfHelpGroupContributionType = selfHelpGroupContributionType;
-        this.payslip = payslip;
-        this.allowance = new ArrayList<>();
-        this.deduction = new ArrayList<>();
+        this.allowance = allowance;
+        this.deduction = deduction;
     }
 
-    public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, Payslip payslip, List<Allowance> allowance, List<Deduction> deduction) {
+    public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, List<Allowance> allowance, List<Deduction> deduction) {
         this.payType = payType;
         this.basicHourlyPay = basicHourlyPay;
         this.weekendHourlyPay = weekendHourlyPay;
@@ -65,12 +98,12 @@ public class PayInformation {
         this.overtimeHourlyPay = overtimeHourlyPay;
         this.paymentMethod = paymentMethod;
         this.selfHelpGroupContributionType = selfHelpGroupContributionType;
-        this.payslip = payslip;
-        this.allowance = new ArrayList<>();
-        this.deduction = new ArrayList<>();
+        this.allowance = allowance;
+        this.deduction = deduction;
     }
 
-
+    public PayInformation(String monthly, BigDecimal bigDecimal, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, String giro, String cpf, Object selfHelpGroupContributionType, Object allowance, Object deduction) {
+    }
 
     public Long getPayInformationId() {
         return payInformationId;
@@ -136,13 +169,13 @@ public class PayInformation {
         this.selfHelpGroupContributionType = selfHelpGroupContributionType;
     }
 
-    public Payslip getPayslip() {
-        return payslip;
-    }
-
-    public void setPayslip(Payslip payslip) {
-        this.payslip = payslip;
-    }
+//    public Payslip getPayslip() {
+//        return payslip;
+//    }
+//
+//    public void setPayslip(Payslip payslip) {
+//        this.payslip = payslip;
+//    }
 
     public List<Allowance> getAllowance() {
         return allowance;
@@ -171,7 +204,7 @@ public class PayInformation {
                 ", overtimeHourlyPay=" + overtimeHourlyPay +
                 ", paymentMethod='" + paymentMethod + '\'' +
                 ", selfHelpGroupContributionType='" + selfHelpGroupContributionType + '\'' +
-                ", payslip=" + payslip +
+//                ", payslip=" + payslip +
                 ", allowance=" + allowance +
                 ", deduction=" + deduction +
                 '}';
