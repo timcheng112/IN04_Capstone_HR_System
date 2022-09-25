@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
+import com.conceiversolutions.hrsystem.user.user.User;
+
 @Entity
 @Table(name = "goals")
 public class Goal {
@@ -18,16 +20,21 @@ public class Goal {
     private LocalDate lastModified;
     private LocalDate created;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "employee")
+    private User employee;
+
     public Goal() {
 
     }
 
-    public Goal(String type, String year, String achievements, LocalDate lastModified, LocalDate created) {
+    public Goal(String type, String year, String achievements, LocalDate lastModified, LocalDate created, User employee) {
         this.type = type;
         this.year = year;
         this.achievements = achievements;
         this.lastModified = lastModified;
         this.created = created;
+        this.employee = employee;
     }
 
     public Long getGoalId() {
@@ -78,6 +85,14 @@ public class Goal {
         this.created = created;
     }
 
+    public User getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(User employee) {
+        this.employee = employee;
+    }
+
     @Override
     public String toString() {
         return "Goal{" +
@@ -87,6 +102,7 @@ public class Goal {
                 ", achievements='" + achievements + '\'' +
                 ", lastModified=" + lastModified +
                 ", created=" + created +
+                ", employee=" + employee +
                 '}';
     }
 }

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
+import com.conceiversolutions.hrsystem.user.user.User;
+
 @Entity
 @Table(name = "reviews")
 public class ManagerReview {
@@ -11,7 +13,7 @@ public class ManagerReview {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long reviewId;
-    private String year;
+    private String reviewYear;
     @Column(name = "start_date")
     private LocalDate startDate;
     @Column(name = "end_date")
@@ -24,14 +26,19 @@ public class ManagerReview {
     private String promotionJustification;
     private Boolean submitted;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "employeeReviewing")
+    private User employeeReviewing;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "manager")
+    private User manager;
+
     public ManagerReview() {
 
     }
 
-    public ManagerReview(String year, LocalDate startDate, LocalDate endDate,
-                         String strengths, String weaknesses, Integer rating,
-                         Boolean promotion, String promotionJustification, Boolean submitted) {
-        this.year = year;
+    public ManagerReview(String reviewYear, LocalDate startDate, LocalDate endDate, String strengths, String weaknesses, Integer rating, Boolean promotion, String promotionJustification, Boolean submitted, User employeeReviewing, User manager) {
+        this.reviewYear = reviewYear;
         this.startDate = startDate;
         this.endDate = endDate;
         this.strengths = strengths;
@@ -40,6 +47,8 @@ public class ManagerReview {
         this.promotion = promotion;
         this.promotionJustification = promotionJustification;
         this.submitted = submitted;
+        this.employeeReviewing = employeeReviewing;
+        this.manager = manager;
     }
 
     public Long getReviewId() {
@@ -50,12 +59,12 @@ public class ManagerReview {
         this.reviewId = reviewId;
     }
 
-    public String getYear() {
-        return year;
+    public String getReviewYear() {
+        return reviewYear;
     }
 
-    public void setYear(String year) {
-        this.year = year;
+    public void setReviewYear(String reviewYear) {
+        this.reviewYear = reviewYear;
     }
 
     public LocalDate getStartDate() {
@@ -122,11 +131,27 @@ public class ManagerReview {
         this.submitted = submitted;
     }
 
+    public User getEmployeeReviewing() {
+        return employeeReviewing;
+    }
+
+    public void setEmployeeReviewing(User employeeReviewing) {
+        this.employeeReviewing = employeeReviewing;
+    }
+
+    public User getManager() {
+        return manager;
+    }
+
+    public void setManager(User manager) {
+        this.manager = manager;
+    }
+
     @Override
     public String toString() {
         return "ManagerReview{" +
                 "reviewId=" + reviewId +
-                ", year='" + year + '\'' +
+                ", reviewYear='" + reviewYear + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", strengths='" + strengths + '\'' +
@@ -135,6 +160,8 @@ public class ManagerReview {
                 ", promotion=" + promotion +
                 ", promotionJustification='" + promotionJustification + '\'' +
                 ", submitted=" + submitted +
+                ", employeeReviewing=" + employeeReviewing +
+                ", manager=" + manager +
                 '}';
     }
 }
