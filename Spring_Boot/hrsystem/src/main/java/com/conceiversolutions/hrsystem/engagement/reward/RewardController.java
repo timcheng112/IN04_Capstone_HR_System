@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="rewards")
+@RequestMapping(path="api/rewards")
 public class RewardController {
 
     private final RewardService rewardService;
