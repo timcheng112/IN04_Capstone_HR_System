@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class CategoryConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(CategoryRepository repository) {
+    CommandLineRunner categoryCommandLineRunner(CategoryRepository repository) {
         return args -> {
             Category dummyCategory = new Category();
 

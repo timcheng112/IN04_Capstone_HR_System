@@ -20,7 +20,7 @@ public class Recommendation {
     @Column(name = "relationship", nullable = false, length = 64)
     private String relationship;
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "qualification_information")
+    @JoinColumn(name = "info_id")
     private QualificationInformation qualificationInformation;
 
     public Recommendation() {

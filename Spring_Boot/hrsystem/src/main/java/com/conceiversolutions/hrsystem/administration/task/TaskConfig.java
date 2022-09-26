@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class TaskConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(TaskRepository repository) {
+    CommandLineRunner taskCommandLineRunner(TaskRepository repository) {
         return args -> {
             Task dummyTask = new Task();
 

@@ -1,6 +1,6 @@
 package com.conceiversolutions.hrsystem.engagement.leave;
 
-import com.conceiversolutions.hrsystem.enums.ApprovalStatusEnum;
+import com.conceiversolutions.hrsystem.enums.StatusEnum;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -26,7 +26,7 @@ public class Leave {
     private String approvalRemarks;
     @Column(name="approval_status")
     @Enumerated(EnumType.STRING)
-    private ApprovalStatusEnum approvalStatusEnum;
+    private StatusEnum statusEnum;
 
     //relationships
 
@@ -74,12 +74,12 @@ public class Leave {
         this.approvalRemarks = approvalRemarks;
     }
 
-    public ApprovalStatusEnum getApprovalStatus() {
-        return approvalStatusEnum;
+    public StatusEnum getStatusEnum() {
+        return statusEnum;
     }
 
-    public void setApprovalStatus(ApprovalStatusEnum approvalStatusEnum) {
-        this.approvalStatusEnum = approvalStatusEnum;
+    public void setStatusEnum(StatusEnum statusEnum) {
+        this.statusEnum = statusEnum;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Leave {
                 ", dates=" + dates +
                 ", remarks='" + remarks + '\'' +
                 ", approvalRemarks='" + approvalRemarks + '\'' +
-                ", approvalStatus=" + approvalStatusEnum +
+                ", approvalStatus=" + statusEnum +
                 '}';
     }
 }

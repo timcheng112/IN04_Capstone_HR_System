@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.conceiversolutions.hrsystem.organization_structure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 
