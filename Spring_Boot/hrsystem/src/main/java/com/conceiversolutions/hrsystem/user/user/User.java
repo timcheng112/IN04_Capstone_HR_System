@@ -145,8 +145,7 @@ public class User {
     }
 
     // this should be for making an employee's account
-    public User(Long userId, String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, LocalDate dateJoined, PayInformation currentPayInformation) {
-        this.userId = userId;
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, LocalDate dateJoined, PayInformation currentPayInformation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -160,6 +159,22 @@ public class User {
         this.isHrEmployee = isHrEmployee;
         this.dateJoined = dateJoined;
         this.currentPayInformation = currentPayInformation;
+        this.isBlackListed = false;
+        this.isEnabled = true;
+        this.profilePic = null;
+        this.positions = new ArrayList<>();
+        this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
