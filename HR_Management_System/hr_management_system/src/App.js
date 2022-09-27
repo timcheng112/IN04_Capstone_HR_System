@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LoginPage from "./pages/Login";
 import OnboardingHr from "./pages/OnboardingHr";
+import ViewTeam from "./pages/OrgChart/ViewTeam/viewTeam";
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
     //     </Switch>
     //   </div>
     // </BrowserRouter>
-    <OnboardingHr />
+    //<OnboardingHr />
+    <ViewTeam />
   );
 }
 
