@@ -28,10 +28,10 @@ public class JobRequest {
     private JobStatusEnum status;
 
     @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "requested_by")
+    @JoinColumn(name = "user_id")
     private User requestedBy;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobSkillset.class)
-    @JoinColumn(name = "job_skillset_id", referencedColumnName = "request_id")
+    @JoinColumn(name = "request_id")
     private List<JobSkillset> jobRequirements;
 
 //    TODO add department

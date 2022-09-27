@@ -39,7 +39,7 @@ public class QualificationInformation {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "qualificationInformation")
     private User user;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserSkillset.class)
-    @JoinColumn(name = "user_skillset_id", referencedColumnName = "info_id")
+    @JoinColumn(name = "info_id")
     private List<UserSkillset> userSkills;
 
     public QualificationInformation() {

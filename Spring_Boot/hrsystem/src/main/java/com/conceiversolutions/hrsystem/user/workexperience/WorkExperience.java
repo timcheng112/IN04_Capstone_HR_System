@@ -25,7 +25,7 @@ public class WorkExperience {
     @Column(name = "description", nullable = false)
     private String description;
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "qualification_information")
+    @JoinColumn(name = "info_id")
     private QualificationInformation qualificationInformation;
 
     public WorkExperience() {

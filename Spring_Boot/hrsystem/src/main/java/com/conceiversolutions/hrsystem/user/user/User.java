@@ -1,25 +1,26 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.*;
+import javax.swing.text.Position;
+
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
-
-import com.conceiversolutions.hrsystem.pay.entities.Attendance;
-import com.conceiversolutions.hrsystem.pay.entities.Payslip;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
-import com.conceiversolutions.hrsystem.organization_structure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+import com.conceiversolutions.hrsystem.pay.attendance.Attendance;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.goal.Goal;
 import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.training.module.Module;
-import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
-
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -38,7 +39,7 @@ public class User {
     private Integer phone;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "work_email", nullable = false)
+    @Column(name = "work_email", nullable = true)
     private String workEmail;
     @Column(name = "dob", nullable = false)
     private LocalDate dob;
@@ -64,7 +65,7 @@ public class User {
     @Column(name = "profile_pic", length = 1000, nullable = true)
     private Byte[] profilePic;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Position.class)
-    @JoinColumn(name = "position_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id")
     private List<Position> positions;
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
     private QualificationInformation qualificationInformation;
@@ -100,12 +101,13 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Team.class)
-    @JoinColumn(name = "team")
-    private Team team;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = TaskListItem.class, mappedBy = "user")
     @Column(name = "task_list_item_id")
     private List<TaskListItem> taskListItems;
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Team.class, mappedBy = "users")
+    private List<Team> teams;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = PayInformation.class, mappedBy = "user")
+    private PayInformation currentPayInformation;
 
     // TODO add on other relationships to other classes
     // TODO add hashing for password
@@ -113,11 +115,10 @@ public class User {
     public User() {
     }
 
-    /* Main Constructor without the optional fields */
-
+    // this should be for making a new applicant's account
     public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob,
-            GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee) {
-
+            GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+            PayInformation currentPayInformation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -137,6 +138,36 @@ public class User {
         this.qualificationInformation = null;
         this.applications = new ArrayList<>();
         this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.currentPayInformation = currentPayInformation;
+    }
+
+    // this should be for making an employee's account
+    public User(Long userId, String firstName, String lastName, String password, Integer phone, String email,
+            String workEmail, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer,
+            Boolean isHrEmployee, LocalDate dateJoined, PayInformation currentPayInformation) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.userRole = userRole;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.dateJoined = dateJoined;
+        this.currentPayInformation = currentPayInformation;
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
@@ -145,7 +176,7 @@ public class User {
             Boolean isEnabled, LocalDate dateJoined, Byte[] profilePic, List<Position> positions,
             QualificationInformation qualificationInformation,
             List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
-            List<Attendance> attendances) {
+            List<Attendance> attendances, PayInformation currentPayInformation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -167,6 +198,14 @@ public class User {
         this.jobRequests = jobRequests;
         this.payslips = payslips;
         this.attendances = attendances;
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.currentPayInformation = currentPayInformation;
     }
 
     public Long getUserId() {
@@ -391,6 +430,14 @@ public class User {
 
     public void setAttendances(List<Attendance> attendances) {
         this.attendances = attendances;
+    }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
     }
 
     @Override

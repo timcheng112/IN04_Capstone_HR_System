@@ -15,7 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.conceiversolutions.hrsystem.engagement.claimtype.ClaimType;
-import com.conceiversolutions.hrsystem.enums.ApprovalStatusEnum;
+import com.conceiversolutions.hrsystem.enums.StatusEnum;
 
 @Entity
 @Table
@@ -40,7 +40,7 @@ public class Claim {
     private Blob supportingDocs;
     @Column(name="approval_status")
     @Enumerated(EnumType.STRING)
-    private ApprovalStatusEnum approvalStatusEnum;
+    private StatusEnum statusEnum;
     @Column(name="approval_remarks")
     private String approvalRemarks;
 
@@ -54,12 +54,12 @@ public class Claim {
     public Claim() {
     }
 
-    public Claim(LocalDate claimDate, String description, String remarks, Blob supportingDocs, ApprovalStatusEnum approvalStatusEnum, String approvalRemarks) {
+    public Claim(LocalDate claimDate, String description, String remarks, Blob supportingDocs, StatusEnum statusEnum, String approvalRemarks) {
         this.claimDate = claimDate;
         this.description = description;
         this.remarks = remarks;
         this.supportingDocs = supportingDocs;
-        this.approvalStatusEnum = approvalStatusEnum;
+        this.statusEnum = statusEnum;
         this.approvalRemarks = approvalRemarks;
     }
 
@@ -112,12 +112,12 @@ public class Claim {
         this.supportingDocs = supportingDocs;
     }
 
-    public ApprovalStatusEnum getClaimStatus() {
-        return approvalStatusEnum;
+    public StatusEnum getClaimStatus() {
+        return statusEnum;
     }
 
-    public void setClaimStatus(ApprovalStatusEnum approvalStatusEnum) {
-        this.approvalStatusEnum = approvalStatusEnum;
+    public void setClaimStatus(StatusEnum statusEnum) {
+        this.statusEnum = statusEnum;
     }
 
     public String getApprovalRemarks() {
@@ -136,7 +136,7 @@ public class Claim {
                 ", description='" + description + '\'' +
                 ", remarks='" + remarks + '\'' +
                 ", supportingDocs=" + supportingDocs +
-                ", claimStatus=" + approvalStatusEnum +
+                ", claimStatus=" + statusEnum +
                 ", approvalRemarks='" + approvalRemarks + '\'' +
                 '}';
     }

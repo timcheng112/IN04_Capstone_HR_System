@@ -31,7 +31,7 @@ public class JobPosting {
     @OneToOne(targetEntity = JobRequest.class, fetch = FetchType.LAZY, optional = false)
     private JobRequest jobRequest;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobSkillset.class)
-    @JoinColumn(name = "job_skillset_id", referencedColumnName = "posting_id")
+    @JoinColumn(name = "posting_id")
     private List<JobSkillset> jobRequirements;
 
     public JobPosting() {
