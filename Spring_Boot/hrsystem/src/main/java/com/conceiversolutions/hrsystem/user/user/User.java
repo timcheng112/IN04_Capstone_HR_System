@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,38 +30,38 @@ public class User {
     private Long userId;
     @Column(name = "first_name", nullable = false, length = 64)
     private String firstName;
-    @Column(name = "last_name",nullable = false, length = 64)
+    @Column(name = "last_name", nullable = false, length = 64)
     private String lastName;
-    @Column(name = "password",nullable = false, length = 64)
+    @Column(name = "password", nullable = false, length = 64)
     private String password;
-    @Column(name = "phone",nullable = false, length = 16)
+    @Column(name = "phone", nullable = false, length = 16)
     private Integer phone;
-    @Column(name = "email",nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "work_email",nullable = false)
+    @Column(name = "work_email", nullable = false)
     private String workEmail;
-    @Column(name = "dob",nullable = false)
+    @Column(name = "dob", nullable = false)
     private LocalDate dob;
-    @Column(name = "gender",nullable = false)
+    @Column(name = "gender", nullable = false)
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 
-    @Column(name = "user_role",nullable = false)
+    @Column(name = "user_role", nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleEnum userRole;
-    @Column(name = "is_partTimer",nullable = false)
+    @Column(name = "is_partTimer", nullable = false)
     private Boolean isPartTimer;
-    @Column(name = "is_hrEmployee",nullable = false)
+    @Column(name = "is_hrEmployee", nullable = false)
     private Boolean isHrEmployee;
 
-    @Column(name = "is_blackListed",nullable = false)
+    @Column(name = "is_blackListed", nullable = false)
     private Boolean isBlackListed;
-    @Column(name = "is_enabled",nullable = false)
+    @Column(name = "is_enabled", nullable = false)
     private Boolean isEnabled;
-    @Column(name = "date_joined",nullable = false)
+    @Column(name = "date_joined", nullable = false)
     private LocalDate dateJoined;
 
-    @Column(name = "profile_pic",length = 1000, nullable = true)
+    @Column(name = "profile_pic", length = 1000, nullable = true)
     private Byte[] profilePic;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Position.class)
     @JoinColumn(name = "position_id", referencedColumnName = "user_id")
@@ -75,7 +76,7 @@ public class User {
     @Column(name = "job_requests")
     private List<JobRequest> jobRequests;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "payslipId")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "payslipId")
     private List<Payslip> payslips;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "attendanceId")
@@ -102,18 +103,20 @@ public class User {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Team.class)
     @JoinColumn(name = "team")
     private Team team;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = TaskListItem.class, mappedBy = "user")
+    @Column(name = "task_list_item_id")
+    private List<TaskListItem> taskListItems;
 
-
-
-//    TODO add on other relationships to other classes
-//    TODO add hashing for password
+    // TODO add on other relationships to other classes
+    // TODO add hashing for password
 
     public User() {
     }
 
     /* Main Constructor without the optional fields */
 
-    public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee) {
+    public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob,
+            GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee) {
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -137,9 +140,12 @@ public class User {
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
-                LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed,
-                Boolean isEnabled, LocalDate dateJoined, Byte[] profilePic, List<Position> positions, QualificationInformation qualificationInformation,
-                List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances) {
+            LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+            Boolean isBlackListed,
+            Boolean isEnabled, LocalDate dateJoined, Byte[] profilePic, List<Position> positions,
+            QualificationInformation qualificationInformation,
+            List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
+            List<Attendance> attendances) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -322,6 +328,7 @@ public class User {
     public void setJobRequests(List<JobRequest> jobRequests) {
         this.jobRequests = jobRequests;
     }
+
     public List<Appraisal> getEmployeeAppraisals() {
         return employeeAppraisals;
     }
@@ -370,7 +377,6 @@ public class User {
         this.goals = goals;
     }
 
-
     public List<Payslip> getPayslips() {
         return payslips;
     }
@@ -386,7 +392,6 @@ public class User {
     public void setAttendances(List<Attendance> attendances) {
         this.attendances = attendances;
     }
-
 
     @Override
     public String toString() {
