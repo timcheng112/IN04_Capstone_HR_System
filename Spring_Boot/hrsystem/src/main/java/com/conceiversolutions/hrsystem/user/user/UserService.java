@@ -36,23 +36,79 @@ public class UserService {
 //    }
 
     public List<User> getAllUsers(){
+        System.out.println("UserService.getAllUsers");
         return userRepository.findAll();
     }
 
     public User getUser(Long id){
-        Optional<User> p = userRepository.findById(id);
-        if(p.isPresent()){
-            return p.get();
-        }else{
-            throw new IllegalStateException("Payslip does not exist.");
+        System.out.println("UserService.getUser");
+        System.out.println("id = " + id);
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            System.out.println("User found");
+            System.out.println(user.get());
+            return user.get();
+        } else {
+            throw new IllegalStateException("User does not exist.");
         }
 
     }
 
-    //i need to come back to change this. no dummy user now. need to check if user alr has payslip. if so
-    //we will not be adding a new payslip as well.
+    public Long addNewUser(User user) {
+        System.out.println("UserService.addNewUser");
 
-    public void addNewUser(User user) {
-        userRepository.save(user);
+//        Check if email is already used
+        if (user.getUserRole().equals(RoleEnum.EMPLOYEE)) {
+            Optional<User> userByEmail = userRepository.findUserByEmail(user.getEmail());
+            if (userByEmail.isPresent()) {
+                System.out.println("Email already in use.");
+                throw new IllegalStateException("User's email is already in used");
+            }
+        } else {
+            Optional<User> employeeByWorkEmail1 = userRepository.findUserByEmail(user.getEmail());
+            Optional<User> employeeByWorkEmail2 = userRepository.findUserByWorkEmail(user.getWorkEmail());
+            if (employeeByWorkEmail1.isPresent() || employeeByWorkEmail2.isPresent()) {
+                System.out.println("Email(s) already in use.");
+                throw new IllegalStateException("User's emails are already in used");
+            }
+        }
+
+        User newUser = userRepository.saveAndFlush(user);
+        System.out.println("New user successfully created with User Id : " + newUser.getUserId());
+        return newUser.getUserId();
+    }
+
+    public Long loginUserJMP(String email, String password) {
+        System.out.println("UserService.loginUserJMP");
+        System.out.println("email = " + email + ", password = " + password);
+        Optional<User> user = userRepository.findUserByEmail(email);
+        if(user.isPresent()){
+            User userRecord = user.get();
+            if (userRecord.getPassword().equals(password)) {
+                System.out.println("User found and password matches. User Id is : " + userRecord.getUserId());
+                return userRecord.getUserId();
+            } else {
+                throw new IllegalStateException("User password does not match the record.");
+            }
+        } else {
+            throw new IllegalStateException("User does not exist.");
+        }
+    }
+
+    public Long loginUserHRMS(String workEmail, String password) {
+        System.out.println("UserService.loginUserHRMS");
+        System.out.println("workEmail = " + workEmail + ", password = " + password);
+        Optional<User> user = userRepository.findUserByEmail(workEmail);
+        if(user.isPresent()){
+            User userRecord = user.get();
+            if (userRecord.getPassword().equals(password)) {
+                System.out.println("Employee found and password matches. User Id is : " + userRecord.getUserId());
+                return userRecord.getUserId();
+            } else {
+                throw new IllegalStateException("User password does not match the record.");
+            }
+        } else {
+            throw new IllegalStateException("User does not exist.");
+        }
     }
 }

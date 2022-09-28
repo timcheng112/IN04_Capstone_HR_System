@@ -11,3 +11,5 @@ spring:
 
 server:
   port: 9191
+  error:
+    include-message: ALWAYS

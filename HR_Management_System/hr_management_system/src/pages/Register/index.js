@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { Switch } from "@headlessui/react";
 import { setUserSession } from "../../utils/Common";
 import api from "../../utils/api";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 export default function Register() {
   const [firstName, setFirstName] = useState("");
@@ -10,8 +15,13 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [workEmail, setWorkEmail] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
+  const [role, setRole] = useState("");
+  const [isPartTimer, setIsPartTime] = useState(false);
+  const [isHrEmployee, setIsHrEmployee] = useState(false);
+  const [dateJoined, setDateJoined] = useState("");
 
   const history = useHistory();
 
@@ -21,15 +31,26 @@ export default function Register() {
   };
 
   function register() {
-    console.log("PASSWORD = " + password);
-    console.log("CONFIRM PASSWORD = " + confirmPassword);
+    console.log('isPartTimer = ' + isPartTimer)
     if (password === confirmPassword) {
       api
-      .register(firstName, lastName, password, phone, email, dob, gender)
-      .then((response) => setUserSession(response.data))
-      .then(() => history.push("/landing"));
+        .register(
+          firstName,
+          lastName,
+          password,
+          phone,
+          email,
+          workEmail,
+          dob,
+          gender,
+          role,
+          isPartTimer,
+          isHrEmployee,
+          dateJoined
+        )
+        .then(() => alert('account creation successful'));
     } else {
-      alert("passwords do not match")
+      alert("passwords do not match");
     }
   }
 
@@ -44,17 +65,8 @@ export default function Register() {
               alt="Your Company"
             /> */}
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-              Register for Job Management Platform
+              Register a new employee
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
-              Already have an account?{" "}
-              <a
-                href="/"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Log in here
-              </a>
-            </p>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />
@@ -105,6 +117,22 @@ export default function Register() {
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="work-email-address" className="sr-only">
+                  Work email address
+                </label>
+                <input
+                  id="work-email-address"
+                  name="work-email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Work email address"
+                  value={workEmail}
+                  onChange={(e) => setWorkEmail(e.target.value)}
                 />
               </div>
               <div>
@@ -179,22 +207,104 @@ export default function Register() {
                   type="text"
                   name="gender"
                   id="gender"
-                  className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   placeholder="Gender"
                   value={gender}
                   onChange={(g) => setGender(g.target.value)}
                 />
               </div>
-            </div>
+              <div>
+                <label htmlFor="date-joined" className="sr-only">
+                  Date Joined
+                </label>
+                <input
+                  type="text"
+                  name="date-joined"
+                  id="date-joined"
+                  className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Date Joined"
+                  value={dateJoined}
+                  onChange={(d) => setDateJoined(d.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="role" className="sr-only">
+                  Role
+                </label>
+                <input
+                  type="text"
+                  name="role"
+                  id="role"
+                  className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Role"
+                  value={role}
+                  onChange={(r) => setRole(r.target.value)}
+                />
+              </div>
 
-            <div className="flex items-center justify-between">
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
+              <div>
+                <Switch.Group
+                  as="div"
+                  className="flex items-center justify-between mt-10"
                 >
-                  Forgot your password?
-                </a>
+                  <span className="flex flex-grow flex-col">
+                    <Switch.Label
+                      as="span"
+                      className="text-sm font-medium text-gray-900"
+                      passive
+                    >
+                      Part-time
+                    </Switch.Label>
+                  </span>
+                  <Switch
+                    checked={isPartTimer}
+                    onChange={setIsPartTime}
+                    className={classNames(
+                      isPartTimer ? "bg-indigo-600" : "bg-gray-200",
+                      "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    )}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={classNames(
+                        isPartTimer ? "translate-x-5" : "translate-x-0",
+                        "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                      )}
+                    />
+                  </Switch>
+                </Switch.Group>
+              </div>
+              <div>
+                <Switch.Group
+                  as="div"
+                  className="flex items-center justify-between mt-10"
+                >
+                  <span className="flex flex-grow flex-col">
+                    <Switch.Label
+                      as="span"
+                      className="text-sm font-medium text-gray-900"
+                      passive
+                    >
+                      HR
+                    </Switch.Label>
+                  </span>
+                  <Switch
+                    checked={isHrEmployee}
+                    onChange={setIsHrEmployee}
+                    className={classNames(
+                      isHrEmployee ? "bg-indigo-600" : "bg-gray-200",
+                      "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    )}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={classNames(
+                        isHrEmployee ? "translate-x-5" : "translate-x-0",
+                        "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                      )}
+                    />
+                  </Switch>
+                </Switch.Group>
               </div>
             </div>
 

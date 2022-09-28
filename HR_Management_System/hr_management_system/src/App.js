@@ -1,21 +1,24 @@
 import "./App.css";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Switch } from "react-router-dom";
 import LoginPage from "./pages/Login";
-import OnboardingHr from "./pages/OnboardingHr";
+import OnboardingHrPage from "./pages/OnboardingHr";
+import PublicRoute from "./utils/PublicRoute";
+import PrivateRoute from "./utils/PrivateRoute";
+import Timeout from "./pages/Timeout";
+import RegisterPage from "./pages/Register";
 
 function App() {
   return (
-    // <BrowserRouter>
-    //   {/* // <h1 className="text-3xl font-bold underline">
-    // //   Hello HR Management System!
-    // // </h1> */}
-    //   <div className="App">
-    //     <Switch>
-    //       <Route exact path="/" component={LoginPage} />
-    //     </Switch>
-    //   </div>
-    // </BrowserRouter>
-    <OnboardingHr />
+    <BrowserRouter>
+      <div className="App">
+        <Switch>
+          <PublicRoute exact path="/" component={LoginPage} />
+          <PublicRoute exact path="/register" component={RegisterPage} />
+          <PublicRoute exact path="/test" component={Timeout} />
+          <PrivateRoute exact path="/onboarding" component={OnboardingHrPage} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
