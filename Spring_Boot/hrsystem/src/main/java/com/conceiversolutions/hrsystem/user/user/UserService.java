@@ -151,7 +151,7 @@ public class UserService implements UserDetailsService {
         if(user.isPresent()){
             System.out.println("Employee exists");
             User userRecord = user.get();
-            if (userRecord.getPassword().equals(password)) {
+            if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {
                 System.out.println("Employee found and password matches. User Id is : " + userRecord.getUserId());
                 return userRecord.getUserId();
             } else {
@@ -165,30 +165,35 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findUserByEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
-    }
-
-    public UserDetails loadEmployeeByUsername(String workEmail) throws UsernameNotFoundException {
-        return userRepository.findUserByWorkEmail(workEmail)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, workEmail)));
+        String[] split = email.split("@");
+        if (split[1].startsWith("libro")) {
+            return userRepository.findUserByWorkEmail(email)
+                    .orElseThrow(() ->
+                            new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+        } else {
+            return userRepository.findUserByEmail(email)
+                    .orElseThrow(() ->
+                            new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+        }
     }
 
     @Transactional
     public String confirmToken(String token) {
+        System.out.println("UserService.confirmToken");
+        System.out.println("token = " + token);
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() -> new IllegalStateException("Token is not found"));
 
         if (confirmationToken.getConfirmedAt() != null) {
+            System.out.println("Email is already verified");
             throw new IllegalStateException("Email has already confirmed");
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
+            System.out.println("Token has already expired");
             throw new IllegalStateException("Token has already expired");
         }
 
@@ -198,6 +203,8 @@ public class UserService implements UserDetailsService {
     }
 
     public int enableUser(String email) {
+        System.out.println("UserService.enableUser");
+        System.out.println("email = " + email);
         return userRepository.enableUser(email);
     }
 
