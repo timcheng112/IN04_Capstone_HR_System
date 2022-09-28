@@ -5,8 +5,14 @@ import javax.persistence.*;
 import com.conceiversolutions.hrsystem.administration.task.Task;
 import com.conceiversolutions.hrsystem.user.user.User;
 
+@Entity
+@Table(name = "task_list_items")
 public class TaskListItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_list_item_id", nullable = false)
     private Long taskListItemId;
+    @Column(name = "is_done", nullable = false)
     private Boolean isDone;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
@@ -14,15 +20,15 @@ public class TaskListItem {
     private User user;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Task.class)
     @JoinColumn(name = "task_id")
-    private Task tasks;
+    private Task task;
 
     public TaskListItem() {
     }
 
-    public TaskListItem(Boolean isDone, User user, Task tasks) {
+    public TaskListItem(Boolean isDone, User user, Task task) {
         this.isDone = isDone;
         this.user = user;
-        this.tasks = tasks;
+        this.task = task;
     }
 
     public Long getTaskListItemId() {
@@ -49,18 +55,17 @@ public class TaskListItem {
         this.user = user;
     }
 
-    public Task getTasks() {
-        return tasks;
+    public Task getTask() {
+        return task;
     }
 
-    public void setTasks(Task tasks) {
-        this.tasks = tasks;
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     @Override
     public String toString() {
-        return "TaskListItem [isDone=" + isDone + ", taskListItemId=" + taskListItemId + ", tasks=" + tasks + ", user="
+        return "TaskListItem [isDone=" + isDone + ", task=" + task + ", taskListItemId=" + taskListItemId + ", user="
                 + user + "]";
     }
-
 }

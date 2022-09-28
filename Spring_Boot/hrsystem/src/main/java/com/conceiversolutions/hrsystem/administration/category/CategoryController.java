@@ -2,25 +2,44 @@ package com.conceiversolutions.hrsystem.administration.category;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.AllArgsConstructor;
+
 @RestController
-@RequestMapping(path = "category")
+@RequestMapping(path = "api/category")
+@AllArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Autowired
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
-
     @GetMapping
     public List<Category> getCategories() {
         return categoryService.getCategories();
+    }
+
+    @PostMapping
+    public void addNewCategory(@RequestBody Category category) {
+        categoryService.addNewCategory(category);
+    }
+
+    @DeleteMapping(path = "{categoryId}")
+    public void deleteCategory(@PathVariable("categoryId") Long categoryId) {
+        categoryService.deleteCategory(categoryId);
+    }
+
+    @PutMapping(path = "{categoryId}")
+    public void editTask(@PathVariable("categoryId") Long categoryId,
+            @RequestParam(name = "categoryName", required = false) String categoryName) {
+        categoryService.editCategory(categoryId, categoryName);
     }
 
 }
