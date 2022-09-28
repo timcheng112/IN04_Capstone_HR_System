@@ -2,8 +2,11 @@ package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
+import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
 import com.conceiversolutions.hrsystem.user.registration.EmailValidator;
 import com.conceiversolutions.hrsystem.user.registration.token.ConfirmationToken;
+import com.conceiversolutions.hrsystem.user.registration.token.ConfirmationTokenRepository;
 import com.conceiversolutions.hrsystem.user.registration.token.ConfirmationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,14 +29,18 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final ReactivationRequestRepository reactivationRequestRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, EmailValidator emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, EmailSender emailSender) {
+    public UserService(UserRepository userRepository, EmailValidator emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, ConfirmationTokenRepository confirmationTokenRepository, ReactivationRequestRepository reactivationRequestRepository) {
         this.userRepository = userRepository;
         this.emailValidator = emailValidator;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.confirmationTokenService = confirmationTokenService;
         this.emailSender = emailSender;
+        this.confirmationTokenRepository = confirmationTokenRepository;
+        this.reactivationRequestRepository = reactivationRequestRepository;
     }
 
 //    public List<User> getTestUsers() {
@@ -70,6 +77,32 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("User does not exist.");
         }
 
+    }
+
+    public User getUser(String email) {
+        System.out.println("UserService.getUser");
+        System.out.println("email = " + email);
+        Optional<User> user = userRepository.findUserByEmail(email);
+        if (user.isPresent()) {
+            System.out.println("User found");
+            System.out.println(user.get());
+            return user.get();
+        } else {
+            throw new IllegalStateException("User does not exist.");
+        }
+    }
+
+    public User getEmployee(String workEmail) {
+        System.out.println("UserService.getEmployee");
+        System.out.println("email = " + workEmail);
+        Optional<User> user = userRepository.findUserByWorkEmail(workEmail);
+        if (user.isPresent()) {
+            System.out.println("Employee found");
+            System.out.println(user.get());
+            return user.get();
+        } else {
+            throw new IllegalStateException("Employee does not exist.");
+        }
     }
 
     public Long addNewUser(User user) {
@@ -133,6 +166,13 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepository.findUserByEmail(email);
         if(user.isPresent()){
             User userRecord = user.get();
+
+            if (userRecord.getBlackListed() ) {
+                throw new IllegalStateException("User account is not accessible, please request to be reactivated");
+            } else if (!userRecord.isEnabled()) {
+                throw new IllegalStateException("User account is not activated yet, please check your email or request to be activated");
+            }
+
             if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {
                 System.out.println("User found and password matches. User Id is : " + userRecord.getUserId());
                 return userRecord.getUserId();
@@ -151,6 +191,11 @@ public class UserService implements UserDetailsService {
         if(user.isPresent()){
             System.out.println("Employee exists");
             User userRecord = user.get();
+
+            if (!userRecord.isEnabled()) {
+                throw new IllegalStateException("Employee account is not activated yet, please check your work email or request to be activated");
+            }
+
             if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {
                 System.out.println("Employee found and password matches. User Id is : " + userRecord.getUserId());
                 return userRecord.getUserId();
@@ -277,10 +322,172 @@ public class UserService implements UserDetailsService {
                 "</div></div>";
     }
 
+    private String buildResetPasswordEmail(String name) {
+        return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
+                "\n" +
+                "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
+                "\n" +
+                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                "    <tbody><tr>\n" +
+                "      <td width=\"100%\" height=\"53\" bgcolor=\"#0b0c0c\">\n" +
+                "        \n" +
+                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
+                "          <tbody><tr>\n" +
+                "            <td width=\"70\" bgcolor=\"#0b0c0c\" valign=\"middle\">\n" +
+                "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
+                "                  <tbody><tr>\n" +
+                "                    <td style=\"padding-left:10px\">\n" +
+                "                  \n" +
+                "                    </td>\n" +
+                "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n" +
+                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n" +
+                "                    </td>\n" +
+                "                  </tr>\n" +
+                "                </tbody></table>\n" +
+                "              </a>\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "        </tbody></table>\n" +
+                "        \n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table>\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n" +
+                "    <tbody><tr>\n" +
+                "      <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
+                "      <td>\n" +
+                "        \n" +
+                "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
+                "                  <tbody><tr>\n" +
+                "                    <td bgcolor=\"#1D70B8\" width=\"100%\" height=\"10\"></td>\n" +
+                "                  </tr>\n" +
+                "                </tbody></table>\n" +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\" height=\"10\"></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n" +
+                "    <tbody><tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
+                "        \n" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> You have successfully reset your account password. If you did not request for the password reset, please contact us at : </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <p>in04.capstoner.2022@gmail.com</p></blockquote>\n  <p>Grow with Libro</p>" +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
+                "\n" +
+                "</div></div>";
+    }
+
     public Boolean testEmailRegex(String email) {
         System.out.println("UserService.testEmailRegex");
         Boolean result = emailValidator.test(email);
         System.out.println("result is " + result);
         return result;
+    }
+
+    public String resetPasswordJMP(String email, String oldPassword, String newPassword) {
+        System.out.println("UserService.resetPasswordJMP");
+        System.out.println("email = " + email + ", oldPassword = " + oldPassword + ", newPassword = " + newPassword);
+
+        User user = getUser(email);
+        if (bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
+            user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        } else {
+            throw new IllegalStateException("User's current password does not match the record.");
+        }
+
+        userRepository.saveAndFlush(user);
+        System.out.println("User password has been changed");
+
+        emailSender.send(
+                email, buildResetPasswordEmail(user.getFirstName()));
+
+        return "Password successfully changed for " + email;
+    }
+
+    public String resetPasswordHRMS(String workEmail, String oldPassword, String newPassword) {
+        System.out.println("UserService.resetPasswordJMP");
+        System.out.println("workEmail = " + workEmail + ", oldPassword = " + oldPassword + ", newPassword = " + newPassword);
+
+        User employee = getEmployee(workEmail);
+        if (bCryptPasswordEncoder.matches(oldPassword, employee.getPassword())) {
+            employee.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        } else {
+            throw new IllegalStateException("User's current password does not match the record.");
+        }
+
+        userRepository.saveAndFlush(employee);
+        System.out.println("User password has been changed");
+
+        emailSender.send(
+                workEmail, buildResetPasswordEmail(employee.getFirstName()));
+
+        return "Password successfully changed for " + workEmail;
+    }
+
+    public String resendConfirmationEmail(String email, Integer platform) {
+        System.out.println("UserService.resendConfirmationEmail");
+        System.out.println("email = " + email + ", platform = " + platform);
+        if (platform.equals(1)) { // JMP
+            System.out.println("JMP Platform");
+            User tempUser = getUser(email);
+
+            System.out.println("User Id is : " + tempUser.getUserId());
+
+            ConfirmationToken ct = confirmationTokenService.findUnconfirmedTokenByUserId(tempUser.getUserId());
+            System.out.println("JMP Unconfirmed token identified");
+            System.out.println("Confirmation Token is : " + ct.toString());
+
+            ct.setExpiresAt(LocalDateTime.now().plusHours(1));
+            confirmationTokenRepository.saveAndFlush(ct);
+
+            String link = "http://localhost:9191/api/user/register/confirmToken?token=" + ct.getToken();
+            emailSender.send(
+                    tempUser.getEmail(), buildConfirmationEmail(tempUser.getFirstName(), link));
+        } else { // HRMS/ESS
+            System.out.println("HRMS/ESS Platform");
+            User tempUser = getEmployee(email);
+
+            System.out.println("User Id is : " + tempUser.getUserId());
+
+            ConfirmationToken ct = confirmationTokenService.findUnconfirmedTokenByUserId(tempUser.getUserId());
+            System.out.println("HRMS/ESS Unconfirmed token identified");
+            System.out.println("Confirmation Token is : " + ct.toString());
+
+            ct.setExpiresAt(LocalDateTime.now().plusHours(1));
+            confirmationTokenRepository.saveAndFlush(ct);
+
+            String link = "http://localhost:9191/api/user/register/confirmToken?token=" + ct.getToken();
+            emailSender.send(
+                    tempUser.getWorkEmail(), buildConfirmationEmail(tempUser.getFirstName(), link));
+        }
+        return "Confirmation email resent";
+    }
+
+    public String requestAccountReactivation(String email, String reason) {
+        User applicant = getUser(email);
+
+        if (!applicant.getBlackListed() && applicant.isEnabled()) {
+            throw new IllegalStateException("User account does not need reactivation");
+        } else {
+            ReactivationRequest req = new ReactivationRequest(LocalDateTime.now(), reason, applicant);
+            ReactivationRequest savedReq = reactivationRequestRepository.saveAndFlush(req);
+            applicant.setReactivationRequest(savedReq);
+            userRepository.saveAndFlush(applicant);
+            return "Reactivation Request has been recorded";
+        }
     }
 }

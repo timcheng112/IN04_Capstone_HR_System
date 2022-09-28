@@ -121,4 +121,69 @@ public class UserController {
     public Boolean testEmailRegex(@RequestParam("email") String email) {
         return userService.testEmailRegex(email);
     }
+
+    @GetMapping(path = "/login/checkEmailJMP")
+    public Long checkEmailJMP(@RequestParam("email") String email) {
+        try {
+            User user = userService.getUser(email);
+
+            if (user.getUserRole().equals(RoleEnum.APPLICANT)) {
+                System.out.println("User found and User role is Applicant");
+                return user.getUserId();
+            } else {
+                System.out.println("User role is not Applicant");
+                throw new IllegalStateException("Email is not linked to a Job Applicant account");
+            }
+        } catch (Exception ex) {
+            System.out.println("User not found or User role is not APPLICANT");
+            throw ex;
+        }
+    }
+
+    @PutMapping(path = "/login/resetPasswordJMP")
+    public String resetPasswordJMP(@RequestParam("email") String email,
+                                   @RequestParam("oldPassword") String oldPassword,
+                                   @RequestParam("newPassword") String newPassword) {
+        return userService.resetPasswordJMP(email, oldPassword, newPassword);
+    }
+
+    @GetMapping(path = "/login/checkEmailHRMS")
+    public Long checkEmailHRMS(@RequestParam("workEmail") String workEmail) {
+        try {
+            User employee = userService.getEmployee(workEmail);
+            if (employee.getUserRole().equals(RoleEnum.APPLICANT)) {
+                System.out.println("User role is an Applicant");
+                throw new IllegalStateException("Email is not linked to an Employee account");
+            } else {
+                System.out.println("Employee found and User role is " + employee.getUserRole().name());
+                return employee.getUserId();
+            }
+        } catch (Exception ex) {
+            System.out.println("Employee not found");
+            throw ex;
+        }
+    }
+
+    @PutMapping(path = "/login/resetPasswordHRMS")
+    public String resetPasswordHRMS(@RequestParam("workEmail") String workEmail,
+                                   @RequestParam("oldPassword") String oldPassword,
+                                   @RequestParam("newPassword") String newPassword) {
+        return userService.resetPasswordHRMS(workEmail, oldPassword, newPassword);
+    }
+
+    @GetMapping(path = "/register/resendConfirmationEmailJMP")
+    public String resendConfirmationEmailJMP(@RequestParam("email") String email) {
+        return userService.resendConfirmationEmail(email,1);
+    }
+
+    @GetMapping(path = "/register/resendConfirmationEmailHRMS")
+    public String resendConfirmationEmailHRMS(@RequestParam("email") String email) {
+        return userService.resendConfirmationEmail(email,2);
+    }
+
+    @PostMapping(path = "/login/requestAccountReactivation")
+    public String requestAccountReactivation(@RequestParam("email") String email,
+                                             @RequestParam("reason") String reason) {
+        return userService.requestAccountReactivation(email, reason);
+    }
 }

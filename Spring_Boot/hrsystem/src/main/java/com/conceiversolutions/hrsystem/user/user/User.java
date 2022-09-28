@@ -15,6 +15,7 @@ import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
+import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -111,6 +112,9 @@ public class User implements UserDetails {
     private List<Team> teams;
     @OneToOne(fetch = FetchType.LAZY, targetEntity = PayInformation.class, mappedBy = "user")
     private PayInformation currentPayInformation;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = ReactivationRequest.class, optional = true)
+    @JoinColumn(name = "reactivation_request_id")
+    private ReactivationRequest reactivationRequest;
 
 //    TODO add on other relationships to other classes
 
@@ -495,5 +499,21 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.isEnabled;
+    }
+
+    public PayInformation getCurrentPayInformation() {
+        return currentPayInformation;
+    }
+
+    public void setCurrentPayInformation(PayInformation currentPayInformation) {
+        this.currentPayInformation = currentPayInformation;
+    }
+
+    public ReactivationRequest getReactivationRequest() {
+        return reactivationRequest;
+    }
+
+    public void setReactivationRequest(ReactivationRequest reactivationRequest) {
+        this.reactivationRequest = reactivationRequest;
     }
 }
