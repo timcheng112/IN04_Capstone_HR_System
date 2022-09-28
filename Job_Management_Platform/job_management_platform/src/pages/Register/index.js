@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { setUserSession } from "../../utils/Common";
 import api from "../../utils/api";
+import logo from "../../assets/libro-transparent-logo.png";
 
 export default function Register() {
   const [firstName, setFirstName] = useState("");
@@ -10,7 +11,9 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [dob, setDob] = useState("");
+  const [dobDay, setDobDay] = useState("");
+  const [dobMonth, setDobMonth] = useState("");
+  const [dobYear, setDobYear] = useState("");
   const [gender, setGender] = useState("");
 
   const history = useHistory();
@@ -21,15 +24,15 @@ export default function Register() {
   };
 
   function register() {
-    console.log("PASSWORD = " + password);
-    console.log("CONFIRM PASSWORD = " + confirmPassword);
+    var dob = dobYear + "-" + dobMonth + "-" + dobDay
+    console.log("dob = " + dob);
     if (password === confirmPassword) {
       api
-      .register(firstName, lastName, password, phone, email, dob, gender)
-      .then((response) => setUserSession(response.data))
-      .then(() => history.push("/landing"));
+        .register(firstName, lastName, password, phone, email, dob, gender)
+        .then((response) => setUserSession(response.data))
+        .then(() => history.push("/landing"));
     } else {
-      alert("passwords do not match")
+      alert("passwords do not match");
     }
   }
 
@@ -38,11 +41,7 @@ export default function Register() {
       <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
           <div>
-            {/* <img
-              className="mx-auto h-12 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            /> */}
+            <img className="mx-auto h-12 w-auto" src={logo} alt="Libro" />
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               Register for Job Management Platform
             </h2>
@@ -60,7 +59,10 @@ export default function Register() {
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="-space-y-px rounded-md shadow-sm">
               <div>
-                <label htmlFor="first-name" className="sr-only">
+                <label
+                  htmlFor="first-name"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   First name
                 </label>
                 <input
@@ -69,14 +71,17 @@ export default function Register() {
                   type="text"
                   autoComplete="text"
                   required
-                  className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="First Name"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Xiao"
                   value={firstName}
                   onChange={(f) => setFirstName(f.target.value)}
                 />
               </div>
               <div>
-                <label htmlFor="last-name" className="sr-only">
+                <label
+                  htmlFor="last-name"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
                   Last name
                 </label>
                 <input
@@ -85,14 +90,17 @@ export default function Register() {
                   type="text"
                   autoComplete="text"
                   required
-                  className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Last Name"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Ming"
                   value={lastName}
                   onChange={(l) => setLastName(l.target.value)}
                 />
               </div>
               <div>
-                <label htmlFor="email-address" className="sr-only">
+                <label
+                  htmlFor="email-address"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
                   Email address
                 </label>
                 <input
@@ -101,14 +109,17 @@ export default function Register() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Email address"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="xiaoming@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div>
-                <label htmlFor="password" className="sr-only">
+                <label
+                  htmlFor="password"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
                   Password
                 </label>
                 <input
@@ -117,14 +128,17 @@ export default function Register() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   placeholder="Password"
                   value={password}
                   onChange={(p) => setPassword(p.target.value)}
                 />
               </div>
               <div>
-                <label htmlFor="confirm-password" className="sr-only">
+                <label
+                  htmlFor="confirm-password"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
                   Confirm password
                 </label>
                 <input
@@ -133,14 +147,17 @@ export default function Register() {
                   type="password"
                   autoComplete="confirm-password"
                   required
-                  className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   placeholder="Confirm password"
                   value={confirmPassword}
                   onChange={(p) => setConfirmPassword(p.target.value)}
                 />
               </div>
               <div>
-                <label htmlFor="phone" className="sr-only">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
                   Phone
                 </label>
                 <input
@@ -149,38 +166,70 @@ export default function Register() {
                   type="text"
                   autoComplete="phone"
                   required
-                  className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Phone"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="91234567"
                   value={phone}
                   onChange={(p) => setPhone(p.target.value)}
                 />
               </div>
-              <div>
-                <label htmlFor="birthday" className="sr-only">
+              <div className="grid grid-cols-1">
+                <label
+                  htmlFor="birthday"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
                   Birthday
                 </label>
-                <input
-                  id="birthday"
-                  name="birthday"
-                  type="text"
-                  autoComplete="birthday"
-                  required
-                  className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Birthday"
-                  value={dob}
-                  onChange={(d) => setDob(d.target.value)}
-                />
+                <div className="flex flex-direction:row">
+                  <input
+                    id="birthday-day"
+                    name="birthday-day"
+                    type="text"
+                    autoComplete="birthday-day"
+                    required
+                    className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm mr-5"
+                    placeholder="DD"
+                    value={dobDay}
+                    onChange={(d) => setDobDay(d.target.value)}
+                  />
+
+                  <input
+                    id="birthday-month"
+                    name="birthday-month"
+                    type="text"
+                    autoComplete="birthday-month"
+                    required
+                    className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm mr-5"
+                    placeholder="MM"
+                    value={dobMonth}
+                    onChange={(d) => setDobMonth(d.target.value)}
+                  />
+
+                  <input
+                    id="birthday-year"
+                    name="birthday-year"
+                    type="text"
+                    autoComplete="birthday-year"
+                    required
+                    className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    placeholder="YYYY"
+                    value={dobYear}
+                    onChange={(d) => setDobYear(d.target.value)}
+                  />
+                </div>
               </div>
               <div>
-                <label htmlFor="gender" className="sr-only">
+                <label
+                  htmlFor="gender"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
                   Gender
                 </label>
                 <input
                   type="text"
                   name="gender"
                   id="gender"
-                  className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Gender"
+                  className="relative block w-full appearance-none rounded-md rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="MALE"
                   value={gender}
                   onChange={(g) => setGender(g.target.value)}
                 />
@@ -190,7 +239,7 @@ export default function Register() {
             <div className="flex items-center justify-between">
               <div className="text-sm">
                 <a
-                  href="#"
+                  href="/"
                   className="font-medium text-indigo-600 hover:text-indigo-500"
                 >
                   Forgot your password?
