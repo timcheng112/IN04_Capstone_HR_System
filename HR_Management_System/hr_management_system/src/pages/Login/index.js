@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { getUser, setUserSession } from "../../utils/Common";
 import logo from "../../assets/libro-transparent-logo.png";
 import api from "../../utils/api";
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,18 +19,30 @@ export default function Login() {
     api
       .login(getWorkEmail(), password)
       .then((response) => {
-        //console.log(response.data)
-        setUserSession(response.data);
+        if (response.status !== 200) {
+          console.log(response.data)
+        } else {
+          setUserSession(response.data);
+        }
       })
       .then(() => {
         history.push("/onboarding");
+      })
+      .catch((error) => {
+        var message = error.request.response
+        if (message.includes("account is not activated yet")) {
+          sessionStorage.setItem("userEmail", email)
+          history.push("/verify")
+        } else if (message.include("wrong password")) {
+          //TODO: catch and show login error
+        }
       });
   }
 
   function forgot() {
-    history.push('/forgot')
+    history.push("/forgot");
     //api call
-    console.log(getWorkEmail())
+    console.log(getWorkEmail());
   }
 
   function getWorkEmail() {

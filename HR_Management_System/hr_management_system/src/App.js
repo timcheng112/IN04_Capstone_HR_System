@@ -18,6 +18,7 @@ function App() {
           <PublicRoute exact path="/register" component={RegisterPage} />
           <PublicRoute exact path="/forgot" component={ForgotPasswordPage} />
           <PublicRoute exact path="/verify" component={VerificationPage} />
+          <PublicRoute exact path="/verify/:token" component={VerificationPage} />
           <PublicRoute exact path="/test" component={Timeout} />
           <PrivateRoute exact path="/onboarding" component={OnboardingHrPage} />
         </Switch>

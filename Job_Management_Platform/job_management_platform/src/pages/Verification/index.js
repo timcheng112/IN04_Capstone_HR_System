@@ -68,23 +68,21 @@ const social = [
 ];
 
 export default function Verification() {
-  const [resent, setResent] = useState(false); 
+  const [resent, setResent] = useState(false);
   const [verified, setVerified] = useState(false);
 
   useEffect(() => {
     var token = window.location.href.substring(29);
     console.log(token);
-    if (token) {
+    if (token.length > 0) {
       setVerified(true);
       api.confirmToken(token).then((response) => console.log(response.data));
     }
   }, [verified]);
 
   function resendVerification() {
-    var email = localStorage.getItem("email");
-    console.log(email);
     api
-      .resendConfirmation(email)
+      .resendConfirmation(sessionStorage.getItem("email"))
       .then((response) => console.log(response.data));
   }
 

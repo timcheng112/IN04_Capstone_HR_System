@@ -102,11 +102,11 @@ public class UserController {
 
     @GetMapping(path = "/login/loginHRMS")
     public Long loginHRMS(@RequestParam("workEmail") String workEmail,
-                         @RequestParam("password") String password) {
+            @RequestParam("password") String password) throws Exception {
         return userService.loginUserHRMS(workEmail, password);
     }
 
-    //taking client request and map it into our payslip
+    // taking client request and map it into our payslip
     @PostMapping
     public void addNewPayslip(@RequestBody User user) {
         userService.addNewUser(user);

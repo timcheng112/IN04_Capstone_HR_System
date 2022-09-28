@@ -188,7 +188,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Long loginUserHRMS(String workEmail, String password) {
+    public Long loginUserHRMS(String workEmail, String password) throws Exception {
         System.out.println("UserService.loginUserHRMS");
         System.out.println("workEmail = " + workEmail + ", password = " + password);
         Optional<User> user = userRepository.findUserByWorkEmail(workEmail);
@@ -197,7 +197,8 @@ public class UserService implements UserDetailsService {
             User userRecord = user.get();
 
             if (!userRecord.isEnabled()) {
-                throw new IllegalStateException("Employee account is not activated yet, please check your work email or request to be activated");
+                System.out.println("Employee account is not activated yet, please check your work email or request to be activated");
+                throw new Exception("Employee account is not activated yet, please check your work email or request to be activated");
             }
 
             if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {

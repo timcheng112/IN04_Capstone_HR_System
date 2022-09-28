@@ -9,6 +9,14 @@ const api = {
           `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&password=${password}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}`
         );
     },
+    confirmToken(token) {
+        return axios.get(`http://localhost:9191/api/user/register/confirmToken?token=${token}`)
+    },
+    resendConfirmation(email) {
+        return axios.get(
+            `http://localhost:9191/api/user/register/resendConfirmationEmailHRMS?email=${email}`
+        )
+    }
 }
 
 export default api;
