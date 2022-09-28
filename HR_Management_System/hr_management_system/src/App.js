@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LoginPage from "./pages/Login";
 import OnboardingHr from "./pages/OnboardingHr";
 import ViewTeam from "./pages/OrgChart/ViewTeam/viewTeam";
+import ViewDepartment from "./pages/OrgChart/ViewDepartment/viewDepartment";
+import ViewOrganisation from "./pages/OrgChart/ViewOrganisation/viewOrganisation";
 
 function App() {
   return (
@@ -16,8 +18,10 @@ function App() {
     //     </Switch>
     //   </div>
     // </BrowserRouter>
-    //<OnboardingHr />
-    <ViewTeam />
+//    <OnboardingHr />
+//    <ViewTeam/>
+//    <ViewDepartment />
+    <ViewOrganisation />
   );
 }
 
