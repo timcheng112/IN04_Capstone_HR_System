@@ -9,7 +9,17 @@ const api = {
   login(email, password) {
     return axios.get(
       `http://localhost:9191/api/user/login/loginJMP?email=${email}&password=${password}`
-    )
+    );
+  },
+  confirmToken(token) {
+    return axios.get(
+      `http://localhost:9191/api/user/register/confirmToken?token=${token}`
+    );
+  },
+  resendConfirmation(email) {
+    return axios.get(
+      `http://localhost:9191/api/user/register/resendConfirmationEmailJMP?email=${email}`
+    );
   },
 };
 

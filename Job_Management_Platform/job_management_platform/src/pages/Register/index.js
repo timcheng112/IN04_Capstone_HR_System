@@ -24,13 +24,15 @@ export default function Register() {
   };
 
   function register() {
-    var dob = dobYear + "-" + dobMonth + "-" + dobDay
+    var dob = dobYear + "-" + dobMonth + "-" + dobDay;
     console.log("dob = " + dob);
     if (password === confirmPassword) {
       api
         .register(firstName, lastName, password, phone, email, dob, gender)
-        .then((response) => setUserSession(response.data))
-        .then(() => history.push("/landing"));
+        .then(() => {
+          localStorage.setItem("email", email);
+        })
+        .then(() => history.push("/verify"));
     } else {
       alert("passwords do not match");
     }

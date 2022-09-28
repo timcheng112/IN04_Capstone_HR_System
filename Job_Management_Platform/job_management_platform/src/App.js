@@ -6,6 +6,7 @@ import TimeoutPage from "./pages/Timeout";
 import { BrowserRouter, Switch } from "react-router-dom";
 import PublicRoute from "./utils/PublicRoute";
 import PrivateRoute from "./utils/PrivateRoute";
+import Verification from "./pages/Verification";
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
         <Switch>
           <PublicRoute exact path="/" component={LoginPage} />
           <PublicRoute exact path="/register" component={RegisterPage} />
+          <PublicRoute exact path="/verify/:token" component={Verification} />
+          <PublicRoute exact path="/verify" component={Verification} />
           <PublicRoute exact path="/timeout" component={TimeoutPage} />
           <PrivateRoute exact path="/landing" component={LandingPage} />
         </Switch>

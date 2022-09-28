@@ -43,33 +43,33 @@ public class UserService implements UserDetailsService {
         this.reactivationRequestRepository = reactivationRequestRepository;
     }
 
-//    public List<User> getTestUsers() {
-//        return List.of(
-//                new User("Janice",
-//                        "Sim",
-//                        "password",
-//                        93823503,
-//                        "janicesim@gmail.com",
-//                        LocalDate.of(2000,2,28),
-//                        GenderEnum.FEMALE,
-//                        RoleEnum.APPLICANT,
-//                        false,
-//                        false,
-//                        null
-//                )
-//        );
-//    }
+    // public List<User> getTestUsers() {
+    // return List.of(
+    // new User("Janice",
+    // "Sim",
+    // "password",
+    // 93823503,
+    // "janicesim@gmail.com",
+    // LocalDate.of(2000,2,28),
+    // GenderEnum.FEMALE,
+    // RoleEnum.APPLICANT,
+    // false,
+    // false,
+    // null
+    // )
+    // );
+    // }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         System.out.println("UserService.getAllUsers");
         return userRepository.findAll();
     }
 
-    public User getUser(Long id){
+    public User getUser(Long id) {
         System.out.println("UserService.getUser");
         System.out.println("id = " + id);
         Optional<User> user = userRepository.findById(id);
-        if(user.isPresent()){
+        if (user.isPresent()) {
             System.out.println("User found");
             System.out.println(user.get());
             return user.get();
@@ -118,19 +118,23 @@ public class UserService implements UserDetailsService {
             Optional<User> userByEmail = userRepository.findUserByEmail(user.getEmail());
             if (userByEmail.isPresent()) {
                 System.out.println("Email already in use.");
-                throw new IllegalStateException("User's email is already in used");
+                throw new IllegalStateException("User's email is already in use");
             }
         } else {
-            boolean isValidWorkEmail = emailValidator.test(user.getWorkEmail());
+            System.out.println("work email " + user.getWorkEmail());
+            String workEmailToCheck = user.getWorkEmail();
+            boolean isValidWorkEmail = emailValidator.test(workEmailToCheck);
             if(!isValidWorkEmail) {
                 throw new IllegalStateException("Work email address is not valid");
             }
             Optional<User> employeeByWorkEmail1 = userRepository.findUserByEmail(user.getEmail());
+
             Optional<User> employeeByWorkEmail2 = userRepository.findUserByWorkEmail(user.getWorkEmail());
             if (employeeByWorkEmail1.isPresent() || employeeByWorkEmail2.isPresent()) {
                 System.out.println("Email(s) already in use.");
-                throw new IllegalStateException("User's emails are already in used");
+                throw new IllegalStateException("User's emails are already in use");
             }
+
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
@@ -147,7 +151,7 @@ public class UserService implements UserDetailsService {
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        String link = "http://localhost:9191/api/user/register/confirmToken?token=" + token;
+        String link = "http://localhost:3000/verify/" + token;
         if (newUser.getUserRole().equals(RoleEnum.APPLICANT)) {
             emailSender.send(
                     newUser.getEmail(), buildConfirmationEmail(newUser.getFirstName(), link));
@@ -164,7 +168,7 @@ public class UserService implements UserDetailsService {
         System.out.println("UserService.loginUserJMP");
         System.out.println("email = " + email + ", password = " + password);
         Optional<User> user = userRepository.findUserByEmail(email);
-        if(user.isPresent()){
+        if (user.isPresent()) {
             User userRecord = user.get();
 
             if (userRecord.getBlackListed() ) {
@@ -454,7 +458,7 @@ public class UserService implements UserDetailsService {
             ct.setExpiresAt(LocalDateTime.now().plusHours(1));
             confirmationTokenRepository.saveAndFlush(ct);
 
-            String link = "http://localhost:9191/api/user/register/confirmToken?token=" + ct.getToken();
+            String link = "http://localhost:3000/verify/" + ct.getToken();
             emailSender.send(
                     tempUser.getEmail(), buildConfirmationEmail(tempUser.getFirstName(), link));
         } else { // HRMS/ESS
@@ -470,7 +474,7 @@ public class UserService implements UserDetailsService {
             ct.setExpiresAt(LocalDateTime.now().plusHours(1));
             confirmationTokenRepository.saveAndFlush(ct);
 
-            String link = "http://localhost:9191/api/user/register/confirmToken?token=" + ct.getToken();
+            String link = "http://localhost:3000/verify/" + ct.getToken();
             emailSender.send(
                     tempUser.getWorkEmail(), buildConfirmationEmail(tempUser.getFirstName(), link));
         }

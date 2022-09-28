@@ -8,7 +8,6 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
-  const [error, setError] = useState(null);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -16,27 +15,32 @@ export default function Login() {
   };
 
   function login() {
-    var workEmail = email + "@libro.com"
     api
-      .login(workEmail, password)
+      .login(getWorkEmail(), password)
       .then((response) => {
         //console.log(response.data)
-        setUserSession(response.data)
+        setUserSession(response.data);
       })
       .then(() => {
-        history.push("/onboarding")
-      })
+        history.push("/onboarding");
+      });
+  }
+
+  function forgot() {
+    history.push('/forgot')
+    //api call
+    console.log(getWorkEmail())
+  }
+
+  function getWorkEmail() {
+    return email + "@libro.com";
   }
 
   return (
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <img
-            className="mx-auto h-12 w-auto"
-            src={logo}
-            alt="Libro"
-          />
+          <img className="mx-auto h-12 w-auto" src={logo} alt="Libro" />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Sign in
           </h2>
@@ -105,12 +109,19 @@ export default function Login() {
                 </div> */}
 
                 <div className="text-sm">
-                  <a
-                    href="/"
+                  {/* <a
+                    href="/forgot"
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot your password?
-                  </a>
+                  </a> */}
+                  <button
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-3 py-2 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200"
+                    onClick={forgot}
+                  >
+                    Forgot your password?
+                  </button>
                 </div>
               </div>
 
@@ -118,7 +129,6 @@ export default function Login() {
                 <button
                   type="submit"
                   className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={() => {}}
                 >
                   Sign in
                 </button>
