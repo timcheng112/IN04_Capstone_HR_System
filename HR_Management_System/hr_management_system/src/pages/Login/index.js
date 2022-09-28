@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { getUser, setUserSession } from "../../utils/Common";
-//import logo from "../../assets/logo.png";
+import logo from "../../assets/libro-transparent-logo.png";
 import api from "../../utils/api";
 
 export default function Login() {
@@ -16,8 +16,9 @@ export default function Login() {
   };
 
   function login() {
+    var workEmail = email + "@libro.com"
     api
-      .login(email, password)
+      .login(workEmail, password)
       .then((response) => {
         //console.log(response.data)
         setUserSession(response.data)
@@ -31,11 +32,11 @@ export default function Login() {
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          {/* <img
+          <img
             className="mx-auto h-12 w-auto"
             src={logo}
             alt="Libro"
-          /> */}
+          />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Sign in
           </h2>
