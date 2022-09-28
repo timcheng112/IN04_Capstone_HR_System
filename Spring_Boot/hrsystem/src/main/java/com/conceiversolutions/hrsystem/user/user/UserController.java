@@ -45,7 +45,7 @@ public class UserController {
 //
 //    }
 
-    @PostMapping(path = "/registerNewAccountJMP")
+    @PostMapping(path = "/register/registerNewAccountJMP")
         public Long registerNewAccountJMP(@RequestParam("firstName") String firstName,
                             @RequestParam("lastName") String lastName,
                             @RequestParam("password") String password,
@@ -67,13 +67,13 @@ public class UserController {
         }
     }
 
-    @GetMapping(path = "/loginJMP")
+    @GetMapping(path = "/login/loginJMP")
     public Long loginJMP(@RequestParam("email") String email,
                          @RequestParam("password") String password) {
         return userService.loginUserJMP(email, password);
     }
 
-    @PostMapping(path = "/registerNewAccountHRMS")
+    @PostMapping(path = "/register/registerNewAccountHRMS")
     public Long registerNewAccountHRMS(@RequestParam("firstName") String firstName,
                                       @RequestParam("lastName") String lastName,
                                       @RequestParam("password") String password,
@@ -100,7 +100,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(path = "/loginHRMS")
+    @GetMapping(path = "/login/loginHRMS")
     public Long loginHRMS(@RequestParam("workEmail") String workEmail,
                          @RequestParam("password") String password) {
         return userService.loginUserHRMS(workEmail, password);
@@ -110,5 +110,10 @@ public class UserController {
     @PostMapping
     public void addNewPayslip(@RequestBody User user) {
         userService.addNewUser(user);
+    }
+
+    @GetMapping(path = "/register/confirmToken")
+    public String confirmToken(@RequestParam("token") String token) {
+        return userService.confirmToken(token);
     }
 }
