@@ -7,5 +7,5 @@ export const getUser = () => {
   }
   
   export const setUserSession = (userId) => {
-    document.cookie = `userSession=${userId}; max-age=900; path=/;`;
+    document.cookie = `userSession=${userId}; max-age=10; path=/;`;
   }
