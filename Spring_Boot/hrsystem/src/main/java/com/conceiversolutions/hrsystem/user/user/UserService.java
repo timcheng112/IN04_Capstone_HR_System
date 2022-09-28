@@ -269,4 +269,11 @@ public class UserService implements UserDetailsService {
                 "\n" +
                 "</div></div>";
     }
+
+    public Boolean testEmailRegex(String email) {
+        System.out.println("UserService.testEmailRegex");
+        Boolean result = emailValidator.test(email);
+        System.out.println("result is " + result);
+        return result;
+    }
 }

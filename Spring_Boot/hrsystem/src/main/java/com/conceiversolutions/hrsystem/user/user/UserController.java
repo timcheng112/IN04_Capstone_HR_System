@@ -116,4 +116,9 @@ public class UserController {
     public String confirmToken(@RequestParam("token") String token) {
         return userService.confirmToken(token);
     }
+
+    @GetMapping(path = "/register/testEmailRegex")
+    public Boolean testEmailRegex(@RequestParam("email") String email) {
+        return userService.testEmailRegex(email);
+    }
 }
