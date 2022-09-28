@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="reward_tracks")
+@RequestMapping(path="api/reward_tracks")
 public class RewardTrackController {
     private final RewardTrackService rewardTrackService;
 

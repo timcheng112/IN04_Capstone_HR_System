@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="leaves")
+@RequestMapping(path="api/leaves")
 public class LeaveController {
 
     private final LeaveService leaveService;
