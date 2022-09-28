@@ -8,6 +8,24 @@ spring:
     hibernate:
       ddl-auto: update
       dialect: org.hibernate.dialect.SQLServer2012Dialect
+  mail:
+    host: localhost
+    port: 1025
+    username: conceivers
+    password: conceivers
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
 
 server:
   port: 9191
+  error:
+    include-message: ALWAYS

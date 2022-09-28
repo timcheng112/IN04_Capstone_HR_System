@@ -21,10 +21,23 @@ import com.conceiversolutions.hrsystem.performance.goal.Goal;
 import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
+import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
+import lombok.EqualsAndHashCode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name="users")
+@EqualsAndHashCode
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -108,9 +121,11 @@ public class User {
     private List<Team> teams;
     @OneToOne(fetch = FetchType.LAZY, targetEntity = PayInformation.class, mappedBy = "user")
     private PayInformation currentPayInformation;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = ReactivationRequest.class, optional = true)
+    @JoinColumn(name = "reactivation_request_id")
+    private ReactivationRequest reactivationRequest;
 
-    // TODO add on other relationships to other classes
-    // TODO add hashing for password
+//    TODO add on other relationships to other classes
 
     public User() {
     }
@@ -131,7 +146,7 @@ public class User {
         this.isPartTimer = isPartTimer;
         this.isHrEmployee = isHrEmployee;
         this.isBlackListed = false;
-        this.isEnabled = true;
+        this.isEnabled = false; // only change to true after email is confirmed
         this.dateJoined = LocalDate.now();
         this.profilePic = null;
         this.positions = new ArrayList<>();
@@ -151,10 +166,7 @@ public class User {
     }
 
     // this should be for making an employee's account
-    public User(Long userId, String firstName, String lastName, String password, Integer phone, String email,
-            String workEmail, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer,
-            Boolean isHrEmployee, LocalDate dateJoined, PayInformation currentPayInformation) {
-        this.userId = userId;
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, LocalDate dateJoined, PayInformation currentPayInformation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -168,6 +180,22 @@ public class User {
         this.isHrEmployee = isHrEmployee;
         this.dateJoined = dateJoined;
         this.currentPayInformation = currentPayInformation;
+        this.isBlackListed = false;
+        this.isEnabled = false; // only change to true after email is confirmed
+        this.profilePic = null;
+        this.positions = new ArrayList<>();
+        this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
@@ -230,10 +258,6 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
@@ -448,5 +472,62 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority =
+                new SimpleGrantedAuthority(this.userRole.name());
+
+        return Collections.singletonList(authority);
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        if (userRole.equals(RoleEnum.APPLICANT)) {
+            return this.email;
+        } else {
+            return this.workEmail;
+        }
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !this.isBlackListed;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.isEnabled;
+    }
+
+    public PayInformation getCurrentPayInformation() {
+        return currentPayInformation;
+    }
+
+    public void setCurrentPayInformation(PayInformation currentPayInformation) {
+        this.currentPayInformation = currentPayInformation;
+    }
+
+    public ReactivationRequest getReactivationRequest() {
+        return reactivationRequest;
+    }
+
+    public void setReactivationRequest(ReactivationRequest reactivationRequest) {
+        this.reactivationRequest = reactivationRequest;
     }
 }

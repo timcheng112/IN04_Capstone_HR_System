@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { Switch } from "@headlessui/react";
 import { setUserSession } from "../../utils/Common";
 import api from "../../utils/api";
-import logo from "../../assets/libro-transparent-logo.png";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 export default function Register() {
   const [firstName, setFirstName] = useState("");
@@ -11,10 +15,17 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [workEmail, setWorkEmail] = useState("");
   const [dobDay, setDobDay] = useState("");
   const [dobMonth, setDobMonth] = useState("");
   const [dobYear, setDobYear] = useState("");
   const [gender, setGender] = useState("");
+  const [role, setRole] = useState("");
+  const [isPartTimer, setIsPartTime] = useState(false);
+  const [isHrEmployee, setIsHrEmployee] = useState(false);
+  const [joinedDay, setJoinedDay] = useState("");
+  const [joinedMonth, setJoinedMonth] = useState("");
+  const [joinedYear, setJoinedYear] = useState("");
 
   const history = useHistory();
 
@@ -24,15 +35,27 @@ export default function Register() {
   };
 
   function register() {
-    var dob = dobYear + "-" + dobMonth + "-" + dobDay;
-    console.log("dob = " + dob);
+    var dob = dobYear + "-" + dobMonth + "-" + dobDay
+    console.log("dob = " + dob)
+    var dateJoined = joinedYear + "-" + joinedMonth + "-" + joinedDay
+    console.log("joined = " + dateJoined)
     if (password === confirmPassword) {
       api
-        .register(firstName, lastName, password, phone, email, dob, gender)
-        .then(() => {
-          localStorage.setItem("email", email);
-        })
-        .then(() => history.push("/verify"));
+        .register(
+          firstName,
+          lastName,
+          password,
+          phone,
+          email,
+          workEmail,
+          dob,
+          gender,
+          role,
+          isPartTimer,
+          isHrEmployee,
+          dateJoined
+        )
+        .then(() => alert("account creation successful"));
     } else {
       alert("passwords do not match");
     }
@@ -43,19 +66,9 @@ export default function Register() {
       <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
           <div>
-            <img className="mx-auto h-12 w-auto" src={logo} alt="Libro" />
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-              Register for Job Management Platform
+              Register a new employee
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
-              Already have an account?{" "}
-              <a
-                href="/"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Log in here
-              </a>
-            </p>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />
@@ -63,7 +76,7 @@ export default function Register() {
               <div>
                 <label
                   htmlFor="first-name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm mt-5 font-medium text-gray-700"
                 >
                   First name
                 </label>
@@ -74,7 +87,7 @@ export default function Register() {
                   autoComplete="text"
                   required
                   className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Xiao"
+                  placeholder="First Name"
                   value={firstName}
                   onChange={(f) => setFirstName(f.target.value)}
                 />
@@ -93,7 +106,7 @@ export default function Register() {
                   autoComplete="text"
                   required
                   className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Ming"
+                  placeholder="Last Name"
                   value={lastName}
                   onChange={(l) => setLastName(l.target.value)}
                 />
@@ -112,9 +125,28 @@ export default function Register() {
                   autoComplete="email"
                   required
                   className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="xiaoming@gmail.com"
+                  placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="work-email-address"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Work email address
+                </label>
+                <input
+                  id="work-email-address"
+                  name="work-email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Work email address"
+                  value={workEmail}
+                  onChange={(e) => setWorkEmail(e.target.value)}
                 />
               </div>
               <div>
@@ -169,18 +201,19 @@ export default function Register() {
                   autoComplete="phone"
                   required
                   className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="91234567"
+                  placeholder="Phone"
                   value={phone}
                   onChange={(p) => setPhone(p.target.value)}
                 />
               </div>
-              <div className="grid grid-cols-1">
+              <div>
                 <label
                   htmlFor="birthday"
                   className="block text-sm mt-5 font-medium text-gray-700"
                 >
                   Birthday
                 </label>
+
                 <div className="flex flex-direction:row">
                   <input
                     id="birthday-day"
@@ -230,11 +263,138 @@ export default function Register() {
                   type="text"
                   name="gender"
                   id="gender"
-                  className="relative block w-full appearance-none rounded-md rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="MALE"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Gender"
                   value={gender}
                   onChange={(g) => setGender(g.target.value)}
                 />
+              </div>
+              <div>
+                <label
+                  htmlFor="date-joined"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Date Joined
+                </label>
+                <div className="flex flex-direction:row">
+                  <input
+                    id="date-joined-day"
+                    name="date-joined-day"
+                    type="text"
+                    autoComplete="date-joined-day"
+                    required
+                    className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm mr-5"
+                    placeholder="DD"
+                    value={joinedDay}
+                    onChange={(d) => setJoinedDay(d.target.value)}
+                  />
+
+                  <input
+                    id="date-joined-month"
+                    name="date-joined-month"
+                    type="text"
+                    autoComplete="date-joined-month"
+                    required
+                    className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm mr-5"
+                    placeholder="MM"
+                    value={joinedMonth}
+                    onChange={(d) => setJoinedMonth(d.target.value)}
+                  />
+
+                  <input
+                    id="date-joined-year"
+                    name="date-joined-year"
+                    type="text"
+                    autoComplete="date-joined-year"
+                    required
+                    className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    placeholder="YYYY"
+                    value={joinedYear}
+                    onChange={(d) => setJoinedYear(d.target.value)}
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="role"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Role
+                </label>
+                <input
+                  type="text"
+                  name="role"
+                  id="role"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Role"
+                  value={role}
+                  onChange={(r) => setRole(r.target.value)}
+                />
+              </div>
+
+              <div>
+                <Switch.Group
+                  as="div"
+                  className="flex items-center justify-between mt-10"
+                >
+                  <span className="flex flex-grow flex-col">
+                    <Switch.Label
+                      as="span"
+                      className="text-sm font-medium text-gray-900"
+                      passive
+                    >
+                      Part-time
+                    </Switch.Label>
+                  </span>
+                  <Switch
+                    checked={isPartTimer}
+                    onChange={setIsPartTime}
+                    className={classNames(
+                      isPartTimer ? "bg-indigo-600" : "bg-gray-200",
+                      "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    )}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={classNames(
+                        isPartTimer ? "translate-x-5" : "translate-x-0",
+                        "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                      )}
+                    />
+                  </Switch>
+                </Switch.Group>
+              </div>
+              <div>
+                <Switch.Group
+                  as="div"
+                  className="flex items-center justify-between mt-10"
+                >
+                  <span className="flex flex-grow flex-col">
+                    <Switch.Label
+                      as="span"
+                      className="text-sm font-medium text-gray-900"
+                      passive
+                    >
+                      HR
+                    </Switch.Label>
+                  </span>
+                  <Switch
+                    checked={isHrEmployee}
+                    onChange={setIsHrEmployee}
+                    className={classNames(
+                      isHrEmployee ? "bg-indigo-600" : "bg-gray-200",
+                      "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    )}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={classNames(
+                        isHrEmployee ? "translate-x-5" : "translate-x-0",
+                        "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                      )}
+                    />
+                  </Switch>
+                </Switch.Group>
               </div>
             </div>
 
