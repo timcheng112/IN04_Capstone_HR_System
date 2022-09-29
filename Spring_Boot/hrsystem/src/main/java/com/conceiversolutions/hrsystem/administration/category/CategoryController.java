@@ -26,6 +26,11 @@ public class CategoryController {
         return categoryService.getCategories();
     }
 
+    @GetMapping(path = "{categoryId}")
+    public Category getCategoryById(@PathVariable Long categoryId) {
+        return categoryService.getCategoryById(categoryId);
+    }
+
     @PostMapping
     public void addNewCategory(@RequestBody Category category) {
         categoryService.addNewCategory(category);
@@ -37,7 +42,7 @@ public class CategoryController {
     }
 
     @PutMapping(path = "{categoryId}")
-    public void editTask(@PathVariable("categoryId") Long categoryId,
+    public void editCategory(@PathVariable("categoryId") Long categoryId,
             @RequestParam(name = "categoryName", required = false) String categoryName) {
         categoryService.editCategory(categoryId, categoryName);
     }

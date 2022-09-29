@@ -22,6 +22,12 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public Category getCategoryById(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalStateException("Category with ID: " + categoryId + " does not exist!"));
+        return category;
+    }
+
     public void addNewCategory(Category category) {
         Optional<Category> categoryOptional = categoryRepository.findCategoryByName(category.getName());
         if (categoryOptional.isPresent()) {

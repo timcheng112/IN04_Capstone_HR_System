@@ -50,4 +50,12 @@ public class TaskListItemService {
                         "TaskListItem with ID: " + taskListItemId + " does not exist!"));
         taskListItem.setIsDone(true);
     }
+
+    public List<TaskListItem> getTaskListItemsByTask(Long taskId) {
+        return taskListItemRepository.findTaskListItemByTask(taskId).get();
+    }
+
+    public List<TaskListItem> getTaskListItemsByEmployee(Long employeeId) {
+        return taskListItemRepository.findTaskListItemByEmployee(employeeId).get();
+    }
 }
