@@ -23,9 +23,11 @@ export default function Login() {
       .then(() => history.push("/landing"))
       .catch((error) => {
         var message = error.request.response;
-        console.log(message);
+        //console.log(message);
         if (message.includes("User password does not match the record.")) {
           alert("The password you entered was incorrect");
+        } else if (message.includes("User account is not accessible, please request to be reactivated")) {
+          history.push("/reactivation")
         }
       });
   }

@@ -46,6 +46,9 @@ const api = {
       `http://localhost:9191/api/user/login/resetPasswordJMP?email=${email}&oldPassword=${oldPassword}&newPassword=${newPassword}`
     )
   },
+  requestAccountReactivation(email, reason) {
+    return axios.post(`http://localhost:9191/api/user/login/requestAccountReactivation?email=${email}&reason=${reason}`)
+  }
 };
 
 export default api;

@@ -9,6 +9,7 @@ import PrivateRoute from "./utils/PrivateRoute";
 import Verification from "./pages/Verification";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import BlacklistPage from "./pages/Blacklisted";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <PublicRoute exact path="/forgot/:token" component={ForgotPassword} />
           <PrivateRoute exact path="/reset" component={ResetPassword} />
           <PublicRoute exact path="/timeout" component={TimeoutPage} />
+          <PublicRoute exact path="/reactivation" component={BlacklistPage} />
           <PrivateRoute exact path="/landing" component={LandingPage} />
         </Switch>
       </div>
