@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useRef, useState } from "react";
+import { useHistory } from "react-router";
 // import InputText from '../../components/inputText';
 // import TextArea from '../../components/textArea';
 //import api from '../../util/api';
 
-export default function EditCategoryModal({ open, onClose, categoryName }) {
+export default function ViewTaskModal({ open, onClose, categoryName }) {
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
@@ -59,23 +58,37 @@ export default function EditCategoryModal({ open, onClose, categoryName }) {
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      Edit Category
+                      View Task
                     </Dialog.Title>
                     <div className="mt-2">
                       <form action="#" method="POST">
                         <label
-                          htmlFor="category-name"
+                          htmlFor="task-name"
                           className="block text-sm font-medium text-gray-700 mt-2"
                         >
-                          Category Name
+                          Task Name
                         </label>
                         <div className="mt-1">
-                          <textarea
-                            id="category-name"
-                            name="category-name"
-                            rows={3}
+                          <text
+                            id="task-name"
+                            name="task-name"
                             className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            defaultValue={categoryName}
+                            // defaultValue={taskName}
+                            required
+                          />
+                        </div>
+                        <label
+                          htmlFor="task-description"
+                          className="block text-sm font-medium text-gray-700 mt-2"
+                        >
+                          Task Name
+                        </label>
+                        <div className="mt-1">
+                          <text
+                            id="task-description"
+                            name="task-description"
+                            className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            // defaultValue={taskDescription}
                             required
                           />
                         </div>

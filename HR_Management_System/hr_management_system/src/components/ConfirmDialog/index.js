@@ -1,11 +1,20 @@
-import { Fragment } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { ExclamationIcon, XIcon } from '@heroicons/react/outline'
+import { Fragment } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { ExclamationIcon, XIcon } from "@heroicons/react/outline";
 
-export default function ConfirmDialog({open, action="delete", params=[], ...props}) {
+export default function ConfirmDialog({
+  open,
+  action = "delete",
+  params = [],
+  ...props
+}) {
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={() => props.setOpen(false)}>
+      <Dialog
+        as="div"
+        className="fixed z-10 inset-0 overflow-y-auto"
+        onClose={props.onClose}
+      >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
@@ -18,11 +27,12 @@ export default function ConfirmDialog({open, action="delete", params=[], ...prop
           >
             <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
-
-          {/* This element is to trick the browser into centering the modal contents. */}
-          <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+          <span
+            className="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+          >
             &#8203;
-          </span>
+          </span>{" "}
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -45,11 +55,20 @@ export default function ConfirmDialog({open, action="delete", params=[], ...prop
               </div>
               <div className="sm:flex sm:items-start">
                 <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                  <ExclamationIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
+                  <ExclamationIcon
+                    className="h-6 w-6 text-red-600"
+                    aria-hidden="true"
+                  />
                 </div>
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                  <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                    {action.charAt(0).toUpperCase() + action.slice(1) + " " + props.title}
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg leading-6 font-medium text-gray-900"
+                  >
+                    {action.charAt(0).toUpperCase() +
+                      action.slice(1) +
+                      " " +
+                      props.title}
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
@@ -82,5 +101,5 @@ export default function ConfirmDialog({open, action="delete", params=[], ...prop
         </div>
       </Dialog>
     </Transition.Root>
-  )
+  );
 }

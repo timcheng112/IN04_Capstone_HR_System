@@ -1,107 +1,107 @@
-import { Fragment, useState } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { useHistory } from 'react-router'
-import {
-    DotsVerticalIcon,
-    PencilIcon,
-  } from '@heroicons/react/solid'
-import { PlusIcon } from '@heroicons/react/20/solid'
-import { TrashIcon } from '@heroicons/react/outline'
-import ConfirmDialog from '../../components/ConfirmDialog'
-import AddTaskModal from '../../features/Onboarding/AddTaskModal'
-import EditCategoryModal from '../../features/Onboarding/EditCategoryModal'
-
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { Fragment, useState } from "react";
+import ConfirmDialog from "../../components/ConfirmDialog";
+import AddTaskModal from "../../features/Onboarding/AddTaskModal";
+import EditCategoryModal from "../../features/Onboarding/EditCategoryModal";
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function CategoryOptions({ user, category, setCategory }) {
-  const [open, setOpen] = useState(false)
-  const [openEdit, setOpenEdit] = useState(false)
-  const [openCreate, setOpenCreate] = useState(false)
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [error, setError] = useState(null);
 
   function deleteCategory() {
-
+    console.log("Delete Category");
   }
 
   return (
-    <Fragment>
-      <Menu as="div" className="ml-3 relative inline-block text-left z-50">
-        <div>
-          <Menu.Button className="-my-2 p-2 rounded-full bg-white flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-rose-500">
-            <span className="sr-only">Open options</span>
-            <DotsVerticalIcon className="h-5 w-5" aria-hidden="true" />
-          </Menu.Button>
-        </div>
+    <Menu as="div" className="relative inline-block text-left">
+      <div>
+        <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+          Options
+          <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+        </Menu.Button>
+      </div>
 
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div className="py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={classNames(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'w-full flex justify-right px-4 py-2 text-sm'
-                    )}
-                    onClick={() => setOpenCreate(true)}
-                  >
-                    <PlusIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                    <span>Add task</span>
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={classNames(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'w-full flex justify-right px-4 py-2 text-sm'
-                    )}
-                    onClick={() => setOpenEdit(true)}
-                  >
-                    <PencilIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                    <span>Edit category</span>
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'w-full flex justify-right px-4 py-2 text-sm'
-                      )}
-                      onClick={() => setOpen(true)}
-                    >
-                      <TrashIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                      <span>Delete categpry</span>
-                    </button>
+      <Transition
+        as={Fragment}
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="py-1">
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm w-full text-left"
                   )}
-              </Menu.Item>  
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
-      <ConfirmDialog
-        title="category"
-        open={open}
-        setOpen={setOpen}
-        item={category}
-        onConfirm={deleteCategory}
+                  onClick={() => setOpenAdd(true)}
+                >
+                  Add Task
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm w-full text-left"
+                  )}
+                  onClick={() => setOpenEdit(true)}
+                >
+                  Edit Category
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm w-full text-left"
+                  )}
+                  onClick={() => setOpenDelete(true)}
+                >
+                  Delete Category
+                </button>
+              )}
+            </Menu.Item>
+          </div>
+        </Menu.Items>
+      </Transition>
+      <AddTaskModal
+        open={openAdd}
+        onClose={() => {
+          setOpenAdd(false);
+        }}
+        categoryName={category.name}
       />
-      <EditCategoryModal open={openEdit} setOpen={setOpenEdit} category={category} setCategory={setCategory} />
-      <AddTaskModal open={openCreate} setOpen={setOpenCreate} category={category} setCategory={setCategory} />
-    </Fragment>
-  )
+      <EditCategoryModal
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        categoryName={"Category 1"}
+        // category={category}
+        // setCategory={setCategory}
+      />
+      {/* <ConfirmDialog
+        title="category"
+        item="category"
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        // onConfirm={deleteCategory}
+      /> */}
+    </Menu>
+  );
 }

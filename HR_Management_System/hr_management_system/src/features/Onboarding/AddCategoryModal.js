@@ -1,40 +1,39 @@
-import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-// import InputText from '../../components/inputText';
-// import TextArea from '../../components/textArea';
-//import api from '../../util/api';
+//import api from '../../utils/api';
 
-export default function AddCategoryModal({open, onClose}) {
-  const history = useHistory()
-  const [user, setUser] = useState(null)
-  const [name, setName] = useState("")
-  const [error, setError] = useState(null);
+export default function AddCategoryModal({ open, onClose }) {
+  const history = useHistory();
+  const [user, setUser] = useState(null);
+  const [name, setName] = useState("");
+  const cancelButtonRef = useRef(null);
+  //const [error, setError] = useState(null);
 
-//   const handleSubmit = (evt) => {
-//     evt.preventDefault()
-//     createCategory()
-//     alert("Successfully created category.")
-//   }
+  //   const handleSubmit = (evt) => {
+  //     evt.preventDefault()
+  //     createCategory()
+  //     alert("Successfully created category.")
+  //   }
 
-  function createCategory() {
-    api.addNewCategory({ // api change
-      name: name,
-    })
-      .then(() => history.goBack())
-      .catch(error => setError(error))
-  }
+  // function createCategory() {
+  //   api.addNewCategory({ // api change
+  //     name: name,
+  //   })
+  //     .then(() => history.goBack())
+  //     .catch(error => setError(error))
+  // }
 
-  useEffect(() => {
-    api.getUser()
-      .then(response => setUser(response.data))
-      .catch((error) => setError(error))
-  }, [])
+  // useEffect(() => {
+  //   api.getUser()
+  //     .then(response => setUser(response.data))
+  //     .catch((error) => setError(error))
+  // }, [])
 
   return (
-    user &&
-    <Transition.Root show={open} as={Fragment}> 
+    //user &&
+    <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
@@ -94,6 +93,7 @@ export default function AddCategoryModal({open, onClose}) {
                   <button
                     type="submit"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={onClose}
                   >
                     Create
                   </button>
@@ -112,5 +112,5 @@ export default function AddCategoryModal({open, onClose}) {
         </div>
       </Dialog>
     </Transition.Root>
-  )
+  );
 }
