@@ -19,7 +19,7 @@ export default function AddCategoryModal({open, onClose}) {
 //   }
 
   function createCategory() {
-    api.createCategory({ // api change
+    api.addNewCategory({ // api change
       name: name,
     })
       .then(() => history.goBack())

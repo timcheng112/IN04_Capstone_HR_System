@@ -23,7 +23,7 @@ export default function AddTaskModal({open, onClose,categoryName}) {
 //   }
 
   function createTask() {
-    api.createTask({ // api change
+    api.addNewTask({ // api change
         name: name,
         description: description,
         employees: employees
@@ -42,7 +42,7 @@ export default function AddTaskModal({open, onClose,categoryName}) {
     user &&
     <form action="#">
       <Tab.Group>
-        {({ selectedIndex }) => (
+        {
           <>
             <Tab.List className="flex items-center">
               <Tab
@@ -107,11 +107,11 @@ export default function AddTaskModal({open, onClose,categoryName}) {
               <Tab.Panel className="-m-0.5 rounded-lg p-0.5">
                 
                 {/* needs to implement */}
-                
+
               </Tab.Panel>
             </Tab.Panels>
           </>
-        )}
+        }
       </Tab.Group>
       <div className="mt-2 flex justify-end">
         <button
