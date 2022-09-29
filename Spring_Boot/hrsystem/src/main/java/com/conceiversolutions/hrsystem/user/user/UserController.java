@@ -68,8 +68,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/login/loginJMP")
-    public Long loginJMP(@RequestParam("email") String email,
-                         @RequestParam("password") String password) {
+    public String loginJMP(@RequestParam("email") String email,
+                         @RequestParam("password") String password) throws Exception {
         return userService.loginUserJMP(email, password);
     }
 
@@ -101,7 +101,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/login/loginHRMS")
-    public Long loginHRMS(@RequestParam("workEmail") String workEmail,
+    public String loginHRMS(@RequestParam("workEmail") String workEmail,
             @RequestParam("password") String password) throws Exception {
         return userService.loginUserHRMS(workEmail, password);
     }

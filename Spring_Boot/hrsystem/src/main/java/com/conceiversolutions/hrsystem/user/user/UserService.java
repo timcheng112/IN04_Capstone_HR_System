@@ -164,7 +164,7 @@ public class UserService implements UserDetailsService {
         return newUser.getUserId();
     }
 
-    public Long loginUserJMP(String email, String password) {
+    public String loginUserJMP(String email, String password) throws Exception {
         System.out.println("UserService.loginUserJMP");
         System.out.println("email = " + email + ", password = " + password);
         Optional<User> user = userRepository.findUserByEmail(email);
@@ -179,7 +179,7 @@ public class UserService implements UserDetailsService {
 
             if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {
                 System.out.println("User found and password matches. User Id is : " + userRecord.getUserId());
-                return userRecord.getUserId();
+                return userRecord.getUserId().toString();
             } else {
                 throw new IllegalStateException("User password does not match the record.");
             }
@@ -188,7 +188,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Long loginUserHRMS(String workEmail, String password) throws Exception {
+    public String loginUserHRMS(String workEmail, String password) throws Exception {
         System.out.println("UserService.loginUserHRMS");
         System.out.println("workEmail = " + workEmail + ", password = " + password);
         Optional<User> user = userRepository.findUserByWorkEmail(workEmail);
@@ -203,7 +203,7 @@ public class UserService implements UserDetailsService {
 
             if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {
                 System.out.println("Employee found and password matches. User Id is : " + userRecord.getUserId());
-                return userRecord.getUserId();
+                return userRecord.getUserId().toString();
             } else {
                 throw new IllegalStateException("User password does not match the record.");
             }

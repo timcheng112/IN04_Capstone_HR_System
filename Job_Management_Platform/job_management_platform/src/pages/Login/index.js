@@ -17,8 +17,17 @@ export default function Login() {
   function login() {
     api
       .login(email, password)
-      .then((response) => setUserSession(response.data, email))
-      .then(() => history.push("/landing"));
+      .then((response) => {
+        if (response.data) setUserSession(response.data, email);
+      })
+      .then(() => history.push("/landing"))
+      .catch((error) => {
+        var message = error.request.response;
+        console.log(message);
+        if (message.includes("User password does not match the record.")) {
+          alert("The password you entered was incorrect");
+        }
+      });
   }
 
   function forgot() {
