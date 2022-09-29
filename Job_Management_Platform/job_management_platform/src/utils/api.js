@@ -21,6 +21,31 @@ const api = {
       `http://localhost:9191/api/user/register/resendConfirmationEmailJMP?email=${email}`
     );
   },
+  forgotCheckEmail(email) {
+    return axios.get(
+      `http://localhost:9191/api/user/login/checkEmailJMP?email=${email}`
+    );
+  },
+  forgotPassword(email) {
+    return axios.get(
+      `http://localhost:9191/api/user/login/forgotPasswordJMP?email=${email}`
+    );
+  },
+  changePassword(email, password) {
+    return axios.get(
+      `http://localhost:9191/api/user/login/changePasswordJMP?email=${email}&password=${password}`
+    );
+  },
+  getUserFromToken(token) {
+    return axios.get(
+      `http://localhost:9191/api/user/login/getUserByToken?token=${token}`
+    );
+  },
+  resetPassword(email, oldPassword, newPassword) {
+    return axios.put(
+      `http://localhost:9191/api/user/login/resetPasswordJMP?email=${email}&oldPassword=${oldPassword}&newPassword=${newPassword}`
+    )
+  },
 };
 
 export default api;

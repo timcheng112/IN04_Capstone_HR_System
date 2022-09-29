@@ -8,6 +8,7 @@ import Timeout from "./pages/Timeout";
 import RegisterPage from "./pages/Register";
 import VerificationPage from "./pages/Verification";
 import ForgotPasswordPage from "./pages/ForgotPassword";
+import ResetPasswordPage from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -17,8 +18,10 @@ function App() {
           <PublicRoute exact path="/" component={LoginPage} />
           <PublicRoute exact path="/register" component={RegisterPage} />
           <PublicRoute exact path="/forgot" component={ForgotPasswordPage} />
+          <PublicRoute exact path="/forgot/:token" component={ForgotPasswordPage} />
           <PublicRoute exact path="/verify" component={VerificationPage} />
           <PublicRoute exact path="/verify/:token" component={VerificationPage} />
+          <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
           <PublicRoute exact path="/test" component={Timeout} />
           <PrivateRoute exact path="/onboarding" component={OnboardingHrPage} />
         </Switch>

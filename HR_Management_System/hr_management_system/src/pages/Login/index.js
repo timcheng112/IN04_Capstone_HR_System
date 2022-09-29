@@ -20,19 +20,20 @@ export default function Login() {
       .login(getWorkEmail(), password)
       .then((response) => {
         if (response.status !== 200) {
-          console.log(response.data)
+          console.log(response.data);
         } else {
-          setUserSession(response.data);
+          setUserSession(response.data, getWorkEmail());
         }
       })
       .then(() => {
         history.push("/onboarding");
       })
       .catch((error) => {
-        var message = error.request.response
+        var message = error.request.response;
         if (message.includes("account is not activated yet")) {
-          sessionStorage.setItem("userEmail", email)
-          history.push("/verify")
+          //TODO: change verify email get and set
+          sessionStorage.setItem("userEmail", email);
+          history.push("/verify");
         } else if (message.include("wrong password")) {
           //TODO: catch and show login error
         }
@@ -40,9 +41,14 @@ export default function Login() {
   }
 
   function forgot() {
-    history.push("/forgot");
-    //api call
-    console.log(getWorkEmail());
+    if (email.length <= 0) {
+      alert("Please enter your email");
+    } else {
+      api
+        .forgotCheckEmail(getWorkEmail())
+        .then((response) => sessionStorage.setItem("userEmail", getWorkEmail()))
+        .then(() => history.push("/forgot"));
+    }
   }
 
   function getWorkEmail() {
