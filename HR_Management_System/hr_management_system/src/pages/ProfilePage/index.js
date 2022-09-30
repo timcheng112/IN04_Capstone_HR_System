@@ -67,32 +67,32 @@ export default function ProfilePage() {
                     {/*first col*/}
                     <div class="bg-cyan-600/70 row-start-1 row-end-4 rounded-lg">
 
-                            <div className="flex justify-center mt-24" >
-                                   <img className="flex h-24 w-24 max-w-[550px] rounded-full"
-                                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                        alt=""
-                                    />
-                            </div>
+                        <div className="flex justify-center mt-24" >
+                            <img className="flex h-24 w-24 max-w-[550px] rounded-full"
+                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                alt=""
+                            />
+                        </div>
 
-                                <span className="">
-                                <div className="my-14"  >
-                                    <p className="text-3xl font-medium text-gray-1500 group-hover:text-gray-900">Tom Cook</p>
-                                    <p className="text-md font-medium text-gray-1200 group-hover:text-gray-700">Employee</p>
-                                </div>
-                                </span>
+                        <span className="">
+                            <div className="my-14"  >
+                                <p className="text-3xl font-medium text-gray-1500 group-hover:text-gray-900">Tom Cook</p>
+                                <p className="text-md font-medium text-gray-1200 group-hover:text-gray-700">Employee</p>
+                            </div>
+                        </span>
 
 
 
                         <div className="font-medium text-gray-1500">
                             Email <svg xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-10 w-full max-w-[550px]">
-                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
 
-                                               </svg>
-                            </div>
+                            </svg>
+                        </div>
                         <div className="font-medium text-gray-1500"> Team <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-10 w-full max-w-[550px]">
-                                                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                                   </svg>
- </div>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        </div>
                         <span>
                             <button type="button" className="mt-12 rounded-md bg-blue font-medium text-red-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             > Disable Account</button>
@@ -165,12 +165,12 @@ export default function ProfilePage() {
                                 </div>
                                 <div class="p-10">
                                     <dd>
-                                        <button type="button" className="mt-4 rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        <button type="button" className="mt-4 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Update Info
                                         </button>
                                         <span>   |   </span>
-                                        <button type="button" className="mt-4 rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        <button type="button" className="mt-4 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Change Password
                                         </button>
@@ -183,10 +183,26 @@ export default function ProfilePage() {
                     <div className="row-span-1 box-border border-2">
                         <dt className="text-lg font-medium leading-6 text-gray-900">Qualifications & Documents</dt>
                         <p className="mt-1 max-w-2xl text-sm text-gray-500">Your CV.</p>
-                        <p> </p>
-                        <div className="flex-1 mt-5">
-                            <img src="https://tse4.mm.bing.net/th?id=OIP.Hlyqks49KABGSCa0YgwPEAHaFj&pid=Api&P=0" />
-
+                        <div class="mb-8">
+                            <input type="file" name="file" id="file" class="sr-only" />
+                            <label
+                                for="file"
+                                class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+                            >
+                                <div>
+                                    <span class="mb-2 block text-xl font-semibold text-[#07074D]">
+                                        Drop files here
+                                    </span>
+                                    <span class="mb-2 block text-base font-medium text-[#6B7280]">
+                                        Or
+                                    </span>
+                                    <span
+                                        class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]"
+                                    >
+                                        Browse
+                                    </span>
+                                </div>
+                            </label>
                         </div>
                         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                             <ul role="list" className="divide-y divide-gray-200 rounded-md border border-gray-200">
@@ -199,7 +215,7 @@ export default function ProfilePage() {
 
                                         <button
                                             type="button"
-                                            className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            className="rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Update
                                         </button>
@@ -222,6 +238,12 @@ export default function ProfilePage() {
                                     </div>
                                 </li>
                             </ul>
+                            <button
+                                type="button"
+                                className="mt-5 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            >
+                                View Job and Qualifications
+                            </button>
                         </dd>
                     </div>
                     <div class="row-span-2 col-start-2 col-end-3 ">
