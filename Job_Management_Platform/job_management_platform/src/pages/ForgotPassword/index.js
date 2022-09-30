@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { EnvelopeIcon } from "@heroicons/react/24/solid";
+import { EnvelopeIcon } from "@heroicons/react/20/solid";
 import api from "../../utils/api";
 import { useHistory } from "react-router-dom";
 
@@ -24,7 +24,7 @@ export default function ForgotPassword() {
   }, []);
 
   useEffect(() => {
-    var userEmail = sessionStorage.getItem("userEmail");
+    var userEmail = sessionStorage.getItem("userEmail")
     if (userEmail !== null && userEmail.length > 0) {
       setEmail(userEmail);
     }
@@ -35,23 +35,6 @@ export default function ForgotPassword() {
     confirm();
   };
 
-  function confirm() {
-    if (password === confirmPassword) {
-      console.log(token);
-      api.getEmployeeByToken(token).then((response) =>
-        api
-          .changePassword(response.data, password)
-          .then((response) => {
-            console.log(response.data);
-            alert(response.data);
-          })
-          .finally(() => history.push("/"))
-      );
-    } else {
-      alert("Passwords do not match");
-    }
-  }
-
   function sendEmail() {
     if (email !== null && email.length > 0) {
       api
@@ -59,6 +42,21 @@ export default function ForgotPassword() {
         .then((response) =>
           console.log("Sent email to user with id " + response.data)
         );
+    }
+  }
+
+  function confirm() {
+    if (password === confirmPassword) {
+      console.log(token);
+      api
+        .getUserFromToken(token)
+        .then((response) =>
+          api
+            .changePassword(response.data, password)
+            .then((response) => alert(response.data)).finally(() => history.push("/"))
+        );
+    } else {
+      alert("Passwords do not match");
     }
   }
 

@@ -21,21 +21,14 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .authorizeRequests()
-//                    .antMatchers("/api/user/register/**", "/api/user/login/**").permitAll()
-//                    .antMatchers("/api/user**").hasRole("USER")
-//                .anyRequest().authenticated().and()
-//                .formLogin();
-//        // TODO: Update api path for registration and change permission to permit all for only registration path
-//        // TODO: Other user paths for authenticated user only
-//        return http.build();
-
-        http.csrf().disable()
-                .authorizeRequests().anyRequest().authenticated();
-
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .anyRequest().permitAll();
         return http.build();
+        // TODO: Update api path for registration and change permission to permit all for only registration path
+        // TODO: Other user paths for authenticated user only
+
     }
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

@@ -29,9 +29,6 @@ export default function Register() {
     if (password === confirmPassword) {
       api
         .register(firstName, lastName, password, phone, email, dob, gender)
-        .then(() => {
-          localStorage.setItem("email", email);
-        })
         .then(() => history.push("/verify"));
     } else {
       alert("passwords do not match");
