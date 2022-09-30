@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 /* This example requires Tailwind CSS v2.0+ */
 const department = [
-  { name: 'Sales Department', teamLeader: 'Wong Shi Han', position: 'Manager' },
-  { name: 'HR Department',  teamLeader: 'Bobby Trinidad', position: 'Manager' },
-  // More team...
+  { name: 'Sales Department', deptLeader: 'Wong Shi Han', position: 'Manager' },
+  { name: 'HR Department',  deptLeader: 'Bobby Trinidad', position: 'Manager' },
+  // More dept...
 ]
 
 const people = [
@@ -120,19 +120,28 @@ export default function ViewOrganisation() {
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                       <span className="sr-only">Edit</span>
                     </th>
+                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                      <span className="sr-only">Disable</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {department.map((team, teamIdx) => (
-                    <tr key={team.email} className={teamIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
+                  {department.map((dept, deptIdx) => (
+                    <tr key={dept.email} className={deptIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                        {team.name}
+                        {dept.name}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{team.teamLeader}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{team.position}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{dept.deptLeader}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{dept.position}</td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <a href="https://www.google.com" className="text-indigo-600 hover:text-indigo-900">
-                          View<span className="sr-only">, {team.name}</span>
+                          View<span className="sr-only">, {dept.name}</span>
+                        </a>
+                      </td>
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                        <a href="https://lh3.googleusercontent.com/L8LLXQeMyAQUGfxQTYZe_ByGzH7R8UC2pc2vjnpIm1QeXb7C0NGYxkF2BXlIpKVbJulpjlF9eCwhOVzY9Tl91QUw_g=w640-h400-e365-rj-sc0x00ffffff"
+                        className="text-indigo-600 hover:text-indigo-900">
+                          Disable<span className="sr-only">, {dept.name}</span>
                         </a>
                       </td>
                     </tr>

@@ -17,6 +17,7 @@ import ProfilePage from './pages/ProfilePage';
 import UpdateProfile from './pages/UpdateProfile';
 
 import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
+import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 
 
 function App() {
@@ -53,6 +54,8 @@ function App() {
 //    <ViewDepartment />
 //   <ViewOrganisation />
 //        <EmployeeChart />
+//    <EmployeeList/>
+//<ProfilePage/>
 
   );
 }
