@@ -42,10 +42,10 @@ function App() {
 //      </div>
 //    </BrowserRouter>
 //    <OnboardingHr />
-    <ViewTeam/>
+//    <ViewTeam/>
 //    <ViewDepartment />
- //   <ViewOrganisation />
-        <EmployeeChart />
+    <ViewOrganisation />
+//        <EmployeeChart />
 
 
   );
