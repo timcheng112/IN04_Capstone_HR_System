@@ -674,27 +674,14 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    @Transactional
-    public String updateUser(User newUser, Long id){
-        System.out.println("UserService.updateUser");
+    public void updateUser(User user, Long id){
+        User u1 = getUser(id);
+        u1.setEmail(user.getEmail());
+        u1.setFirstName(user.getFirstName());
+        u1.setPhone(user.getPhone());
+        u1.setPassword(user.getPassword());
 
-        User user = getUser(id);
-
-        user.setFirstName(newUser.getFirstName());
-        user.setLastName(newUser.getLastName());
-        user.setPassword(newUser.getPassword());
-        user.setPhone(newUser.getPhone());
-        user.setEmail(newUser.getEmail());
-        if(newUser != null && !newUser.getWorkEmail().isEmpty()) {
-            user.setWorkEmail(newUser.getWorkEmail());
-        }
-        user.setDob(newUser.getDob());
-        user.setGender(newUser.getGender());
-        user.setProfilePic(newUser.getProfilePic());
-
-        return "Update of user was successful";
     }
-
 
 
 }

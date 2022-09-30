@@ -216,9 +216,4 @@ public class UserController {
     public String getEmployeeByToken(@RequestParam("token") String token) {
         return userService.getEmployeeFromToken(token);
     }
-
-    @PutMapping(path = "/updateProfile")
-    public String updateProfile(@RequestBody User user, @RequestParam("userId") Long userId) {
-        return userService.updateUser(user, userId);
-    }
 }
