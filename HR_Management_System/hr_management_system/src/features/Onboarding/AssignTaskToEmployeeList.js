@@ -6,7 +6,7 @@ export default function AssignTaskToEmployeeList({
   onClick,
 }) {
   return (
-    <div className="border-2 p-2 rounded-lg mr-1 pb-8">
+    <div className="p-2 mr-1 pb-8">
       <div className="mt-6 flow-root">
         <ul role="list" className="-my-5 divide-y divide-gray-200">
           {people.map((person) => (

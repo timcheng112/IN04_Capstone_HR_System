@@ -62,7 +62,11 @@ export default function TaskOptions({ user, categoryId, task, setTask }) {
         <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
         Delete
       </button>
-      <ViewTaskModal open={openView} onClose={() => setOpenView(false)} />
+      <ViewTaskModal
+        open={openView}
+        onClose={() => setOpenView(false)}
+        task={task}
+      />
     </div>
   );
 }
