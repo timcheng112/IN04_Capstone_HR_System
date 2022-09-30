@@ -20,7 +20,7 @@ export default function Login() {
       .then((response) => {
         if (response.data) setUserSession(response.data, email);
       })
-      .then(() => history.push("/landing"))
+      .then(() => history.push("/home"))
       .catch((error) => {
         var message = error.request.response;
         //console.log(message);
