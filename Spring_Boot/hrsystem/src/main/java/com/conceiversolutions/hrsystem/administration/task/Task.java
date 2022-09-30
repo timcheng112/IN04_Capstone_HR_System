@@ -2,7 +2,9 @@ package com.conceiversolutions.hrsystem.administration.task;
 
 import com.conceiversolutions.hrsystem.administration.category.Category;
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -15,25 +17,28 @@ public class Task {
     @Column(name = "task_id")
     private Long taskId;
 
+    @Column(nullable = true, unique = true)
     private String name;
+    @Column(nullable = true)
     private String description;
+    @Column(nullable = true, name = "is_onboarding")
     private Boolean isOnboarding;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Category.class)
     @JoinColumn(name = "category_id")
     private Category category;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = TaskListItem.class, mappedBy = "task")
-    @Column(name = "task_list_item_id")
+    @Column(name = "task_list_items")
     private List<TaskListItem> taskListItems;
 
     public Task() {
-
     }
 
     public Task(String name, String description, Boolean isOnboarding) {
         this.name = name;
         this.description = description;
         this.isOnboarding = isOnboarding;
+        this.taskListItems = new ArrayList<>();
     }
 
     public Task(String name, String description, Boolean isOnboarding, Category category,

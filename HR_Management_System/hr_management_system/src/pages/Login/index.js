@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { getUser, setUserSession } from "../../utils/Common";
+import { setUserSession } from "../../utils/Common";
 import logo from "../../assets/libro-transparent-logo.png";
 import api from "../../utils/api";
-import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -20,29 +19,35 @@ export default function Login() {
       .login(getWorkEmail(), password)
       .then((response) => {
         if (response.status !== 200) {
-          console.log(response.data)
+          console.log(response.data);
         } else {
-          setUserSession(response.data);
+          setUserSession(response.data, getWorkEmail());
         }
       })
       .then(() => {
         history.push("/onboarding");
       })
       .catch((error) => {
-        var message = error.request.response
+        var message = error.request.response;
+        console.log(message)
         if (message.includes("account is not activated yet")) {
-          sessionStorage.setItem("userEmail", email)
-          history.push("/verify")
-        } else if (message.include("wrong password")) {
-          //TODO: catch and show login error
+          sessionStorage.setItem("userEmail", email);
+          history.push("/verify");
+        } else if (message.includes("User password does not match the record")) {
+          alert("The password you entered was incorrect")
         }
       });
   }
 
   function forgot() {
-    history.push("/forgot");
-    //api call
-    console.log(getWorkEmail());
+    if (email.length <= 0) {
+      alert("Please enter your email");
+    } else {
+      api
+        .forgotCheckEmail(getWorkEmail())
+        .then((response) => sessionStorage.setItem("userEmail", getWorkEmail()))
+        .then(() => history.push("/forgot"));
+    }
   }
 
   function getWorkEmail() {

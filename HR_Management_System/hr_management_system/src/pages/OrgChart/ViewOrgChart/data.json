@@ -1,33 +1,42 @@
-[{
-  "name": "Root",
-  "children": [
-    {
-      "name": "Child 1",
-      "children": [
-        {
-          "name": "Grand Child"
-        }
-      ]
-    },
-    {
-      "name": "Child 2",
-      "children": [
-        {
-          "name": "Grand Child",
-          "children": [
-            {
-              "name": "Great Grand Child 1"
-            },
-            {
-              "name": "Grand Grand Child 2"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Child 2"
-    }
-  ]
-}
+[
+  {
+    "name": "James Chan",
+    "jobtitle" : "CEO",
+    "children": [
+      {
+        "name": "Child 1",
+        "jobtitle" : "Manager",
+        "children": [
+          {
+            "name": "Grand Child",
+            "jobtitle" : "Cashier"
+          }
+        ]
+      },
+      {
+        "name": "Child 2",
+        "jobtitle" : "Manager",
+        "children": [
+          {
+            "name": "Grand Child",
+            "jobtitle" : "Cashier",
+            "children": [
+              {
+                "name": "Great Grand Child 1",
+                "jobtitle" : "Cashier"
+              },
+              {
+                "name": "Grand Grand Child 2",
+                "jobtitle" : "Cashier"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Child 2",
+        "jobtitle" : "Manager"
+      }
+    ]
+  }
 ]

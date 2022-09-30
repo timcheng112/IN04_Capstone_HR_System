@@ -12,10 +12,11 @@ public class CategoryConfig {
     @Bean
     CommandLineRunner categoryCommandLineRunner(CategoryRepository repository) {
         return args -> {
-            Category dummyCategory = new Category();
+            repository.deleteAll();
+            // Category dummyCategory = new Category();
 
-            repository.saveAll(
-                    List.of(dummyCategory));
+            // repository.saveAll(
+            // List.of(dummyCategory));
         };
     }
 }

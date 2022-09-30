@@ -5,10 +5,10 @@ import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/user")
 public class UserController {
@@ -68,8 +68,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/login/loginJMP")
-    public Long loginJMP(@RequestParam("email") String email,
-                         @RequestParam("password") String password) {
+    public String loginJMP(@RequestParam("email") String email,
+                         @RequestParam("password") String password) throws Exception {
         return userService.loginUserJMP(email, password);
     }
 
@@ -101,7 +101,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/login/loginHRMS")
-    public Long loginHRMS(@RequestParam("workEmail") String workEmail,
+    public String loginHRMS(@RequestParam("workEmail") String workEmail,
             @RequestParam("password") String password) throws Exception {
         return userService.loginUserHRMS(workEmail, password);
     }
@@ -185,5 +185,35 @@ public class UserController {
     public String requestAccountReactivation(@RequestParam("email") String email,
                                              @RequestParam("reason") String reason) {
         return userService.requestAccountReactivation(email, reason);
+    }
+
+    @GetMapping(path = "/login/forgotPasswordHRMS")
+    public Long forgotPasswordHRMS(@RequestParam("workEmail") String workEmail) {
+        return userService.forgotPasswordHRMS(workEmail);
+    }
+
+    @GetMapping(path = "/login/forgotPasswordJMP")
+    public Long forgotPasswordJMP(@RequestParam("email") String email) {
+        return userService.forgotPasswordJMP(email);
+    }
+
+    @GetMapping(path = "/login/changePasswordHRMS")
+    public String changePasswordHRMS(@RequestParam("workEmail") String workEmail, @RequestParam("password") String password) {
+        return userService.changePasswordHRMS(workEmail, password);
+    }
+
+    @GetMapping(path = "/login/changePasswordJMP")
+    public String changePasswordJMP(@RequestParam("email") String email, @RequestParam("password") String password) {
+        return userService.changePasswordJMP(email, password);
+    }
+
+    @GetMapping(path = "/login/getUserByToken")
+    public String getUserByToken(@RequestParam("token") String token) {
+        return userService.getUserFromToken(token);
+    }
+
+    @GetMapping(path = "/login/getEmployeeByToken")
+    public String getEmployeeByToken(@RequestParam("token") String token) {
+        return userService.getEmployeeFromToken(token);
     }
 }
