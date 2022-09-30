@@ -10,11 +10,16 @@ import RegisterPage from "./pages/Register";
 import VerificationPage from "./pages/Verification";
 import ForgotPasswordPage from "./pages/ForgotPassword";
 import OnboardingHr from "./pages/OnboardingHr";
+
+//testing shi han's pages
 import ViewTeam from "./pages/OrgChart/ViewTeam/viewTeam";
 import ViewDepartment from "./pages/OrgChart/ViewDepartment/viewDepartment";
 import ViewOrganisation from "./pages/OrgChart/ViewOrganisation/viewOrganisation";
 import ProfilePage from './pages/ProfilePage';
 import UpdateProfile from './pages/UpdateProfile';
+
+import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
+
 
 function App() {
   return (
@@ -31,14 +36,16 @@ function App() {
 //          <PublicRoute exact path="/profile" component={ProfilePage}/>
 //          <PublicRoute exact path="/viewOrg" component={ViewOrganisation}/>
 //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/>
-//            <PublicRoute exact path="/viewTeam" component={ViewTeam}/>
+
+//
 //        </Switch>
 //      </div>
 //    </BrowserRouter>
 //    <OnboardingHr />
-//    <ViewTeam/>
+    <ViewTeam/>
 //    <ViewDepartment />
-    <ViewOrganisation />
+ //   <ViewOrganisation />
+        <EmployeeChart />
 
 
   );
