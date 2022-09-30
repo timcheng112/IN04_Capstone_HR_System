@@ -1,12 +1,15 @@
 import "./App.css";
+import { BrowserRouter, Switch } from "react-router-dom";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import LandingPage from "./pages/Landing";
 import TimeoutPage from "./pages/Timeout";
-import { BrowserRouter, Switch } from "react-router-dom";
 import PublicRoute from "./utils/PublicRoute";
 import PrivateRoute from "./utils/PrivateRoute";
 import Verification from "./pages/Verification";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import BlacklistPage from "./pages/Blacklisted";
 
 function App() {
   return (
@@ -17,7 +20,11 @@ function App() {
           <PublicRoute exact path="/register" component={RegisterPage} />
           <PublicRoute exact path="/verify/:token" component={Verification} />
           <PublicRoute exact path="/verify" component={Verification} />
+          <PublicRoute exact path="/forgot" component={ForgotPassword} />
+          <PublicRoute exact path="/forgot/:token" component={ForgotPassword} />
+          <PrivateRoute exact path="/reset" component={ResetPassword} />
           <PublicRoute exact path="/timeout" component={TimeoutPage} />
+          <PublicRoute exact path="/reactivation" component={BlacklistPage} />
           <PrivateRoute exact path="/landing" component={LandingPage} />
         </Switch>
       </div>

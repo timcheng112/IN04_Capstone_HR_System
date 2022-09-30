@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import api from "../../utils/api";
 import { setUserSession } from "../../utils/Common";
-import logo from "../../assets/libro-transparent-logo.png"
+import logo from "../../assets/libro-transparent-logo.png";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,8 +17,34 @@ export default function Login() {
   function login() {
     api
       .login(email, password)
-      .then((response) => setUserSession(response.data))
-      .then(() => history.push("/landing"));
+      .then((response) => {
+        if (response.data) setUserSession(response.data, email);
+      })
+      .then(() => history.push("/landing"))
+      .catch((error) => {
+        var message = error.request.response;
+        //console.log(message);
+        if (message.includes("User password does not match the record.")) {
+          alert("The password you entered was incorrect");
+        } else if (message.includes("User account is not accessible, please request to be reactivated")) {
+          history.push("/reactivation")
+        }
+      });
+  }
+
+  function forgot() {
+    if (email.length <= 0) {
+      alert("Please enter your email");
+    } else {
+      api
+        .forgotCheckEmail(email)
+        .then((response) => {
+          //sessionStorage.setItem("userId", response.data);
+          console.log(email);
+          sessionStorage.setItem("userEmail", email);
+        })
+        .then(() => history.push("/forgot"));
+    }
   }
 
   return (
@@ -27,11 +53,7 @@ export default function Login() {
         <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96">
             <div>
-              <img
-                  className="mx-auto h-12 w-auto"
-                  src={logo}
-                  alt="Libro"
-                />
+              <img className="mx-auto h-12 w-auto" src={logo} alt="Libro" />
               <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
                 Sign in to Job Management Platform
               </h2>
@@ -92,14 +114,21 @@ export default function Login() {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="text-sm">
+                    {/* <div className="text-sm">
                       <a
                         href="/"
                         className="font-medium text-indigo-600 hover:text-indigo-500"
                       >
                         Forgot your password?
                       </a>
-                    </div>
+                    </div> */}
+                    <button
+                      type="button"
+                      className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-3 py-2 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200"
+                      onClick={forgot}
+                    >
+                      Forgot your password?
+                    </button>
                   </div>
 
                   <div>
