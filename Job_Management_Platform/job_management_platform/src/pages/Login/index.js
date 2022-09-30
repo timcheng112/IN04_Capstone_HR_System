@@ -26,8 +26,21 @@ export default function Login() {
         //console.log(message);
         if (message.includes("User password does not match the record.")) {
           alert("The password you entered was incorrect");
-        } else if (message.includes("User account is not accessible, please request to be reactivated")) {
-          history.push("/reactivation")
+        } else if (
+          message.includes(
+            "User account is not accessible, please request to be reactivated"
+          )
+        ) {
+          history.push("/reactivation");
+        } else if (
+          message.includes(
+            "User account is not activated yet, please check your email or request to be activated"
+          )
+        ) {
+          api
+            .getUserIdByEmail(email)
+            .then((response) => setUserSession(response.data, email))
+            .finally(() => history.push("/verify"));
         }
       });
   }

@@ -1,13 +1,13 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { getUser } from "./Common";
+import { getUserId } from "./Common";
 
 export default function PrivateRoute({ component: Component, ...rest }) {
   return (
     <Route
       {...rest}
       render={(props) =>
-        getUser() ? (
+        getUserId() ? (
           <Component {...props} />
         ) : (
           <Redirect

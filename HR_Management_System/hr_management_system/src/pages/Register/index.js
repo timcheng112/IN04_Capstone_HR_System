@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Switch } from "@headlessui/react";
-import { setUserSession } from "../../utils/Common";
+import { getUserId, setUserSession } from "../../utils/Common";
 import api from "../../utils/api";
 
 function classNames(...classes) {
@@ -26,8 +26,17 @@ export default function Register() {
   const [joinedDay, setJoinedDay] = useState("");
   const [joinedMonth, setJoinedMonth] = useState("");
   const [joinedYear, setJoinedYear] = useState("");
-
+  const [isHr, setIsHr] = useState(true)
+ 
   const history = useHistory();
+
+  useEffect(() => {
+    api.getUser(getUserId()).then(response => setIsHr(response.data.hrEmployee)).finally(() => {
+      if (!isHr) {
+        history.goBack()
+      }
+    }, [isHr])
+  })
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -55,7 +64,7 @@ export default function Register() {
           isHrEmployee,
           dateJoined
         )
-        .then(() => alert("account creation successful"));
+        .then(() => alert("account creation successful")).finally(() => history.goBack());
     } else {
       alert("passwords do not match");
     }

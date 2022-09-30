@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import logo from "../../assets/libro-transparent-logo.png";
 import api from "../../utils/api";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
+import { deleteUser } from "../../utils/Common";
+import { useHistory } from "react-router-dom";
 
 const social = [
   {
@@ -72,6 +74,7 @@ export default function Verification() {
   const [verified, setVerified] = useState(false);
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
+  const history = useHistory()
 
   useEffect(() => {
     var urlToken = window.location.href.substring(29);
@@ -91,6 +94,11 @@ export default function Verification() {
           .then((response) => console.log(response.data));
   }
 
+  function login() {
+    deleteUser()
+    history.push("/")
+  }
+
   return (
     <>
       {verified ? (
@@ -100,12 +108,12 @@ export default function Verification() {
               Your account has been activated
             </p>
             <p className="mx-auto mt-5 max-w-xl text-xl text-indigo-600">
-              You can now start using HRMS
+              You can now start using HRMS after logging in
             </p>
-            <a href="/">
               <button
                 type="button"
                 className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-5"
+                onClick={login}
               >
                 <ArrowLeftIcon
                   className="-ml-1 mr-3 h-5 w-5"
@@ -113,7 +121,6 @@ export default function Verification() {
                 />
                 Log in
               </button>
-            </a>
           </div>
         </div>
       ) : (

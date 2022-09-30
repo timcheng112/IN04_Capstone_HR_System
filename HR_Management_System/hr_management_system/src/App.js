@@ -13,47 +13,39 @@ import ResetPasswordPage from "./pages/ResetPassword";
 import ViewTeam from "./pages/OrgChart/ViewTeam/viewTeam";
 import ViewDepartment from "./pages/OrgChart/ViewDepartment/viewDepartment";
 import ViewOrganisation from "./pages/OrgChart/ViewOrganisation/viewOrganisation";
-import ProfilePage from './pages/ProfilePage';
-import UpdateProfile from './pages/UpdateProfile';
+import ProfilePage from "./pages/ProfilePage";
+import UpdateProfile from "./pages/UpdateProfile";
+import HomePage from "./pages/Home";
 
 import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 
-
 function App() {
   return (
-
     <BrowserRouter>
       <div className="App">
         <Switch>
           <PublicRoute exact path="/" component={LoginPage} />
-          <PublicRoute exact path="/register" component={RegisterPage} />
+          <PrivateRoute exact path="/register" component={RegisterPage} />
           <PublicRoute exact path="/forgot" component={ForgotPasswordPage} />
-          <PublicRoute
-            exact
-            path="/forgot/:token"
-            component={ForgotPasswordPage}
-          />
-          <PublicRoute exact path="/verify" component={VerificationPage} />
-          <PublicRoute
-            exact
-            path="/verify/:token"
-            component={VerificationPage}
-          />
+          <PublicRoute exact path="/forgot/:token" component={ForgotPasswordPage}/>
+          <PrivateRoute exact path="/verify" component={VerificationPage} />
+          <PrivateRoute exact path="/verify/:token" component={VerificationPage}/>
           <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
-          <PublicRoute exact path="/test" component={Timeout} />
+          <PublicRoute exact path="/timeout" component={Timeout} />
           <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
-          <PublicRoute exact path="/profile" component={ProfilePage}/>
-//          <PublicRoute exact path="/viewOrg" component={ViewOrganisation}/>
-{/* //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/> */}
-          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart}/>
+          <PrivateRoute exact path="/profile" component={ProfilePage} />
+          
+          <PublicRoute exact path="/viewOrg" component={ViewOrganisation} />
+          {/* //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/> */}
+          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart} />
+          <PrivateRoute exact path="/home" component={HomePage} />
         </Switch>
       </div>
     </BrowserRouter>
-//        <ViewTeam/>
-//    <ViewDepartment />
-//   <ViewOrganisation />
-//        <EmployeeChart />
-
+    //        <ViewTeam/>
+    //    <ViewDepartment />
+    //   <ViewOrganisation />
+    //        <EmployeeChart />
   );
 }
 

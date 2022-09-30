@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { useHistory } from "react-router-dom";
-import { deleteUser } from "../../utils/Common";
+import { deleteUser, getUserEmail } from "../../utils/Common";
 
 export default function ResetPassword() {
   const [email, setEmail] = useState("");
@@ -11,7 +11,7 @@ export default function ResetPassword() {
   const history = useHistory();
 
   useEffect(() => {
-    const email = document.cookie.valueOf("userEmail=").substring(26);
+    const email = getUserEmail()
     //console.log(email);
     setEmail(email);
   }, []);
