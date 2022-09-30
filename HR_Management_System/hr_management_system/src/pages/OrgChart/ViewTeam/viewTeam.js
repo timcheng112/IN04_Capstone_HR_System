@@ -1,4 +1,6 @@
 import Navbar  from '../../../components/Navbar.js';
+import {useState, useEffect} from 'react';
+//import axios from 'axios';
 
 /* This example requires Tailwind CSS v2.0+ */
 const manager = [
@@ -36,7 +38,32 @@ const people = [
 ]
 
 export default function ViewTeam() {
+//   const [table, setTable] = useState([]);
+//   const [error, setError] = useState([]);
+//
+//    useEffect( () => {
+//           getAllDepartment()
+//       }, [])
+//
+//       function getAllDepartment(){
+//           async function fetch(){
+//           axios.get("http://localhost:9191/api/v1/department")
+//             .then((response) =>
+//               setTable(response.data)
+//             )
+//             .catch((error) => (
+//               setError(error)
+//             ))}
+//             fetch()
+//
+//         }
+
+
   return (
+
+
+
+
 <>
   <Navbar/>
   <div class="bg-[#13AEBD] rounded-xl p-10 m-10">

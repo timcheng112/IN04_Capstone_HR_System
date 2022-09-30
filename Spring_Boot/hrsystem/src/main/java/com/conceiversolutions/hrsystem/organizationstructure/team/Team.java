@@ -26,8 +26,8 @@ public class Team {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "department_id")
     private Department department;
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "roster_id")
+    @OneToOne(cascade = CascadeType.MERGE, optional = true)
+    @JoinColumn(name = "roster_id", nullable = true)
     private Roster roster;
     @ManyToMany
     @JoinTable(
@@ -48,6 +48,15 @@ public class Team {
         this.isOffice = isOffice;
         this.department = department;
         this.roster = roster;
+        this.users = users;
+        this.teamHead = teamHead;
+    }
+
+    public Team(String teamName, String outlet, Boolean isOffice, Department department, List<User> users, User teamHead) {
+        this.teamName = teamName;
+        this.outlet = outlet;
+        this.isOffice = isOffice;
+        this.department = department;
         this.users = users;
         this.teamHead = teamHead;
     }
