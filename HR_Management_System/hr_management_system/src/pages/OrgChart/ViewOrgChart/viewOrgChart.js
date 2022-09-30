@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 import randomcolor from "randomcolor";
 import data from "./data.json";
+import "./orgChart.css";
+
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
