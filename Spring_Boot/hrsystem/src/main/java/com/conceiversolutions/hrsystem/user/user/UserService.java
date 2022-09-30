@@ -495,4 +495,15 @@ public class UserService implements UserDetailsService {
             return "Reactivation Request has been recorded";
         }
     }
+
+    public void updateUser(User user, Long id){
+        User u1 = getUser(id);
+        u1.setEmail(user.getEmail());
+        u1.setFirstName(user.getFirstName());
+        u1.setPhone(user.getPhone());
+        u1.setPassword(user.getPassword());
+
+    }
+
+
 }
