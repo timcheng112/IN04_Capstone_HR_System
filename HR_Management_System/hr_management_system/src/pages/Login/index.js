@@ -25,16 +25,20 @@ export default function Login() {
         }
       })
       .then(() => {
-        history.push("/onboarding");
+        history.push("/home");
       })
       .catch((error) => {
         var message = error.request.response;
-        console.log(message)
+        console.log(getWorkEmail());
         if (message.includes("account is not activated yet")) {
-          sessionStorage.setItem("userEmail", email);
-          history.push("/verify");
-        } else if (message.includes("User password does not match the record")) {
-          alert("The password you entered was incorrect")
+          api
+            .getUserIdByEmail(getWorkEmail())
+            .then((response) => setUserSession(response.data, email))
+            .then(() => history.push("/verify"));
+        } else if (
+          message.includes("User password does not match the record")
+        ) {
+          alert("The password you entered was incorrect");
         }
       });
   }

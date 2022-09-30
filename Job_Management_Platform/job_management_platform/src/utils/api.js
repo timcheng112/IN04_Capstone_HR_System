@@ -48,6 +48,12 @@ const api = {
   },
   requestAccountReactivation(email, reason) {
     return axios.post(`http://localhost:9191/api/user/login/requestAccountReactivation?email=${email}&reason=${reason}`)
+  },
+  getUser(userId) {
+    return axios.get(`http://localhost:9191/api/user/${userId}`)
+  },
+  getUserIdByEmail(email){
+    return axios.get(`http://localhost:9191/api/user/login/getUserIdByEmail?email=${email}`)
   }
 };
 

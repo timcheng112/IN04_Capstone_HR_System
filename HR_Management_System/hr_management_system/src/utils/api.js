@@ -111,6 +111,14 @@ const api = {
       `http://localhost:9191/api/task_list_item/${taskListItemId}`
     );
   },
+  getUser(userId) {
+    return axios.get(
+      `http://localhost:9191/api/user/${userId}`
+    )
+  },
+  getUserIdByEmail(email) {
+    return axios.get(`http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`)
+  }
 };
 
 export default api;
