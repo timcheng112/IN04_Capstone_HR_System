@@ -24,13 +24,10 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/api/user/register/**", "/api/user/login/**").permitAll()
-                    .antMatchers("/api/user**").hasRole("USER")
-                .anyRequest().authenticated().and()
-                .formLogin();
+                .anyRequest().permitAll();
+        return http.build();
         // TODO: Update api path for registration and change permission to permit all for only registration path
         // TODO: Other user paths for authenticated user only
-        return http.build();
     }
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
