@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.rostering.swaprequest;
+package com.conceiversolutions.hrsystem.rostering.swapRequest;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class SwapRequest {
     }
 
     public SwapRequest(String reason, StatusEnum status, String responseReason, List<Shift> shifts, User requestor,
-                       User receiver) {
+            User receiver) {
         this.reason = reason;
         this.status = status;
         this.responseReason = responseReason;

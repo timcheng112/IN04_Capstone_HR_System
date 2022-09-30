@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Switch } from "react-router-dom";
 import LoginPage from "./pages/Login";
-import OnboardingHrPage from "./pages/OnboardingHr";
+import OnboardingHrPage from "./pages/Onboarding/indexHR";
 import PublicRoute from "./utils/PublicRoute";
 import PrivateRoute from "./utils/PrivateRoute";
 import Timeout from "./pages/Timeout";
@@ -18,12 +18,20 @@ function App() {
           <PublicRoute exact path="/" component={LoginPage} />
           <PublicRoute exact path="/register" component={RegisterPage} />
           <PublicRoute exact path="/forgot" component={ForgotPasswordPage} />
-          <PublicRoute exact path="/forgot/:token" component={ForgotPasswordPage} />
+          <PublicRoute
+            exact
+            path="/forgot/:token"
+            component={ForgotPasswordPage}
+          />
           <PublicRoute exact path="/verify" component={VerificationPage} />
-          <PublicRoute exact path="/verify/:token" component={VerificationPage} />
+          <PublicRoute
+            exact
+            path="/verify/:token"
+            component={VerificationPage}
+          />
           <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
           <PublicRoute exact path="/test" component={Timeout} />
-          <PrivateRoute exact path="/onboarding" component={OnboardingHrPage} />
+          <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
         </Switch>
       </div>
     </BrowserRouter>

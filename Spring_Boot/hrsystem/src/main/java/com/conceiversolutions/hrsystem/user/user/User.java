@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
-import javax.swing.text.Position;
 
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
@@ -20,6 +19,7 @@ import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.goal.Goal;
 import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.training.module.Module;
+import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import lombok.EqualsAndHashCode;
@@ -115,7 +115,7 @@ public class User implements UserDetails {
     @Column(name = "goals")
     private List<Goal> goals;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = TaskListItem.class, mappedBy = "user")
-    @Column(name = "task_list_item_id")
+    @Column(name = "task_list_items")
     private List<TaskListItem> taskListItems;
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = Team.class, mappedBy = "users")
     private List<Team> teams;
@@ -162,6 +162,7 @@ public class User implements UserDetails {
         this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
     }
 
@@ -233,6 +234,7 @@ public class User implements UserDetails {
         this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
     }
 
