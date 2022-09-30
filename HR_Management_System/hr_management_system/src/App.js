@@ -31,14 +31,14 @@ function App() {
 //          <PublicRoute exact path="/profile" component={ProfilePage}/>
 //          <PublicRoute exact path="/viewOrg" component={ViewOrganisation}/>
 //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/>
-//
+//            <PublicRoute exact path="/viewTeam" component={ViewTeam}/>
 //        </Switch>
 //      </div>
 //    </BrowserRouter>
 //    <OnboardingHr />
-    <ViewTeam/>
+//    <ViewTeam/>
 //    <ViewDepartment />
- //   <ViewOrganisation />
+    <ViewOrganisation />
 
 
   );
