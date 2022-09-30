@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="medical_certificates")
+@RequestMapping(path="api/medical_certificates")
 public class MedicalCertificateController {
 
     private final MedicalCertificateService medicalCertificateService;

@@ -2,13 +2,12 @@ package com.conceiversolutions.hrsystem.organizationstructure.organization;
 
 import java.util.List;
 
+import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/organization")
+@RequestMapping(path = "api/organization")
 public class OrganizationController {
 
     private final OrganizationService organizationService;
@@ -21,5 +20,10 @@ public class OrganizationController {
     @GetMapping
     public List<Organization> getOrganizations() {
         return organizationService.getOrganizations();
+    }
+
+    @PostMapping(path = "/addOrg")
+    public Long addNewOrganization(@RequestParam("organizationName") String organisationName, @RequestParam("userId") Integer id) {
+        return organizationService.addNewOrganization(organisationName, Long.valueOf(id));
     }
 }
