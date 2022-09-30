@@ -68,4 +68,12 @@ public class TaskListItem {
         return "TaskListItem [isDone=" + isDone + ", task=" + task + ", taskListItemId=" + taskListItemId + ", user="
                 + user + "]";
     }
+
+    public Boolean getDone() {
+        return isDone;
+    }
+
+    public void setDone(Boolean done) {
+        isDone = done;
+    }
 }

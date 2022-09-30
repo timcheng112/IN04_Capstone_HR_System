@@ -1,11 +1,5 @@
 package com.conceiversolutions.hrsystem.user.user;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.*;
-
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
@@ -531,5 +525,18 @@ public class User implements UserDetails {
 
     public void setReactivationRequest(ReactivationRequest reactivationRequest) {
         this.reactivationRequest = reactivationRequest;
+    }
+
+    public List<TaskListItem> getTaskListItems() {
+        return taskListItems;
+    }
+
+    public void setTaskListItems(List<TaskListItem> taskListItems) {
+        this.taskListItems = taskListItems;
+    }
+
+    public List<TaskListItem> addTaskListItem(TaskListItem item) {
+        this.taskListItems.add(item);
+        return this.taskListItems;
     }
 }
