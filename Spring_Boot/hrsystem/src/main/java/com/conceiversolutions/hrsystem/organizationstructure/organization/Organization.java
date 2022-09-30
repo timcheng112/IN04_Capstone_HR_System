@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.organizationstructure.organization;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -25,13 +26,16 @@ public class Organization {
     private User organizationHead;
 
     public Organization() {
+        this.departments = new ArrayList<>();
     }
 
     public Organization(String organizationName, List<Department> departments, User organizationHead) {
         this.organizationName = organizationName;
-        this.departments = departments;
+        this.departments = new ArrayList<>();
         this.organizationHead = organizationHead;
     }
+
+
 
     public Long getOrganizationId() {
         return organizationId;
