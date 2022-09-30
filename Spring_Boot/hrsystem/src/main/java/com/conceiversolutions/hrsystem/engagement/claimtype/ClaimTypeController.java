@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="claim_types")
+@RequestMapping(path="api/claim_types")
 public class ClaimTypeController {
 
     private final ClaimTypeService claimTypeService;

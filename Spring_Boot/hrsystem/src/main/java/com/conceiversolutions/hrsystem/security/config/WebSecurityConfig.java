@@ -28,6 +28,7 @@ public class WebSecurityConfig {
         return http.build();
         // TODO: Update api path for registration and change permission to permit all for only registration path
         // TODO: Other user paths for authenticated user only
+
     }
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
