@@ -20,6 +20,7 @@ import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 
 function App() {
   return (
+
     <BrowserRouter>
       <div className="App">
         <Switch>
@@ -40,6 +41,9 @@ function App() {
           <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
           <PublicRoute exact path="/test" component={Timeout} />
           <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
+//          <PublicRoute exact path="/profile" component={ProfilePage}/>
+//          <PublicRoute exact path="/viewOrg" component={ViewOrganisation}/>
+//          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/>
         </Switch>
       </div>
     </BrowserRouter>
@@ -47,6 +51,7 @@ function App() {
 //    <ViewDepartment />
 //   <ViewOrganisation />
 //        <EmployeeChart />
+
   );
 }
 
