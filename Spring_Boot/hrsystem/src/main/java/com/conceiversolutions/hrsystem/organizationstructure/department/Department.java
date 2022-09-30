@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.organizationstructure.department;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -28,12 +29,13 @@ public class Department {
     private User departmentHead;
 
     public Department() {
+        this.teams = new ArrayList<>();
     }
 
     public Department(String departmentName, Organization organization, List<Team> teams, User departmentHead) {
         this.departmentName = departmentName;
         this.organization = organization;
-        this.teams = teams;
+        this.teams = new ArrayList<>();
         this.departmentHead = departmentHead;
     }
 
