@@ -1,8 +1,12 @@
+import Navbar from '../../../components/Navbar.js';
 import React, { Fragment } from "react";
 import randomcolor from "randomcolor";
+//import faker from "faker";
+import call from "./icons8-call-50.png";
+import video from "./icons8-video-24.png";
+import chat from "./icons8-chat-50.png";
 import data from "./data.json";
-import "./orgChart.css";
-
+import "./styles.css";
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -23,11 +27,24 @@ const Card = (props) => {
                 />
               </div>
               <div className="card-body">
-                <h4>{item.name}</h4>
-                <p>{item.jobtitle}</p>
+               {/*<h4>{faker.name.findName()}</h4>*/}
+                {/*<p>{faker.name.jobTitle()}</p>*/}
+               <h4>{"name"}</h4>
+                <p>{"job title"}</p>
               </div>
               <div className="card-footer" style={{ background: levelColor }}>
-              temp
+                <img
+                  src={chat}
+                  alt="Chat"
+                />
+                <img
+                  src={call}
+                  alt="Call"
+                />
+                <img
+                  src={video}
+                  alt="Video"
+                />
               </div>
               <div></div>
             </div>
@@ -39,7 +56,7 @@ const Card = (props) => {
   );
 };
 
-const EmployeeChart = () => {
+const Chart = () => {
   return (
     <div className="org-tree">
       <Card data={data} />
@@ -47,4 +64,4 @@ const EmployeeChart = () => {
   );
 };
 
-export default EmployeeChart;
+export default Chart;
