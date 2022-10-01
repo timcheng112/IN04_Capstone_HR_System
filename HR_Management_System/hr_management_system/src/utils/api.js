@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const api = {
+  //matthew and xueqi's stuff for SR1
   login(email, password) {
     return axios.get(
       `http://localhost:9191/api/user/login/loginHRMS?workEmail=${email}&password=${password}`
@@ -59,6 +60,8 @@ const api = {
       `http://localhost:9191/api/user/login/changePasswordHRMS?workEmail=${workEmail}&password=${password}`
     );
   },
+
+  //timothy & xy's stuff for SR1
   getCategories() {
     return axios.get(`http://localhost:9191/api/category`);
   },
@@ -111,6 +114,15 @@ const api = {
       `http://localhost:9191/api/task_list_item/${taskListItemId}`
     );
   },
+
+  //shi hans stuff for SR1
+  getOrganization() {
+    return axios.get(
+      `http://localhost:9191/api/organization/1`
+    )
+  }
+
+
 };
 
 export default api;
