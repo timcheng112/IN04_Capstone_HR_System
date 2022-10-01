@@ -42,15 +42,17 @@ function App() {
           <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
           <PublicRoute exact path="/test" component={Timeout} />
           <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
-          <PublicRoute exact path="/profile" component={ProfilePage}/>
-//          <PublicRoute exact path="/viewOrg" component={ViewOrganisation}/>
-{/* //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/> */}
-          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart}/>
+          <PrivateRoute exact path="/profile" component={ProfilePage}/>
+          <PrivateRoute exact path="/viewOrg" component={ViewOrganisation}/>
+          <PrivateRoute exact path="/updateProfile" component={UpdateProfile}/>
+          <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
+          <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
+          <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
+          {/* <ViewTeam/> */}
         </Switch>
       </div>
     </BrowserRouter>
-//        <ViewTeam/>
-//    <ViewDepartment />
+
 //   <ViewOrganisation />
 //        <EmployeeChart />
 

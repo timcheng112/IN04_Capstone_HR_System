@@ -111,6 +111,12 @@ const api = {
       `http://localhost:9191/api/task_list_item/${taskListItemId}`
     );
   },
+  getUserInfo(userId){
+    return axios.get(`http://localhost:9191/api/user/${userId}`);
+  },
+  editUserInfo(userId, gender, email, phone){
+    return axios.get(`http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`);
+  },
 };
 
 export default api;

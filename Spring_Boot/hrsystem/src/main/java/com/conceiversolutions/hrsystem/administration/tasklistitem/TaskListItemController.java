@@ -26,12 +26,12 @@ public class TaskListItemController {
         return taskListItemService.getTaskListItems();
     }
 
-    @GetMapping
+    @GetMapping (path = "/task-list-items-by-task" )
     public List<TaskListItem> getTaskListItemsByTask(@RequestParam("taskId") Long taskId) {
         return taskListItemService.getTaskListItemsByTask(taskId);
     }
 
-    @GetMapping
+    @GetMapping(path = "/task-list-items-by-employee")
     public List<TaskListItem> getTaskListItemsByEmployee(@RequestParam("employeeId") Long employeeId) {
         return taskListItemService.getTaskListItemsByEmployee(employeeId);
     }
