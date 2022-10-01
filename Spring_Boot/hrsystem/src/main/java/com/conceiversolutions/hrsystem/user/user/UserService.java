@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.user.user;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
 import com.conceiversolutions.hrsystem.user.registration.EmailValidator;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,7 +65,23 @@ public class UserService implements UserDetailsService {
 
     public List<User> getAllUsers() {
         System.out.println("UserService.getAllUsers");
-        return userRepository.findAll();
+
+        List<User> users = userRepository.findAll();
+        System.out.println("size of user list is " + users.size());
+        for (User u : users) {
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setRoster(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+            u.setTeams(new ArrayList<>());
+        }
+
+        return users;
     }
 
     public User getUser(Long id) {
@@ -73,7 +91,21 @@ public class UserService implements UserDetailsService {
         if (user.isPresent()) {
             System.out.println("User found");
             System.out.println(user.get());
-            return user.get();
+
+            User u = user.get();
+
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setRoster(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+            u.setTeams(new ArrayList<>());
+
+            return u;
         } else {
             throw new IllegalStateException("User does not exist.");
         }
@@ -87,7 +119,21 @@ public class UserService implements UserDetailsService {
         if (user.isPresent()) {
             System.out.println("User found");
             System.out.println(user.get());
-            return user.get();
+
+            User u = user.get();
+
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setRoster(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+            u.setTeams(new ArrayList<>());
+
+            return u;
         } else {
             throw new IllegalStateException("User does not exist.");
         }
@@ -100,7 +146,21 @@ public class UserService implements UserDetailsService {
         if (user.isPresent()) {
             System.out.println("Employee found");
             System.out.println(user.get());
-            return user.get();
+
+            User u = user.get();
+
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setRoster(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+            u.setTeams(new ArrayList<>());
+
+            return u;
         } else {
             throw new IllegalStateException("Employee does not exist.");
         }
@@ -712,4 +772,85 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public List<User> getAllManagers() {
+        List<User> managers = userRepository.findAllByRole(RoleEnum.MANAGER);
+        System.out.println("size of managers list is " + managers.size());
+        for (User u : managers) {
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+//            u.setTeams(new ArrayList<>());
+        }
+
+        return managers;
+    }
+
+    public List<User> getAllEmployees() {
+        List<User> employees = userRepository.findAllByRole(RoleEnum.EMPLOYEE);
+        System.out.println("size of employees list is " + employees.size());
+        for (User u : employees) {
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+//            u.setTeams(new ArrayList<>());
+        }
+
+        return employees;
+    }
+
+    public List<User> getAllStaff() {
+        List<User> employees = userRepository.findAllStaff(RoleEnum.MANAGER, RoleEnum.EMPLOYEE);
+        System.out.println("size of employee list is " + employees.size());
+        for (User u : employees) {
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+//            u.setTeams(new ArrayList<>());
+        }
+
+        return employees;
+    }
+
+    public void initAdmin(User user) {
+        System.out.println("UserService.initAdmin");
+        boolean isValidEmail = emailValidator.test(user.getEmail());
+        if (!isValidEmail) {
+            throw new IllegalStateException("Email address is not valid");
+        }
+        System.out.println("work email " + user.getWorkEmail());
+        String workEmailToCheck = user.getWorkEmail();
+        boolean isValidWorkEmail = emailValidator.test(workEmailToCheck);
+        if(!isValidWorkEmail) {
+            throw new IllegalStateException("Work email address is not valid");
+        }
+        Optional<User> employeeByWorkEmail1 = userRepository.findUserByEmail(user.getEmail());
+
+        Optional<User> employeeByWorkEmail2 = userRepository.findUserByWorkEmail(user.getWorkEmail());
+        if (employeeByWorkEmail1.isPresent() || employeeByWorkEmail2.isPresent()) {
+            System.out.println("Email(s) already in use.");
+            throw new IllegalStateException("User's emails are already in use");
+        }
+
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        User newUser = userRepository.saveAndFlush(user);
+    }
 }
