@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/department")
+@RequestMapping(path = "api/department")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
@@ -16,7 +16,7 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping
+    @GetMapping(path = "/getAllDepartments")
     public List<Department> getAllDepartment() {
         return departmentService.getAllDepartment();
     }
@@ -26,26 +26,33 @@ public class DepartmentController {
         return departmentService.getDepartment(id);
     }
 
-    @PostMapping
-    public void addNewDepartment(@RequestBody Department department) {
-        departmentService.addNewDepartment(department);
+    @PostMapping(path = "/addDepartment")
+    public Long addNewDepartment(@RequestParam("deptName") String deptName,
+                                 @RequestParam("deptHeadId") Integer deptHeadId) {
+        return departmentService.addNewDepartment(deptName, deptHeadId);
+    }
+
+    @PutMapping(path = "/changeDepartmentHead")
+    public String changeDeptHead(@RequestParam("deptId") Integer deptId,
+                                 @RequestParam("newHeadId") Integer newHeadId) {
+        return departmentService.changeDeptHead(deptId, newHeadId);
     }
 
     @PutMapping(path = "{departmentId}")
-    public void updateDepartment(@RequestBody Department department, @PathVariable("payslipId") Long departmentId) {
+    public void updateDepartment(@RequestBody Department department, @PathVariable("departmentId") Long departmentId) {
         departmentService.updateDepartment(department, departmentId);
     }
 
+    // can only delete if the dept has no teams
     @DeleteMapping(path = "{departmentId}")
-    public void deletePayslip(@PathVariable("departmentId") Long id) {
-        departmentService.deleteDepartment(id);
+    public boolean deleteDepartment(@PathVariable("departmentId") Long id) {
+        return departmentService.deleteDepartment(id);
     }
 
-
-    @DeleteMapping
-    public void deleteAllPayslips() {
-        departmentService.deleteAllDepartments();
-    }
+//    @DeleteMapping(path = "/deleteAllDepartments")
+//    public void deleteAllDepartments() {
+//        departmentService.deleteAllDepartments();
+//    }
 
 
 }
