@@ -35,7 +35,12 @@ public class Organization {
         this.organizationHead = organizationHead;
     }
 
-
+    public Organization(Long organizationId, String organizationName, List<Department> departments, User organizationHead) {
+        this.organizationId = organizationId;
+        this.organizationName = organizationName;
+        this.departments = departments;
+        this.organizationHead = organizationHead;
+    }
 
     public Long getOrganizationId() {
         return organizationId;
@@ -59,6 +64,11 @@ public class Organization {
 
     public void setDepartments(List<Department> departments) {
         this.departments = departments;
+    }
+
+    public List<Department> addDepartment(Department newDept) {
+        this.departments.add(newDept);
+        return this.departments;
     }
 
     public User getOrganizationHead() {

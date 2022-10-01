@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
+import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
@@ -675,6 +676,20 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
+    public String updateUser(Long userId, GenderEnum gender, String email, Integer phone){
+        System.out.println("UserService.updateUser");
+//        System.out.println(.getUserRole());
+
+        User user = getUser(userId);
+
+        user.setPhone(phone);
+        user.setEmail(email);
+        user.setGender(gender);
+
+
+        return "Update of user was successful";
+
     public Long getUserFromEmail(String email) {
         System.out.println("UserService.getUserFromEmail");
         Optional<User> user = userRepository.findUserByEmail(email);
@@ -694,5 +709,6 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("User not found");
         }
     }
+
 
 }

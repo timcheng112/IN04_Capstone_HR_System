@@ -24,6 +24,9 @@ spring:
           connectiontimeout: 5000
           timeout: 3000
           writetimeout: 5000
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
 
 server:
   port: 9191

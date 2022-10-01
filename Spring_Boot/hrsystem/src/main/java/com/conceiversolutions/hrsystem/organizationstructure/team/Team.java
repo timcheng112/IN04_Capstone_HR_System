@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
+import com.conceiversolutions.hrsystem.organizationstructure.outlet.Outlet;
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
 import com.conceiversolutions.hrsystem.user.user.User;
 
@@ -18,8 +19,9 @@ public class Team {
     private Long teamId;
     @Column(name = "team_name", nullable = false)
     private String teamName;
-    @Column(name = "outlet", nullable = true)
-    private String outlet;
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "outlet_id", nullable = true)
+    private Outlet outlet;
     @Column(name = "is_office", nullable = false)
     private Boolean isOffice;
 
@@ -41,7 +43,7 @@ public class Team {
     public Team() {
     }
 
-    public Team(String teamName, String outlet, Boolean isOffice, Department department, Roster roster,
+    public Team(String teamName, Outlet outlet, Boolean isOffice, Department department, Roster roster,
             List<User> users, User teamHead) {
         this.teamName = teamName;
         this.outlet = outlet;
@@ -52,7 +54,7 @@ public class Team {
         this.teamHead = teamHead;
     }
 
-    public Team(String teamName, String outlet, Boolean isOffice, Department department, List<User> users, User teamHead) {
+    public Team(String teamName, Outlet outlet, Boolean isOffice, Department department, List<User> users, User teamHead) {
         this.teamName = teamName;
         this.outlet = outlet;
         this.isOffice = isOffice;
@@ -77,11 +79,11 @@ public class Team {
         this.teamName = teamName;
     }
 
-    public String getOutlet() {
+    public Outlet getOutlet() {
         return outlet;
     }
 
-    public void setOutlet(String outlet) {
+    public void setOutlet(Outlet outlet) {
         this.outlet = outlet;
     }
 
@@ -119,12 +121,10 @@ public class Team {
 
     public void addUser(User u) {
         this.users.add(u);
-        u.getTeams().add(this);
     }
 
     public void removeUser(User u) {
         this.users.remove(u);
-        u.getTeams().remove(this);
     }
 
     public User getTeamHead() {
