@@ -228,4 +228,19 @@ public class UserController {
         return userService.updateUser(userId, gender, email, phone);
 
     }
+
+    @GetMapping(path = "/getAllManagers")
+    public List<User> getAllManagers() {
+        return userService.getAllManagers();
+    }
+
+    @GetMapping(path = "/getAllEmployees")
+    public List<User> getAllEmployees() {
+        return userService.getAllEmployees();
+    }
+
+    @GetMapping(path = "/getAllStaff")
+    public List<User> getAllStaff() {
+        return userService.getAllStaff();
+    }
 }
