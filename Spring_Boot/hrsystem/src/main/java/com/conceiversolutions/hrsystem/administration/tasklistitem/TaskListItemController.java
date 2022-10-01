@@ -26,7 +26,8 @@ public class TaskListItemController {
         return taskListItemService.getTaskListItems();
     }
 
-    @GetMapping (path = "/task-list-items-by-task" )
+
+    @GetMapping(path = "/task-list-items-by-task")
     public List<TaskListItem> getTaskListItemsByTask(@RequestParam("taskId") Long taskId) {
         return taskListItemService.getTaskListItemsByTask(taskId);
     }

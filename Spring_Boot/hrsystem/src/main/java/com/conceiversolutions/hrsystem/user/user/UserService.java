@@ -686,6 +686,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(email);
         user.setGender(gender);
 
+
         return "Update of user was successful";
     }
 

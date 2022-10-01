@@ -217,6 +217,7 @@ public class UserController {
         return userService.getEmployeeFromToken(token);
     }
 
+
     @GetMapping(path = "/updateProfile")
     public String updateProfile(@RequestParam("userId") Long userId,
                                 @RequestParam("gender") GenderEnum gender,
@@ -225,5 +226,6 @@ public class UserController {
     ){
 //        System.out.println(user.getUserRole());
         return userService.updateUser(userId, gender, email, phone);
+
     }
 }
