@@ -1,5 +1,5 @@
 import React from "react";
-import OnboardingComponent from "../components/onboarding/OnboardingComponent";
+import OnboardingComponent from "../components/Onboarding/OnboardingComponent";
 
 const OffboardingScreen = () => {
   return <OnboardingComponent />;
