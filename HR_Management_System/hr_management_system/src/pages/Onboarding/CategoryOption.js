@@ -4,19 +4,23 @@ import { Fragment, useState } from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import AddTaskModal from "../../features/Onboarding/AddTaskModal";
 import EditCategoryModal from "../../features/Onboarding/EditCategoryModal";
+import api from "../../utils/api";
+import { useHistory } from 'react-router'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function CategoryOptions({ user, category, setCategory }) {
+export default function CategoryOptions({ category}) {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [error, setError] = useState(null);
+  const history = useHistory()
 
   function deleteCategory() {
-    console.log("Delete Category");
+    api.deleteCategory(category.id)
+      .then(() => history.push('/admin/onboardinghr'))
   }
 
   return (
@@ -86,22 +90,20 @@ export default function CategoryOptions({ user, category, setCategory }) {
         onClose={() => {
           setOpenAdd(false);
         }}
-        categoryName={category.name}
+        category={category}
       />
       <EditCategoryModal
         open={openEdit}
         onClose={() => setOpenEdit(false)}
-        categoryName={"Category 1"}
-        // category={category}
-        // setCategory={setCategory}
+        category={category}
       />
-      {/* <ConfirmDialog
+      <ConfirmDialog
         title="category"
         item="category"
         open={openDelete}
         onClose={() => setOpenDelete(false)}
-        // onConfirm={deleteCategory}
-      /> */}
+        onConfirm={deleteCategory}
+      /> 
     </Menu>
   );
 }

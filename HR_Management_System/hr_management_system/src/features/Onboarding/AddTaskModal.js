@@ -1,14 +1,14 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Fragment, useState } from "react";
 import { useHistory } from "react-router";
 import AddTaskSteps from "./AddTaskSteps";
 import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
 // import InputText from '../../components/inputText';
 // import TextArea from '../../components/textArea';
-//import api from '../../util/api';
+import api from '../../utils/api';
 
-export default function AddTaskModal({ open, onClose, categoryName }) {
+export default function AddTaskModal({ open, onClose, category }) {
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
@@ -16,44 +16,7 @@ export default function AddTaskModal({ open, onClose, categoryName }) {
   const [error, setError] = useState(null);
   const [showStepOne, setShowStepOne] = useState(true);
 
-  const [unassignedEmployees, setUnassignedEmployees] = useState([
-    {
-      name: "Leonard Krasner",
-      handle: "leonardkrasner",
-    },
-    {
-      name: "Floyd Miles",
-      handle: "floydmiles",
-    },
-    {
-      name: "Emily Selman",
-      handle: "emilyselman",
-    },
-    {
-      name: "Kristin Watson",
-      handle: "kristinwatson",
-    },
-    {
-      name: "Kristin Watson",
-      handle: "kristinwatson",
-    },
-    {
-      name: "Kristin Watson",
-      handle: "kristinwatson",
-    },
-    {
-      name: "Kristin Watson",
-      handle: "kristinwatson",
-    },
-    {
-      name: "Kristin Watson",
-      handle: "kristinwatson",
-    },
-    {
-      name: "Kristin Watson",
-      handle: "kristinwatson",
-    },
-  ]);
+  const [unassignedEmployees, setUnassignedEmployees] = useState(api.getUser());
   const [assignedEmployees, setAssignedEmployees] = useState([]);
 
   const [filteredUnassignedEmployees, setFilteredUnassignedEmployees] =
@@ -61,52 +24,31 @@ export default function AddTaskModal({ open, onClose, categoryName }) {
   const [filteredAssignedEmployees, setFilteredAssignedEmployees] =
     useState(assignedEmployees);
   const handleSubmit = (evt) => {
-    evt.preventDefault();
+    evt.preventDefault()
+    createTask()
+    //createTaskListItem()
+    alert("Successfully created task.")
   };
-
-  // useEffect(() => {
-  //   setShowStepOne(true);
-  //   setUnassignedEmployees(
-  //     {
-  //       name: "Leonard Krasner",
-  //       handle: "leonardkrasner",
-  //     },
-  //     {
-  //       name: "Floyd Miles",
-  //       handle: "floydmiles",
-  //     },
-  //     {
-  //       name: "Emily Selman",
-  //       handle: "emilyselman",
-  //     },
-  //     {
-  //       name: "Kristin Watson",
-  //       handle: "kristinwatson",
-  //     }
-  //   );
-  //   setAssignedEmployees([]);
-
-  //   setFilteredUnassignedEmployees(
-  //     {
-  //       name: "Leonard Krasner",
-  //       handle: "leonardkrasner",
-  //     },
-  //     {
-  //       name: "Floyd Miles",
-  //       handle: "floydmiles",
-  //     },
-  //     {
-  //       name: "Emily Selman",
-  //       handle: "emilyselman",
-  //     },
-  //     {
-  //       name: "Kristin Watson",
-  //       handle: "kristinwatson",
-  //     }
-  //   );
-
-  //   setFilteredAssignedEmployees([]);
-  // }, []);
+  function createTask() {
+    api.addNewTask({ 
+      name: name,
+      description: description,
+      isOnboarding: true,
+      categpry: category
+    })
+      .then(() => history.goBack())
+      .catch(error => setError(error))
+  }
+  // function createTaskListItem() {
+  //   api.addNewTaskListItem({ 
+  //     name: name,
+  //     description: description,
+  //     isOnboarding: true,
+  //   })
+  //     .then(() => history.goBack())
+  //     .catch(error => setError(error))
+  // }
+  
 
   function search(e, items, isUnassigned) {
     const value = e.target.value;
@@ -157,32 +99,10 @@ export default function AddTaskModal({ open, onClose, categoryName }) {
     return classes.filter(Boolean).join(" ");
   }
 
-  //   const handleSubmit = (evt) => {
-  //     evt.preventDefault()
-  //     createCategory()
-  //     alert("Successfully created category.")
-  //   }
-
-  // function createTask() {
-  //   api.addNewTask({ // api change
-  //       name: name,
-  //       description: description,
-  //       employees: employees
-  //   })
-  //     .then(() => history.goBack())
-  //     .catch(error => setError(error))
-  // }
-
-  // useEffect(() => {
-  //   api.getUser()
-  //     .then(response => setUser(response.data))
-  //     .catch((error) => setError(error))
-  // }, [])
 
   return (
     // user && (
     <Transition.Root show={open} as={Fragment}>
-      <form onSubmit={handleSubmit}>
         <Dialog
           as="div"
           className="relative z-10"
@@ -214,6 +134,7 @@ export default function AddTaskModal({ open, onClose, categoryName }) {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
+                <form onSubmit={handleSubmit}>
                 <Dialog.Panel className="bg-white relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                   <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="mt-3 text-center sm:mt-0 sm:text-left">
@@ -222,7 +143,7 @@ export default function AddTaskModal({ open, onClose, categoryName }) {
                         as="h3"
                         className="text-lg font-medium leading-6 text-gray-900 mb-2"
                       >
-                        Add a Task under {categoryName}
+                        Add a Task under {category.name}
                       </Dialog.Title>
                       {showStepOne ? (
                         <div className="mt-2">
@@ -240,6 +161,8 @@ export default function AddTaskModal({ open, onClose, categoryName }) {
                                 rows={1}
                                 className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 required
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                               />
                             </div>
                             <label
@@ -255,6 +178,8 @@ export default function AddTaskModal({ open, onClose, categoryName }) {
                                 rows={3}
                                 className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 required
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
                               />
                             </div>
                           </form>
@@ -352,11 +277,11 @@ export default function AddTaskModal({ open, onClose, categoryName }) {
                     </button>
                   </div>
                 </Dialog.Panel>
+                </form>
               </Transition.Child>
             </div>
           </div>
         </Dialog>
-      </form>
     </Transition.Root>
   );
   // );

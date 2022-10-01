@@ -7,63 +7,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function TasklistTable() {
-  const categories = [
-    {
-      id: 1,
-      name: "Category 1",
-      tasks: [
-        {
-          name: "Task 1A",
-          description: "This is Task 1A.",
-        },
-        {
-          name: "Task 1B",
-          description: "This is Task 1B.",
-        },
-        {
-          name: "Task 1C",
-          description: "This is Task 1C.",
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Category 2",
-      tasks: [
-        {
-          name: "Task 2A",
-          description: "This is Task 2C.",
-        },
-        {
-          name: "Task 2B",
-          description: "This is Task 2C.",
-        },
-        {
-          name: "Task 2C",
-          description: "This is Task 2C.",
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Category 3",
-      tasks: [
-        {
-          name: "Task 3A",
-          description: "This is Task 3C.",
-        },
-        {
-          name: "Task 3B",
-          description: "This is Task 3C.",
-        },
-        {
-          name: "Task 3C",
-          description: "This is Task 3C.",
-        },
-      ],
-    },
-  ];
+function TasklistTable(categories,setCategories) {
+  
 
   return (
     <div className="mt-8 flex flex-col">
@@ -135,7 +80,6 @@ function TasklistTable() {
                           </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <TaskOptions
-                              categoryId={category.id}
                               task={task}
                               //   setTask={setTask}
                             />
