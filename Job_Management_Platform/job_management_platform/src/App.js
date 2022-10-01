@@ -9,6 +9,8 @@ import Verification from "./pages/Verification";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import BlacklistPage from "./pages/Blacklisted";
+import ProfilePage from "./pages/ProfilePage";
+import UpdateProfile from "./pages/UpdatePage";
 import Home from "./pages/Home";
 
 function App() {
@@ -25,6 +27,9 @@ function App() {
           <PrivateRoute exact path="/reset" component={ResetPassword} />
           <PublicRoute exact path="/timeout" component={TimeoutPage} />
           <PublicRoute exact path="/reactivation" component={BlacklistPage} />
+          <PrivateRoute exact path="/landing" component={LandingPage} />
+          <PrivateRoute exact path="/profile" component={ProfilePage} />
+          <PrivateRoute exact path="/updateProfile" component={UpdateProfile} />
           <PrivateRoute exact path="/home" component={Home} />
         </Switch>
       </div>

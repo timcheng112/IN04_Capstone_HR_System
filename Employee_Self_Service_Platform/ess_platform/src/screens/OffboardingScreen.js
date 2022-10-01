@@ -1,8 +1,8 @@
 import React from "react";
 import OnboardingComponent from "../components/onboarding/OnboardingComponent";
 
-const Onboarding = () => {
+const OffboardingScreen = () => {
   return <OnboardingComponent />;
 };
 
-export default Onboarding;
+export default OffboardingScreen;

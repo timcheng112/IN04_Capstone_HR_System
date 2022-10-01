@@ -8,6 +8,7 @@ import javax.persistence.*;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.Organization;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.user.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "departments")
@@ -36,6 +37,14 @@ public class Department {
         this.departmentName = departmentName;
         this.organization = organization;
         this.teams = new ArrayList<>();
+        this.departmentHead = departmentHead;
+    }
+
+    public Department(Long departmentId, String departmentName, Organization organization, List<Team> teams, User departmentHead) {
+        this.departmentId = departmentId;
+        this.departmentName = departmentName;
+        this.organization = organization;
+        this.teams = teams;
         this.departmentHead = departmentHead;
     }
 
@@ -69,6 +78,16 @@ public class Department {
 
     public void setTeams(List<Team> teams) {
         this.teams = teams;
+    }
+
+    public List<Team> addTeam(Team t) {
+        this.teams.add(t);
+        return this.teams;
+    }
+
+    public List<Team> removeTeam(Team t) {
+        this.teams.remove(t);
+        return this.teams;
     }
 
     public User getDepartmentHead() {

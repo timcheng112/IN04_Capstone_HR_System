@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
+import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
@@ -673,6 +674,21 @@ public class UserService implements UserDetailsService {
             userRepository.saveAndFlush(applicant);
             return "Reactivation Request has been recorded";
         }
+    }
+
+    @Transactional
+    public String updateUser(Long userId, GenderEnum gender, String email, Integer phone) {
+        System.out.println("UserService.updateUser");
+//        System.out.println(.getUserRole());
+
+        User user = getUser(userId);
+
+        user.setPhone(phone);
+        user.setEmail(email);
+        user.setGender(gender);
+
+
+        return "Update of user was successful";
     }
 
     public Long getUserFromEmail(String email) {

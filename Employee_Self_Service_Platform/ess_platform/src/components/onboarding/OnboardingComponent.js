@@ -1,6 +1,7 @@
 import React from "react";
 import { SafeAreaView, StatusBar } from "react-native";
 import { Text } from "react-native-paper";
+import TabNavigator from "../../navigation/TabNavigator";
 import TaskList from "./TaskList";
 
 function OnboardingComponent() {

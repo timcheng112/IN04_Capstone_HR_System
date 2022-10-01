@@ -16,19 +16,47 @@ public class TeamController {
         this.teamService = teamService;
     }
 
-    @GetMapping
+    @GetMapping(path = "/getAllTeams")
     public List<Team> getAllTeams() {
         return teamService.getAllTeams();
     }
 
     @GetMapping(path = "{teamId}")
-    public Team getTeam(@PathVariable Long id ){
+    public Team getTeam(@PathVariable("teamId") Long id ){
         return teamService.getTeam(id);
     }
 
-//    @PostMapping(path = "/addTeam")
-//    public Long addNewOrganization(@RequestParam("organizationName") String teamName, @RequestParam("teamId") Integer id) {
-//       return teamService.addNewTeam(teamName, Long.valueOf(id));
-//
-//    }
+    @PostMapping(path = "/addTeam")
+    public Long addNewTeam(@RequestParam("teamName") String teamName,
+                           @RequestParam("teamHeadId") Integer teamHeadId,
+                           @RequestParam("outletId") Integer outletId,
+                           @RequestParam("isOffice") Boolean isOffice,
+                           @RequestParam("deptId") Integer deptId) {
+        return teamService.addNewTeam(teamName, teamHeadId, outletId, isOffice, deptId);
+    }
+
+    @PutMapping(path = "/addMemberToTeam")
+    public boolean addMemberToTeam(@RequestParam("teamId") Integer teamId,
+                                   @RequestParam("userId") Integer userId) {
+        return teamService.addMemberToTeam(teamId, userId);
+    }
+
+    @DeleteMapping (path = "/removeMemberFromTeam")
+    public boolean removeMemberFromTeam(@RequestParam("teamId") Integer teamId,
+                                   @RequestParam("userId") Integer userId) {
+        return teamService.removeMemberFromTeam(teamId, userId);
+    }
+
+    @PutMapping(path = "/assignTeamToDept")
+    public String assignTeamToDept(@RequestParam("deptId") Integer deptId,
+                                   @RequestParam("teamId") Integer teamId) {
+        return teamService.assignTeamToDept(deptId, teamId);
+    }
+
+    @PutMapping(path = "/changeTeamHead")
+    public String changeTeamHead(@RequestParam("teamId") Integer teamId,
+                                 @RequestParam("newHeadId") Integer newHeadId) {
+        return teamService.changeTeamHead(teamId, newHeadId);
+    }
+
 }
