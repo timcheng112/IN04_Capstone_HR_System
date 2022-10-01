@@ -13,6 +13,7 @@ import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.goal.Goal;
 import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.training.module.Module;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
@@ -69,8 +70,8 @@ public class User implements UserDetails {
     @Column(name = "date_joined", nullable = false)
     private LocalDate dateJoined;
 
-    @Column(name = "profile_pic", length = 1000, nullable = true)
-    private Byte[] profilePic;
+    @Column(name = "profile_pic", nullable = true)
+    private DocData profilePic;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Position.class)
     @JoinColumn(name = "user_id")
     private List<Position> positions;
@@ -196,7 +197,7 @@ public class User implements UserDetails {
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
             LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
             Boolean isBlackListed,
-            Boolean isEnabled, LocalDate dateJoined, Byte[] profilePic, List<Position> positions,
+            Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions,
             QualificationInformation qualificationInformation,
             List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
             List<Attendance> attendances, PayInformation currentPayInformation) {
@@ -348,11 +349,11 @@ public class User implements UserDetails {
         this.dateJoined = dateJoined;
     }
 
-    public Byte[] getProfilePic() {
+    public DocData getProfilePic() {
         return profilePic;
     }
 
-    public void setProfilePic(Byte[] profilePic) {
+    public void setProfilePic(DocData profilePic) {
         this.profilePic = profilePic;
     }
 
