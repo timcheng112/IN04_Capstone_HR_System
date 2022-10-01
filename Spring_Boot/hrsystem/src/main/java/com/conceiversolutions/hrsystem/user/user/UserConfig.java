@@ -23,9 +23,9 @@ public class UserConfig {
                     "janicesim@gmail.com",
                     LocalDate.of(2000,2,28),
                     GenderEnum.FEMALE,
-                    RoleEnum.APPLICANT,
+                    RoleEnum.ADMINISTRATOR,
                     false,
-                    false,
+                    true,
                     null
                 );
 
@@ -37,20 +37,20 @@ public class UserConfig {
                     "matthewlee@gmail.com",
                     LocalDate.of(1997,1,3),
                     GenderEnum.MALE,
-                    RoleEnum.APPLICANT,
-                    true,
+                    RoleEnum.ADMINISTRATOR,
                     false,
+                    true,
                     null
             );
 
 //            if any user exists already, don't run
             if (!userRepository.existsById(1L)) {
-                System.out.println("No user, so will init 2 test users");
+                System.out.println("No user, so will init 2 Administrator users");
                 userRepository.saveAll(
                         List.of(testUser, testUser2)
                 );
             } else {
-                System.out.println("Users already exist, do not init test users");
+                System.out.println("Administrators already exist, do not init Administrator users");
             }
         };
     }
