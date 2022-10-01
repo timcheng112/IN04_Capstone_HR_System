@@ -70,7 +70,8 @@ public class User implements UserDetails {
     @Column(name = "date_joined", nullable = false)
     private LocalDate dateJoined;
 
-    @Column(name = "profile_pic", nullable = true)
+    @OneToOne(targetEntity = DocData.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_pic")
     private DocData profilePic;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Position.class)
     @JoinColumn(name = "user_id")

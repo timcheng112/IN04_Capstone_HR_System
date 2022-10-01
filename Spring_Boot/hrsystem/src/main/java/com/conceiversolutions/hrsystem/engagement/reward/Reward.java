@@ -22,7 +22,8 @@ public class Reward {
     private String name;
     @Column(name="reward_description")
     private String description;
-    @Column(name="reward_image")
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
+    @JoinColumn(name="reward_image")
     private DocData image;
     @Column(name="date_claimed")
     private LocalDate dateClaimed;
