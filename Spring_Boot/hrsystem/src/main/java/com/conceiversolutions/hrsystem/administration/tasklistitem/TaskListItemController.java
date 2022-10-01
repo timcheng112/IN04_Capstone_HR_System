@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+import com.conceiversolutions.hrsystem.user.user.User;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @CrossOrigin("*")
 @RestController
@@ -41,5 +45,15 @@ public class TaskListItemController {
     @PutMapping(path = "{taskListItemId}")
     public void markTaskListItemAsComplete(@PathVariable("taskListItemId") Long taskListItemId) {
         taskListItemService.markTaskListItemAsComplete(taskListItemId);
+    }
+
+    @PostMapping
+    public void addNewTaskListItem(@RequestBody TaskListItem taskListItem, User assignedEmployee, Long taskId) {
+        taskListItemService.addNewTaskListItem(taskListItem,assignedEmployee,taskId);
+    }
+
+    @DeleteMapping(path = "{taskListItemId}")
+    public void deleteTaskListItem(@PathVariable("taskListItemId") Long taskListItemId) {
+        taskListItemService.deleteTaskListItem(taskListItemId);
     }
 }

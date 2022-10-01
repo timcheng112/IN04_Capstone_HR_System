@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -26,4 +27,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT c.user FROM ConfirmationToken c WHERE c.token = ?1")
     Optional<User> findUserByToken(String token);
+
+    // @Query("SELECT u FROM User u WHERE u.userRole = 'EMPLOYEE'")
+    // Optional<List<User>> findAllEmployees();
+
+    
+    // @Query("SELECT u FROM User u WHERE u.userRole = 'EMPLOYEE' AND (u.task_list_items NOT IN(SELECT t.task_list_items FROM Task t WHERE t.id = taskId)))")
+    // Optional<List<User>> findEmployeesWithoutTask(Long taskId);
+
+    // @Query("SELECT u FROM User u WHERE u.userRole = 'EMPLOYEE' AND (ANY u.task_list_items IN(SELECT t.task_list_items FROM Task t WHERE t.id = taskId)))")
+    // Optional<List<User>> findEmployeesWithTask(Long taskId);
 }
