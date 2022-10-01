@@ -1,37 +1,48 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Text, Card, Checkbox, Paragraph, Title } from "react-native-paper";
-import ViewTaskModal from "./ViewTaskModal";
+import {
+  Badge,
+  Button,
+  Card,
+  Checkbox,
+  Paragraph,
+  Title,
+} from "react-native-paper";
 
-function TaskList() {
+function TaskList({ showModal, setTask }) {
   const [taskListItems, setTaskListItems] = useState([
     {
+      id: 1,
       name: "Task 1",
       description: "This is Task 1.",
       category: "IT",
     },
     {
+      id: 2,
       name: "Task 2",
       description: "This is Task 2.",
       category: "New Hire Paperwork",
     },
     {
+      id: 3,
       name: "Task 3",
       description: "This is Task 3.",
       category: "Culture Orientation",
     },
   ]);
   const [checked, setChecked] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [selectedTask, setSelectedTask] = useState([]);
 
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  function onClickHandler(taskListItem) {
+    setTaskListItems(
+      taskListItems.filter((item) => item.name !== taskListItem.name)
+    );
+  }
 
   return (
     <View>
-      <Text variant="titleLarge">Category 1</Text>
       {/* Render List Items of Task */}
-      {taskListItems.map((task) => (
+      {taskListItems.map((task, index) => (
         <Card
           style={{
             borderRadius: 10,
@@ -39,21 +50,44 @@ function TaskList() {
             alignSelf: "center",
             margin: "1%",
           }}
-          onPress={showModal}
+          onPress={() => {
+            showModal();
+            setTask(task);
+          }}
+          key={index}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Checkbox
-              status={checked ? "checked" : "unchecked"}
+              status={selectedTask.includes(task) ? "checked" : "unchecked"}
+              value={task.name}
               onPress={() => {
-                setChecked(!checked);
+                !selectedTask.includes(task)
+                  ? setSelectedTask([...selectedTask, task])
+                  : console.log("Task already checked");
               }}
+              disabled={selectedTask.includes(task)}
             />
-            <Card.Title title={task.name} subtitle={task.category} />
-            <Text>{task.description}</Text>
+            <View style={{ padding: 10 }}>
+              <Title>{task.name}</Title>
+              <Badge style={{ paddingHorizontal: 10, alignSelf: "flex-start" }}>
+                {task.category}
+              </Badge>
+            </View>
           </View>
+          {selectedTask.includes(task) && (
+            <Button
+              mode="contained"
+              style={{ margin: 10 }}
+              onPress={(e) => {
+                e.stopPropagation();
+                onClickHandler(task);
+              }}
+            >
+              Clear
+            </Button>
+          )}
         </Card>
       ))}
-      <ViewTaskModal visible={visible} hideModal={hideModal} />
     </View>
   );
 }
