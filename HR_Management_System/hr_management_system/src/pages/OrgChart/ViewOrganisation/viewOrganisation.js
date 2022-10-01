@@ -2,7 +2,7 @@ import Navbar from "../../../components/Navbar.js";
 import { Link } from "react-router-dom";
 import api from "../../../utils/api";
 import { useState, useEffect } from "react";
-import AddDepartmentModal from './addDeptModal.js';
+import AddDepartmentModal from "./addDeptModal.js";
 
 /* Requires Tailwind CSS v2.0+ */
 //TODO: fix org.organization.Head.positions & department, status active
@@ -11,25 +11,31 @@ import AddDepartmentModal from './addDeptModal.js';
 //TODO: link view button to next page(?)
 //consider using useEffect to minimize refreshes
 
+//TODO: UPDATE TABLE WHEN ADDING DEPT ETC? anyway to just update the list without refreshing the whole page? look into!
+
 export default function ViewOrganisation() {
   const [org, setOrg] = useState([]);
 
   useEffect(() => {
     api.getOrganization().then((response) => {
       setOrg(response.data);
+      console.log(org);
     });
     console.log(org);
   }, []);
 
-  const [openAdd, setOpenAdd] = useState(false)
+  const [openAdd, setOpenAdd] = useState(false);
 
   return (
     <>
       {org.organizationHead ? (
         <>
           <Navbar />
-          <AddDepartmentModal open={openAdd} onClose={ () => setOpenAdd(false)}/>
-          <div class="bg-[#13AEBD] rounded-xl p-10 m-10">
+          <AddDepartmentModal
+            open={openAdd}
+            onClose={() => setOpenAdd(false)}
+          />
+          <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
@@ -43,7 +49,7 @@ export default function ViewOrganisation() {
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                   <button
-                    onClick={()=>setOpenAdd(true)}
+                    onClick={() => setOpenAdd(true)}
                     type="button"
                     className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                   >
@@ -229,7 +235,7 @@ export default function ViewOrganisation() {
           </div>
         </>
       ) : (
-        <div class="bg-cyan-300">
+        <div className="bg-cyan-300">
           <div className="font-mono absolute mx-auto text-center w-screen text-6xl mt-9">
             <h1>loading...</h1>
           </div>
