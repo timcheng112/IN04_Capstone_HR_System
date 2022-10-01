@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.Option;
+//import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -13,15 +13,16 @@ import java.util.Optional;
 public class DocDataService {
     private final DocDataRepository docDataRepository;
 
-    public String uploadDoc(MultipartFile file) throws IOException {
+    public DocData uploadDoc(MultipartFile file) throws IOException {
         DocData d = new DocData(file.getOriginalFilename(), file.getContentType(),
                 DocDataUtil.compressDoc(file.getBytes()));
 
         DocData doc = docDataRepository.save(d);
-        if (doc != null) {
-            return "Document uploaded successfully " + file.getOriginalFilename();
-        }
-        return "Document did not upload successfully";
+        return doc;
+//        if (doc != null) {
+//            return "Document uploaded successfully " + file.getOriginalFilename();
+//        }
+//        return "Document did not upload successfully";
     }
 
     public byte[] downloadDocById(Long id) {

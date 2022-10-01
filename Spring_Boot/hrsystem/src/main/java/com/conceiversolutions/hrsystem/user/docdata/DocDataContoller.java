@@ -18,10 +18,17 @@ public class DocDataContoller {
 
     @PostMapping(path = "/uploadDocument")
     public ResponseEntity<?> uploadDocument(@RequestParam("document") MultipartFile file) throws IOException {
-        String s = docDataService.uploadDoc(file);
+        DocData s = docDataService.uploadDoc(file);
+        if(s != null){
+             return ResponseEntity.status(HttpStatus.OK)
+                    .body(s);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(s);
+        }else{
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("unable to upload document");
+        }
+
     }
 
     @GetMapping(path = "/getDocById")
