@@ -22,40 +22,43 @@ import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmploye
 
 function App() {
   return (
+    <BrowserRouter>
+      <div className="App">
+        <Switch>
+          <PublicRoute exact path="/" component={LoginPage} />
+          <PublicRoute exact path="/register" component={RegisterPage} />
+          <PublicRoute exact path="/forgot" component={ForgotPasswordPage} />
+          <PublicRoute
+            exact
+            path="/forgot/:token"
+            component={ForgotPasswordPage}
+          />
+          <PublicRoute exact path="/verify" component={VerificationPage} />
+          <PublicRoute
+            exact
+            path="/verify/:token"
+            component={VerificationPage}
+          />
+          <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
+          <PublicRoute exact path="/test" component={Timeout} />
+          <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
+          <PrivateRoute exact path="/profile" component={ProfilePage}/>
+          <PrivateRoute exact path="/viewOrg" component={ViewOrganisation}/>
+          <PrivateRoute exact path="/updateProfile" component={UpdateProfile}/>
+          <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
+          <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
+          <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
+          {/* <ViewTeam/> */}
+        </Switch>
+      </div>
+    </BrowserRouter>
 
-//    <BrowserRouter>
-//      <div className="App">
-//        <Switch>
-//          <PublicRoute exact path="/" component={LoginPage} />
-//          <PublicRoute exact path="/register" component={RegisterPage} />
-//          <PublicRoute exact path="/forgot" component={ForgotPasswordPage} />
-//          <PublicRoute
-//            exact
-//            path="/forgot/:token"
-//            component={ForgotPasswordPage}
-//          />
-//          <PublicRoute exact path="/verify" component={VerificationPage} />
-//          <PublicRoute
-//            exact
-//            path="/verify/:token"
-//            component={VerificationPage}
-//          />
-//          <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
-//          <PublicRoute exact path="/test" component={Timeout} />
-//          <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
-//          <PublicRoute exact path="/profile" component={ProfilePage}/>
-////          <PublicRoute exact path="/viewOrg" component={ViewOrganisation}/>
-//{/* //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/> */}
-//          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart}/>
-//        </Switch>
-//      </div>
-//    </BrowserRouter>
-//        <ViewTeam/>
+//    <ViewTeam/>
 //    <ViewDepartment />
-   <ViewOrganisation />
-//        <EmployeeChart />
+//    <ViewOrganisation />
+//    <EmployeeChart />
 //    <EmployeeList/>
-//<ProfilePage/>
+//    <ProfilePage/>
 
   );
 }

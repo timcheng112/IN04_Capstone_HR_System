@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.user.qualificationinformation;
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.recommendation.Recommendation;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.workexperience.WorkExperience;
@@ -17,8 +18,8 @@ public class QualificationInformation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "info_id")
     private Long infoId;
-    @Column(name = "cv",length = 1000)
-    private Byte[] cv;
+    @Column(name = "cv")
+    private DocData cv;
     @Column(name = "highest_education",nullable = true)
     @Enumerated(EnumType.STRING)
     private EducationEnum highestEducation;
@@ -61,11 +62,11 @@ public class QualificationInformation {
         this.infoId = infoId;
     }
 
-    public Byte[] getCv() {
+    public DocData getCv() {
         return cv;
     }
 
-    public void setCv(Byte[] cv) {
+    public void setCv(DocData cv) {
         this.cv = cv;
     }
 

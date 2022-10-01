@@ -217,8 +217,15 @@ public class UserController {
         return userService.getEmployeeFromToken(token);
     }
 
-    @PutMapping(path = "/updateProfile")
-    public String updateProfile(@RequestBody User user, @RequestParam("userId") Long userId) {
-        return userService.updateUser(user, userId);
+
+    @GetMapping(path = "/updateProfile")
+    public String updateProfile(@RequestParam("userId") Long userId,
+                                @RequestParam("gender") GenderEnum gender,
+                                @RequestParam("email") String email,
+                                @RequestParam("phone") Integer phone
+    ){
+//        System.out.println(user.getUserRole());
+        return userService.updateUser(userId, gender, email, phone);
+
     }
 }

@@ -1,9 +1,10 @@
 package com.conceiversolutions.hrsystem.engagement.reward;
 
 import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrack;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
 
 import javax.persistence.*;
-import java.sql.Blob;
+//import java.sql.Blob;
 import java.time.LocalDate;
 
 @Entity
@@ -22,7 +23,7 @@ public class Reward {
     @Column(name="reward_description")
     private String description;
     @Column(name="reward_image")
-    private Blob image;
+    private DocData image;
     @Column(name="date_claimed")
     private LocalDate dateClaimed;
 
@@ -35,7 +36,7 @@ public class Reward {
     private RewardTrack rewardTrack;
 
     //constructors
-    public Reward(String name, String description, Blob image, LocalDate dateClaimed, LocalDate expiryDate) {
+    public Reward(String name, String description, DocData image, LocalDate dateClaimed, LocalDate expiryDate) {
         this.name = name;
         this.description = description;
         this.image = image;
@@ -46,7 +47,7 @@ public class Reward {
     public Reward() {
     }
 
-    public Reward(Long rewardId, String name, String description, Blob image, LocalDate dateClaimed, LocalDate expiryDate) {
+    public Reward(Long rewardId, String name, String description, DocData image, LocalDate dateClaimed, LocalDate expiryDate) {
         this.rewardId = rewardId;
         this.name = name;
         this.description = description;
@@ -80,11 +81,11 @@ public class Reward {
         this.description = description;
     }
 
-    public Blob getImage() {
+    public DocData getImage() {
         return image;
     }
 
-    public void setImage(Blob image) {
+    public void setImage(DocData image) {
         this.image = image;
     }
 

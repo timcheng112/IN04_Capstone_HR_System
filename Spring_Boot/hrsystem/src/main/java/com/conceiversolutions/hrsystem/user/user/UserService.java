@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
+import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
@@ -675,21 +676,20 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public String updateUser(User newUser, Long id){
+    public String updateUser(Long userId, GenderEnum gender, String email, Integer phone){
         System.out.println("UserService.updateUser");
+//        System.out.println(.getUserRole());
 
-        User user = getUser(id);
+        User user = getUser(userId);
 
-        user.setFirstName(newUser.getFirstName());
-        user.setLastName(newUser.getLastName());
-        user.setPhone(newUser.getPhone());
-        user.setEmail(newUser.getEmail());
-        user.setDob(newUser.getDob());
-        user.setGender(newUser.getGender());
-        user.setProfilePic(newUser.getProfilePic());
+        user.setPhone(phone);
+        user.setEmail(email);
+        user.setGender(gender);
+
 
         return "Update of user was successful";
     }
+
 
 
 }

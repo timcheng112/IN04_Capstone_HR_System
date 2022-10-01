@@ -1,4 +1,4 @@
-import Navbar  from '../../components/Navbar.js';
+// import Navbar  from '../../components/Navbar.js';
 import {useEffect, useState} from 'react';
 import { useHistory } from "react-router-dom";
 import {getUser} from '../../utils/Common.js';
@@ -21,7 +21,6 @@ export default function ProfilePage(props) {
   useEffect(() => {
     api.getUserInfo(userId).then(response => {
         setUserInfo(response.data);
-              
         setGender(response.data.gender);
         setPhone(response.data.phone);
         setEmail(response.data.email); }).then( ()=>{
@@ -59,7 +58,7 @@ export default function ProfilePage(props) {
           {userInfo && email? (
               <> 
       
-              <Navbar/>
+              {/* <Navbar/> */}
               <div className="items-baseline bg-white py-16 px-4 sm:px-6 lg:col-span-3 lg:py-24 lg:px-8 xl:pl-12">
               <button class=" h-10 w-20 px-4 py-2 font-semibold text-sm bg-cyan-500 text-white rounded-full" onClick={()=> history.push('/profile') }>Back</button>
       

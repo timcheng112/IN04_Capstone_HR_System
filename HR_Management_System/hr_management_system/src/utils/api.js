@@ -114,14 +114,20 @@ const api = {
       `http://localhost:9191/api/task_list_item/${taskListItemId}`
     );
   },
-
+  
   //shi hans stuff for SR1
   getOrganization() {
     return axios.get(
       `http://localhost:9191/api/organization/1`
-    )
-  }
+    );
+  },
 
+  getUserInfo(userId){
+    return axios.get(`http://localhost:9191/api/user/${userId}`);
+  },
+  editUserInfo(userId, gender, email, phone){
+    return axios.get(`http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`);
+  },
 
 };
 
