@@ -18,7 +18,8 @@ public class QualificationInformation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "info_id")
     private Long infoId;
-    @Column(name = "cv")
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
+    @JoinColumn(name = "cv")
     private DocData cv;
     @Column(name = "highest_education",nullable = true)
     @Enumerated(EnumType.STRING)

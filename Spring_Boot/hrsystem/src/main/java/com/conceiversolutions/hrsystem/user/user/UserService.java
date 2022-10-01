@@ -677,7 +677,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public String updateUser(Long userId, GenderEnum gender, String email, Integer phone){
+    public String updateUser(Long userId, GenderEnum gender, String email, Integer phone) {
         System.out.println("UserService.updateUser");
 //        System.out.println(.getUserRole());
 
@@ -689,6 +689,7 @@ public class UserService implements UserDetailsService {
 
 
         return "Update of user was successful";
+    }
 
     public Long getUserFromEmail(String email) {
         System.out.println("UserService.getUserFromEmail");
