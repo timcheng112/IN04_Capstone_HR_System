@@ -29,7 +29,12 @@ export default function Register() {
     if (password === confirmPassword) {
       api
         .register(firstName, lastName, password, phone, email, dob, gender)
-        .then(() => history.push("/verify"));
+        .then(() => {
+          api
+            .getUserIdByEmail(email)
+            .then((response) => setUserSession(response.data, email))
+            .finally(() => history.push("/verify"));
+        });
     } else {
       alert("passwords do not match");
     }

@@ -662,6 +662,7 @@ public class UserService implements UserDetailsService {
     }
 
     public String requestAccountReactivation(String email, String reason) {
+        System.out.println("UserService.requestAccountReactivation");
         User applicant = getUser(email);
 
         if (!applicant.getBlackListed() && applicant.isEnabled()) {
@@ -688,8 +689,26 @@ public class UserService implements UserDetailsService {
 
 
         return "Update of user was successful";
+
+    public Long getUserFromEmail(String email) {
+        System.out.println("UserService.getUserFromEmail");
+        Optional<User> user = userRepository.findUserByEmail(email);
+        if (user.isPresent()) {
+            return user.get().getUserId();
+        } else {
+            throw new IllegalStateException("User not found");
+        }
     }
 
+    public Long getUserFromWorkEmail(String workEmail) {
+        System.out.println("UserService.getUserFromWorkEmail");
+        Optional<User> user = userRepository.findUserByWorkEmail(workEmail);
+        if (user.isPresent()) {
+            return user.get().getUserId();
+        } else {
+            throw new IllegalStateException("User not found");
+        }
+    }
 
 
 }
