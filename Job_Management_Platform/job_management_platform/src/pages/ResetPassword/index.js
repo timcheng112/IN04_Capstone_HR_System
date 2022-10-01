@@ -3,7 +3,7 @@ import { ArrowsPointingInIcon, EnvelopeIcon } from "@heroicons/react/20/solid";
 import api from "../../utils/api";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import { deleteUser, getUser, getUserEmail } from "../../utils/Common";
+import { deleteUser, getUserEmail } from "../../utils/Common";
 
 export default function ResetPassword() {
   const [email, setEmail] = useState("");
@@ -14,7 +14,6 @@ export default function ResetPassword() {
 
   useEffect(() => {
     const email = getUserEmail()
-    //console.log(email);
     setEmail(email);
   }, []);
 

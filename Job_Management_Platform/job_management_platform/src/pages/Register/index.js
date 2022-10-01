@@ -14,7 +14,7 @@ export default function Register() {
   const [dobDay, setDobDay] = useState("");
   const [dobMonth, setDobMonth] = useState("");
   const [dobYear, setDobYear] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("Male");
 
   const history = useHistory();
 
@@ -28,12 +28,19 @@ export default function Register() {
     console.log("dob = " + dob);
     if (password === confirmPassword) {
       api
-        .register(firstName, lastName, password, phone, email, dob, gender)
+        .register(firstName, lastName, password, phone, email, dob, gender.toUpperCase())
         .then(() => {
           api
             .getUserIdByEmail(email)
             .then((response) => setUserSession(response.data, email))
             .finally(() => history.push("/verify"));
+        })
+        .catch(error => {
+          var message = error.request.response;
+          console.log(error.message)
+          if (message.includes("User's email is already in use")) {
+            alert("The email " + email + " already has an account with us")
+          }
         });
     } else {
       alert("passwords do not match");
@@ -228,15 +235,16 @@ export default function Register() {
                 >
                   Gender
                 </label>
-                <input
-                  type="text"
-                  name="gender"
+                <select
                   id="gender"
-                  className="relative block w-full appearance-none rounded-md rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="MALE"
+                  name="gender"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
                   value={gender}
-                  onChange={(g) => setGender(g.target.value)}
-                />
+                  onChange={(r) => setGender(r.target.value)}
+                >
+                  <option>Male</option>
+                  <option>Female</option>
+                </select>
               </div>
             </div>
 
