@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import logo from "../../assets/libro-transparent-logo.png";
 import api from "../../utils/api";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
-import { deleteUser } from "../../utils/Common";
+import { deleteUser, getUserEmail } from "../../utils/Common";
 import { useHistory } from "react-router-dom";
 
 const social = [
@@ -87,7 +87,7 @@ export default function Verification() {
   }, [token]);
 
   function resendVerification() {
-    var email = sessionStorage.getItem("userEmail") + "@libro.com"
+    var email = getUserEmail() + "@libro.com"
     console.log(email)
         api
           .resendConfirmation(email)

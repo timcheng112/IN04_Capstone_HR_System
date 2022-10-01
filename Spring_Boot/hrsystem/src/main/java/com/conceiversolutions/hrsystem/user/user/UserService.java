@@ -144,19 +144,19 @@ public class UserService implements UserDetailsService {
 
         User newUser = userRepository.saveAndFlush(user);
 
-//        Sending confirmation TOKEN to set user's isEnabled
+        // Sending confirmation TOKEN to set user's isEnabled
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
-                token, LocalDateTime.now(), LocalDateTime.now().plusHours(1), newUser
-        );
+                token, LocalDateTime.now(), LocalDateTime.now().plusHours(1), newUser);
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-        String link = "http://localhost:3000/verify/" + token;
+        String link = "";
         if (newUser.getUserRole().equals(RoleEnum.APPLICANT)) {
+            link = "http://localhost:3000/verify/" + token;
             emailSender.send(
                     newUser.getEmail(), buildConfirmationEmail(newUser.getFirstName(), link));
         } else {
+            link = "http://localhost:3001/verify/" + token;
             emailSender.send(
                     newUser.getWorkEmail(), buildConfirmationEmail(newUser.getFirstName(), link));
         }
@@ -293,7 +293,7 @@ public class UserService implements UserDetailsService {
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        String link = "http://localhost:3000/forgot/" + token;
+        String link = "http://localhost:3001/forgot/" + token;
         emailSender.send(email, buildForgotPasswordEmail(tempUser.getFirstName(), link));
         return tempUser.getUserId();
     }
@@ -527,7 +527,7 @@ public class UserService implements UserDetailsService {
                 +
                 "        \n" +
                 "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name
-                + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Please click on the below link to change your password. If you did not request for the password reset, please contact us at : </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <p>in04.capstoner.2022@gmail.com</p></blockquote>\n</p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\""
+                + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Please click on the link below to change your password. If you did not request for the password reset, please contact us at : </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <p>in04.capstoner.2022@gmail.com</p></blockquote>\n</p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\""
                 + link + "\">Change Now</a> </p></blockquote>\n Link will expire in 1 Hour. <p>Grow with Libro</p>" +
                 "        \n" +
                 "      </td>\n" +
@@ -654,7 +654,7 @@ public class UserService implements UserDetailsService {
             ct.setExpiresAt(LocalDateTime.now().plusHours(1));
             confirmationTokenRepository.saveAndFlush(ct);
 
-            String link = "http://localhost:3000/verify/" + ct.getToken();
+            String link = "http://localhost:3001/verify/" + ct.getToken();
             emailSender.send(
                     tempUser.getWorkEmail(), buildConfirmationEmail(tempUser.getFirstName(), link));
         }
@@ -711,5 +711,21 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
+    public String updateUser(User newUser, Long id){
+        System.out.println("UserService.updateUser");
+
+        User user = getUser(id);
+
+        user.setFirstName(newUser.getFirstName());
+        user.setLastName(newUser.getLastName());
+        user.setPhone(newUser.getPhone());
+        user.setEmail(newUser.getEmail());
+        user.setDob(newUser.getDob());
+        user.setGender(newUser.getGender());
+        user.setProfilePic(newUser.getProfilePic());
+
+        return "Update of user was successful";
+    }
 
 }
