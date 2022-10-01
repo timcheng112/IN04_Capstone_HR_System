@@ -45,22 +45,25 @@ export default function TaskOptions({ user, categoryId, task, setTask }) {
         onClick={() => setOpenView(true)}
         className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
-        <EyeIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-        View
+        <EyeIcon className="md:-ml-0.5 md:mr-2 h-4 w-4" aria-hidden="true" />
+        <span className="hidden md:block">View</span>
       </button>
       <button
         type="button"
         className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
-        <PencilSquareIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-        Edit
+        <PencilSquareIcon
+          className="md:-ml-0.5 md:mr-2 h-4 w-4"
+          aria-hidden="true"
+        />
+        <span className="hidden md:block">Edit</span>
       </button>
       <button
         type="button"
         className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
-        <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-        Delete
+        <TrashIcon className="md:-ml-0.5 md:mr-2 h-4 w-4" aria-hidden="true" />
+        <span className="hidden md:block">Delete</span>
       </button>
       <ViewTaskModal
         open={openView}

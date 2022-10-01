@@ -1,44 +1,18 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { useState } from "react";
-import TasklistTable from "../../features/Onboarding/TasklistTable";
-import AddCategoryModal from "../../features/Onboarding/AddCategoryModal";
+import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
-import ConfirmDialog from "../../components/ConfirmDialog";
+import AddCategoryModal from "../../features/Onboarding/AddCategoryModal";
+import TasklistTable from "../../features/Onboarding/TasklistTable";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function OnboardingHR() {
-  const [user, setUser] = useState(null);
-  const [categories, setCategories] = useState(null);
+function OffboardingHr() {
   const [openCreate, setOpenCreate] = useState(false);
-  //const [tasks, setTasks] = useState(null)
-
-  // useEffect(() => {
-  //     api.getUser()
-  //         .then(response => setUser(response.data))
-  //         .catch((error) => (
-  //             setError(error)
-  //         ))
-  // }, [])
-
-  // useEffect(() => {
-  //     api.getCategories()
-  //         .then(response => setCategories(response.data))
-  //         .catch((error) => (
-  //             setError(error)
-  //         ))
-  // }, [])
 
   return (
-    // (user && category) &&
     <div>
       <Navbar />
       <div className="flex">
         <div className="flex-1">
-          <AdminSidebar pageTitle="Onboarding (HR)" />
+          <AdminSidebar pageTitle="Offboarding (HR)" />
         </div>
         <div className="flex items-center">
           <div className="mt-4 ml-auto mr-6">
@@ -66,3 +40,5 @@ export default function OnboardingHR() {
     </div>
   );
 }
+
+export default OffboardingHr;

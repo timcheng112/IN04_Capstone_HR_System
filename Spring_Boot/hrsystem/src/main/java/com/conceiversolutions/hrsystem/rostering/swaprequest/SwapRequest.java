@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.rostering.swapRequest;
+package com.conceiversolutions.hrsystem.rostering.swaprequest;
 
 import java.util.List;
 

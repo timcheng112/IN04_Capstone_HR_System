@@ -1,7 +1,8 @@
 import "./App.css";
 import { BrowserRouter, Switch } from "react-router-dom";
 import LoginPage from "./pages/Login";
-import OnboardingHrPage from "./pages/Onboarding/indexHR";
+import OnboardingHrPage from "./pages/Onboarding/index";
+import OffboardingHrPage from "./pages/Offboarding/indexHr";
 import PublicRoute from "./utils/PublicRoute";
 import PrivateRoute from "./utils/PrivateRoute";
 import Timeout from "./pages/Timeout";
@@ -25,6 +26,11 @@ function App() {
           />
           <PublicRoute exact path="/test" component={Timeout} />
           <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
+          <PublicRoute
+            exact
+            path="/offboarding"
+            component={OffboardingHrPage}
+          />
         </Switch>
       </div>
     </BrowserRouter>
