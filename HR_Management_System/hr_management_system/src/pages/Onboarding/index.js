@@ -1,7 +1,7 @@
 import { React, useRef } from "react";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
-import SelfTasklistTable from "../../features/onboarding/SelfTasklistTable";
+import SelfTasklistTable from "../../features/Onboarding/SelfTasklistTable";
 
 export default function Onboarding() {
   const checkbox = useRef();

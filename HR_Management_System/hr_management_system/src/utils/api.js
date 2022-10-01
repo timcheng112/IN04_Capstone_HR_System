@@ -136,6 +136,9 @@ const api = {
   getUserIdByEmail(email) {
     return axios.get(`http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`);
   },
+  getDept(deptId){
+    return axios.get(`http://localhost:9191/api/department/${deptId}`);
+  },
 
 };
 
