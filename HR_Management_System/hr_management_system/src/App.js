@@ -20,6 +20,7 @@ import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 import OnboardingHrPage from "./pages/Onboarding/indexHR";
 import OnboardingPage from "./pages/Onboarding/index";
+import OffboardingPage from "./pages/Offboarding"
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
           />
           <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
           <PublicRoute exact path="/timeout" component={Timeout} />
-          <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
+          <PrivateRoute exact path="/onboarding" component={OnboardingHrPage} />
           <PrivateRoute exact path="/profile" component={ProfilePage}/>
           <PrivateRoute exact path="/viewOrg" component={ViewOrganisation}/>
           <PrivateRoute exact path="/updateProfile" component={UpdateProfile}/>
@@ -52,6 +53,7 @@ function App() {
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
           <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
           <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
+          <PrivateRoute exact path="/offboarding" component={OffboardingPage}/>
           {/* <ViewTeam/> */}
 
           <PrivateRoute exact path="/admin/onboarding" component={OnboardingPage} />
@@ -59,13 +61,6 @@ function App() {
         </Switch>
       </div>
     </BrowserRouter>
-
-//    <ViewTeam/>
-//    <ViewDepartment />
-//    <ViewOrganisation />
-//    <EmployeeChart />
-//    <EmployeeList/>
-//    <ProfilePage/>
   );
 }
 

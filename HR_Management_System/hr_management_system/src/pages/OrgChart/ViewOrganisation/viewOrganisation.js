@@ -2,8 +2,13 @@ import Navbar from "../../../components/Navbar.js";
 import { Link } from "react-router-dom";
 import api from "../../../utils/api";
 import { useState, useEffect } from "react";
-import AddDepartmentModal from "./addDeptModal.js";
+
+import AddDepartmentModal from './addDeptModal.js';
+import { useHistory } from "react-router-dom";
+import DeleteDeptModal from "./deleteDeptModal.js";
+
 import ChangeOrgHeadModal from "./changeOrgHeadModal.js";
+
 
 /* Requires Tailwind CSS v2.0+ */
 //TODO: fix org.organization.Head.positions & department, status active
@@ -26,8 +31,11 @@ export default function ViewOrganisation() {
   }, [org]);
 
   const [openAdd, setOpenAdd] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false)
+
   const [openChange, setOpenChange] = useState(false);
   const [deptName, setDeptName] = useState("");
+
 
   return (
     <>
@@ -38,10 +46,16 @@ export default function ViewOrganisation() {
             open={openAdd}
             onClose={() => setOpenAdd(false)}
           />
+
+          <DeleteDeptModal
+            open={openDelete}
+            onClose={() => setOpenDelete(false)}
+
           <ChangeOrgHeadModal
             newOrgName={org.organizationName}
             open={openChange}
             onClose={() => setOpenChange(false)}
+
           />
           <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
@@ -226,10 +240,10 @@ export default function ViewOrganisation() {
                               </td>
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                 <a
-                                  href="https://lh3.googleusercontent.com/L8LLXQeMyAQUGfxQTYZe_ByGzH7R8UC2pc2vjnpIm1QeXb7C0NGYxkF2BXlIpKVbJulpjlF9eCwhOVzY9Tl91QUw_g=w640-h400-e365-rj-sc0x00ffffff"
+                                  onClick={() => setOpenDelete(true)}
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
-                                  Disable
+                                  Delete
                                   <span className="sr-only">, {dept.name}</span>
                                 </a>
                               </td>

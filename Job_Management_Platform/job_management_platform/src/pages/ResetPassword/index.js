@@ -4,6 +4,7 @@ import api from "../../utils/api";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { deleteUser, getUserEmail } from "../../utils/Common";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export default function ResetPassword() {
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ export default function ResetPassword() {
   const history = useHistory();
 
   useEffect(() => {
-    const email = getUserEmail()
+    const email = getUserEmail();
     setEmail(email);
   }, []);
 
@@ -53,6 +54,17 @@ export default function ResetPassword() {
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               Reset password
             </h2>
+            <button
+              type="button"
+              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-5"
+              onClick={() => history.goBack()}
+            >
+              <ArrowLeftIcon
+                className="-ml-1 mr-3 h-5 w-5"
+                aria-hidden="true"
+              />
+              Back
+            </button>
             <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label

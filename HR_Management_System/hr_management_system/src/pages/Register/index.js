@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Switch } from "@headlessui/react";
-import { getUserId, setUserSession } from "../../utils/Common";
+import { getUserId } from "../../utils/Common";
 import api from "../../utils/api";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -43,8 +44,6 @@ export default function Register() {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    //console.log(gender.toUpperCase());
-    //console.log(role.toUpperCase());
     register();
   };
 
@@ -86,6 +85,17 @@ export default function Register() {
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               Register a new employee
             </h2>
+            <button
+              type="button"
+              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-5"
+              onClick={() => history.goBack()}
+            >
+              <ArrowLeftIcon
+                className="-ml-1 mr-3 h-5 w-5"
+                aria-hidden="true"
+              />
+              Back
+            </button>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />

@@ -114,29 +114,39 @@ const api = {
       `http://localhost:9191/api/task_list_item/${taskListItemId}`
     );
   },
-
+  
   getOrganization() {
-    return axios.get(`http://localhost:9191/api/organization/1`);
-  },
-
-  getUserInfo(userId) {
-    return axios.get(`http://localhost:9191/api/user/${userId}`);
-  },
-  editUserInfo(userId, gender, email, phone) {
     return axios.get(
-      `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
+      `http://localhost:9191/api/organization/1`
     );
   },
-  getUser(userId) {
+
+  getUserInfo(userId){
     return axios.get(`http://localhost:9191/api/user/${userId}`);
+  },
+  editUserInfo(userId, gender, email, phone){
+    return axios.get(`http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`);
+  },
+  
+  getUser(userId) {
+    return axios.get(
+      `http://localhost:9191/api/user/${userId}`
+    );
   },
   getUserIdByEmail(email) {
-    return axios.get(
-      `http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`
-    );
+    return axios.get(`http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`);
   },
-  getDept(deptId) {
+  getDept(deptId){
     return axios.get(`http://localhost:9191/api/department/${deptId}`);
+  },
+  deleteDept(deptId){
+    return axios.delete(`http://localhost:9191/api/department/${deptId}`);
+  },
+  deleteTeam(deptId){
+    return axios.delete(`http://localhost:9191/api/department/${deptId}`);
+  },
+  uploadFile(file){
+    return axios.post(`http://localhost:9191/uploadDocument/${file}`)
   },
   addDepartment(deptName, deptHeadId) {
     return axios.post(
@@ -151,6 +161,7 @@ const api = {
       `http://localhost:9191/api/organization/changeOrganizationHead?orgName=${orgName}&newOrgId=${newOrgId}`
     );
   },
+
 };
 
 export default api;
