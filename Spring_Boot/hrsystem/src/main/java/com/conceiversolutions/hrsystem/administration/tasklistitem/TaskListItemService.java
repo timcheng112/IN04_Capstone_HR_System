@@ -75,6 +75,32 @@ public class TaskListItemService {
     }
 
     public List<TaskListItem> getTaskListItemsByEmployee(Long employeeId) {
-        return taskListItemRepository.findTaskListItemByEmployee(employeeId).get();
+        List<TaskListItem> taskListItems = taskListItemRepository.findTaskListItemByEmployee(employeeId).get();
+        for (TaskListItem t : taskListItems) {
+            t.getUser().setTaskListItems(new ArrayList<>());
+            t.getTask().setTaskListItems(new ArrayList<>());
+            t.getTask().getCategory().setTasks(new ArrayList<>());
+        }
+        return taskListItems;
+    }
+
+    public List<TaskListItem> getOnboardingTaskListItemsByEmployee(Long employeeId) {
+        List<TaskListItem> taskListItems = new ArrayList<>();
+        for (TaskListItem t : this.getTaskListItemsByEmployee(employeeId)) {
+            if (t.getTask().getIsOnboarding()) {
+                taskListItems.add(t);
+            }
+        }
+        return taskListItems;
+    }
+
+    public List<TaskListItem> getOffboardingTaskListItemsByEmployee(Long employeeId) {
+        List<TaskListItem> taskListItems = new ArrayList<>();
+        for (TaskListItem t : this.getTaskListItemsByEmployee(employeeId)) {
+            if (!t.getTask().getIsOnboarding()) {
+                taskListItems.add(t);
+            }
+        }
+        return taskListItems;
     }
 }

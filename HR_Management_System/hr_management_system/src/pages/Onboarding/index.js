@@ -26,7 +26,7 @@ export default function Onboarding() {
 
   useEffect(() => {
     api
-      .getTaskListItemsByEmployee(getUserId())
+      .getOnboardingTaskListItemsByEmployee(getUserId())
       .then((response) => {
         setTaskListItems(response.data);
       })

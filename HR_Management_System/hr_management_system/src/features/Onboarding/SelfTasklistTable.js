@@ -4,7 +4,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function SelfTasklistTable({taskListItems,setTaskListItems}) {
+function SelfTasklistTable({ taskListItems, setTaskListItems }) {
   // const [taskListItems, setTaskListItems] = useState([
   //   {
   //     name: "Task 1",
@@ -76,25 +76,28 @@ function SelfTasklistTable({taskListItems,setTaskListItems}) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {taskListItems.map((task) => (
+                  {taskListItems.map((taskListItem) => (
                     <tr
-                      key={task.name}
+                      key={taskListItem.taskListItemId}
                       className={
-                        selectedTask.includes(task) ? "bg-gray-50" : undefined
+                        selectedTask.includes(taskListItem)
+                          ? "bg-gray-50"
+                          : undefined
                       }
                     >
                       <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                        {selectedTask.includes(task) && (
+                        {selectedTask.includes(taskListItem) && (
                           <div className="absolute inset-y-0 left-0 w-0.5 bg-gray-600" />
                         )}
                         <input
                           type="checkbox"
                           className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
-                          value={task.name}
-                          checked={selectedTask.includes(task)}
+                          value={taskListItem.taskListItemId}
+                          checked={selectedTask.includes(taskListItem)}
                           onChange={(e) => {
-                            e.target.checked && !selectedTask.includes(task)
-                              ? setSelectedTask([...selectedTask, task])
+                            e.target.checked &&
+                            !selectedTask.includes(taskListItem)
+                              ? setSelectedTask([...selectedTask, taskListItem])
                               : console.log("Task already checked");
                           }}
                         />
@@ -102,28 +105,28 @@ function SelfTasklistTable({taskListItems,setTaskListItems}) {
                       <td
                         className={classNames(
                           "whitespace-nowrap py-4 pr-3 text-sm font-medium text-left",
-                          selectedTask.includes(task)
+                          selectedTask.includes(taskListItem)
                             ? "text-gray-900 line-through"
                             : "text-gray-900"
                         )}
                       >
-                        {task.name}
+                        {taskListItem.task.name}
                       </td>
                       <td
                         className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left"
                         colSpan={2}
                       >
-                        {task.description}
+                        {taskListItem.task.description}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
-                        {task.task.category}
+                        {taskListItem.task.category.name}
                       </td>
                       <td className="whitespace-nowrap px-3 text-sm text-gray-500 text-left">
-                        {selectedTask.includes(task) && (
+                        {selectedTask.includes(taskListItem) && (
                           <button
                             type="button"
                             className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            onClick={() => onClickHandler(task)}
+                            onClick={() => onClickHandler(taskListItem)}
                           >
                             Clear
                           </button>

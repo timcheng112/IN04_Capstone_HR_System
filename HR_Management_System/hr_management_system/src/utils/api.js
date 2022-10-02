@@ -134,6 +134,16 @@ const api = {
       `http://localhost:9191/api/task_list_item/task-list-items-by-employee?employeeId=${employeeId}`
     );
   },
+  getOnboardingTaskListItemsByEmployee(employeeId) {
+    return axios.get(
+      `http://localhost:9191/api/task_list_item/onboarding-task-list-items?employeeId=${employeeId}`
+    );
+  },
+  getOffboardingTaskListItemsByEmployee(employeeId) {
+    return axios.get(
+      `http://localhost:9191/api/task_list_item/offboarding-task-list-items?employeeId=${employeeId}`
+    );
+  },
   markTaskListItemAsComplete(taskListItemId) {
     return axios.put(
       `http://localhost:9191/api/task_list_item/${taskListItemId}`
@@ -143,10 +153,14 @@ const api = {
     return axios.get(`http://localhost:9191/api/user/getAllEmployees`);
   },
   getEmployeesWithTask(taskId) {
-    return axios.get(`http://localhost:9191/api/user/getAssignedEmployees?taskId=${taskId}`);
+    return axios.get(
+      `http://localhost:9191/api/user/getAssignedEmployees?taskId=${taskId}`
+    );
   },
   getEmployeesWithoutTask(taskId) {
-    return axios.get(`http://localhost:9191/api/user/getUnassignedEmployees?taskId=${taskId}`);
+    return axios.get(
+      `http://localhost:9191/api/user/getUnassignedEmployees?taskId=${taskId}`
+    );
   },
 
   getOrganization() {

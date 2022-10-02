@@ -44,6 +44,16 @@ public class TaskListItemController {
         return taskListItemService.getTaskListItemsByEmployee(employeeId);
     }
 
+    @GetMapping(path = "/onboarding-task-list-items")
+    public List<TaskListItem> getOnboardingTaskListItemsByEmployee(@RequestParam("employeeId") Long employeeId) {
+        return taskListItemService.getOnboardingTaskListItemsByEmployee(employeeId);
+    }
+
+    @GetMapping(path = "/offboarding-task-list-items")
+    public List<TaskListItem> getOffboardingTaskListItemsByEmployee(@RequestParam("employeeId") Long employeeId) {
+        return taskListItemService.getOffboardingTaskListItemsByEmployee(employeeId);
+    }
+
     @PutMapping(path = "{taskListItemId}")
     public void markTaskListItemAsComplete(@PathVariable("taskListItemId") Long taskListItemId) {
         taskListItemService.markTaskListItemAsComplete(taskListItemId);
