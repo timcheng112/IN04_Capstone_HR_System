@@ -17,6 +17,7 @@ export default function OnboardingHR() {
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState(null);
   const history = useHistory();
+  const [refreshKey, setRefreshKey] = useState(0);
   //const [tasks, setTasks] = useState(null)
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function OnboardingHR() {
         setCategories(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
   if (error) return `Error`;
 
@@ -82,6 +83,7 @@ export default function OnboardingHR() {
           <AddCategoryModal
             open={openCreate}
             onClose={() => setOpenCreate(false)}
+            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           />
         </div>
       </main>
