@@ -90,6 +90,12 @@ const api = {
       `http://localhost:9191/api/task/get-task-by-name${taskName}`
     );
   },
+  getOnboardingTasks() {
+    return axios.get(`http://localhost:9191/api/task/onboarding-tasks`);
+  },
+  getOffboardingTasks() {
+    return axios.get(`http://localhost:9191/api/task/offboarding-tasks`);
+  },
   addNewTask(task, categoryId) {
     return axios.post(
       `http://localhost:9191/api/task?categoryId=${categoryId}`,
@@ -135,6 +141,12 @@ const api = {
   },
   getAllEmployees() {
     return axios.get(`http://localhost:9191/api/user/getAllEmployees`);
+  },
+  getEmployeesWithTask() {
+    return axios.get(`http://localhost:9191/api/user/getAssignedEmployees`);
+  },
+  getEmployeesWithoutTask() {
+    return axios.get(`http://localhost:9191/api/user/getUnassignedEmployees`);
   },
 
   getOrganization() {

@@ -43,6 +43,16 @@ public class TaskController {
         return taskService.getTaskByName(taskName);
     }
 
+    @GetMapping(path = "/onboarding-tasks")
+    public List<Task> getOnboardingTasks() {
+        return taskService.getOnboardingTasks();
+    }
+
+    @GetMapping(path = "/offboarding-tasks")
+    public List<Task> getOffboardingTasks() {
+        return taskService.getOffboardingTasks();
+    }
+
     @PostMapping
     public Long addNewTask(@RequestBody Task task,
             @RequestParam(name = "categoryId", required = true) Long categoryId) {

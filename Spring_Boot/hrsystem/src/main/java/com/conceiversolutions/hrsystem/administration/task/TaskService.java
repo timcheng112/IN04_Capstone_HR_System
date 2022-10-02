@@ -105,6 +105,14 @@ public class TaskService {
         }
     }
 
+    public List<Task> getOnboardingTasks() {
+        return taskRepository.findTaskByIsOnboarding(true);
+    }
+
+    public List<Task> getOffboardingTasks() {
+        return taskRepository.findTaskByIsOnboarding(false);
+    }
+
     // public void assignTaskToEmployee(Long employeeId, Long taskId) {
     // User employee = userRepository.findById(employeeId).get();
     // TaskListItem taskListItem = new TaskListItem();
