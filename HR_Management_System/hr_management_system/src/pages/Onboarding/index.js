@@ -1,7 +1,7 @@
 import { React, useRef } from "react";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
-import SelfTasklistTable from "../../features/Onboarding/SelfTasklistTable";
+import SelfTasklistTable from "../../features/onboarding/SelfTasklistTable";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { getUserId, setUserSession } from "../../utils/Common";

@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 import api from "../../../utils/api";
 import { useState, useEffect } from "react";
 
-import AddDepartmentModal from './addDeptModal.js';
+import AddDepartmentModal from "./addDeptModal.js";
 import { useHistory } from "react-router-dom";
 import DeleteDeptModal from "./deleteDeptModal.js";
 
 import ChangeOrgHeadModal from "./changeOrgHeadModal.js";
-
 
 /* Requires Tailwind CSS v2.0+ */
 //TODO: fix org.organization.Head.positions & department, status active
@@ -31,11 +30,10 @@ export default function ViewOrganisation() {
   //what is this [org] for?
 
   const [openAdd, setOpenAdd] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [openChange, setOpenChange] = useState(false);
   const [deptName, setDeptName] = useState("");
-
 
   return (
     <>
@@ -50,12 +48,12 @@ export default function ViewOrganisation() {
           <DeleteDeptModal
             open={openDelete}
             onClose={() => setOpenDelete(false)}
+          />
 
           <ChangeOrgHeadModal
             newOrgName={org.organizationName}
             open={openChange}
             onClose={() => setOpenChange(false)}
-
           />
           <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
