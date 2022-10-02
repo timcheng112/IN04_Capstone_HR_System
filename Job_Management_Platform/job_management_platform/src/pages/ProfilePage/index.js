@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 //import SideProfile from './sideprofile.js'
 import { PaperClipIcon } from "@heroicons/react/20/solid";
 import loading from "../../assets/Spinner.svg";
-import { getUser } from "../../utils/Common.js";
+import { getUserId } from "../../utils/Common.js";
 import api from "../../utils/api.js";
 import axios from "axios";
 
@@ -61,12 +61,11 @@ function classNames(...classes) {
 }
 
 export default function ProfilePage(props) {
-  const [user, setUser] = useState(getUser()) //logged in user
+  const [user, setUser] = useState(getUserId()) //logged in user
   const history = useHistory()
-  const result = user.split(";");
   // const email = result[2]
   let [userInfo, setUserInfo] = useState([]);
-  const userId = result[0]
+  const userId = getUserId()
   // const email = result[1]
 
   console.log(userId)

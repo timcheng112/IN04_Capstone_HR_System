@@ -1,15 +1,15 @@
 // import Navbar  from '../../components/Navbar.js';
 import {useEffect, useState} from 'react';
 import { useHistory } from "react-router-dom";
-import {getUser} from '../../utils/Common.js';
+import {getUserId} from '../../utils/Common.js';
 import api from "../../utils/api.js";
 import loading from "../../assets/Spinner.svg";
 
 
 export default function ProfilePage(props) {
-  const [user, setUser] = useState(getUser()) //logged in user
+  const [user, setUser] = useState(getUserId()) //logged in user
   const result= user.split(";");
-  const userId = result[0];
+  const userId = getUserId()
   const [userInfo, setUserInfo] = useState([]);
   const [viewUser, setViewUser] = useState(null) //viewing other user
   //        const [tab, setTab] = useState(tabs[0])

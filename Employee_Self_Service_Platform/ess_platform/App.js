@@ -10,11 +10,10 @@ import TabNavigator from "./src/navigation/TabNavigator";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import { AuthContext } from "./src/components/login/Context";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./src/utils/api";
 
 export default function Main() {
-
   const initialLoginState = {
     isLoading: true,
     email: null,
@@ -22,7 +21,7 @@ export default function Main() {
   };
 
   const loginReducer = (prevState, action) => {
-    switch ((action.type)) {
+    switch (action.type) {
       case "RETRIEVE_TOKEN":
         return {
           ...prevState,
@@ -40,40 +39,50 @@ export default function Main() {
     }
   };
 
-  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState)
+  const [loginState, dispatch] = React.useReducer(
+    loginReducer,
+    initialLoginState
+  );
 
   const authContext = React.useMemo(() => ({
-    signIn: async(email, password) => {
+    signIn: async (email, password) => {
       let userToken;
       userToken = null;
-      console.log(email)
-      console.log(password)
-      api.login(email, password).then(response => {
-        try {
-          userToken = 'token'
-          AsyncStorage.setItem('userToken', userToken)
-          console.log('user token = ' + userToken)
-          dispatch({type: "SIGNIN", id: email, token: userToken})
-        } catch (error) {
-          console.log(error)
-        }
-      }).catch(error => console.log(error))
+      console.log(email);
+      console.log(password);
+      api
+        .login(email, password)
+        .then((response) => {
+          console.log(response.data);
+          try {
+            userToken = "token";
+            AsyncStorage.setItem("userToken", userToken);
+            console.log("user token = " + userToken);
+            dispatch({ type: "SIGNIN", id: email, token: userToken });
+          } catch (error) {
+            console.log(error);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          userToken = null;
+        });
     },
-    signOut: async() => {
-      await AsyncStorage.removeItem('userToken');
-      dispatch({type: "SIGNOUT"})
+    signOut: async () => {
+      await AsyncStorage.removeItem("userToken");
+      dispatch({ type: "SIGNOUT" });
     },
   }));
   React.useEffect(() => {
-    setTimeout(async() => {
+    setTimeout(async () => {
       let userToken = null;
-      try { 
-        userToken = await AsyncStorage.getItem('userToken')
+      try {
+        userToken = await AsyncStorage.getItem("userToken");
       } catch (error) {
-        console.log(error)
-      } 
-      dispatch({type: "RETRIEVE_TOKEN", token: userToken})
-      console.log('user token = ' + userToken)
+        console.log(error);
+      }
+      dispatch({ type: "RETRIEVE_TOKEN", token: userToken });
+      console.log("user token = " + userToken);
     }, 100);
   }, []);
 

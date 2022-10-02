@@ -42,7 +42,7 @@ function App() {
           />
           <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
           <PublicRoute exact path="/timeout" component={Timeout} />
-          <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
+          <PrivateRoute exact path="/onboarding" component={OnboardingHrPage} />
           <PrivateRoute exact path="/profile" component={ProfilePage}/>
           <PrivateRoute exact path="/viewOrg" component={ViewOrganisation}/>
           <PrivateRoute exact path="/updateProfile" component={UpdateProfile}/>
@@ -52,7 +52,7 @@ function App() {
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
           <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
           <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
-          <PublicRoute exact path="/offboarding" component={OffboardingHrPage}/>
+          <PrivateRoute exact path="/offboarding" component={OffboardingHrPage}/>
           {/* <ViewTeam/> */}
         </Switch>
       </div>
