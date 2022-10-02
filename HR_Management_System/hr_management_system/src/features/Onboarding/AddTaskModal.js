@@ -6,7 +6,7 @@ import AddTaskSteps from "./AddTaskSteps";
 import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
 // import InputText from '../../components/inputText';
 // import TextArea from '../../components/textArea';
-import api from '../../utils/api';
+import api from "../../utils/api";
 
 export default function AddTaskModal({ open, onClose, category }) {
   const history = useHistory();
@@ -16,31 +16,33 @@ export default function AddTaskModal({ open, onClose, category }) {
   const [error, setError] = useState(null);
   const [showStepOne, setShowStepOne] = useState(true);
 
-  const [unassignedEmployees, setUnassignedEmployees] = useState(api.getUser());
+  const [unassignedEmployees, setUnassignedEmployees] = useState();
   const [assignedEmployees, setAssignedEmployees] = useState([]);
 
   const [filteredUnassignedEmployees, setFilteredUnassignedEmployees] =
     useState(unassignedEmployees);
   const [filteredAssignedEmployees, setFilteredAssignedEmployees] =
     useState(assignedEmployees);
+
   const handleSubmit = (evt) => {
-    evt.preventDefault()
-    createTask()
+    evt.preventDefault();
+    createTask();
     //createTaskListItem()
-    alert("Successfully created task.")
+    alert("Successfully created task.");
   };
   function createTask() {
-    api.addNewTask({ 
-      name: name,
-      description: description,
-      isOnboarding: true,
-      categpry: category
-    })
+    api
+      .addNewTask({
+        name: name,
+        description: description,
+        isOnboarding: true,
+        categpry: category,
+      })
       .then(() => history.goBack())
-      .catch(error => setError(error))
+      .catch((error) => setError(error));
   }
   // function createTaskListItem() {
-  //   api.addNewTaskListItem({ 
+  //   api.addNewTaskListItem({
   //     name: name,
   //     description: description,
   //     isOnboarding: true,
@@ -48,7 +50,6 @@ export default function AddTaskModal({ open, onClose, category }) {
   //     .then(() => history.goBack())
   //     .catch(error => setError(error))
   // }
-  
 
   function search(e, items, isUnassigned) {
     const value = e.target.value;
@@ -99,42 +100,41 @@ export default function AddTaskModal({ open, onClose, category }) {
     return classes.filter(Boolean).join(" ");
   }
 
-
   return (
     // user && (
     <Transition.Root show={open} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => {
-            onClose();
-            setShowStepOne(true);
-          }}
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={() => {
+          onClose();
+          setShowStepOne(true);
+        }}
+      >
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-          </Transition.Child>
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+        </Transition.Child>
 
-          <div className="fixed inset-0 z-10 overflow-y-auto">
-            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                enterTo="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              >
-                <form onSubmit={handleSubmit}>
+        <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <form onSubmit={handleSubmit}>
                 <Dialog.Panel className="bg-white relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                   <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="mt-3 text-center sm:mt-0 sm:text-left">
@@ -277,11 +277,11 @@ export default function AddTaskModal({ open, onClose, category }) {
                     </button>
                   </div>
                 </Dialog.Panel>
-                </form>
-              </Transition.Child>
-            </div>
+              </form>
+            </Transition.Child>
           </div>
-        </Dialog>
+        </div>
+      </Dialog>
     </Transition.Root>
   );
   // );

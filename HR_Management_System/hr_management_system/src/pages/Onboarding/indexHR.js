@@ -33,7 +33,7 @@ export default function OnboardingHR() {
     api
       .getCategories()
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setCategories(response.data);
       })
       .catch((error) => setError(error));

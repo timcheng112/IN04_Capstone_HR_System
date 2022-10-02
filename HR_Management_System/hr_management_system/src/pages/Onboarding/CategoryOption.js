@@ -25,7 +25,7 @@ export default function CategoryOptions({ category }) {
 
   function deleteCategory() {
     api
-      .deleteCategory(category.id)
+      .deleteCategory(category.categoryId)
       .then(() => history.push("/admin/onboardinghr"));
   }
 
@@ -134,6 +134,7 @@ export default function CategoryOptions({ category }) {
       <button
         type="button"
         className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        onClick={() => setOpenDelete(true)}
       >
         <TrashIcon className="md:-ml-0.5 md:mr-2 h-4 w-4" aria-hidden="true" />
         <span className="hidden md:block">Delete</span>
