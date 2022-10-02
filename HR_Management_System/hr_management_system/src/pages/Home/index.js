@@ -410,14 +410,14 @@ export default function Home() {
                                   Welfare
                                 </a>
                                 <a
-                                  key="Welfare"
+                                  key="Hiring"
                                   href="/home"
                                   className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
                                 >
                                   Hiring
                                 </a>
                                 <a
-                                  key="Welfare"
+                                  key="Reports"
                                   href="/home"
                                   className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
                                 >

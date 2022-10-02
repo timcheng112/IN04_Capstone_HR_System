@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
 
@@ -7,32 +7,60 @@ export default function AddDepartmentModal({ open, onClose }) {
   const [deptHeadId, setDeptHeadId] = useState(-1);
 
   function addDepartment() {
-    console.log("adddeptfunc :" + deptName + " " + deptHeadId);
-    api
-      .addDepartment(deptName, parseInt(deptHeadId))
-      .then((response) => {
-        if (response.status == 200) {
-          console.log("successfully added new dept!");
-        } else {
-          console.error("failed to add new dept!");
-        }
-      })
-      .catch((error) => {
-        var message = error.request.response;
-        console.log(message);
-        if (message.includes("User selected is not a Manager")) {
-          alert(
-            "The user you selected was not a manager! Please select a manager to be the department head."
-          );
-        } else if (
-          message.includes("Manager selected is not an active employee")
-        ) {
-          alert(
-            "The selected employee is not enabled! Please select another manager or seek administrative help to enable the manager's account."
-          );
-        }
-      });
+    if (deptHeadId === -1) {
+      alert("Please select a Manager!");
+    } else {
+      console.log("adddeptfunc :" + deptName + " " + deptHeadId);
+      api
+        .addDepartment(deptName, parseInt(deptHeadId))
+        .then((response) => {
+          if (response.status == 200) {
+            console.log("successfully added new dept!");
+          } else {
+            console.error("failed to add new dept!");
+          }
+        })
+        .catch((error) => {
+          var message = error.request.response;
+          console.log(message);
+          if (message.includes("User selected is not a Manager")) {
+            alert(
+              "The user you selected was not a manager! Please select a manager to be the department head."
+            );
+          } else if (
+            message.includes("Manager selected is not an active employee")
+          ) {
+            alert(
+              "The selected employee is not enabled! Please select another manager or seek administrative help to enable the manager's account."
+            );
+          }
+        });
+    }
   }
+
+  const [options, setOptions] = useState(null);
+  useEffect(() => {
+    const availManagers = async () => {
+      const arr = [];
+      await api.getAvailManagers().then((res) => {
+        let result = res.data;
+        result.map((manager) => {
+          return arr.push({
+            value: manager.userId,
+            label: manager.firstName + " " + manager.lastName,
+          });
+        });
+        setOptions(arr);
+        console.log("fetching options...");
+        console.log(options);
+        // console.log("HELLO!");
+        // console.log(res);
+        // console.log(res.data);
+        // console.log(typeof res.data.items);
+      });
+    };
+    availManagers();
+  });
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -121,14 +149,24 @@ export default function AddDepartmentModal({ open, onClose }) {
                                   onChange={(e) =>
                                     setDeptHeadId(e.target.value)
                                   }
-                                  id="country"
-                                  name="country"
-                                  autoComplete="country-name"
+                                  // placeholder="Select a Manager (might take a while...)"
+                                  id="deptHead"
+                                  name="deptHead"
                                   className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                                 >
-                                  <option>1</option>
-                                  <option>2</option>
-                                  <option>6</option>
+                                  <option>Select A Manager...</option>
+                                  {/*<option>1</option>*/}
+                                  {options !== null &&
+                                    options.map((option, index) => {
+                                      return (
+                                        <option
+                                          key={index}
+                                          value={option.value}
+                                        >
+                                          {option.label}
+                                        </option>
+                                      );
+                                    })}
                                 </select>
                               </div>
                             </div>

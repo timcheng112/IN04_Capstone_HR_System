@@ -148,7 +148,19 @@ const api = {
   uploadFile(file){
     return axios.post(`http://localhost:9191/uploadDocument/${file}`)
   },
-
+  addDepartment(deptName, deptHeadId) {
+    return axios.post(
+      `http://localhost:9191/api/department/addDepartment?deptName=${deptName}&deptHeadId=${deptHeadId}`
+    );
+  },
+  getAvailManagers() {
+    return axios.get(`http://localhost:9191/api/user/getAllAvailManagers`);
+  },
+  changeOrgHead(orgName, newOrgId) {
+    return axios.put(
+      `http://localhost:9191/api/organization/changeOrganizationHead?orgName=${orgName}&newOrgId=${newOrgId}`
+    );
+  },
 
 };
 
