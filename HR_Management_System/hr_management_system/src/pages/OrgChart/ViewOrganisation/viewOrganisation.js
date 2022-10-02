@@ -39,7 +39,6 @@ export default function ViewOrganisation() {
 
   const [openChange, setOpenChange] = useState(false);
   const [deptName, setDeptName] = useState("");
-  const history = useHistory()
 
   function deleteDept() {
     console.log("delete department " + toDelete)
