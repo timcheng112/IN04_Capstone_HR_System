@@ -114,32 +114,55 @@ const api = {
       `http://localhost:9191/api/task_list_item/${taskListItemId}`
     );
   },
-
+  
   getOrganization() {
-    return axios.get(`http://localhost:9191/api/organization/1`);
+    return axios.get(
+      `http://localhost:9191/api/organization/1`
+    );
   },
 
-  getUserInfo(userId) {
+  getUserInfo(userId){
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
-  editUserInfo(userId, gender, email, phone) {
-    return axios.get(
-      `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
-    );
+  editUserInfo(userId, gender, email, phone){
+    return axios.get(`http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`);
   },
-  getUserIdByEmail(workEmail) {
-    return axios.get(
-      `http://localhost:9191/api/user/login/getEmployeeIdByEmail?workEmail=${workEmail}`
-    );
-  },
+  
   getUser(userId) {
-    return axios.get(`http://localhost:9191/api/user/${userId}`);
+    return axios.get(
+      `http://localhost:9191/api/user/${userId}`
+    );
+  },
+  getUserIdByEmail(email) {
+    return axios.get(`http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`);
   },
   getDept(deptId){
     return axios.get(`http://localhost:9191/api/department/${deptId}`);
   },
-  addDepartment(deptName, deptHeadId){
-    return axios.post(`http://localhost:9191/api/department/addDepartment?deptName=${deptName}&deptHeadId=${deptHeadId}`);
+  deleteDept(deptId){
+    return axios.delete(`http://localhost:9191/api/department/${deptId}`);
+  },
+  deleteTeam(deptId){
+    return axios.delete(`http://localhost:9191/api/department/${deptId}`);
+  },
+  uploadFile(file){
+    return axios.post(`http://localhost:9191/uploadDocument/${file}`)
+  },
+  addDepartment(deptName, deptHeadId) {
+    return axios.post(
+      `http://localhost:9191/api/department/addDepartment?deptName=${deptName}&deptHeadId=${deptHeadId}`
+    );
+  },
+  getAvailManagers() {
+    return axios.get(`http://localhost:9191/api/user/getAllAvailManagers`);
+  },
+  changeOrgHead(orgName, newOrgId) {
+    return axios.put(
+      `http://localhost:9191/api/organization/changeOrganizationHead?orgName=${orgName}&newOrgId=${newOrgId}`
+    );
+  },
+  getTeam(teamId) {
+    return axios.get(`http://localhost:9191/api/team/?teamId=${teamId}`);
   },
 };
 
