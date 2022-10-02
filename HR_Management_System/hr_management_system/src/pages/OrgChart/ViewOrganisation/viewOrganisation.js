@@ -37,6 +37,7 @@ export default function ViewOrganisation() {
 
   const [openChange, setOpenChange] = useState(false);
   const [deptName, setDeptName] = useState("");
+  const history = useHistory()
 
 
   function deleteDept() {
@@ -80,8 +81,10 @@ export default function ViewOrganisation() {
 
           <DeleteDeptModal
             open={openDelete}
+
             onClose={() => setOpenDelete(false)}
           />
+
           <ChangeOrgHeadModal
             newOrgName={org.organizationName}
             open={openChange}
@@ -265,7 +268,8 @@ export default function ViewOrganisation() {
                               </td>
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                 {/*THE VIEW BUTTON IS HERE!!!!*/}
-                                <button className="text-indigo-600 hover:text-indigo-900">
+                                <button className="text-indigo-600 hover:text-indigo-900"
+                                onClick={() => history.push("/viewDept/" + dept.departmentId)}>
                                   View
                                   <span className="sr-only">, {dept.name}</span>
                                 </button>

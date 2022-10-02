@@ -1,5 +1,5 @@
 import Navbar from "../../../components/Navbar.js";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../../utils/api";
 import axios from "axios";
@@ -35,9 +35,10 @@ const people = [
 
 export default function ViewDepartment() {
   const [dept, setDept] = useState([]);
-  const [person, setDeptHead] = useState([]);
+  const [deptHead, setDeptHead] = useState([]);
   const [teams, setTeams] = useState([]);
   const [deptId, setDeptId] = useState([]);
+  const history = useHistory()
 
   //   function getURL(){
   //     const url = window.location.href;
@@ -47,32 +48,34 @@ export default function ViewDepartment() {
 
   useEffect(() => {
     const url = window.location.href;
+    const tempDeptId = url.substring(31);
+
     // console.log(url);
     // console.log(url.substring(url.length -1));
-    setDeptId(url.slice(-1));
-    // console.log(deptId);
+    setDeptId(url.substring(31));
+
+    //console.log(url.substring(31));
     // api.getDept(deptId).then((response) => {
     //   setDept(response.data);
     //   setDeptHead(response.data.departmentHead);
     //   setTeams(response.data.teams);
     // });
     // axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
-    axios
-      .get(`http://localhost:9191/api/department/${url.slice(-1)}`)
-      .then((response) => {
-        setDept(response.data);
-        setDeptHead(response.data.departmentHead);
-        console.log(response.data.departmentHead.firstName);
-        setTeams(response.data.teams);
-        console.log(response.data.departmentHead);
-      });
+    api.getDept(tempDeptId).then((response) => {
+      setDept(response.data);
+      setDeptHead(response.data.departmentHead);
+      console.log(response.data.departmentHead.firstName);
+      setTeams(response.data.teams);
+      console.log(response.data.departmentHead);
+    });
 
     // console.log(dept);
-  }, [deptId, dept, teams]);
+  }, [deptId]);
 
   return (
     dept &&
-    deptId && (
+    deptId &&
+    teams && (
       <>
         {/*<Navbar/>*/}
         <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
@@ -131,7 +134,7 @@ export default function ViewDepartment() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr key={person.email}>
+                        <tr key={deptHead.email}>
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                             <div className="flex items-center">
                               <div className="h-10 w-10 flex-shrink-0">
@@ -141,22 +144,22 @@ export default function ViewDepartment() {
                                   alt=""
                                 />
                               </div>
-                              <div className="ml-4">
+                              <div className="">
                                 <div className="font-medium text-gray-900">
-                                  {person.name}
+                                  {deptHead.firstName} {deptHead.lastName}
                                 </div>
                                 <div className="text-gray-500">
-                                  {person.email}
+                                  {deptHead.email}
                                 </div>
                               </div>
                             </div>
                           </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          <td className="whitespace-nowrap py-4 text-sm text-gray-500">
                             <div className="text-gray-900">
-                              {person.userRole}
+                              {deptHead.userRole}
                             </div>
                             <div className="text-gray-500">
-                              {person.department}
+                              {deptHead.department}
                             </div>
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -170,7 +173,7 @@ export default function ViewDepartment() {
                               className="text-indigo-600 hover:text-indigo-900"
                             >
                               Change
-                              <span className="sr-only">, {person.name}</span>
+                              <span className="sr-only">, {deptHead.name}</span>
                             </a>
                           </td>
                         </tr>
@@ -194,12 +197,12 @@ export default function ViewDepartment() {
                           >
                             Team Name
                           </th>
-                          <th
+                          {/* <th
                             scope="col"
                             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                           >
                             Outlet
-                          </th>
+                          </th> */}
                           <th
                             scope="col"
                             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
@@ -210,7 +213,7 @@ export default function ViewDepartment() {
                             scope="col"
                             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                           >
-                            Position
+                            Department
                           </th>
                           <th
                             scope="col"
@@ -229,31 +232,33 @@ export default function ViewDepartment() {
                       <tbody className="bg-white">
                         {teams.map((team, teamIdx) => (
                           <tr
-                            key={team.email}
+                            key={team.teamId}
                             className={
                               teamIdx % 2 === 0 ? undefined : "bg-gray-50"
                             }
                           >
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                              {team.name}
+                              {team.teamName}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {team.outlet}
+                            </td> */}
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              {team.teamHead}
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {team.teamLeader}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {team.position}
+                              {team.department}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <a
-                                href="https://www.google.com"
+                              <button
                                 className="text-indigo-600 hover:text-indigo-900"
+                                onClick={() =>
+                                  history.push("/viewTeam/" + team.teamId)
+                                }
                               >
                                 View
-                                <span className="sr-only">, {team.name}</span>
-                              </a>
+                                <span className="sr-only">, {dept.name}</span>
+                              </button>
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <a
