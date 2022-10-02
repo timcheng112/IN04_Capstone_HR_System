@@ -12,7 +12,6 @@ public class CategoryConfig {
     @Bean
     CommandLineRunner categoryCommandLineRunner(CategoryRepository repository) {
         return args -> {
-            repository.deleteAll();
             // Category dummyCategory = new Category();
 
             // repository.saveAll(

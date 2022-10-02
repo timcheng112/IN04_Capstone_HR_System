@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.administration.category;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,12 +20,23 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public List<Category> getCategories() {
-        return categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
+        for (Category category : categories) {
+            for (Task task : category.getTasks()) {
+                task.setCategory(null);
+                task.setTaskListItems(new ArrayList<>());
+            }
+        }
+        return categories;
     }
 
     public Category getCategoryById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalStateException("Category with ID: " + categoryId + " does not exist!"));
+        for (Task task : category.getTasks()) {
+            task.setCategory(null);
+            task.setTaskListItems(new ArrayList<>());
+        }
         return category;
     }
 
