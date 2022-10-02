@@ -127,6 +127,15 @@ const api = {
       `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
     );
   },
+
+  getUser(userId) {
+    return axios.get(`http://localhost:9191/api/user/${userId}`);
+  },
+  getUserIdByEmail(workEmail) {
+    return axios.get(
+      `http://localhost:9191/api/user/login/getEmployeeIdByEmail?workEmail=${workEmail}`
+    );
+  },
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
@@ -141,7 +150,6 @@ const api = {
   addDepartment(deptName, deptHeadId){
     return axios.post(`http://localhost:9191/api/department/addDepartment?deptName=${deptName}&deptHeadId=${deptHeadId}`);
   },
-
 };
 
 export default api;

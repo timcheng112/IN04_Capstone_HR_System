@@ -61,12 +61,11 @@ function classNames(...classes) {
 }
 
 export default function ProfilePage(props) {
-  const [userId, setUser] = useState(getUserId()) //logged in user
+  const [user, setUser] = useState(getUserId()) //logged in user
   const history = useHistory()
-//   const result = user.split(";");
   // const email = result[2]
   let [userInfo, setUserInfo] = useState([]);
-//   const userId = result[0]
+  const userId = getUserId()
   // const email = result[1]
 
   console.log(userId)

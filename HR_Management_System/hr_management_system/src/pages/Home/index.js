@@ -254,7 +254,7 @@ export default function Home() {
                               >
                                 Career
                               </a>
-                              <a
+                              {/* <a
                                 key="Welfare"
                                 href="/home"
                                 className={classNames(
@@ -262,17 +262,17 @@ export default function Home() {
                                 )}
                               >
                                 Welfare
-                              </a>
+                              </a> */}
                               <a
                                 key="Hiring"
-                                href="/home"
+                                href="/register"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
                                 Hiring
                               </a>
-                              <a
+                              {/* <a
                                 key="Reports"
                                 href="/home"
                                 className={classNames(
@@ -280,7 +280,7 @@ export default function Home() {
                                 )}
                               >
                                 Reports
-                              </a>
+                              </a> */}
                             </nav>
                           </div>
                           {/* <div className="px-12 lg:px-0">
@@ -664,7 +664,7 @@ export default function Home() {
                           </div>
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
-                              <a href="/home" className="focus:outline-none">
+                              <a href="/onboarding" className="focus:outline-none">
                                 {/* Extend touch target to entire panel */}
                                 <span
                                   className="absolute inset-0"
@@ -715,7 +715,7 @@ export default function Home() {
                           </div>
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
-                              <a href="/home" className="focus:outline-none">
+                              <a href="/offboarding" className="focus:outline-none">
                                 {/* Extend touch target to entire panel */}
                                 <span
                                   className="absolute inset-0"

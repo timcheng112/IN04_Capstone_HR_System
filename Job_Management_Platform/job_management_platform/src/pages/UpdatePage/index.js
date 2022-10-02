@@ -7,9 +7,9 @@ import loading from "../../assets/Spinner.svg";
 
 
 export default function ProfilePage(props) {
-  const [userId, setUser] = useState(getUserId()) //logged in user
-//   const result= user.split(";");
-//   const userId = result[0];
+  const [user, setUser] = useState(getUserId()) //logged in user
+  const result= user.split(";");
+  const userId = getUserId()
   const [userInfo, setUserInfo] = useState([]);
   const [viewUser, setViewUser] = useState(null) //viewing other user
   //        const [tab, setTab] = useState(tabs[0])

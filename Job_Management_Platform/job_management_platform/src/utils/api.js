@@ -59,6 +59,9 @@ const api = {
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
+  getUserIdByEmail(email) {
+    return axios.get(`http://localhost:9191/api/user/login/getUserIdByEmail?email=${email}`)
+  }
   getUserIdByEmail(email){
     return axios.get(`http://localhost:9191/api/user/login/getUserIdByEmail?email=${email}`);
   },
