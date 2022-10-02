@@ -45,9 +45,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT t.user FROM TaskListItem t WHERE NOT t.task.taskId = ?2 AND t.user.userRole = ?1")
     List<User> findEmployeesWithoutTask(RoleEnum userRole, Long taskId);
 
-    // @Query("SELECT t.user FROM TaskListItem t WHERE t.taskId = ?1 AND
-    // t.user.userRole = ?2")
-    // List<User> findEmployeesWithTask(Long taskId, RoleEnum userRole);
+
+    @Query("SELECT t.user FROM TaskListItem t WHERE t.task.taskId = ?2 AND t.user.userRole = ?1")
+    List<User> findEmployeesWithTask(RoleEnum userRole, Long taskId);
 
     @Query("SELECT u FROM User u WHERE u.userRole = ?1")
     List<User> findAllByRole(RoleEnum role);
