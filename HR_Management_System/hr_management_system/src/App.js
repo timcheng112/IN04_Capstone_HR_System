@@ -23,49 +23,47 @@ import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmploye
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="App">
-        <Switch>
-          <PublicRoute exact path="/" component={LoginPage} />
-          <PrivateRoute exact path="/register" component={RegisterPage} />
-          <PublicRoute exact path="/forgot" component={ForgotPasswordPage} />
-          <PublicRoute
-            exact
-            path="/forgot/:token"
-            component={ForgotPasswordPage}
-          />
-          <PrivateRoute exact path="/verify" component={VerificationPage} />
-          <PrivateRoute
-            exact
-            path="/verify/:token"
-            component={VerificationPage}
-          />
-          <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
-          <PublicRoute exact path="/timeout" component={Timeout} />
-          <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
-          <PrivateRoute exact path="/profile" component={ProfilePage}/>
-          <PrivateRoute exact path="/viewOrg" component={ViewOrganisation}/>
-          <PrivateRoute exact path="/updateProfile" component={UpdateProfile}/>
-          {/* //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/> */}
-          {/* //          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart} /> */}
-          <PrivateRoute exact path="/home" component={HomePage} />
-          <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
-          <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
-          <PrivateRoute exact path="/viewDept/:id" component={ViewDepartment}/>
-          <PublicRoute exact path="/offboarding" component={OffboardingHrPage}/>
-          {/* <ViewTeam/> */}
-        </Switch>
-      </div>
-    </BrowserRouter>
+    // <BrowserRouter>
+    //   <div className="App">
+    //     <Switch>
+    //       <PublicRoute exact path="/" component={LoginPage} />
+    //       <PrivateRoute exact path="/register" component={RegisterPage} />
+    //       <PublicRoute exact path="/forgot" component={ForgotPasswordPage} />
+    //       <PublicRoute
+    //         exact
+    //         path="/forgot/:token"
+    //         component={ForgotPasswordPage}
+    //       />
+    //       <PrivateRoute exact path="/verify" component={VerificationPage} />
+    //       <PrivateRoute
+    //         exact
+    //         path="/verify/:token"
+    //         component={VerificationPage}
+    //       />
+    //       <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
+    //       <PublicRoute exact path="/timeout" component={Timeout} />
+    //       <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
+    //       <PrivateRoute exact path="/profile" component={ProfilePage}/>
+    //       <PrivateRoute exact path="/viewOrg" component={ViewOrganisation}/>
+    //       <PrivateRoute exact path="/updateProfile" component={UpdateProfile}/>
+    //       {/* //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/> */}
+    //       {/* //          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart} /> */}
+    //       <PrivateRoute exact path="/home" component={HomePage} />
+    //       <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
+    //       <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
+    //       <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
+    //       <PublicRoute exact path="/offboarding" component={OffboardingHrPage}/>
+    //       {/* <ViewTeam/> */}
+    //     </Switch>
+    //   </div>
+    // </BrowserRouter>
 
-//    <ViewTeam/>
-//    <ViewDepartment />
-//    <ViewOrganisation />
-//    <EmployeeChart />
-//    <EmployeeList/>
-//    <ProfilePage/>
-
-
+    //    <ViewTeam/>
+    // <ViewDepartment />
+    <ViewOrganisation />
+    //    <EmployeeChart />
+    //    <EmployeeList/>
+    //    <ProfilePage/>
   );
 }
 

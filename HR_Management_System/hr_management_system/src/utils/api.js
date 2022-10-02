@@ -139,6 +139,9 @@ const api = {
   getDept(deptId){
     return axios.get(`http://localhost:9191/api/department/${deptId}`);
   },
+  addDepartment(deptName, deptHeadId){
+    return axios.post(`http://localhost:9191/api/department/addDepartment?deptName=${deptName}&deptHeadId=${deptHeadId}`);
+  },
 
 };
 

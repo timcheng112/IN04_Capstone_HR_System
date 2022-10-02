@@ -7,6 +7,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
+@CrossOrigin("*")
 @RequestMapping(path = "api/department")
 public class DepartmentController {
 
