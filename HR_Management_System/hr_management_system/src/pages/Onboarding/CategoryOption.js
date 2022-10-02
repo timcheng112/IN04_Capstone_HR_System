@@ -156,6 +156,7 @@ export default function CategoryOptions({ category }) {
         title="category"
         item="category"
         open={openDelete}
+        setOpen={() => setOpenDelete(false)}
         onClose={() => setOpenDelete(false)}
         onConfirm={deleteCategory}
       />
