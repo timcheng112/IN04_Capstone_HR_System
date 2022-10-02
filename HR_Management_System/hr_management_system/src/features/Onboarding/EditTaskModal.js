@@ -303,7 +303,7 @@ export default function EditTaskModal({
                       showStepOne ? () => setShowStepOne(false) : handleSubmit
                     }
                   >
-                    {showStepOne ? "Next Step" : "Add Task"}
+                    {showStepOne ? "Next Step" : "Confirm"}
                   </button>
                   {!showStepOne && (
                     <button

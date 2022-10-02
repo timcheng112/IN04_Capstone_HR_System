@@ -57,7 +57,8 @@ export default function TaskOptions({ task, refreshKeyHandler}) {
       .then(() => {
         alert("Successfully deleted!");
         refreshKeyHandler();
-      });
+      })
+      .catch((error) => setError(error));
   }
 
 
