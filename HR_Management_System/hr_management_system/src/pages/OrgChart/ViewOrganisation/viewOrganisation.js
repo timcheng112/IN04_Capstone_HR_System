@@ -22,8 +22,8 @@ export default function ViewOrganisation() {
       setOrg(response.data);
       console.log(org);
     });
-    console.log(org);
   }, [org]);
+  //what is this [org] for?
 
   const [openAdd, setOpenAdd] = useState(false);
   const [openChange, setOpenChange] = useState(false);

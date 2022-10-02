@@ -151,6 +151,9 @@ const api = {
       `http://localhost:9191/api/organization/changeOrganizationHead?orgName=${orgName}&newOrgId=${newOrgId}`
     );
   },
+  getTeam(teamId) {
+    return axios.get(`http://localhost:9191/api/team/?teamId=${teamId}`);
+  },
 };
 
 export default api;
