@@ -27,8 +27,11 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
     api.deleteCategory(category.categoryId).then(() => {
       alert("Successfully deleted!");
       refreshKeyHandler();
-    });
+    })
+    .catch((error) => setError(error));
   }
+
+  if(error) return 'Error'
 
   return (
     // <Menu as="div" className="relative inline-block text-left">
