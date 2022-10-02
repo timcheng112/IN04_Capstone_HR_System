@@ -135,13 +135,22 @@ const api = {
       `http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`
     );
   },
-  getDept(deptId){
+  getDept(deptId) {
     return axios.get(`http://localhost:9191/api/department/${deptId}`);
   },
-  addDepartment(deptName, deptHeadId){
-    return axios.post(`http://localhost:9191/api/department/addDepartment?deptName=${deptName}&deptHeadId=${deptHeadId}`);
+  addDepartment(deptName, deptHeadId) {
+    return axios.post(
+      `http://localhost:9191/api/department/addDepartment?deptName=${deptName}&deptHeadId=${deptHeadId}`
+    );
   },
-
+  getAvailManagers() {
+    return axios.get(`http://localhost:9191/api/user/getAllAvailManagers`);
+  },
+  changeOrgHead(orgName, newOrgId) {
+    return axios.put(
+      `http://localhost:9191/api/organization/changeOrganizationHead?orgName=${orgName}&newOrgId=${newOrgId}`
+    );
+  },
 };
 
 export default api;
