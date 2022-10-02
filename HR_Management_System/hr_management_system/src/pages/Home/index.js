@@ -246,6 +246,15 @@ export default function Home() {
                                 Admin
                               </a>
                               <a
+                                key="Company"
+                                href="/home"
+                                className={classNames(
+                                  "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
+                                )}
+                              >
+                                Company
+                              </a>
+                              <a
                                 key="Career"
                                 href="/home"
                                 className={classNames(
@@ -254,15 +263,15 @@ export default function Home() {
                               >
                                 Career
                               </a>
-                              {/* <a
+                              <a
                                 key="Welfare"
-                                href="/home"
+                                href="/"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
                                 Welfare
-                              </a> */}
+                              </a>
                               <a
                                 key="Hiring"
                                 href="/register"
@@ -272,7 +281,7 @@ export default function Home() {
                               >
                                 Hiring
                               </a>
-                              {/* <a
+                              <a
                                 key="Reports"
                                 href="/home"
                                 className={classNames(
@@ -280,7 +289,7 @@ export default function Home() {
                                 )}
                               >
                                 Reports
-                              </a> */}
+                              </a>
                             </nav>
                           </div>
                           {/* <div className="px-12 lg:px-0">
@@ -360,11 +369,13 @@ export default function Home() {
                             <div className="pt-3 pb-2">
                               <div className="flex items-center justify-between px-4">
                                 <div>
-                                  <img
-                                    className="h-8 w-auto"
-                                    src={logo}
-                                    alt="Your Company"
-                                  />
+                                  <a href="/home">
+                                    <img
+                                      className="h-8 w-auto"
+                                      src={logo}
+                                      alt="Your Company"
+                                    />
+                                  </a>
                                 </div>
                                 <div className="-mr-2">
                                   <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500">
@@ -664,7 +675,10 @@ export default function Home() {
                           </div>
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
-                              <a href="/onboarding" className="focus:outline-none">
+                              <a
+                                href="/onboarding"
+                                className="focus:outline-none"
+                              >
                                 {/* Extend touch target to entire panel */}
                                 <span
                                   className="absolute inset-0"
@@ -715,7 +729,10 @@ export default function Home() {
                           </div>
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
-                              <a href="/offboarding" className="focus:outline-none">
+                              <a
+                                href="/offboarding"
+                                className="focus:outline-none"
+                              >
                                 {/* Extend touch target to entire panel */}
                                 <span
                                   className="absolute inset-0"

@@ -20,6 +20,7 @@ import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 import OnboardingHrPage from "./pages/Onboarding/indexHR";
 import OnboardingPage from "./pages/Onboarding/index";
+import OffboardingPage from "./pages/Offboarding"
 
 function App() {
   return (
@@ -52,7 +53,7 @@ function App() {
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
           <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
           <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
-          <PrivateRoute exact path="/offboarding" component={OffboardingHrPage}/>
+          <PrivateRoute exact path="/offboarding" component={OffboardingPage}/>
           {/* <ViewTeam/> */}
 
           <PrivateRoute exact path="/admin/onboarding" component={OnboardingPage} />
