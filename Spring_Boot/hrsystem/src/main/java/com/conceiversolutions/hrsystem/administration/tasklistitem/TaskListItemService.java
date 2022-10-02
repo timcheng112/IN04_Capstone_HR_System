@@ -77,7 +77,8 @@ public class TaskListItemService {
     public List<TaskListItem> getTaskListItemsByEmployee(Long employeeId) {
         List<TaskListItem> taskListItems = taskListItemRepository.findTaskListItemByEmployee(employeeId).get();
         for (TaskListItem t : taskListItems) {
-            t.getUser().setTaskListItems(new ArrayList<>());
+            //t.getUser().setTaskListItems(new ArrayList<>());
+            t.setUser(null);
             t.getTask().setTaskListItems(new ArrayList<>());
             t.getTask().getCategory().setTasks(new ArrayList<>());
         }
