@@ -1,22 +1,24 @@
 import { useState } from "react";
 import { useHistory } from "react-router";
 import { DotsVerticalIcon, PencilIcon } from "@heroicons/react/solid";
-import EditTaskModal from "../../features/Onboarding/EditTaskModal";
+import EditTaskModal from "../../features/onboarding/EditTaskModal";
 import api from "../../utils/api";
 import {
   EyeIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
+
 import AddTaskModal from "../../features/Onboarding/AddTaskModal";
 import ViewTaskModal from "../../features/Onboarding/ViewTaskModal";
 import ConfirmDialog from "../../components/ConfirmDialog";
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function TaskOptions({ task}) {
+export default function TaskOptions({ task }) {
   const history = useHistory();
   const [action, setAction] = useState("");
   const [openView, setOpenView] = useState(false);
@@ -50,11 +52,8 @@ export default function TaskOptions({ task}) {
   ]);
 
   function deleteTask() {
-    api
-      .deleteTask(task.id)
-      .then(() => history.push('/admin/onboardinghr'))
+    api.deleteTask(task.id).then(() => history.push("/admin/onboardinghr"));
   }
-
 
   return (
     <div className="space-x-2">
@@ -85,15 +84,26 @@ export default function TaskOptions({ task}) {
         <span className="hidden md:block">Delete</span>
       </button>
 
-      <ViewTaskModal open={openView} onClose={() => setOpenView(false)} task={task}/>
-      <EditTaskModal open={openEdit} onClose={() => setOpenEdit(false)} taskName={'Task1'} taskDescription={'This is Task1'} unassignedEmployees={unassignedEmployees} assignedEmployees={assignedEmployees}/>
+      <ViewTaskModal
+        open={openView}
+        onClose={() => setOpenView(false)}
+        task={task}
+      />
+      <EditTaskModal
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        taskName={"Task1"}
+        taskDescription={"This is Task1"}
+        unassignedEmployees={unassignedEmployees}
+        assignedEmployees={assignedEmployees}
+      />
       <ConfirmDialog
         title="task"
         item="task"
         open={openDelete}
         onClose={() => setOpenDelete(false)}
         onConfirm={deleteTask}
-      /> 
+      />
     </div>
   );
 }
