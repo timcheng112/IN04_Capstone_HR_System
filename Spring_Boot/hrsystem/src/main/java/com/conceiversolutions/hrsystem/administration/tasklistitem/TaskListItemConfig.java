@@ -10,7 +10,7 @@ public class TaskListItemConfig {
     @Bean
     CommandLineRunner taskListItemCommandLineRunner(TaskListItemRepository repository) {
         return args -> {
-            repository.deleteAll();
+//            repository.deleteAll();
             // Category dummyCategory = new Category();
 
             // repository.saveAll(

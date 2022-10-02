@@ -217,6 +217,17 @@ public class UserController {
         return userService.getEmployeeFromToken(token);
     }
 
+    @GetMapping(path = "/login/getUserIdByEmail")
+    public Long getUserIdByEmail(@RequestParam("email") String email) {
+        
+        return userService.getUserFromEmail(email);
+    }
+
+    @GetMapping(path = "/login/getEmployeeIdByEmail")
+    public Long getEmployeeIdByEmail(@RequestParam("workEmail") String workEmail) {
+        System.out.println("getEmployeeIdByEmail " + workEmail);
+        return userService.getUserFromWorkEmail(workEmail);
+    }
 
     @GetMapping(path = "/updateProfile")
     public String updateProfile(@RequestParam("userId") Long userId,

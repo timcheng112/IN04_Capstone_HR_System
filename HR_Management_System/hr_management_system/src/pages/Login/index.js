@@ -25,15 +25,18 @@ export default function Login() {
         }
       })
       .then(() => {
-        history.push("/admin/onboarding");
+        history.push("/home");
       })
       .catch((error) => {
         var message = error.request.response;
         console.log(getWorkEmail());
         if (message.includes("account is not activated yet")) {
+          console.log("in api call " + getWorkEmail());
           api
             .getUserIdByEmail(getWorkEmail())
-            .then((response) => setUserSession(response.data, email))
+            .then((response) => {
+              setUserSession(response.data, email);
+            })
             .then(() => history.push("/verify"));
         } else if (
           message.includes("User password does not match the record")
