@@ -6,7 +6,12 @@ import { Dialog, Transition } from "@headlessui/react";
 // import TextArea from '../../components/textArea';
 import api from "../../utils/api";
 
-export default function EditCategoryModal({ open, onClose, category }) {
+export default function EditCategoryModal({
+  open,
+  onClose,
+  category,
+  refreshKeyHandler,
+}) {
   const history = useHistory();
   const [name, setName] = useState(category.name);
   const [error, setError] = useState(null);
@@ -27,6 +32,7 @@ export default function EditCategoryModal({ open, onClose, category }) {
       editCategory();
       onClose(false);
       alert("Successfully edited category.");
+      refreshKeyHandler();
     }
   };
 
