@@ -25,7 +25,7 @@ export default function Login() {
         }
       })
       .then(() => {
-        history.push("/home");
+        history.push("/admin/onboarding");
       })
       .catch((error) => {
         var message = error.request.response;

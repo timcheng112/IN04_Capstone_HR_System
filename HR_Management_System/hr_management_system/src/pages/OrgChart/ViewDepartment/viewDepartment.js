@@ -1,5 +1,10 @@
 import Navbar  from '../../../components/Navbar.js';
 import { Link } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import api from "../../../utils/api";
+import axios from 'axios';
+
+
 
 /* This example requires Tailwind CSS v2.0+ */
 const teams = [
@@ -21,10 +26,49 @@ const people = [
 ]
 
 export default function ViewDepartment() {
+  const [dept, setDept] = useState([]);
+  const [person , setDeptHead] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [deptId, setDeptId]= useState([]);
+
+
+//   function getURL(){
+//     const url = window.location.href;
+//     const deptId = url.slice(-1);
+//     console.log(url);
+// }
+
+  useEffect(() => {
+    
+    const url = window.location.href;
+    // console.log(url);
+    // console.log(url.substring(url.length -1));
+    setDeptId(url.slice(-1));
+    // console.log(deptId);
+    // api.getDept(deptId).then((response) => {
+    //   setDept(response.data);
+    //   setDeptHead(response.data.departmentHead);
+    //   setTeams(response.data.teams);
+    // });
+    // axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
+    axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
+        
+        setDept(response.data);
+        setDeptHead(response.data.departmentHead);console.log(response.data.departmentHead.firstName);
+        setTeams(response.data.teams);
+        console.log(response.data.departmentHead);
+  });
+
+    // console.log(dept);
+
+  }, [deptId,dept,teams]);
+
+
   return (
+  dept && deptId &&
   <>
     <Navbar/>
-    <div class="bg-[#13AEBD] rounded-xl p-10 m-10">
+    <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
@@ -66,12 +110,11 @@ export default function ViewDepartment() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {people.map((person) => (
                       <tr key={person.email}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                           <div className="flex items-center">
                             <div className="h-10 w-10 flex-shrink-0">
-                              <img className="h-10 w-10 rounded-full" src={person.image} alt="" />
+                              <img className="h-10 w-10 rounded-full" src={""} alt="" />
                             </div>
                             <div className="ml-4">
                               <div className="font-medium text-gray-900">{person.name}</div>
@@ -80,7 +123,7 @@ export default function ViewDepartment() {
                           </div>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          <div className="text-gray-900">{person.position}</div>
+                          <div className="text-gray-900">{person.userRole}</div>
                           <div className="text-gray-500">{person.department}</div>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -94,7 +137,6 @@ export default function ViewDepartment() {
                             </a>
                         </td>
                       </tr>
-                    ))}
                   </tbody>
                 </table>
               </div>

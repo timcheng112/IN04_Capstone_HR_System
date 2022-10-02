@@ -1,8 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Switch } from "react-router-dom";
 import LoginPage from "./pages/Login";
-import OnboardingHrPage from "./pages/Onboarding/index";
-import OffboardingHrPage from "./pages/Offboarding/indexHr";
 import PublicRoute from "./utils/PublicRoute";
 import PrivateRoute from "./utils/PrivateRoute";
 import Timeout from "./pages/Timeout";
@@ -20,6 +18,8 @@ import HomePage from "./pages/Home";
 
 import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
+import OnboardingHrPage from "./pages/Onboarding/indexHR";
+import OnboardingPage from "./pages/Onboarding/index";
 
 function App() {
   return (
@@ -54,18 +54,12 @@ function App() {
           <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
           <PrivateRoute exact path="/offboarding" component={OffboardingHrPage}/>
           {/* <ViewTeam/> */}
+
+          <PrivateRoute exact path="/admin/onboarding" component={OnboardingPage} />
+          <PrivateRoute exact path="/admin/onboardinghr" component={OnboardingHrPage} />
         </Switch>
       </div>
     </BrowserRouter>
-
-//    <ViewTeam/>
-//    <ViewDepartment />
-//    <ViewOrganisation />
-//    <EmployeeChart />
-//    <EmployeeList/>
-//    <ProfilePage/>
-
-
   );
 }
 

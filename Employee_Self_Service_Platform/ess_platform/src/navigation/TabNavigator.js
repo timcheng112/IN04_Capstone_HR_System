@@ -7,6 +7,7 @@ import HomeScreen from "../screens/HomeScreen";
 import AdminNavigator from "./AdminNavigator";
 import HomeNavigator from "./HomeNavigator";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import AdminDrawerNavigator from "./AdminDrawerNavigator";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -15,7 +16,9 @@ const TabNavigator = () => {
     <Tab.Navigator
       initialRouteName="Home"
       activeColor="#101820FF"
-      barStyle={{ backgroundColor: "#FBB344" }}
+      shifting={true}
+      sceneAnimationEnabled={false}
+      barStyle={{ backgroundColor: "#FBB344", elevation: 8 }}
     >
       <Tab.Screen
         name="Home"
@@ -28,7 +31,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Admin"
-        component={AdminNavigator}
+        component={AdminDrawerNavigator}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons

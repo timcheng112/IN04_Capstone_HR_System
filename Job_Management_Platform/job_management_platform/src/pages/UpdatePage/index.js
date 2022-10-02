@@ -23,12 +23,11 @@ export default function ProfilePage(props) {
         setUserInfo(response.data);
         setGender(response.data.gender);
         setPhone(response.data.phone);
-        setEmail(response.data.email); }).then( ()=>{
-              console.log(email);
+        setEmail(response.data.email); }).then( ()=>{ 
               console.log(userInfo);  
         })
 
-  },[user])
+  },[userId, userInfo])
 
 
   const handleSubmit = (evt) => {

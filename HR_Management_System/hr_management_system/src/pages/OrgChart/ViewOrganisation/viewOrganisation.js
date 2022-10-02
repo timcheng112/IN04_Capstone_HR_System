@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../../../utils/api";
 import { useState, useEffect } from "react";
 import AddDepartmentModal from './addDeptModal.js';
+import { useHistory } from "react-router-dom";
 
 /* Requires Tailwind CSS v2.0+ */
 //TODO: fix org.organization.Head.positions & department, status active
@@ -11,25 +12,34 @@ import AddDepartmentModal from './addDeptModal.js';
 //TODO: link view button to next page(?)
 //consider using useEffect to minimize refreshes
 
+//TODO: UPDATE TABLE WHEN ADDING DEPT ETC? anyway to just update the list without refreshing the whole page? look into!
+
 export default function ViewOrganisation() {
   const [org, setOrg] = useState([]);
+  const history = useHistory()
 
   useEffect(() => {
     api.getOrganization().then((response) => {
       setOrg(response.data);
+      console.log(org);
     });
+
     console.log(org);
+    // console.log(org.organizationHead.departmentId);
   }, []);
 
-  const [openAdd, setOpenAdd] = useState(false)
+  const [openAdd, setOpenAdd] = useState(false);
 
   return (
     <>
       {org.organizationHead ? (
         <>
           <Navbar />
-          <AddDepartmentModal open={openAdd} onClose={ () => setOpenAdd(false)}/>
-          <div class="bg-[#13AEBD] rounded-xl p-10 m-10">
+          <AddDepartmentModal
+            open={openAdd}
+            onClose={() => setOpenAdd(false)}
+          />
+          <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
@@ -43,7 +53,7 @@ export default function ViewOrganisation() {
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                   <button
-                    onClick={()=>setOpenAdd(true)}
+                    onClick={() => setOpenAdd(true)}
                     type="button"
                     className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                   >
@@ -87,7 +97,7 @@ export default function ViewOrganisation() {
                         </thead>
 
                         <tbody className="divide-y divide-gray-200 bg-white">
-                          <tr key={org.organizationHead.userId}>
+                          <tr onClick={() => history.push("/viewDept" + org.organizationHead.departmentId)} key={org.organizationHead.userId}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                               <div className="flex items-center">
                                 <div className="h-10 w-10 flex-shrink-0">
@@ -157,6 +167,7 @@ export default function ViewOrganisation() {
                             <th
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                              
                             >
                               Department Head
                             </th>
@@ -191,7 +202,7 @@ export default function ViewOrganisation() {
                               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                 {dept.departmentName}
                               </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              <td onClick={() => history.push("/viewDept/" + dept.departmentId)} className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                 {dept.departmentHead.firstName +
                                   " " +
                                   dept.departmentHead.lastName}
@@ -229,7 +240,7 @@ export default function ViewOrganisation() {
           </div>
         </>
       ) : (
-        <div class="bg-cyan-300">
+        <div className="bg-cyan-300">
           <div className="font-mono absolute mx-auto text-center w-screen text-6xl mt-9">
             <h1>loading...</h1>
           </div>

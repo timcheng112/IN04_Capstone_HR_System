@@ -61,6 +61,16 @@ public class Category {
         return tasks;
     }
 
+    public List<Task> addTask(Task task) {
+        this.tasks.add(task);
+        return this.tasks;
+    }
+
+    public List<Task> removeTask(Task task) {
+        this.tasks.remove(task);
+        return this.tasks;
+    }
+
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }

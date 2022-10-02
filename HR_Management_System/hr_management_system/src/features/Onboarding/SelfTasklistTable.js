@@ -4,24 +4,24 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function SelfTasklistTable() {
-  const [taskListItems, setTaskListItems] = useState([
-    {
-      name: "Task 1",
-      description: "This is Task 1.",
-      category: "IT",
-    },
-    {
-      name: "Task 2",
-      description: "This is Task 2.",
-      category: "New Hire Paperwork",
-    },
-    {
-      name: "Task 3",
-      description: "This is Task 3.",
-      category: "Culture Orientation",
-    },
-  ]);
+function SelfTasklistTable({taskListItems,setTaskListItems}) {
+  // const [taskListItems, setTaskListItems] = useState([
+  //   {
+  //     name: "Task 1",
+  //     description: "This is Task 1.",
+  //     category: "IT",
+  //   },
+  //   {
+  //     name: "Task 2",
+  //     description: "This is Task 2.",
+  //     category: "New Hire Paperwork",
+  //   },
+  //   {
+  //     name: "Task 3",
+  //     description: "This is Task 3.",
+  //     category: "Culture Orientation",
+  //   },
+  // ]);
   const [selectedTask, setSelectedTask] = useState([]);
 
   function onClickHandler(taskListItem) {
@@ -116,7 +116,7 @@ function SelfTasklistTable() {
                         {task.description}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
-                        {task.category}
+                        {task.task.category}
                       </td>
                       <td className="whitespace-nowrap px-3 text-sm text-gray-500 text-left">
                         {selectedTask.includes(task) && (
