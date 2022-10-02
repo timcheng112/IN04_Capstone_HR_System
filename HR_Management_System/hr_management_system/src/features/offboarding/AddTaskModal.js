@@ -8,13 +8,24 @@ import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
 // import TextArea from '../../components/textArea';
 import api from "../../utils/api";
 
-export default function AddTaskModal({ open, onClose, category }) {
+export default function AddTaskModal({
+  open,
+  onClose,
+  category,
+  refreshKeyHandler,
+}) {
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState(null);
   const [showStepOne, setShowStepOne] = useState(true);
+  const [searchParam] = useState([
+    "userId",
+    "firstName",
+    "lastName",
+    "workEmail",
+  ]);
 
   const [unassignedEmployees, setUnassignedEmployees] = useState();
   const [assignedEmployees, setAssignedEmployees] = useState([]);
@@ -24,45 +35,75 @@ export default function AddTaskModal({ open, onClose, category }) {
   const [filteredAssignedEmployees, setFilteredAssignedEmployees] =
     useState(assignedEmployees);
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
+  useEffect(() => {
+    api
+      .getAllEmployees()
+      .then((response) => {
+        setUnassignedEmployees(response.data);
+        setFilteredUnassignedEmployees(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  const handleSubmit = () => {
     createTask();
+    onClose();
     //createTaskListItem()
     alert("Successfully created task.");
+    refreshKeyHandler();
   };
   function createTask() {
+    const task = {
+      name: name,
+      description: description,
+      isOnboarding: false,
+    };
     api
-      .addNewTask({
-        name: name,
-        description: description,
-        isOnboarding: true,
-        categpry: category,
+      .addNewTask(task, category.categoryId)
+      .then((result) => {
+        console.log("RESULT DATA: " + result.data);
+        createTaskListItem(result.data);
       })
-      .then(() => history.goBack())
       .catch((error) => setError(error));
   }
-  // function createTaskListItem() {
-  //   api.addNewTaskListItem({
-  //     name: name,
-  //     description: description,
-  //     isOnboarding: true,
-  //   })
-  //     .then(() => history.goBack())
-  //     .catch(error => setError(error))
-  // }
+
+  function createTaskListItem(taskId) {
+    const taskListItem = { isDone: false };
+    assignedEmployees.forEach((employee) => {
+      api
+        .addNewTaskListItem(employee.userId, taskId, taskListItem)
+        .then(() => console.log("Task List Item created"))
+        .catch((error) => setError(error));
+    });
+  }
 
   function search(e, items, isUnassigned) {
     const value = e.target.value;
     isUnassigned
       ? setFilteredUnassignedEmployees(
-          items.filter((employee) =>
-            employee.name.toLowerCase().includes(value.toLowerCase())
-          )
+          items.filter((item) => {
+            return searchParam.some((newItem) => {
+              return (
+                item[newItem]
+                  .toString()
+                  .toLowerCase()
+                  .indexOf(value.toLowerCase()) > -1
+              );
+            });
+          })
         )
       : setFilteredAssignedEmployees(
-          items.filter((employee) =>
-            employee.name.toLowerCase().includes(value.toLowerCase())
-          )
+          items.filter((item) => {
+            return searchParam.some((newItem) => {
+              return (
+                item[newItem]
+                  .toString()
+                  .toLowerCase()
+                  .indexOf(value.toLowerCase()) > -1
+              );
+            });
+          })
         );
   }
 

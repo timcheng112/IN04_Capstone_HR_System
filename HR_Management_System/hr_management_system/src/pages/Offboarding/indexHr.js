@@ -56,7 +56,7 @@ function OffboardingHr() {
       </div>
       <main className="flex-1">
         <div className="py-4 px-6">
-          <TasklistTable isHr={true} />
+          <TasklistTable isHr={true} categories={categories} />
           <AddCategoryModal
             open={openCreate}
             onClose={() => setOpenCreate(false)}

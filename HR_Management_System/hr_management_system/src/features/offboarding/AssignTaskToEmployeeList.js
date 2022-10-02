@@ -14,10 +14,10 @@ export default function AssignTaskToEmployeeList({
               <div className="flex items-center space-x-4">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-gray-900">
-                    {person.name}
+                    {person.firstName + " " + person.lastName}
                   </p>
                   <p className="truncate text-sm text-gray-500">
-                    {"@" + person.handle}
+                    {person.workEmail}
                   </p>
                 </div>
                 <div>

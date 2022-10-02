@@ -10,7 +10,6 @@ function classNames(...classes) {
 function TasklistTable({ categories, setCategories, refreshKeyHandler }) {
   console.log("categories: " + categories);
   console.log("categories length: " + categories.length);
-
   return (
     <div className="mt-8 flex flex-col">
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -66,30 +65,34 @@ function TasklistTable({ categories, setCategories, refreshKeyHandler }) {
                           />
                         </th>
                       </tr>
-                      {category.tasks.map((task, taskIdx) => (
-                        <tr
-                          key={task.name}
-                          className={classNames(
-                            taskIdx === 0
-                              ? "border-gray-300"
-                              : "border-gray-200",
-                            "border-t"
-                          )}
-                        >
-                          <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                            {task.name}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                            {task.description}
-                          </td>
-                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <TaskOptions
-                              task={task}
-                              //   setTask={setTask}
-                            />
-                          </td>
-                        </tr>
-                      ))}
+                      {category.tasks.map((task, taskIdx) => {
+                        if (task.isOnboarding) {
+                          return (
+                            <tr
+                              key={task.name}
+                              className={classNames(
+                                taskIdx === 0
+                                  ? "border-gray-300"
+                                  : "border-gray-200",
+                                "border-t"
+                              )}
+                            >
+                              <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                {task.name}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                                {task.description}
+                              </td>
+                              <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                <TaskOptions
+                                  task={task}
+                                  //   setTask={setTask}
+                                />
+                              </td>
+                            </tr>
+                          );
+                        }
+                      })}
                     </Fragment>
                   ))}
                 </tbody>
