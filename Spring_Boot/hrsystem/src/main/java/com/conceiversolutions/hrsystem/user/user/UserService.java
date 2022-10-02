@@ -199,11 +199,27 @@ public class UserService implements UserDetailsService {
     }
 
     public List<User> getEmployeesWithoutTask(Long taskId) {
-        return userRepository.findEmployeesWithoutTask(RoleEnum.EMPLOYEE, taskId);
+        List<User> employees = userRepository.findEmployeesWithoutTask(RoleEnum.EMPLOYEE, taskId);
+        for (User employee : employees) {
+            for (TaskListItem taskListItem : employee.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+        }
+        return employees;
     }
 
     public List<User> getEmployeesWithTask(Long taskId) {
-        return userRepository.findEmployeesWithTask(RoleEnum.EMPLOYEE, taskId);
+        List<User> employees = userRepository.findEmployeesWithTask(RoleEnum.EMPLOYEE, taskId);
+        for (User employee : employees) {
+            for (TaskListItem taskListItem : employee.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+        }
+        return employees;
     }
 
     public Long addNewUser(User user) {
