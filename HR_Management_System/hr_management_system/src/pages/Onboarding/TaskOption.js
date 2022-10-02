@@ -1,18 +1,16 @@
-import { Fragment, useState } from "react";
-import { Menu, Transition } from "@headlessui/react";
+import { useState } from "react";
 import { useHistory } from "react-router";
 import { DotsVerticalIcon, PencilIcon } from "@heroicons/react/solid";
 import EditTaskModal from "../../features/Onboarding/EditTaskModal";
 import api from "../../utils/api";
-import ConfirmDialog from "../../components/ConfirmDialog";
 import {
-  DocumentMinusIcon,
   EyeIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import AddTaskModal from "../../features/Onboarding/AddTaskModal";
 import ViewTaskModal from "../../features/Onboarding/ViewTaskModal";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

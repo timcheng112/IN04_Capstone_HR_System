@@ -127,10 +127,6 @@ const api = {
       `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
     );
   },
-
-  getUser(userId) {
-    return axios.get(`http://localhost:9191/api/user/${userId}`);
-  },
   getUserIdByEmail(workEmail) {
     return axios.get(
       `http://localhost:9191/api/user/login/getEmployeeIdByEmail?workEmail=${workEmail}`
@@ -138,11 +134,6 @@ const api = {
   },
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
-  },
-  getUserIdByEmail(email) {
-    return axios.get(
-      `http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`
-    );
   },
   getDept(deptId){
     return axios.get(`http://localhost:9191/api/department/${deptId}`);
