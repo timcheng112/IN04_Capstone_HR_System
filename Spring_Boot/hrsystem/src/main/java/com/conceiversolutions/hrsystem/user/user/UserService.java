@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
@@ -42,16 +43,20 @@ public class UserService implements UserDetailsService {
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
 
-//    @Autowired
-//    public UserService(UserRepository userRepository, EmailValidator emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, ConfirmationTokenRepository confirmationTokenRepository, ReactivationRequestRepository reactivationRequestRepository) {
-//        this.userRepository = userRepository;
-//        this.emailValidator = emailValidator;
-//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-//        this.confirmationTokenService = confirmationTokenService;
-//        this.emailSender = emailSender;
-//        this.confirmationTokenRepository = confirmationTokenRepository;
-//        this.reactivationRequestRepository = reactivationRequestRepository;
-//    }
+    // @Autowired
+    // public UserService(UserRepository userRepository, EmailValidator
+    // emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder,
+    // ConfirmationTokenService confirmationTokenService, EmailSender emailSender,
+    // ConfirmationTokenRepository confirmationTokenRepository,
+    // ReactivationRequestRepository reactivationRequestRepository) {
+    // this.userRepository = userRepository;
+    // this.emailValidator = emailValidator;
+    // this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    // this.confirmationTokenService = confirmationTokenService;
+    // this.emailSender = emailSender;
+    // this.confirmationTokenRepository = confirmationTokenRepository;
+    // this.reactivationRequestRepository = reactivationRequestRepository;
+    // }
 
     // public List<User> getTestUsers() {
     // return List.of(
@@ -76,14 +81,18 @@ public class UserService implements UserDetailsService {
         List<User> users = userRepository.findAll();
         System.out.println("size of user list is " + users.size());
         for (User u : users) {
-            List <Team> teams = u.getTeams();
+            List<Team> teams = u.getTeams();
             for (Team t : teams) {
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
                 t.setRoster(null);
             }
-            u.setTaskListItems(null);
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+            }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
         }
@@ -101,14 +110,18 @@ public class UserService implements UserDetailsService {
 
             User u = user.get();
 
-            List <Team> teams = u.getTeams();
+            List<Team> teams = u.getTeams();
             for (Team t : teams) {
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
                 t.setRoster(null);
             }
-            u.setTaskListItems(null);
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+            }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
 
@@ -129,7 +142,7 @@ public class UserService implements UserDetailsService {
 
             User u = user.get();
 
-            List <Team> teams = u.getTeams();
+            List<Team> teams = u.getTeams();
             for (Team t : teams) {
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
@@ -156,7 +169,7 @@ public class UserService implements UserDetailsService {
 
             User u = user.get();
 
-            List <Team> teams = u.getTeams();
+            List<Team> teams = u.getTeams();
             for (Team t : teams) {
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
@@ -174,24 +187,26 @@ public class UserService implements UserDetailsService {
     }
 
     // public List<User> getAllEmployees() {
-    //     return userRepository.findAllEmployees().get();
+    // return userRepository.findAllEmployees(RoleEnum.EMPLOYEE);
     // }
+
     // public List<User> getEmployeesWithoutTask(Long taskId) {
-    //     return userRepository.findEmployeesWithoutTask(taskId).get();
+    // return userRepository.findEmployeesWithoutTask(taskId, RoleEnum.EMPLOYEE);
     // }
+
     // public List<User> getEmployeesWithTask(Long taskId) {
-    //     return userRepository.findEmployeesWithTask(taskId).get();
+    // return userRepository.findEmployeesWithTask(taskId, RoleEnum.EMPLOYEE);
     // }
 
     public Long addNewUser(User user) {
         System.out.println("UserService.addNewUser");
-//        Check if email is valid
+        // Check if email is valid
         boolean isValidEmail = emailValidator.test(user.getEmail());
         if (!isValidEmail) {
             throw new IllegalStateException("Email address is not valid");
         }
 
-//        Check if email is already used
+        // Check if email is already used
         if (user.getUserRole().equals(RoleEnum.APPLICANT)) {
             Optional<User> userByEmail = userRepository.findUserByEmail(user.getEmail());
             if (userByEmail.isPresent()) {
@@ -202,7 +217,7 @@ public class UserService implements UserDetailsService {
             System.out.println("work email " + user.getWorkEmail());
             String workEmailToCheck = user.getWorkEmail();
             boolean isValidWorkEmail = emailValidator.test(workEmailToCheck);
-            if(!isValidWorkEmail) {
+            if (!isValidWorkEmail) {
                 throw new IllegalStateException("Work email address is not valid");
             }
             Optional<User> employeeByWorkEmail1 = userRepository.findUserByEmail(user.getEmail());
@@ -249,10 +264,11 @@ public class UserService implements UserDetailsService {
         if (user.isPresent()) {
             User userRecord = user.get();
 
-            if (userRecord.getBlackListed() ) {
+            if (userRecord.getBlackListed()) {
                 throw new IllegalStateException("User account is not accessible, please request to be reactivated");
             } else if (!userRecord.isEnabled()) {
-                throw new IllegalStateException("User account is not activated yet, please check your email or request to be activated");
+                throw new IllegalStateException(
+                        "User account is not activated yet, please check your email or request to be activated");
             }
 
             if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {
@@ -270,13 +286,15 @@ public class UserService implements UserDetailsService {
         System.out.println("UserService.loginUserHRMS");
         System.out.println("workEmail = " + workEmail + ", password = " + password);
         Optional<User> user = userRepository.findUserByWorkEmail(workEmail);
-        if(user.isPresent()){
+        if (user.isPresent()) {
             System.out.println("Employee exists");
             User userRecord = user.get();
 
             if (!userRecord.isEnabled()) {
-                System.out.println("Employee account is not activated yet, please check your work email or request to be activated");
-                throw new Exception("Employee account is not activated yet, please check your work email or request to be activated");
+                System.out.println(
+                        "Employee account is not activated yet, please check your work email or request to be activated");
+                throw new Exception(
+                        "Employee account is not activated yet, please check your work email or request to be activated");
             }
 
             if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {
@@ -296,12 +314,10 @@ public class UserService implements UserDetailsService {
         String[] split = email.split("@");
         if (split[1].startsWith("libro")) {
             return userRepository.findUserByWorkEmail(email)
-                    .orElseThrow(() ->
-                            new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+                    .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
         } else {
             return userRepository.findUserByEmail(email)
-                    .orElseThrow(() ->
-                            new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+                    .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
         }
     }
 
@@ -399,20 +415,25 @@ public class UserService implements UserDetailsService {
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
                 "\n" +
-                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n"
+                +
                 "    <tbody><tr>\n" +
                 "      <td width=\"100%\" height=\"53\" bgcolor=\"#0b0c0c\">\n" +
                 "        \n" +
-                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
+                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n"
+                +
                 "          <tbody><tr>\n" +
                 "            <td width=\"70\" bgcolor=\"#0b0c0c\" valign=\"middle\">\n" +
-                "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
+                "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n"
+                +
                 "                  <tbody><tr>\n" +
                 "                    <td style=\"padding-left:10px\">\n" +
                 "                  \n" +
                 "                    </td>\n" +
-                "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n" +
-                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n" +
+                "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n"
+                +
+                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n"
+                +
                 "                    </td>\n" +
                 "                  </tr>\n" +
                 "                </tbody></table>\n" +
@@ -424,12 +445,14 @@ public class UserService implements UserDetailsService {
                 "      </td>\n" +
                 "    </tr>\n" +
                 "  </tbody></table>\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
                 "    <tbody><tr>\n" +
                 "      <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
                 "      <td>\n" +
                 "        \n" +
-                "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
+                "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n"
+                +
                 "                  <tbody><tr>\n" +
                 "                    <td bgcolor=\"#1D70B8\" width=\"100%\" height=\"10\"></td>\n" +
                 "                  </tr>\n" +
@@ -442,15 +465,19 @@ public class UserService implements UserDetailsService {
                 "\n" +
                 "\n" +
                 "\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
                 "    <tbody><tr>\n" +
                 "      <td height=\"30\"><br></td>\n" +
                 "    </tr>\n" +
                 "    <tr>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
+                "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n"
+                +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering an account with Libro. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 1 Hour. <p>Grow with Libro</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name
+                + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering an account with Libro. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\""
+                + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 1 Hour. <p>Grow with Libro</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
@@ -563,8 +590,10 @@ public class UserService implements UserDetailsService {
                 "                    <td style=\"padding-left:10px\">\n" +
                 "                  \n" +
                 "                    </td>\n" +
-                "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n" +
-                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n" +
+                "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n"
+                +
+                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n"
+                +
                 "                    </td>\n" +
                 "                  </tr>\n" +
                 "                </tbody></table>\n" +
@@ -576,12 +605,14 @@ public class UserService implements UserDetailsService {
                 "      </td>\n" +
                 "    </tr>\n" +
                 "  </tbody></table>\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
                 "    <tbody><tr>\n" +
                 "      <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
                 "      <td>\n" +
                 "        \n" +
-                "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
+                "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n"
+                +
                 "                  <tbody><tr>\n" +
                 "                    <td bgcolor=\"#1D70B8\" width=\"100%\" height=\"10\"></td>\n" +
                 "                  </tr>\n" +
@@ -594,7 +625,8 @@ public class UserService implements UserDetailsService {
                 "\n" +
                 "\n" +
                 "\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
                 "    <tbody><tr>\n" +
                 "      <td height=\"30\"><br></td>\n" +
                 "    </tr>\n" +
@@ -647,7 +679,8 @@ public class UserService implements UserDetailsService {
 
     public String resetPasswordHRMS(String workEmail, String oldPassword, String newPassword) {
         System.out.println("UserService.resetPasswordJMP");
-        System.out.println("workEmail = " + workEmail + ", oldPassword = " + oldPassword + ", newPassword = " + newPassword);
+        System.out.println(
+                "workEmail = " + workEmail + ", oldPassword = " + oldPassword + ", newPassword = " + newPassword);
 
         User employee = getEmployee(workEmail);
         if (bCryptPasswordEncoder.matches(oldPassword, employee.getPassword())) {
@@ -756,14 +789,13 @@ public class UserService implements UserDetailsService {
     @Transactional
     public String updateUser(Long userId, GenderEnum gender, String email, Integer phone) {
         System.out.println("UserService.updateUser");
-//        System.out.println(.getUserRole());
+        // System.out.println(.getUserRole());
 
         User user = getUser(userId);
 
         user.setPhone(phone);
         user.setEmail(email);
         user.setGender(gender);
-
 
         return "Update of user was successful";
     }
@@ -789,7 +821,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public String updateUser(User newUser, Long id){
+    public String updateUser(User newUser, Long id) {
         System.out.println("UserService.updateUser");
 
         User user = getUser(id);
@@ -809,7 +841,7 @@ public class UserService implements UserDetailsService {
         List<User> managers = userRepository.findAllByRole(RoleEnum.MANAGER);
         System.out.println("size of managers list is " + managers.size());
         for (User u : managers) {
-            List <Team> teams = u.getTeams();
+            List<Team> teams = u.getTeams();
             for (Team t : teams) {
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
@@ -818,7 +850,7 @@ public class UserService implements UserDetailsService {
             }
             u.setTaskListItems(null);
             u.setQualificationInformation(null);
-//            u.setTeams(new ArrayList<>());
+            // u.setTeams(new ArrayList<>());
         }
 
         return managers;
@@ -828,16 +860,20 @@ public class UserService implements UserDetailsService {
         List<User> employees = userRepository.findAllByRole(RoleEnum.EMPLOYEE);
         System.out.println("size of employees list is " + employees.size());
         for (User u : employees) {
-            List <Team> teams = u.getTeams();
+            List<Team> teams = u.getTeams();
             for (Team t : teams) {
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setRoster(null);
                 t.setTeamHead(null);
             }
-            u.setTaskListItems(null);
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+            }
             u.setQualificationInformation(null);
-//            u.setTeams(new ArrayList<>());
+            // u.setTeams(new ArrayList<>());
         }
 
         return employees;
@@ -847,7 +883,7 @@ public class UserService implements UserDetailsService {
         List<User> employees = userRepository.findAllStaff(RoleEnum.MANAGER, RoleEnum.EMPLOYEE);
         System.out.println("size of employee list is " + employees.size());
         for (User u : employees) {
-            List <Team> teams = u.getTeams();
+            List<Team> teams = u.getTeams();
             for (Team t : teams) {
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
@@ -856,7 +892,7 @@ public class UserService implements UserDetailsService {
             }
             u.setTaskListItems(null);
             u.setQualificationInformation(null);
-//            u.setTeams(new ArrayList<>());
+            // u.setTeams(new ArrayList<>());
         }
 
         return employees;
@@ -871,7 +907,7 @@ public class UserService implements UserDetailsService {
         System.out.println("work email " + user.getWorkEmail());
         String workEmailToCheck = user.getWorkEmail();
         boolean isValidWorkEmail = emailValidator.test(workEmailToCheck);
-        if(!isValidWorkEmail) {
+        if (!isValidWorkEmail) {
             throw new IllegalStateException("Work email address is not valid");
         }
         Optional<User> employeeByWorkEmail1 = userRepository.findUserByEmail(user.getEmail());
@@ -905,7 +941,7 @@ public class UserService implements UserDetailsService {
         List<User> availManagers = new ArrayList<>();
         for (User u : managers) {
             if (!deptHeadIds.contains(u.getUserId()) && !teamHeadIds.contains(u.getUserId())) {
-                List <Team> teams = u.getTeams();
+                List<Team> teams = u.getTeams();
                 for (Team t : teams) {
                     t.setUsers(new ArrayList<>());
                     t.setDepartment(null);

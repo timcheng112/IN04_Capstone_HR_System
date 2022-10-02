@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
+import { useHistory } from "react-router";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -15,20 +16,18 @@ export default function OnboardingHR() {
   const [categories, setCategories] = useState([]);
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState(null);
+  const history = useHistory();
   //const [tasks, setTasks] = useState(null)
 
-  // useEffect(() => {
-  //   const userId = getUserId();
-  //   console.log("USERID: " + userId);
-  //   api
-  //     .getUser(userId)
-  //     .then((response) => {
-  //       console.log("RESPONSE DATA: " + response.data);
-  //       setUser(response.data);
-  //     })
-  //     .catch((error) => setError(error));
-  //   console.log("User: " + user);
-  // }, []);
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   useEffect(() => {
     api
@@ -63,6 +62,19 @@ export default function OnboardingHR() {
       </div>
       <main className="flex-1">
         <div className="py-4 px-6">
+          <div className="flex items-center">
+            <div className="mt-4 ml-auto mr-6">
+              {user !== null && user.hrEmployee && (
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                  onClick={() => history.push("/admin/onboarding")}
+                >
+                  Non-HR Mode
+                </button>
+              )}
+            </div>
+          </div>
           <TasklistTable
             categories={categories}
             setCategories={setCategories}
