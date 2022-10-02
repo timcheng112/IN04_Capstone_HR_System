@@ -12,7 +12,7 @@ function classNames(...classes) {
 export default function Navbar() {
   const navigation = [
     { name: 'Dashboard', path: '/'},
-    { name: 'Admin', path: '/admin'},
+    { name: 'Admin', path: '/admin/onboarding'},
     { name: 'Company', path: '/company'},
     { name: 'Career', path: '/career'},
     { name: 'Welfare', path: '/welfare'},
@@ -67,7 +67,7 @@ export default function Navbar() {
                 </button>
 
                 {/* Profile dropdown */}
-                <Menu as="div" className="relative ml-3">
+                {/* <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
@@ -116,7 +116,7 @@ export default function Navbar() {
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
-                </Menu>
+                </Menu> */}
               </div>
             </div>
           </div>
