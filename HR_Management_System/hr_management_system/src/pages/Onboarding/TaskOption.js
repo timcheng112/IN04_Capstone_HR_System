@@ -18,7 +18,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function TaskOptions({ task}) {
+export default function TaskOptions({ task, refreshKeyHandler}) {
   const history = useHistory();
   const [action, setAction] = useState("");
   const [openView, setOpenView] = useState(false);
@@ -26,35 +26,38 @@ export default function TaskOptions({ task}) {
   const [openDelete, setOpenDelete] = useState(false);
   const [error, setError] = useState(null);
 
-  const [unassignedEmployees] = useState([
-    {
-      name: "Leonard Krasner",
-      handle: "leonardkrasner",
-    },
-    {
-      name: "Floyd Miles",
-      handle: "floydmiles",
-    },
-    {
-      name: "Emily Selman",
-      handle: "emilyselman",
-    },
-    {
-      name: "Kristin Watson",
-      handle: "kristinwatson",
-    },
-  ]);
-  const [assignedEmployees] = useState([
-    {
-      name: "KongXinyue",
-      handle: "KongXinyue",
-    },
-  ]);
+  // const [unassignedEmployees] = useState([
+  //   {
+  //     name: "Leonard Krasner",
+  //     handle: "leonardkrasner",
+  //   },
+  //   {
+  //     name: "Floyd Miles",
+  //     handle: "floydmiles",
+  //   },
+  //   {
+  //     name: "Emily Selman",
+  //     handle: "emilyselman",
+  //   },
+  //   {
+  //     name: "Kristin Watson",
+  //     handle: "kristinwatson",
+  //   },
+  // ]);
+  // const [assignedEmployees] = useState([
+  //   {
+  //     name: "KongXinyue",
+  //     handle: "KongXinyue",
+  //   },
+  // ]);
 
   function deleteTask() {
     api
-      .deleteTask(task.id)
-      .then(() => history.push('/admin/onboardinghr'))
+      .deleteTask(task.taskId)
+      .then(() => {
+        alert("Successfully deleted!");
+        refreshKeyHandler();
+      });
   }
 
 
@@ -88,7 +91,7 @@ export default function TaskOptions({ task}) {
       </button>
 
       <ViewTaskModal open={openView} onClose={() => setOpenView(false)} task={task}/>
-      <EditTaskModal open={openEdit} onClose={() => setOpenEdit(false)} taskName={'Task1'} taskDescription={'This is Task1'} unassignedEmployees={unassignedEmployees} assignedEmployees={assignedEmployees}/>
+      <EditTaskModal open={openEdit} onClose={() => setOpenEdit(false)} task={task} refreshKeyHandler={refreshKeyHandler}/>
       <ConfirmDialog
         title="task"
         item="task"
