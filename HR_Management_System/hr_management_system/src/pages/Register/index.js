@@ -19,35 +19,40 @@ export default function Register() {
   const [dobDay, setDobDay] = useState("");
   const [dobMonth, setDobMonth] = useState("");
   const [dobYear, setDobYear] = useState("");
-  const [gender, setGender] = useState("");
-  const [role, setRole] = useState("");
+  const [gender, setGender] = useState("Male");
+  const [role, setRole] = useState("Employee");
   const [isPartTimer, setIsPartTime] = useState(false);
   const [isHrEmployee, setIsHrEmployee] = useState(false);
   const [joinedDay, setJoinedDay] = useState("");
   const [joinedMonth, setJoinedMonth] = useState("");
   const [joinedYear, setJoinedYear] = useState("");
-  const [isHr, setIsHr] = useState(true)
- 
+  const [isHr, setIsHr] = useState(true);
+
   const history = useHistory();
 
   useEffect(() => {
-    api.getUser(getUserId()).then(response => setIsHr(response.data.hrEmployee)).finally(() => {
-      if (!isHr) {
-        history.goBack()
-      }
-    }, [isHr])
-  })
+    api
+      .getUser(getUserId())
+      .then((response) => setIsHr(response.data.hrEmployee))
+      .finally(() => {
+        if (!isHr) {
+          history.goBack();
+        }
+      }, [isHr]);
+  });
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    //console.log(gender.toUpperCase());
+    //console.log(role.toUpperCase());
     register();
   };
 
   function register() {
-    var dob = dobYear + "-" + dobMonth + "-" + dobDay
-    console.log("dob = " + dob)
-    var dateJoined = joinedYear + "-" + joinedMonth + "-" + joinedDay
-    console.log("joined = " + dateJoined)
+    var dob = dobYear + "-" + dobMonth + "-" + dobDay;
+    console.log("dob = " + dob);
+    var dateJoined = joinedYear + "-" + joinedMonth + "-" + joinedDay;
+    console.log("joined = " + dateJoined);
     if (password === confirmPassword) {
       api
         .register(
@@ -58,13 +63,16 @@ export default function Register() {
           email,
           workEmail,
           dob,
-          gender,
-          role,
+          gender.toUpperCase(),
+          role.toUpperCase(),
           isPartTimer,
           isHrEmployee,
           dateJoined
         )
-        .then(() => alert("account creation successful")).finally(() => history.goBack());
+        .then(() =>
+          alert("Account creation successful for " + firstName + " " + lastName)
+        )
+        .finally(() => history.goBack());
     } else {
       alert("passwords do not match");
     }
@@ -81,7 +89,7 @@ export default function Register() {
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />
-            <div className="-space-y-px rounded-md shadow-sm">
+            <div className="-space-y-px rounded-md ">
               <div>
                 <label
                   htmlFor="first-name"
@@ -261,7 +269,7 @@ export default function Register() {
                   />
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <label
                   htmlFor="gender"
                   className="block text-sm mt-5 font-medium text-gray-700"
@@ -277,6 +285,24 @@ export default function Register() {
                   value={gender}
                   onChange={(g) => setGender(g.target.value)}
                 />
+              </div> */}
+              <div>
+                <label
+                  htmlFor="gender"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Gender
+                </label>
+                <select
+                  id="gender"
+                  name="gender"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+                  value={gender}
+                  onChange={(r) => setGender(r.target.value)}
+                >
+                  <option>Male</option>
+                  <option>Female</option>
+                </select>
               </div>
               <div>
                 <label
@@ -323,7 +349,7 @@ export default function Register() {
                   />
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <label
                   htmlFor="role"
                   className="block text-sm mt-5 font-medium text-gray-700"
@@ -339,8 +365,26 @@ export default function Register() {
                   value={role}
                   onChange={(r) => setRole(r.target.value)}
                 />
+              </div> */}
+              <div>
+                <label
+                  htmlFor="role"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Role
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+                  value={role}
+                  onChange={(r) => setRole(r.target.value)}
+                >
+                  <option>Employee</option>
+                  <option>Manager</option>
+                  <option>Administrator</option>
+                </select>
               </div>
-
               <div>
                 <Switch.Group
                   as="div"
@@ -367,7 +411,7 @@ export default function Register() {
                       aria-hidden="true"
                       className={classNames(
                         isPartTimer ? "translate-x-5" : "translate-x-0",
-                        "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                        "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white ring-0 transition duration-200 ease-in-out"
                       )}
                     />
                   </Switch>
@@ -399,7 +443,7 @@ export default function Register() {
                       aria-hidden="true"
                       className={classNames(
                         isHrEmployee ? "translate-x-5" : "translate-x-0",
-                        "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                        "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white ring-0 transition duration-200 ease-in-out"
                       )}
                     />
                   </Switch>

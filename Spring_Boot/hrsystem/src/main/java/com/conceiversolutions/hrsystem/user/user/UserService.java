@@ -3,13 +3,18 @@ package com.conceiversolutions.hrsystem.user.user;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
+import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
 import com.conceiversolutions.hrsystem.user.registration.EmailValidator;
 import com.conceiversolutions.hrsystem.user.registration.token.ConfirmationToken;
 import com.conceiversolutions.hrsystem.user.registration.token.ConfirmationTokenRepository;
 import com.conceiversolutions.hrsystem.user.registration.token.ConfirmationTokenService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,11 +23,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final static String USER_NOT_FOUND_MSG = "User with email %s not found";
@@ -32,17 +39,19 @@ public class UserService implements UserDetailsService {
     private final EmailSender emailSender;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final ReactivationRequestRepository reactivationRequestRepository;
+    private final DepartmentRepository departmentRepository;
+    private final TeamRepository teamRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository, EmailValidator emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, ConfirmationTokenRepository confirmationTokenRepository, ReactivationRequestRepository reactivationRequestRepository) {
-        this.userRepository = userRepository;
-        this.emailValidator = emailValidator;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.confirmationTokenService = confirmationTokenService;
-        this.emailSender = emailSender;
-        this.confirmationTokenRepository = confirmationTokenRepository;
-        this.reactivationRequestRepository = reactivationRequestRepository;
-    }
+//    @Autowired
+//    public UserService(UserRepository userRepository, EmailValidator emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, ConfirmationTokenRepository confirmationTokenRepository, ReactivationRequestRepository reactivationRequestRepository) {
+//        this.userRepository = userRepository;
+//        this.emailValidator = emailValidator;
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//        this.confirmationTokenService = confirmationTokenService;
+//        this.emailSender = emailSender;
+//        this.confirmationTokenRepository = confirmationTokenRepository;
+//        this.reactivationRequestRepository = reactivationRequestRepository;
+//    }
 
     // public List<User> getTestUsers() {
     // return List.of(
@@ -63,7 +72,23 @@ public class UserService implements UserDetailsService {
 
     public List<User> getAllUsers() {
         System.out.println("UserService.getAllUsers");
-        return userRepository.findAll();
+
+        List<User> users = userRepository.findAll();
+        System.out.println("size of user list is " + users.size());
+        for (User u : users) {
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setRoster(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+            u.setTeams(new ArrayList<>());
+        }
+
+        return users;
     }
 
     public User getUser(Long id) {
@@ -73,7 +98,21 @@ public class UserService implements UserDetailsService {
         if (user.isPresent()) {
             System.out.println("User found");
             System.out.println(user.get());
-            return user.get();
+
+            User u = user.get();
+
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setRoster(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+            u.setTeams(new ArrayList<>());
+
+            return u;
         } else {
             throw new IllegalStateException("User does not exist.");
         }
@@ -87,7 +126,21 @@ public class UserService implements UserDetailsService {
         if (user.isPresent()) {
             System.out.println("User found");
             System.out.println(user.get());
-            return user.get();
+
+            User u = user.get();
+
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setRoster(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+            u.setTeams(new ArrayList<>());
+
+            return u;
         } else {
             throw new IllegalStateException("User does not exist.");
         }
@@ -100,7 +153,21 @@ public class UserService implements UserDetailsService {
         if (user.isPresent()) {
             System.out.println("Employee found");
             System.out.println(user.get());
-            return user.get();
+
+            User u = user.get();
+
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setRoster(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+            u.setTeams(new ArrayList<>());
+
+            return u;
         } else {
             throw new IllegalStateException("Employee does not exist.");
         }
@@ -154,19 +221,19 @@ public class UserService implements UserDetailsService {
 
         User newUser = userRepository.saveAndFlush(user);
 
-//        Sending confirmation TOKEN to set user's isEnabled
+        // Sending confirmation TOKEN to set user's isEnabled
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
-                token, LocalDateTime.now(), LocalDateTime.now().plusHours(1), newUser
-        );
+                token, LocalDateTime.now(), LocalDateTime.now().plusHours(1), newUser);
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-        String link = "http://localhost:3000/verify/" + token;
+        String link = "";
         if (newUser.getUserRole().equals(RoleEnum.APPLICANT)) {
+            link = "http://localhost:3000/verify/" + token;
             emailSender.send(
                     newUser.getEmail(), buildConfirmationEmail(newUser.getFirstName(), link));
         } else {
+            link = "http://localhost:3001/verify/" + token;
             emailSender.send(
                     newUser.getWorkEmail(), buildConfirmationEmail(newUser.getFirstName(), link));
         }
@@ -303,7 +370,7 @@ public class UserService implements UserDetailsService {
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        String link = "http://localhost:3000/forgot/" + token;
+        String link = "http://localhost:3001/forgot/" + token;
         emailSender.send(email, buildForgotPasswordEmail(tempUser.getFirstName(), link));
         return tempUser.getUserId();
     }
@@ -537,7 +604,7 @@ public class UserService implements UserDetailsService {
                 +
                 "        \n" +
                 "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name
-                + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Please click on the below link to change your password. If you did not request for the password reset, please contact us at : </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <p>in04.capstoner.2022@gmail.com</p></blockquote>\n</p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\""
+                + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Please click on the link below to change your password. If you did not request for the password reset, please contact us at : </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <p>in04.capstoner.2022@gmail.com</p></blockquote>\n</p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\""
                 + link + "\">Change Now</a> </p></blockquote>\n Link will expire in 1 Hour. <p>Grow with Libro</p>" +
                 "        \n" +
                 "      </td>\n" +
@@ -664,7 +731,7 @@ public class UserService implements UserDetailsService {
             ct.setExpiresAt(LocalDateTime.now().plusHours(1));
             confirmationTokenRepository.saveAndFlush(ct);
 
-            String link = "http://localhost:3000/verify/" + ct.getToken();
+            String link = "http://localhost:3001/verify/" + ct.getToken();
             emailSender.send(
                     tempUser.getWorkEmail(), buildConfirmationEmail(tempUser.getFirstName(), link));
         }
@@ -721,5 +788,137 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
+    public String updateUser(User newUser, Long id){
+        System.out.println("UserService.updateUser");
 
+        User user = getUser(id);
+
+        user.setFirstName(newUser.getFirstName());
+        user.setLastName(newUser.getLastName());
+        user.setPhone(newUser.getPhone());
+        user.setEmail(newUser.getEmail());
+        user.setDob(newUser.getDob());
+        user.setGender(newUser.getGender());
+        user.setProfilePic(newUser.getProfilePic());
+
+        return "Update of user was successful";
+    }
+
+    public List<User> getAllManagers() {
+        List<User> managers = userRepository.findAllByRole(RoleEnum.MANAGER);
+        System.out.println("size of managers list is " + managers.size());
+        for (User u : managers) {
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+//            u.setTeams(new ArrayList<>());
+        }
+
+        return managers;
+    }
+
+    public List<User> getAllEmployees() {
+        List<User> employees = userRepository.findAllByRole(RoleEnum.EMPLOYEE);
+        System.out.println("size of employees list is " + employees.size());
+        for (User u : employees) {
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+//            u.setTeams(new ArrayList<>());
+        }
+
+        return employees;
+    }
+
+    public List<User> getAllStaff() {
+        List<User> employees = userRepository.findAllStaff(RoleEnum.MANAGER, RoleEnum.EMPLOYEE);
+        System.out.println("size of employee list is " + employees.size());
+        for (User u : employees) {
+            List <Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            u.setTaskListItems(null);
+            u.setQualificationInformation(null);
+//            u.setTeams(new ArrayList<>());
+        }
+
+        return employees;
+    }
+
+    public void initAdmin(User user) {
+        System.out.println("UserService.initAdmin");
+        boolean isValidEmail = emailValidator.test(user.getEmail());
+        if (!isValidEmail) {
+            throw new IllegalStateException("Email address is not valid");
+        }
+        System.out.println("work email " + user.getWorkEmail());
+        String workEmailToCheck = user.getWorkEmail();
+        boolean isValidWorkEmail = emailValidator.test(workEmailToCheck);
+        if(!isValidWorkEmail) {
+            throw new IllegalStateException("Work email address is not valid");
+        }
+        Optional<User> employeeByWorkEmail1 = userRepository.findUserByEmail(user.getEmail());
+
+        Optional<User> employeeByWorkEmail2 = userRepository.findUserByWorkEmail(user.getWorkEmail());
+        if (employeeByWorkEmail1.isPresent() || employeeByWorkEmail2.isPresent()) {
+            System.out.println("Email(s) already in use.");
+            throw new IllegalStateException("User's emails are already in use");
+        }
+
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        User newUser = userRepository.saveAndFlush(user);
+    }
+
+    public List<User> getAllAvailManagers() {
+        List<Department> departments = departmentRepository.findAll();
+        List<Long> deptHeadIds = new ArrayList<>();
+        for (Department d : departments) {
+            deptHeadIds.add(d.getDepartmentHead().getUserId());
+        }
+
+        List<Team> allTeams = teamRepository.findAll();
+        List<Long> teamHeadIds = new ArrayList<>();
+        for (Team t : allTeams) {
+            teamHeadIds.add(t.getTeamHead().getUserId());
+        }
+
+        List<User> managers = userRepository.findAllByRole(RoleEnum.MANAGER);
+        System.out.println("size of managers list is " + managers.size());
+        List<User> availManagers = new ArrayList<>();
+        for (User u : managers) {
+            if (!deptHeadIds.contains(u.getUserId()) && !teamHeadIds.contains(u.getUserId())) {
+                List <Team> teams = u.getTeams();
+                for (Team t : teams) {
+                    t.setUsers(new ArrayList<>());
+                    t.setDepartment(null);
+                    t.setRoster(null);
+                    t.setTeamHead(null);
+                }
+                u.setTaskListItems(null);
+                u.setQualificationInformation(null);
+
+                availManagers.add(u);
+            }
+        }
+
+        return availManagers;
+    }
 }

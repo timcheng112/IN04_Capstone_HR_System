@@ -12,7 +12,7 @@ import java.util.List;
 @Configuration
 public class UserConfig {
     @Bean
-    CommandLineRunner userCommandLineRunner(UserRepository userRepository) {
+    CommandLineRunner userCommandLineRunner(UserRepository userRepository, UserService userService) {
 //        User Init for 2 test users
         return args -> {
             User testUser = new User(
@@ -28,6 +28,8 @@ public class UserConfig {
                     true,
                     null
                 );
+            testUser.setWorkEmail("simj@libro.com");
+            testUser.setEnabled(true);
 
             User testUser2 = new User(
                     "Matthew",
@@ -42,13 +44,14 @@ public class UserConfig {
                     true,
                     null
             );
+            testUser2.setWorkEmail("leem@libro.com");
+            testUser2.setEnabled(true);
 
 //            if any user exists already, don't run
             if (!userRepository.existsById(1L)) {
                 System.out.println("No user, so will init 2 Administrator users");
-                userRepository.saveAll(
-                        List.of(testUser, testUser2)
-                );
+                userService.initAdmin(testUser);
+                userService.initAdmin(testUser2);
             } else {
                 System.out.println("Administrators already exist, do not init Administrator users");
             }
