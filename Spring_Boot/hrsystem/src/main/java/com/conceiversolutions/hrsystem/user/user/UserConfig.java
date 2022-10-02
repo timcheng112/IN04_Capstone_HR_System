@@ -13,7 +13,7 @@ import java.util.List;
 public class UserConfig {
     @Bean
     CommandLineRunner userCommandLineRunner(UserRepository userRepository, UserService userService) {
-//        User Init for 2 test users
+        // User Init for 2 test users
         return args -> {
             User testUser = new User(
                     "Janice",
@@ -21,13 +21,12 @@ public class UserConfig {
                     "password",
                     93823503,
                     "janicesim@gmail.com",
-                    LocalDate.of(2000,2,28),
+                    LocalDate.of(2000, 2, 28),
                     GenderEnum.FEMALE,
                     RoleEnum.ADMINISTRATOR,
                     false,
                     true,
-                    null
-                );
+                    null);
             testUser.setWorkEmail("simj@libro.com");
             testUser.setEnabled(true);
 
@@ -37,17 +36,16 @@ public class UserConfig {
                     "password",
                     81868188,
                     "matthewlee@gmail.com",
-                    LocalDate.of(1997,1,3),
+                    LocalDate.of(1997, 1, 3),
                     GenderEnum.MALE,
                     RoleEnum.ADMINISTRATOR,
                     false,
                     true,
-                    null
-            );
+                    null);
             testUser2.setWorkEmail("leem@libro.com");
             testUser2.setEnabled(true);
 
-//            if any user exists already, don't run
+            // if any user exists already, don't run
             if (!userRepository.existsById(1L)) {
                 System.out.println("No user, so will init 2 Administrator users");
                 userService.initAdmin(testUser);

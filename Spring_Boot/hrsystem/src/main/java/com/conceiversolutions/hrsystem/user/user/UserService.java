@@ -173,6 +173,16 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    // public List<User> getAllEmployees() {
+    //     return userRepository.findAllEmployees().get();
+    // }
+    // public List<User> getEmployeesWithoutTask(Long taskId) {
+    //     return userRepository.findEmployeesWithoutTask(taskId).get();
+    // }
+    // public List<User> getEmployeesWithTask(Long taskId) {
+    //     return userRepository.findEmployeesWithTask(taskId).get();
+    // }
+
     public Long addNewUser(User user) {
         System.out.println("UserService.addNewUser");
 //        Check if email is valid

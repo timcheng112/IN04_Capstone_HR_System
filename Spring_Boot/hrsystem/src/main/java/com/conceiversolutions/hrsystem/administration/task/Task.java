@@ -98,6 +98,16 @@ public class Task {
         this.taskListItems = taskListItems;
     }
 
+    public List<TaskListItem> addTaskListItem(TaskListItem taskListItem) {
+        this.taskListItems.add(taskListItem);
+        return this.taskListItems;
+    }
+
+    public List<TaskListItem> removeTaskListItem(TaskListItem taskListItem) {
+        this.taskListItems.remove(taskListItem);
+        return this.taskListItems;
+    }
+
     @Override
     public String toString() {
         return "Task [category=" + category + ", description=" + description + ", isOnboarding=" + isOnboarding

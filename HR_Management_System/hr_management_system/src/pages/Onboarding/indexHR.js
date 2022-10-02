@@ -1,10 +1,10 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { useState } from "react";
-import TasklistTable from "../../features/Onboarding/TasklistTable";
-import AddCategoryModal from "../../features/Onboarding/AddCategoryModal";
+import { useState, useEffect } from "react";
+import TasklistTable from "../../features/onboarding/TasklistTable";
+import AddCategoryModal from "../../features/onboarding/AddCategoryModal";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
-import ConfirmDialog from "../../components/ConfirmDialog";
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -12,28 +12,37 @@ function classNames(...classes) {
 
 export default function OnboardingHR() {
   const [user, setUser] = useState(null);
-  const [categories, setCategories] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [openCreate, setOpenCreate] = useState(false);
+  const [error, setError] = useState(null);
   //const [tasks, setTasks] = useState(null)
 
   // useEffect(() => {
-  //     api.getUser()
-  //         .then(response => setUser(response.data))
-  //         .catch((error) => (
-  //             setError(error)
-  //         ))
-  // }, [])
+  //   const userId = getUserId();
+  //   console.log("USERID: " + userId);
+  //   api
+  //     .getUser(userId)
+  //     .then((response) => {
+  //       console.log("RESPONSE DATA: " + response.data);
+  //       setUser(response.data);
+  //     })
+  //     .catch((error) => setError(error));
+  //   console.log("User: " + user);
+  // }, []);
 
-  // useEffect(() => {
-  //     api.getCategories()
-  //         .then(response => setCategories(response.data))
-  //         .catch((error) => (
-  //             setError(error)
-  //         ))
-  // }, [])
+  useEffect(() => {
+    api
+      .getCategories()
+      .then((response) => {
+        console.log(response.data);
+        setCategories(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  if (error) return `Error`;
 
   return (
-    // (user && category) &&
     <div>
       <Navbar />
       <div className="flex">
@@ -54,12 +63,13 @@ export default function OnboardingHR() {
       </div>
       <main className="flex-1">
         <div className="py-4 px-6">
-          <TasklistTable isHr={true} />
+          <TasklistTable
+            categories={categories}
+            setCategories={setCategories}
+          />
           <AddCategoryModal
             open={openCreate}
             onClose={() => setOpenCreate(false)}
-            // category={category}
-            // setCategory={setCategory}
           />
         </div>
       </main>

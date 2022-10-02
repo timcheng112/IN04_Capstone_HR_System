@@ -2,28 +2,28 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-//import api from '../../utils/api';
+import api from '../../utils/api';
 
 export default function AddCategoryModal({ open, onClose }) {
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const cancelButtonRef = useRef(null);
-  //const [error, setError] = useState(null);
+  const [error, setError] = useState(null);
 
-  //   const handleSubmit = (evt) => {
-  //     evt.preventDefault()
-  //     createCategory()
-  //     alert("Successfully created category.")
-  //   }
+    const handleSubmit = (evt) => {
+      evt.preventDefault()
+      createCategory()
+      alert("Successfully created category.")
+    }
 
-  // function createCategory() {
-  //   api.addNewCategory({ // api change
-  //     name: name,
-  //   })
-  //     .then(() => history.goBack())
-  //     .catch(error => setError(error))
-  // }
+  function createCategory() {
+    api.addNewCategory({ // api change
+      name: name,
+    })
+      .then(() => history.goBack())
+      .catch(error => setError(error))
+  }
 
   // useEffect(() => {
   //   api.getUser()
@@ -58,6 +58,7 @@ export default function AddCategoryModal({ open, onClose }) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
+              <form onSubmit={handleSubmit}>
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <div className="mt-3 text-center sm:mt-0 sm:text-left">
@@ -83,6 +84,8 @@ export default function AddCategoryModal({ open, onClose }) {
                             className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             defaultValue={""}
                             required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                           />
                         </div>
                       </form>
@@ -107,6 +110,7 @@ export default function AddCategoryModal({ open, onClose }) {
                   </button>
                 </div>
               </Dialog.Panel>
+              </form>
             </Transition.Child>
           </div>
         </div>

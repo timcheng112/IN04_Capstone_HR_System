@@ -25,6 +25,10 @@ public class TaskListItem {
     public TaskListItem() {
     }
 
+    public TaskListItem(Boolean isDone) {
+        this.isDone = isDone;
+    }
+
     public TaskListItem(Boolean isDone, User user, Task task) {
         this.isDone = isDone;
         this.user = user;

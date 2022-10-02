@@ -1,25 +1,52 @@
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import OffboardingScreen from "../screens/OffboardingScreen";
-
-const AdminStack = createNativeStackNavigator();
+import Header from "../components/general/Header";
+import { Appbar, Button } from "react-native-paper";
+import { StatusBar } from "react-native";
+import { Entypo } from "@expo/vector-icons";
+import DrawerContent from "../components/general/DrawerContent";
 
 const AdminNavigator = () => {
+  const theme = useTheme();
+  const AdminStack = createNativeStackNavigator();
+  const openMenu = () => {
+    navigation.openDrawer();
+  };
+
   return (
-    <AdminStack.Navigator>
+    <AdminStack.Navigator
+      initialRouteName="OnboardingScreen"
+      // screenOptions={{
+      //   header: ({ scene, previous, navigation }) => (
+      //     <Appbar.Header style={{ marginTop: StatusBar.currentHeight }}>
+      //       <Appbar.Action
+      //         icon="menu"
+      //         onPress={openMenu}
+      //         color={theme.dark ? theme.colors.primary : theme.colors.onPrimary}
+      //       />
+      //       <Appbar.Content title="Admin" />
+      //     </Appbar.Header>
+      //   ),
+      // }}
+    >
       <AdminStack.Screen
-        name="OnboardingScreen"
+        name="Onboarding"
         component={OnboardingScreen}
         options={{
-          title: "Welcome to Onboarding",
+          title: "My Onboarding Tasks",
+          headerTitle: "Onboarding",
         }}
       />
       <AdminStack.Screen
-        name="OffboardingScreen"
+        name="Offboarding"
         component={OffboardingScreen}
-        options={{ title: "Welcome to Offboarding" }}
+        options={{
+          title: "My Offboarding Tasks",
+          headerTitle: "Offboarding",
+        }}
       />
     </AdminStack.Navigator>
   );
