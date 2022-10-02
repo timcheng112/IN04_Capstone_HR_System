@@ -21,7 +21,7 @@ export default function AddCategoryModal({ open, onClose }) {
     api.addNewCategory({ // api change
       name: name,
     })
-      .then(() => history.goBack())
+      //.then(() => history.goBack())
       .catch(error => setError(error))
   }
 
