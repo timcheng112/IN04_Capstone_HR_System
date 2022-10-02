@@ -14,17 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItemService;
+
+import lombok.AllArgsConstructor;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/task")
+@AllArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
-
-    @Autowired
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
+    private final TaskListItemService taskListItemService;
 
     @GetMapping
     public List<Task> getTasks() {
@@ -37,8 +39,9 @@ public class TaskController {
     }
 
     @PostMapping
-    public void addNewTask(@RequestBody Task task) {
-        taskService.addNewTask(task);
+    public void addNewTask(@RequestBody Task task,
+            @RequestParam(name = "categoryId", required = true) Long categoryId) {
+        taskService.addNewTask(task, categoryId);
     }
 
     @DeleteMapping(path = "{taskId}")
@@ -54,7 +57,7 @@ public class TaskController {
         taskService.editTask(taskId, taskName, taskDescription);
         if (employeeIds.length != 0) {
             for (Integer employeeId : employeeIds) {
-                taskService.assignTaskToEmployee(Long.valueOf(employeeId), taskId);
+                taskListItemService.addNewTaskListItem(new TaskListItem(false), Long.valueOf(employeeId), taskId);
             }
         }
     }

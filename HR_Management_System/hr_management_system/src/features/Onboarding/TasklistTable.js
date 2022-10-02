@@ -7,15 +7,16 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function TasklistTable(categories,setCategories) {
-  
+function TasklistTable({ categories, setCategories }) {
+  console.log("categories: " + categories);
+  console.log("categories length: " + categories.length);
 
   return (
     <div className="mt-8 flex flex-col">
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle px-6 lg:px-8">
           <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
-            {categories.length === 0 ? (
+            {categories.length === undefined || categories.length === 0 ? (
               <div className="p-4">
                 <img
                   src={require("../../assets/shiba-cant-find-documents.png")}
@@ -33,12 +34,14 @@ function TasklistTable(categories,setCategories) {
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      colSpan={2}
                     >
                       Name
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      colSpan={2}
                     >
                       Description
                     </th>
@@ -50,7 +53,7 @@ function TasklistTable(categories,setCategories) {
                       <tr className="border-t border-gray-200">
                         <th
                           colSpan={2}
-                          scope="colgroup"
+                          scope="col"
                           className="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6"
                         >
                           {category.name}

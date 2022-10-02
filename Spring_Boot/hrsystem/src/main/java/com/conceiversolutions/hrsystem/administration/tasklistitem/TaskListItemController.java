@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.conceiversolutions.hrsystem.administration.task.Task;
 import com.conceiversolutions.hrsystem.user.user.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
@@ -48,8 +50,9 @@ public class TaskListItemController {
     }
 
     @PostMapping
-    public void addNewTaskListItem(@RequestBody TaskListItem taskListItem, User assignedEmployee, Long taskId) {
-        taskListItemService.addNewTaskListItem(taskListItem,assignedEmployee,taskId);
+    public void addNewTaskListItem(@RequestBody TaskListItem taskListItem, @RequestParam Long employeeId,
+            @RequestParam Long taskId) {
+        taskListItemService.addNewTaskListItem(taskListItem, employeeId, taskId);
     }
 
     @DeleteMapping(path = "{taskListItemId}")
