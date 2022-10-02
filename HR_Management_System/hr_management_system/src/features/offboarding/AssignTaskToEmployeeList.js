@@ -10,7 +10,7 @@ export default function AssignTaskToEmployeeList({
       <div className="mt-6 flow-root">
         <ul role="list" className="-my-5 divide-y divide-gray-200">
           {people.map((person) => (
-            <li key={person.handle} className="py-4">
+            <li key={person.userId} className="py-4">
               <div className="flex items-center space-x-4">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-gray-900">

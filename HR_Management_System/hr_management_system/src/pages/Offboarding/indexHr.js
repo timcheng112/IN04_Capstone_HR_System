@@ -56,10 +56,15 @@ function OffboardingHr() {
       </div>
       <main className="flex-1">
         <div className="py-4 px-6">
-          <TasklistTable isHr={true} categories={categories} />
+          <TasklistTable
+            isHr={true}
+            categories={categories}
+            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
+          />
           <AddCategoryModal
             open={openCreate}
             onClose={() => setOpenCreate(false)}
+            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
             // category={category}
             // setCategory={setCategory}
           />
