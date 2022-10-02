@@ -1,15 +1,15 @@
 // import Navbar  from '../../components/Navbar.js';
 import {useEffect, useState} from 'react';
 import { useHistory } from "react-router-dom";
-import {getUser} from '../../utils/Common.js';
+import {getUserId} from '../../utils/Common.js';
 import api from "../../utils/api.js";
 import loading from "../../assets/Spinner.svg";
 
 
 export default function ProfilePage(props) {
-  const [user, setUser] = useState(getUser()) //logged in user
-  const result= user.split(";");
-  const userId = result[0];
+  const [userId, setUser] = useState(getUserId()) //logged in user
+//   const result= user.split(";");
+//   const userId = result[0];
   const [userInfo, setUserInfo] = useState([]);
   const [viewUser, setViewUser] = useState(null) //viewing other user
   //        const [tab, setTab] = useState(tabs[0])
@@ -23,12 +23,11 @@ export default function ProfilePage(props) {
         setUserInfo(response.data);
         setGender(response.data.gender);
         setPhone(response.data.phone);
-        setEmail(response.data.email); }).then( ()=>{
-              console.log(email);
+        setEmail(response.data.email); }).then( ()=>{ 
               console.log(userInfo);  
         })
 
-  },[user])
+  },[userId, userInfo])
 
 
   const handleSubmit = (evt) => {

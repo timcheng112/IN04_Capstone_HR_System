@@ -66,8 +66,6 @@ function App() {
 //    <EmployeeChart />
 //    <EmployeeList/>
 //    <ProfilePage/>
-
-
   );
 }
 
