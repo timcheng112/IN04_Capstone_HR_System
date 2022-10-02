@@ -74,6 +74,7 @@ export default function ProfilePage(props) {
   let [userInfo, setUserInfo] = useState([]);
   const userId = result[0];
   // const email = result[1]
+  const [file, setFileState] =useState(null);
 
   console.log(userId);
   // console.log(email)
@@ -119,6 +120,22 @@ export default function ProfilePage(props) {
   // console.log(userInfo);})
 
   // console.log(userInfo + "plz")
+  function handleFile(e){
+    console.log(e.target.files, "--");
+    console.log(e.target.files[0], "$SSSSS$")
+    let f = e.target.files[0]
+    this.setFileState(f)
+
+  }
+
+  function uploadFile(e){
+    let formData = new FormData() 
+    formData.append('document', file)
+    api.uploadFile(e).then()
+
+
+  }
+
 
   return (
     <>
@@ -294,15 +311,19 @@ export default function ProfilePage(props) {
               </div>
             </div>
             <div className="row-span-1 col-span-1 col-start-3 box border border-2 rounded rounded-lg shadow-lg ">
+              <form>
               <dt className="mt-5 my-5 text-lg font-medium leading-6 text-gray-900">
                 Qualifications & Documents
                 <p className="mt-1 max-w-2xl text-sm text-gray-500">Your CV.</p>
               </dt>
+      
               <div class="mb-8">
-                <input type="file" name="file" id="file" class="sr-only" />
+                {/* <input id="file" type="file" name="file" onChange ={(e) => handleFile(e)} /> */}
+               
                 <label
                   for="file"
                   class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+
                 >
                   <div>
                     <span class="mb-2 block text-xl font-semibold text-[#07074D]">
@@ -311,30 +332,31 @@ export default function ProfilePage(props) {
                     <span class="mb-2 block text-base font-medium text-[#6B7280]">
                       Or
                     </span>
-                    <span class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
-                      Browse
-                    </span>
+            
+                      <input id="file" type="file" multiple name="file" onChange ={(e) => handleFile(e)} />
+                     
                   </div>
                 </label>
               </div>
+             
               <dd className="m-1 sm:col-span-2 sm:mt-0">
                 <ul role="list">
                   <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
                     <div className="flex w-0 flex-1 items-center">
-                      <PaperClipIcon
+                      {/* where the fetching for download should be */}
+                    </div>
+                    <div className="ml-4 flex flex-shrink-0 space-x-4">
+                    <PaperClipIcon
                         className="h-5 w-5 flex-shrink-0 text-gray-400"
                         aria-hidden="true"
                       />
-                      <span className="ml-2 w-0 flex-1 truncate">
-                        resume_back_end_developer.pdf
-                      </span>
-                    </div>
-                    <div className="ml-4 flex flex-shrink-0 space-x-4">
+                      {/* <input id="file" type="file" name="file" onChange ={(e) => handleFile(e)} /> */}
                       <button
                         type="button"
                         className="rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        onClick={(e) => uploadFile(e)}
                       >
-                        Update
+                        Upload
                       </button>
                     </div>
                   </li>
@@ -346,6 +368,7 @@ export default function ProfilePage(props) {
                   View Your CV
                 </button>
               </dd>
+              </form>
             </div>
           </div>
         </>
