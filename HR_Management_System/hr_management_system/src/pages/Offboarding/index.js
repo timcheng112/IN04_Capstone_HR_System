@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { getUserId, setUserSession } from "../../utils/Common";
 import { useHistory } from "react-router-dom";
-import SelfTasklistTable from "../../features/offboarding/SelfTaskListTable"
+import SelfTasklistTable from "../../features/offboarding/SelfTaskListTable";
 
 export default function Offboarding() {
   const checkbox = useRef();
@@ -13,6 +13,7 @@ export default function Offboarding() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const history = useHistory();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     api
@@ -26,12 +27,12 @@ export default function Offboarding() {
 
   useEffect(() => {
     api
-      .getTaskListItemsByEmployee(getUserId())
+      .getOffboardingTaskListItemsByEmployee(getUserId())
       .then((response) => {
         setTaskListItems(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
   if (error) return `Error`;
 
@@ -65,6 +66,7 @@ export default function Offboarding() {
             <SelfTasklistTable
               taskListItems={taskListItems}
               setTaskListItems={setTaskListItems}
+              refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
             />
           </div>
         </main>
