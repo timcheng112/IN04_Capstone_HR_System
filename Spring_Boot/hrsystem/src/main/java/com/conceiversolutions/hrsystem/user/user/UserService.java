@@ -189,6 +189,9 @@ public class UserService implements UserDetailsService {
     public List<User> getEmployeesWithoutTask(Long taskId) {
         return userRepository.findEmployeesWithoutTask(RoleEnum.EMPLOYEE, taskId);
     }
+    public List<User> getEmployeesWithTask(Long taskId) {
+        return userRepository.findEmployeesWithTask(RoleEnum.EMPLOYEE, taskId);
+    }
 
     // public List<User> getEmployeesWithTask(Long taskId) {
     // return userRepository.findEmployeesWithTask(taskId, RoleEnum.EMPLOYEE);
