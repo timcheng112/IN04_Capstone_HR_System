@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import api from "../../../utils/api";
 import { useState, useEffect } from "react";
 
-import AddDepartmentModal from './addDeptModal.js';
+import AddDepartmentModal from "./addDeptModal.js";
 import { useHistory } from "react-router-dom";
 import DeleteDeptModal from "./deleteDeptModal.js";
 
 import ChangeOrgHeadModal from "./changeOrgHeadModal.js";
-
+import { getUserId } from "../../../utils/Common.js";
 
 /* Requires Tailwind CSS v2.0+ */
 //TODO: fix org.organization.Head.positions & department, status active
@@ -20,53 +20,45 @@ import ChangeOrgHeadModal from "./changeOrgHeadModal.js";
 //TODO: UPDATE TABLE WHEN ADDING DEPT ETC? anyway to just update the list without refreshing the whole page? look into!
 
 export default function ViewOrganisation() {
+  const userId = getUserId()
   const [org, setOrg] = useState([]);
-  const history = useHistory()
+  const history = useHistory();
+  const [toDelete, setToDelete] = useState(0)
 
   useEffect(() => {
     api.getOrganization().then((response) => {
       setOrg(response.data);
-      console.log(org);
-      console.log(response.data.departments[0].departmentId);
+      //console.log(org);
+      //console.log(response.data.departments[0].departmentId);
     });
   }, [org]);
   //what is this [org] for?
 
   const [openAdd, setOpenAdd] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [openChange, setOpenChange] = useState(false);
   const [deptName, setDeptName] = useState("");
 
-
   function deleteDept() {
+    console.log("delete department " + toDelete)
     // console.log("adddeptfunc :" + deptName + " " + deptHeadId);
-    api.deleteDept(org.organizationHead.departmentId).then((response) => {
-        // console.log(deptId + "###");
-        if (response.status == 200) {
-          console.log("successfully deleted dept!");
-        } else {
-          console.error("failed to delete dept!");
-        }
+    api
+      .deleteDept(toDelete)
+      .then((response) => {
+        console.log('deleted? ' + response.data);
+        // api.getOrganization().then((response) => {
+        //   setOrg(response.data);
+        // });
+        setToDelete('')
       })
       .catch((error) => {
         var message = error.request.response;
+        if (message.includes("Department still has teams unable to delete"))
         console.log(message);
-        alert(
-          "Something went wrong... Give it a second."
-        );
-
+        alert("Department still has teams");
       });
-
   }
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    // console.log(deptId + "$$$$")
-    deleteDept();
-
-
-  };
 
   return (
     <>
@@ -86,7 +78,6 @@ export default function ViewOrganisation() {
             newOrgName={org.organizationName}
             open={openChange}
             onClose={() => setOpenChange(false)}
-
           />
 
           <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
@@ -272,18 +263,21 @@ export default function ViewOrganisation() {
                               </td>
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                 <a
-                                  onClick={() => setOpenDelete(true)}
+                                  onClick={() => {
+                                    setOpenDelete(true);
+                                    setToDelete(dept.departmentId)
+                                  }}
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
                                   Delete
-                                  <DeleteDeptModal
-                                      open={openDelete}
-                                      onConfirm = {handleSubmit}
-                                      onClose={setOpenDelete}
-                                      deptId = {dept.departmentId}
-                                    />
                                   <span className="sr-only">, {dept.name}</span>
                                 </a>
+                                <DeleteDeptModal
+                                  open={openDelete}
+                                  onConfirm={deleteDept}
+                                  setOpen={setOpenDelete}
+                                  deptId={dept.departmentId}
+                                />
                               </td>
                             </tr>
                           ))}
