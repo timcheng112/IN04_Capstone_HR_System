@@ -12,33 +12,13 @@ import LoginScreen from "./src/screens/LoginScreen";
 import { AuthContext } from "./src/components/login/Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./src/utils/api";
+import axios from "axios";
+import {
+  initialLoginState,
+  loginReducer,
+} from "./src/components/login/AuthContext";
 
-export default function Main() {
-  const initialLoginState = {
-    isLoading: true,
-    email: null,
-    userToken: null,
-  };
-
-  const loginReducer = (prevState, action) => {
-    switch (action.type) {
-      case "RETRIEVE_TOKEN":
-        return {
-          ...prevState,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case "SIGNIN":
-        return {
-          ...prevState,
-          email: action.email,
-          isLoading: false,
-        };
-      case "SIGNOUT":
-        return { ...prevState, isLoading: false, email: null, userToken: null };
-    }
-  };
-
+export default function Main({ navigation }) {
   const [loginState, dispatch] = React.useReducer(
     loginReducer,
     initialLoginState
@@ -50,21 +30,28 @@ export default function Main() {
       userToken = null;
       console.log(email);
       console.log(password);
-      api
-        .login(email, password)
+
+      // api
+      //   .login(email, password)
+      const conn = axios.create({ baseURL: "http://localhost:9191", proxy: false });
+
+      conn
+        .get(
+          `http://localhost/api/user/login/loginHRMS?workEmail=leem@libro.com&password=password`
+        )
         .then((response) => {
-          console.log(response.data);
+          console.log("userId = " + response.data);
           try {
-            userToken = "token";
+            userToken = response.data;
             AsyncStorage.setItem("userToken", userToken);
-            console.log("user token = " + userToken);
+            console.log("token = " + userToken);
             dispatch({ type: "SIGNIN", id: email, token: userToken });
           } catch (error) {
             console.log(error);
           }
         })
         .catch((error) => {
-          console.log(error);
+          console.log(JSON.stringify(error));
           userToken = null;
         });
     },
@@ -73,6 +60,7 @@ export default function Main() {
       dispatch({ type: "SIGNOUT" });
     },
   }));
+
   React.useEffect(() => {
     setTimeout(async () => {
       let userToken = null;
@@ -82,9 +70,9 @@ export default function Main() {
         console.log(error);
       }
       dispatch({ type: "RETRIEVE_TOKEN", token: userToken });
-      console.log("user token = " + userToken);
-    }, 100);
-  }, []);
+      //console.log("user token = " + userToken);
+    }, 2500);
+  });
 
   if (loginState.isLoading) {
     return (

@@ -24,12 +24,11 @@ export default function Verification() {
 
   function resendVerification() {
     api
-      .resendConfirmation(getUserEmail())
+      .resendConfirmation(sessionStorage.getItem("userEmail"))
       .then((response) => console.log(response.data));
   }
 
   function login() {
-    deleteUser()
     history.push("/")
   }
 

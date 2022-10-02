@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const api = {
     login(email, password) {
         return axios.get(

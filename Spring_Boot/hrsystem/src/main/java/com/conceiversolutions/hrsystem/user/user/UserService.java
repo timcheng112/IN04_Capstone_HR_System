@@ -276,7 +276,7 @@ public class UserService implements UserDetailsService {
 
             if (!userRecord.isEnabled()) {
                 System.out.println("Employee account is not activated yet, please check your work email or request to be activated");
-                throw new Exception("Employee account is not activated yet, please check your work email or request to be activated");
+                throw new IllegalStateException("Employee account is not activated yet, please check your work email or request to be activated");
             }
 
             if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {

@@ -19,6 +19,7 @@ import logo from "../../assets/libro-transparent-logo.png";
 import api from "../../utils/api";
 import { deleteUser, getUserId } from "../../utils/Common";
 import loading from "../../assets/Spinner.svg";
+import { useHistory } from "react-router";
 
 // const navigation = [
 //   { name: "Home", href: "#", current: true },
@@ -140,12 +141,19 @@ function classNames(...classes) {
 export default function Home() {
   const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(getUserId());
+  const history = useHistory();
 
   useEffect(() => {
-    api.getUser(userId).then((response) => {
-      console.log(response.data);
-      setUser(response.data);
-    });
+    api
+      .getUser(userId)
+      .then((response) => {
+        //console.log(response.data);
+        setUser(response.data);
+      })
+      .catch((error) => {
+        history.push("/");
+        deleteUser();
+      });
   }, [userId]);
 
   return (
@@ -522,7 +530,7 @@ export default function Home() {
                           </div>
                         </div>
                         <div className="grid grid-cols-1 divide-y divide-gray-200 border-t border-gray-200 bg-gray-50 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
-                          {stats.map((stat) => (
+                          {/* {stats.map((stat) => (
                             <div
                               key={stat.label}
                               className="px-6 py-5 text-center text-sm font-medium"
@@ -534,7 +542,7 @@ export default function Home() {
                                 {stat.label}
                               </span>
                             </div>
-                          ))}
+                          ))} */}
                         </div>
                       </div>
                     </section>
@@ -831,7 +839,7 @@ export default function Home() {
           </div>
         </>
       ) : (
-        <div className="min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
+        <div className="h-full px-4 py-30 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
           <img className="h-full w-auto" src={loading} alt="" />
         </div>
       )}
