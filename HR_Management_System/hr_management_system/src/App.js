@@ -51,7 +51,7 @@ function App() {
           <PrivateRoute exact path="/home" component={HomePage} />
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
           <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
-          <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
+          <PrivateRoute exact path="/viewDept/:id" component={ViewDepartment}/>
           <PublicRoute exact path="/offboarding" component={OffboardingHrPage}/>
           {/* <ViewTeam/> */}
         </Switch>

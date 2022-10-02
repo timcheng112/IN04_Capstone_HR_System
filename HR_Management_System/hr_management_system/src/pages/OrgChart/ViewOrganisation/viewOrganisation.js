@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../../../utils/api";
 import { useState, useEffect } from "react";
 import AddDepartmentModal from './addDeptModal.js';
+import { useHistory } from "react-router-dom";
 
 /* Requires Tailwind CSS v2.0+ */
 //TODO: fix org.organization.Head.positions & department, status active
@@ -13,12 +14,15 @@ import AddDepartmentModal from './addDeptModal.js';
 
 export default function ViewOrganisation() {
   const [org, setOrg] = useState([]);
+  const history = useHistory()
 
   useEffect(() => {
     api.getOrganization().then((response) => {
       setOrg(response.data);
     });
+
     console.log(org);
+    // console.log(org.organizationHead.departmentId);
   }, []);
 
   const [openAdd, setOpenAdd] = useState(false)
@@ -87,7 +91,7 @@ export default function ViewOrganisation() {
                         </thead>
 
                         <tbody className="divide-y divide-gray-200 bg-white">
-                          <tr key={org.organizationHead.userId}>
+                          <tr onClick={() => history.push("/viewDept" + org.organizationHead.departmentId)} key={org.organizationHead.userId}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                               <div className="flex items-center">
                                 <div className="h-10 w-10 flex-shrink-0">
@@ -157,6 +161,7 @@ export default function ViewOrganisation() {
                             <th
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                              
                             >
                               Department Head
                             </th>
@@ -191,7 +196,7 @@ export default function ViewOrganisation() {
                               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                 {dept.departmentName}
                               </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              <td onClick={() => history.push("/viewDept/" + dept.departmentId)} className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                 {dept.departmentHead.firstName +
                                   " " +
                                   dept.departmentHead.lastName}
