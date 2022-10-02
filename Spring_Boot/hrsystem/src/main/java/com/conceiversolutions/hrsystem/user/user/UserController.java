@@ -234,6 +234,11 @@ public class UserController {
         return userService.getAllManagers();
     }
 
+    @GetMapping(path = "/getAllAvailManagers")
+    public List<User> getAllAvailManagers() {
+        return userService.getAllAvailManagers();
+    }
+
     @GetMapping(path = "/getAllEmployees")
     public List<User> getAllEmployees() {
         return userService.getAllEmployees();

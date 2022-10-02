@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
-import AddCategoryModal from "../../features/onboarding/AddCategoryModal";
-import TasklistTable from "../../features/onboarding/TasklistTable";
+import AddCategoryModal from "../../features/Onboarding/AddCategoryModal";
+import TasklistTable from "../../features/Onboarding/TasklistTable";
 
 function OffboardingHr() {
   const [openCreate, setOpenCreate] = useState(false);

@@ -2,8 +2,8 @@ import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Fragment, useState } from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
-import AddTaskModal from "../../features/onboarding/AddTaskModal";
-import EditCategoryModal from "../../features/onboarding/EditCategoryModal";
+import AddTaskModal from "../../features/Onboarding/AddTaskModal";
+import EditCategoryModal from "../../features/Onboarding/EditCategoryModal";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

@@ -3,14 +3,18 @@ package com.conceiversolutions.hrsystem.user.user;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
+import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
 import com.conceiversolutions.hrsystem.user.registration.EmailValidator;
 import com.conceiversolutions.hrsystem.user.registration.token.ConfirmationToken;
 import com.conceiversolutions.hrsystem.user.registration.token.ConfirmationTokenRepository;
 import com.conceiversolutions.hrsystem.user.registration.token.ConfirmationTokenService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +29,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final static String USER_NOT_FOUND_MSG = "User with email %s not found";
@@ -34,17 +39,19 @@ public class UserService implements UserDetailsService {
     private final EmailSender emailSender;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final ReactivationRequestRepository reactivationRequestRepository;
+    private final DepartmentRepository departmentRepository;
+    private final TeamRepository teamRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository, EmailValidator emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, ConfirmationTokenRepository confirmationTokenRepository, ReactivationRequestRepository reactivationRequestRepository) {
-        this.userRepository = userRepository;
-        this.emailValidator = emailValidator;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.confirmationTokenService = confirmationTokenService;
-        this.emailSender = emailSender;
-        this.confirmationTokenRepository = confirmationTokenRepository;
-        this.reactivationRequestRepository = reactivationRequestRepository;
-    }
+//    @Autowired
+//    public UserService(UserRepository userRepository, EmailValidator emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, ConfirmationTokenRepository confirmationTokenRepository, ReactivationRequestRepository reactivationRequestRepository) {
+//        this.userRepository = userRepository;
+//        this.emailValidator = emailValidator;
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//        this.confirmationTokenService = confirmationTokenService;
+//        this.emailSender = emailSender;
+//        this.confirmationTokenRepository = confirmationTokenRepository;
+//        this.reactivationRequestRepository = reactivationRequestRepository;
+//    }
 
     // public List<User> getTestUsers() {
     // return List.of(
@@ -868,5 +875,40 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         User newUser = userRepository.saveAndFlush(user);
+    }
+
+    public List<User> getAllAvailManagers() {
+        List<Department> departments = departmentRepository.findAll();
+        List<Long> deptHeadIds = new ArrayList<>();
+        for (Department d : departments) {
+            deptHeadIds.add(d.getDepartmentHead().getUserId());
+        }
+
+        List<Team> allTeams = teamRepository.findAll();
+        List<Long> teamHeadIds = new ArrayList<>();
+        for (Team t : allTeams) {
+            teamHeadIds.add(t.getTeamHead().getUserId());
+        }
+
+        List<User> managers = userRepository.findAllByRole(RoleEnum.MANAGER);
+        System.out.println("size of managers list is " + managers.size());
+        List<User> availManagers = new ArrayList<>();
+        for (User u : managers) {
+            if (!deptHeadIds.contains(u.getUserId()) && !teamHeadIds.contains(u.getUserId())) {
+                List <Team> teams = u.getTeams();
+                for (Team t : teams) {
+                    t.setUsers(new ArrayList<>());
+                    t.setDepartment(null);
+                    t.setRoster(null);
+                    t.setTeamHead(null);
+                }
+                u.setTaskListItems(null);
+                u.setQualificationInformation(null);
+
+                availManagers.add(u);
+            }
+        }
+
+        return availManagers;
     }
 }
