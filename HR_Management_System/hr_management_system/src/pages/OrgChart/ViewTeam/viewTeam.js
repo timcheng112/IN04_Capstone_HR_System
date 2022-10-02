@@ -33,7 +33,7 @@ export default function ViewTeam() {
       setTeam(response.data);
       console.log(team);
     });
-  });
+  }, [teamId]);
 
   return (
     <>
