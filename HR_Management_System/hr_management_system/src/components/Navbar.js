@@ -12,7 +12,7 @@ function classNames(...classes) {
 export default function Navbar() {
   const navigation = [
     { name: 'Dashboard', path: '/'},
-    { name: 'Admin', path: '/admin'},
+    { name: 'Admin', path: '/admin/onboarding'},
     { name: 'Company', path: '/company'},
     { name: 'Career', path: '/career'},
     { name: 'Welfare', path: '/welfare'},
