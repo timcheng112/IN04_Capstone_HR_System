@@ -238,7 +238,7 @@ export default function Home() {
                             <nav className="flex space-x-4">
                               <a
                                 key="Admin"
-                                href="/home"
+                                href="/admin/onboarding"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
