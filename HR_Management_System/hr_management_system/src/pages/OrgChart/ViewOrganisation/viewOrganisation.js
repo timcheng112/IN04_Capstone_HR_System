@@ -23,6 +23,7 @@ export default function ViewOrganisation() {
     api.getOrganization().then((response) => {
       setOrg(response.data);
       console.log(org);
+      console.log(response.data.departments[0].departmentId);
     });
 
     console.log(org);
@@ -31,6 +32,35 @@ export default function ViewOrganisation() {
 
   const [openAdd, setOpenAdd] = useState(false);
   const [openDelete, setOpenDelete] = useState(false)
+
+  function deleteDept() {
+    // console.log("adddeptfunc :" + deptName + " " + deptHeadId);
+    api.deleteDept(org.organizationHead.departmentId).then((response) => {
+        // console.log(deptId + "###");
+        if (response.status == 200) {
+          console.log("successfully deleted dept!");
+        } else {
+          console.error("failed to delete dept!");
+        }
+      })
+      .catch((error) => {
+        var message = error.request.response;
+        console.log(message);
+        alert(
+          "Something went wrong... Give it a second."
+        );
+       
+      });
+      
+  }
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    // console.log(deptId + "$$$$")
+    deleteDept();
+
+    
+  };
 
   return (
     <>
@@ -41,10 +71,7 @@ export default function ViewOrganisation() {
             open={openAdd}
             onClose={() => setOpenAdd(false)}
           />
-          <DeleteDeptModal
-            open={openDelete}
-            onClose={() => setOpenDelete(false)}
-          />
+          
           <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
               <div className="sm:flex sm:items-center">
@@ -231,6 +258,12 @@ export default function ViewOrganisation() {
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
                                   Delete
+                                  <DeleteDeptModal
+                                      open={openDelete}
+                                      onConfirm = {handleSubmit}
+                                      onClose={setOpenDelete}
+                                      deptId = {dept.departmentId}
+                                    />
                                   <span className="sr-only">, {dept.name}</span>
                                 </a>
                               </td>
