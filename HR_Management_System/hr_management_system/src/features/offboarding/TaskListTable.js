@@ -7,9 +7,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function TasklistTable({ categories, setCategories }) {
+function TasklistTable({ categories, setCategories, refreshKeyHandler }) {
   console.log("categories: " + categories);
-  console.log("categories length: " + categories.length);
 
   return (
     <div className="mt-8 flex flex-col">
@@ -61,6 +60,7 @@ function TasklistTable({ categories, setCategories }) {
                         <th className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 bg-gray-50">
                           <CategoryOptions
                             category={category}
+                            refreshKeyHandler={refreshKeyHandler}
                             // setCategory={setCategory}
                           />
                         </th>

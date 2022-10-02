@@ -92,6 +92,7 @@ public class UserService implements UserDetailsService {
             for (TaskListItem taskListItem : u.getTaskListItems()) {
                 taskListItem.setUser(null);
                 taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
@@ -121,6 +122,7 @@ public class UserService implements UserDetailsService {
             for (TaskListItem taskListItem : u.getTaskListItems()) {
                 taskListItem.setUser(null);
                 taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
@@ -149,7 +151,12 @@ public class UserService implements UserDetailsService {
                 t.setOutlet(null);
                 t.setRoster(null);
             }
-            u.setTaskListItems(null);
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
 
@@ -176,7 +183,12 @@ public class UserService implements UserDetailsService {
                 t.setOutlet(null);
                 t.setRoster(null);
             }
-            u.setTaskListItems(null);
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
 
@@ -189,13 +201,10 @@ public class UserService implements UserDetailsService {
     public List<User> getEmployeesWithoutTask(Long taskId) {
         return userRepository.findEmployeesWithoutTask(RoleEnum.EMPLOYEE, taskId);
     }
+
     public List<User> getEmployeesWithTask(Long taskId) {
         return userRepository.findEmployeesWithTask(RoleEnum.EMPLOYEE, taskId);
     }
-
-    // public List<User> getEmployeesWithTask(Long taskId) {
-    // return userRepository.findEmployeesWithTask(taskId, RoleEnum.EMPLOYEE);
-    // }
 
     public Long addNewUser(User user) {
         System.out.println("UserService.addNewUser");
@@ -847,7 +856,12 @@ public class UserService implements UserDetailsService {
                 t.setRoster(null);
                 t.setTeamHead(null);
             }
-            u.setTaskListItems(null);
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
             u.setQualificationInformation(null);
             // u.setTeams(new ArrayList<>());
         }
@@ -870,6 +884,7 @@ public class UserService implements UserDetailsService {
             for (TaskListItem taskListItem : u.getTaskListItems()) {
                 taskListItem.setUser(null);
                 taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
             // u.setTeams(new ArrayList<>());
@@ -889,7 +904,12 @@ public class UserService implements UserDetailsService {
                 t.setRoster(null);
                 t.setTeamHead(null);
             }
-            u.setTaskListItems(null);
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
             u.setQualificationInformation(null);
             // u.setTeams(new ArrayList<>());
         }
@@ -947,7 +967,12 @@ public class UserService implements UserDetailsService {
                     t.setRoster(null);
                     t.setTeamHead(null);
                 }
-                u.setTaskListItems(null);
+                // u.setTaskListItems(null);
+                for (TaskListItem taskListItem : u.getTaskListItems()) {
+                    taskListItem.setUser(null);
+                    taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                    taskListItem.getTask().setCategory(null);
+                }
                 u.setQualificationInformation(null);
 
                 availManagers.add(u);

@@ -16,7 +16,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function CategoryOptions({ category }) {
+export default function CategoryOptions({ category, refreshKeyHandler }) {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -24,9 +24,10 @@ export default function CategoryOptions({ category }) {
   const history = useHistory();
 
   function deleteCategory() {
-    api
-      .deleteCategory(category.categoryId)
-      .then(() => history.push("/admin/onboardinghr"));
+    api.deleteCategory(category.categoryId).then(() => {
+      alert("Successfully deleted!");
+      refreshKeyHandler();
+    });
   }
 
   return (
@@ -146,11 +147,13 @@ export default function CategoryOptions({ category }) {
           setOpenAdd(false);
         }}
         category={category}
+        refreshKeyHandler={refreshKeyHandler}
       />
       <EditCategoryModal
         open={openEdit}
         onClose={() => setOpenEdit(false)}
         category={category}
+        refreshKeyHandler={refreshKeyHandler}
       />
       <ConfirmDialog
         title="category"

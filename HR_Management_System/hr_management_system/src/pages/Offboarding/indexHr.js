@@ -1,11 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import AddCategoryModal from "../../features/offboarding/AddCategoryModal";
 import TasklistTable from "../../features/offboarding/TaskListTable";
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common";
 
 function OffboardingHr() {
   const [openCreate, setOpenCreate] = useState(false);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  useEffect(() => {
+    api
+      .getCategories()
+      .then((response) => {
+        // console.log(response.data);
+        setCategories(response.data);
+      })
+      .catch((error) => setError(error));
+  }, [refreshKey]);
+
+  if (error) return `Error`;
 
   return (
     <div>
