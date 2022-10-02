@@ -142,11 +142,11 @@ const api = {
   getAllEmployees() {
     return axios.get(`http://localhost:9191/api/user/getAllEmployees`);
   },
-  getEmployeesWithTask() {
-    return axios.get(`http://localhost:9191/api/user/getAssignedEmployees`);
+  getEmployeesWithTask(taskId) {
+    return axios.get(`http://localhost:9191/api/user/getAssignedEmployees?taskId=${taskId}`);
   },
-  getEmployeesWithoutTask() {
-    return axios.get(`http://localhost:9191/api/user/getUnassignedEmployees`);
+  getEmployeesWithoutTask(taskId) {
+    return axios.get(`http://localhost:9191/api/user/getUnassignedEmployees?taskId=${taskId}`);
   },
 
   getOrganization() {
