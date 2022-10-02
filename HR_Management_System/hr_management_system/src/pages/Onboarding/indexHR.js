@@ -79,6 +79,7 @@ export default function OnboardingHR() {
           <TasklistTable
             categories={categories}
             setCategories={setCategories}
+            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           />
           <AddCategoryModal
             open={openCreate}

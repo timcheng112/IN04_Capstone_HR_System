@@ -51,7 +51,18 @@ public class TaskService {
         return task;
     }
 
-    public void addNewTask(Task task, Long categoryId) {
+    public Task getTaskByName(String taskName) {
+        Task task = taskRepository.findTaskByName(taskName)
+                .orElseThrow(() -> new IllegalStateException("Task with name: " + taskName + " does not exist!"));
+        task.getCategory().setTasks(new ArrayList<>());
+        for (TaskListItem taskListItem : task.getTaskListItems()) {
+            taskListItem.setTask(null);
+            taskListItem.setUser(null);
+        }
+        return task;
+    }
+
+    public Long addNewTask(Task task, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalStateException("Category with ID: " + categoryId + " does not exist!"));
         Optional<Task> taskOptional = taskRepository.findTaskByName(task.getName());
@@ -62,6 +73,7 @@ public class TaskService {
         Task savedTask = taskRepository.saveAndFlush(task);
         category.addTask(savedTask);
         categoryRepository.saveAndFlush(category);
+        return savedTask.getTaskId();
     }
 
     public void deleteTask(Long taskId) {

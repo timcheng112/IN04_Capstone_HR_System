@@ -85,6 +85,11 @@ const api = {
   getTaskById(taskId) {
     return axios.get(`http://localhost:9191/api/task/${taskId}`);
   },
+  getTaskByName(taskName) {
+    return axios.get(
+      `http://localhost:9191/api/task/get-task-by-name${taskName}`
+    );
+  },
   addNewTask(task, categoryId) {
     return axios.post(
       `http://localhost:9191/api/task?categoryId=${categoryId}`,
@@ -102,10 +107,10 @@ const api = {
   getTaskListItems() {
     return axios.get(`http://localhost:9191/api/task_list_item`);
   },
-  addNewTaskListItem(employeeId, taskId, taskItemList) {
+  addNewTaskListItem(employeeId, taskId, taskListItem) {
     return axios.post(
       `http://localhost:9191/api/task_list_item?employeeId=${employeeId}&taskId=${taskId}`,
-      taskItemList
+      taskListItem
     );
   },
   deleteTaskListItem(taskListItemId) {
@@ -127,6 +132,9 @@ const api = {
     return axios.put(
       `http://localhost:9191/api/task_list_item/${taskListItemId}`
     );
+  },
+  getAllEmployees() {
+    return axios.get(`http://localhost:9191/api/user/getAllEmployees`);
   },
 
   getOrganization() {

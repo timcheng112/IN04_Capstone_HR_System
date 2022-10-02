@@ -38,10 +38,15 @@ public class TaskController {
         return taskService.getTaskById(taskId);
     }
 
+    @GetMapping(path = "/get-task-by-name")
+    public Task getTaskByName(@RequestParam(name = "taskName") String taskName) {
+        return taskService.getTaskByName(taskName);
+    }
+
     @PostMapping
-    public void addNewTask(@RequestBody Task task,
+    public Long addNewTask(@RequestBody Task task,
             @RequestParam(name = "categoryId", required = true) Long categoryId) {
-        taskService.addNewTask(task, categoryId);
+        return taskService.addNewTask(task, categoryId);
     }
 
     @DeleteMapping(path = "{taskId}")

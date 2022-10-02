@@ -186,13 +186,9 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    // public List<User> getAllEmployees() {
-    // return userRepository.findAllEmployees(RoleEnum.EMPLOYEE);
-    // }
-
-    // public List<User> getEmployeesWithoutTask(Long taskId) {
-    // return userRepository.findEmployeesWithoutTask(taskId, RoleEnum.EMPLOYEE);
-    // }
+    public List<User> getEmployeesWithoutTask(Long taskId) {
+        return userRepository.findEmployeesWithoutTask(RoleEnum.EMPLOYEE, taskId);
+    }
 
     // public List<User> getEmployeesWithTask(Long taskId) {
     // return userRepository.findEmployeesWithTask(taskId, RoleEnum.EMPLOYEE);
