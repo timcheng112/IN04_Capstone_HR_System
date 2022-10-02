@@ -2,34 +2,94 @@ import Navbar from "../../../components/Navbar.js";
 import { Link } from "react-router-dom";
 import api from "../../../utils/api";
 import { useState, useEffect } from "react";
+
 import AddDepartmentModal from './addDeptModal.js';
+import { useHistory } from "react-router-dom";
+import DeleteDeptModal from "./deleteDeptModal.js";
+
+import ChangeOrgHeadModal from "./changeOrgHeadModal.js";
+
 
 /* Requires Tailwind CSS v2.0+ */
 //TODO: fix org.organization.Head.positions & department, status active
-//TODO: add modals for change org head, add dept, disable dept
-//TODO: failure case for disable.. need popup? or need another modal
+//TODO: add modals for change org head, disable dept
+//TODO: failure case for disable.. need popup? or need another modal answer: alert()? idk theres a warning thing somewhere.
 //TODO: link view button to next page(?)
 //consider using useEffect to minimize refreshes
 
+//TODO: UPDATE TABLE WHEN ADDING DEPT ETC? anyway to just update the list without refreshing the whole page? look into!
+
 export default function ViewOrganisation() {
   const [org, setOrg] = useState([]);
+  const history = useHistory()
 
   useEffect(() => {
     api.getOrganization().then((response) => {
       setOrg(response.data);
+      console.log(org);
+      console.log(response.data.departments[0].departmentId);
     });
-    console.log(org);
-  }, []);
+  }, [org]);
+  //what is this [org] for?
 
-  const [openAdd, setOpenAdd] = useState(false)
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false)
+
+  const [openChange, setOpenChange] = useState(false);
+  const [deptName, setDeptName] = useState("");
+
+
+  function deleteDept() {
+    // console.log("adddeptfunc :" + deptName + " " + deptHeadId);
+    api.deleteDept(org.organizationHead.departmentId).then((response) => {
+        // console.log(deptId + "###");
+        if (response.status == 200) {
+          console.log("successfully deleted dept!");
+        } else {
+          console.error("failed to delete dept!");
+        }
+      })
+      .catch((error) => {
+        var message = error.request.response;
+        console.log(message);
+        alert(
+          "Something went wrong... Give it a second."
+        );
+
+      });
+
+  }
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    // console.log(deptId + "$$$$")
+    deleteDept();
+
+
+  };
 
   return (
     <>
       {org.organizationHead ? (
         <>
           <Navbar />
-          <AddDepartmentModal open={openAdd} onClose={ () => setOpenAdd(false)}/>
-          <div class="bg-[#13AEBD] rounded-xl p-10 m-10">
+          <AddDepartmentModal
+            open={openAdd}
+            onClose={() => setOpenAdd(false)}
+          />
+
+          <DeleteDeptModal
+            open={openDelete}
+            onClose={() => setOpenDelete(false)}
+          />
+          <ChangeOrgHeadModal
+            newOrgName={org.organizationName}
+            open={openChange}
+            onClose={() => setOpenChange(false)}
+
+          />
+
+          <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
@@ -43,7 +103,7 @@ export default function ViewOrganisation() {
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                   <button
-                    onClick={()=>setOpenAdd(true)}
+                    onClick={() => setOpenAdd(true)}
                     type="button"
                     className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                   >
@@ -69,13 +129,13 @@ export default function ViewOrganisation() {
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
-                              Position
+                              {/*Position*/}
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
-                              Status
+                              {/*Status*/}
                             </th>
                             <th
                               scope="col"
@@ -91,11 +151,13 @@ export default function ViewOrganisation() {
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                               <div className="flex items-center">
                                 <div className="h-10 w-10 flex-shrink-0">
+                                  {/*}
                                   <img
                                     className="h-10 w-10 rounded-full"
                                     src={org.organizationHead.profilePic}
                                     alt="img"
                                   />
+      */}
                                 </div>
                                 <div className="ml-4">
                                   <div className="font-medium text-gray-900">
@@ -111,27 +173,29 @@ export default function ViewOrganisation() {
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               <div className="text-gray-900">
-                                org.organizationHead.positions
+                                {/*org.organizationHead.positions*/}
                               </div>
                               <div className="text-gray-500">
-                                org.organizationHead.department
+                                {/*org.organizationHead.department*/}
                               </div>
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                                Active
+                                {/*Active*/}
                               </span>
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <a
-                                href="https://www.google.com"
+                              <button
+                                onClick={() => {
+                                  setOpenChange(true);
+                                }}
                                 className="text-indigo-600 hover:text-indigo-900"
                               >
                                 Change
                                 <span className="sr-only">
                                   , {org.organizationHead.firstName}
                                 </span>
-                              </a>
+                              </button>
                             </td>
                           </tr>
                         </tbody>
@@ -164,7 +228,7 @@ export default function ViewOrganisation() {
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
-                              Position
+                              {/*Position*/}
                             </th>
                             <th
                               scope="col"
@@ -197,23 +261,27 @@ export default function ViewOrganisation() {
                                   dept.departmentHead.lastName}
                               </td>
                               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                dept.position
+                                {/*dept.position*/}
                               </td>
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                <a
-                                  href="https://www.google.com"
-                                  className="text-indigo-600 hover:text-indigo-900"
-                                >
+                                {/*THE VIEW BUTTON IS HERE!!!!*/}
+                                <button className="text-indigo-600 hover:text-indigo-900">
                                   View
                                   <span className="sr-only">, {dept.name}</span>
-                                </a>
+                                </button>
                               </td>
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                 <a
-                                  href="https://lh3.googleusercontent.com/L8LLXQeMyAQUGfxQTYZe_ByGzH7R8UC2pc2vjnpIm1QeXb7C0NGYxkF2BXlIpKVbJulpjlF9eCwhOVzY9Tl91QUw_g=w640-h400-e365-rj-sc0x00ffffff"
+                                  onClick={() => setOpenDelete(true)}
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
-                                  Disable
+                                  Delete
+                                  <DeleteDeptModal
+                                      open={openDelete}
+                                      onConfirm = {handleSubmit}
+                                      onClose={setOpenDelete}
+                                      deptId = {dept.departmentId}
+                                    />
                                   <span className="sr-only">, {dept.name}</span>
                                 </a>
                               </td>
@@ -229,7 +297,7 @@ export default function ViewOrganisation() {
           </div>
         </>
       ) : (
-        <div class="bg-cyan-300">
+        <div className="bg-cyan-300">
           <div className="font-mono absolute mx-auto text-center w-screen text-6xl mt-9">
             <h1>loading...</h1>
           </div>

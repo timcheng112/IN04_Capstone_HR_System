@@ -1,19 +1,56 @@
 import * as React from "react";
-import { Modal, Portal, Text, Button, Provider } from "react-native-paper";
+import {
+  Modal,
+  Portal,
+  Text,
+  Button,
+  Provider,
+  Title,
+  Badge,
+} from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity, View } from "react-native";
 
-const ViewTaskModal = ({ visible, hideModal }) => {
-  const containerStyle = { backgroundColor: "white", padding: 20 };
+const ViewTaskModal = ({ visible, hideModal, task }) => {
+  const containerStyle = {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    marginHorizontal: 8,
+    elevation: 20,
+    bottom: "10%",
+  };
 
   return (
     <Provider>
       <Portal>
-        <Modal
-          visible={visible}
-          onDismiss={hideModal}
-          contentContainerStyle={containerStyle}
-        >
-          <Text>Example Modal. Click outside this area to dismiss.</Text>
-        </Modal>
+        {task !== null && (
+          <Modal
+            visible={visible}
+            onDismiss={hideModal}
+            contentContainerStyle={containerStyle}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Badge style={{ fontWeight: "bold", paddingHorizontal: 20 }}>
+                {task.category}
+              </Badge>
+              <TouchableOpacity onPress={hideModal}>
+                <Ionicons
+                  name="ios-close-outline"
+                  size={24}
+                  color={"#111111"}
+                />
+              </TouchableOpacity>
+            </View>
+            <Title>{task.name}</Title>
+            <Text>{task.description}</Text>
+          </Modal>
+        )}
       </Portal>
     </Provider>
   );

@@ -3,7 +3,7 @@ import { Fragment, useRef, useState } from "react";
 import { useHistory } from "react-router";
 // import InputText from '../../components/inputText';
 // import TextArea from '../../components/textArea';
-//import api from '../../util/api';
+import api from '../../utils/api';
 
 export default function ViewTaskModal({ open, onClose, task }) {
   const tabs = [

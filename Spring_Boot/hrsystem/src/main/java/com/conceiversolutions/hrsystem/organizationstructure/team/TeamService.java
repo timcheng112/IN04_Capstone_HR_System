@@ -82,6 +82,10 @@ public class TeamService {
             t.getRoster().setBlocks(new ArrayList<>());
             t.getRoster().setShifts(new ArrayList<>());
 
+            //added by shihan not too sure.
+            t.getOutlet();
+            t.getOutlet().getAddress();
+
             t.getTeamHead().setTeams(new ArrayList<>());
 
             return t;

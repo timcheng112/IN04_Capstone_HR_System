@@ -59,8 +59,11 @@ const api = {
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
-  getUserIdByEmail(email){
-    return axios.get(`http://localhost:9191/api/user/login/getUserIdByEmail?email=${email}`);
+  getUserIdByEmail(email) {
+    return axios.get(`http://localhost:9191/api/user/login/getUserIdByEmail?email=${email}`)
+  },
+  addDepartment(deptName, deptHeadId){
+    return axios.post(`http://localhost:9191/api/department/addDepartment?deptName=${deptName}&deptHeadId=${deptHeadId}`);
   },
 };
 

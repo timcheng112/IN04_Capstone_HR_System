@@ -4,26 +4,34 @@ import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 // import InputText from '../../components/inputText';
 // import TextArea from '../../components/textArea';
-//import api from '../../util/api';
+import api from '../../utils/api';
 
-export default function EditCategoryModal({ open, onClose, categoryName }) {
+export default function EditCategoryModal({ open, onClose, category }) {
   const history = useHistory();
-  const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [error, setError] = useState(null);
   const cancelButtonRef = useRef(null);
 
-  //   const handleSubmit = (evt) => {
-  //     evt.preventDefault()
-  //     createCategory()
-  //     alert("Successfully created category.")
-  //   }
+  useEffect(() => {
+    api.getCategoryById(category.id)
+        .then(response => {
+            setName(response.data.name)
+        })
+  }, [category])
 
-  // useEffect(() => {
-  //   api.getUser()
-  //     .then(response => setUser(response.data))
-  //     .catch((error) => setError(error))
-  // }, [])
+  function editCategory() {
+    category.name = name
+    api.editCategory(category.id, name)
+  }
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault()
+    if(name !== ''){
+      editCategory()
+      onClose(false)
+      alert("Successfully edited category.")
+    }
+  }
 
   return (
     //user && (
@@ -52,6 +60,7 @@ export default function EditCategoryModal({ open, onClose, categoryName }) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
+              <form onSubmit={handleSubmit}>
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <div className="mt-3 text-center sm:mt-0 sm:text-left">
@@ -75,8 +84,10 @@ export default function EditCategoryModal({ open, onClose, categoryName }) {
                             name="category-name"
                             rows={3}
                             className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            defaultValue={categoryName}
+                            defaultValue={category.name}
                             required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                           />
                         </div>
                       </form>
@@ -101,6 +112,7 @@ export default function EditCategoryModal({ open, onClose, categoryName }) {
                   </button>
                 </div>
               </Dialog.Panel>
+              </form>
             </Transition.Child>
           </div>
         </div>

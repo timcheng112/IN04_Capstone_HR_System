@@ -10,7 +10,7 @@ export default function ConfirmDialog({
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog
+      {/* <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
         onClose={props.onClose}
@@ -99,7 +99,7 @@ export default function ConfirmDialog({
             </div>
           </Transition.Child>
         </div>
-      </Dialog>
+      </Dialog> */}
     </Transition.Root>
   );
 }

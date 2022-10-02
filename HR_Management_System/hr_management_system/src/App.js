@@ -1,8 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Switch } from "react-router-dom";
 import LoginPage from "./pages/Login";
-import OnboardingHrPage from "./pages/Onboarding/index";
-import OffboardingHrPage from "./pages/Offboarding/indexHr";
 import PublicRoute from "./utils/PublicRoute";
 import PrivateRoute from "./utils/PrivateRoute";
 import Timeout from "./pages/Timeout";
@@ -20,6 +18,9 @@ import HomePage from "./pages/Home";
 
 import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
+import OnboardingHrPage from "./pages/Onboarding/indexHR";
+import OnboardingPage from "./pages/Onboarding/index";
+import OffboardingPage from "./pages/Offboarding"
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
           />
           <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
           <PublicRoute exact path="/timeout" component={Timeout} />
-          <PublicRoute exact path="/onboarding" component={OnboardingHrPage} />
+          <PrivateRoute exact path="/onboarding" component={OnboardingHrPage} />
           <PrivateRoute exact path="/profile" component={ProfilePage}/>
           <PrivateRoute exact path="/viewOrg" component={ViewOrganisation}/>
           <PrivateRoute exact path="/updateProfile" component={UpdateProfile}/>
@@ -52,20 +53,14 @@ function App() {
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
           <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
           <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
-          <PublicRoute exact path="/offboarding" component={OffboardingHrPage}/>
+          <PrivateRoute exact path="/offboarding" component={OffboardingPage}/>
           {/* <ViewTeam/> */}
+
+          <PrivateRoute exact path="/admin/onboarding" component={OnboardingPage} />
+          <PrivateRoute exact path="/admin/onboardinghr" component={OnboardingHrPage} />
         </Switch>
       </div>
     </BrowserRouter>
-
-//    <ViewTeam/>
-//    <ViewDepartment />
-//    <ViewOrganisation />
-//    <EmployeeChart />
-//    <EmployeeList/>
-//    <ProfilePage/>
-
-
   );
 }
 
