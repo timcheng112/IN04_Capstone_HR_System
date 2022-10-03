@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
@@ -920,5 +921,35 @@ public class UserService implements UserDetailsService {
         }
 
         return availManagers;
+    }
+
+    public List<User> getEmployeesNotInGivenTeam(Integer teamId) {
+        System.out.println("UserService.getEmployeesNotInGivenTeam");
+        System.out.println("teamId = " + teamId);
+
+        List<User> employees = userRepository.getEmployeesNotInGivenTeam(RoleEnum.MANAGER, RoleEnum.EMPLOYEE, Long.valueOf(teamId));
+
+        if (employees.isEmpty()) {
+            throw new IllegalStateException("Employees not found.");
+        }
+
+        for (User e : employees) {
+            List<Team> teams = e.getTeams();
+            for (Team t : teams) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setTeamHead(null);
+            }
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : e.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+            e.setQualificationInformation(null);
+        }
+
+        return employees;
     }
 }

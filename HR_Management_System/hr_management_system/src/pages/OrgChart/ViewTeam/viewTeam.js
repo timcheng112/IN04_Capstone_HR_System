@@ -1,6 +1,8 @@
 import Navbar from "../../../components/Navbar.js";
 import { useState, useEffect } from "react";
 import api from "../../../utils/api.js";
+import AddUserModal from "./addUserModal.js";
+
 //import axios from 'axios';
 
 export default function ViewTeam() {
@@ -26,9 +28,17 @@ export default function ViewTeam() {
 
   //shihan 3/10/2022
   const [teamId, setTeamId] = useState(1);
-  const [team, setTeam] = useState([]);
+  const [team, setTeam] = useState(null);
+
+  const [openAdd, setOpenAdd] = useState(false);
 
   useEffect(() => {
+    console.log("use effect!");
+    const url = window.location.href;
+    const tempTeamId = url.substring(31);
+    console.log("urlSubstring:" + tempTeamId);
+    setTeamId(tempTeamId);
+
     api.getTeam(teamId).then((response) => {
       setTeam(response.data);
       console.log(team);
@@ -37,9 +47,14 @@ export default function ViewTeam() {
 
   return (
     <>
-      {team.outlet ? (
+      {team ? (
         <>
           {/* <Navbar/> */}
+          <AddUserModal
+            open={openAdd}
+            onClose={() => setOpenAdd(false)}
+            teamId={teamId}
+          />
           <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
               <div className="sm:flex sm:items-center">
@@ -55,6 +70,7 @@ export default function ViewTeam() {
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                   <button
                     type="button"
+                    onClick={() => setOpenAdd(true)}
                     className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                   >
                     Add user
