@@ -933,7 +933,7 @@ public class UserService implements UserDetailsService {
         return employees;
     }
 
-    public void initAdmin(User user) {
+    public Long initAdmin(User user) {
         System.out.println("UserService.initAdmin");
         boolean isValidEmail = emailValidator.test(user.getEmail());
         if (!isValidEmail) {
@@ -956,6 +956,7 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         User newUser = userRepository.saveAndFlush(user);
+        return newUser.getUserId();
     }
 
     public List<User> getAllAvailManagers() {

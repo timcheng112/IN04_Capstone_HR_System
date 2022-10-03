@@ -53,8 +53,8 @@ function App() {
           {/* //          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart} /> */}
           <PrivateRoute exact path="/home" component={HomePage} />
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
-          <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
-          <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
+          <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam}/>
+          <PrivateRoute exact path="/viewDept/:deptId" component={ViewDepartment}/>
           <PrivateRoute exact path="/offboarding" component={OffboardingPage}/>
           {/* <ViewTeam/> */}
 
