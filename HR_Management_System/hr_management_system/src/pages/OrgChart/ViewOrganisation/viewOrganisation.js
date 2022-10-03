@@ -20,7 +20,7 @@ import ChangeOrgHeadModal from "./changeOrgHeadModal.js";
 
 export default function ViewOrganisation() {
   const [org, setOrg] = useState([]);
-  const history = useHistory()
+  const history = useHistory();
 
   useEffect(() => {
     api.getOrganization().then((response) => {
@@ -36,12 +36,12 @@ export default function ViewOrganisation() {
 
   const [openChange, setOpenChange] = useState(false);
   const [deptName, setDeptName] = useState("");
-  const history = useHistory()
-
 
   function deleteDept() {
     // console.log("adddeptfunc :" + deptName + " " + deptHeadId);
-    api.deleteDept(org.organizationHead.departmentId).then((response) => {
+    api
+      .deleteDept(org.organizationHead.departmentId)
+      .then((response) => {
         // console.log(deptId + "###");
         if (response.status == 200) {
           console.log("successfully deleted dept!");
@@ -52,20 +52,14 @@ export default function ViewOrganisation() {
       .catch((error) => {
         var message = error.request.response;
         console.log(message);
-        alert(
-          "Something went wrong... Give it a second."
-        );
-
+        alert("Something went wrong... Give it a second.");
       });
-
   }
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     // console.log(deptId + "$$$$")
     deleteDept();
-
-
   };
 
   return (
@@ -265,8 +259,14 @@ export default function ViewOrganisation() {
                               </td>
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                 {/*THE VIEW BUTTON IS HERE!!!!*/}
-                                <button className="text-indigo-600 hover:text-indigo-900"
-                                onClick={() => history.push("/viewDept/" + dept.departmentId)}>
+                                <button
+                                  className="text-indigo-600 hover:text-indigo-900"
+                                  onClick={() =>
+                                    history.push(
+                                      "/viewDept/" + dept.departmentId
+                                    )
+                                  }
+                                >
                                   View
                                   <span className="sr-only">, {dept.name}</span>
                                 </button>
@@ -278,11 +278,11 @@ export default function ViewOrganisation() {
                                 >
                                   Delete
                                   <DeleteDeptModal
-                                      open={openDelete}
-                                      onConfirm = {handleSubmit}
-                                      onClose={setOpenDelete}
-                                      deptId = {dept.departmentId}
-                                    />
+                                    open={openDelete}
+                                    onConfirm={handleSubmit}
+                                    onClose={setOpenDelete}
+                                    deptId={dept.departmentId}
+                                  />
                                   <span className="sr-only">, {dept.name}</span>
                                 </a>
                               </td>
