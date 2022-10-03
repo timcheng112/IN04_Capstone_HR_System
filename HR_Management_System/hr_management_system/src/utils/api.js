@@ -164,37 +164,37 @@ const api = {
   },
 
   getOrganization() {
+    return axios.get(`http://localhost:9191/api/organization/1`);
+  },
+
+  getUserInfo(userId) {
+    return axios.get(`http://localhost:9191/api/user/${userId}`);
+  },
+  editUserInfo(userId, gender, email, phone) {
     return axios.get(
-      `http://localhost:9191/api/organization/1`
+      `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
     );
   },
 
-  getUserInfo(userId){
+  getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
-  editUserInfo(userId, gender, email, phone){
-    return axios.get(`http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`);
-  },
-  
-  getUser(userId) {
+  getUserIdByEmail(email) {
     return axios.get(
-      `http://localhost:9191/api/user/${userId}`
+      `http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`
     );
   },
-  getUserIdByEmail(email) {
-    return axios.get(`http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`);
-  },
-  getDept(deptId){
+  getDept(deptId) {
     return axios.get(`http://localhost:9191/api/department/${deptId}`);
   },
-  deleteDept(deptId){
+  deleteDept(deptId) {
     return axios.delete(`http://localhost:9191/api/department/${deptId}`);
   },
-  deleteTeam(deptId){
+  deleteTeam(deptId) {
     return axios.delete(`http://localhost:9191/api/department/${deptId}`);
   },
-  uploadFile(file){
-    return axios.post(`http://localhost:9191/uploadDocument/${file}`)
+  uploadFile(file) {
+    return axios.post(`http://localhost:9191/uploadDocument/${file}`);
   },
   addDepartment(deptName, deptHeadId) {
     return axios.post(
@@ -211,6 +211,29 @@ const api = {
   },
   getTeam(teamId) {
     return axios.get(`http://localhost:9191/api/team/${teamId}`);
+  },
+  getAllTeams() {
+    return axios.get(`http://localhost:9191/api/team/getAllTeams`);
+  },
+  getEmployeesNotInGivenTeam(teamId) {
+    return axios.get(
+      `http://localhost:9191/api/user/getEmployeesNotInGivenTeam?teamId=${teamId}`
+    );
+  },
+  addMemberToTeam(teamId, userId) {
+    return axios.put(
+      `http://localhost:9191/api/team/addMemberToTeam?teamId=${teamId}&userId=${userId}`
+    );
+  },
+  addAddress(addressName, line1, line2, postalCode, city, country) {
+    return axios.post(
+      `http://localhost:9191/api/address/addAddress?addressName=${addressName}&line1=${line1}&line2=${line2}&postalCode=${postalCode}&city=${city}&country=${country}`
+    );
+  },
+  addOutlet(outletName, contactNo, openingHour, closingHour, addressId) {
+    return axios.post(
+      `http://localhost:9191/api/address/addAddress?addressName=${outletName}&line1=${contactNo}&line2=${openingHour}&postalCode=${closingHour}&city=${addressId}`
+    );
   },
 };
 

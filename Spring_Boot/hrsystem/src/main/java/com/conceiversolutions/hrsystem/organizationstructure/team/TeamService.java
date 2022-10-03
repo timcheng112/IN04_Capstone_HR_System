@@ -85,6 +85,7 @@ public class TeamService {
             //added by shihan not too sure.
             t.getOutlet();
             t.getOutlet().getAddress();
+            t.getDepartment().setTeams(new ArrayList<>());
 
             t.getTeamHead().setTeams(new ArrayList<>());
 
