@@ -1,146 +1,70 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { useEffect, useRef } from "react";
-import { Fragment, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { Fragment, useRef } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { Tab } from "@headlessui/react";
 import AddTaskSteps from "./AddTaskSteps";
 import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
 // import InputText from '../../components/inputText';
 // import TextArea from '../../components/textArea';
-import api from "../../utils/api";
+//import api from '../../util/api';
 
-export default function AddTaskModal({
-  open,
-  onClose,
-  category,
-  refreshKeyHandler,
-}) {
+export default function EditTaskModal({ open, onClose, taskName, taskDescription, unassignedEmployees, assignedEmployees }) {
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [employees, setEmployees] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
   const [error, setError] = useState(null);
   const [showStepOne, setShowStepOne] = useState(true);
-  const [searchParam] = useState([
-    "userId",
-    "firstName",
-    "lastName",
-    "workEmail",
-  ]);
-  const [refreshKeyModal, setRefreshKeyModal] = useState(0);
 
-  const [unassignedEmployees, setUnassignedEmployees] = useState();
-  const [assignedEmployees, setAssignedEmployees] = useState([]);
-
-  const [filteredUnassignedEmployees, setFilteredUnassignedEmployees] =
-    useState(unassignedEmployees);
-  const [filteredAssignedEmployees, setFilteredAssignedEmployees] =
-    useState(assignedEmployees);
-
-  useEffect(() => {
-    api
-      .getAllEmployees()
-      .then((response) => {
-        setUnassignedEmployees(response.data);
-        setFilteredUnassignedEmployees(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => setError(error));
-  }, []);
-
-  const handleSubmit = () => {
-    createTask();
-    onClose();
-    //createTaskListItem()
-    alert("Successfully created task.");
-    refreshKeyHandler();
-  };
-  function createTask() {
-    const task = {
-      name: name,
-      description: description,
-      isOnboarding: true,
-    };
-    api
-      .addNewTask(task, category.categoryId)
-      .then((result) => {
-        console.log("RESULT DATA: " + result.data);
-        createTaskListItem(result.data);
-      })
-      .catch((error) => setError(error));
-  }
-
-  function createTaskListItem(taskId) {
-    const taskListItem = { isDone: false };
-    assignedEmployees.forEach((employee) => {
-      api
-        .addNewTaskListItem(employee.userId, taskId, taskListItem)
-        .then(() => console.log("Task List Item created"))
-        .catch((error) => setError(error));
-    });
-  }
-
-  function search(e, items, isUnassigned) {
-    const value = e.target.value;
-    isUnassigned
-      ? setFilteredUnassignedEmployees(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        )
-      : setFilteredAssignedEmployees(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        );
-  }
+  const [setUnassignedEmployees] = useState([]);
+  const [setAssignedEmployees] = useState([]);
 
   function assignEmployeeToTask(employee) {
     setUnassignedEmployees(
       unassignedEmployees.filter(
-        (unassignedEmployee) => unassignedEmployee.userId !== employee.userId
-      )
-    );
-    setFilteredUnassignedEmployees(
-      unassignedEmployees.filter(
-        (unassignedEmployee) => unassignedEmployee.userId !== employee.userId
+        (unassignedEmployee) => unassignedEmployee.name !== employee.name
       )
     );
     setAssignedEmployees([...assignedEmployees, employee]);
-    setFilteredAssignedEmployees([...assignedEmployees, employee]);
   }
 
   function removeEmployeeFromTask(employee) {
     setAssignedEmployees(
       assignedEmployees.filter(
-        (assignedEmployee) => assignedEmployee.userId !== employee.userId
-      )
-    );
-    setFilteredAssignedEmployees(
-      assignedEmployees.filter(
-        (assignedEmployee) => assignedEmployee.userId !== employee.userId
+        (assignedEmployee) => assignedEmployee.name !== employee.name
       )
     );
     setUnassignedEmployees([...unassignedEmployees, employee]);
-    setFilteredUnassignedEmployees([...unassignedEmployees, employee]);
   }
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
+
+  //   const handleSubmit = (evt) => {
+  //     evt.preventDefault()
+  //     createCategory()
+  //     alert("Successfully created category.")
+  //   }
+
+  // function createTask() {
+  //   api.addNewTask({ // api change
+  //       name: name,
+  //       description: description,
+  //       employees: employees
+  //   })
+  //     .then(() => history.goBack())
+  //     .catch(error => setError(error))
+  // }
+
+  // useEffect(() => {
+  //   api.getUser()
+  //     .then(response => setUser(response.data))
+  //     .catch((error) => setError(error))
+  // }, [])
 
   return (
     // user && (
@@ -150,7 +74,6 @@ export default function AddTaskModal({
         className="relative z-10"
         onClose={() => {
           onClose();
-          // setRefreshKeyModal((oldKey) => oldKey + 1);
           setShowStepOne(true);
         }}
       >
@@ -185,7 +108,7 @@ export default function AddTaskModal({
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900 mb-2"
                     >
-                      Add a Task under {category.name}
+                      Edit Task
                     </Dialog.Title>
                     {showStepOne ? (
                       <div className="mt-2">
@@ -202,9 +125,8 @@ export default function AddTaskModal({
                               name="task-name"
                               rows={1}
                               className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              defaultValue={taskName}
                               required
-                              value={name}
-                              onChange={(e) => setName(e.target.value)}
                             />
                           </div>
                           <label
@@ -219,69 +141,30 @@ export default function AddTaskModal({
                               name="category-description"
                               rows={3}
                               className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              defaultValue={taskDescription}
                               required
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
                             />
                           </div>
                         </form>
                       </div>
                     ) : (
                       <div className="flex space-x-4 w-full justify-between ">
-                        <div className="overflow-y-scroll w-full h-96 border-2 rounded-md">
-                          <label className="block text-sm text-gray-700 mt-2 ml-2 font-bold underline-offset-2 underline">
-                            Unassigned:
+                        <div className="overflow-y-scroll w-full h-full">
+                          <label className="block text-sm font-medium text-gray-700 mt-2">
+                            Unassigned:{" "}
                           </label>
-                          <div>
-                            <div className="relative mt-1 flex items-center px-2">
-                              <input
-                                type="text"
-                                name="search"
-                                id="search"
-                                placeholder="Search..."
-                                onChange={(e) => {
-                                  search(e, unassignedEmployees, true);
-                                }}
-                                className="p-2 block border-2 w-full rounded-md border-gray-300 pr-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              />
-                              <div className="absolute inset-y-0 right-0 flex py-1.5 pr-3">
-                                <kbd className="inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400">
-                                  ⌘K
-                                </kbd>
-                              </div>
-                            </div>
-                          </div>
                           <AssignTaskToEmployeeList
                             isAssigning={true}
-                            people={filteredUnassignedEmployees}
+                            people={unassignedEmployees}
                             onClick={assignEmployeeToTask}
                           />
                         </div>
-                        <div className="overflow-y-scroll w-full border-2 rounded-md">
-                          <label className="block text-sm text-gray-700 mt-2 ml-2 font-bold underline-offset-2 underline">
-                            Assigned:
+                        <div className="overflow-y-scroll w-full">
+                          <label className="block text-sm font-medium text-gray-700 mt-2">
+                            Assigned:{" "}
                           </label>
-                          <div>
-                            <div className="relative mt-1 flex items-center px-2">
-                              <input
-                                type="text"
-                                name="search"
-                                id="search"
-                                placeholder="Search..."
-                                onChange={(e) => {
-                                  search(e, assignedEmployees, false);
-                                }}
-                                className="p-2 block border-2 w-full rounded-md border-gray-300 pr-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              />
-                              <div className="absolute inset-y-0 right-0 flex py-1.5 pr-3">
-                                <kbd className="inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400">
-                                  ⌘K
-                                </kbd>
-                              </div>
-                            </div>
-                          </div>
                           <AssignTaskToEmployeeList
-                            people={filteredAssignedEmployees}
+                            people={assignedEmployees}
                             onClick={removeEmployeeFromTask}
                           />
                         </div>
@@ -294,7 +177,7 @@ export default function AddTaskModal({
                     type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={
-                      showStepOne ? () => setShowStepOne(false) : handleSubmit
+                      showStepOne ? () => setShowStepOne(false) : onClose
                     }
                   >
                     {showStepOne ? "Next Step" : "Add Task"}
@@ -313,6 +196,7 @@ export default function AddTaskModal({
                     className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={() => {
                       onClose();
+                      setShowStepOne(true);
                     }}
                   >
                     Cancel
