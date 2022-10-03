@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @EqualsAndHashCode
 public class User implements UserDetails {
     @Id
@@ -121,7 +121,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "reactivation_request_id")
     private ReactivationRequest reactivationRequest;
 
-//    TODO add on other relationships to other classes
+    // TODO add on other relationships to other classes
 
     public User() {
     }
@@ -163,7 +163,9 @@ public class User implements UserDetails {
     }
 
     // this should be for making an employee's account
-    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, LocalDate dateJoined, PayInformation currentPayInformation) {
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
+            LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+            LocalDate dateJoined, PayInformation currentPayInformation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -193,6 +195,7 @@ public class User implements UserDetails {
         this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
@@ -474,8 +477,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority =
-                new SimpleGrantedAuthority(this.userRole.name());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(this.userRole.name());
 
         return Collections.singletonList(authority);
     }

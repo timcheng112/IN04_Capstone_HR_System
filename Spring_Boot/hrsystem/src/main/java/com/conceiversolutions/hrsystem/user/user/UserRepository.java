@@ -30,18 +30,24 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT c.user FROM ConfirmationToken c WHERE c.token = ?1")
     Optional<User> findUserByToken(String token);
 
-    // @Query("SELECT u FROM User u WHERE u.userRole = 'EMPLOYEE'")
-    // Optional<List<User>> findAllEmployees();
+    // @Query("SELECT u FROM User u WHERE u.userRole = ?1")
+    // List<User> findAllEmployees(RoleEnum userRole);
 
-    // @Query("SELECT u FROM User u WHERE u.userRole = 'EMPLOYEE' AND
-    // (u.task_list_items NOT IN(SELECT t.task_list_items FROM Task t WHERE t.id =
-    // taskId)))")
-    // Optional<List<User>> findEmployeesWithoutTask(Long taskId);
+    // @Query("SELECT u FROM User u WHERE u.userRole = ?1 AND (u.task_list_items NOT
+    // IN(SELECT t.task_list_items FROM Task t WHERE t.id = ?2))")
+    // List<User> findEmployeesWithoutTask(RoleEnum userRole, Long taskId);
 
     // @Query("SELECT u FROM User u WHERE u.userRole = 'EMPLOYEE' AND (ANY
     // u.task_list_items IN(SELECT t.task_list_items FROM Task t WHERE t.id =
     // taskId)))")
     // Optional<List<User>> findEmployeesWithTask(Long taskId);
+
+    @Query("SELECT t.user FROM TaskListItem t WHERE NOT t.task.taskId = ?2 AND t.user.userRole = ?1")
+    List<User> findEmployeesWithoutTask(RoleEnum userRole, Long taskId);
+
+
+    @Query("SELECT t.user FROM TaskListItem t WHERE t.task.taskId = ?2 AND t.user.userRole = ?1")
+    List<User> findEmployeesWithTask(RoleEnum userRole, Long taskId);
 
     @Query("SELECT u FROM User u WHERE u.userRole = ?1")
     List<User> findAllByRole(RoleEnum role);

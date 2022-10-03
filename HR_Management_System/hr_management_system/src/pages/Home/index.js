@@ -246,7 +246,7 @@ export default function Home() {
                             <nav className="flex space-x-4">
                               <a
                                 key="Admin"
-                                href="/home"
+                                href="/admin/onboarding"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
@@ -418,14 +418,14 @@ export default function Home() {
                                   Welfare
                                 </a>
                                 <a
-                                  key="Welfare"
+                                  key="Hiring"
                                   href="/home"
                                   className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
                                 >
                                   Hiring
                                 </a>
                                 <a
-                                  key="Welfare"
+                                  key="Reports"
                                   href="/home"
                                   className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
                                 >

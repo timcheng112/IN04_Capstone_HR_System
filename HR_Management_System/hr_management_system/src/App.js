@@ -20,7 +20,9 @@ import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 import OnboardingHrPage from "./pages/Onboarding/indexHR";
 import OnboardingPage from "./pages/Onboarding/index";
-import OffboardingPage from "./pages/Offboarding"
+import OffboardingHrPage from "./pages/Offboarding/indexHr";
+import OffboardingPage from "./pages/Offboarding/index";
+
 
 function App() {
   return (
@@ -51,13 +53,15 @@ function App() {
           {/* //          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart} /> */}
           <PrivateRoute exact path="/home" component={HomePage} />
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
-          <PrivateRoute exact path="/viewTeam" component={ViewTeam}/>
-          <PrivateRoute exact path="/viewDept" component={ViewDepartment}/>
+          <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam}/>
+          <PrivateRoute exact path="/viewDept/:deptId" component={ViewDepartment}/>
           <PrivateRoute exact path="/offboarding" component={OffboardingPage}/>
           {/* <ViewTeam/> */}
 
           <PrivateRoute exact path="/admin/onboarding" component={OnboardingPage} />
           <PrivateRoute exact path="/admin/onboardinghr" component={OnboardingHrPage} />
+          <PrivateRoute exact path="/admin/offboarding" component={OffboardingPage} />
+          <PrivateRoute exact path="/admin/offboardinghr" component={OffboardingHrPage} />
         </Switch>
       </div>
     </BrowserRouter>
