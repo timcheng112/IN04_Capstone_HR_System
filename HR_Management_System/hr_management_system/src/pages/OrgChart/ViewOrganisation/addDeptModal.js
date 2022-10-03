@@ -18,6 +18,7 @@ export default function AddDepartmentModal({ open, onClose }) {
         .then((response) => {
           if (response.status == 200) {
             console.log("successfully added new dept!");
+            alert("Department has been successfully created.")
           } else {
             console.error("failed to add new dept!");
           }
