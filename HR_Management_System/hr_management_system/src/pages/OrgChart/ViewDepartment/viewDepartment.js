@@ -3,7 +3,8 @@ import { Link, useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../../utils/api";
 import axios from "axios";
-import AddOutletModal from "./addOutletModal.js";
+import AddOutletModal from "./addTeamModal.js";
+// TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
 /* This example requires Tailwind CSS v2.0+ */
 
