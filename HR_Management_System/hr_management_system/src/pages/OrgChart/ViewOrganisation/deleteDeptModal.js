@@ -5,33 +5,8 @@ import api from "../../../utils/api";
 
 
 
-export default function DeleteDeptModal({ deptId , open, onClose }) {
+export default function DeleteDeptModal({ deptId, open, onClose, props, params = [] }) {
   const cancelButtonRef = useRef(null);
-
-  function deleteDept() {
-    // console.log("adddeptfunc :" + deptName + " " + deptHeadId);
-    api.deleteDept(deptId).then((response) => {
-        if (response.status == 200) {
-          console.log("successfully deleted dept!");
-        } else {
-          console.error("failed to delete dept!");
-        }
-      })
-      .catch((error) => {
-        var message = error.request.response;
-        console.log(message);
-        alert(
-          "Something went wrong... Give it a second."
-        );
-       
-      });
-      
-  }
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    deleteDept();
-  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -67,21 +42,19 @@ export default function DeleteDeptModal({ deptId , open, onClose }) {
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 <div className="mt-10 sm:mt-0">
                   <div className="md:grid md:grid-cols-3 md:gap-6">
-                    <div className="md:col-span-1">
-                      <div className="px-4 sm:px-0">
-                        <h3 className="text-lg font-medium leading-6 text-gray-900">
+                   
+                    <div className=" md:col-span-3 md:mt-0">
+                      <form>
+                      
+                        <div className="p-4 overflow-hidden shadow sm:rounded-md">
+                        
+                          <h3 className="text-lg font-medium leading-6 text-gray-900 ">
                           Delete Department
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-600">
-                          Are you sure you want to delete this department?
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-5 md:col-span-2 md:mt-0">
-                      <form onSubmit={handleSubmit}>
-                        <div className="overflow-hidden shadow sm:rounded-md">
-                          <div className="bg-white px-4 py-5 sm:p-6"></div>
+                            </h3>
 
+                            <p className=" flex items-center text-sm text-gray-600">
+                              Are you sure you want to delete this department?
+                                </p>
                           {/*this button will need the function to delete the employee*/}
                           <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                             <button
@@ -96,8 +69,10 @@ export default function DeleteDeptModal({ deptId , open, onClose }) {
                             <button
                               type="button"
                               className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                              onClick={onClose}
+                              
+                              onClick = {() =>{props.onConfirm(...params); console.log(...params);}}
                             >
+
                               Delete
                             </button>
                           </div>
