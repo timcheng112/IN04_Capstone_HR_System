@@ -10,8 +10,8 @@ import { Fragment, useState } from "react";
 import Breadcrumb from "../Breadcrumb";
 
 const navigation = [
-  { name: "Onboarding", href: "#", icon: UsersIcon, current: false },
-  { name: "Offboarding", href: "#", icon: FolderIcon, current: false },
+  { name: "Onboarding", href: "/admin/onboarding", icon: UsersIcon, current: false },
+  { name: "Offboarding", href: "/admin/offboarding", icon: FolderIcon, current: false },
 ];
 
 function classNames(...classes) {

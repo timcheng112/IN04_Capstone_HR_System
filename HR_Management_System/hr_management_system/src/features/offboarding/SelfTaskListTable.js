@@ -1,12 +1,16 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import api from "../../utils/api";
-import ConfirmDialog from "../../components/ConfirmDialog";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function SelfTasklistTable({ taskListItems, setTaskListItems }) {
+function SelfTasklistTable({
+  taskListItems,
+  setTaskListItems,
+  refreshKeyHandler,
+}) {
   // const [taskListItems, setTaskListItems] = useState([
   //   {
   //     name: "Task 1",
@@ -25,18 +29,29 @@ function SelfTasklistTable({ taskListItems, setTaskListItems }) {
   //   },
   // ]);
   const [selectedTask, setSelectedTask] = useState([]);
-  const [openDelete, setOpenDelete] = useState(false);
+  const [error, setError] = useState(null);
+  const history = useHistory();
 
-  function onClickHandler(taskListItem) {
-    setTaskListItems(
-      taskListItems.filter((item) => item.name !== taskListItem.name)
-    );
-  }
   function deleteTaskListItem(taskListItemId) {
-    api.deleteTaskListItem(taskListItemId).then(() => {
-      alert("Successfully deleted!");
-      //refreshKeyHandler();
-    })
+    api
+      .deleteTaskListItem(taskListItemId)
+      .then(() => {
+        console.log("Successfully cleared");
+      })
+      .catch((error) => setError(error));
+  }
+  function onClickHandler(taskListItem) {
+    // setTaskListItemsCopy(
+    //   taskListItemsCopy.filter(
+    //     (item) => item.taskListItemId !== taskListItem.taskListItemId
+    //   )
+    // );
+    setTaskListItems(
+      taskListItems.filter(
+        (item) => item.taskListItemId !== taskListItem.taskListItemId
+      )
+    );
+    deleteTaskListItem(taskListItem.taskListItemId);
   }
 
   return (
@@ -132,13 +147,6 @@ function SelfTasklistTable({ taskListItems, setTaskListItems }) {
                       </td>
                       <td className="whitespace-nowrap px-3 text-sm text-gray-500 text-left">
                         {selectedTask.includes(taskListItem) && (
-                          // <button
-                          //   type="button"
-                          //   className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                          //   onClick={() => onClickHandler(taskListItem)}
-                          // >
-                          //   Clear
-                          // </button>
                           <button
                             type="button"
                             className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -156,14 +164,6 @@ function SelfTasklistTable({ taskListItems, setTaskListItems }) {
           </div>
         </div>
       </div>
-      {/* <ConfirmDialog
-        title="task"
-        item="task"
-        open={openDelete}
-        setOpen={() => setOpenDelete(false)}
-        onClose={() => setOpenDelete(false)}
-        onConfirm={deleteTaskListItem}
-      /> */}
     </div>
   );
 }

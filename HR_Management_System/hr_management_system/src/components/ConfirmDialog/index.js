@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ExclamationIcon, XIcon } from "@heroicons/react/outline";
+import { ExclamationCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
 export default function ConfirmDialog({
   open,
@@ -10,7 +10,7 @@ export default function ConfirmDialog({
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
-      {/* <Dialog
+      <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
         onClose={props.onClose}
@@ -50,12 +50,12 @@ export default function ConfirmDialog({
                   onClick={() => props.setOpen(false)}
                 >
                   <span className="sr-only">Close</span>
-                  <XIcon className="h-6 w-6" aria-hidden="true" />
+                  <XCircleIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
               <div className="sm:flex sm:items-start">
                 <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                  <ExclamationIcon
+                  <ExclamationCircleIcon
                     className="h-6 w-6 text-red-600"
                     aria-hidden="true"
                   />
@@ -99,7 +99,7 @@ export default function ConfirmDialog({
             </div>
           </Transition.Child>
         </div>
-      </Dialog> */}
+      </Dialog>
     </Transition.Root>
   );
 }

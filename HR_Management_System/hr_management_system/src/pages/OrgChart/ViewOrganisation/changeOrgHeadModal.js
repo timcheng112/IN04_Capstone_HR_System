@@ -1,9 +1,11 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
+import { getUserId } from "../../../utils/Common";
 
 export default function ChangeOrgHeadModal({ open, onClose, newOrgName }) {
   //the dept name is passed from prev page?
+  const userId = getUserId()
   const [orgHeadId, setorgHeadId] = useState(-1);
   const [options, setOptions] = useState(null);
 
@@ -60,7 +62,7 @@ export default function ChangeOrgHeadModal({ open, onClose, newOrgName }) {
       });
     };
     availManagers();
-  });
+  }, [userId]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();

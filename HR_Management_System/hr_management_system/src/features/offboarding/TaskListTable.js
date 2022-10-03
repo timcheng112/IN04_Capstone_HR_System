@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
-import CategoryOptions from "../../pages/Onboarding/CategoryOption";
-import TaskOptions from "../../pages/Onboarding/TaskOption";
+import CategoryOptions from "../../pages/Offboarding/CategoryOption";
+import TaskOptions from "../../pages/Offboarding/TaskOption";
 import { useState } from "react";
 
 function classNames(...classes) {
@@ -9,7 +9,7 @@ function classNames(...classes) {
 
 function TasklistTable({ categories, setCategories, refreshKeyHandler }) {
   console.log("categories: " + categories);
-  console.log("categories length: " + categories.length);
+
   return (
     <div className="mt-8 flex flex-col">
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -66,7 +66,7 @@ function TasklistTable({ categories, setCategories, refreshKeyHandler }) {
                         </th>
                       </tr>
                       {category.tasks.map((task, taskIdx) => {
-                        if (task.isOnboarding) {
+                        if (!task.isOnboarding) {
                           return (
                             <tr
                               key={task.name}

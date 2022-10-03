@@ -15,7 +15,7 @@ public class TaskConfig {
     @Bean
     CommandLineRunner taskCommandLineRunner(TaskRepository repository) {
         return args -> {
-//            repository.deleteAll();
+            //repository.deleteAll();
             // Task dummyTask = new Task("Dummy Task", "This is a dummy task", true, new
             // Category("Dummy Category"),
             // new ArrayList<>());

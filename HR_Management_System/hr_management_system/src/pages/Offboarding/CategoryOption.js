@@ -2,8 +2,8 @@ import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { Fragment, useState } from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
-import AddTaskModal from "../../features/onboarding/AddTaskModal";
-import EditCategoryModal from "../../features/onboarding/EditCategoryModal";
+import AddTaskModal from "../../features/offboarding/AddTaskModal";
+import EditCategoryModal from "../../features/offboarding/EditCategoryModal";
 import api from "../../utils/api";
 import { useHistory } from "react-router";
 import {
@@ -27,11 +27,8 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
     api.deleteCategory(category.categoryId).then(() => {
       alert("Successfully deleted!");
       refreshKeyHandler();
-    })
-    .catch((error) => setError(error));
+    });
   }
-
-  if(error) return 'Error'
 
   return (
     // <Menu as="div" className="relative inline-block text-left">
