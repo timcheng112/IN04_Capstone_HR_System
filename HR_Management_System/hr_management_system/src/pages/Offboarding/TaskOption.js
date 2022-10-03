@@ -1,17 +1,18 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import { Menu, Transition } from "@headlessui/react";
 import { useHistory } from "react-router";
 import { DotsVerticalIcon, PencilIcon } from "@heroicons/react/solid";
 import EditTaskModal from "../../features/onboarding/EditTaskModal";
 import api from "../../utils/api";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import {
+  DocumentMinusIcon,
   EyeIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
-
 import AddTaskModal from "../../features/onboarding/AddTaskModal";
 import ViewTaskModal from "../../features/onboarding/ViewTaskModal";
-import ConfirmDialog from "../../components/ConfirmDialog";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -60,6 +61,7 @@ export default function TaskOptions({ task, refreshKeyHandler}) {
       .catch((error) => setError(error));
   }
 
+
   return (
     <div className="space-x-2">
       <button
@@ -99,7 +101,7 @@ export default function TaskOptions({ task, refreshKeyHandler}) {
         onClose={() => setOpenDelete(false)}
         setOpen={() => setOpenDelete(false)}
         onConfirm={deleteTask}
-      />
+      /> 
     </div>
   );
 }

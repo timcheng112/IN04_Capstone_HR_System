@@ -1,8 +1,10 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
+import { getUserId } from "../../../utils/Common";
 
 export default function AddDepartmentModal({ open, onClose }) {
+  const userId = getUserId()
   const [deptName, setDeptName] = useState("");
   const [deptHeadId, setDeptHeadId] = useState(-1);
 
@@ -60,7 +62,7 @@ export default function AddDepartmentModal({ open, onClose }) {
       });
     };
     availManagers();
-  });
+  }, [userId]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();

@@ -58,7 +58,7 @@ export default function AddTaskModal({
     const task = {
       name: name,
       description: description,
-      isOnboarding: true,
+      isOnboarding: false,
     };
     api
       .addNewTask(task, category.categoryId)
