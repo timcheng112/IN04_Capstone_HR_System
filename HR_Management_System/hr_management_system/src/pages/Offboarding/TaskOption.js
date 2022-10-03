@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useHistory } from "react-router";
 import { DotsVerticalIcon, PencilIcon } from "@heroicons/react/solid";
-import EditTaskModal from "../../features/offboarding/EditTaskModal";
+import EditTaskModal from "../../features/onboarding/EditTaskModal";
 import api from "../../utils/api";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import {
@@ -11,13 +11,14 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
-import ViewTaskModal from "../../features/offboarding/ViewTaskModal";
+import AddTaskModal from "../../features/onboarding/AddTaskModal";
+import ViewTaskModal from "../../features/onboarding/ViewTaskModal";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function TaskOptions({ task}) {
+export default function TaskOptions({ task, refreshKeyHandler}) {
   const history = useHistory();
   const [action, setAction] = useState("");
   const [openView, setOpenView] = useState(false);
@@ -25,35 +26,39 @@ export default function TaskOptions({ task}) {
   const [openDelete, setOpenDelete] = useState(false);
   const [error, setError] = useState(null);
 
-  const [unassignedEmployees] = useState([
-    {
-      name: "Leonard Krasner",
-      handle: "leonardkrasner",
-    },
-    {
-      name: "Floyd Miles",
-      handle: "floydmiles",
-    },
-    {
-      name: "Emily Selman",
-      handle: "emilyselman",
-    },
-    {
-      name: "Kristin Watson",
-      handle: "kristinwatson",
-    },
-  ]);
-  const [assignedEmployees] = useState([
-    {
-      name: "KongXinyue",
-      handle: "KongXinyue",
-    },
-  ]);
+  // const [unassignedEmployees] = useState([
+  //   {
+  //     name: "Leonard Krasner",
+  //     handle: "leonardkrasner",
+  //   },
+  //   {
+  //     name: "Floyd Miles",
+  //     handle: "floydmiles",
+  //   },
+  //   {
+  //     name: "Emily Selman",
+  //     handle: "emilyselman",
+  //   },
+  //   {
+  //     name: "Kristin Watson",
+  //     handle: "kristinwatson",
+  //   },
+  // ]);
+  // const [assignedEmployees] = useState([
+  //   {
+  //     name: "KongXinyue",
+  //     handle: "KongXinyue",
+  //   },
+  // ]);
 
   function deleteTask() {
     api
-      .deleteTask(task.id)
-      .then(() => history.push('/admin/onboardinghr'))
+      .deleteTask(task.taskId)
+      .then(() => {
+        alert("Successfully deleted!");
+        refreshKeyHandler();
+      })
+      .catch((error) => setError(error));
   }
 
 
@@ -88,7 +93,7 @@ export default function TaskOptions({ task}) {
       </button>
 
       <ViewTaskModal open={openView} onClose={() => setOpenView(false)} task={task}/>
-      <EditTaskModal open={openEdit} onClose={() => setOpenEdit(false)} taskName={'Task1'} taskDescription={'This is Task1'} unassignedEmployees={unassignedEmployees} assignedEmployees={assignedEmployees}/>
+      <EditTaskModal open={openEdit} onClose={() => setOpenEdit(false)} task={task} refreshKeyHandler={refreshKeyHandler}/>
       <ConfirmDialog
         title="task"
         item="task"

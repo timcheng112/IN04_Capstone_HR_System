@@ -26,10 +26,10 @@ export default function AddTaskModal({
     "lastName",
     "workEmail",
   ]);
+  const [refreshKeyModal, setRefreshKeyModal] = useState(0);
 
-  const [unassignedEmployees, setUnassignedEmployees] = useState([]);
+  const [unassignedEmployees, setUnassignedEmployees] = useState();
   const [assignedEmployees, setAssignedEmployees] = useState([]);
-  const [check, setCheck] = useState(false);
 
   const [filteredUnassignedEmployees, setFilteredUnassignedEmployees] =
     useState(unassignedEmployees);
@@ -37,19 +37,14 @@ export default function AddTaskModal({
     useState(assignedEmployees);
 
   useEffect(() => {
-    // if (!check) {
     api
       .getAllEmployees()
       .then((response) => {
         setUnassignedEmployees(response.data);
         setFilteredUnassignedEmployees(response.data);
         console.log(response.data);
-        setCheck(true);
       })
       .catch((error) => setError(error));
-    // } else {
-    //   console.log("Already fetched employees");
-    // }
   }, []);
 
   const handleSubmit = () => {
@@ -58,7 +53,6 @@ export default function AddTaskModal({
     //createTaskListItem()
     alert("Successfully created task.");
     refreshKeyHandler();
-    history.goBack();
   };
   function createTask() {
     const task = {
@@ -156,6 +150,7 @@ export default function AddTaskModal({
         className="relative z-10"
         onClose={() => {
           onClose();
+          // setRefreshKeyModal((oldKey) => oldKey + 1);
           setShowStepOne(true);
         }}
       >
@@ -259,7 +254,6 @@ export default function AddTaskModal({
                           <AssignTaskToEmployeeList
                             isAssigning={true}
                             people={filteredUnassignedEmployees}
-                            // people={unassignedEmployees}
                             onClick={assignEmployeeToTask}
                           />
                         </div>
@@ -288,7 +282,6 @@ export default function AddTaskModal({
                           </div>
                           <AssignTaskToEmployeeList
                             people={filteredAssignedEmployees}
-                            // people={assignedEmployees}
                             onClick={removeEmployeeFromTask}
                           />
                         </div>
