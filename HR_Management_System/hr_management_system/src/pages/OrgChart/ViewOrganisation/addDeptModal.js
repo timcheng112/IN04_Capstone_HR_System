@@ -116,8 +116,9 @@ export default function AddDepartmentModal({ open, onClose }) {
                               Create a Department
                             </h3>
                             <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                              Use a permanent address where you can receive
-                              mail.
+                              Create a new department by providing the name of
+                              this new department and selecting a manager to
+                              head this department.
                             </p>
                           </div>
                           <div className="space-y-6 sm:space-y-5">
