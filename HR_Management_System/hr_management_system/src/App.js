@@ -37,8 +37,8 @@ function App() {
             path="/forgot/:token"
             component={ForgotPasswordPage}
           />
-          <PrivateRoute exact path="/verify" component={VerificationPage} />
-          <PrivateRoute
+          <PublicRoute exact path="/verify" component={VerificationPage} />
+          <PublicRoute
             exact
             path="/verify/:token"
             component={VerificationPage}

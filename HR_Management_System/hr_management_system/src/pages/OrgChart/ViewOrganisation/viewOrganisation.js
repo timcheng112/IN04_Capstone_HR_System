@@ -51,7 +51,9 @@ export default function ViewOrganisation() {
         //   setOrg(response.data);
         // });
         setToDelete('')
-      })
+      }).then(() => {
+        alert("Department is successfully deleted.")
+        })
       .catch((error) => {
         var message = error.request.response;
         if (message.includes("Department still has teams unable to delete"))

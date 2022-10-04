@@ -267,6 +267,7 @@ public class UserController {
     public List<User> getEmployeesNotInGivenTeam(@RequestParam("teamId") Integer teamId) {
         return userService.getEmployeesNotInGivenTeam(teamId);
     }
+    
     @GetMapping(path = "/getUnassignedEmployees")
     public List<User> getEmployeesWithoutTask(@RequestParam("taskId") Long taskId) {
         return userService.getEmployeesWithoutTask(taskId);
