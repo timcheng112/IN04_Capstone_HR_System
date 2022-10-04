@@ -2,7 +2,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
 
-export default function AddOutletModal({ open, onClose }) {
+export default function AddOutletModal({ open, onClose , deptId}) {
   const [userId, setUserId] = useState(-1);
 
   //addoutlet
@@ -21,6 +21,9 @@ export default function AddOutletModal({ open, onClose }) {
   const [country, setCountry] = useState("");
   //TODO: put the outlet on top of the address: looks better.
   //add user to team
+
+  //add address
+  //add outlet
   function addAddress() {
     console.log("addAddressFunc :" + userId);
     api

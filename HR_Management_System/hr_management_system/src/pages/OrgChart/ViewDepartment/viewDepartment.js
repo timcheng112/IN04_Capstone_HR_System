@@ -3,7 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../../utils/api";
 import axios from "axios";
-import AddOutletModal from "./addTeamModal.js";
+import AddOutletModal from "./addOutletModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
 /* This example requires Tailwind CSS v2.0+ */
@@ -53,7 +53,7 @@ export default function ViewDepartment() {
     deptId &&
     teams && (
       <>
-        {/*<Navbar/>*/}
+        <Navbar/>
         <AddOutletModal
           open={openAdd}
           onClose={() => setOpenAdd(false)}
