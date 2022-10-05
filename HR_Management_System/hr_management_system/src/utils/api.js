@@ -235,11 +235,16 @@ const api = {
       `http://localhost:9191/api/outlet/addOutlet?outletName=${outletName}&contactNo=${contactNo}&openingHour=${openingHour}&closingHour=${closingHour}&addressId=${addressId}`
     );
   },
+  addTeam(teamName, teamHeadId, outletId, isOffice, deptId){
+      return axios.post(
+        `http://localhost:9191/api/address/addTeam?teamHeadId=${teamHeadId}&teamName=${teamName}&outletId=${outletId}&isOffice=${isOffice}&deptId=${deptId}`);
+  },
   changeDepartmentHead(deptId, newHeadId) {
     return axios.put(
         `http://localhost:9191/api/department/changeDepartmentHead?deptId=${deptId}&newHeadId=${newHeadId}`
     )
   }
 };
+
 
 export default api;
