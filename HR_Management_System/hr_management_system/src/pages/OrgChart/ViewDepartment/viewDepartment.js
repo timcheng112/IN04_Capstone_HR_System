@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "../../../utils/api";
 import axios from "axios";
 import AddOutletModal from "./addOutletModal.js";
+import AddTeamModal from "./addTeamModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
 /* This example requires Tailwind CSS v2.0+ */
@@ -15,6 +16,7 @@ export default function ViewDepartment() {
   const [deptId, setDeptId] = useState([]);
   const history = useHistory();
   const [openAdd, setOpenAdd] = useState(false);
+  const [openAddTeam, setOpenAddTeam] = useState(false);
 
   //   function getURL(){
   //     const url = window.location.href;
@@ -59,15 +61,25 @@ export default function ViewDepartment() {
           onClose={() => setOpenAdd(false)}
           deptId={deptId}
         />
+        <AddTeamModal
+            open={openAddTeam}
+            onClose={() => setOpenAddTeam(false)}
+            deptId={deptId}
+          />
         <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
           <div className="px-4 sm:px-6 lg:px-8">
+            <a href="/viewOrg">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="border-2 rounded-full border-black w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
+            </svg></a>
+
             <div className="sm:flex sm:items-center">
               <div className="sm:flex-auto">
                 <h1 className="text-xl font-semibold text-gray-900">
                   Sales Department
                 </h1>
                 <p className="mt-2 text-sm text-gray-700">
-                  A list of all the teams in the Sales Department including
+                  A list of all the teams in the Department including
                   their name, outlet and supervisor.
                 </p>
               </div>
@@ -86,6 +98,7 @@ export default function ViewDepartment() {
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                  onClick={() => setOpenAddTeam(true)}
                 >
                   Add Team
                 </button>
