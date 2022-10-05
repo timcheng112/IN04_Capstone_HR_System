@@ -2,7 +2,6 @@ import Navbar from "../../../components/Navbar.js";
 import { Link, useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../../utils/api";
-import axios from "axios";
 import AddOutletModal from "./addOutletModal.js";
 import AddTeamModal from "./addTeamModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
@@ -17,6 +16,8 @@ export default function ViewDepartment() {
   const history = useHistory();
   const [openAdd, setOpenAdd] = useState(false);
   const [openAddTeam, setOpenAddTeam] = useState(false);
+  const [teamId, setTeamId] = useState([]);
+  
 
   //   function getURL(){
   //     const url = window.location.href;
@@ -39,7 +40,7 @@ export default function ViewDepartment() {
     //   setTeams(response.data.teams);
     // });
     // axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
-    api.getDept(tempDeptId).then((response) => {
+    api.getDept(teamId).then((response) => {
       setDept(response.data);
       setDeptHead(response.data.departmentHead);
       console.log(response.data.departmentHead.firstName);
@@ -49,6 +50,31 @@ export default function ViewDepartment() {
 
     // console.log(dept);
   }, [deptId]);
+
+  //useEffect for getTeam
+  useEffect(() => {
+    // const url = window.location.href;
+    // const tempDeptId = url.substring(31);
+
+    // console.log(url);
+    // console.log(url.substring(url.length -1));
+    // setDeptId(url.substring(31));
+
+    //console.log(url.substring(31));
+    // api.getDept(deptId).then((response) => {
+    //   setDept(response.data);
+    //   setDeptHead(response.data.departmentHead);
+    //   setTeams(response.data.teams);
+    // });
+    // axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
+    api.getAllTeams().then((response) => {
+      setTeams(response.data);
+      console.log(response.data);
+
+    });
+
+    // console.log(dept);
+  }, []);
 
   return (
     dept &&

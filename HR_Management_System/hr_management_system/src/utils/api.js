@@ -235,6 +235,10 @@ const api = {
       `http://localhost:9191/api/address/addAddress?addressName=${outletName}&line1=${contactNo}&line2=${openingHour}&postalCode=${closingHour}&city=${addressId}`
     );
   },
-};
+  addTeam(teamName, teamHeadId, outletId, isOffice, deptId){
+      return axios.post(
+        `http://localhost:9191/api/address/addTeam?teamHeadId=${teamHeadId}&teamName=${teamName}&outletId=${outletId}&isOffice=${isOffice}&deptId=${deptId}`);
+  },
+};  
 
 export default api;
