@@ -20,10 +20,10 @@ import { getUserId } from "../../../utils/Common.js";
 //TODO: UPDATE TABLE WHEN ADDING DEPT ETC? anyway to just update the list without refreshing the whole page? look into!
 
 export default function ViewOrganisation() {
-  const userId = getUserId()
+  const userId = getUserId();
   const [org, setOrg] = useState([]);
   const history = useHistory();
-  const [toDelete, setToDelete] = useState(0)
+  const [toDelete, setToDelete] = useState(0);
 
   useEffect(() => {
     api.getOrganization().then((response) => {
@@ -38,26 +38,25 @@ export default function ViewOrganisation() {
   const [openDelete, setOpenDelete] = useState(false);
 
   const [openChange, setOpenChange] = useState(false);
-  const [deptName, setDeptName] = useState("");
 
   function deleteDept() {
-    console.log("delete department " + toDelete)
-    // console.log("adddeptfunc :" + deptName + " " + deptHeadId);
+    console.log("delete department " + toDelete);
     api
       .deleteDept(toDelete)
       .then((response) => {
-        console.log('deleted? ' + response.data);
+        console.log("deleted? " + response.data);
         // api.getOrganization().then((response) => {
         //   setOrg(response.data);
         // });
-        setToDelete('')
-      }).then(() => {
-        alert("Department is successfully deleted.")
-        })
+        setToDelete("");
+      })
+      .then(() => {
+        alert("Department is successfully deleted.");
+      })
       .catch((error) => {
         var message = error.request.response;
         if (message.includes("Department still has teams unable to delete"))
-        console.log(message);
+          console.log(message);
         alert("Department still has teams");
       });
   }
@@ -275,7 +274,7 @@ export default function ViewOrganisation() {
                                 <a
                                   onClick={() => {
                                     setOpenDelete(true);
-                                    setToDelete(dept.departmentId)
+                                    setToDelete(dept.departmentId);
                                   }}
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >

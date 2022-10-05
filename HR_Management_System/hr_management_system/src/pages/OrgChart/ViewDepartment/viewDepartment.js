@@ -50,7 +50,7 @@ export default function ViewDepartment() {
     });
 
     // console.log(dept);
-  }, [openChange, openAdd, openAddTeam]);
+  }, [dept]);
 
   return (
     dept &&
