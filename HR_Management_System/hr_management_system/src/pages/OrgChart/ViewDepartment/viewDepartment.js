@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import api from "../../../utils/api";
 import axios from "axios";
 import AddOutletModal from "./addOutletModal.js";
-import AddTeamModal from "./addTeamModal.js";
+//import AddTeamModal from "./addTeamModal.js";
+import ChangeDeptHeadModal from "./changeDeptHeadModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
 /* This example requires Tailwind CSS v2.0+ */
@@ -17,6 +18,7 @@ export default function ViewDepartment() {
   const history = useHistory();
   const [openAdd, setOpenAdd] = useState(false);
   const [openAddTeam, setOpenAddTeam] = useState(false);
+  const [openChange, setOpenChange] = useState(false);
 
   //   function getURL(){
   //     const url = window.location.href;
@@ -48,30 +50,49 @@ export default function ViewDepartment() {
     });
 
     // console.log(dept);
-  }, [deptId]);
+  }, [openChange, openAdd, openAddTeam]);
 
   return (
     dept &&
     deptId &&
     teams && (
       <>
-        <Navbar/>
+        <Navbar />
         <AddOutletModal
           open={openAdd}
           onClose={() => setOpenAdd(false)}
           deptId={deptId}
         />
-        <AddTeamModal
-            open={openAddTeam}
-            onClose={() => setOpenAddTeam(false)}
-            deptId={deptId}
-          />
+        {/* <AddTeamModal
+          open={openAddTeam}
+          onClose={() => setOpenAddTeam(false)}
+          deptId={deptId}
+        /> */}
+
+        <ChangeDeptHeadModal
+          deptId={deptId}
+          open={openChange}
+          onClose={() => setOpenChange(false)}
+        />
+
         <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
           <div className="px-4 sm:px-6 lg:px-8">
             <a href="/viewOrg">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="border-2 rounded-full border-black w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
-            </svg></a>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="border-2 rounded-full border-black w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75"
+                />
+              </svg>
+            </a>
 
             <div className="sm:flex sm:items-center">
               <div className="sm:flex-auto">
@@ -79,8 +100,8 @@ export default function ViewDepartment() {
                   Sales Department
                 </h1>
                 <p className="mt-2 text-sm text-gray-700">
-                  A list of all the teams in the Department including
-                  their name, outlet and supervisor.
+                  A list of all the teams in the Department including their
+                  name, outlet and supervisor.
                 </p>
               </div>
 
@@ -173,13 +194,15 @@ export default function ViewDepartment() {
                             </span>
                           </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <a
-                              href="https://www.google.com"
+                            <button
+                              onClick={() => {
+                                setOpenChange(true);
+                              }}
                               className="text-indigo-600 hover:text-indigo-900"
                             >
                               Change
                               <span className="sr-only">, {deptHead.name}</span>
-                            </a>
+                            </button>
                           </td>
                         </tr>
                       </tbody>
