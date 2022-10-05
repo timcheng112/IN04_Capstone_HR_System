@@ -2,15 +2,16 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
 
-export default function AddOutletModal({ open, onClose , deptId}) {
-  const [userId, setUserId] = useState(-1);
+export default function AddOutletModal({ open, onClose, deptId }) {
+  //need this?
+  //const [userId, setUserId] = useState(-1);
 
   //addoutlet
   const [outletName, setOutletName] = useState("");
   const [contactNo, setContactNo] = useState("");
   const [openingHour, setOpeningHour] = useState(0);
   const [closingHour, setClosingHour] = useState(0);
-  const [addressId, setAddressId] = useState("");
+  const [addressId, setAddressId] = useState(-1);
 
   //addAddress
   const [addressName, setAddressName] = useState("");
@@ -25,60 +26,105 @@ export default function AddOutletModal({ open, onClose , deptId}) {
   //add address
   //add outlet
   function addAddress() {
-    console.log("addAddressFunc :" + userId);
+    console.log("addAddressFunc :" + addressName);
+    console.log(
+      "AddressName: " +
+        addressName +
+        " line1: " +
+        line1 +
+        " line2: " +
+        line2 +
+        " postalCode: " +
+        postalCode +
+        " city: " +
+        city +
+        "country: " +
+        country
+    );
     api
-      .addMemberToTeam(parseInt(1), parseInt(userId))
+      .addAddress(addressName, line1, line2, postalCode, city, country)
       .then((response) => {
         if (response.status == 200) {
-          console.log("successfully added user to team!");
+          console.log("successfully created address!");
+          console.log("new addressId: " + response.data);
           alert("success!");
+          setAddressId(parseInt(response.data));
         } else {
-          console.error("failed to add user to team!");
+          console.error("failed to create address!");
         }
       })
       .catch((error) => {
         var message = error.request.response;
         console.log(message);
-        if (
-          message.includes("Employee being assigned is not an active employee")
-        ) {
-          alert("Selected Employee's account is not activated!");
-        } else if (message.includes("Employee is already in the team")) {
-          alert("The selected employee is already in this team!");
-        } else if (
-          message.includes("User being assigned is not an employee,")
-        ) {
-          alert(
-            "The selected user being assigned is not an employee! You may have selected a manager or administrator."
-          );
+        //i left this if here even though it won't trigger in case we add more error checking later.
+        if (message.includes("placeholder error")) {
+          alert("placeholder error! no way you ever see this alert!");
+        } else {
+          alert("Error: " + message);
         }
       });
   }
 
-  const [options, setOptions] = useState(null);
-  useEffect(() => {
-    const availEmployees = async () => {
-      console.log("use effect! teamId:" + 1);
-      const arr = [];
-      await api.getEmployeesNotInGivenTeam(1).then((res) => {
-        let result = res.data;
-        result.map((employee) => {
-          return arr.push({
-            value: employee.userId,
-            label: employee.firstName + " " + employee.lastName,
-          });
-        });
-        setOptions(arr);
-        console.log("fetching options...");
-        console.log(options);
+  function addOutlet() {
+    console.log("addOutletFunc :" + outletName);
+    console.log(
+      "OutletName: " +
+        outletName +
+        " contactNo: " +
+        contactNo +
+        " openingHour: " +
+        openingHour +
+        " closingHour: " +
+        closingHour +
+        " adressId: " +
+        addressId
+    );
+    api
+      .addOutlet(outletName, contactNo, openingHour, closingHour, addressId)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log("successfully created outlet!");
+          alert("success!");
+        } else {
+          console.error("failed to create outlet!");
+        }
+      })
+      .catch((error) => {
+        var message = error.request.response;
+        console.log(message);
+        if (message.includes("Closing time cannot be before opening time!")) {
+          alert("Closing time cannot be before opening time!");
+        } else {
+          alert("Error: " + message);
+        }
       });
-    };
-    availEmployees();
-  });
+  }
+
+  // const [options, setOptions] = useState(null);
+  // useEffect(() => {
+  //   const availEmployees = async () => {
+  //     console.log("use effect! teamId:" + 1);
+  //     const arr = [];
+  //     await api.getEmployeesNotInGivenTeam(1).then((res) => {
+  //       let result = res.data;
+  //       result.map((employee) => {
+  //         return arr.push({
+  //           value: employee.userId,
+  //           label: employee.firstName + " " + employee.lastName,
+  //         });
+  //       });
+  //       setOptions(arr);
+  //       console.log("fetching options...");
+  //       console.log(options);
+  //     });
+  //   };
+  //   availEmployees();
+  // });
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     addAddress();
+    addOutlet();
   };
 
   const cancelButtonRef = useRef(null);
@@ -142,6 +188,9 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                               </label>
                               <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                                 <input
+                                  onChange={(e) =>
+                                    setOutletName(String(e.target.value))
+                                  }
                                   type="text"
                                   name="outlet-name"
                                   id="outlet-name"
@@ -158,6 +207,9 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                               </label>
                               <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                                 <input
+                                  onChange={(e) =>
+                                    setContactNo(String(e.target.value))
+                                  }
                                   type="text"
                                   name="contact-no"
                                   id="contact-no"
@@ -174,6 +226,9 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                               </label>
                               <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                                 <input
+                                  onChange={(e) =>
+                                    setOpeningHour(e.target.value)
+                                  }
                                   type="number"
                                   name="opening-hour"
                                   id="opening-hour"
@@ -191,6 +246,9 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                               </label>
                               <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                                 <input
+                                  onChange={(e) =>
+                                    setClosingHour(e.target.value)
+                                  }
                                   type="number"
                                   name="closing-hour"
                                   id="closing-hour"
@@ -222,10 +280,12 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                             </label>
                             <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                               <input
+                                onChange={(e) =>
+                                  setAddressName(String(e.target.value))
+                                }
                                 type="text"
-                                name="last-name"
-                                id="last-name"
-                                autoComplete="family-name"
+                                name="address-name"
+                                id="address-name"
                                 className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm px-2"
                               />
                             </div>
@@ -236,10 +296,13 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                               htmlFor="line1"
                               className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                             >
-                              Line 1
+                              Address
                             </label>
                             <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                               <input
+                                onChange={(e) =>
+                                  setLine1(String(e.target.value))
+                                }
                                 type="text"
                                 name="line1"
                                 id="line1"
@@ -252,10 +315,17 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                               htmlFor="line2"
                               className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                             >
-                              Line 2
+                              Unit Number
                             </label>
                             <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                               <input
+                                onChange={(e) => {
+                                  var tempPC = e.target.value;
+                                  if (tempPC.charAt(0) == "#") {
+                                    tempPC = tempPC.substring(1);
+                                  }
+                                  setLine2(tempPC);
+                                }}
                                 type="text"
                                 name="line2"
                                 id="line2"
@@ -273,6 +343,9 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                             </label>
                             <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                               <input
+                                onChange={(e) =>
+                                  setPostalCode(String(e.target.value))
+                                }
                                 type="text"
                                 name="postal-code"
                                 id="postal-code"
@@ -290,6 +363,9 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                             </label>
                             <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                               <input
+                                onChange={(e) =>
+                                  setCity(String(e.target.value))
+                                }
                                 type="text"
                                 name="city"
                                 id="city"
@@ -307,6 +383,9 @@ export default function AddOutletModal({ open, onClose , deptId}) {
                             </label>
                             <div className="mt-1 sm:col-span-2 sm:mt-2 sm:mb-2">
                               <input
+                                onChange={(e) =>
+                                  setCountry(String(e.target.value))
+                                }
                                 type="text"
                                 name="country"
                                 id="country"
