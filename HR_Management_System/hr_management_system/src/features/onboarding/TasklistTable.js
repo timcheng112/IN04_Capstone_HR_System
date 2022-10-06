@@ -40,7 +40,7 @@ function TasklistTable({ categories, setCategories, refreshKeyHandler }) {
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      colSpan={2}
+                      colSpan={4}
                     >
                       Description
                     </th>
@@ -49,15 +49,16 @@ function TasklistTable({ categories, setCategories, refreshKeyHandler }) {
                 <tbody className="bg-white">
                   {categories.map((category) => (
                     <Fragment key={category.name}>
-                      <tr className="border-t border-gray-200">
+                      <tr className="border-t border-gray-200 bg-gray-50">
                         <th
                           colSpan={2}
                           scope="col"
-                          className="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6"
+                          className=" px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6"
                         >
                           {category.name}
                         </th>
-                        <th className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 bg-gray-50">
+                        <th colSpan={2} />
+                        <th className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 ">
                           <CategoryOptions
                             category={category}
                             refreshKeyHandler={refreshKeyHandler}
@@ -77,15 +78,22 @@ function TasklistTable({ categories, setCategories, refreshKeyHandler }) {
                                 "border-t"
                               )}
                             >
-                              <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                              <td
+                                colSpan={2}
+                                className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                              >
                                 {task.name}
                               </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                              <td
+                                colSpan={2}
+                                className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500"
+                              >
                                 {task.description}
                               </td>
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                 <TaskOptions
                                   task={task}
+                                  refreshKeyHandler={refreshKeyHandler}
                                   //   setTask={setTask}
                                 />
                               </td>

@@ -146,9 +146,7 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
 
       <AddTaskModal
         open={openAdd}
-        onClose={() => {
-          setOpenAdd(false);
-        }}
+        onClose={() => setOpenAdd(false)}
         category={category}
         refreshKeyHandler={refreshKeyHandler}
       />
