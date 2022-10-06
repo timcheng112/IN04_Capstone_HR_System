@@ -51,7 +51,6 @@ export default function AddTaskModal({
     createTask();
     onClose();
     //createTaskListItem()
-    alert("Successfully created task.");
     refreshKeyHandler();
   };
   function createTask() {
@@ -63,7 +62,6 @@ export default function AddTaskModal({
     api
       .addNewTask(task, category.categoryId)
       .then((result) => {
-        console.log("RESULT DATA: " + result.data);
         createTaskListItem(result.data);
       })
       .catch((error) => setError(error));
@@ -71,12 +69,14 @@ export default function AddTaskModal({
 
   function createTaskListItem(taskId) {
     const taskListItem = { isDone: false };
-    assignedEmployees.forEach((employee) => {
-      api
-        .addNewTaskListItem(employee.userId, taskId, taskListItem)
-        .then(() => console.log("Task List Item created"))
-        .catch((error) => setError(error));
-    });
+    assignedEmployees
+      .forEach((employee) => {
+        api
+          .addNewTaskListItem(employee.userId, taskId, taskListItem)
+          .then(() => console.log("Task List Item created"))
+          .catch((error) => setError(error));
+      })
+      .then(() => alert("Successfully created task."));
   }
 
   function search(e, items, isUnassigned) {

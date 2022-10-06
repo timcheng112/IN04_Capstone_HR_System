@@ -199,7 +199,8 @@ public class UserService implements UserDetailsService {
     }
 
     public List<User> getEmployeesWithoutTask(Long taskId) {
-        List<User> employees = userRepository.findEmployeesWithoutTask(RoleEnum.EMPLOYEE, taskId);
+        List<User> employees = userRepository.findEmployeesWithoutTask(taskId, RoleEnum.ADMINISTRATOR,
+                RoleEnum.APPLICANT);
         for (User employee : employees) {
             for (TaskListItem taskListItem : employee.getTaskListItems()) {
                 taskListItem.setUser(null);
@@ -211,7 +212,7 @@ public class UserService implements UserDetailsService {
     }
 
     public List<User> getEmployeesWithTask(Long taskId) {
-        List<User> employees = userRepository.findEmployeesWithTask(RoleEnum.EMPLOYEE, taskId);
+        List<User> employees = userRepository.findEmployeesWithTask(taskId, RoleEnum.ADMINISTRATOR, RoleEnum.APPLICANT);
         for (User employee : employees) {
             for (TaskListItem taskListItem : employee.getTaskListItems()) {
                 taskListItem.setUser(null);
@@ -1003,7 +1004,8 @@ public class UserService implements UserDetailsService {
         System.out.println("UserService.getEmployeesNotInGivenTeam");
         System.out.println("teamId = " + teamId);
 
-        List<User> employees = userRepository.getEmployeesNotInGivenTeam(RoleEnum.MANAGER, RoleEnum.EMPLOYEE, Long.valueOf(teamId));
+        List<User> employees = userRepository.getEmployeesNotInGivenTeam(RoleEnum.MANAGER, RoleEnum.EMPLOYEE,
+                Long.valueOf(teamId));
 
         if (employees.isEmpty()) {
             throw new IllegalStateException("Employees not found.");
