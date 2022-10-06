@@ -62,6 +62,49 @@ public class TeamService {
         return teams;
     }
 
+    public List<Team> getAllTeamsInDept(Long deptId) {
+        System.out.println("TeamService.getAllTeamsInDept");
+        List<Team> teams = teamRepository.findAll();
+
+        List<Team> teamsInDept = new ArrayList<>();
+
+        if (teams.isEmpty()) {
+            throw new IllegalStateException("Unable to retrieve, no teams exist");
+        }
+
+        for (Team t : teams) {
+
+            System.out.println("Team ID is : " + t.getTeamId() + ", Team name is : " + t.getTeamName());
+            Department d = t.getDepartment();
+
+            if (d.getDepartmentId() == deptId) {
+                teamsInDept.add(t);
+            }
+        }
+
+        for (Team t: teamsInDept) {
+            System.out.println("Team ID is : " + t.getTeamId() + ", Team name is : " + t.getTeamName());
+            Department d = t.getDepartment();
+
+            d.setTeams(new ArrayList<>());
+            d.setDepartmentHead(null);
+            d.setOrganization(null);
+
+            List<User> teamMembers = t.getUsers();
+            for (User member : teamMembers) {
+                member.setTeams(new ArrayList<>());
+            }
+
+            t.getRoster().setTeam(null);
+            t.getRoster().setBlocks(new ArrayList<>());
+            t.getRoster().setShifts(new ArrayList<>());
+
+            t.getTeamHead().setTeams(new ArrayList<>());
+        }
+
+        return teamsInDept;
+    }
+
     public Team getTeam(Long id){
         Optional<Team> team = teamRepository.findById(id);
         if(team.isPresent()){

@@ -20,7 +20,6 @@ export default function ViewDepartment() {
   const [teamId, setTeamId] = useState([]);
   const [openChange, setOpenChange] = useState(false);
 
-
   //   function getURL(){
   //     const url = window.location.href;
   //     const deptId = url.slice(-1);
@@ -42,7 +41,7 @@ export default function ViewDepartment() {
     //   setTeams(response.data.teams);
     // });
     // axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
-    api.getDept(teamId).then((response) => {
+    api.getDept(tempDeptId).then((response) => {
       setDept(response.data);
       setDeptHead(response.data.departmentHead);
       console.log(response.data.departmentHead.firstName);
@@ -72,7 +71,6 @@ export default function ViewDepartment() {
     api.getAllTeams().then((response) => {
       setTeams(response.data);
       console.log(response.data);
-
     });
 
     // console.log(dept);

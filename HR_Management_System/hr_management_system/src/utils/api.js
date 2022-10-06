@@ -242,8 +242,13 @@ const api = {
   changeDepartmentHead(deptId, newHeadId) {
     return axios.put(
         `http://localhost:9191/api/department/changeDepartmentHead?deptId=${deptId}&newHeadId=${newHeadId}`
-    )
-  }
+    );
+  },
+  getAllTeamsInDept(deptId) {
+    return axios.get(
+        `http://localhost:9191/api/team/getAllTeamsInDept/${deptId}`
+    );
+  },
 };
 
 
