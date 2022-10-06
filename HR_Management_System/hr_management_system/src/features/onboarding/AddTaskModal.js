@@ -47,7 +47,17 @@ export default function AddTaskModal({
       .catch((error) => setError(error));
   }, []);
 
-  const handleSubmit = () => {
+  useEffect(()=>{
+    if(!open){
+      setName('')
+      setDescription('')
+      setAssignedEmployees([])
+      setShowStepOne(true)
+    }
+  },[open])
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
     createTask();
     onClose();
     //createTaskListItem()
@@ -148,11 +158,7 @@ export default function AddTaskModal({
       <Dialog
         as="div"
         className="relative z-10"
-        onClose={() => {
-          onClose();
-          // setRefreshKeyModal((oldKey) => oldKey + 1);
-          setShowStepOne(true);
-        }}
+        onClose={onClose}
       >
         <Transition.Child
           as={Fragment}

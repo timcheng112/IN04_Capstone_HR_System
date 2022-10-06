@@ -32,6 +32,11 @@ export default function AddCategoryModal({ open, onClose, refreshKeyHandler }) {
   //     .then(response => setUser(response.data))
   //     .catch((error) => setError(error))
   // }, [])
+  useEffect(()=>{
+    if(!open){
+      setName('')
+    }
+  },[open])
 
   return (
     //user &&

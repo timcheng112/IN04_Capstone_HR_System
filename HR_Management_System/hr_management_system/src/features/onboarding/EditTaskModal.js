@@ -1,7 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-// import InputText from '../../components/inputText';
-// import TextArea from '../../components/textArea';
+import { Fragment, useState, useEffect } from "react";
 import api from "../../utils/api";
 /* global BigInt */
 
@@ -24,9 +22,9 @@ export default function EditTaskModal({
   const [refreshKeyModal, setRefreshKeyModal] = useState(0);
 
   const handleSubmit = () => {
+    //evt.preventDefault();
     editTask();
     onClose();
-    //createTaskListItem()
     refreshKeyHandler();
   };
   function editTask() {
@@ -37,6 +35,12 @@ export default function EditTaskModal({
       })
       .catch((error) => alert(error.response.data.message));
   }
+  // useEffect(()=>{
+  //   if(!open){
+  //     setName('')
+  //     setDescription('')
+  //   }
+  // },[open])
 
   return (
     // user && (
