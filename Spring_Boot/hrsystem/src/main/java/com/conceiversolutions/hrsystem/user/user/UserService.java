@@ -888,6 +888,7 @@ public class UserService implements UserDetailsService {
 
     public List<User> getAllEmployees() {
         List<User> employees = userRepository.findAllByRole(RoleEnum.EMPLOYEE);
+        employees.addAll(userRepository.findAllByRole(RoleEnum.MANAGER));
         System.out.println("size of employees list is " + employees.size());
         for (User u : employees) {
             List<Team> teams = u.getTeams();
@@ -906,7 +907,6 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             // u.setTeams(new ArrayList<>());
         }
-
         return employees;
     }
 
