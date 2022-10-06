@@ -33,12 +33,10 @@ function SelfTasklistTable({
   const history = useHistory();
 
   function deleteTaskListItem(taskListItemId) {
-    api
-      .deleteTaskListItem(taskListItemId)
-      .then(() => {
-        console.log("Successfully cleared");
-      })
-      .catch((error) => setError(error));
+    api.deleteTaskListItem(taskListItemId).then(() => {
+      alert("Successfully deleted!");
+      refreshKeyHandler();
+    })
   }
   function onClickHandler(taskListItem) {
     // setTaskListItemsCopy(

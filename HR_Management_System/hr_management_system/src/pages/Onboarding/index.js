@@ -1,7 +1,7 @@
 import { React, useRef } from "react";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
-import SelfTasklistTable from "../../features/Onboarding/SelfTasklistTable";
+import SelfTasklistTable from "../../features/onboarding/SelfTasklistTable";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { getUserId, setUserSession } from "../../utils/Common";
@@ -13,6 +13,7 @@ export default function Onboarding() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const history = useHistory();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     api
@@ -31,7 +32,7 @@ export default function Onboarding() {
         setTaskListItems(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
   if (error) return `Error`;
 
@@ -65,6 +66,7 @@ export default function Onboarding() {
             <SelfTasklistTable
               taskListItems={taskListItems}
               setTaskListItems={setTaskListItems}
+              refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
             />
           </div>
         </main>

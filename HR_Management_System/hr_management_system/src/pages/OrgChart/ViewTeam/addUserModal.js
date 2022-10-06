@@ -1,40 +1,42 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
-import { getUserId } from "../../../utils/Common";
 
-export default function AddDepartmentModal({ open, onClose }) {
-  const userId = getUserId()
-  const [deptName, setDeptName] = useState("");
-  const [deptHeadId, setDeptHeadId] = useState(-1);
+export default function AddUserModal({ open, onClose, teamId }) {
+  const [userId, setUserId] = useState(-1);
 
-  function addDepartment() {
-    if (deptHeadId === -1) {
-      alert("Please select a Manager!");
+  //add user to team
+  function addUser() {
+    if (userId === -1) {
+      alert("Please select a User!");
     } else {
-      console.log("adddeptfunc :" + deptName + " " + deptHeadId);
+      console.log("adduserfunc :" + teamId + " " + userId);
       api
-        .addDepartment(deptName, parseInt(deptHeadId))
+        .addMemberToTeam(parseInt(teamId), parseInt(userId))
         .then((response) => {
           if (response.status == 200) {
-            console.log("successfully added new dept!");
-            alert("Department has been successfully created.")
+            console.log("successfully added user to team!");
+            alert("success!");
           } else {
-            console.error("failed to add new dept!");
+            console.error("failed to add user to team!");
           }
         })
         .catch((error) => {
           var message = error.request.response;
           console.log(message);
-          if (message.includes("User selected is not a Manager")) {
-            alert(
-              "The user you selected was not a manager! Please select a manager to be the department head."
-            );
+          if (
+            message.includes(
+              "Employee being assigned is not an active employee"
+            )
+          ) {
+            alert("Selected Employee's account is not activated!");
+          } else if (message.includes("Employee is already in the team")) {
+            alert("The selected employee is already in this team!");
           } else if (
-            message.includes("Manager selected is not an active employee")
+            message.includes("User being assigned is not an employee,")
           ) {
             alert(
-              "The selected employee is not enabled! Please select another manager or seek administrative help to enable the manager's account."
+              "The selected user being assigned is not an employee! You may have selected a manager or administrator."
             );
           }
         });
@@ -43,31 +45,28 @@ export default function AddDepartmentModal({ open, onClose }) {
 
   const [options, setOptions] = useState(null);
   useEffect(() => {
-    const availManagers = async () => {
+    const availEmployees = async () => {
+      console.log("use effect! teamId:" + teamId);
       const arr = [];
-      await api.getAvailManagers().then((res) => {
+      await api.getEmployeesNotInGivenTeam(teamId).then((res) => {
         let result = res.data;
-        result.map((manager) => {
+        result.map((employee) => {
           return arr.push({
-            value: manager.userId,
-            label: manager.firstName + " " + manager.lastName,
+            value: employee.userId,
+            label: employee.firstName + " " + employee.lastName,
           });
         });
         setOptions(arr);
         console.log("fetching options...");
         console.log(options);
-        // console.log("HELLO!");
-        // console.log(res);
-        // console.log(res.data);
-        // console.log(typeof res.data.items);
       });
     };
-    availManagers();
-  }, [userId]);
+    availEmployees();
+  });
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    addDepartment();
+    addUser();
   };
 
   const cancelButtonRef = useRef(null);
@@ -114,51 +113,29 @@ export default function AddDepartmentModal({ open, onClose }) {
                         <div className="space-y-6 pt-8 sm:space-y-5 sm:pt-10">
                           <div>
                             <h3 className="text-lg font-medium leading-6 text-gray-900">
-                              Create a Department
+                              Add an Employee
                             </h3>
                             <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                              Create a new department by providing the name of
-                              this new department and selecting a manager to
-                              head this department.
+                              Add an employee to the team.
                             </p>
                           </div>
                           <div className="space-y-6 sm:space-y-5">
-                            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5 mt-0">
-                              <label
-                                htmlFor="dept-name"
-                                className="block text-sm font-medium text-gray-700 sm:pt-2"
-                              >
-                                Department Name
-                              </label>
-                              <div className="mt-2 sm:col-span-2">
-                                <input
-                                  onChange={(e) => setDeptName(e.target.value)}
-                                  type="text"
-                                  name="dept-name"
-                                  id="dept-name"
-                                  className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm px-2"
-                                />
-                              </div>
-                            </div>
-
                             <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                               <label
-                                htmlFor="country"
+                                htmlFor="employee"
                                 className="block text-sm font-medium text-gray-700 sm:pt-2"
                               >
-                                Department Head
+                                Employee
                               </label>
                               <div className="mt-2 sm:col-span-2 ">
                                 <select
-                                  onChange={(e) =>
-                                    setDeptHeadId(e.target.value)
-                                  }
+                                  onChange={(e) => setUserId(e.target.value)}
                                   // placeholder="Select a Manager (might take a while...)"
-                                  id="deptHead"
-                                  name="deptHead"
+                                  id="user"
+                                  name="user"
                                   className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                                 >
-                                  <option>Select A Manager...</option>
+                                  <option>Select An Employee...</option>
                                   {/*<option>1</option>*/}
                                   {options !== null &&
                                     options.map((option, index) => {
@@ -191,7 +168,7 @@ export default function AddDepartmentModal({ open, onClose }) {
                             type="submit"
                             className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                           >
-                            Create
+                            Add
                           </button>
                         </div>
                       </div>

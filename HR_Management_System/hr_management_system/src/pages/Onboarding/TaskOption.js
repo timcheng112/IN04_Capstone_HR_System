@@ -9,10 +9,9 @@ import {
   TrashIcon,
 } from "@heroicons/react/20/solid";
 
-import AddTaskModal from "../../features/Onboarding/AddTaskModal";
-import ViewTaskModal from "../../features/Onboarding/ViewTaskModal";
+import AddTaskModal from "../../features/onboarding/AddTaskModal";
+import ViewTaskModal from "../../features/onboarding/ViewTaskModal";
 import ConfirmDialog from "../../components/ConfirmDialog";
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

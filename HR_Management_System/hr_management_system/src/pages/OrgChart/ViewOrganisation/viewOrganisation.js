@@ -51,7 +51,9 @@ export default function ViewOrganisation() {
         //   setOrg(response.data);
         // });
         setToDelete('')
-      })
+      }).then(() => {
+        alert("Department is successfully deleted.")
+        })
       .catch((error) => {
         var message = error.request.response;
         if (message.includes("Department still has teams unable to delete"))
@@ -72,7 +74,6 @@ export default function ViewOrganisation() {
 
           <DeleteDeptModal
             open={openDelete}
-
             onClose={() => setOpenDelete(false)}
           />
 
@@ -258,8 +259,14 @@ export default function ViewOrganisation() {
                               </td>
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                 {/*THE VIEW BUTTON IS HERE!!!!*/}
-                                <button className="text-indigo-600 hover:text-indigo-900"
-                                onClick={() => history.push("/viewDept/" + dept.departmentId)}>
+                                <button
+                                  className="text-indigo-600 hover:text-indigo-900"
+                                  onClick={() =>
+                                    history.push(
+                                      "/viewDept/" + dept.departmentId
+                                    )
+                                  }
+                                >
                                   View
                                   <span className="sr-only">, {dept.name}</span>
                                 </button>
