@@ -11,15 +11,15 @@ function classNames(...classes) {
 export default function AddTeamModal({ open, onClose, deptId }) {
   const userId = getUserId();
   const [teamName, setTeamName] = useState("");
-  const [deptHeadId, setDeptHeadId] = useState(-1);
+//   const [deptHeadId, setDeptHeadId] = useState(-1);
   const [teamHeadId, setTeamHeadId] = useState(-1);
   const [outlet, setOutletId] = useState("");
-  const [inOffice, setInOffice] = useState(false);
+  const [ inOffice, setInOffice] = useState(false);
 
   //teamName, teamHeadId, outletId, isOffice, deptId
-  console.log(deptId + "$$$");
+//  console.log(deptId + "$$$");
   const cancelButtonRef = useRef(null);
-  //   console.log(props.outletId + "OUTLET");
+//   console.log(props.outletId + "OUTLET");
 
   function addTeam() {
     if (teamHeadId === -1) {
@@ -85,10 +85,10 @@ export default function AddTeamModal({ open, onClose, deptId }) {
       const arr = [];
       await api.getAllOutlets().then((response) => {
         console.log(response.data);
-        response.data.map((outlet) => {
+        (response.data).map((outlet) => {
           return arr.push({
             value: outlet.outletId,
-            label: outlet.outletName,
+            label: outlet.outletName
           });
         });
         setOutletOptions(arr);
@@ -97,6 +97,8 @@ export default function AddTeamModal({ open, onClose, deptId }) {
       });
     };
     outletAvail();
+  }, [deptId, outletOptions]);
+
   }, [outletOptions]);
 
   const handleSubmit = (evt) => {

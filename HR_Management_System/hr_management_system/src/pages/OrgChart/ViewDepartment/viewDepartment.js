@@ -7,8 +7,6 @@ import AddTeamModal from "./addTeamModal.js";
 import ChangeDeptHeadModal from "./changeDeptHeadModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
-//TODO: Create Outlet Modal does not autoclose.
-
 /* This example requires Tailwind CSS v2.0+ */
 
 export default function ViewDepartment() {
@@ -32,8 +30,11 @@ export default function ViewDepartment() {
     const url = window.location.href;
     const tempDeptId = url.substring(31);
 
+    // console.log(url);
+    // console.log(url.substring(url.length -1));
     setDeptId(url.substring(31));
 
+    //console.log(url.substring(31));
     // api.getDept(deptId).then((response) => {
     //   setDept(response.data);
     //   setDeptHead(response.data.departmentHead);
@@ -45,14 +46,16 @@ export default function ViewDepartment() {
       setDeptHead(response.data.departmentHead);
       console.log("USE EFFECT 1: get departmentHead Name");
       console.log(response.data.departmentHead.firstName);
-      setTeams(response.data.teams);
+      // setTeams(response.data.teams);
       console.log("USE EFFECT 1: get departmentHead");
       console.log(response.data.departmentHead);
+      // console.log("USE EFFECT 1: get teams ");
+      // console.log(response.data.teams);
     });
     // console.log(dept);
   }, [deptId]);
 
-  //useEffect for getTeam
+  // useEffect for getTeam
   useEffect(() => {
     api.getAllTeams().then((response) => {
       setTeams(response.data);
@@ -61,7 +64,7 @@ export default function ViewDepartment() {
     });
 
     // console.log(dept);
-  }, [teams]);
+  }, [deptId]);
 
   return (
     dept &&
@@ -274,6 +277,7 @@ export default function ViewDepartment() {
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                               {team.teamName}
                             </td>
+                            {console.log(team)}
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {team.outlet.outletName}
                             </td>
