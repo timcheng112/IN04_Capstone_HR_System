@@ -99,7 +99,6 @@ export default function AddTeamModal({ open, onClose, deptId }) {
     outletAvail();
   }, [deptId, outletOptions]);
 
-  }, [outletOptions]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
