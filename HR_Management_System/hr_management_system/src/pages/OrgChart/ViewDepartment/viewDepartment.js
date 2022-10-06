@@ -7,6 +7,8 @@ import AddTeamModal from "./addTeamModal.js";
 import ChangeDeptHeadModal from "./changeDeptHeadModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
+//TODO: Create Outlet Modal does not autoclose.
+
 /* This example requires Tailwind CSS v2.0+ */
 
 export default function ViewDepartment() {
@@ -30,11 +32,8 @@ export default function ViewDepartment() {
     const url = window.location.href;
     const tempDeptId = url.substring(31);
 
-    // console.log(url);
-    // console.log(url.substring(url.length -1));
     setDeptId(url.substring(31));
 
-    //console.log(url.substring(31));
     // api.getDept(deptId).then((response) => {
     //   setDept(response.data);
     //   setDeptHead(response.data.departmentHead);
@@ -51,7 +50,7 @@ export default function ViewDepartment() {
       console.log(response.data.departmentHead);
     });
     // console.log(dept);
-  }, []);
+  }, [deptId]);
 
   //useEffect for getTeam
   useEffect(() => {
@@ -62,7 +61,7 @@ export default function ViewDepartment() {
     });
 
     // console.log(dept);
-  }, [dept]);
+  }, [teams]);
 
   return (
     dept &&

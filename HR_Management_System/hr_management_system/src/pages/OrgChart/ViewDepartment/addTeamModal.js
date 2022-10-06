@@ -5,33 +5,33 @@ import { getUserId } from "../../../utils/Common";
 import { Switch } from "@headlessui/react";
 
 function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
+  return classes.filter(Boolean).join(" ");
+}
 
 export default function AddTeamModal({ open, onClose, deptId }) {
-  const userId = getUserId()
+  const userId = getUserId();
   const [teamName, setTeamName] = useState("");
   const [deptHeadId, setDeptHeadId] = useState(-1);
   const [teamHeadId, setTeamHeadId] = useState(-1);
   const [outlet, setOutletId] = useState("");
-  const [ inOffice, setInOffice] = useState(false);
+  const [inOffice, setInOffice] = useState(false);
 
   //teamName, teamHeadId, outletId, isOffice, deptId
-  console.log(deptId + "$$$")
+  console.log(deptId + "$$$");
   const cancelButtonRef = useRef(null);
-//   console.log(props.outletId + "OUTLET");
+  //   console.log(props.outletId + "OUTLET");
 
   function addTeam() {
     if (teamHeadId === -1) {
       alert("Please select a Manager!");
     } else {
-      console.log("addTeamfunc :" + teamName + " " + teamHeadId + " " );
+      console.log("addTeamfunc :" + teamName + " " + teamHeadId + " ");
       api
-        .addTeam(teamName, parseInt(teamHeadId), outlet, inOffice, deptId )
+        .addTeam(teamName, parseInt(teamHeadId), outlet, inOffice, deptId)
         .then((response) => {
           if (response.status == 200) {
             console.log("successfully added new team!");
-            alert("Team has been successfully created.")
+            alert("Team has been successfully created.");
           } else {
             console.error("failed to add new team!");
           }
@@ -78,7 +78,6 @@ export default function AddTeamModal({ open, onClose, deptId }) {
     availManagers();
   }, [userId]);
 
-
   const [outletOptions, setOutletOptions] = useState(null);
 
   useEffect(() => {
@@ -86,28 +85,24 @@ export default function AddTeamModal({ open, onClose, deptId }) {
       const arr = [];
       await api.getAllOutlets().then((response) => {
         console.log(response.data);
-        (response.data).map((outlet) => {
+        response.data.map((outlet) => {
           return arr.push({
             value: outlet.outletId,
-            label: outlet.outletName 
+            label: outlet.outletName,
           });
         });
         setOutletOptions(arr);
         console.log("fetching options...");
         console.log(outletOptions);
-
       });
     };
     outletAvail();
-  }, [deptId]);
-
+  }, [outletOptions]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     addTeam();
   };
-
-
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -154,9 +149,9 @@ export default function AddTeamModal({ open, onClose, deptId }) {
                               Create a Team
                             </h3>
                             <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                              Create a new team by providing the name of
-                              this new team and selecting a manager to
-                              head this department.
+                              Create a new team by providing the name of this
+                              new team and selecting a manager to head this
+                              department.
                             </p>
                           </div>
                           <div className="space-y-6 sm:space-y-5">
@@ -195,7 +190,9 @@ export default function AddTeamModal({ open, onClose, deptId }) {
                                   name="teamHead"
                                   className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                                 >
-                                  <option>Select A Team Head (Manager)...</option>
+                                  <option>
+                                    Select A Team Head (Manager)...
+                                  </option>
                                   {/*<option>1</option>*/}
                                   {options !== null &&
                                     options.map((option, index) => {
@@ -212,7 +209,6 @@ export default function AddTeamModal({ open, onClose, deptId }) {
                               </div>
                             </div>
 
-                            
                             <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                               <label
                                 htmlFor="country"
@@ -222,16 +218,13 @@ export default function AddTeamModal({ open, onClose, deptId }) {
                               </label>
                               <div className="mt-2 sm:col-span-2 ">
                                 <select
-                                  onChange={(e) =>
-                                    setOutletId(e.target.value)
-                                  }
-                              
+                                  onChange={(e) => setOutletId(e.target.value)}
                                   id="outlet"
                                   name="outlet"
                                   className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                                 >
                                   <option>Select Outlet</option>
-                            
+
                                   {outletOptions !== null &&
                                     outletOptions.map((option, index) => {
                                       return (
@@ -266,16 +259,14 @@ export default function AddTeamModal({ open, onClose, deptId }) {
                                   checked={inOffice}
                                   onChange={setInOffice}
                                   className={classNames(
-                                    inOffice
-                                      ? "bg-indigo-600"
-                                      : "bg-gray-200",
+                                    inOffice ? "bg-indigo-600" : "bg-gray-200",
                                     "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                   )}
                                 >
                                   <span
                                     aria-hidden="true"
                                     className={classNames(
-                                        inOffice
+                                      inOffice
                                         ? "translate-x-5"
                                         : "translate-x-0",
                                       "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white ring-0 transition duration-200 ease-in-out"
@@ -284,10 +275,6 @@ export default function AddTeamModal({ open, onClose, deptId }) {
                                 </Switch>
                               </Switch.Group>
                             </div>
-
-
-
-
                           </div>
                         </div>
                       </div>
