@@ -20,7 +20,6 @@ export default function ViewDepartment() {
   const [teamId, setTeamId] = useState([]);
   const [openChange, setOpenChange] = useState(false);
 
-
   //   function getURL(){
   //     const url = window.location.href;
   //     const deptId = url.slice(-1);
@@ -71,8 +70,8 @@ export default function ViewDepartment() {
     // axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
     api.getAllTeams().then((response) => {
       setTeams(response.data);
+      console.log("printing response data");
       console.log(response.data + "$$$$$$$$$$");
-
     });
 
     // console.log(dept);
