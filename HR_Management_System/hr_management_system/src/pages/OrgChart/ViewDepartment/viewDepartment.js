@@ -44,38 +44,25 @@ export default function ViewDepartment() {
     api.getDept(tempDeptId).then((response) => {
       setDept(response.data);
       setDeptHead(response.data.departmentHead);
+      console.log("USE EFFECT 1: get departmentHead Name");
       console.log(response.data.departmentHead.firstName);
       setTeams(response.data.teams);
+      console.log("USE EFFECT 1: get departmentHead");
       console.log(response.data.departmentHead);
+    });
+    // console.log(dept);
+  }, []);
+
+  //useEffect for getTeam
+  useEffect(() => {
+    api.getAllTeams().then((response) => {
+      setTeams(response.data);
+      console.log("USE EFFECT 2: getAllTeams");
+      console.log(response.data);
     });
 
     // console.log(dept);
   }, [dept]);
-
-  //useEffect for getTeam
-  useEffect(() => {
-    // const url = window.location.href;
-    // const tempDeptId = url.substring(31);
-
-    // console.log(url);
-    // console.log(url.substring(url.length -1));
-    // setDeptId(url.substring(31));
-
-    //console.log(url.substring(31));
-    // api.getDept(deptId).then((response) => {
-    //   setDept(response.data);
-    //   setDeptHead(response.data.departmentHead);
-    //   setTeams(response.data.teams);
-    // });
-    // axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
-    api.getAllTeams().then((response) => {
-      setTeams(response.data);
-      console.log("printing response data");
-      console.log(response.data + "$$$$$$$$$$");
-    });
-
-    // console.log(dept);
-  }, []);
 
   return (
     dept &&
@@ -241,7 +228,7 @@ export default function ViewDepartment() {
               <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                   <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                    {/* <table className="min-w-full divide-y divide-gray-300">
+                    <table className="min-w-full divide-y divide-gray-300">
                       <thead className="bg-gray-50">
                         <tr>
                           <th
@@ -289,10 +276,10 @@ export default function ViewDepartment() {
                               {team.teamName}
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {team.outlet}
+                              {team.outlet.outletName}
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {team.teamHead}
+                              {team.teamHead.firstName + team.teamHead.lastName}
                             </td>
 
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
@@ -318,7 +305,7 @@ export default function ViewDepartment() {
                           </tr>
                         ))}
                       </tbody>
-                    </table> */}
+                    </table>
                   </div>
                 </div>
               </div>
