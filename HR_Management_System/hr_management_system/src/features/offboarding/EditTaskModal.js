@@ -26,7 +26,6 @@ export default function EditTaskModal({
     "lastName",
     "workEmail",
   ]);
-  const [refreshKeyModal, setRefreshKeyModal] = useState(0);
 
   const handleSubmit = () => {
     //evt.preventDefault();
