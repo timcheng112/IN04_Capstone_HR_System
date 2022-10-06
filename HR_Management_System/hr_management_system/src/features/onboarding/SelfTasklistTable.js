@@ -6,7 +6,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function SelfTasklistTable({ taskListItems, setTaskListItems }) {
+function SelfTasklistTable({ taskListItems, setTaskListItems, refreshKeyHandler }) {
   // const [taskListItems, setTaskListItems] = useState([
   //   {
   //     name: "Task 1",
@@ -35,7 +35,7 @@ function SelfTasklistTable({ taskListItems, setTaskListItems }) {
   function deleteTaskListItem(taskListItemId) {
     api.deleteTaskListItem(taskListItemId).then(() => {
       alert("Successfully deleted!");
-      //refreshKeyHandler();
+      refreshKeyHandler();
     })
   }
 

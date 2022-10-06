@@ -28,10 +28,10 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
       alert("Successfully deleted!");
       refreshKeyHandler();
     })
-    .catch((error) => setError(error));
+    .catch((error) => alert("Unable to delete as category contains tasks"));
   }
 
-  if(error) return 'Error'
+  // if(error) alert("Cannot deleted!");
 
   return (
     // <Menu as="div" className="relative inline-block text-left">
