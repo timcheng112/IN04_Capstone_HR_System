@@ -3,7 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../../utils/api";
 import AddOutletModal from "./addOutletModal.js";
-//import AddTeamModal from "./addTeamModal.js";
+import AddTeamModal from "./addTeamModal.js";
 import ChangeDeptHeadModal from "./changeDeptHeadModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
@@ -42,7 +42,7 @@ export default function ViewDepartment() {
     //   setTeams(response.data.teams);
     // });
     // axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
-    api.getDept(teamId).then((response) => {
+    api.getDept(tempDeptId).then((response) => {
       setDept(response.data);
       setDeptHead(response.data.departmentHead);
       console.log(response.data.departmentHead.firstName);
@@ -71,7 +71,7 @@ export default function ViewDepartment() {
     // axios.get(`http://localhost:9191/api/department/${url.slice(-1)}`).then((response) => {
     api.getAllTeams().then((response) => {
       setTeams(response.data);
-      console.log(response.data);
+      console.log(response.data + "$$$$$$$$$$");
 
     });
 
@@ -89,11 +89,11 @@ export default function ViewDepartment() {
           onClose={() => setOpenAdd(false)}
           deptId={deptId}
         />
-        {/* <AddTeamModal
+        <AddTeamModal
           open={openAddTeam}
           onClose={() => setOpenAddTeam(false)}
           deptId={deptId}
-        /> */}
+        />
 
         <ChangeDeptHeadModal
           deptId={deptId}
@@ -242,7 +242,7 @@ export default function ViewDepartment() {
               <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                   <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-300">
+                    {/* <table className="min-w-full divide-y divide-gray-300">
                       <thead className="bg-gray-50">
                         <tr>
                           <th
@@ -251,24 +251,19 @@ export default function ViewDepartment() {
                           >
                             Team Name
                           </th>
-                          {/* <th
+                          <th
                             scope="col"
                             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                           >
                             Outlet
-                          </th> */}
+                          </th>
                           <th
                             scope="col"
                             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                           >
                             Team Leader
                           </th>
-                          <th
-                            scope="col"
-                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                          >
-                            Department
-                          </th>
+
                           <th
                             scope="col"
                             className="relative py-3.5 pl-3 pr-4 sm:pr-6"
@@ -294,15 +289,13 @@ export default function ViewDepartment() {
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                               {team.teamName}
                             </td>
-                            {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {team.outlet}
-                            </td> */}
+                            </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {team.teamHead}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {team.department}
-                            </td>
+
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <button
                                 className="text-indigo-600 hover:text-indigo-900"
@@ -326,7 +319,7 @@ export default function ViewDepartment() {
                           </tr>
                         ))}
                       </tbody>
-                    </table>
+                    </table> */}
                   </div>
                 </div>
               </div>

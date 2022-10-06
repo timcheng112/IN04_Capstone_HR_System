@@ -8,30 +8,30 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
-export default function AddTeamModal({ open, onClose, ...props }) {
-  const userId = getUserId();
+export default function AddTeamModal({ open, onClose, deptId }) {
+  const userId = getUserId()
   const [teamName, setTeamName] = useState("");
+  const [deptHeadId, setDeptHeadId] = useState(-1);
   const [teamHeadId, setTeamHeadId] = useState(-1);
-  //   const [deptId, setDeptId] = useState("");
+  const [outlet, setOutletId] = useState("");
+  const [ inOffice, setInOffice] = useState(false);
+
+  //teamName, teamHeadId, outletId, isOffice, deptId
+  console.log(deptId + "$$$")
   const cancelButtonRef = useRef(null);
-  const [teamOutlet, setTeamOutlet] = useState("");
-  const [inOffice, setInOffice] = useState(false);
-//   const [isInOffice, setInIsOffice] = useState(false);
-  console.log(props.deptId + "###");
-  console.log(props.outletId + "");
+//   console.log(props.outletId + "OUTLET");
 
   function addTeam() {
-    //teamName, teamHeadId, outletId, isOffice, deptId
     if (teamHeadId === -1) {
       alert("Please select a Manager!");
     } else {
-      console.log("addTeamfunc :" + teamName + " " + teamHeadId);
+      console.log("addTeamfunc :" + teamName + " " + teamHeadId + " " );
       api
-        .addTeam(teamName, parseInt(teamHeadId))
+        .addTeam(teamName, parseInt(teamHeadId), outlet, inOffice, deptId )
         .then((response) => {
-          if (response.status === 200) {
-            console.log("successfully added new Team!");
-            alert("Team has been successfully created.");
+          if (response.status == 200) {
+            console.log("successfully added new team!");
+            alert("Team has been successfully created.")
           } else {
             console.error("failed to add new team!");
           }
@@ -53,10 +53,8 @@ export default function AddTeamModal({ open, onClose, ...props }) {
         });
     }
   }
-
+  //choosing teamhead for people
   const [options, setOptions] = useState(null);
-
-  //find managers. only managers can be team head
   useEffect(() => {
     const availManagers = async () => {
       const arr = [];
@@ -78,12 +76,38 @@ export default function AddTeamModal({ open, onClose, ...props }) {
       });
     };
     availManagers();
-  }, [userId, options]);
+  }, [userId]);
+
+
+  const [outletOptions, setOutletOptions] = useState(null);
+
+  useEffect(() => {
+    const outletAvail = async () => {
+      const arr = [];
+      await api.getAllOutlets().then((response) => {
+        console.log(response.data);
+        (response.data).map((outlet) => {
+          return arr.push({
+            value: outlet.outletId,
+            label: outlet.outletName 
+          });
+        });
+        setOutletOptions(arr);
+        console.log("fetching options...");
+        console.log(outletOptions);
+
+      });
+    };
+    outletAvail();
+  }, [deptId]);
+
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     addTeam();
   };
+
+
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -130,9 +154,9 @@ export default function AddTeamModal({ open, onClose, ...props }) {
                               Create a Team
                             </h3>
                             <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                              Create a new team by providing the name of this
-                              new team and selecting a team head to head this
-                              team.
+                              Create a new team by providing the name of
+                              this new team and selecting a manager to
+                              head this department.
                             </p>
                           </div>
                           <div className="space-y-6 sm:space-y-5">
@@ -147,52 +171,83 @@ export default function AddTeamModal({ open, onClose, ...props }) {
                                 <input
                                   onChange={(e) => setTeamName(e.target.value)}
                                   type="text"
-                                  name="team-name"
-                                  id="team-name"
-                                  className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm px-2"
-                                />
-                              </div>
-                            </div>
-                            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5 mt-0">
-                              <label
-                                htmlFor="dept-name"
-                                className="block text-sm font-medium text-gray-700 sm:pt-2"
-                              >
-                                Team Outlet
-                              </label>
-                              <div className="mt-2 sm:col-span-2">
-                                <input
-                                  onChange={(e) =>
-                                    setTeamOutlet(e.target.value)
-                                  }
-                                  type="text"
-                                  name="teamOutlet"
-                                  id="teamOutlet"
+                                  name="dept-name"
+                                  id="dept-name"
                                   className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm px-2"
                                 />
                               </div>
                             </div>
 
-                            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5 mt-0">
+                            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                               <label
-                                htmlFor="dept-name"
+                                htmlFor="country"
                                 className="block text-sm font-medium text-gray-700 sm:pt-2"
                               >
-                                In Office
+                                Team Head
                               </label>
-                              <div className="mt-2 sm:col-span-2">
-                                <input
+                              <div className="mt-2 sm:col-span-2 ">
+                                <select
                                   onChange={(e) =>
-                                    setTeamOutlet(e.target.value)
+                                    setTeamHeadId(e.target.value)
                                   }
-                                  type="text"
-                                  name="teamOutlet"
-                                  id="teamOutlet"
-                                  className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm px-2"
-                                />
+                                  // placeholder="Select a Manager (might take a while...)"
+                                  id="teamHead"
+                                  name="teamHead"
+                                  className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                                >
+                                  <option>Select A Team Head (Manager)...</option>
+                                  {/*<option>1</option>*/}
+                                  {options !== null &&
+                                    options.map((option, index) => {
+                                      return (
+                                        <option
+                                          key={index}
+                                          value={option.value}
+                                        >
+                                          {option.label}
+                                        </option>
+                                      );
+                                    })}
+                                </select>
                               </div>
                             </div>
 
+                            
+                            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                              <label
+                                htmlFor="country"
+                                className="block text-sm font-medium text-gray-700 sm:pt-2"
+                              >
+                                Outlet
+                              </label>
+                              <div className="mt-2 sm:col-span-2 ">
+                                <select
+                                  onChange={(e) =>
+                                    setOutletId(e.target.value)
+                                  }
+                              
+                                  id="outlet"
+                                  name="outlet"
+                                  className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                                >
+                                  <option>Select Outlet</option>
+                            
+                                  {outletOptions !== null &&
+                                    outletOptions.map((option, index) => {
+                                      return (
+                                        <option
+                                          key={index}
+                                          value={option.value}
+                                        >
+                                          {option.label}
+                                        </option>
+                                      );
+                                    })}
+                                </select>
+                              </div>
+                            </div>
+
+                            {/* In office */}
                             <div>
                               <Switch.Group
                                 as="div"
@@ -230,39 +285,9 @@ export default function AddTeamModal({ open, onClose, ...props }) {
                               </Switch.Group>
                             </div>
 
-                            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                              <label
-                                htmlFor="country"
-                                className="block text-sm font-medium text-gray-700 sm:pt-2"
-                              >
-                                Team Head
-                              </label>
-                              <div className="mt-2 sm:col-span-2 ">
-                                <select
-                                  onChange={(e) =>
-                                    setTeamHeadId(e.target.value)
-                                  }
-                                  // placeholder="Select a Manager (might take a while...)"
-                                  id="teamHead"
-                                  name="teamHead"
-                                  className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                                >
-                                  <option>Select A Manager...</option>
-                                  {/*<option>1</option>*/}
-                                  {options !== null &&
-                                    options.map((option, index) => {
-                                      return (
-                                        <option
-                                          key={index}
-                                          value={option.value}
-                                        >
-                                          {option.label}
-                                        </option>
-                                      );
-                                    })}
-                                </select>
-                              </div>
-                            </div>
+
+
+
                           </div>
                         </div>
                       </div>
