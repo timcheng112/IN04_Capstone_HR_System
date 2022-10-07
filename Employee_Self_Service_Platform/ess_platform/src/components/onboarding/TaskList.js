@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { RefreshControl, ScrollView, View } from "react-native";
 import {
   Badge,
   Button,
@@ -8,40 +8,45 @@ import {
   Paragraph,
   Title,
 } from "react-native-paper";
+import api from "../../utils/api";
 
-function TaskList({ taskListItems, showModal, setTask }) {
-  console.log(taskListItems);
-  // const [taskListItems, setTaskListItems] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Task 1",
-  //     description: "This is Task 1.",
-  //     category: "IT",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Task 2",
-  //     description: "This is Task 2.",
-  //     category: "New Hire Paperwork",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Task 3",
-  //     description: "This is Task 3.",
-  //     category: "Culture Orientation",
-  //   },
-  // ]);
-  const [checked, setChecked] = useState(false);
-  const [selectedTaskListItem, setSelectedTaskListItem] = useState([]);
-
+function TaskList({
+  taskListItems,
+  showModal,
+  setTaskListItem,
+  refreshKeyHandler,
+  refreshing,
+}) {
   function onClickHandler(taskListItem) {
-    setTaskListItems(
-      taskListItems.filter((item) => item.name !== taskListItem.name)
-    );
+    api
+      .markTaskListItemAsComplete(taskListItem.taskListItemId)
+      .then(() => {
+        console.log("Successfully checked!");
+        refreshKeyHandler();
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
+  }
+
+  function deleteTaskListItem(taskListItemId) {
+    api
+      .deleteTaskListItem(taskListItemId)
+      .then(() => {
+        alert("Successfully deleted!");
+        refreshKeyHandler();
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
   }
 
   return (
-    <View>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={refreshKeyHandler} />
+      }
+    >
       {/* Render List Items of Task */}
       {taskListItems !== undefined &&
         taskListItems.map((taskListItem, index) => (
@@ -60,24 +65,26 @@ function TaskList({ taskListItems, showModal, setTask }) {
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Checkbox
-                status={
-                  selectedTaskListItem.includes(taskListItem)
-                    ? "checked"
-                    : "unchecked"
-                }
+                status={taskListItem.isDone ? "checked" : "unchecked"}
                 value={taskListItem.task.taskName}
                 onPress={() => {
-                  !selectedTaskListItem.includes(taskListItem)
-                    ? setSelectedTaskListItem([
-                        ...selectedTaskListItem,
-                        taskListItem,
-                      ])
+                  !taskListItem.isDone
+                    ? onClickHandler(taskListItem)
                     : console.log("Task List Item already checked");
                 }}
-                disabled={selectedTaskListItem.includes(taskListItem)}
+                disabled={taskListItem.isDone}
               />
               <View style={{ padding: 10 }}>
-                <Title>{taskListItem.task.name}</Title>
+                <Title
+                  style={
+                    taskListItem.isDone && {
+                      textDecorationStyle: "solid",
+                      textDecorationLine: "line-through",
+                    }
+                  }
+                >
+                  {taskListItem.task.name}
+                </Title>
                 <Badge
                   style={{ paddingHorizontal: 10, alignSelf: "flex-start" }}
                 >
@@ -85,13 +92,12 @@ function TaskList({ taskListItems, showModal, setTask }) {
                 </Badge>
               </View>
             </View>
-            {selectedTaskListItem.includes(taskListItem) && (
+            {taskListItem.isDone && (
               <Button
                 mode="contained"
                 style={{ margin: 10 }}
-                onPress={(e) => {
-                  e.stopPropagation();
-                  onClickHandler(taskListItem);
+                onPress={() => {
+                  deleteTaskListItem(taskListItem.taskListItemId);
                 }}
               >
                 Clear
@@ -99,7 +105,7 @@ function TaskList({ taskListItems, showModal, setTask }) {
             )}
           </Card>
         ))}
-    </View>
+    </ScrollView>
   );
 }
 
