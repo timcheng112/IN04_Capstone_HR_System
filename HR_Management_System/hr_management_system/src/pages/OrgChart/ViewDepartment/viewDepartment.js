@@ -33,11 +33,8 @@ export default function ViewDepartment() {
     const url = window.location.href;
     const tempDeptId = url.substring(31);
 
-    // console.log(url);
-    // console.log(url.substring(url.length -1));
     setDeptId(url.substring(31));
 
-    //console.log(url.substring(31));
     // api.getDept(deptId).then((response) => {
     //   setDept(response.data);
     //   setDeptHead(response.data.departmentHead);
@@ -57,6 +54,7 @@ export default function ViewDepartment() {
     });
     // console.log(dept);
   }, [deptId]);
+
 
   // useEffect for getTeam
   useEffect(() => {
@@ -90,6 +88,7 @@ export default function ViewDepartment() {
   //       alert("Teams still has team members");
   //     });
   // }
+
 
 
   return (

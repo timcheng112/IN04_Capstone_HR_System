@@ -33,7 +33,7 @@ export default function Login() {
         if (message.includes("account is not activated yet")) {
           console.log("in api call " + getWorkEmail());
           api
-            .getUserIdByEmail(getWorkEmail())
+            .getEmployeeIdByEmail(getWorkEmail())
             .then((response) => {
               setUserSession(response.data, email);
             })
