@@ -5,6 +5,7 @@ import api from "../../../utils/api";
 import AddOutletModal from "./addOutletModal.js";
 import AddTeamModal from "./addTeamModal.js";
 import ChangeDeptHeadModal from "./changeDeptHeadModal.js";
+// import DeleteTeamModal from "./deleteTeamModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
 /* This example requires Tailwind CSS v2.0+ */
@@ -19,6 +20,8 @@ export default function ViewDepartment() {
   const [openAddTeam, setOpenAddTeam] = useState(false);
   const [teamId, setTeamId] = useState([]);
   const [openChange, setOpenChange] = useState(false);
+  const [toDelete, setToDelete] = useState(0);
+  const [openDelete, setOpenDelete] = useState(false);
 
   //   function getURL(){
   //     const url = window.location.href;
@@ -57,14 +60,37 @@ export default function ViewDepartment() {
 
   // useEffect for getTeam
   useEffect(() => {
-    api.getAllTeams().then((response) => {
+    api.getAllTeamsInDept(deptId).then((response) => {
       setTeams(response.data);
       console.log("USE EFFECT 2: getAllTeams");
       console.log(response.data);
     });
 
     // console.log(dept);
-  }, [deptId]);
+  }, [deptId, teams]);
+
+  // function deleteTeam() {
+  //   console.log("delete department " + toDelete);
+  //   api
+  //     .deleteTeam(toDelete)
+  //     .then((response) => {
+  //       console.log("deleted? " + response.data);
+  //       // api.getOrganization().then((response) => {
+  //       //   setOrg(response.data);
+  //       // });
+  //       setToDelete("");
+  //     })
+  //     .then(() => {
+  //       alert("Team is successfully deleted.");
+  //     })
+  //     .catch((error) => {
+  //       var message = error.request.response;
+  //       if (message.includes("Team still consists of people so system is unable to delete"))
+  //         console.log(message);
+  //       alert("Teams still has team members");
+  //     });
+  // }
+
 
   return (
     dept &&
@@ -89,6 +115,11 @@ export default function ViewDepartment() {
           onClose={() => setOpenChange(false)}
         />
 
+        {/* <DeleteTeamModal
+          open={openDelete}
+          onClose={() => setOpenDelete(false)}
+        /> */}
+
         <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
           <div className="px-4 sm:px-6 lg:px-8">
             <a href="/viewOrg">
@@ -111,7 +142,7 @@ export default function ViewDepartment() {
             <div className="sm:flex sm:items-center">
               <div className="sm:flex-auto">
                 <h1 className="text-xl font-semibold text-gray-900">
-                  Sales Department
+                  {dept.departmentN}
                 </h1>
                 <p className="mt-2 text-sm text-gray-700">
                   A list of all the teams in the Department including their
@@ -298,12 +329,22 @@ export default function ViewDepartment() {
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <a
-                                href="https://www.google.com"
+                                // onClick={() => {
+                                //   setOpenDelete(true);
+                                //   setToDelete(team.teamIdx);
+                                // }}
                                 className="text-indigo-600 hover:text-indigo-900"
                               >
                                 Delete
                                 <span className="sr-only">, {team.name}</span>
                               </a>
+
+                              {/* <DeleteTeamModal
+                                  open={openDelete}
+                                  onConfirm={deleteTeam}
+                                  setOpen={setOpenDelete}
+                                  deptId={team.teamIdx}
+                                /> */}
                             </td>
                           </tr>
                         ))}

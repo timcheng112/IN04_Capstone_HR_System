@@ -29,7 +29,7 @@ export default function AddTeamModal({ open, onClose, deptId }) {
       api
         .addTeam(teamName, parseInt(teamHeadId), outlet, inOffice, deptId)
         .then((response) => {
-          if (response.status == 200) {
+          if (response.status === 200) {
             console.log("successfully added new team!");
             alert("Team has been successfully created.");
           } else {
