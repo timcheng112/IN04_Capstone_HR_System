@@ -1,8 +1,9 @@
 import React from "react";
+import { Text } from "react-native";
 // import OnboardingComponent from "../components/onboarding/OnboardingComponent";
 
 const OffboardingScreen = () => {
-  return <Text>sdf</Text>
+  return <Text></Text>;
 };
 
 export default OffboardingScreen;
