@@ -1,95 +1,40 @@
 package com.conceiversolutions.hrsystem.engagement.leave;
 
 import com.conceiversolutions.hrsystem.enums.StatusEnum;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name = "leaves")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
 public class Leave {
     //attributes
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="leave_id")
     private Long leaveId;
     @Column(name="leave_dates")
     @ElementCollection(targetClass = LocalDate.class)
     private List<LocalDate> dates;
-    @Column(name="remarks")
+    @Column(name="remarks", nullable = false)
     private String remarks;
-    @Column(name="approval_remarks")
+    @Column(name="approval_remarks", nullable = true)
     private String approvalRemarks;
-    @Column(name="approval_status")
+    @Column(name="approval_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private StatusEnum statusEnum;
+    private StatusEnum approvalStatus;
 
-    //relationships
-
-    //constructors
     public Leave(List<LocalDate> dates, String remarks) {
         this.dates = dates;
         this.remarks = remarks;
-    }
-
-    public Leave() {
-        dates = new ArrayList<>();
-    }
-
-    //getters and setters
-
-    public Long getLeaveId() {
-        return leaveId;
-    }
-
-    public void setLeaveId(Long leaveId) {
-        this.leaveId = leaveId;
-    }
-
-    public List<LocalDate> getDates() {
-        return dates;
-    }
-
-    public void setDates(List<LocalDate> dates) {
-        this.dates = dates;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public String getApprovalRemarks() {
-        return approvalRemarks;
-    }
-
-    public void setApprovalRemarks(String approvalRemarks) {
-        this.approvalRemarks = approvalRemarks;
-    }
-
-    public StatusEnum getStatusEnum() {
-        return statusEnum;
-    }
-
-    public void setStatusEnum(StatusEnum statusEnum) {
-        this.statusEnum = statusEnum;
-    }
-
-    @Override
-    public String toString() {
-        return "Leave{" +
-                "leaveId=" + leaveId +
-                ", dates=" + dates +
-                ", remarks='" + remarks + '\'' +
-                ", approvalRemarks='" + approvalRemarks + '\'' +
-                ", approvalStatus=" + statusEnum +
-                '}';
+        this.approvalStatus = StatusEnum.PENDING;
+        this.approvalRemarks = null;
     }
 }
