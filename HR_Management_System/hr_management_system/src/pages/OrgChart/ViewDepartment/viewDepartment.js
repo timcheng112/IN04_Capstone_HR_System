@@ -45,7 +45,11 @@ export default function ViewDepartment() {
       setDeptHead(response.data.departmentHead);
       console.log("USE EFFECT 1: get departmentHead Name");
       console.log(response.data.departmentHead.firstName);
-      setTeams(response.data.teams);
+
+      // console.log("teams: ");
+      // console.log(response.data.teams);
+      // setTeams(response.data.teams);
+      
       console.log("USE EFFECT 1: get departmentHead");
       console.log(response.data.departmentHead);
     });
@@ -53,15 +57,15 @@ export default function ViewDepartment() {
   }, [deptId]);
 
   //useEffect for getTeam
-  useEffect(() => {
-    api.getAllTeams().then((response) => {
-      setTeams(response.data);
-      console.log("USE EFFECT 2: getAllTeams");
-      console.log(response.data);
-    });
+   useEffect(() => {
+     api.getAllTeamsInDept(deptId).then((response) => {
+       setTeams(response.data);
+       console.log("USE EFFECT 2: getAllTeams");
+       console.log(response.data);
+     });
 
-    // console.log(dept);
-  }, [teams]);
+     // console.log(dept);
+   }, [deptId, teams]);
 
   return (
     dept &&
@@ -108,7 +112,7 @@ export default function ViewDepartment() {
             <div className="sm:flex sm:items-center">
               <div className="sm:flex-auto">
                 <h1 className="text-xl font-semibold text-gray-900">
-                  Sales Department
+                  {dept.departmentName}
                 </h1>
                 <p className="mt-2 text-sm text-gray-700">
                   A list of all the teams in the Department including their

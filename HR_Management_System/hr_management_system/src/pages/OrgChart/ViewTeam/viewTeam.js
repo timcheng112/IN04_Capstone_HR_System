@@ -44,7 +44,7 @@ export default function ViewTeam() {
       setTeam(response.data);
       console.log(team);
     });
-  }, [teamId]);
+  }, [team]);
 
   return (
     <>
