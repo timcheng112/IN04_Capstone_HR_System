@@ -3,7 +3,7 @@ import { Fragment, useRef, useState, useEffect } from "react";
 import { useHistory } from "react-router";
 // import InputText from '../../components/inputText';
 // import TextArea from '../../components/textArea';
-import api from '../../utils/api';
+import api from "../../utils/api";
 
 export default function ViewTaskModal({ open, onClose, task }) {
   const tabs = [
@@ -28,7 +28,6 @@ export default function ViewTaskModal({ open, onClose, task }) {
       .catch((error) => setError(error));
   }, []);
 
-
   const history = useHistory();
   const [error, setError] = useState(null);
   const cancelButtonRef = useRef(null);
@@ -44,6 +43,14 @@ export default function ViewTaskModal({ open, onClose, task }) {
   //     .then(response => setUser(response.data))
   //     .catch((error) => setError(error))
   // }, [])
+
+  const findStatusHandler = (user) => {
+    return user.taskListItems.find((taskListItem) => {
+      return (
+        taskListItem.isDone === true && taskListItem.task.taskId === task.taskId
+      );
+    });
+  };
 
   return (
     //user && (
@@ -201,9 +208,10 @@ export default function ViewTaskModal({ open, onClose, task }) {
                                     <div className="flex items-center">
                                       <div className="ml-4">
                                         <div className="font-medium text-gray-900">
-                                          {person.firstName + " " + person.lastName}
+                                          {person.firstName +
+                                            " " +
+                                            person.lastName}
                                         </div>
-                                    
                                       </div>
                                     </div>
                                   </td>
@@ -213,10 +221,15 @@ export default function ViewTaskModal({ open, onClose, task }) {
                                     </div>
                                   </td>
                                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                    
+                                    {!findStatusHandler(person) ? (
                                       <span className="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">
                                         Not Done
                                       </span>
+                                    ) : (
+                                      <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
+                                        Done
+                                      </span>
+                                    )}
                                   </td>
                                 </tr>
                               ))}

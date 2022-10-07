@@ -27,7 +27,8 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
     api.deleteCategory(category.categoryId).then(() => {
       alert("Successfully deleted!");
       refreshKeyHandler();
-    });
+    })
+    .catch((error) => alert("Unable to delete as category contains tasks"));
   }
 
   return (

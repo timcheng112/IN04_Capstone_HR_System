@@ -7,8 +7,6 @@ import AddTeamModal from "./addTeamModal.js";
 import ChangeDeptHeadModal from "./changeDeptHeadModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
-//TODO: Create Outlet Modal does not autoclose.
-
 /* This example requires Tailwind CSS v2.0+ */
 
 export default function ViewDepartment() {
@@ -45,13 +43,11 @@ export default function ViewDepartment() {
       setDeptHead(response.data.departmentHead);
       console.log("USE EFFECT 1: get departmentHead Name");
       console.log(response.data.departmentHead.firstName);
-
-      // console.log("teams: ");
-      // console.log(response.data.teams);
       // setTeams(response.data.teams);
-      
       console.log("USE EFFECT 1: get departmentHead");
       console.log(response.data.departmentHead);
+      // console.log("USE EFFECT 1: get teams ");
+      // console.log(response.data.teams);
     });
     // console.log(dept);
   }, [deptId]);
@@ -112,7 +108,7 @@ export default function ViewDepartment() {
             <div className="sm:flex sm:items-center">
               <div className="sm:flex-auto">
                 <h1 className="text-xl font-semibold text-gray-900">
-                  {dept.departmentName}
+                  Sales Department
                 </h1>
                 <p className="mt-2 text-sm text-gray-700">
                   A list of all the teams in the Department including their
@@ -278,6 +274,7 @@ export default function ViewDepartment() {
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                               {team.teamName}
                             </td>
+                            {console.log(team)}
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {team.outlet.outletName}
                             </td>
