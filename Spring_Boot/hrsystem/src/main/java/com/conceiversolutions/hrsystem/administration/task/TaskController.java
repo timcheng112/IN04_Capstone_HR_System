@@ -64,17 +64,33 @@ public class TaskController {
         taskService.deleteTask(taskId);
     }
 
+    // @PutMapping(path = "{taskId}")
+    // public void editTask(@PathVariable("taskId") Long taskId,
+    // @RequestParam(name = "taskName", required = false) String taskName,
+    // @RequestParam(name = "taskDescription", required = false) String
+    // taskDescription,
+    // @RequestParam(name = "employeeIds", required = false) Integer[] employeeIds)
+    // {
+    // taskService.editTask(taskId, taskName, taskDescription);
+    // if (employeeIds.length != 0) {
+    // for (Integer employeeId : employeeIds) {
+    // taskListItemService.addNewTaskListItem(new TaskListItem(false),
+    // Long.valueOf(employeeId), taskId);
+    // }
+    // }
+    // }
+
     @PutMapping(path = "{taskId}")
     public void editTask(@PathVariable("taskId") Long taskId,
             @RequestParam(name = "taskName", required = false) String taskName,
-            @RequestParam(name = "taskDescription", required = false) String taskDescription,
-            @RequestParam(name = "employeeIds", required = false) Integer[] employeeIds) {
+            @RequestParam(name = "taskDescription", required = false) String taskDescription) {
         taskService.editTask(taskId, taskName, taskDescription);
-        if (employeeIds.length != 0) {
-            for (Integer employeeId : employeeIds) {
-                taskListItemService.addNewTaskListItem(new TaskListItem(false), Long.valueOf(employeeId), taskId);
-            }
-        }
+    }
+
+    @PutMapping(path = "/assignTaskToEmployee")
+    public void assignTaskToEmployee(@RequestParam(name = "employeeId", required = true) Long employeeId,
+            @RequestParam(name = "taskId", required = true) Long taskId) {
+        taskService.assignTaskToEmployee(employeeId, taskId);
     }
 
 }
