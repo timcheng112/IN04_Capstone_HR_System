@@ -21,17 +21,23 @@ export default function EditTaskModal({
   ]);
   const [refreshKeyModal, setRefreshKeyModal] = useState(0);
 
+  useEffect(() => {
+    setName(task.name);
+    setDescription(task.description);
+  }, [open]);
+
   const handleSubmit = () => {
     //evt.preventDefault();
     editTask();
-    onClose();
-    refreshKeyHandler();
   };
+
   function editTask() {
     api
       .editTask(task.taskId, name, description)
       .then(() => {
         alert("Successfully edited task.");
+        onClose();
+        refreshKeyHandler();
       })
       .catch((error) => alert(error.response.data.message));
   }
