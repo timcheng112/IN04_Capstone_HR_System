@@ -11,45 +11,27 @@ function SelfTasklistTable({
   setTaskListItems,
   refreshKeyHandler,
 }) {
-  // const [taskListItems, setTaskListItems] = useState([
-  //   {
-  //     name: "Task 1",
-  //     description: "This is Task 1.",
-  //     category: "IT",
-  //   },
-  //   {
-  //     name: "Task 2",
-  //     description: "This is Task 2.",
-  //     category: "New Hire Paperwork",
-  //   },
-  //   {
-  //     name: "Task 3",
-  //     description: "This is Task 3.",
-  //     category: "Culture Orientation",
-  //   },
-  // ]);
-  const [selectedTask, setSelectedTask] = useState([]);
-  const [error, setError] = useState(null);
-  const history = useHistory();
-
-  function deleteTaskListItem(taskListItemId) {
-    api.deleteTaskListItem(taskListItemId).then(() => {
-      alert("Successfully deleted!");
-      refreshKeyHandler();
-    })
-  }
   function onClickHandler(taskListItem) {
-    // setTaskListItemsCopy(
-    //   taskListItemsCopy.filter(
-    //     (item) => item.taskListItemId !== taskListItem.taskListItemId
-    //   )
-    // );
-    setTaskListItems(
-      taskListItems.filter(
-        (item) => item.taskListItemId !== taskListItem.taskListItemId
-      )
-    );
-    deleteTaskListItem(taskListItem.taskListItemId);
+    api
+      .markTaskListItemAsComplete(taskListItem.taskListItemId)
+      .then(() => {
+        console.log("Successfully checked!");
+        refreshKeyHandler();
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
+  }
+  function deleteTaskListItem(taskListItemId) {
+    api
+      .deleteTaskListItem(taskListItemId)
+      .then(() => {
+        alert("Successfully deleted!");
+        refreshKeyHandler();
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
   }
 
   return (
@@ -101,25 +83,20 @@ function SelfTasklistTable({
                   {taskListItems.map((taskListItem) => (
                     <tr
                       key={taskListItem.taskListItemId}
-                      className={
-                        selectedTask.includes(taskListItem)
-                          ? "bg-gray-50"
-                          : undefined
-                      }
+                      className={taskListItem.isDone && "bg-gray-50"}
                     >
                       <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                        {selectedTask.includes(taskListItem) && (
+                        {taskListItem.isDone && (
                           <div className="absolute inset-y-0 left-0 w-0.5 bg-gray-600" />
                         )}
                         <input
                           type="checkbox"
                           className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
                           value={taskListItem.taskListItemId}
-                          checked={selectedTask.includes(taskListItem)}
+                          checked={taskListItem.isDone}
                           onChange={(e) => {
-                            e.target.checked &&
-                            !selectedTask.includes(taskListItem)
-                              ? setSelectedTask([...selectedTask, taskListItem])
+                            e.target.checked && !taskListItem.isDone
+                              ? onClickHandler(taskListItem)
                               : console.log("Task already checked");
                           }}
                         />
@@ -127,7 +104,7 @@ function SelfTasklistTable({
                       <td
                         className={classNames(
                           "whitespace-nowrap py-4 pr-3 text-sm font-medium text-left",
-                          selectedTask.includes(taskListItem)
+                          taskListItem.isDone
                             ? "text-gray-900 line-through"
                             : "text-gray-900"
                         )}
@@ -144,11 +121,20 @@ function SelfTasklistTable({
                         {taskListItem.task.category.name}
                       </td>
                       <td className="whitespace-nowrap px-3 text-sm text-gray-500 text-left">
-                        {selectedTask.includes(taskListItem) && (
+                        {taskListItem.isDone && (
+                          // <button
+                          //   type="button"
+                          //   className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          //   onClick={() => onClickHandler(taskListItem)}
+                          // >
+                          //   Clear
+                          // </button>
                           <button
                             type="button"
                             className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            onClick={() => deleteTaskListItem(taskListItem.taskListItemId)}
+                            onClick={() =>
+                              deleteTaskListItem(taskListItem.taskListItemId)
+                            }
                           >
                             Clear
                           </button>

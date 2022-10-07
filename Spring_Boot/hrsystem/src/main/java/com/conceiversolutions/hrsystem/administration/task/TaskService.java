@@ -95,13 +95,21 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
 
+        Boolean isTaskNameChanged = false, isTaskDescriptionChanged = false;
+
         if (taskName != null && taskName.length() > 0 && !Objects.equals(task.getName(), taskName)) {
             task.setName(taskName);
+            isTaskNameChanged = true;
         }
 
         if (taskDescription != null && taskDescription.length() > 0
                 && !Objects.equals(task.getDescription(), taskDescription)) {
             task.setDescription(taskDescription);
+            isTaskDescriptionChanged = true;
+        }
+
+        if (!isTaskNameChanged && !isTaskDescriptionChanged) {
+            throw new IllegalStateException("No changes detected!");
         }
     }
 
@@ -113,11 +121,8 @@ public class TaskService {
         return taskRepository.findTaskByIsOnboarding(false);
     }
 
-    // public void assignTaskToEmployee(Long employeeId, Long taskId) {
-    // User employee = userRepository.findById(employeeId).get();
-    // TaskListItem taskListItem = new TaskListItem();
-    // Task task = this.getTaskById(taskId);
-    // taskListItemService.addNewTaskListItem(taskListItem, employee, task);
-    // }
+    public void assignTaskToEmployee(Long employeeId, Long taskId) {
+        taskListItemService.addNewTaskListItem(new TaskListItem(false), employeeId, taskId);
+    }
 
 }

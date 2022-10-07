@@ -41,12 +41,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // taskId)))")
     // Optional<List<User>> findEmployeesWithTask(Long taskId);
 
-    @Query("SELECT t.user FROM TaskListItem t WHERE NOT t.task.taskId = ?2 AND t.user.userRole = ?1")
-    List<User> findEmployeesWithoutTask(RoleEnum userRole, Long taskId);
+    // @Query("SELECT t.user FROM TaskListItem t WHERE NOT t.task.taskId = ?1 AND
+    // t.user.userRole <> ?2 AND t.user.userRole <> ?3")
+    // List<User> findEmployeesWithoutTask(Long taskId, RoleEnum role, RoleEnum
+    // role2);
+    @Query("SELECT u FROM User u WHERE u NOT IN (SELECT t.user FROM TaskListItem t WHERE t.task.taskId = ?1) AND u.userRole <> ?2 AND u.userRole <> ?3")
+    List<User> findEmployeesWithoutTask(Long taskId, RoleEnum role, RoleEnum role2);
 
-
-    @Query("SELECT t.user FROM TaskListItem t WHERE t.task.taskId = ?2 AND t.user.userRole = ?1")
-    List<User> findEmployeesWithTask(RoleEnum userRole, Long taskId);
+    @Query("SELECT t.user FROM TaskListItem t WHERE t.task.taskId = ?1 AND t.user.userRole <> ?2 AND t.user.userRole <> ?3")
+    List<User> findEmployeesWithTask(Long taskId, RoleEnum role, RoleEnum role2);
 
     @Query("SELECT u FROM User u WHERE u.userRole = ?1")
     List<User> findAllByRole(RoleEnum role);

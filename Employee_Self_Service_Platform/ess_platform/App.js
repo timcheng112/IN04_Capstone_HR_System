@@ -86,7 +86,7 @@ export default function Main({ navigation }) {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <PaperProvider>
-          {loginState.userToken !== null ? <TabNavigator /> : <LoginScreen />}
+          {loginState.userToken === null ? <TabNavigator /> : <LoginScreen />}
         </PaperProvider>
       </NavigationContainer>
     </AuthContext.Provider>

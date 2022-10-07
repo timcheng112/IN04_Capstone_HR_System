@@ -14,7 +14,6 @@ export default function AddCategoryModal({ open, onClose, refreshKeyHandler }) {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     createCategory();
-    alert("Successfully created category.");
     refreshKeyHandler();
   };
 
@@ -24,7 +23,7 @@ export default function AddCategoryModal({ open, onClose, refreshKeyHandler }) {
         // api change
         name: name,
       })
-      //.then(() => history.goBack())
+      .then(() => alert("Successfully created category."))
       .catch((error) => setError(error));
   }
 
@@ -33,6 +32,11 @@ export default function AddCategoryModal({ open, onClose, refreshKeyHandler }) {
   //     .then(response => setUser(response.data))
   //     .catch((error) => setError(error))
   // }, [])
+  useEffect(()=>{
+    if(!open){
+      setName('')
+    }
+  },[open])
 
   return (
     //user &&

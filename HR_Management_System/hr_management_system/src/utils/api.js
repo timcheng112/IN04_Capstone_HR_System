@@ -114,9 +114,9 @@ const api = {
   deleteTask(taskId) {
     return axios.delete(`http://localhost:9191/api/task/${taskId}`);
   },
-  editTask(taskId, name, description, employeeIds) {
+  editTask(taskId, name, description) {
     return axios.put(
-      `http://localhost:9191/api/task/${taskId}?taskName=${name}&taskDescription=${description}&employeeIds=${employeeIds}`
+      `http://localhost:9191/api/task/${taskId}?taskName=${name}&taskDescription=${description}`
     );
   },
   getTaskListItems() {
