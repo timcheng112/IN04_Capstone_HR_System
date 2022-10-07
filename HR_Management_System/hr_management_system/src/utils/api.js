@@ -199,7 +199,7 @@ const api = {
     return axios.delete(`http://localhost:9191/api/team/${teamId}`);
   },
   uploadFile(file) {
-    return axios.post(`http://localhost:9191/uploadDocument/${file}`);
+    return axios.post(`http://localhost:9191/api/docData/uploadDocument/`, file);
   },
   addDepartment(deptName, deptHeadId) {
     return axios.post(

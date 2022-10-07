@@ -153,41 +153,46 @@ public class TeamService {
         t1.setUsers(team.getUsers());
     }
 
-//    public void deleteTeam(Long teamId) {
-//        Team t = getTeam(teamId);
-//
-//        if (d.isEmpty()) {
-//            throw new IllegalStateException("Team does not exist.");
-//        }
-//        Team tempTeam = t.get();
-//
-//        Long deptId = tempTeam.getDepartment().getDepartmentId();
-//
-//        Optional<Department> d = departmentRepository.findById(Long.valueOf(deptId));
-//        if (d.isEmpty()) {
-//            throw new IllegalStateException("Department does not exist.");
-//        }
-//
-//        Department dept = d.get();
-//
-//        //delete from user team head
-//        User th1 = tempTeam.getTeamHead();
+    public String deleteTeam(Long teamId) {
+        Team t = getTeam(teamId);
+        Long deptId = t.getDepartment().getDepartmentId();
+
+        Optional<Department> d = departmentRepository.findById(Long.valueOf(deptId));
+        Department dept = d.get();
+
+        //remove team members & team head
+        List<User> teamMembers = t.getUsers();
+        for(User u : teamMembers){
+            removeMemberFromTeam(teamId.intValue(), u.getUserId().intValue());
+        }
+        t.setTeamHead(null);
+        //delete from user team head
+//        User th1 = t.getTeamHead();
 //        List<Team> tempTeams = th1.getTeams();
 //        tempTeams.remove(t);
 //        th1.setTeams(tempTeams);
 //        userRepository.saveAndFlush(th1);
-//
-//        //delete from team
-//        dept.removeTeam(t);
-//        departmentRepository.saveAndFlush(dept);
-//
-//        if(tempTeam.getRoster() != null){
-//            tempTeam.getRoster().setTeam(null);
-//        }
-//
-//        emptyRoster.setTeam(tempTeams);
-//        rosterRepository.saveAndFlush(emptyRoster);
-//    }
+
+        t.getDepartment().removeTeam(t);
+        //delete from team
+        dept.removeTeam(t);
+        departmentRepository.saveAndFlush(dept);
+
+        t.getRoster().setTeam(null);
+        //delete from roster
+        Long r = t.getRoster().getRosterId();
+        Optional<Roster> roster = rosterRepository.findById(r);
+        if(roster.isEmpty()){
+            throw new IllegalStateException("Roster does not exist.");
+        }
+        Roster ros = roster.get();
+        ros.setTeam(null);
+        rosterRepository.saveAndFlush(ros);
+//        rosterRepository.findAll().remove(ros);
+
+        teamRepository.delete(t);
+        return teamId + "is deleted successfully";
+    }
 
         public Long addNewTeam(String teamName, Integer teamHeadId, Integer outletId, Boolean isOffice, Integer deptId) {
         System.out.println("TeamService.addNewTeam");

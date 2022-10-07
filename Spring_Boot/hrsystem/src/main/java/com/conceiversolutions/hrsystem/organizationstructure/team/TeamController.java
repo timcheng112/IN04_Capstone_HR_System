@@ -63,9 +63,9 @@ public class TeamController {
         return teamService.changeTeamHead(teamId, newHeadId);
     }
 
-//    @DeleteMapping(path="/deleteTeam")
-//    public String deleteTeam(@PathVariable("teamId") Long teamId){
-//        return teamService.deleteTeam(teamId);
-//    }
+    @DeleteMapping(path="/deleteTeam")
+    public String deleteTeam(@PathVariable("teamId") Long teamId){
+        return teamService.deleteTeam(teamId);
+    }
 
 }
