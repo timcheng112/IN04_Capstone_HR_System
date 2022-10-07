@@ -179,11 +179,16 @@ const api = {
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
-  getUserIdByEmail(email) {
+  getUserIdByEmail(email) { // this mght nt work
     return axios.get(
       `http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`
     );
   },
+  getEmployeeIdByEmail(email) {
+      return axios.get(
+        `http://localhost:9191/api/user/login/getEmployeeIdByEmail?workEmail=${email}`
+      );
+    },
   getDept(deptId) {
     return axios.get(`http://localhost:9191/api/department/${deptId}`);
   },
