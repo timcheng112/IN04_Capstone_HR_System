@@ -24,16 +24,12 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
   const history = useHistory();
 
   function deleteCategory() {
-    api
-      .deleteCategory(category.categoryId)
-      .then(() => {
-        alert("Successfully deleted!");
-        refreshKeyHandler();
-      })
-      .catch((error) => setError(error));
+    api.deleteCategory(category.categoryId).then(() => {
+      alert("Successfully deleted!");
+      refreshKeyHandler();
+    })
+    .catch((error) => alert("Unable to delete as category contains tasks"));
   }
-
-  if (error) return "Error";
 
   return (
     <div className="space-x-2">

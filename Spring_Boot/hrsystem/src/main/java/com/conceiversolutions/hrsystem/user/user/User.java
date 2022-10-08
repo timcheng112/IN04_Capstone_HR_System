@@ -163,12 +163,11 @@ public class User implements UserDetails {
     }
 
     // this should be for making an employee's account
-    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
+    public User(String firstName, String lastName, Integer phone, String email, String workEmail,
             LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
             LocalDate dateJoined, PayInformation currentPayInformation) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.password = password;
         this.phone = phone;
         this.email = email;
         this.workEmail = workEmail;

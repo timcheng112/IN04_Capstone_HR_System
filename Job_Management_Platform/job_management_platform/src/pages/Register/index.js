@@ -32,7 +32,7 @@ export default function Register() {
         .then(() => {
           api
             .getUserIdByEmail(email)
-            .then((response) => setUserSession(response.data, email))
+            .then((response) => sessionStorage.setItem("userEmail", email))
             .finally(() => history.push("/verify"));
         })
         .catch(error => {

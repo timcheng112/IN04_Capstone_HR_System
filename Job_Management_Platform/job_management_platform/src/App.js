@@ -20,8 +20,8 @@ function App() {
         <Switch>
           <PublicRoute exact path="/" component={LoginPage} />
           <PublicRoute exact path="/register" component={RegisterPage} />
-          <PrivateRoute exact path="/verify/:token" component={Verification} />
-          <PrivateRoute exact path="/verify" component={Verification} />
+          <PublicRoute exact path="/verify/:token" component={Verification} />
+          <PublicRoute exact path="/verify" component={Verification} />
           <PublicRoute exact path="/forgot" component={ForgotPassword} />
           <PublicRoute exact path="/forgot/:token" component={ForgotPassword} />
           <PrivateRoute exact path="/reset" component={ResetPassword} />
