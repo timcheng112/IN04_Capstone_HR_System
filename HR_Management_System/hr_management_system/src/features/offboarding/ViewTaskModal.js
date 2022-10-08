@@ -23,10 +23,10 @@ export default function ViewTaskModal({ open, onClose, task }) {
       .getEmployeesWithTask(task.taskId)
       .then((response) => {
         setPeople(response.data);
-        console.log(response.data);
+        setTabId(0);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [open]);
 
   const history = useHistory();
   const [error, setError] = useState(null);

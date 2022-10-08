@@ -11,7 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 
-const ViewTaskModal = ({ visible, hideModal, task }) => {
+const ViewTaskModal = ({ visible, hideModal, taskListItem }) => {
   const containerStyle = {
     backgroundColor: "white",
     padding: 20,
@@ -24,7 +24,7 @@ const ViewTaskModal = ({ visible, hideModal, task }) => {
   return (
     <Provider>
       <Portal>
-        {task !== null && (
+        {taskListItem !== null && (
           <Modal
             visible={visible}
             onDismiss={hideModal}
@@ -37,7 +37,7 @@ const ViewTaskModal = ({ visible, hideModal, task }) => {
               }}
             >
               <Badge style={{ fontWeight: "bold", paddingHorizontal: 20 }}>
-                {task.category}
+                {taskListItem.task.category.name}
               </Badge>
               <TouchableOpacity onPress={hideModal}>
                 <Ionicons
@@ -47,8 +47,8 @@ const ViewTaskModal = ({ visible, hideModal, task }) => {
                 />
               </TouchableOpacity>
             </View>
-            <Title>{task.name}</Title>
-            <Text>{task.description}</Text>
+            <Title>{taskListItem.task.name}</Title>
+            <Text>{taskListItem.task.description}</Text>
           </Modal>
         )}
       </Portal>

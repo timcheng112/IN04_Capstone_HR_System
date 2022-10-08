@@ -18,11 +18,9 @@ export default function Login() {
     api
       .login(getWorkEmail(), password)
       .then((response) => {
-        if (response.status !== 200) {
-          console.log(response.data);
-        } else {
-          setUserSession(response.data, getWorkEmail());
-        }
+        console.log(response.data.enabled);
+        console.log(response.data);
+        setUserSession(response.data, getWorkEmail());
       })
       .then(() => {
         history.push("/home");
@@ -31,13 +29,12 @@ export default function Login() {
         var message = error.request.response;
         console.log(getWorkEmail());
         if (message.includes("account is not activated yet")) {
-          console.log("in api call " + getWorkEmail());
-          api
-            .getUserIdByEmail(getWorkEmail())
-            .then((response) => {
-              setUserSession(response.data, email);
-            })
-            .then(() => history.push("/verify"));
+
+          console.log("unactivated account " + getWorkEmail());
+          api.getEmployeeIdByEmail(getWorkEmail()).then((response) => {
+          sessionStorage.setItem("userEmail", getWorkEmail())
+          }).then(() => history.push("/verify"));
+
         } else if (
           message.includes("User password does not match the record")
         ) {
@@ -66,11 +63,13 @@ export default function Login() {
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img className="mx-auto h-12 w-auto" src={logo} alt="Libro" />
+          <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-indigo-600">
+            Human Resources Management System
+          </h2>
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Sign in
+            Sign In
           </h2>
         </div>
-
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form className="space-y-6" onSubmit={handleSubmit}>
