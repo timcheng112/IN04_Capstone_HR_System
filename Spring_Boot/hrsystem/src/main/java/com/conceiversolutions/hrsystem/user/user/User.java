@@ -12,7 +12,6 @@ import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.goal.Goal;
 import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
-import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
@@ -104,9 +103,6 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "employeeReviewing")
     @Column(name = "reviewed_by")
     private List<ManagerReview> employeeReviews;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Module.class, mappedBy = "employee")
-    @Column(name = "modules")
-    private List<Module> modules;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
@@ -155,7 +151,6 @@ public class User implements UserDetails {
         this.managerAppraisals = new ArrayList<>();
         this.managerReviews = new ArrayList<>();
         this.employeeReviews = new ArrayList<>();
-        this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
@@ -191,7 +186,6 @@ public class User implements UserDetails {
         this.managerAppraisals = new ArrayList<>();
         this.managerReviews = new ArrayList<>();
         this.employeeReviews = new ArrayList<>();
-        this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
@@ -229,7 +223,6 @@ public class User implements UserDetails {
         this.managerAppraisals = new ArrayList<>();
         this.managerReviews = new ArrayList<>();
         this.employeeReviews = new ArrayList<>();
-        this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
@@ -422,14 +415,6 @@ public class User implements UserDetails {
 
     public void setEmployeeReviews(List<ManagerReview> employeeReviews) {
         this.employeeReviews = employeeReviews;
-    }
-
-    public List<Module> getModules() {
-        return modules;
-    }
-
-    public void setModules(List<Module> modules) {
-        this.modules = modules;
     }
 
     public List<Goal> getGoals() {

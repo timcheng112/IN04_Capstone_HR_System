@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -26,30 +26,33 @@ public class Module {
     private Long moduleId;
     private String title;
     private String description;
+    private String thumbnail;
 
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Video.class, mappedBy = "videoId")
     @Column(name = "videos")
-    private List<Video> videoList;
+    private List<String> videoList;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
-    @JoinColumn(name = "employee")
-    private User employee;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "assigned_to", referencedColumnName = "user_id")
+    private List<User> employees;
 
     public Module() {
 
     }
 
-    public Module(String title, String description, List<Video> videoList) {
+    public Module(String title, String description, String thumbnail, List<String> videoList, List<User> employees) {
         this.title = title;
         this.description = description;
+        this.thumbnail = thumbnail;
         this.videoList = videoList;
+        this.employees = employees;
     }
 
-    public Module(String title, String description, List<Video> videoList, User employee) {
+    public Module(String title, String description, String thumbnail, List<String> videoList) {
         this.title = title;
         this.description = description;
+        this.thumbnail = thumbnail;
         this.videoList = videoList;
-        this.employee = employee;
     }
 
     public Long getModuleId() {
@@ -76,30 +79,38 @@ public class Module {
         this.description = description;
     }
 
-    public List<Video> getVideoList() {
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public List<String> getVideoList() {
         return videoList;
     }
 
-    public void setVideoList(List<Video> videoList) {
+    public void setVideoList(List<String> videoList) {
         this.videoList = videoList;
     }
 
-    public User getEmployee() {
-        return employee;
+    public List<User> getEmployees() {
+        return employees;
     }
 
-    public void setEmployee(User employee) {
-        this.employee = employee;
+    public void setEmployees(List<User> employees) {
+        this.employees = employees;
     }
 
-    @Override
-    public String toString() {
+    @java.lang.Override
+    public java.lang.String toString() {
         return "Module{" +
                 "moduleId=" + moduleId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", videoList=" + videoList +
-                ", employee=" + employee +
+                ", employees=" + employees +
                 '}';
     }
 }
