@@ -255,10 +255,13 @@ public class UserService implements UserDetailsService {
 
         }
 
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-
+        String encodedPassword = "";
+        if (user.getUserRole().equals(RoleEnum.APPLICANT)) {
+            encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        } else {
+            encodedPassword = bCryptPasswordEncoder.encode(user.getWorkEmail());
+        }
         user.setPassword(encodedPassword);
-
         User newUser = userRepository.saveAndFlush(user);
 
         // Sending confirmation TOKEN to set user's isEnabled
@@ -271,11 +274,12 @@ public class UserService implements UserDetailsService {
         if (newUser.getUserRole().equals(RoleEnum.APPLICANT)) {
             link = "http://localhost:3000/verify/" + token;
             emailSender.send(
-                    newUser.getEmail(), buildConfirmationEmail(newUser.getFirstName(), link));
+                    newUser.getEmail(), buildJMPConfirmationEmail(newUser.getFirstName(), link));
         } else {
             link = "http://localhost:3001/verify/" + token;
             emailSender.send(
-                    newUser.getWorkEmail(), buildConfirmationEmail(newUser.getFirstName(), link));
+                    newUser.getWorkEmail(),
+                    buildHRMSConfirmationEmail(newUser.getFirstName(), link, newUser.getPassword()));
         }
 
         System.out.println("New user successfully created with User Id : " + newUser.getUserId());
@@ -347,7 +351,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public String confirmToken(String token) {
+    public String confirmToken(String token) throws Exception {
         System.out.println("UserService.confirmToken");
         System.out.println("token = " + token);
         ConfirmationToken confirmationToken = confirmationTokenService
@@ -367,7 +371,6 @@ public class UserService implements UserDetailsService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        enableUser(confirmationToken.getUser().getEmail());
         return "Token has been confirmed.";
     }
 
@@ -435,7 +438,7 @@ public class UserService implements UserDetailsService {
         return tempUser.getUserId();
     }
 
-    private String buildConfirmationEmail(String name, String link) {
+    private String buildJMPConfirmationEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -515,7 +518,7 @@ public class UserService implements UserDetailsService {
                 "</div></div>";
     }
 
-    private String buildResetPasswordEmail(String name) {
+    private String buildHRMSConfirmationEmail(String name, String link, String tempPassword) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -538,6 +541,88 @@ public class UserService implements UserDetailsService {
                 "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n"
                 +
                 "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n"
+                +
+                "                    </td>\n" +
+                "                  </tr>\n" +
+                "                </tbody></table>\n" +
+                "              </a>\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "        </tbody></table>\n" +
+                "        \n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table>\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
+                "    <tbody><tr>\n" +
+                "      <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
+                "      <td>\n" +
+                "        \n" +
+                "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n"
+                +
+                "                  <tbody><tr>\n" +
+                "                    <td bgcolor=\"#1D70B8\" width=\"100%\" height=\"10\"></td>\n" +
+                "                  </tr>\n" +
+                "                </tbody></table>\n" +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\" height=\"10\"></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
+                "    <tbody><tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n"
+                +
+                "        \n" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name
+                + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering an account with Libro. Please enter the following temporary password in the link below to activate your account: </p> <p>"
+                + tempPassword
+                + "</p>\n \n <blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\""
+                + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 1 Hour. <p>Grow with Libro</p>" +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
+                "\n" +
+                "</div></div>";
+    }
+
+    private String buildResetPasswordEmail(String name) {
+        return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
+                "\n" +
+                "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
+                "\n" +
+                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n"
+                +
+                "    <tbody><tr>\n" +
+                "      <td width=\"100%\" height=\"53\" bgcolor=\"#0b0c0c\">\n" +
+                "        \n" +
+                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n"
+                +
+                "          <tbody><tr>\n" +
+                "            <td width=\"70\" bgcolor=\"#0b0c0c\" valign=\"middle\">\n" +
+                "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n"
+                +
+                "                  <tbody><tr>\n" +
+                "                    <td style=\"padding-left:10px\">\n" +
+                "                  \n" +
+                "                    </td>\n" +
+                "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n"
+                +
+                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Change your password</span>\n"
                 +
                 "                    </td>\n" +
                 "                  </tr>\n" +
@@ -617,7 +702,7 @@ public class UserService implements UserDetailsService {
                 "                    </td>\n" +
                 "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n"
                 +
-                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n"
+                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Reset your password</span>\n"
                 +
                 "                    </td>\n" +
                 "                  </tr>\n" +
@@ -775,7 +860,7 @@ public class UserService implements UserDetailsService {
 
             String link = "http://localhost:3000/verify/" + ct.getToken();
             emailSender.send(
-                    tempUser.getEmail(), buildConfirmationEmail(tempUser.getFirstName(), link));
+                    tempUser.getEmail(), buildJMPConfirmationEmail(tempUser.getFirstName(), link));
         } else { // HRMS/ESS
             System.out.println("HRMS/ESS Platform");
             User tempUser = getEmployee(email);
@@ -791,7 +876,8 @@ public class UserService implements UserDetailsService {
 
             String link = "http://localhost:3001/verify/" + ct.getToken();
             emailSender.send(
-                    tempUser.getWorkEmail(), buildConfirmationEmail(tempUser.getFirstName(), link));
+                    tempUser.getWorkEmail(),
+                    buildHRMSConfirmationEmail(tempUser.getFirstName(), link, tempUser.getPassword()));
         }
         return "Confirmation email resent";
     }
@@ -1029,5 +1115,23 @@ public class UserService implements UserDetailsService {
         }
 
         return employees;
+    }
+
+    public String verifyTempPassword(String workEmail, String tempPassword) {
+        String currentPassword = getEmployee(workEmail).getPassword();
+        if (tempPassword.equals(currentPassword)) {
+            return "Temporary password verified";
+        }
+        throw new IllegalStateException("Invalid temporary password");
+    }
+
+    @Transactional
+    public String setFirstPassword(String workEmail, String password) {
+        User user = getEmployee(workEmail);
+        String encodedPassword = bCryptPasswordEncoder.encode(password);
+        user.setPassword(encodedPassword);
+        enableUser(user.getEmail());
+        userRepository.saveAndFlush(user);
+        return "Successfully set password";
     }
 }

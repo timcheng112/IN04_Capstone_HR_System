@@ -28,11 +28,21 @@ export default function EditCategoryModal({
   }
 
   const handleSubmit = () => {
-    if (name !== "") {
-      editCategory();
-      onClose(false);
-      alert("Successfully edited category.");
-      refreshKeyHandler();
+    editCategory();
+    onClose(false);
+    alert("Successfully edited category.");
+    refreshKeyHandler();
+  };
+
+  const handleSubmitHandler = () => {
+    if (name !== "" && name !== category.name) {
+      handleSubmit();
+    } else {
+      if (name === "") {
+        alert("Input cannot be empty!");
+      } else {
+        alert("No changes detected!");
+      }
     }
   };
 
@@ -63,7 +73,7 @@ export default function EditCategoryModal({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmitHandler}>
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                   <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="mt-3 text-center sm:mt-0 sm:text-left">
@@ -101,8 +111,7 @@ export default function EditCategoryModal({
                       type="button"
                       className="inline-flex w-full justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                       onClick={() => {
-                        onClose();
-                        handleSubmit();
+                        handleSubmitHandler();
                       }}
                     >
                       Confirm

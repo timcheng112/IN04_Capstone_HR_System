@@ -10,7 +10,6 @@ const api = {
   register(
     firstName,
     lastName,
-    password,
     phone,
     email,
     workEmail,
@@ -22,13 +21,23 @@ const api = {
     dateJoined
   ) {
     return axios.post(
-      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&password=${password}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}`
+      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}`
     );
   },
   confirmToken(token) {
     return axios.get(
       `http://localhost:9191/api/user/register/confirmToken?token=${token}`
     );
+  },
+  verifyTempPassword(workEmail, tempPassword) {
+    return axios.get(
+      `http://localhost:9191/api/user/register/verifyTempPassword?workEmail=${workEmail}&tempPassword=${tempPassword}`
+    )
+  },
+  setFirstPassword(workEmail, password) {
+    return axios.get(
+      `http://localhost:9191/api/user/register/setFirstPassword?workEmail=${workEmail}&password=${password}`
+    )
   },
   resendConfirmation(email) {
     return axios.get(
@@ -166,7 +175,6 @@ const api = {
   getOrganization() {
     return axios.get(`http://localhost:9191/api/organization/1`);
   },
-
   getUserInfo(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
@@ -175,26 +183,30 @@ const api = {
       `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
     );
   },
-
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
-  getUserIdByEmail(email) {
+  getUserIdByEmail(email) { // this mght nt work
     return axios.get(
       `http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`
     );
   },
+  getEmployeeIdByEmail(email) {
+      return axios.get(
+        `http://localhost:9191/api/user/login/getEmployeeIdByEmail?workEmail=${email}`
+      );
+    },
   getDept(deptId) {
     return axios.get(`http://localhost:9191/api/department/${deptId}`);
   },
   deleteDept(deptId) {
     return axios.delete(`http://localhost:9191/api/department/${deptId}`);
   },
-  deleteTeam(deptId) {
-    return axios.delete(`http://localhost:9191/api/department/${deptId}`);
+  deleteTeam(teamId) {
+    return axios.delete(`http://localhost:9191/api/team/${teamId}`);
   },
   uploadFile(file) {
-    return axios.post(`http://localhost:9191/uploadDocument/${file}`);
+    return axios.post(`http://localhost:9191/api/docData/uploadDocument/`, file);
   },
   addDepartment(deptName, deptHeadId) {
     return axios.post(
@@ -232,7 +244,25 @@ const api = {
   },
   addOutlet(outletName, contactNo, openingHour, closingHour, addressId) {
     return axios.post(
-      `http://localhost:9191/api/address/addAddress?addressName=${outletName}&line1=${contactNo}&line2=${openingHour}&postalCode=${closingHour}&city=${addressId}`
+      `http://localhost:9191/api/outlet/addOutlet?outletName=${outletName}&contactNo=${contactNo}&openingHour=${openingHour}&closingHour=${closingHour}&addressId=${addressId}`
+    );
+  },
+  addTeam(teamName, teamHeadId, outletId, isOffice, deptId) {
+    return axios.post(
+      `http://localhost:9191/api/team/addTeam?teamHeadId=${teamHeadId}&teamName=${teamName}&outletId=${outletId}&isOffice=${isOffice}&deptId=${deptId}`
+    );
+  },
+  getAllOutlets() {
+    return axios.get(`http://localhost:9191/api/outlet/getAllOutlets`);
+  },
+  changeDepartmentHead(deptId, newHeadId) {
+    return axios.put(
+        `http://localhost:9191/api/department/changeDepartmentHead?deptId=${deptId}&newHeadId=${newHeadId}`
+    );
+  },
+  getAllTeamsInDept(deptId) {
+    return axios.get(
+        `http://localhost:9191/api/team/getAllTeamsInDept/${deptId}`
     );
   },
 };

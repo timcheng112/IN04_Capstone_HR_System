@@ -12,7 +12,6 @@ function classNames(...classes) {
 export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -44,37 +43,52 @@ export default function Register() {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    register();
+    validateDates();
   };
+
+  function validateDates() {
+    if (dobDay.length < 2 || dobMonth.length < 2 || dobYear.length < 4) {
+      alert(
+        "Please ensure the date of birth dates are in the format of DD MM YYYY"
+      );
+    } else if (
+      joinedDay.length < 2 ||
+      joinedMonth.length < 2 ||
+      joinedYear.length < 4
+    ) {
+      alert("Please ensure the joined dates are in the format of DD MM YYYY");
+    } else if (dobDay > 31 || dobMonth > 12 || dobYear > 2023) {
+      alert("Invalid birthday");
+    } else if (joinedDay > 31 || joinedMonth > 12 || joinedYear > 2023) {
+      alert("Invalid date joined");
+    } else {
+      register();
+    }
+  }
 
   function register() {
     var dob = dobYear + "-" + dobMonth + "-" + dobDay;
     console.log("dob = " + dob);
     var dateJoined = joinedYear + "-" + joinedMonth + "-" + joinedDay;
     console.log("joined = " + dateJoined);
-    if (password === confirmPassword) {
-      api
-        .register(
-          firstName,
-          lastName,
-          password,
-          phone,
-          email,
-          workEmail,
-          dob,
-          gender.toUpperCase(),
-          role.toUpperCase(),
-          isPartTimer,
-          isHrEmployee,
-          dateJoined
-        )
-        .then(() =>
-          alert("Account creation successful for " + firstName + " " + lastName)
-        )
-        .finally(() => history.goBack());
-    } else {
-      alert("passwords do not match");
-    }
+    api
+      .register(
+        firstName.trim(),
+        lastName.trim(),
+        phone.trim(),
+        email.trim(),
+        workEmail.trim() + "@libro.com",
+        dob.trim(),
+        gender.toUpperCase(),
+        role.toUpperCase(),
+        isPartTimer,
+        isHrEmployee,
+        dateJoined.trim()
+      )
+      .then(() =>
+        alert("Account creation successful for " + firstName + " " + lastName)
+      )
+      .finally(() => history.goBack());
   }
 
   return (
@@ -138,6 +152,7 @@ export default function Register() {
                   onChange={(l) => setLastName(l.target.value)}
                 />
               </div>
+
               <div>
                 <label
                   htmlFor="email-address"
@@ -164,7 +179,7 @@ export default function Register() {
                 >
                   Work email address
                 </label>
-                <input
+                {/* <input
                   id="work-email-address"
                   name="work-email"
                   type="email"
@@ -174,9 +189,25 @@ export default function Register() {
                   placeholder="Work email address"
                   value={workEmail}
                   onChange={(e) => setWorkEmail(e.target.value)}
-                />
+                /> */}
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <input
+                    type="text"
+                    name="work-email-address"
+                    id="work-email"
+                    className="block w-full min-w-0 flex-1 rounded-none rounded-l-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    placeholder="johntan"
+                    value={workEmail}
+                    onChange={(e) => {
+                      setWorkEmail(e.target.value);
+                    }}
+                  />
+                  <span className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">
+                    @libro.com
+                  </span>
+                </div>
               </div>
-              <div>
+              {/* <div>
                 <label
                   htmlFor="password"
                   className="block text-sm mt-5 font-medium text-gray-700"
@@ -213,7 +244,7 @@ export default function Register() {
                   value={confirmPassword}
                   onChange={(p) => setConfirmPassword(p.target.value)}
                 />
-              </div>
+              </div> */}
               <div>
                 <label
                   htmlFor="phone"
