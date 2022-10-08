@@ -242,6 +242,12 @@ const api = {
       `http://localhost:9191/api/address/addAddress?addressName=${outletName}&line1=${contactNo}&line2=${openingHour}&postalCode=${closingHour}&city=${addressId}`
     );
   },
+  getAllModules() {
+    return axios.get(`http://localhost:9191/api/module`)
+  },
+  getModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}`)
+  }
 };
 
 export default api;
