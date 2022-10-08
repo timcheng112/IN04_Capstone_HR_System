@@ -1,8 +1,8 @@
 import React from "react";
-import Signout from "../components/home/Signout";
+import { Text } from "react-native-paper";
 
 const HomeScreen = () => {
-  return <Signout />;
+  return <Text>HomeScreen</Text>;
 };
 
 export default HomeScreen;

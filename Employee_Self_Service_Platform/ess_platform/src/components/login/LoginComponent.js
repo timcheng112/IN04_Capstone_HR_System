@@ -7,25 +7,26 @@ function LoginComponent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { signIn } = React.useContext(AuthContext)
+  const { signIn } = React.useContext(AuthContext);
 
   return (
     <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight }}>
-      <View>
-        <View style={{padding:40}}></View>
+      <View style={{ alignItems: "center" }}>
+        <View style={{ padding: 40 }}></View>
         <Image
           source={require("../../../assets/libro-logo.png")}
           resizeMode="contain"
-          style={{ height: "20%", width: "100%", }}
+          style={{ height: "20%", width: "100%" }}
         />
-        <View style={{padding:15}}></View>
+        <View style={{ padding: 15 }}></View>
         <TextInput
-          style={{ marginVertical: 10 }}
+          style={{ marginVertical: 10, width: "90%" }}
           label="Email"
-          value={email} 
+          value={email}
           onChangeText={(email) => setEmail(email)}
         />
         <TextInput
+          style={{ width: "90%" }} 
           label="Password"
           value={password}
           onChangeText={(password) => setPassword(password)}

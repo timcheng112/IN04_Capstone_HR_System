@@ -77,7 +77,6 @@ public class UserController {
     @PostMapping(path = "/register/registerNewAccountHRMS")
     public Long registerNewAccountHRMS(@RequestParam("firstName") String firstName,
             @RequestParam("lastName") String lastName,
-            @RequestParam("password") String password,
             @RequestParam("phone") Integer phone,
             @RequestParam("email") String email,
             @RequestParam("workEmail") String workEmail,
@@ -88,10 +87,9 @@ public class UserController {
             @RequestParam("isHrEmployee") Boolean isHrEmployee,
             @RequestParam("dateJoined") String dateJoined) {
         System.out.println("UserController.registerNewAccountJMP");
-        User newEmployee = new User(firstName, lastName, password, phone, email, workEmail, LocalDate.parse(dob),
+        User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
                 GenderEnum.valueOf(gender), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
                 LocalDate.parse(dateJoined), null);
-        System.out.println("newEmployee = " + newEmployee.toString());
         try {
             Long employeeId = userService.addNewUser(newEmployee);
             System.out.println("UserController.registerNewAccountHRMS");
@@ -116,8 +114,20 @@ public class UserController {
     }
 
     @GetMapping(path = "/register/confirmToken")
-    public String confirmToken(@RequestParam("token") String token) {
+    public String confirmToken(@RequestParam("token") String token) throws Exception {
         return userService.confirmToken(token);
+    }
+
+    @GetMapping(path = "/register/verifyTempPassword")
+    public String verifyTempPassword(@RequestParam("workEmail") String workEmail,
+            @RequestParam("tempPassword") String tempPassword) throws Exception {
+        return userService.verifyTempPassword(workEmail, tempPassword);
+    }
+
+    @GetMapping(path = "/register/setFirstPassword")
+    public String setFirstPassword(@RequestParam("workEmail") String workEmail,
+            @RequestParam("password") String password) throws Exception {
+        return userService.setFirstPassword(workEmail, password);
     }
 
     @GetMapping(path = "/register/testEmailRegex")
@@ -223,7 +233,6 @@ public class UserController {
 
     @GetMapping(path = "/login/getUserIdByEmail")
     public Long getUserIdByEmail(@RequestParam("email") String email) {
-        
         return userService.getUserFromEmail(email);
     }
 
@@ -267,7 +276,7 @@ public class UserController {
     public List<User> getEmployeesNotInGivenTeam(@RequestParam("teamId") Integer teamId) {
         return userService.getEmployeesNotInGivenTeam(teamId);
     }
-    
+
     @GetMapping(path = "/getUnassignedEmployees")
     public List<User> getEmployeesWithoutTask(@RequestParam("taskId") Long taskId) {
         return userService.getEmployeesWithoutTask(taskId);
