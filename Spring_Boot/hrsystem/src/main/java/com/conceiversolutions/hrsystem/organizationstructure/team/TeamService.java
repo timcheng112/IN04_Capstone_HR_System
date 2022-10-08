@@ -62,6 +62,49 @@ public class TeamService {
         return teams;
     }
 
+    public List<Team> getAllTeamsInDept(Long deptId) {
+        System.out.println("TeamService.getAllTeamsInDept");
+        List<Team> teams = teamRepository.findAll();
+
+        List<Team> teamsInDept = new ArrayList<>();
+
+        if (teams.isEmpty()) {
+            throw new IllegalStateException("Unable to retrieve, no teams exist");
+        }
+
+        for (Team t : teams) {
+
+            System.out.println("Team ID is : " + t.getTeamId() + ", Team name is : " + t.getTeamName());
+            Department d = t.getDepartment();
+
+            if (d.getDepartmentId() == deptId) {
+                teamsInDept.add(t);
+            }
+        }
+
+        for (Team t: teamsInDept) {
+            System.out.println("Team ID is : " + t.getTeamId() + ", Team name is : " + t.getTeamName());
+            Department d = t.getDepartment();
+
+            d.setTeams(new ArrayList<>());
+            d.setDepartmentHead(null);
+            d.setOrganization(null);
+
+            List<User> teamMembers = t.getUsers();
+            for (User member : teamMembers) {
+                member.setTeams(new ArrayList<>());
+            }
+
+            t.getRoster().setTeam(null);
+            t.getRoster().setBlocks(new ArrayList<>());
+            t.getRoster().setShifts(new ArrayList<>());
+
+            t.getTeamHead().setTeams(new ArrayList<>());
+        }
+
+        return teamsInDept;
+    }
+
     public Team getTeam(Long id){
         Optional<Team> team = teamRepository.findById(id);
         if(team.isPresent()){
@@ -110,11 +153,48 @@ public class TeamService {
         t1.setUsers(team.getUsers());
     }
 
-    public void deleteTeam(Long teamId) {
-        teamRepository.deleteById(teamId);
+    public String deleteTeam(Long teamId) {
+        Team t = getTeam(teamId);
+        Long deptId = t.getDepartment().getDepartmentId();
+
+        Optional<Department> d = departmentRepository.findById(Long.valueOf(deptId));
+        Department dept = d.get();
+
+        //remove team members & team head
+        List<User> teamMembers = t.getUsers();
+        for(User u : teamMembers){
+            removeMemberFromTeam(teamId.intValue(), u.getUserId().intValue());
+        }
+        t.setTeamHead(null);
+        //delete from user team head
+//        User th1 = t.getTeamHead();
+//        List<Team> tempTeams = th1.getTeams();
+//        tempTeams.remove(t);
+//        th1.setTeams(tempTeams);
+//        userRepository.saveAndFlush(th1);
+
+        t.getDepartment().removeTeam(t);
+        //delete from team
+        dept.removeTeam(t);
+        departmentRepository.saveAndFlush(dept);
+
+        t.getRoster().setTeam(null);
+        //delete from roster
+        Long r = t.getRoster().getRosterId();
+        Optional<Roster> roster = rosterRepository.findById(r);
+        if(roster.isEmpty()){
+            throw new IllegalStateException("Roster does not exist.");
+        }
+        Roster ros = roster.get();
+        ros.setTeam(null);
+        rosterRepository.saveAndFlush(ros);
+//        rosterRepository.findAll().remove(ros);
+
+        teamRepository.delete(t);
+        return teamId + "is deleted successfully";
     }
 
-    public Long addNewTeam(String teamName, Integer teamHeadId, Integer outletId, Boolean isOffice, Integer deptId) {
+        public Long addNewTeam(String teamName, Integer teamHeadId, Integer outletId, Boolean isOffice, Integer deptId) {
         System.out.println("TeamService.addNewTeam");
         System.out.println("teamName = " + teamName + ", teamHeadId = " + teamHeadId + ", outletId = " + outletId + ", isOffice = " + isOffice + ", deptId = " + deptId);
 

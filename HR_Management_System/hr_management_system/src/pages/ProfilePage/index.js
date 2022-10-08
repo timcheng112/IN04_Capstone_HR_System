@@ -23,6 +23,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { getUserId } from "../../utils/Common.js";
 import api from "../../utils/api.js";
+import axios from "axios";
 
 // const actions1 = [
 //     {
@@ -74,9 +75,10 @@ export default function ProfilePage(props) {
   let [userInfo, setUserInfo] = useState([]);
   const userId = result[0];
   // const email = result[1]
-  const [file, setFileState] =useState(null);
+  const [file, setFileState] =useState('');
+  const [fileName , setfileName]= useState('');
 
-  console.log(userId);
+  // console.log(userId);
   // console.log(email)
 
   // useEffect to get the user details
@@ -84,7 +86,7 @@ export default function ProfilePage(props) {
     async function getUserInfo() {
       await api.getUserInfo(userId).then((response) => {
         setUserInfo(response.data);
-        console.log(userInfo);
+        // console.log(userInfo);
       });
     }
     getUserInfo();
@@ -123,16 +125,51 @@ export default function ProfilePage(props) {
   function handleFile(e){
     console.log(e.target.files, "--");
     console.log(e.target.files[0], "$SSSSS$")
-    let f = e.target.files[0]
-    this.setFileState(f)
+    // let f = e.target.files[0]
+    setFileState(e.target.files[0])
+    setfileName(e.target.files[0].name)
+    console.log(file + "what now")
+    console.log(fileName + "printing fileName")
 
   }
 
   function uploadFile(e){
-    let formData = new FormData() 
-    formData.append('document', file)
-    api.uploadFile(e).then()
+    e.preventDefault();
+    console.log(file[0])
+    console.log("printing file contents above")
+    let formData = new FormData() ;
+    if(file){
+      formData.append('document', file)
+    }
 
+    try{
+      // const res = axios.post(`http://localhost:9191/api/docData/uploadDocument/`,formData).
+      api.uploadFile(formData).
+      then(response => 
+        {console.log(response.data)
+        if(response.status ===200){
+          alert("Resume submitted succesfully");
+        }
+        }
+      ).catch((error) => {
+                console.log(error.response)
+             });
+      
+    } catch(err){
+      if(err.response.status === 500){
+        console.log("There was a problem with upload..")
+      }else{
+        console.log(err.response.dataS)
+      }
+
+    }
+    
+    // axios.post(`http://localhost:9191/api/docData/uploadDocument/${file}`).
+    // then(response => console.log(response.data)).catch((error) => {
+    //           console.log(error.response)
+    //        });
+    // api.uploadFile(e);
+    
 
   }
 
@@ -150,9 +187,9 @@ export default function ProfilePage(props) {
             <Navbar />
           </div>
 
-          <div class="grid grid-cols-3 gap-10 mx-24 p-12 mt-12">
+          <div className="grid grid-cols-3 gap-10 mx-24 p-12 mt-12">
             {/*first col*/}
-            <div class=" bg-slate-200/70 row-start-1 row-end-4 rounded-lg">
+            <div className=" bg-slate-200/70 row-start-1 row-end-4 rounded-lg">
               <div className="flex justify-center mt-24">
                 <img
                   className="flex h-24 w-24 max-w-[550px] rounded-full"
@@ -194,7 +231,7 @@ export default function ProfilePage(props) {
                     </svg>
                   </a>
                 </div>
-                <span class="p-4"></span>
+                <span className="p-4"></span>
                 <div>
                   Team{" "}
                   <a href="/viewTeam">
@@ -202,13 +239,13 @@ export default function ProfilePage(props) {
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
-                      stroke-width="1.5"
+                      strokeWidth="1.5"
                       stroke="currentColor"
-                      class="h-10 w-full max-w-[550px]"
+                      className="h-10 w-full max-w-[550px]"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
                       />
                     </svg>
@@ -218,8 +255,8 @@ export default function ProfilePage(props) {
             </div>
             {/*span 2*/}
 
-            <div class="col-span-2 "></div>
-            <div class="col-span-1 col-start-2 box border border-2 rounded rounded-lg shadow-lg ">
+            <div className="col-span-2 "></div>
+            <div className="col-span-1 col-start-2 box border border-2 rounded rounded-lg shadow-lg ">
               <h3 className="mt-5 text-lg font-medium leading-6 text-gray-900">
                 Personal Information
               </h3>
@@ -288,7 +325,7 @@ export default function ProfilePage(props) {
                       </span>
                     </dd>
                   </div>
-                  <div class="p-8">
+                  <div className="p-8">
                     <dd>
                       <button
                         type="button"
@@ -311,30 +348,34 @@ export default function ProfilePage(props) {
               </div>
             </div>
             <div className="row-span-1 col-span-1 col-start-3 box border border-2 rounded rounded-lg shadow-lg ">
-              <form>
+              
+              
+              
+              <form onSubmit={uploadFile} encType="multipart/form">
               <dt className="mt-5 my-5 text-lg font-medium leading-6 text-gray-900">
                 Qualifications & Documents
                 <p className="mt-1 max-w-2xl text-sm text-gray-500">Your CV.</p>
               </dt>
       
-              <div class="mb-8">
+              <div className="mb-8">
                 {/* <input id="file" type="file" name="file" onChange ={(e) => handleFile(e)} /> */}
                
                 <label
-                  for="file"
-                  class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+                  // for not ok anymore for react, use htmlFor. same with class - classNames  stroke-width - strokeWidth  stroke-linejoin - strokeLinejoin
+                  htmlFor="file"
+                  className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
 
                 >
                   <div>
-                    <span class="mb-2 block text-xl font-semibold text-[#07074D]">
+                    <span className="mb-2 block text-xl font-semibold text-[#07074D]">
                       Click here to upload
                     </span>
-                    <span class="mb-2 block text-base font-medium text-[#6B7280]">
+                    <span className="mb-2 block text-base font-medium text-[#6B7280]">
                       Or
                     </span>
-            
+                    <span className="flex ml-10 mb-2 block text-md text-[#07074D]">
                       <input id="file" type="file" multiple name="file" onChange ={(e) => handleFile(e)} />
-                     
+                      </span> 
                   </div>
                 </label>
               </div>
@@ -346,24 +387,27 @@ export default function ProfilePage(props) {
                       {/* where the fetching for download should be */}
                     </div>
                     <div className="ml-4 flex flex-shrink-0 space-x-4">
+                      
                     <PaperClipIcon
-                        className="h-5 w-5 flex-shrink-0 text-gray-400"
-                        aria-hidden="true"
-                      />
+                        className="inline-block h-6 w-6 flex-shrink-0 text-gray-400"
+                        aria-hidden="true" 
+                      > </PaperClipIcon>
                       {/* <input id="file" type="file" name="file" onChange ={(e) => handleFile(e)} /> */}
-                      <button
+                      {/* <button
                         type="button"
                         className="rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         onClick={(e) => uploadFile(e)}
                       >
                         Upload
-                      </button>
+                      </button> */}
+                      {fileName}
+                      <input type="submit" value="Upload" className="inline-block px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"></input>
                     </div>
                   </li>
                 </ul>
                 <button
                   type="button"
-                  className="mt-5 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                 >
                   View Your CV
                 </button>
