@@ -96,20 +96,45 @@ public class TaskService {
                 .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
 
         Boolean isTaskNameChanged = false, isTaskDescriptionChanged = false;
+        Boolean isTaskNameValid = true, isTaskDescriptionValid = true;
+        String errMsg = "";
 
-        if (taskName != null && taskName.length() > 0 && !Objects.equals(task.getName(), taskName)) {
-            task.setName(taskName);
-            isTaskNameChanged = true;
+        if (taskName != null) {
+            if (taskName.length() > 0) {
+                if (!Objects.equals(task.getName(), taskName)) {
+                    task.setName(taskName);
+                    isTaskNameChanged = true;
+                }
+            } else {
+                errMsg = errMsg.concat("Task Name cannot be empty!\n");
+                isTaskNameValid = false;
+            }
+        } else {
+            errMsg = errMsg.concat("Task Name is null!\n");
+            isTaskNameValid = false;
         }
 
-        if (taskDescription != null && taskDescription.length() > 0
-                && !Objects.equals(task.getDescription(), taskDescription)) {
-            task.setDescription(taskDescription);
-            isTaskDescriptionChanged = true;
+        if (taskDescription != null) {
+            if (taskDescription.length() > 0) {
+                if (!Objects.equals(task.getDescription(), taskDescription)) {
+                    task.setDescription(taskDescription);
+                    isTaskDescriptionChanged = true;
+                }
+            } else {
+                errMsg = errMsg.concat("Task Description cannot be empty!\n");
+                isTaskDescriptionValid = false;
+            }
+        } else {
+            errMsg = errMsg.concat("Task Description is null!\n");
+            isTaskDescriptionValid = false;
         }
 
-        if (!isTaskNameChanged && !isTaskDescriptionChanged) {
-            throw new IllegalStateException("No changes detected!");
+        if (errMsg != "" && !(isTaskNameChanged && isTaskDescriptionChanged)) {
+            if (isTaskNameChanged && isTaskDescriptionValid || isTaskDescriptionChanged && isTaskNameValid) {
+                System.out.println("Changes are valid");
+            } else {
+                throw new IllegalStateException(errMsg);
+            }
         }
     }
 

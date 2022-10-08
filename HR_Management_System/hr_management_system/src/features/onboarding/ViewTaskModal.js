@@ -23,10 +23,10 @@ export default function ViewTaskModal({ open, onClose, task }) {
       .getEmployeesWithTask(task.taskId)
       .then((response) => {
         setPeople(response.data);
-        console.log(response.data);
+        setTabId(0);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [open]);
 
   const history = useHistory();
   const [error, setError] = useState(null);
@@ -45,11 +45,11 @@ export default function ViewTaskModal({ open, onClose, task }) {
   // }, [])
 
   const findStatusHandler = (user) => {
-    return user.taskListItems.find((taskListItem) => {
-      return (
+    const taskListItemToBeReturned = user.taskListItems.find(
+      (taskListItem) =>
         taskListItem.isDone === true && taskListItem.task.taskId === task.taskId
-      );
-    });
+    );
+    return taskListItemToBeReturned;
   };
 
   return (

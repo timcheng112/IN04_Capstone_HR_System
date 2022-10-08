@@ -23,10 +23,11 @@ const AssignTaskModal = ({ open, onClose, task, refreshKeyHandler }) => {
       .then((response) => {
         setUnassignedEmployees(response.data);
         setFilteredUnassignedEmployees(response.data);
-        console.log(response.data);
+        setAssignedEmployees([]);
+        setFilteredAssignedEmployees([]);
       })
       .catch((error) => console.log(error.response.data.message));
-  }, []);
+  }, [open]);
 
   const handleSubmit = () => {
     createTaskListItem(task.taskId);
