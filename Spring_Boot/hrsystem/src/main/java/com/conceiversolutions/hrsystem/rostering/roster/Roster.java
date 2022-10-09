@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.conceiversolutions.hrsystem.organization_structure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 
@@ -19,7 +19,7 @@ public class Roster {
     @Column(name = "roster_description", nullable = true)
     private String rosterDescription;
 
-    @OneToOne(mappedBy = "roster", optional = false)
+    @OneToOne(mappedBy = "roster", optional = true)
     private Team team;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "roster")
     private List<Shift> shifts;
@@ -32,6 +32,12 @@ public class Roster {
     public Roster(String rosterDescription, Team team, List<Shift> shifts, List<Block> blocks) {
         this.rosterDescription = rosterDescription;
         this.team = team;
+        this.shifts = shifts;
+        this.blocks = blocks;
+    }
+
+    public Roster(String rosterDescription, List<Shift> shifts, List<Block> blocks) {
+        this.rosterDescription = rosterDescription;
         this.shifts = shifts;
         this.blocks = blocks;
     }

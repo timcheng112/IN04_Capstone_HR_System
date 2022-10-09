@@ -1,15 +1,27 @@
 package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
+import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.skillset.jobskillset.JobSkillset;
 import com.conceiversolutions.hrsystem.user.user.User;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name="job_requests")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 public class JobRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,108 +31,57 @@ public class JobRequest {
     private String jobTitle;
     @Column(name = "job_description", nullable = false, length = 255)
     private String jobDescription;
-    @Column(name = "reason", nullable = false, length = 255)
-    private String reason;
+    @Column(name = "justification", nullable = false, length = 255)
+    private String justification;
     @Column(name = "request_date", nullable = false)
     private LocalDate requestDate;
+    @Column(name = "preferred_start_date", nullable = false)
+    private LocalDate preferredStartDate;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "job_type", nullable = false)
+    private JobTypeEnum jobType;
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private JobStatusEnum status;
-
-    @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "requested_by")
-    private User requestedBy;
+    @Column(name = "salary_min", nullable = false)
+    private BigDecimal salaryMin;
+    @Column(name = "salary_max", nullable = false)
+    private BigDecimal salaryMax;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobSkillset.class)
-    @JoinColumn(name = "job_skillset_id", referencedColumnName = "request_id")
+    @JoinColumn(name = "requirements")
     private List<JobSkillset> jobRequirements;
 
-//    TODO add department
-//    private Department department;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Department.class, optional = false)
+    @JoinColumn(name = "department")
+    private Department department;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Team.class, optional = true)
+    @JoinColumn(name = "team")
+    private Team team;
+
+    @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "requestor")
+    private User requestedBy;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = User.class, optional = true)
+    @JoinColumn(name = "approver")
+    private User approver;
 
     public JobRequest() {
     }
 
-    public JobRequest(String jobTitle, String jobDescription, String reason, LocalDate requestDate, JobStatusEnum status, User requestedBy, List<JobSkillset> jobRequirements) {
+    public JobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobType, BigDecimal salaryMin, BigDecimal salaryMax, List<JobSkillset> jobRequirements, Department department, Team team, User requestedBy) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
-        this.reason = reason;
-        this.requestDate = requestDate;
-        this.status = status;
-        this.requestedBy = requestedBy;
+        this.justification = justification;
+        this.preferredStartDate = preferredStartDate;
+        this.jobType = jobType;
+        this.salaryMin = salaryMin;
+        this.salaryMax = salaryMax;
         this.jobRequirements = jobRequirements;
-    }
-
-    public Long getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(Long requestId) {
-        this.requestId = requestId;
-    }
-
-    public String getJobTitle() {
-        return jobTitle;
-    }
-
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
-    }
-
-    public String getJobDescription() {
-        return jobDescription;
-    }
-
-    public void setJobDescription(String jobDescription) {
-        this.jobDescription = jobDescription;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public LocalDate getRequestDate() {
-        return requestDate;
-    }
-
-    public void setRequestDate(LocalDate requestDate) {
-        this.requestDate = requestDate;
-    }
-
-    public JobStatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(JobStatusEnum status) {
-        this.status = status;
-    }
-
-    public User getRequestedBy() {
-        return requestedBy;
-    }
-
-    public void setRequestedBy(User requestedBy) {
+        this.department = department;
+        this.team = team;
         this.requestedBy = requestedBy;
-    }
-
-    public List<JobSkillset> getJobRequirements() {
-        return jobRequirements;
-    }
-
-    public void setJobRequirements(List<JobSkillset> jobRequirements) {
-        this.jobRequirements = jobRequirements;
-    }
-
-    @Override
-    public String toString() {
-        return "JobRequest{" +
-                "requestId=" + requestId +
-                ", jobTitle='" + jobTitle + '\'' +
-                ", jobDescription='" + jobDescription + '\'' +
-                ", requestedBy=" + requestedBy +
-                '}';
+        this.requestDate = LocalDate.now();
+        this.status = JobStatusEnum.CREATED;
+        this.approver = null;
     }
 }

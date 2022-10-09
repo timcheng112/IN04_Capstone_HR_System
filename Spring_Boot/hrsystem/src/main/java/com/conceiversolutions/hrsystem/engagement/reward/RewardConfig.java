@@ -1,17 +1,17 @@
-// package com.conceiversolutions.hrsystem.engagement.reward;
+ package com.conceiversolutions.hrsystem.engagement.reward;
 
-// import org.springframework.boot.CommandLineRunner;
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
+ import org.springframework.boot.CommandLineRunner;
+ import org.springframework.context.annotation.Bean;
+ import org.springframework.context.annotation.Configuration;
 
-// import java.time.LocalDate;
-// import java.util.List;
+ import java.time.LocalDate;
+ import java.util.List;
 
-// @Configuration
-// public class RewardConfig {
+ @Configuration
+ public class RewardConfig {
 
 //     @Bean
-//     CommandLineRunner commandLineRunner(
+//     CommandLineRunner rewardCommandLineRunner(
 //             RewardRepository repository) {
 //         return args -> {
 //             Reward rws = new Reward(
@@ -28,11 +28,11 @@
 //                     null,
 //                     LocalDate.of(2023,9,9)
 //             );
-
+//
 //             repository.saveAll(
 //                     List.of(rws,luge)
 //             );
-
+//
 //         };
 //     }
-// }
+ }

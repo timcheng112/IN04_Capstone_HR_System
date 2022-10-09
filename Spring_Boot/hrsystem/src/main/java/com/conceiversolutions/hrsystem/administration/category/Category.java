@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.administration.category;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -20,7 +21,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long categoryId;
-    private String description;
+    private String name;
 
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Task.class, mappedBy = "category")
     @Column(name = "task_id")
@@ -30,8 +31,13 @@ public class Category {
 
     }
 
-    public Category(String description, List<Task> tasks) {
-        this.description = description;
+    public Category(String name) {
+        this.name = name;
+        this.tasks = new ArrayList<>();
+    }
+
+    public Category(String name, List<Task> tasks) {
+        this.name = name;
         this.tasks = tasks;
     }
 
@@ -43,16 +49,26 @@ public class Category {
         this.categoryId = categoryId;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Task> getTasks() {
         return tasks;
+    }
+
+    public List<Task> addTask(Task task) {
+        this.tasks.add(task);
+        return this.tasks;
+    }
+
+    public List<Task> removeTask(Task task) {
+        this.tasks.remove(task);
+        return this.tasks;
     }
 
     public void setTasks(List<Task> tasks) {
@@ -63,7 +79,7 @@ public class Category {
     public String toString() {
         return "Category{" +
                 "categoryId=" + categoryId +
-                ", description='" + description + '\'' +
+                ", name='" + name + '\'' +
                 ", tasks=" + tasks +
                 '}';
     }
