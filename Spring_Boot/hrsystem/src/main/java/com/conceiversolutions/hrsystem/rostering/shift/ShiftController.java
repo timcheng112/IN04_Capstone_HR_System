@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping(name = "shift")
+@RequestMapping(path = "api/shift")
 @AllArgsConstructor
 public class ShiftController {
 

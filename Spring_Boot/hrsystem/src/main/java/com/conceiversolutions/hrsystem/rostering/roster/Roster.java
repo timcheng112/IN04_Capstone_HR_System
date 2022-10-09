@@ -77,6 +77,16 @@ public class Roster {
         this.blocks = blocks;
     }
 
+    public List<Block> addBlock(Block block) {
+        this.blocks.add(block);
+        return this.blocks;
+    }
+
+    public List<Block> removeBlock(Block block) {
+        this.blocks.remove(block);
+        return this.blocks;
+    }
+
     @Override
     public String toString() {
         return "Roster [blocks=" + blocks + ", rosterDescription=" + rosterDescription + ", rosterId=" + rosterId

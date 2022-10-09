@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping(path = "preferred_date")
+@RequestMapping(path = "api/preferred_date")
 @AllArgsConstructor
 public class PreferredDatesController {
 

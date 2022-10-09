@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping(name = "swap_request")
+@RequestMapping(path = "api/swap_request")
 @AllArgsConstructor
 public class SwapRequestController {
 
