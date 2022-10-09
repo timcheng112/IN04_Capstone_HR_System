@@ -22,6 +22,9 @@ public class TeamController {
         return teamService.getAllTeams();
     }
 
+    @GetMapping(path= "/getAllTeamsInDept/{deptId}")
+    public List<Team> getAllTeamsInDept(@PathVariable("deptId") Long deptId) {return teamService.getAllTeamsInDept(deptId);}
+
     @GetMapping(path = "{teamId}")
     public Team getTeam(@PathVariable("teamId") Long id ){
         return teamService.getTeam(id);
@@ -58,6 +61,11 @@ public class TeamController {
     public String changeTeamHead(@RequestParam("teamId") Integer teamId,
                                  @RequestParam("newHeadId") Integer newHeadId) {
         return teamService.changeTeamHead(teamId, newHeadId);
+    }
+
+    @DeleteMapping(path="/deleteTeam")
+    public String deleteTeam(@PathVariable("teamId") Long teamId){
+        return teamService.deleteTeam(teamId);
     }
 
 }

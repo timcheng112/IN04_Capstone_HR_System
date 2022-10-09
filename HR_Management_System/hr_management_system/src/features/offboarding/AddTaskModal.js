@@ -42,17 +42,25 @@ export default function AddTaskModal({
       .then((response) => {
         setUnassignedEmployees(response.data);
         setFilteredUnassignedEmployees(response.data);
-        console.log(response.data);
+        setAssignedEmployees([]);
+        setFilteredAssignedEmployees([]);
+        setName("");
+        setDescription("");
+        setShowStepOne(true);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [open]);
 
   const handleSubmit = () => {
-    createTask();
-    onClose();
-    //createTaskListItem()
-    alert("Successfully created task.");
-    refreshKeyHandler();
+    if (name !== "" && description !== "") {
+      createTask();
+      onClose();
+      //createTaskListItem()
+      alert("Successfully created task.");
+      refreshKeyHandler();
+    } else {
+      alert("Name/Description inputs must be filled!");
+    }
   };
   function createTask() {
     const task = {

@@ -29,10 +29,12 @@ export default function Login() {
         var message = error.request.response;
         console.log(getWorkEmail());
         if (message.includes("account is not activated yet")) {
+
           console.log("unactivated account " + getWorkEmail());
           api.getEmployeeIdByEmail(getWorkEmail()).then((response) => {
           sessionStorage.setItem("userEmail", getWorkEmail())
           }).then(() => history.push("/verify"));
+
         } else if (
           message.includes("User password does not match the record")
         ) {

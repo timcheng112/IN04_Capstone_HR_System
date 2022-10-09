@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const URL = "172.17.154.228";
+
 const api = {
   login(email, password) {
     return axios.get(
@@ -13,7 +15,7 @@ const api = {
   },
   deleteTaskListItem(taskListItemId) {
     return axios.delete(
-      `http://localhost:9191/api/task_list_item/${taskListItemId}`
+      `http://${URL}:9191/api/task_list_item/${taskListItemId}`
     );
   },
   getTaskListItemsByTask(taskId) {
@@ -28,18 +30,16 @@ const api = {
   },
   getOnboardingTaskListItemsByEmployee(employeeId) {
     return axios.get(
-      `http://192.168.1.44:9191/api/task_list_item/onboarding-task-list-items?employeeId=${employeeId}`
+      `http://${URL}:9191/api/task_list_item/onboarding-task-list-items?employeeId=${employeeId}`
     );
   },
   getOffboardingTaskListItemsByEmployee(employeeId) {
     return axios.get(
-      `http://localhost:9191/api/task_list_item/offboarding-task-list-items?employeeId=${employeeId}`
+      `http://${URL}:9191/api/task_list_item/offboarding-task-list-items?employeeId=${employeeId}`
     );
   },
   markTaskListItemAsComplete(taskListItemId) {
-    return axios.put(
-      `http://localhost:9191/api/task_list_item/${taskListItemId}`
-    );
+    return axios.put(`http://${URL}:9191/api/task_list_item/${taskListItemId}`);
   },
 };
 
