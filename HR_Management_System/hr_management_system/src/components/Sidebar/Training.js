@@ -19,6 +19,7 @@ const navigation = [
     current: false,
   },
   { name: "All Training", href: "/training", icon: UsersIcon, current: false },
+  { name: "All Videos", href: "/training", icon: UsersIcon, current: false },
 ];
 
 function classNames(...classes) {

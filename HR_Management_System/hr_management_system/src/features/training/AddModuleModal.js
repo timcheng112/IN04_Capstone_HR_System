@@ -61,7 +61,7 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
       setDescription("")
       setThumbnail("")
       setShowStepOne(true)
-      //console.log(response.data);
+      console.log("to assign " + response.data);
       assignModule(response.data);
     });
     // api
@@ -74,8 +74,9 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
   }
 
   function assignModule(moduleId) {
-    console.log(moduleId);
+    console.log('moduleId assign = ' + moduleId);
     const userIdList = [];
+    console.log(assignedEmployees.length)
     assignedEmployees.forEach((employee) => {
         console.log(employee.userId)
         userIdList.push(employee.userId)

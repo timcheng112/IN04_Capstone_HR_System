@@ -270,7 +270,19 @@ const api = {
   },
   getModule(moduleId) {
     return axios.get(`http://localhost:9191/api/module/${moduleId}`)
-  }
+  },
+  addModule(module) {
+    return axios.post(`http://localhost:9191/api/module`, module)
+  },
+  assignModule(moduleId, employees) {
+    return axios.post(`http://localhost:9191/api/module/user/${moduleId}`, employees)
+  },
+  deleteModule(moduleId) {
+    return axios.delete(`http://localhost:9191/api/module/${moduleId}`)
+  },
+  editModule(moduleId, module) {
+    return axios.put(`http://localhost:9191/api/module/${moduleId}`, module)
+  },
 };
 
 export default api;

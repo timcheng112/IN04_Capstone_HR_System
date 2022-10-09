@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,10 +35,10 @@ public class ModuleController {
         return moduleService.getModule(moduleId);
     }
 
-    @GetMapping(path = "user/{userId}")
-    public Iterable<Module> getUserModules(@PathVariable("userId") Long userId) throws Exception {
-        return moduleService.getUserModules(userId);
-    }
+    // @GetMapping(path = "user/{userId}")
+    // public Iterable<Module> getUserModules(@PathVariable("userId") Long userId) throws Exception {
+    //     return moduleService.getUserModules(userId);
+    // }
 
     @PostMapping
     public Long addModule(@RequestBody Module module) {
@@ -53,6 +54,11 @@ public class ModuleController {
     public String assignModulesToEmployees(@PathVariable("moduleId") Long moduleId, @RequestBody List<Long> employees)
             throws Exception {
         return moduleService.assignModulesToEmployees(moduleId, employees);
+    }
+
+    @PutMapping(path = "{moduleId}")
+    public String editModule(@PathVariable("moduleId") Long moduleId, @RequestBody Module module) throws Exception {
+        return moduleService.editModule(moduleId, module);
     }
 
 }

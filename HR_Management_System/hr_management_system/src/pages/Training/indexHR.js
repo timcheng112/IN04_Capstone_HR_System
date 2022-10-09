@@ -38,16 +38,7 @@ export default function TrainingHR() {
         setModules(response.data);
       })
       .catch((error) => setError(error));
-  });
-
-  // useEffect(() => {
-  //   api
-  //     .getAllModules()
-  //     .then((response) => {
-  //       setModules(response.data);
-  //     })
-  //     .catch((error) => setError(error));
-  // }, [modules]);
+  }, [modules]);
 
   if (error) return `Error`;
 

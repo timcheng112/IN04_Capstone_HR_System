@@ -25,7 +25,7 @@ export default function Training() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, [user]);
+  }, []);
 
   if (error) return `Error`;
 

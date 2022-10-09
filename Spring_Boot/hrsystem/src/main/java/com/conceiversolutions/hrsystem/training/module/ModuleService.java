@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,8 @@ public class ModuleService {
     public Module getModule(Long moduleId) throws Exception {
         Optional<Module> m = moduleRepository.findById(moduleId);
         if (m.isPresent()) {
-            return m.get() ;
+            System.out.println("get employees " + m.get().getEmployees());
+            return m.get();
         } else {
             throw new IllegalStateException("Module not found");
         }
@@ -54,19 +57,6 @@ public class ModuleService {
             throw new IllegalStateException("module with id " + moduleId + " does not exist");
         }
         moduleRepository.deleteById(moduleId);
-    }
-
-    public Iterable<Module> getUserModules(Long userId) throws Exception {
-        List<Module> userModules = new ArrayList<>();
-        List<Module> allModules = getModules();
-        for (Module m : allModules) {
-            for (User employee : m.getEmployees()) {
-                if (employee.getUserId() == userId) {
-                    userModules.add(m);
-                }
-            }
-        }
-        return userModules;
     }
 
     public String assignModulesToEmployees(Long moduleId, List<Long> employees) throws Exception {
@@ -93,10 +83,19 @@ public class ModuleService {
             moduleRepository.save(module);
             System.out.println(module.getEmployees() instanceof List);
             
-            return employees.size() + " employees have been added to module " + moduleId;
+            return employees.size() + " employee(s) have been assigned to module " + moduleId;
         } else {
             throw new IllegalStateException("Module does not exist");
         }
+    }
+
+    @Transactional
+    public String editModule(Long moduleId, Module module) throws Exception {
+        Module m = getModule(moduleId);
+        m.setTitle(module.getTitle());
+        m.setDescription(module.getDescription());
+        m.setThumbnail(module.getThumbnail());
+        return module.getTitle() + " successfuly edited";
     }
 
 }

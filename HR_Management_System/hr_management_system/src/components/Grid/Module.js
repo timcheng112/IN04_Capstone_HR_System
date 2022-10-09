@@ -15,7 +15,7 @@ export default function ModuleGrid({ files }) {
           <div className="bg-white py-6 px-4 shadow sm:rounded-lg sm:px-10 group block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 hover:opacity-75">
             <img
               src={file.thumbnail}
-              alt=""
+              alt="Module Thumbnail"
               className="pointer-events-none h-25 w-15 object-contain"
             />
             {/* <button
