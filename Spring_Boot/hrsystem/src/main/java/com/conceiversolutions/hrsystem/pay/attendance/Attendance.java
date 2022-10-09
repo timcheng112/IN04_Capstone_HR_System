@@ -1,11 +1,17 @@
 package com.conceiversolutions.hrsystem.pay.attendance;
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.conceiversolutions.hrsystem.user.user.User;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 
 @Entity
 @Table(name="attendance")
+@ToString
+@EqualsAndHashCode
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,44 +23,76 @@ public class Attendance {
     private Long overTimeHoursWorked;
     @Column(name="ph_event_hours_worked", nullable = false)
     private Long phEventHoursWorked;
-    @Column(name="period_start", nullable = false)
-    private LocalDate periodStart;
-    @Column(name="period_end", nullable = false)
-    private LocalDate periodEnd;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    //not sure if i should remove
+    @Column(nullable = false)
+    private LocalDate date;
+
+    //need to store their count somewhere. user doesnt have it
+    @Column(name="total_count")
+    private int totalCount;
+
+    @Column(name="period_start")
+    private LocalDateTime periodStart;
+    @Column(name="period_end")
+    private LocalDateTime periodEnd;
+
+    @ManyToOne(fetch  = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
+
+    //ask timothy if shifts need to be here
+//    @OneToOne(targetEntity = Shift.class, fetch = FetchType.LAZY)
+//    @JoinColumn(name="shiftId")
+//    private Shift shift;
+
+    //also should have absent/present
+    //can check by clock in but will make life easier via jquery
+    //private boolean absent;
 
 
     public Attendance() {
     }
 
-    public Attendance(Long attendanceId, Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd, User user) {
+    public Attendance(Long attendanceId, Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate date, LocalDateTime periodStart, LocalDateTime periodEnd, User user) {
         this.attendanceId = attendanceId;
         this.weekendHoursWorked = weekendHoursWorked;
         this.overTimeHoursWorked = overTimeHoursWorked;
         this.phEventHoursWorked = phEventHoursWorked;
+        this.date = date;
         this.periodStart = periodStart;
         this.periodEnd = periodEnd;
         this.user = user;
     }
 
-    public Attendance(Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd, User user) {
+    public Attendance(Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate date, LocalDateTime periodStart, LocalDateTime periodEnd, User user) {
         this.weekendHoursWorked = weekendHoursWorked;
         this.overTimeHoursWorked = overTimeHoursWorked;
         this.phEventHoursWorked = phEventHoursWorked;
+        this.date = date;
         this.periodStart = periodStart;
         this.periodEnd = periodEnd;
         this.user = user;
     }
 
-    public Attendance(Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate periodStart, LocalDate periodEnd) {
+    public Attendance(Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate date, LocalDateTime periodStart, LocalDateTime periodEnd) {
         this.weekendHoursWorked = weekendHoursWorked;
         this.overTimeHoursWorked = overTimeHoursWorked;
         this.phEventHoursWorked = phEventHoursWorked;
+        this.date = date;
         this.periodStart = periodStart;
         this.periodEnd = periodEnd;
+    }
+
+    public Attendance(Long weekendHoursWorked, Long overTimeHoursWorked, Long phEventHoursWorked, LocalDate date, int totalCount, LocalDateTime periodStart, LocalDateTime periodEnd, User user) {
+        this.weekendHoursWorked = weekendHoursWorked;
+        this.overTimeHoursWorked = overTimeHoursWorked;
+        this.phEventHoursWorked = phEventHoursWorked;
+        this.date = date;
+        this.totalCount = totalCount;
+        this.periodStart = periodStart;
+        this.periodEnd = periodEnd;
+        this.user = user;
     }
 
     public Long getAttendanceId() {
@@ -89,19 +127,19 @@ public class Attendance {
         this.phEventHoursWorked = phEventHoursWorked;
     }
 
-    public LocalDate getPeriodStart() {
+    public LocalDateTime getPeriodStart() {
         return periodStart;
     }
 
-    public void setPeriodStart(LocalDate periodStart) {
+    public void setPeriodStart(LocalDateTime periodStart) {
         this.periodStart = periodStart;
     }
 
-    public LocalDate getPeriodEnd() {
+    public LocalDateTime getPeriodEnd() {
         return periodEnd;
     }
 
-    public void setPeriodEnd(LocalDate periodEnd) {
+    public void setPeriodEnd(LocalDateTime periodEnd) {
         this.periodEnd = periodEnd;
     }
 
@@ -111,6 +149,22 @@ public class Attendance {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 
     @Override
