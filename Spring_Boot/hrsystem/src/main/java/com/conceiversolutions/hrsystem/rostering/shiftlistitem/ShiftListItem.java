@@ -1,5 +1,7 @@
 package com.conceiversolutions.hrsystem.rostering.shiftlistitem;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
@@ -16,8 +18,10 @@ public class ShiftListItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "shift_list_item_id")
     private Long shiftListItemId;
-    @Column(name = "is_checked_in")
-    private Boolean isCheckedIn;
+    @Column(name = "check_in_timing")
+    private LocalDateTime checkInTiming;
+    @Column(name = "check_out_timing")
+    private LocalDateTime checkOutTiming;
     @Column(name = "is_weekend")
     private Boolean isWeekend;
     @Column(name = "is_ph_event")
@@ -41,12 +45,20 @@ public class ShiftListItem {
         this.shiftListItemId = shiftListItemId;
     }
 
-    public Boolean getIsCheckedIn() {
-        return isCheckedIn;
+    public LocalDateTime getCheckInTiming() {
+        return checkInTiming;
     }
 
-    public void setIsCheckedIn(Boolean isCheckedIn) {
-        this.isCheckedIn = isCheckedIn;
+    public void setCheckInTiming(LocalDateTime checkInTiming) {
+        this.checkInTiming = checkInTiming;
+    }
+
+    public LocalDateTime getCheckOutTiming() {
+        return checkOutTiming;
+    }
+
+    public void setCheckOutTiming(LocalDateTime checkOutTiming) {
+        this.checkOutTiming = checkOutTiming;
     }
 
     public Boolean getIsWeekend() {
@@ -83,8 +95,9 @@ public class ShiftListItem {
 
     @Override
     public String toString() {
-        return "ShiftListItem [shiftListItemId=" + shiftListItemId + ", isCheckedIn=" + isCheckedIn + ", isWeekend="
-                + isWeekend + ", isPhEvent=" + isPhEvent + ", shift=" + shift + "]";
+        return "ShiftListItem [shiftListItemId=" + shiftListItemId + ", checkInTiming=" + checkInTiming
+                + ", checkOutTiming=" + checkOutTiming + ", isWeekend=" + isWeekend + ", isPhEvent=" + isPhEvent
+                + ", shift=" + shift + ", user=" + user + "]";
     }
 
 }

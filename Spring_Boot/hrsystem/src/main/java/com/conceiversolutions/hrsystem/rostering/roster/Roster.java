@@ -87,6 +87,16 @@ public class Roster {
         return this.blocks;
     }
 
+    public List<Shift> addShift(Shift shift) {
+        this.shifts.add(shift);
+        return this.shifts;
+    }
+
+    public List<Shift> removeShift(Shift shift) {
+        this.shifts.remove(shift);
+        return this.shifts;
+    }
+
     @Override
     public String toString() {
         return "Roster [blocks=" + blocks + ", rosterDescription=" + rosterDescription + ", rosterId=" + rosterId
