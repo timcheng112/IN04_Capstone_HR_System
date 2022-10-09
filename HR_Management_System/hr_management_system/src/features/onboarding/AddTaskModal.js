@@ -42,26 +42,34 @@ export default function AddTaskModal({
       .then((response) => {
         setUnassignedEmployees(response.data);
         setFilteredUnassignedEmployees(response.data);
-        console.log(response.data);
+        setAssignedEmployees([]);
+        setFilteredAssignedEmployees([]);
+        setName("");
+        setDescription("");
+        setShowStepOne(true);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [open]);
 
-  useEffect(()=>{
-    if(!open){
-      setName('')
-      setDescription('')
-      setAssignedEmployees([])
-      setShowStepOne(true)
+  useEffect(() => {
+    if (!open) {
+      setName("");
+      setDescription("");
+      setAssignedEmployees([]);
+      setShowStepOne(true);
     }
-  },[open])
+  }, [open]);
 
   const handleSubmit = (evt) => {
-    evt.preventDefault();
-    createTask();
-    onClose();
-    //createTaskListItem()
-    refreshKeyHandler();
+    if (name !== "" && description !== "") {
+      evt.preventDefault();
+      createTask();
+      onClose();
+      //createTaskListItem()
+      refreshKeyHandler();
+    } else {
+      alert("Name/Description inputs must be filled!");
+    }
   };
   function createTask() {
     const task = {
@@ -155,11 +163,7 @@ export default function AddTaskModal({
   return (
     // user && (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        onClose={onClose}
-      >
+      <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -200,7 +204,7 @@ export default function AddTaskModal({
                             htmlFor="task-name"
                             className="block text-sm font-medium text-gray-700 mt-2"
                           >
-                            Task Name
+                            Task Name*
                           </label>
                           <div className="mt-1">
                             <textarea

@@ -25,6 +25,7 @@ import OffboardingHrPage from "./pages/Offboarding/indexHr";
 import OffboardingPage from "./pages/Offboarding/index";
 import TrainingHRPage from "./pages/Training/indexHR";
 import ModulePage from "./pages/Module";
+import AdminPage from "./pages/AdminPage";
 
 
 function App() {
@@ -61,7 +62,7 @@ function App() {
           <PrivateRoute exact path="/offboarding" component={OffboardingPage}/>
           <PrivateRoute exact path="/mytraining" component={TrainingPage} />
           {/* <ViewTeam/> */}
-
+          <PrivateRoute exact path="/admin" component={AdminPage}/> 
           <PrivateRoute exact path="/admin/onboarding" component={OnboardingPage} />
           <PrivateRoute exact path="/admin/onboardinghr" component={OnboardingHrPage} />
           <PrivateRoute exact path="/admin/offboarding" component={OffboardingPage} />

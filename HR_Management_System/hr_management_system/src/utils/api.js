@@ -186,6 +186,11 @@ const api = {
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
+  getUserIdByEmail(email) { // this mght nt work
+    return axios.get(
+      `http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`
+    );
+  },
   getEmployeeIdByEmail(email) {
       return axios.get(
         `http://localhost:9191/api/user/login/getEmployeeIdByEmail?workEmail=${email}`
@@ -197,11 +202,11 @@ const api = {
   deleteDept(deptId) {
     return axios.delete(`http://localhost:9191/api/department/${deptId}`);
   },
-  deleteTeam(deptId) {
-    return axios.delete(`http://localhost:9191/api/department/${deptId}`);
+  deleteTeam(teamId) {
+    return axios.delete(`http://localhost:9191/api/team/${teamId}`);
   },
   uploadFile(file) {
-    return axios.post(`http://localhost:9191/uploadDocument/${file}`);
+    return axios.post(`http://localhost:9191/api/docData/uploadDocument/`, file);
   },
   addDepartment(deptName, deptHeadId) {
     return axios.post(
@@ -239,7 +244,25 @@ const api = {
   },
   addOutlet(outletName, contactNo, openingHour, closingHour, addressId) {
     return axios.post(
-      `http://localhost:9191/api/address/addAddress?addressName=${outletName}&line1=${contactNo}&line2=${openingHour}&postalCode=${closingHour}&city=${addressId}`
+      `http://localhost:9191/api/outlet/addOutlet?outletName=${outletName}&contactNo=${contactNo}&openingHour=${openingHour}&closingHour=${closingHour}&addressId=${addressId}`
+    );
+  },
+  addTeam(teamName, teamHeadId, outletId, isOffice, deptId) {
+    return axios.post(
+      `http://localhost:9191/api/team/addTeam?teamHeadId=${teamHeadId}&teamName=${teamName}&outletId=${outletId}&isOffice=${isOffice}&deptId=${deptId}`
+    );
+  },
+  getAllOutlets() {
+    return axios.get(`http://localhost:9191/api/outlet/getAllOutlets`);
+  },
+  changeDepartmentHead(deptId, newHeadId) {
+    return axios.put(
+        `http://localhost:9191/api/department/changeDepartmentHead?deptId=${deptId}&newHeadId=${newHeadId}`
+    );
+  },
+  getAllTeamsInDept(deptId) {
+    return axios.get(
+        `http://localhost:9191/api/team/getAllTeamsInDept/${deptId}`
     );
   },
   getAllModules() {
