@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.rostering.roster;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -29,17 +30,11 @@ public class Roster {
     public Roster() {
     }
 
-    public Roster(String rosterDescription, Team team, List<Shift> shifts, List<Block> blocks) {
+    public Roster(String rosterDescription, Team team) {
         this.rosterDescription = rosterDescription;
         this.team = team;
-        this.shifts = shifts;
-        this.blocks = blocks;
-    }
-
-    public Roster(String rosterDescription, List<Shift> shifts, List<Block> blocks) {
-        this.rosterDescription = rosterDescription;
-        this.shifts = shifts;
-        this.blocks = blocks;
+        this.shifts = new ArrayList<>();
+        this.blocks = new ArrayList<>();
     }
 
     public Long getRosterId() {

@@ -1,11 +1,13 @@
 package com.conceiversolutions.hrsystem.rostering.shift;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
@@ -34,16 +36,21 @@ public class Shift {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "roster_id")
     private Roster roster;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
+    @Column(name = "shift_list_items")
+    private List<ShiftListItem> shiftListItems;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "shift", joinColumns = @JoinColumn(name = "shift_id", referencedColumnName = "shift_id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"))
-    private List<User> employees_involved;
+    // @ManyToMany(cascade = CascadeType.ALL)
+    // @JoinTable(name = "shift", joinColumns = @JoinColumn(name = "shift_id",
+    // referencedColumnName = "shift_id"), inverseJoinColumns = @JoinColumn(name =
+    // "user_id", referencedColumnName = "user_id"))
+    // private List<User> employees_involved;
 
     public Shift() {
     }
 
     public Shift(LocalDate startTime, LocalDate endTime, String shiftTitle, Long unpaidBreak, String location,
-            String remarks, Long minQuota, Roster roster, List<User> employees_involved) {
+            String remarks, Long minQuota, Roster roster) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.shiftTitle = shiftTitle;
@@ -52,7 +59,7 @@ public class Shift {
         this.remarks = remarks;
         this.minQuota = minQuota;
         this.roster = roster;
-        this.employees_involved = employees_involved;
+        this.shiftListItems = new ArrayList<>();
     }
 
     public Long getShiftId() {
@@ -127,19 +134,19 @@ public class Shift {
         this.roster = roster;
     }
 
-    public List<User> getEmployees_involved() {
-        return employees_involved;
+    public List<ShiftListItem> getShiftListItems() {
+        return shiftListItems;
     }
 
-    public void setEmployees_involved(List<User> employees_involved) {
-        this.employees_involved = employees_involved;
+    public void setShiftListItems(List<ShiftListItem> shiftListItems) {
+        this.shiftListItems = shiftListItems;
     }
 
     @Override
     public String toString() {
-        return "Shift [employees_involved=" + employees_involved + ", endTime=" + endTime + ", location=" + location
-                + ", minQuota=" + minQuota + ", remarks=" + remarks + ", roster=" + roster + ", shiftId=" + shiftId
-                + ", shiftTitle=" + shiftTitle + ", startTime=" + startTime + ", unpaidBreak=" + unpaidBreak + "]";
+        return "Shift [shiftId=" + shiftId + ", startTime=" + startTime + ", endTime=" + endTime + ", shiftTitle="
+                + shiftTitle + ", unpaidBreak=" + unpaidBreak + ", location=" + location + ", remarks=" + remarks
+                + ", minQuota=" + minQuota + ", roster=" + roster + ", shiftListItems=" + shiftListItems + "]";
     }
 
 }

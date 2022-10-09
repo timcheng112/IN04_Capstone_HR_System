@@ -12,6 +12,9 @@ import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.goal.Goal;
 import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
+import com.conceiversolutions.hrsystem.rostering.block.Block;
+import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
@@ -120,6 +123,14 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.LAZY, targetEntity = ReactivationRequest.class, optional = true)
     @JoinColumn(name = "reactivation_request_id")
     private ReactivationRequest reactivationRequest;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = PreferredDates.class, mappedBy = "preferred_dates")
+    private PreferredDates preferredDates;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Block.class, mappedBy = "user")
+    @Column(name = "block")
+    private List<Block> blocks;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
+    @Column(name = "shift_list_items")
+    private List<ShiftListItem> shiftListItems;
 
     // TODO add on other relationships to other classes
 
@@ -165,7 +176,7 @@ public class User implements UserDetails {
     // this should be for making an employee's account
     public User(String firstName, String lastName, Integer phone, String email, String workEmail,
             LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
-            LocalDate dateJoined, PayInformation currentPayInformation) {
+            LocalDate dateJoined, PayInformation currentPayInformation, PreferredDates preferredDates) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -195,6 +206,9 @@ public class User implements UserDetails {
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
+        this.preferredDates = preferredDates;
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
@@ -203,7 +217,7 @@ public class User implements UserDetails {
             Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions,
             QualificationInformation qualificationInformation,
             List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
-            List<Attendance> attendances, PayInformation currentPayInformation) {
+            List<Attendance> attendances, PayInformation currentPayInformation, PreferredDates preferredDates) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -234,6 +248,9 @@ public class User implements UserDetails {
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
+        this.preferredDates = preferredDates;
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
     }
 
     public Long getUserId() {
@@ -542,4 +559,39 @@ public class User implements UserDetails {
         this.taskListItems.add(item);
         return this.taskListItems;
     }
+
+    public PreferredDates getPreferredDates() {
+        return preferredDates;
+    }
+
+    public void setPreferredDates(PreferredDates preferredDates) {
+        this.preferredDates = preferredDates;
+    }
+
+    public List<Block> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(List<Block> blocks) {
+        this.blocks = blocks;
+    }
+
+    public List<Block> addBlock(Block block) {
+        this.blocks.add(block);
+        return this.blocks;
+    }
+
+    public List<Block> removeBlock(Block block) {
+        this.blocks.remove(block);
+        return this.blocks;
+    }
+
+    public List<ShiftListItem> getShiftListItems() {
+        return shiftListItems;
+    }
+
+    public void setShiftListItems(List<ShiftListItem> shiftListItems) {
+        this.shiftListItems = shiftListItems;
+    }
+
 }
