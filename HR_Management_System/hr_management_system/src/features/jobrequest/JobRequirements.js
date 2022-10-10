@@ -26,10 +26,14 @@ export default function JobRequirements() {
   const [skillSet,setSkillSet] = useState([])
 
   function onClickHandler(skillSet) {
-    setTaskListItems(
-      taskListItems.filter((item) => item.name !== taskListItem.name)
+    setSkillSet(
+      skillSet.filter((item) => item.name !== skillSet.name)
     );
   }
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
