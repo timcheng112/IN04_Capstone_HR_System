@@ -15,7 +15,7 @@ public class UserSkillset {
     private Integer skillLevel;
 //    @Column(name = "skill_description", nullable = true, length = 255)
 //    private String skillDescription;
-    @OneToOne(targetEntity = Skillset.class, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(targetEntity = Skillset.class, fetch = FetchType.LAZY, optional = false)
     private Skillset skillset;
 
     public UserSkillset() {

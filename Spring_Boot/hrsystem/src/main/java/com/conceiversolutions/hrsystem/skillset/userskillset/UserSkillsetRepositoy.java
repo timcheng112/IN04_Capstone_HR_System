@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface UserSkillsetRepositoy extends JpaRepository<UserSkillset, Long> {
-    @Query("SELECT uss FROM UserSkillset uss, QualificationInformation q, IN (q.userSkills) us WHERE q.user.userId = ?1 AND us.userSkillsetId = uss.userSkillsetId")
+    @Query("SELECT q.userSkills FROM User u JOIN u.qualificationInformation q WHERE u.userId = ?1")
     List<UserSkillset> findSkillsetByUserId(Long userId);
 }
