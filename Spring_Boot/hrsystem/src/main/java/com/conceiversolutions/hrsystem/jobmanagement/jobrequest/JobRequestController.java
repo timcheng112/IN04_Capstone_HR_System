@@ -16,7 +16,7 @@ import java.util.List;
 public class JobRequestController {
     private final JobRequestService jobRequestService;
 
-    @GetMapping(path = "getAllJobRequests")
+    @GetMapping(path = "/getAllJobRequests")
     public List<JobRequest> getAllJobRequests() {
         return jobRequestService.getAllJobRequests();
     }
@@ -47,12 +47,12 @@ public class JobRequestController {
                 jobT, RoleEnum.valueOf(jobRole),salary, jobRequirementIds, departmentId, requestedById, teamId, jobRequestId);
     }
 
-    @GetMapping(path = "getJobRequestById")
+    @GetMapping(path = "/getJobRequestById")
     public JobRequest getJobRequestById(@RequestParam("jobRequestId") Long jobRequestId) {
         return jobRequestService.getJobRequestById(jobRequestId);
     }
 
-    @DeleteMapping(path = "deleteJobRequest")
+    @DeleteMapping(path = "/deleteJobRequest")
     public String deleteJobRequest(Long jobRequestId) {
         return jobRequestService.deleteJobRequest(jobRequestId);
     }
@@ -72,7 +72,7 @@ public class JobRequestController {
 //        return jobRequestService.getJobRequestsByDepartmentId(id);
 //    }
 //
-    @GetMapping(path = "getJobRequestsByRequestorId")
+    @GetMapping(path = "/getJobRequestsByRequestorId")
     public List<JobRequest> getJobRequestsByRequestorId(@RequestParam("requestorId") Long id) {
         return jobRequestService.getJobRequestsByRequestorId(id);
     }

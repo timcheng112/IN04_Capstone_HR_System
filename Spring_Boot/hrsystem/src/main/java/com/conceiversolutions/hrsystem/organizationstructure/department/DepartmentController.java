@@ -56,7 +56,7 @@ public class DepartmentController {
 //        departmentService.deleteAllDepartments();
 //    }
 
-    @GetMapping(path = "getDepartmentByEmployeeId")
+    @GetMapping(path = "/getDepartmentByEmployeeId")
     public Department getDepartmentByEmployeeId(@RequestParam("employeeId") Long employeeId) {
         return departmentService.getDepartmentByEmployeeId(employeeId);
     }
