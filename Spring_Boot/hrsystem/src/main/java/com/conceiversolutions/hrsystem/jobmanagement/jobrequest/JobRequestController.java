@@ -34,8 +34,17 @@ public class JobRequestController {
                                @RequestParam("teamId") Long teamId,
                                @RequestParam("requestedById") Long requestedById,
                                @RequestParam("jobRequestId") Long jobRequestId) {
+        JobTypeEnum jobT = null;
+        if (jobType.equals("Contract") || jobType.equals("Intern")) {
+            jobT = JobTypeEnum.valueOf(jobType);
+        } else if (jobType.equals("Full Time")) {
+            jobT = JobTypeEnum.FULLTIME;
+        } else {
+            jobT = JobTypeEnum.PARTTIME;
+        }
+
         return jobRequestService.saveJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                JobTypeEnum.valueOf(jobType), RoleEnum.valueOf(jobRole),salary, jobRequirementIds, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole),salary, jobRequirementIds, departmentId, requestedById, teamId, jobRequestId);
     }
 
     @GetMapping(path = "getJobRequestById")
