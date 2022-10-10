@@ -26,7 +26,7 @@ public class Block {
     @Column(nullable = false)
     private Boolean isPaid;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private User employee;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
