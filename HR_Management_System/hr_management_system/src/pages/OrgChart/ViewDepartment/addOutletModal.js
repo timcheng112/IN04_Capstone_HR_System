@@ -47,8 +47,11 @@ export default function AddOutletModal({ open, onClose, deptId }) {
         if (response.status == 200) {
           console.log("successfully created address!");
           console.log("new addressId: " + response.data);
-          alert("success!");
-          setAddressId(parseInt(response.data));
+          alert("Address Created!");
+
+          setAddressId(response.data);
+
+          addOutlet(response.data);
         } else {
           console.error("failed to create address!");
         }
@@ -63,9 +66,10 @@ export default function AddOutletModal({ open, onClose, deptId }) {
           alert("Error: " + message);
         }
       });
+    return 0;
   }
 
-  function addOutlet() {
+  function addOutlet(theAddressId) {
     console.log("addOutletFunc :" + outletName);
     console.log(
       "OutletName: " +
@@ -77,14 +81,15 @@ export default function AddOutletModal({ open, onClose, deptId }) {
         " closingHour: " +
         closingHour +
         " adressId: " +
-        addressId
+        theAddressId
     );
     api
-      .addOutlet(outletName, contactNo, openingHour, closingHour, addressId)
+      .addOutlet(outletName, contactNo, openingHour, closingHour, theAddressId)
       .then((response) => {
         if (response.status == 200) {
           console.log("successfully created outlet!");
-          alert("success!");
+          alert("Outlet Created!");
+          onClose();
         } else {
           console.error("failed to create outlet!");
         }
@@ -100,31 +105,10 @@ export default function AddOutletModal({ open, onClose, deptId }) {
       });
   }
 
-  // const [options, setOptions] = useState(null);
-  // useEffect(() => {
-  //   const availEmployees = async () => {
-  //     console.log("use effect! teamId:" + 1);
-  //     const arr = [];
-  //     await api.getEmployeesNotInGivenTeam(1).then((res) => {
-  //       let result = res.data;
-  //       result.map((employee) => {
-  //         return arr.push({
-  //           value: employee.userId,
-  //           label: employee.firstName + " " + employee.lastName,
-  //         });
-  //       });
-  //       setOptions(arr);
-  //       console.log("fetching options...");
-  //       console.log(options);
-  //     });
-  //   };
-  //   availEmployees();
-  // });
-
   const handleSubmit = (evt) => {
     evt.preventDefault();
     addAddress();
-    addOutlet();
+    //addoutlet in add address code
   };
 
   const cancelButtonRef = useRef(null);

@@ -3,8 +3,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
 import { getUserId } from "../../../utils/Common";
 
-export default function AddDepartmentModal({ open, onClose }) {
-  const userId = getUserId()
+export default function AddDepartmentModal({
+  open,
+  onClose,
+  refreshKeyHandler,
+}) {
+  const userId = getUserId();
   const [deptName, setDeptName] = useState("");
   const [deptHeadId, setDeptHeadId] = useState(-1);
 
@@ -18,7 +22,9 @@ export default function AddDepartmentModal({ open, onClose }) {
         .then((response) => {
           if (response.status == 200) {
             console.log("successfully added new dept!");
-            alert("Department has been successfully created.")
+            alert("Department has been successfully created.");
+            refreshKeyHandler();
+            onClose();
           } else {
             console.error("failed to add new dept!");
           }

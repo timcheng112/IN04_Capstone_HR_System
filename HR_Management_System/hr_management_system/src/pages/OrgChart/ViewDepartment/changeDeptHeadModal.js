@@ -20,6 +20,7 @@ export default function ChangeDeptHeadModal({ open, onClose, deptId }) {
           if (response.status == 200) {
             console.log("successfully changed dept head!");
             alert("sucessfully changed dept. head!");
+            onClose();
           } else {
             console.error("failed to change dept head...");
           }

@@ -8,18 +8,23 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function AddTeamModal({ open, onClose, deptId }) {
+export default function AddTeamModal({
+  open,
+  onClose,
+  deptId,
+  refreshKeyHandler,
+}) {
   const userId = getUserId();
   const [teamName, setTeamName] = useState("");
-//   const [deptHeadId, setDeptHeadId] = useState(-1);
+  //   const [deptHeadId, setDeptHeadId] = useState(-1);
   const [teamHeadId, setTeamHeadId] = useState(-1);
   const [outlet, setOutletId] = useState("");
-  const [ inOffice, setInOffice] = useState(false);
+  const [inOffice, setInOffice] = useState(false);
 
   //teamName, teamHeadId, outletId, isOffice, deptId
-//  console.log(deptId + "$$$");
+  //  console.log(deptId + "$$$");
   const cancelButtonRef = useRef(null);
-//   console.log(props.outletId + "OUTLET");
+  //   console.log(props.outletId + "OUTLET");
 
   function addTeam() {
     if (teamHeadId === -1) {
@@ -32,6 +37,7 @@ export default function AddTeamModal({ open, onClose, deptId }) {
           if (response.status === 200) {
             console.log("successfully added new team!");
             alert("Team has been successfully created.");
+            refreshKeyHandler();
           } else {
             console.error("failed to add new team!");
           }
@@ -67,8 +73,8 @@ export default function AddTeamModal({ open, onClose, deptId }) {
           });
         });
         setOptions(arr);
-        console.log("fetching options...");
-        console.log(options);
+        // console.log("fetching options...");
+        // console.log(options);
         // console.log("HELLO!");
         // console.log(res);
         // console.log(res.data);
@@ -84,21 +90,20 @@ export default function AddTeamModal({ open, onClose, deptId }) {
     const outletAvail = async () => {
       const arr = [];
       await api.getAllOutlets().then((response) => {
-        console.log(response.data);
-        (response.data).map((outlet) => {
+        // console.log(response.data);
+        response.data.map((outlet) => {
           return arr.push({
             value: outlet.outletId,
-            label: outlet.outletName
+            label: outlet.outletName,
           });
         });
         setOutletOptions(arr);
-        console.log("fetching options...");
-        console.log(outletOptions);
+        // console.log("fetching options...");
+        // console.log(outletOptions);
       });
     };
     outletAvail();
-  }, [deptId, outletOptions]);
-
+  }, [open]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();

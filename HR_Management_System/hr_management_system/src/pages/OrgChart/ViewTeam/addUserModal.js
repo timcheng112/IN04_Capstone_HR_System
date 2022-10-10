@@ -2,7 +2,12 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
 
-export default function AddUserModal({ open, onClose, teamId }) {
+export default function AddUserModal({
+  open,
+  onClose,
+  teamId,
+  refreshKeyHandler,
+}) {
   const [userId, setUserId] = useState(-1);
 
   //add user to team
@@ -17,6 +22,8 @@ export default function AddUserModal({ open, onClose, teamId }) {
           if (response.status == 200) {
             console.log("successfully added user to team!");
             alert("success!");
+            onClose();
+            refreshKeyHandler();
           } else {
             console.error("failed to add user to team!");
           }
@@ -44,25 +51,16 @@ export default function AddUserModal({ open, onClose, teamId }) {
   }
 
   const [options, setOptions] = useState(null);
+
   useEffect(() => {
-    const availEmployees = async () => {
-      console.log("use effect! teamId:" + teamId);
-      const arr = [];
-      await api.getEmployeesNotInGivenTeam(teamId).then((res) => {
-        let result = res.data;
-        result.map((employee) => {
-          return arr.push({
-            value: employee.userId,
-            label: employee.firstName + " " + employee.lastName,
-          });
-        });
-        setOptions(arr);
-        console.log("fetching options...");
-        console.log(options);
-      });
-    };
-    availEmployees();
-  });
+    api
+      .getEmployeesNotInGivenTeam(teamId)
+      .then((response) => {
+        setOptions(response.data);
+        console.log("OPTIONS: " + options);
+      })
+      .catch((error) => console.log(error));
+  }, [open]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -142,9 +140,11 @@ export default function AddUserModal({ open, onClose, teamId }) {
                                       return (
                                         <option
                                           key={index}
-                                          value={option.value}
+                                          value={option.userId}
                                         >
-                                          {option.label}
+                                          {option.firstName +
+                                            " " +
+                                            option.lastName}
                                         </option>
                                       );
                                     })}
