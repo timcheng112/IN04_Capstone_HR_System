@@ -9,7 +9,7 @@ public class Skillset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skillset_id")
     private Long skillsetId;
-    @Column(name = "skillset_name", nullable = false, length = 64)
+    @Column(name = "skillset_name", nullable = false, length = 64, unique = true)
     private String skillsetName;
 //    @Column(name = "open_ended", nullable = false)
 //    private Boolean openEnded;
