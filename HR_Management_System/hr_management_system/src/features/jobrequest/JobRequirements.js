@@ -3,7 +3,7 @@ import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 
-export default function JobRequirements() {
+export default function JobRequirements({open,setOpen}) {
   // const skillSet = [ 
   //   { value:"Java", label: "Java"},
   //   { value:"Python", label: "Python"},
@@ -17,7 +17,6 @@ export default function JobRequirements() {
   //   classNamePrefix="select"
   // />
   // )
-  const [open, setOpen] = useState(true)
 
   const cancelButtonRef = useRef(null)
   const checkbox = useRef()
@@ -68,6 +67,7 @@ export default function JobRequirements() {
                     </Dialog.Title>
                   </div>
                 </div>
+                <div>
                 <table className="min-w-full table-fixed divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
@@ -120,18 +120,19 @@ export default function JobRequirements() {
                   ))}
                 </tbody>
               </table>
+              </div>
                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                   <button
                     type="submit"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                    onClick={() => setOpen(false)}
+                    onClick={setOpen}
                   >
                     Submit
                   </button>
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
-                    onClick={() => setOpen(false)}
+                    onClick={setOpen}
                     ref={cancelButtonRef}
                   >
                     Cancel

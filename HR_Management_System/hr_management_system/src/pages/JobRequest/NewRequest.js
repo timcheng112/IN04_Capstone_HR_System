@@ -18,32 +18,33 @@ function classNames(...classes) {
 export default function NewRequest() {
   const [startDate, setStartDate] = useState(new Date());
   const history = useHistory();
-  const [dept, setDept] = useState(null);
+  const [department, setDepartment] = useState(null);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [add, setAdd] = useState(false);
 
   useEffect(() => {
     api
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        //console.log(response.data);
-        console.log(user);
+        console.log(response.data);
+        //console.log(user);
       })
       .catch((error) => setError(error));
   }, []);
-  
+
   useEffect(() => {
     api
       .getDepartmentByEmployeeId(getUserId())
       .then((response) => {
-        setDept(response.data);
-        //console.log(response.data);
-        //console.log(dept);
+        setDepartment(response.data);
+        console.log(response.data);
+        //console.log(department);
       })
       .catch((error) => setError(error));
   }, []);
-  
+
 
   return (
     <div className="">
@@ -120,7 +121,14 @@ export default function NewRequest() {
                 <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Requirements
                 </label>
-                <JobRequirements />
+                <button
+                  type="button"
+                  className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => setAdd(true)}
+                >
+                  Add Job Requirements
+                </button>
+        
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -159,7 +167,7 @@ export default function NewRequest() {
                 <label htmlFor="department" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Team
                 </label>
-                <Team dept= {dept} setDept = {setDept}  />
+                {department !== null && <Team department={department} />}
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -201,6 +209,7 @@ export default function NewRequest() {
         </div>
 
       </form>
+      <JobRequirements open = {add} setOpen = {() => setAdd(false)}/>
     </div>
   )
 }

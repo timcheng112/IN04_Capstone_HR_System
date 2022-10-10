@@ -12,15 +12,17 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Team(dept, setDept) {
+export default function Team(department) {
   const [query, setQuery] = useState('')
   const [teams, setTeams] = useState([])
   const [selectedTeam, setSelectedTeam] = useState()
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // console.log(department);
+
     api
-      .getAllTeamsInDept(dept.departmentId)
+      .getAllTeamsInDept(department.department.departmentId)
       .then((response) => {
         setTeams(response.data);
       })
@@ -35,13 +37,14 @@ export default function Team(dept, setDept) {
         })
 
   return (
-    <Combobox as="div" value={selectedTeam} onChange={setSelectedTeam}>
+    <div>{department !== null &&
+     <Combobox as="div" value={selectedTeam} onChange={setSelectedTeam}>
       {/* <Combobox.Label className="block text-sm font-medium text-gray-700">Assigned to</Combobox.Label> */}
       <div className="relative mt-1">
         <Combobox.Input
           className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
           onChange={(event) => setQuery(event.target.value)}
-          displayValue={(team) => team?.name}
+          displayValue={(team) => team?.teamName}
         />
         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
           <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -51,7 +54,7 @@ export default function Team(dept, setDept) {
           <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {filteredTeam.map((team) => (
               <Combobox.Option
-                key={team.id}
+                key={team.teamName}
                 value={team}
                 className={({ active }) =>
                   classNames(
@@ -62,7 +65,7 @@ export default function Team(dept, setDept) {
               >
                 {({ active, selected }) => (
                   <>
-                    <span className={classNames('block truncate', selected && 'font-semibold')}>{team.name}</span>
+                    <span className={classNames('block truncate', selected && 'font-semibold')}>{team.teamName}</span>
 
                     {selected && (
                       <span
@@ -81,6 +84,7 @@ export default function Team(dept, setDept) {
           </Combobox.Options>
         )}
       </div>
-    </Combobox>
+    </Combobox>}
+    </div>
   )
 }

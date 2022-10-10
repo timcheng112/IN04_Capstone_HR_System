@@ -31,7 +31,7 @@ export default function JobRequest() {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        console.log(user);
+        // console.log(user);
       })
       .catch((error) => setError(error));
   }, []);
