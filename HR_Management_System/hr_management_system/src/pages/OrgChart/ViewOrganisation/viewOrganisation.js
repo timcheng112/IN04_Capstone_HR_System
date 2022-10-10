@@ -24,6 +24,7 @@ export default function ViewOrganisation() {
   const [org, setOrg] = useState([]);
   const history = useHistory();
   const [toDelete, setToDelete] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     api.getOrganization().then((response) => {
@@ -31,7 +32,7 @@ export default function ViewOrganisation() {
       //console.log(org);
       //console.log(response.data.departments[0].departmentId);
     });
-  }, [org]);
+  }, [refreshKey]);
   //what is this [org] for?
 
   const [openAdd, setOpenAdd] = useState(false);
@@ -52,6 +53,7 @@ export default function ViewOrganisation() {
       })
       .then(() => {
         alert("Department is successfully deleted.");
+        setRefreshKey((oldKey) => oldKey + 1);
       })
       .catch((error) => {
         var message = error.request.response;
@@ -69,6 +71,7 @@ export default function ViewOrganisation() {
           <AddDepartmentModal
             open={openAdd}
             onClose={() => setOpenAdd(false)}
+            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           />
 
           <DeleteDeptModal
@@ -80,6 +83,7 @@ export default function ViewOrganisation() {
             newOrgName={org.organizationName}
             open={openChange}
             onClose={() => setOpenChange(false)}
+            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           />
 
           <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
