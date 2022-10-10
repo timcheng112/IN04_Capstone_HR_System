@@ -53,7 +53,7 @@ export default function ViewTeam() {
     <>
       {team ? (
         <>
-          {/* <Navbar/> */}
+          <Navbar />
           <AddUserModal
             open={openAdd}
             onClose={() => setOpenAdd(false)}
