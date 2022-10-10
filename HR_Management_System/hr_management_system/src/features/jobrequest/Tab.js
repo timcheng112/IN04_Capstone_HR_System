@@ -8,7 +8,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Tab() {
   return (
     <div>
       <div className="sm:hidden">
@@ -42,13 +42,13 @@ export default function Example() {
               aria-current={tab.current ? 'page' : undefined}
             >
               <span>{tab.name}</span>
-              <span
+              {/* <span
                 aria-hidden="true"
                 className={classNames(
-                  tab.current ? 'bg-indigo-500' : 'bg-transparent'
-                  // 'absolute inset-x-0 bottom-0 h-0.5'
+                  tab.current ? 'bg-indigo-500' : 'bg-transparent',
+                   'absolute inset-x-0 bottom-0 h-0.5'
                 )}
-              />
+              /> */}
             </a>
           ))}
         </nav>

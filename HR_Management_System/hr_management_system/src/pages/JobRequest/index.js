@@ -6,22 +6,44 @@ import {
   MagnifyingGlassIcon
 } from "@heroicons/react/20/solid";
 import { useHistory } from 'react-router-dom';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../utils/api";
+import { getUserId} from "../../utils/Common";
 
-const requests = [
-  { title: 'Product Manager', department: 'Product', lastEditedDate: '2022-08-15', status: 'Created' },
-  { title: 'Software Engineer', department: 'IT', lastEditedDate: '2022-08-20', status: 'Approved' },
-]
-
-
+// const requests = [
+//   { title: 'Product Manager', department: 'Product', lastEditedDate: '2022-08-15', status: 'Created' },
+//   { title: 'Software Engineer', department: 'IT', lastEditedDate: '2022-08-20', status: 'Approved' },
+// ]
 
 export default function JobRequest() {
   const history = useHistory();
+  const [requests,setRequests] = useState([]);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
   const [filteredRequests, setFilteredRequests] =
     useState(requests);
   const [searchParam] = useState([
     "title"
   ]);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(user);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  
+  useEffect(() => {
+    api
+      .getManagerJobRequests(getUserId())
+      .then((response) => {
+        setRequests(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   function search(e, items) {
     const value = e.target.value;

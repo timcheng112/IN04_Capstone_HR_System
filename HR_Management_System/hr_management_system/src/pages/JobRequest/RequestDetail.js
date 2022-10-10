@@ -3,6 +3,7 @@ import Department from "../../components/ComboBox/Department";
 import JobType from "../../components/ComboBox/JobType";
 import JobRole from "../../components/ComboBox/Role";
 import JobRequirements from "../../features/jobrequest/JobRequirements";
+import Team from "../../components/ComboBox/Team";
 import { useState } from "react";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -77,14 +78,14 @@ export default function RequestDetails(request) {
                 <label htmlFor="type" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Job Type
                 </label>
-                  <JobType />
+                <JobType />
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="role" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Job Role
                 </label>
-                  <JobRole />
+                <JobRole />
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -118,11 +119,18 @@ export default function RequestDetails(request) {
                 </div>
               </div>
 
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+              {/* <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="department" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Department
                 </label>
                 <Department />
+              </div> */}
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="department" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Team
+                </label>
+                <Team />
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -130,7 +138,7 @@ export default function RequestDetails(request) {
                   Start Date
                 </label>
                 <DatePicker selected={startDate} onChange={(date) => setStartDate(date)}
-                className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                  className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
               </div>
             </div>
           </div>
@@ -141,23 +149,37 @@ export default function RequestDetails(request) {
             <button
               type="button"
               className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={()=> history.push("/hiring/jobrequest")}
+              onClick={() => history.push("/hiring/jobrequest")}
             >
               Cancel
             </button>
             <button
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={()=> history.push("/hiring/jobrequest")}
+              onClick={() => history.push("/hiring/jobrequest")}
             >
               Save
             </button>
-            <button
+            {/* <button
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               onClick={()=> history.push("/hiring/jobrequest")}
             >
               Submit
+            </button> */}
+            <button
+              type="button"
+              className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              onClick={() => history.push("/hiring/jobrequest")}
+            >
+              Approve
+            </button>
+            <button
+              type="submit"
+              className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              onClick={() => history.push("/hiring/jobrequest")}
+            >
+              Reject
             </button>
           </div>
         </div>
