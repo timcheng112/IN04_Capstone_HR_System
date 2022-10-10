@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.leave;
 
 import com.conceiversolutions.hrsystem.enums.StatusEnum;
+import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,6 +31,9 @@ public class Leave {
     @Column(name="approval_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusEnum approvalStatus;
+
+    @OneToOne(mappedBy = "leaves", optional = true)
+    private User user;
 
     public Leave(List<LocalDate> dates, String remarks) {
         this.dates = dates;

@@ -2,6 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import OffboardingScreen from "../screens/OffboardingScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import AttendanceScreen from "../screens/AttendanceScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import DrawerContent from "../components/general/DrawerContent";
 
@@ -16,6 +17,7 @@ const AdminDrawerNavigator = () => {
     >
       <AdminDrawer.Screen name="Onboarding" component={OnboardingScreen} />
       <AdminDrawer.Screen name="Offboarding" component={OffboardingScreen} />
+      <AdminDrawer.Screen name="Attendance" component={AttendanceScreen} />
     </AdminDrawer.Navigator>
   );
 };

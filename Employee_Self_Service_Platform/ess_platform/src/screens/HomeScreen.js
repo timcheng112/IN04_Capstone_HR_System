@@ -1,8 +1,9 @@
 import React from "react";
 import { Text } from "react-native-paper";
+import AttendanceStats from "../components/attendance/AttendanceStats";
 
 const HomeScreen = () => {
-  return <Text>HomeScreen</Text>;
+  return <AttendanceStats/>;
 };
 
 export default HomeScreen;

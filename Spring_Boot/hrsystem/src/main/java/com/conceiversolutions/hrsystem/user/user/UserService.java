@@ -8,6 +8,9 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.pay.attendance.Attendance;
+import com.conceiversolutions.hrsystem.rostering.shift.ShiftService;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepository;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
 import com.conceiversolutions.hrsystem.user.registration.EmailValidator;
@@ -22,8 +25,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +47,8 @@ public class UserService implements UserDetailsService {
     private final ReactivationRequestRepository reactivationRequestRepository;
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
+    private final ShiftListItemRepository shiftListItemRepository;
+
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -1145,4 +1152,81 @@ public class UserService implements UserDetailsService {
         userRepository.saveAndFlush(user);
         return "Successfully set password";
     }
+
+    //need to figure out how it looks on front end first
+    //check if today, they have any attendance first
+    //and on shift, if yes then add
+    //need to tally
+    //check if need to use ZonedDateTime
+    //take out lunch hour 9-1= 8 hrs from 9-6
+
+    //FULL-TIME
+    //Allowance
+    //Basic Monthly Rate, Overtime Hourly Pay
+    //Deduction
+    //Self Help Group Contribution Type
+
+    //PART-TIME
+    //Allowance
+    //Basic Hourly Rate, Weekend Hourly Rate, Overtime Hourly Rate, PH/Event Hourly Rate
+    //Deduction
+    //Self Help Group Contribution Type
+
+    //INTERN
+    //Allowance
+    //Basic Monthly Rate, Overtime Hourly Pay
+
+    //CONTRACT
+    //Allowance
+    //PH/Event Hourly Rate
+    public int attendanceFullTimeMonthly(Long userId){
+        //Basic Monthly Rate, Overtime Hourly Pay
+        int count =0;
+        User u1 = getUser(userId);
+        List<Leave> l = u1.getLeaves();
+        return count;
+
+    }
+
+    //contract
+//    public void countAttendanceForToday(Long userId){
+//
+////        User u1 = userRepository.findById(attendance.getUser().getUserId()).get();
+//        User u1 = getUser(attendance.getUser().getUserId());
+//        //will have user
+//
+//        //Check time for today
+//        //find
+//        LocalDateTime dt1 = attendance.getPeriodStart();
+//        LocalDateTime dt2 = attendance.getPeriodEnd();
+//        //https://stackoverflow.com/questions/25747499/java-8-difference-between-two-localdatetime-in-multiple-units
+//        //https://docs.oracle.com/javase/tutorial/datetime/iso/period.html
+//        //dont use minus(). gives u back 1 LDT and u have to translate again BOO
+//
+////        test -ve for between
+////        LocalDateTime localDT1 = LocalDateTime.parse("1979-12-09T09:00:25");
+////        LocalDateTime localDT2 = LocalDateTime.parse("1979-12-09T18:00:24");
+////        Long hours = ChronoUnit.HOURS.between(localDT1,localDT2);
+////        System.out.println(hours);
+//        if(dt2.isAfter(dt1)){
+////            LocalDateTime timeWorked =  dt2. dt1;
+//            //Chronos hours return Long
+//            //minus 1 cos lunch break
+//            Long hours = ChronoUnit.HOURS.between(dt1,dt2);
+//            Integer clocked = hours.intValue() - 1;
+//
+//            //need to check with shift which kind of shift is it. event or normal for payroll
+//            if(clocked > 8){
+//                Integer ot = clocked -8;
+//                attendance.setPhEventHoursWorked(ot.longValue());
+//                attendance.setTotalCount(attendance.getTotalCount() + clocked + ot);
+//            }else{
+//                attendance.setTotalCount(attendance.getTotalCount() + clocked);
+//            }
+//
+//        }
+//        //they need to pass this info to payroll. need to check if today is weekday, weekend or event for pay
+//        attendanceRepository.saveAndFlush(attendance);
+//
+//    }
 }

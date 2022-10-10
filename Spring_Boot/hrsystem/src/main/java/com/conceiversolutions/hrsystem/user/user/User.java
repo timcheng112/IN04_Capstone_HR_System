@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
@@ -138,6 +139,10 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
     @Column(name = "shift_list_items")
     private List<ShiftListItem> shiftListItems;
+
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Leave.class, optional = true)
+    @JoinColumn(name = "leave_id")
+    private List<Leave> leaves;
 
     // TODO add on other relationships to other classes
 

@@ -3,6 +3,7 @@ import { NavigationContainer, useTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import OffboardingScreen from "../screens/OffboardingScreen";
+import AttendanceScreen from "../screens/AttendanceScreen";
 import Header from "../components/general/Header";
 import { Appbar, Button } from "react-native-paper";
 import { StatusBar } from "react-native";
@@ -46,6 +47,14 @@ const AdminNavigator = () => {
         options={{
           title: "My Offboarding Tasks",
           headerTitle: "Offboarding",
+        }}
+      />
+      <AdminStack.Screen
+        name="Attendance"
+        component={AttendanceScreen}
+        options={{
+          title: "My Attendance",
+          headerTitle: "Attendance",
         }}
       />
     </AdminStack.Navigator>
