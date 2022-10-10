@@ -61,7 +61,6 @@ public class ShiftService {
         return savedShift.getShiftId();
     }
 
-    // UNFINISHED
     public void deleteShift(Long shiftId) {
         Shift shift = shiftRepository.findById(shiftId)
                 .orElseThrow(() -> new IllegalStateException("Shift with ID: " + shiftId + " does not exist!"));

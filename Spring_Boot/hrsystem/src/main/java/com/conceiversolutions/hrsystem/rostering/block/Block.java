@@ -36,6 +36,14 @@ public class Block {
     public Block() {
     }
 
+    public Block(LocalDate startTime, LocalDate endTime, String blockTitle, String reason, Boolean isPaid) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.blockTitle = blockTitle;
+        this.reason = reason;
+        this.isPaid = isPaid;
+    }
+
     public Block(LocalDate startTime, LocalDate endTime, String blockTitle, String reason, Boolean isPaid,
             User employee, Roster roster) {
         this.startTime = startTime;

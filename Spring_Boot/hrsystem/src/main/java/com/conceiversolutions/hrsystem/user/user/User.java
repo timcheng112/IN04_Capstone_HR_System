@@ -15,6 +15,7 @@ import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
+import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
@@ -138,6 +139,10 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
     @Column(name = "shift_list_items")
     private List<ShiftListItem> shiftListItems;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "requestor")
+    private List<SwapRequest> swapRequestsRequested;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "receiver")
+    private List<SwapRequest> swapRequestsReceived;
 
     // TODO add on other relationships to other classes
 
@@ -207,6 +212,22 @@ public class User implements UserDetails {
         this.profilePic = null;
         this.currentPosition = null;
         this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
         this.preferredDates = null;
     }
 
@@ -241,31 +262,239 @@ public class User implements UserDetails {
         this.payslips = payslips;
         this.attendances = attendances;
         this.currentPayInformation = currentPayInformation;
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
         this.preferredDates = null;
     }
 
-    // this should be for making an employee's account
-    public User(String firstName, String lastName, Integer phone, String email, String workEmail,
-            LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
-            LocalDate dateJoined, PayInformation currentPayInformation, PreferredDates preferredDates) {
-        this();
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Integer phone) {
         this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getWorkEmail() {
+        return workEmail;
+    }
+
+    public void setWorkEmail(String workEmail) {
         this.workEmail = workEmail;
+    }
+
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob(LocalDate dob) {
         this.dob = dob;
+    }
+
+    public GenderEnum getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderEnum gender) {
         this.gender = gender;
+    }
+
+    public RoleEnum getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(RoleEnum userRole) {
         this.userRole = userRole;
-        this.isPartTimer = isPartTimer;
-        this.isHrEmployee = isHrEmployee;
+    }
+
+    public Boolean getPartTimer() {
+        return isPartTimer;
+    }
+
+    public void setPartTimer(Boolean partTimer) {
+        isPartTimer = partTimer;
+    }
+
+    public Boolean getHrEmployee() {
+        return isHrEmployee;
+    }
+
+    public void setHrEmployee(Boolean hrEmployee) {
+        isHrEmployee = hrEmployee;
+    }
+
+    public Boolean getBlackListed() {
+        return isBlackListed;
+    }
+
+    public void setBlackListed(Boolean blackListed) {
+        isBlackListed = blackListed;
+    }
+
+    public Boolean getEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public LocalDate getDateJoined() {
+        return dateJoined;
+    }
+
+    public void setDateJoined(LocalDate dateJoined) {
         this.dateJoined = dateJoined;
-        this.currentPayInformation = currentPayInformation;
-        this.isBlackListed = false;
-        this.isEnabled = false; // only change to true after email is confirmed
-        this.profilePic = null;
-        this.qualificationInformation = null;
-        this.preferredDates = preferredDates;
+    }
+
+    public DocData getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(DocData profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
+    }
+
+    public QualificationInformation getQualificationInformation() {
+        return qualificationInformation;
+    }
+
+    public void setQualificationInformation(QualificationInformation qualificationInformation) {
+        this.qualificationInformation = qualificationInformation;
+    }
+
+    public List<JobApplication> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<JobApplication> applications) {
+        this.applications = applications;
+    }
+
+    public List<JobRequest> getJobRequests() {
+        return jobRequests;
+    }
+
+    public void setJobRequests(List<JobRequest> jobRequests) {
+        this.jobRequests = jobRequests;
+    }
+
+    public List<Appraisal> getEmployeeAppraisals() {
+        return employeeAppraisals;
+    }
+
+    public void setEmployeeAppraisals(List<Appraisal> employeeAppraisals) {
+        this.employeeAppraisals = employeeAppraisals;
+    }
+
+    public List<Appraisal> getManagerAppraisals() {
+        return managerAppraisals;
+    }
+
+    public void setManagerAppraisals(List<Appraisal> managerAppraisals) {
+        this.managerAppraisals = managerAppraisals;
+    }
+
+    public List<ManagerReview> getManagerReviews() {
+        return managerReviews;
+    }
+
+    public void setManagerReviews(List<ManagerReview> managerReviews) {
+        this.managerReviews = managerReviews;
+    }
+
+    public List<ManagerReview> getEmployeeReviews() {
+        return employeeReviews;
+    }
+
+    public void setEmployeeReviews(List<ManagerReview> employeeReviews) {
+        this.employeeReviews = employeeReviews;
+    }
+
+    public List<Module> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
+    }
+
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(List<Goal> goals) {
+        this.goals = goals;
+    }
+
+    public List<Payslip> getPayslips() {
+        return payslips;
+    }
+
+    public void setPayslips(List<Payslip> payslips) {
+        this.payslips = payslips;
+    }
+
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
+    }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
     }
 
     @Override
@@ -361,6 +590,26 @@ public class User implements UserDetails {
     public List<ShiftListItem> removeShiftListItems(ShiftListItem shiftListItem) {
         this.shiftListItems.remove(shiftListItem);
         return this.shiftListItems;
+    }
+
+    public List<SwapRequest> addSwapRequestsRequested(SwapRequest swapRequest) {
+        this.swapRequestsRequested.add(swapRequest);
+        return this.swapRequestsRequested;
+    }
+
+    public List<SwapRequest> removeSwapRequestsRequested(SwapRequest swapRequest) {
+        this.swapRequestsRequested.remove(swapRequest);
+        return this.swapRequestsRequested;
+    }
+
+    public List<SwapRequest> addSwapRequestsReceived(SwapRequest swapRequest) {
+        this.swapRequestsReceived.add(swapRequest);
+        return this.swapRequestsReceived;
+    }
+
+    public List<SwapRequest> removeSwapRequestsReceived(SwapRequest swapRequest) {
+        this.swapRequestsReceived.remove(swapRequest);
+        return this.swapRequestsReceived;
     }
 
     public Boolean getPartTimer() {
