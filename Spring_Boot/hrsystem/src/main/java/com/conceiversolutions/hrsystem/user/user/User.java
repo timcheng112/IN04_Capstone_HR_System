@@ -234,7 +234,8 @@ public class User implements UserDetails {
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
             LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
             Boolean isBlackListed,
-            Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions, Position currentPosition,
+            Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions,
+            Position currentPosition,
             QualificationInformation qualificationInformation,
             List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
             List<Attendance> attendances, PayInformation currentPayInformation) {
@@ -343,14 +344,6 @@ public class User implements UserDetails {
 
     public void setUserRole(RoleEnum userRole) {
         this.userRole = userRole;
-    }
-
-    public Boolean getPartTimer() {
-        return isPartTimer;
-    }
-
-    public void setPartTimer(Boolean partTimer) {
-        isPartTimer = partTimer;
     }
 
     public Boolean getHrEmployee() {
@@ -618,29 +611,5 @@ public class User implements UserDetails {
 
     public void setPartTimer(Boolean partTimer) {
         isPartTimer = partTimer;
-    }
-
-    public Boolean getHrEmployee() {
-        return isHrEmployee;
-    }
-
-    public void setHrEmployee(Boolean hrEmployee) {
-        isHrEmployee = hrEmployee;
-    }
-
-    public Boolean getBlackListed() {
-        return isBlackListed;
-    }
-
-    public void setBlackListed(Boolean blackListed) {
-        isBlackListed = blackListed;
-    }
-
-    public Boolean getEnabled() {
-        return isEnabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        isEnabled = enabled;
     }
 }
