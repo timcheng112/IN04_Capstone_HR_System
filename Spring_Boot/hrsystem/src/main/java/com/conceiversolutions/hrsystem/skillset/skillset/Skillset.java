@@ -11,15 +11,15 @@ public class Skillset {
     private Long skillsetId;
     @Column(name = "skillset_name", nullable = false, length = 64)
     private String skillsetName;
-    @Column(name = "open_ended", nullable = false)
-    private Boolean openEnded;
+//    @Column(name = "open_ended", nullable = false)
+//    private Boolean openEnded;
 
     public Skillset() {
     }
 
-    public Skillset(String skillsetName, Boolean openEnded) {
+    public Skillset(String skillsetName/*, Boolean openEnded*/) {
         this.skillsetName = skillsetName;
-        this.openEnded = openEnded;
+//        this.openEnded = openEnded;
     }
 
     public Long getSkillsetId() {
@@ -38,20 +38,20 @@ public class Skillset {
         this.skillsetName = skillsetName;
     }
 
-    public Boolean getOpenEnded() {
-        return openEnded;
-    }
-
-    public void setOpenEnded(Boolean openEnded) {
-        this.openEnded = openEnded;
-    }
+//    public Boolean getOpenEnded() {
+//        return openEnded;
+//    }
+//
+//    public void setOpenEnded(Boolean openEnded) {
+//        this.openEnded = openEnded;
+//    }
 
     @Override
     public String toString() {
         return "Skillset{" +
                 "skillsetId=" + skillsetId +
                 ", skillsetName='" + skillsetName + '\'' +
-                ", openEnded=" + openEnded +
+//                ", openEnded=" + openEnded +
                 '}';
     }
 }
