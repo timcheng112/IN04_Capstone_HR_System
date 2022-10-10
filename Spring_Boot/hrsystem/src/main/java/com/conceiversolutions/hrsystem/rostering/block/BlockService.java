@@ -25,8 +25,7 @@ public class BlockService {
         List<Block> blocks = blockRepository.findAll();
         for (Block block : blocks) {
             block.setEmployee(null);
-            block.getRoster().setShifts(new ArrayList<>());
-            block.getRoster().setTeam(null);
+            block.setRoster(null);
         }
         return blocks;
     }
@@ -35,8 +34,7 @@ public class BlockService {
         Block block = blockRepository.findById(blockId)
                 .orElseThrow(() -> new IllegalStateException("Block with ID: " + blockId + " does not exist!"));
         block.setEmployee(null);
-        block.getRoster().setShifts(new ArrayList<>());
-        block.getRoster().setTeam(null);
+        block.setRoster(null);
         return block;
     }
 

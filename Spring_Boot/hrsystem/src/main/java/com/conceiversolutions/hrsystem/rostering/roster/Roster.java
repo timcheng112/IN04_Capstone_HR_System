@@ -30,6 +30,12 @@ public class Roster {
     public Roster() {
     }
 
+    public Roster(String rosterDescription) {
+        this.rosterDescription = rosterDescription;
+        this.shifts = new ArrayList<>();
+        this.blocks = new ArrayList<>();
+    }
+
     public Roster(String rosterDescription, Team team) {
         this.rosterDescription = rosterDescription;
         this.team = team;

@@ -123,10 +123,10 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.LAZY, targetEntity = ReactivationRequest.class, optional = true)
     @JoinColumn(name = "reactivation_request_id")
     private ReactivationRequest reactivationRequest;
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = PreferredDates.class, mappedBy = "preferred_dates")
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = PreferredDates.class, mappedBy = "user")
     private PreferredDates preferredDates;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Block.class, mappedBy = "user")
-    @Column(name = "block")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Block.class, mappedBy = "employee")
+    @Column(name = "blocks")
     private List<Block> blocks;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
     @Column(name = "shift_list_items")
@@ -176,7 +176,7 @@ public class User implements UserDetails {
     // this should be for making an employee's account
     public User(String firstName, String lastName, Integer phone, String email, String workEmail,
             LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
-            LocalDate dateJoined, PayInformation currentPayInformation, PreferredDates preferredDates) {
+            LocalDate dateJoined, PayInformation currentPayInformation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -206,7 +206,6 @@ public class User implements UserDetails {
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
-        this.preferredDates = preferredDates;
         this.blocks = new ArrayList<>();
         this.shiftListItems = new ArrayList<>();
     }
@@ -217,7 +216,7 @@ public class User implements UserDetails {
             Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions,
             QualificationInformation qualificationInformation,
             List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
-            List<Attendance> attendances, PayInformation currentPayInformation, PreferredDates preferredDates) {
+            List<Attendance> attendances, PayInformation currentPayInformation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -248,6 +247,44 @@ public class User implements UserDetails {
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+    }
+
+    // TO REMOVE
+    // this should be for making an employee's account
+    public User(String firstName, String lastName, Integer phone, String email, String workEmail,
+            LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+            LocalDate dateJoined, PayInformation currentPayInformation, PreferredDates preferredDates) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.userRole = userRole;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.dateJoined = dateJoined;
+        this.currentPayInformation = currentPayInformation;
+        this.isBlackListed = false;
+        this.isEnabled = false; // only change to true after email is confirmed
+        this.profilePic = null;
+        this.positions = new ArrayList<>();
+        this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.preferredDates = preferredDates;
         this.blocks = new ArrayList<>();
         this.shiftListItems = new ArrayList<>();
@@ -592,6 +629,16 @@ public class User implements UserDetails {
 
     public void setShiftListItems(List<ShiftListItem> shiftListItems) {
         this.shiftListItems = shiftListItems;
+    }
+
+    public List<ShiftListItem> addShiftListItems(ShiftListItem shiftListItem) {
+        this.shiftListItems.add(shiftListItem);
+        return this.shiftListItems;
+    }
+
+    public List<ShiftListItem> removeShiftListItems(ShiftListItem shiftListItem) {
+        this.shiftListItems.remove(shiftListItem);
+        return this.shiftListItems;
     }
 
 }
