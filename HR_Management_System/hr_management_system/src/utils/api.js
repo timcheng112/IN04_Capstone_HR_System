@@ -291,6 +291,11 @@ const api = {
             `http://localhost:9191/api/jobrequest/deleteJobRequest?jobRequestId=${jobRequestId}`
         );
   },
+  getDepartmentByEmployeeId(employeeId) {
+          return axios.get(
+              `http://localhost:9191/api/department/getDepartmentByEmployeeId?employeeId=${employeeId}`
+          );
+    },
 };
 
 export default api;

@@ -7,8 +7,8 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
-import com.conceiversolutions.hrsystem.skillset.jobskillset.JobSkillset;
-import com.conceiversolutions.hrsystem.skillset.jobskillset.JobSkillsetRepository;
+import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
+import com.conceiversolutions.hrsystem.skillset.skillset.SkillsetRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ public class JobRequestService {
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
-    private final JobSkillsetRepository jobSkillsetRepository;
+    private final SkillsetRepository skillsetRepository;
 
     public List<JobRequest> getAllJobRequests() {
         System.out.println("JobRequestService.getAllJobRequests");
@@ -129,9 +129,9 @@ public class JobRequestService {
         }
         User requestor = r.get();
 
-        List<JobSkillset> skillsets = new ArrayList<>();
+        List<Skillset> skillsets = new ArrayList<>();
         if (jobRequirementIds != null) {
-            skillsets = jobSkillsetRepository.findAllById(jobRequirementIds);
+            skillsets = skillsetRepository.findAllById(jobRequirementIds);
         }
 
         if (!jobRequestId.equals(0L)) {

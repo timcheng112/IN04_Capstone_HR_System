@@ -1,7 +1,7 @@
 package com.conceiversolutions.hrsystem.jobmanagement.jobposting;
 
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
-import com.conceiversolutions.hrsystem.skillset.jobskillset.JobSkillset;
+import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import com.conceiversolutions.hrsystem.user.user.User;
 
 import javax.persistence.*;
@@ -30,14 +30,14 @@ public class JobPosting {
     private User postedBy;
     @OneToOne(targetEntity = JobRequest.class, fetch = FetchType.LAZY, optional = false, mappedBy = "jobPosting")
     private JobRequest jobRequest;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = JobSkillset.class)
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
     @JoinColumn(name = "posting_id")
-    private List<JobSkillset> jobRequirements;
+    private List<Skillset> jobRequirements;
 
     public JobPosting() {
     }
 
-    public JobPosting(String jobTitle, String jobDescription, String remuneration, LocalDate postDate, Boolean isActive, User postedBy, JobRequest jobRequest, List<JobSkillset> jobRequirements) {
+    public JobPosting(String jobTitle, String jobDescription, String remuneration, LocalDate postDate, Boolean isActive, User postedBy, JobRequest jobRequest, List<Skillset> jobRequirements) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.remuneration = remuneration;
@@ -112,11 +112,11 @@ public class JobPosting {
         this.jobRequest = jobRequest;
     }
 
-    public List<JobSkillset> getJobRequirements() {
+    public List<Skillset> getJobRequirements() {
         return jobRequirements;
     }
 
-    public void setJobRequirements(List<JobSkillset> jobRequirements) {
+    public void setJobRequirements(List<Skillset> jobRequirements) {
         this.jobRequirements = jobRequirements;
     }
 
