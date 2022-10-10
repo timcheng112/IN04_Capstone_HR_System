@@ -23,6 +23,12 @@ import OnboardingPage from "./pages/Onboarding/index";
 import OffboardingHrPage from "./pages/Offboarding/indexHr";
 import OffboardingPage from "./pages/Offboarding/index";
 
+import JobRequestPage from "./pages/JobRequest/index";
+import JobRequestDetailPage from "./pages/JobRequest/RequestDetail";
+import NewJobRequestPage from "./pages/JobRequest/NewRequest";
+import JobRequestHrPage from "./pages/JobRequest/indexHR";
+import JobPostPage from "./pages/JobPost/indexHR";
+
 
 function App() {
   return (
@@ -62,6 +68,12 @@ function App() {
           <PrivateRoute exact path="/admin/onboardinghr" component={OnboardingHrPage} />
           <PrivateRoute exact path="/admin/offboarding" component={OffboardingPage} />
           <PrivateRoute exact path="/admin/offboardinghr" component={OffboardingHrPage} />
+
+          <PublicRoute exact path="/hiring/jobrequest" component={JobRequestPage} />
+          <PublicRoute exact path="/hiring/jobrequestdetail" component={JobRequestDetailPage} />
+          <PublicRoute exact path="/hiring/newjobrequest" component={NewJobRequestPage} />
+          <PublicRoute exact path="/hiring/jobrequesthr" component={JobRequestHrPage} />
+          <PublicRoute exact path="/hiring/jobpost" component={JobPostPage} />
         </Switch>
       </div>
     </BrowserRouter>
