@@ -278,7 +278,7 @@ const api = {
   },
   saveJobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobType, jobRole, salary, jobRequirementIds, departmentId, requestedById, jobRequestId) {
         return axios.post(
-            `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justficiation}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirementsId=${jobRequirementIds}&departmentId=${departmentId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}'
+            `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirementsId=${jobRequirementIds}&departmentId=${departmentId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
         );
   },
   getJobRequestById(jobRequestId) {

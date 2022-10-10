@@ -110,6 +110,8 @@ public class JobRequestService {
     public Long saveJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, List<Long> jobRequirementIds, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
         System.out.println("JobRequestService.saveJobRequest");
 
+        checkInput(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, roleEnum, salary, departmentId, requestedById);
+
         Optional<Department> d = departmentRepository.findById(departmentId);
         if (d.isEmpty()) {
             throw new IllegalStateException("Department cannot be found, cannot proceed");
@@ -165,6 +167,34 @@ public class JobRequestService {
             return done.getRequestId();
         }
     }
+
+    private void checkInput(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, Long departmentId, Long requestedById) {
+        System.out.println("JobRequestService.checkInput");
+        if (jobTitle.equals("")) {
+            throw new IllegalStateException("jobTitle is missing");
+        } else if (jobDescription.equals("")) {
+            throw new IllegalStateException("jobDescription is missing");
+        } else if (justification.equals("")) {
+            throw new IllegalStateException("justification is missing");
+        } else if (preferredStartDate == null) {
+            throw new IllegalStateException("preferredStartDate is missing");
+        } else if (preferredStartDate.isBefore(LocalDate.now())) {
+            throw new IllegalStateException("preferredStartDate is invalid");
+        } else if (jobTypeEnum == null) {
+            throw new IllegalStateException("jobTypeEnum is missing");
+        } else if (roleEnum == null) {
+            throw new IllegalStateException("roleEnum is missing");
+        } else if (salary == null) {
+            throw new IllegalStateException("salary is missing");
+        } else if (salary.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalStateException("salary is invalid");
+        } else if (departmentId == null || departmentId.compareTo(0L) < 0) {
+            throw new IllegalStateException("departmentId is invalid");
+        } else if (requestedById == null || requestedById.compareTo(0L) < 0) {
+            throw new IllegalStateException("requestedById is invalid");
+        }
+    }
+
 
     public JobRequest getJobRequestById(Long jobRequestId) {
         System.out.println("JobRequestService.getJobRequestById");
