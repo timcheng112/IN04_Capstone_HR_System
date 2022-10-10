@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
 import com.conceiversolutions.hrsystem.rostering.roster.RosterRepository;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepository;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemService;
 
 import lombok.AllArgsConstructor;
 
@@ -17,6 +19,7 @@ public class ShiftService {
 
     private final ShiftRepository shiftRepository;
     private final RosterRepository rosterRepository;
+    private final ShiftListItemService shiftListItemService;
 
     public List<Shift> getShifts() {
         List<Shift> shifts = shiftRepository.findAll();
@@ -67,8 +70,7 @@ public class ShiftService {
         shift.setRoster(null);
 
         for (ShiftListItem shiftListItem : shift.getShiftListItems()) {
-            // to-do call delete shiftlistitem method from shiftlistitem service
-            shift.removeShiftListItem(shiftListItem);
+            shiftListItemService.deleteShiftListItem(shiftListItem.getShiftListItemId());
         }
 
         shiftRepository.deleteById(shiftId);

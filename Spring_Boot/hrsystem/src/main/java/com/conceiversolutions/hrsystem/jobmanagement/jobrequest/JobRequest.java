@@ -2,6 +2,8 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.skillset.jobskillset.JobSkillset;
@@ -14,6 +16,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -40,13 +43,14 @@ public class JobRequest {
     @Enumerated(EnumType.STRING)
     @Column(name = "job_type", nullable = false)
     private JobTypeEnum jobType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "job_role", nullable = false)
+    private RoleEnum jobRole;
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private JobStatusEnum status;
-    @Column(name = "salary_min", nullable = false)
-    private BigDecimal salaryMin;
-    @Column(name = "salary_max", nullable = false)
-    private BigDecimal salaryMax;
+    @Column(name = "salary", nullable = false)
+    private BigDecimal salary;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobSkillset.class)
     @JoinColumn(name = "requirements")
     private List<JobSkillset> jobRequirements;
@@ -64,24 +68,38 @@ public class JobRequest {
     @OneToOne(fetch = FetchType.LAZY, targetEntity = User.class, optional = true)
     @JoinColumn(name = "approver")
     private User approver;
+    @Column(name = "approved_date", nullable = true)
+    private LocalDateTime approvedDate;
+    @Column(name = "last_edited_date", nullable = false)
+    private LocalDateTime lastEditedDate;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = JobPosting.class)
+    private JobPosting jobPosting;
 
     public JobRequest() {
     }
 
-    public JobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobType, BigDecimal salaryMin, BigDecimal salaryMax, List<JobSkillset> jobRequirements, Department department, Team team, User requestedBy) {
+    public JobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobType, BigDecimal salary, List<JobSkillset> jobRequirements, Department department, Team team, User requestedBy, RoleEnum jobRole) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.justification = justification;
         this.preferredStartDate = preferredStartDate;
         this.jobType = jobType;
-        this.salaryMin = salaryMin;
-        this.salaryMax = salaryMax;
+        this.salary = salary;
         this.jobRequirements = jobRequirements;
         this.department = department;
         this.team = team;
         this.requestedBy = requestedBy;
+        this.jobRole = jobRole;
         this.requestDate = LocalDate.now();
-        this.status = JobStatusEnum.CREATED;
+        this.status = JobStatusEnum.PENDING;
         this.approver = null;
+        this.approvedDate = null;
+        this.lastEditedDate = LocalDateTime.now();
+        this.jobPosting = null;
+    }
+
+    public void approveJobRequest() {
+        this.status = JobStatusEnum.APPROVED;
+        this.approvedDate = LocalDateTime.now();
     }
 }

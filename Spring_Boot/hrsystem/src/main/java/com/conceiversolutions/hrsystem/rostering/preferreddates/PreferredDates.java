@@ -20,6 +20,7 @@ public class PreferredDates {
     @Column(name = "preferred_dates_id")
     private Long preferredDatesId;
     @Column(nullable = false)
+    @ElementCollection(targetClass = LocalDate.class)
     private List<LocalDate> dates;
 
     @OneToOne(cascade = CascadeType.ALL)
