@@ -22,6 +22,7 @@ import OnboardingHrPage from "./pages/Onboarding/indexHR";
 import OnboardingPage from "./pages/Onboarding/index";
 import OffboardingHrPage from "./pages/Offboarding/indexHr";
 import OffboardingPage from "./pages/Offboarding/index";
+import AdminPage from "./pages/AdminPage";
 
 import JobRequestPage from "./pages/JobRequest/index";
 import JobRequestDetailPage from "./pages/JobRequest/RequestDetail";
@@ -63,7 +64,7 @@ function App() {
           <PrivateRoute exact path="/viewDept/:deptId" component={ViewDepartment}/>
           <PrivateRoute exact path="/offboarding" component={OffboardingPage}/>
           {/* <ViewTeam/> */}
-
+          <PrivateRoute exact path="/admin" component={AdminPage}/> 
           <PrivateRoute exact path="/admin/onboarding" component={OnboardingPage} />
           <PrivateRoute exact path="/admin/onboardinghr" component={OnboardingHrPage} />
           <PrivateRoute exact path="/admin/offboarding" component={OffboardingPage} />

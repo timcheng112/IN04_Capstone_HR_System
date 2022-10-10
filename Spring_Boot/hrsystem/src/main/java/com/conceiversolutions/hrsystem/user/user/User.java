@@ -12,6 +12,9 @@ import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.goal.Goal;
 import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
+import com.conceiversolutions.hrsystem.rostering.block.Block;
+import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
@@ -127,6 +130,14 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.LAZY, targetEntity = ReactivationRequest.class, optional = true)
     @JoinColumn(name = "reactivation_request_id")
     private ReactivationRequest reactivationRequest;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = PreferredDates.class, mappedBy = "user")
+    private PreferredDates preferredDates;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Block.class, mappedBy = "employee")
+    @Column(name = "blocks")
+    private List<Block> blocks;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
+    @Column(name = "shift_list_items")
+    private List<ShiftListItem> shiftListItems;
 
     // TODO add on other relationships to other classes
 
@@ -204,6 +215,8 @@ public class User implements UserDetails {
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
@@ -244,6 +257,47 @@ public class User implements UserDetails {
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+    }
+
+    // TO REMOVE
+    // this should be for making an employee's account
+    public User(String firstName, String lastName, Integer phone, String email, String workEmail,
+            LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+            LocalDate dateJoined, PayInformation currentPayInformation, PreferredDates preferredDates) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.userRole = userRole;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.dateJoined = dateJoined;
+        this.currentPayInformation = currentPayInformation;
+        this.isBlackListed = false;
+        this.isEnabled = false; // only change to true after email is confirmed
+        this.profilePic = null;
+        this.positions = new ArrayList<>();
+        this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
+        this.preferredDates = preferredDates;
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
     }
 
     @Override
@@ -296,4 +350,49 @@ public class User implements UserDetails {
         this.taskListItems.add(item);
         return this.taskListItems;
     }
+
+    public PreferredDates getPreferredDates() {
+        return preferredDates;
+    }
+
+    public void setPreferredDates(PreferredDates preferredDates) {
+        this.preferredDates = preferredDates;
+    }
+
+    public List<Block> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(List<Block> blocks) {
+        this.blocks = blocks;
+    }
+
+    public List<Block> addBlock(Block block) {
+        this.blocks.add(block);
+        return this.blocks;
+    }
+
+    public List<Block> removeBlock(Block block) {
+        this.blocks.remove(block);
+        return this.blocks;
+    }
+
+    public List<ShiftListItem> getShiftListItems() {
+        return shiftListItems;
+    }
+
+    public void setShiftListItems(List<ShiftListItem> shiftListItems) {
+        this.shiftListItems = shiftListItems;
+    }
+
+    public List<ShiftListItem> addShiftListItems(ShiftListItem shiftListItem) {
+        this.shiftListItems.add(shiftListItem);
+        return this.shiftListItems;
+    }
+
+    public List<ShiftListItem> removeShiftListItems(ShiftListItem shiftListItem) {
+        this.shiftListItems.remove(shiftListItem);
+        return this.shiftListItems;
+    }
+
 }
