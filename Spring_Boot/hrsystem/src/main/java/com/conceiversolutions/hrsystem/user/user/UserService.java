@@ -1101,6 +1101,8 @@ public class UserService implements UserDetailsService {
 
         List<User> employees = userRepository.getEmployeesNotInGivenTeam(RoleEnum.MANAGER, RoleEnum.EMPLOYEE,
                 Long.valueOf(teamId));
+        
+        System.out.println("EMPLOYEES NOT IN GIVEN TEAM: " + employees);
 
         if (employees.isEmpty()) {
             throw new IllegalStateException("Employees not found.");
@@ -1113,6 +1115,7 @@ public class UserService implements UserDetailsService {
                 t.setDepartment(null);
                 t.setOutlet(null);
                 t.setTeamHead(null);
+                t.setRoster(null);
             }
             // u.setTaskListItems(null);
             for (TaskListItem taskListItem : e.getTaskListItems()) {
