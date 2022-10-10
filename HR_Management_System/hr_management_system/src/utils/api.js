@@ -283,6 +283,32 @@ const api = {
   editModule(moduleId, module) {
     return axios.put(`http://localhost:9191/api/module/${moduleId}`, module)
   },
+  // JOB REQUEST
+  getAllJobRequests() {
+      return axios.get(
+          `http://localhost:9191/api/jobrequest/getAllJobRequests`
+      );
+  },
+  getManagerJobRequests(managerId) {
+        return axios.get(
+            `http://localhost:9191/api/jobrequest/getJobRequestsByRequestorId?requestorId=${managerId}`
+        );
+  },
+  saveJobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobType, jobRole, salary, jobRequirementIds, departmentId, requestedById, jobRequestId) {
+        return axios.post(
+            `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirementsId=${jobRequirementIds}&departmentId=${departmentId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
+        );
+  },
+  getJobRequestById(jobRequestId) {
+        return axios.get(
+            `http://localhost:9191/api/jobrequest/getJobRequestById?jobRequestId=${jobRequestId}`
+        );
+  },
+  deleteJobRequest(jobRequestId) {
+        return axios.delete(
+            `http://localhost:9191/api/jobrequest/deleteJobRequest?jobRequestId=${jobRequestId}`
+        );
+  },
 };
 
 export default api;

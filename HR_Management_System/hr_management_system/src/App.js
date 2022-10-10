@@ -27,6 +27,12 @@ import TrainingHRPage from "./pages/Training/indexHR";
 import ModulePage from "./pages/Module";
 import AdminPage from "./pages/AdminPage";
 
+import JobRequestPage from "./pages/JobRequest/index";
+import JobRequestDetailPage from "./pages/JobRequest/RequestDetail";
+import NewJobRequestPage from "./pages/JobRequest/NewRequest";
+import JobRequestHrPage from "./pages/JobRequest/indexHR";
+import JobPostPage from "./pages/JobPost/indexHR";
+
 
 function App() {
   return (
@@ -69,6 +75,12 @@ function App() {
           <PrivateRoute exact path="/admin/offboardinghr" component={OffboardingHrPage} />
           <PrivateRoute exact path="/career/traininghr" component={TrainingHRPage} />  
           <PrivateRoute exact path="/career/traininghr/module/:moduleId" component={ModulePage} />     
+
+          <PublicRoute exact path="/hiring/jobrequest" component={JobRequestPage} />
+          <PublicRoute exact path="/hiring/jobrequestdetail" component={JobRequestDetailPage} />
+          <PublicRoute exact path="/hiring/newjobrequest" component={NewJobRequestPage} />
+          <PublicRoute exact path="/hiring/jobrequesthr" component={JobRequestHrPage} />
+          <PublicRoute exact path="/hiring/jobpost" component={JobPostPage} />
         </Switch>
       </div>
     </BrowserRouter>

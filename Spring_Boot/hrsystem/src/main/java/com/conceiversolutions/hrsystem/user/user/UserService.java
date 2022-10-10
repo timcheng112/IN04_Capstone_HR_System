@@ -96,6 +96,7 @@ public class UserService implements UserDetailsService {
             }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
+            u.setBlocks(new ArrayList<>());
         }
 
         return users;
@@ -126,6 +127,7 @@ public class UserService implements UserDetailsService {
             }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
+            u.setBlocks(new ArrayList<>());
 
             return u;
         } else {
@@ -159,6 +161,7 @@ public class UserService implements UserDetailsService {
             }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
+            u.setBlocks(new ArrayList<>());
 
             return u;
         } else {
@@ -191,6 +194,7 @@ public class UserService implements UserDetailsService {
             }
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
+            u.setBlocks(new ArrayList<>());
 
             return u;
         } else {
@@ -992,6 +996,8 @@ public class UserService implements UserDetailsService {
             }
             u.setQualificationInformation(null);
             // u.setTeams(new ArrayList<>());
+            u.setBlocks(new ArrayList<>());
+
         }
         return employees;
     }
@@ -1015,6 +1021,8 @@ public class UserService implements UserDetailsService {
             }
             u.setQualificationInformation(null);
             // u.setTeams(new ArrayList<>());
+            u.setBlocks(new ArrayList<>());
+
         }
 
         return employees;
@@ -1078,6 +1086,7 @@ public class UserService implements UserDetailsService {
                     taskListItem.getTask().setCategory(null);
                 }
                 u.setQualificationInformation(null);
+                u.setBlocks(new ArrayList<>());
 
                 availManagers.add(u);
             }
@@ -1112,6 +1121,8 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             e.setQualificationInformation(null);
+            e.setBlocks(new ArrayList<>());
+
         }
 
         return employees;

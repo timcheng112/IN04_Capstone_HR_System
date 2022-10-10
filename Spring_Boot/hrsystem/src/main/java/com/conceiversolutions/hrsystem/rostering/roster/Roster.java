@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.rostering.roster;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -29,17 +30,17 @@ public class Roster {
     public Roster() {
     }
 
-    public Roster(String rosterDescription, Team team, List<Shift> shifts, List<Block> blocks) {
+    public Roster(String rosterDescription) {
         this.rosterDescription = rosterDescription;
-        this.team = team;
-        this.shifts = shifts;
-        this.blocks = blocks;
+        this.shifts = new ArrayList<>();
+        this.blocks = new ArrayList<>();
     }
 
-    public Roster(String rosterDescription, List<Shift> shifts, List<Block> blocks) {
+    public Roster(String rosterDescription, Team team) {
         this.rosterDescription = rosterDescription;
-        this.shifts = shifts;
-        this.blocks = blocks;
+        this.team = team;
+        this.shifts = new ArrayList<>();
+        this.blocks = new ArrayList<>();
     }
 
     public Long getRosterId() {
@@ -80,6 +81,26 @@ public class Roster {
 
     public void setBlocks(List<Block> blocks) {
         this.blocks = blocks;
+    }
+
+    public List<Block> addBlock(Block block) {
+        this.blocks.add(block);
+        return this.blocks;
+    }
+
+    public List<Block> removeBlock(Block block) {
+        this.blocks.remove(block);
+        return this.blocks;
+    }
+
+    public List<Shift> addShift(Shift shift) {
+        this.shifts.add(shift);
+        return this.shifts;
+    }
+
+    public List<Shift> removeShift(Shift shift) {
+        this.shifts.remove(shift);
+        return this.shifts;
     }
 
     @Override
