@@ -44,7 +44,33 @@ public class JobRequestController {
         }
 
         return jobRequestService.saveJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole),salary, jobRequirementIds, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), salary, jobRequirementIds, departmentId, requestedById, teamId, jobRequestId);
+    }
+
+    @PutMapping(path = "/submitJobRequest")
+    public Long submitJobRequest(@RequestParam("jobTitle") String jobTitle,
+                               @RequestParam("jobDescription") String jobDescription,
+                               @RequestParam("justification") String justification,
+                               @RequestParam("preferredStartDate") String preferredStartDate,
+                               @RequestParam("jobType") String jobType,
+                               @RequestParam("jobRole") String jobRole,
+                               @RequestParam("salary") BigDecimal salary,
+                               @RequestParam("jobRequirementIds") List<Long> jobRequirementIds,
+                               @RequestParam("departmentId") Long departmentId,
+                               @RequestParam("teamId") Long teamId,
+                               @RequestParam("requestedById") Long requestedById,
+                               @RequestParam("jobRequestId") Long jobRequestId) {
+        JobTypeEnum jobT = null;
+        if (jobType.equals("Contract") || jobType.equals("Intern")) {
+            jobT = JobTypeEnum.valueOf(jobType);
+        } else if (jobType.equals("Full Time")) {
+            jobT = JobTypeEnum.FULLTIME;
+        } else {
+            jobT = JobTypeEnum.PARTTIME;
+        }
+
+        return jobRequestService.submitJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
+                jobT, RoleEnum.valueOf(jobRole), salary, jobRequirementIds, departmentId, requestedById, teamId, jobRequestId);
     }
 
     @GetMapping(path = "/getJobRequestById")
