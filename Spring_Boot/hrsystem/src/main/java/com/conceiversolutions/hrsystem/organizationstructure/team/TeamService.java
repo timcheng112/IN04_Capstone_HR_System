@@ -58,6 +58,10 @@ public class TeamService {
             t.getRoster().setShifts(new ArrayList<>());
 
             t.getTeamHead().setTeams(new ArrayList<>());
+            t.getTeamHead().setQualificationInformation(null);
+            t.getTeamHead().setPositions(new ArrayList<>());
+            t.getTeamHead().setTaskListItems(new ArrayList<>());
+            t.getTeamHead().setShiftListItems(new ArrayList<>());
         }
 
         return teams;
@@ -101,6 +105,10 @@ public class TeamService {
             t.getRoster().setShifts(new ArrayList<>());
 
             t.getTeamHead().setTeams(new ArrayList<>());
+            t.getTeamHead().setQualificationInformation(null);
+            t.getTeamHead().setPositions(new ArrayList<>());
+            t.getTeamHead().setTaskListItems(new ArrayList<>());
+            t.getTeamHead().setShiftListItems(new ArrayList<>());
         }
 
         return teamsInDept;
@@ -132,6 +140,10 @@ public class TeamService {
             t.getDepartment().setTeams(new ArrayList<>());
 
             t.getTeamHead().setTeams(new ArrayList<>());
+            t.getTeamHead().setQualificationInformation(null);
+            t.getTeamHead().setPositions(new ArrayList<>());
+            t.getTeamHead().setTaskListItems(new ArrayList<>());
+            t.getTeamHead().setShiftListItems(new ArrayList<>());
 
             return t;
         } else {
