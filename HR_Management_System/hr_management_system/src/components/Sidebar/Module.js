@@ -19,7 +19,7 @@ const navigation = [
     icon: UsersIcon,
     current: false,
   },
-  { name: "All Training", href: "/training", icon: UsersIcon, current: false },
+  { name: "All Modules", href: "/training", icon: UsersIcon, current: false },
   { name: "All Videos", href: "/training", icon: UsersIcon, current: false },
 ];
 
