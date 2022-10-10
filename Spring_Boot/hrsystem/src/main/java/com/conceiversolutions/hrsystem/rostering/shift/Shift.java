@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.rostering.shift;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.user.user.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "shifts")
@@ -19,13 +21,13 @@ public class Shift {
     @Column(name = "shift_id", nullable = false)
     private Long shiftId;
     @Column(name = "start_time", nullable = false)
-    private LocalDate startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Singapore")
+    private LocalDateTime startTime;
     @Column(name = "end_time", nullable = false)
-    private LocalDate endTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Singapore")
+    private LocalDateTime endTime;
     @Column(name = "shift_title", nullable = false)
     private String shiftTitle;
-    @Column(name = "location", nullable = true)
-    private String location;
     @Column(name = "remarks", nullable = true)
     private String remarks;
     @Column(name = "min_quota", nullable = false)
@@ -47,12 +49,21 @@ public class Shift {
     public Shift() {
     }
 
-    public Shift(LocalDate startTime, LocalDate endTime, String shiftTitle, String location,
+    public Shift(LocalDateTime startTime, LocalDateTime endTime, String shiftTitle, String remarks,
+            Long minQuota) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.shiftTitle = shiftTitle;
+        this.remarks = remarks;
+        this.minQuota = minQuota;
+        this.shiftListItems = new ArrayList<>();
+    }
+
+    public Shift(LocalDateTime startTime, LocalDateTime endTime, String shiftTitle,
             String remarks, Long minQuota, Roster roster) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.shiftTitle = shiftTitle;
-        this.location = location;
         this.remarks = remarks;
         this.minQuota = minQuota;
         this.roster = roster;
@@ -67,19 +78,19 @@ public class Shift {
         this.shiftId = shiftId;
     }
 
-    public LocalDate getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDate startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDate getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDate endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -89,14 +100,6 @@ public class Shift {
 
     public void setShiftTitle(String shiftTitle) {
         this.shiftTitle = shiftTitle;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getRemarks() {
@@ -144,8 +147,8 @@ public class Shift {
     @Override
     public String toString() {
         return "Shift [shiftId=" + shiftId + ", startTime=" + startTime + ", endTime=" + endTime + ", shiftTitle="
-                + shiftTitle + ", location=" + location + ", remarks=" + remarks
-                + ", minQuota=" + minQuota + ", roster=" + roster + ", shiftListItems=" + shiftListItems + "]";
+                + shiftTitle + ", remarks=" + remarks + ", minQuota=" + minQuota + ", roster=" + roster
+                + ", shiftListItems=" + shiftListItems + "]";
     }
 
 }

@@ -15,6 +15,7 @@ import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
+import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
@@ -131,6 +132,10 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
     @Column(name = "shift_list_items")
     private List<ShiftListItem> shiftListItems;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "requestor")
+    private List<SwapRequest> swapRequestsRequested;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "receiver")
+    private List<SwapRequest> swapRequestsReceived;
 
     // TODO add on other relationships to other classes
 
@@ -208,6 +213,8 @@ public class User implements UserDetails {
         this.taskListItems = new ArrayList<>();
         this.blocks = new ArrayList<>();
         this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
@@ -249,6 +256,8 @@ public class User implements UserDetails {
         this.currentPayInformation = currentPayInformation;
         this.blocks = new ArrayList<>();
         this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
     }
 
     // TO REMOVE
@@ -288,6 +297,8 @@ public class User implements UserDetails {
         this.preferredDates = preferredDates;
         this.blocks = new ArrayList<>();
         this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
     }
 
     public Long getUserId() {
@@ -639,6 +650,26 @@ public class User implements UserDetails {
     public List<ShiftListItem> removeShiftListItems(ShiftListItem shiftListItem) {
         this.shiftListItems.remove(shiftListItem);
         return this.shiftListItems;
+    }
+
+    public List<SwapRequest> addSwapRequestsRequested(SwapRequest swapRequest) {
+        this.swapRequestsRequested.add(swapRequest);
+        return this.swapRequestsRequested;
+    }
+
+    public List<SwapRequest> removeSwapRequestsRequested(SwapRequest swapRequest) {
+        this.swapRequestsRequested.remove(swapRequest);
+        return this.swapRequestsRequested;
+    }
+
+    public List<SwapRequest> addSwapRequestsReceived(SwapRequest swapRequest) {
+        this.swapRequestsReceived.add(swapRequest);
+        return this.swapRequestsReceived;
+    }
+
+    public List<SwapRequest> removeSwapRequestsReceived(SwapRequest swapRequest) {
+        this.swapRequestsReceived.remove(swapRequest);
+        return this.swapRequestsReceived;
     }
 
 }
