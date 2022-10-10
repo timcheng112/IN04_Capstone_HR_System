@@ -158,6 +158,71 @@ public class JobRequestService {
         } else {
             System.out.println("Job Request doesnt exists, will create a new one");
             JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, salary, skillsets, dept, team, requestor, roleEnum);
+            jr.setStatus(JobStatusEnum.PENDING);
+            jr.setLastEditedDate(LocalDateTime.now());
+            JobRequest done = jobRequestRepository.saveAndFlush(jr);
+
+            List<JobRequest> temp = requestor.getJobRequests();
+            temp.add(done);
+            requestor.setJobRequests(temp);
+            userRepository.save(requestor);
+            return done.getRequestId();
+        }
+    }
+
+    public Long submitJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, List<Long> jobRequirementIds, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
+        System.out.println("JobRequestService.saveJobRequest");
+
+        checkInput(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, roleEnum, salary, departmentId, requestedById);
+
+        Optional<Department> d = departmentRepository.findById(departmentId);
+        if (d.isEmpty()) {
+            throw new IllegalStateException("Department cannot be found, cannot proceed");
+        }
+        Department dept = d.get();
+
+        Team team = null;
+        if (!teamId.equals(0L)) {
+            team = teamRepository.findById(teamId).get();
+        }
+
+        Optional<User> r = userRepository.findById(requestedById);
+        if (r.isEmpty()) {
+            throw new IllegalStateException("Requestor cannot be found, cannot proceed");
+        }
+        User requestor = r.get();
+
+        List<Skillset> skillsets = new ArrayList<>();
+        if (jobRequirementIds != null) {
+            skillsets = skillsetRepository.findAllById(jobRequirementIds);
+        }
+
+        if (!jobRequestId.equals(0L)) {
+            System.out.println("Job Request already exists, now is editing");
+            Optional<JobRequest> jobRequest = jobRequestRepository.findById(jobRequestId);
+
+            JobRequest jr = jobRequest.get();
+
+            jr.setJobTitle(jobTitle);
+            jr.setJobDescription(jobDescription);
+            jr.setJustification(justification);
+            jr.setPreferredStartDate(preferredStartDate);
+            jr.setJobType(jobTypeEnum);
+            jr.setJobRole(roleEnum);
+            jr.setSalary(salary);
+            jr.setJobRequirements(skillsets);
+            jr.setDepartment(dept);
+            jr.setTeam(team);
+            jr.setStatus(JobStatusEnum.CREATED);
+            jr.setLastEditedDate(LocalDateTime.now());
+
+            JobRequest done = jobRequestRepository.saveAndFlush(jr);
+            return done.getRequestId();
+        } else {
+            System.out.println("Job Request doesnt exists, will create a new one");
+            JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, salary, skillsets, dept, team, requestor, roleEnum);
+            jr.setStatus(JobStatusEnum.CREATED);
+            jr.setLastEditedDate(LocalDateTime.now());
             JobRequest done = jobRequestRepository.saveAndFlush(jr);
 
             List<JobRequest> temp = requestor.getJobRequests();
