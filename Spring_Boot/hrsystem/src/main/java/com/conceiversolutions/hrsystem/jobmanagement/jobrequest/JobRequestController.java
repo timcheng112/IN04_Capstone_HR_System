@@ -43,28 +43,33 @@ public class JobRequestController {
         return jobRequestService.getJobRequestById(jobRequestId);
     }
 
-    @GetMapping(path = "getJobRequestsByIncludeTitle")
-    public List<JobRequest> getJobRequestsByIncludeTitle(@RequestParam("title") String title) {
-        return jobRequestService.getJobRequestsByIncludeTitle(title);
+    @DeleteMapping(path = "deleteJobRequest")
+    public String deleteJobRequest(Long jobRequestId) {
+        return jobRequestService.deleteJobRequest(jobRequestId);
     }
 
-    @GetMapping(path = "getJobRequestsByIncludeDescription")
-    public List<JobRequest> getJobRequestsByIncludeDescription(@RequestParam("description") String desc) {
-        return jobRequestService.getJobRequestsByIncludeDescription(desc);
-    }
-
-    @GetMapping(path = "getJobRequestsByDepartmentId")
-    public List<JobRequest> getJobRequestsByDepartmentId(@RequestParam("departmentId") Long id) {
-        return jobRequestService.getJobRequestsByDepartmentId(id);
-    }
-
+//    @GetMapping(path = "getJobRequestsByIncludeTitle")
+//    public List<JobRequest> getJobRequestsByIncludeTitle(@RequestParam("title") String title) {
+//        return jobRequestService.getJobRequestsByIncludeTitle(title);
+//    }
+//
+//    @GetMapping(path = "getJobRequestsByIncludeDescription")
+//    public List<JobRequest> getJobRequestsByIncludeDescription(@RequestParam("description") String desc) {
+//        return jobRequestService.getJobRequestsByIncludeDescription(desc);
+//    }
+//
+//    @GetMapping(path = "getJobRequestsByDepartmentId")
+//    public List<JobRequest> getJobRequestsByDepartmentId(@RequestParam("departmentId") Long id) {
+//        return jobRequestService.getJobRequestsByDepartmentId(id);
+//    }
+//
     @GetMapping(path = "getJobRequestsByRequestorId")
     public List<JobRequest> getJobRequestsByRequestorId(@RequestParam("requestorId") Long id) {
         return jobRequestService.getJobRequestsByRequestorId(id);
     }
-
-    @GetMapping(path = "getJobRequestsByApproverId")
-    public List<JobRequest> getJobRequestsByApproverId(@RequestParam("approverId") Long id) {
-        return jobRequestService.getJobRequestsByApproverId(id);
-    }
+//
+//    @GetMapping(path = "getJobRequestsByApproverId")
+//    public List<JobRequest> getJobRequestsByApproverId(@RequestParam("approverId") Long id) {
+//        return jobRequestService.getJobRequestsByApproverId(id);
+//    }
 }
