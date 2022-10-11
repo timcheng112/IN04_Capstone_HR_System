@@ -1149,5 +1149,5 @@ public class UserService implements UserDetailsService {
         return "Successfully set password";
     }
 
-    
+
 }
