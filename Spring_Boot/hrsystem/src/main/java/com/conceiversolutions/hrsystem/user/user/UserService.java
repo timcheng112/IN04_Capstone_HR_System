@@ -371,6 +371,18 @@ public class UserService implements UserDetailsService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
+
+        Optional<User> optionalUser = userRepository.findUserByToken(token);
+
+        if (optionalUser.isPresent()) {
+            User confirmedUser = optionalUser.get();
+            //System.out.println("Confirmed User Work Email = " + confirmedUser.getWorkEmail());
+            if (confirmedUser.getWorkEmail().isEmpty()) {
+                System.out.println("User about to be enabled " + getUserFromToken(token));
+                enableUser(getUserFromToken(token));
+            }
+        }
+        
         return "Token has been confirmed.";
     }
 
