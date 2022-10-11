@@ -32,8 +32,8 @@ public class Leave {
     @Enumerated(EnumType.STRING)
     private StatusEnum approvalStatus;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @ManyToOne(optional = false, targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user")
     private User user;
 
 

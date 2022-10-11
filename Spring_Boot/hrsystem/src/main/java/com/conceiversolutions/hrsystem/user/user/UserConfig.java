@@ -150,12 +150,11 @@ public class UserConfig {
                 userService.initAdmin(manager3);
                 userService.initAdmin(manager4);
                 userService.initAdmin(manager5);
-
+                organizationService.addNewOrganization("Libro", ceoId);
             } else {
                 System.out.println("Administrators already exist, do not init Administrator users");
             }
 
-            organizationService.addNewOrganization("Libro", ceoId);
         };
     }
 }

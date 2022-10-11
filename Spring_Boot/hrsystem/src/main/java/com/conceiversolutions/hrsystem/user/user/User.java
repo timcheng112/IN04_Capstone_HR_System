@@ -145,7 +145,8 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "receiver")
     private List<SwapRequest> swapRequestsReceived;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "user")
+    @Column(name = "leaves")
     private List<Leave> leaves;
 
 
