@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.leave;
 
 import com.conceiversolutions.hrsystem.enums.StatusEnum;
+import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,10 +32,17 @@ public class Leave {
     @Enumerated(EnumType.STRING)
     private StatusEnum approvalStatus;
 
-    public Leave(List<LocalDate> dates, String remarks) {
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
+
+    public Leave(List<LocalDate> dates, String remarks, User user) {
         this.dates = dates;
         this.remarks = remarks;
         this.approvalStatus = StatusEnum.PENDING;
         this.approvalRemarks = null;
+        this.user = user;
+
     }
 }

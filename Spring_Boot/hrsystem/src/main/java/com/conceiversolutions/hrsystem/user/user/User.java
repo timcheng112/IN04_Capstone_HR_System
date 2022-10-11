@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
@@ -144,6 +145,10 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "receiver")
     private List<SwapRequest> swapRequestsReceived;
 
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "user")
+    private List<Leave> leaves;
+
+
     // TODO add on other relationships to other classes
 
     public User() {
@@ -162,6 +167,7 @@ public class User implements UserDetails {
         this.teams = new ArrayList<>();
         this.blocks = new ArrayList<>();
         this.shiftListItems = new ArrayList<>();
+        this.leaves = new ArrayList<>();
     }
 
     // this should be for making a new applicant's account
