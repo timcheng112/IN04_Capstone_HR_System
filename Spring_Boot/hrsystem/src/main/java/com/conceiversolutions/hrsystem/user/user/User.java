@@ -16,14 +16,15 @@ import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
-import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -115,9 +116,6 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "employeeReviewing")
     @Column(name = "reviewed_by")
     private List<ManagerReview> employeeReviews;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Module.class, mappedBy = "employee")
-    @Column(name = "modules")
-    private List<Module> modules;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
@@ -156,7 +154,6 @@ public class User implements UserDetails {
         this.managerAppraisals = new ArrayList<>();
         this.managerReviews = new ArrayList<>();
         this.employeeReviews = new ArrayList<>();
-        this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
         this.teams = new ArrayList<>();
@@ -187,6 +184,17 @@ public class User implements UserDetails {
         this.profilePic = null;
         this.currentPosition = null;
         this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
         this.preferredDates = null;
     }
@@ -213,6 +221,17 @@ public class User implements UserDetails {
         this.profilePic = null;
         this.currentPosition = null;
         this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.preferredDates = null;
     }
 
@@ -246,6 +265,13 @@ public class User implements UserDetails {
         this.jobRequests = jobRequests;
         this.payslips = payslips;
         this.attendances = attendances;
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
         this.preferredDates = null;
     }
@@ -399,5 +425,145 @@ public class User implements UserDetails {
 
     public void setEnabled(Boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public LocalDate getDateJoined() {
+        return dateJoined;
+    }
+
+    public void setDateJoined(LocalDate dateJoined) {
+        this.dateJoined = dateJoined;
+    }
+
+    public DocData getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(DocData profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
+    }
+
+    public QualificationInformation getQualificationInformation() {
+        return qualificationInformation;
+    }
+
+    public void setQualificationInformation(QualificationInformation qualificationInformation) {
+        this.qualificationInformation = qualificationInformation;
+    }
+
+    public List<JobApplication> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<JobApplication> applications) {
+        this.applications = applications;
+    }
+
+    public List<JobRequest> getJobRequests() {
+        return jobRequests;
+    }
+
+    public void setJobRequests(List<JobRequest> jobRequests) {
+        this.jobRequests = jobRequests;
+    }
+
+    public List<Appraisal> getEmployeeAppraisals() {
+        return employeeAppraisals;
+    }
+
+    public void setEmployeeAppraisals(List<Appraisal> employeeAppraisals) {
+        this.employeeAppraisals = employeeAppraisals;
+    }
+
+    public List<Appraisal> getManagerAppraisals() {
+        return managerAppraisals;
+    }
+
+    public void setManagerAppraisals(List<Appraisal> managerAppraisals) {
+        this.managerAppraisals = managerAppraisals;
+    }
+
+    public List<ManagerReview> getManagerReviews() {
+        return managerReviews;
+    }
+
+    public void setManagerReviews(List<ManagerReview> managerReviews) {
+        this.managerReviews = managerReviews;
+    }
+
+    public List<ManagerReview> getEmployeeReviews() {
+        return employeeReviews;
+    }
+
+    public void setEmployeeReviews(List<ManagerReview> employeeReviews) {
+        this.employeeReviews = employeeReviews;
+    }
+
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(List<Goal> goals) {
+        this.goals = goals;
+    }
+
+    public List<Payslip> getPayslips() {
+        return payslips;
+    }
+
+    public void setPayslips(List<Payslip> payslips) {
+        this.payslips = payslips;
+    }
+
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
+    }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public PayInformation getCurrentPayInformation() {
+        return currentPayInformation;
+    }
+
+    public void setCurrentPayInformation(PayInformation currentPayInformation) {
+        this.currentPayInformation = currentPayInformation;
+    }
+
+    public ReactivationRequest getReactivationRequest() {
+        return reactivationRequest;
+    }
+
+    public void setReactivationRequest(ReactivationRequest reactivationRequest) {
+        this.reactivationRequest = reactivationRequest;
+    }
+
+    public List<TaskListItem> getTaskListItems() {
+        return taskListItems;
+    }
+
+    public void setTaskListItems(List<TaskListItem> taskListItems) {
+        this.taskListItems = taskListItems;
     }
 }

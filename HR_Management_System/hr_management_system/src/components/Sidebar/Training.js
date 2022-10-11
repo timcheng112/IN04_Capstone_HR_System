@@ -8,17 +8,25 @@ import {
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
+import TrainingBreadcrumb from "../Breadcrumb/TrainingBreadcrumb";
 
 const navigation = [
-  { name: "Onboarding", href: "/admin/onboarding", icon: UsersIcon, current: false },
-  { name: "Offboarding", href: "/admin/offboarding", icon: FolderIcon, current: false },
+  { name: "My Training", href: "/mytraining", icon: UsersIcon, current: false },
+  {
+    name: "My Completed Training",
+    href: "/mytraining",
+    icon: UsersIcon,
+    current: false,
+  },
+  { name: "All Modules", href: "/training", icon: UsersIcon, current: false },
+  { name: "All Videos", href: "/training", icon: UsersIcon, current: false },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function AdminSidebar({ pageTitle }) {
+export default function TrainingSidebar({ pageTitle }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -170,8 +178,12 @@ export default function AdminSidebar({ pageTitle }) {
               >
                 <span>{pageTitle}</span>
               </button> */}
-              <Breadcrumb
-                currentPage={{ name: pageTitle, href: "#", current: true }}
+              <TrainingBreadcrumb
+                currentPage={{
+                  name: pageTitle,
+                  href: "/mytraining",
+                  current: true,
+                }}
               />
             </div>
           </div>

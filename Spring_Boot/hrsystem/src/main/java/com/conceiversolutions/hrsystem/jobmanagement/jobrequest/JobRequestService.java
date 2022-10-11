@@ -60,7 +60,6 @@ public class JobRequestService {
                 approver.setManagerAppraisals(new ArrayList<>());
                 approver.setManagerReviews(new ArrayList<>());
                 approver.setEmployeeReviews(new ArrayList<>());
-                approver.setModules(new ArrayList<>());
                 approver.setApplications(new ArrayList<>());
                 approver.setGoals(new ArrayList<>());
                 approver.setPositions(new ArrayList<>());
@@ -80,7 +79,6 @@ public class JobRequestService {
                 requestor.setManagerAppraisals(new ArrayList<>());
                 requestor.setManagerReviews(new ArrayList<>());
                 requestor.setEmployeeReviews(new ArrayList<>());
-                requestor.setModules(new ArrayList<>());
                 requestor.setApplications(new ArrayList<>());
                 requestor.setGoals(new ArrayList<>());
                 requestor.setPositions(new ArrayList<>());
@@ -226,7 +224,6 @@ public class JobRequestService {
                 approver.setManagerAppraisals(new ArrayList<>());
                 approver.setManagerReviews(new ArrayList<>());
                 approver.setEmployeeReviews(new ArrayList<>());
-                approver.setModules(new ArrayList<>());
                 approver.setApplications(new ArrayList<>());
                 approver.setGoals(new ArrayList<>());
                 approver.setPositions(new ArrayList<>());
@@ -246,7 +243,6 @@ public class JobRequestService {
                 requestor.setManagerAppraisals(new ArrayList<>());
                 requestor.setManagerReviews(new ArrayList<>());
                 requestor.setEmployeeReviews(new ArrayList<>());
-                requestor.setModules(new ArrayList<>());
                 requestor.setApplications(new ArrayList<>());
                 requestor.setGoals(new ArrayList<>());
                 requestor.setPositions(new ArrayList<>());
@@ -550,7 +546,6 @@ public class JobRequestService {
                 approver.setManagerAppraisals(new ArrayList<>());
                 approver.setManagerReviews(new ArrayList<>());
                 approver.setEmployeeReviews(new ArrayList<>());
-                approver.setModules(new ArrayList<>());
                 approver.setApplications(new ArrayList<>());
                 approver.setGoals(new ArrayList<>());
                 approver.setPositions(new ArrayList<>());
@@ -570,7 +565,6 @@ public class JobRequestService {
                 requestor.setManagerAppraisals(new ArrayList<>());
                 requestor.setManagerReviews(new ArrayList<>());
                 requestor.setEmployeeReviews(new ArrayList<>());
-                requestor.setModules(new ArrayList<>());
                 requestor.setApplications(new ArrayList<>());
                 requestor.setGoals(new ArrayList<>());
                 requestor.setPositions(new ArrayList<>());
