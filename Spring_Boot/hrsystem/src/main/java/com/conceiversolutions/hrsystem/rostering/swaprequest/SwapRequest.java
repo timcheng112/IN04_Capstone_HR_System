@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.enums.StatusEnum;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
@@ -24,9 +25,16 @@ public class SwapRequest {
     @Column(name = "response_reason", nullable = true)
     private String responseReason;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Shift.class)
-    @JoinColumn(name = "shift_id", referencedColumnName = "swap_request_id")
-    private List<Shift> shifts;
+    // @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity =
+    // Shift.class)
+    // @JoinColumn(name = "shift_id", referencedColumnName = "swap_request_id")
+    // private List<Shift> shifts;
+    @OneToOne(cascade = CascadeType.MERGE, optional = false)
+    @JoinColumn(name = "requestor_shift_id", nullable = false)
+    private ShiftListItem requestorShiftListItem;
+    @OneToOne(cascade = CascadeType.MERGE, optional = false)
+    @JoinColumn(name = "receiver_shift_id", nullable = false)
+    private ShiftListItem receiverShiftListItem;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "requestor_id")
     private User requestor;
@@ -37,14 +45,15 @@ public class SwapRequest {
     public SwapRequest() {
     }
 
-    public SwapRequest(String reason, StatusEnum status, String responseReason, List<Shift> shifts, User requestor,
-            User receiver) {
+    public SwapRequest(String reason, StatusEnum status) {
+        this.reason = reason;
+        this.status = status;
+    }
+
+    public SwapRequest(String reason, StatusEnum status, String responseReason) {
         this.reason = reason;
         this.status = status;
         this.responseReason = responseReason;
-        this.shifts = shifts;
-        this.requestor = requestor;
-        this.receiver = receiver;
     }
 
     public Long getSwapRequestId() {
@@ -79,12 +88,20 @@ public class SwapRequest {
         this.responseReason = responseReason;
     }
 
-    public List<Shift> getShifts() {
-        return shifts;
+    public ShiftListItem getRequestorShiftListItem() {
+        return requestorShiftListItem;
     }
 
-    public void setShifts(List<Shift> shifts) {
-        this.shifts = shifts;
+    public void setRequestorShiftListItem(ShiftListItem requestorShiftListItem) {
+        this.requestorShiftListItem = requestorShiftListItem;
+    }
+
+    public ShiftListItem getReceiverShiftListItem() {
+        return receiverShiftListItem;
+    }
+
+    public void setReceiverShiftListItem(ShiftListItem receiverShiftListItem) {
+        this.receiverShiftListItem = receiverShiftListItem;
     }
 
     public User getRequestor() {
@@ -105,9 +122,10 @@ public class SwapRequest {
 
     @Override
     public String toString() {
-        return "SwapRequest [reason=" + reason + ", receiver=" + receiver + ", requestor=" + requestor
-                + ", responseReason=" + responseReason + ", shifts=" + shifts + ", status=" + status
-                + ", swapRequestId=" + swapRequestId + "]";
+        return "SwapRequest [swapRequestId=" + swapRequestId + ", reason=" + reason + ", status=" + status
+                + ", responseReason=" + responseReason + ", requestorShiftListItem=" + requestorShiftListItem
+                + ", receiverShiftListItem=" + receiverShiftListItem + ", requestor=" + requestor + ", receiver="
+                + receiver + "]";
     }
 
 }

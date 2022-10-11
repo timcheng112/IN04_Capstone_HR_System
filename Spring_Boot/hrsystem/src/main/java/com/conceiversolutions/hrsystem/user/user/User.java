@@ -16,15 +16,15 @@ import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
 import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
+import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
+import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -116,6 +116,9 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "employeeReviewing")
     @Column(name = "reviewed_by")
     private List<ManagerReview> employeeReviews;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Module.class, mappedBy = "employee")
+    @Column(name = "modules")
+    private List<Module> modules;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
@@ -137,8 +140,13 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
     @Column(name = "shift_list_items")
     private List<ShiftListItem> shiftListItems;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "requestor")
+    private List<SwapRequest> swapRequestsRequested;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "receiver")
+    private List<SwapRequest> swapRequestsReceived;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "user")
+    @Column(name = "leaves")
     private List<Leave> leaves;
 
 
@@ -154,6 +162,7 @@ public class User implements UserDetails {
         this.managerAppraisals = new ArrayList<>();
         this.managerReviews = new ArrayList<>();
         this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
         this.teams = new ArrayList<>();
@@ -184,17 +193,6 @@ public class User implements UserDetails {
         this.profilePic = null;
         this.currentPosition = null;
         this.qualificationInformation = null;
-        this.applications = new ArrayList<>();
-        this.jobRequests = new ArrayList<>();
-        this.payslips = new ArrayList<>();
-        this.attendances = new ArrayList<>();
-        this.employeeAppraisals = new ArrayList<>();
-        this.managerAppraisals = new ArrayList<>();
-        this.managerReviews = new ArrayList<>();
-        this.employeeReviews = new ArrayList<>();
-        this.goals = new ArrayList<>();
-        this.teams = new ArrayList<>();
-        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
         this.preferredDates = null;
     }
@@ -229,16 +227,22 @@ public class User implements UserDetails {
         this.managerAppraisals = new ArrayList<>();
         this.managerReviews = new ArrayList<>();
         this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
         this.preferredDates = null;
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
             LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
             Boolean isBlackListed,
-            Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions, Position currentPosition,
+            Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions,
+            Position currentPosition,
             QualificationInformation qualificationInformation,
             List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
             List<Attendance> attendances, PayInformation currentPayInformation) {
@@ -265,142 +269,88 @@ public class User implements UserDetails {
         this.jobRequests = jobRequests;
         this.payslips = payslips;
         this.attendances = attendances;
-        this.employeeAppraisals = new ArrayList<>();
-        this.managerAppraisals = new ArrayList<>();
-        this.managerReviews = new ArrayList<>();
-        this.employeeReviews = new ArrayList<>();
-        this.goals = new ArrayList<>();
-        this.teams = new ArrayList<>();
-        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
         this.preferredDates = null;
     }
 
-    // this should be for making an employee's account
-    public User(String firstName, String lastName, Integer phone, String email, String workEmail,
-            LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
-            LocalDate dateJoined, PayInformation currentPayInformation, PreferredDates preferredDates) {
-        this();
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Integer phone) {
         this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getWorkEmail() {
+        return workEmail;
+    }
+
+    public void setWorkEmail(String workEmail) {
         this.workEmail = workEmail;
+    }
+
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob(LocalDate dob) {
         this.dob = dob;
+    }
+
+    public GenderEnum getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderEnum gender) {
         this.gender = gender;
+    }
+
+    public RoleEnum getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(RoleEnum userRole) {
         this.userRole = userRole;
-        this.isPartTimer = isPartTimer;
-        this.isHrEmployee = isHrEmployee;
-        this.dateJoined = dateJoined;
-        this.currentPayInformation = currentPayInformation;
-        this.isBlackListed = false;
-        this.isEnabled = false; // only change to true after email is confirmed
-        this.profilePic = null;
-        this.qualificationInformation = null;
-        this.preferredDates = preferredDates;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(this.userRole.name());
-
-        return Collections.singletonList(authority);
-    }
-
-    @Override
-    public String getUsername() {
-        if (userRole.equals(RoleEnum.APPLICANT)) {
-            return this.email;
-        } else {
-            return this.workEmail;
-        }
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return !this.isBlackListed;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.isEnabled;
-    }
-
-    public List<TaskListItem> addTaskListItem(TaskListItem item) {
-        this.taskListItems.add(item);
-        return this.taskListItems;
-    }
-
-    public PreferredDates getPreferredDates() {
-        return preferredDates;
-    }
-
-    public void setPreferredDates(PreferredDates preferredDates) {
-        this.preferredDates = preferredDates;
-    }
-
-    public List<Block> getBlocks() {
-        return blocks;
-    }
-
-    public void setBlocks(List<Block> blocks) {
-        this.blocks = blocks;
-    }
-
-    public List<Block> addBlock(Block block) {
-        this.blocks.add(block);
-        return this.blocks;
-    }
-
-    public List<Block> removeBlock(Block block) {
-        this.blocks.remove(block);
-        return this.blocks;
-    }
-
-    public List<ShiftListItem> getShiftListItems() {
-        return shiftListItems;
-    }
-
-    public void setShiftListItems(List<ShiftListItem> shiftListItems) {
-        this.shiftListItems = shiftListItems;
-    }
-
-    public List<ShiftListItem> addShiftListItems(ShiftListItem shiftListItem) {
-        this.shiftListItems.add(shiftListItem);
-        return this.shiftListItems;
-    }
-
-    public List<ShiftListItem> removeShiftListItems(ShiftListItem shiftListItem) {
-        this.shiftListItems.remove(shiftListItem);
-        return this.shiftListItems;
-    }
-
-    public Boolean getPartTimer() {
-        return isPartTimer;
-    }
-
-    public void setPartTimer(Boolean partTimer) {
-        isPartTimer = partTimer;
     }
 
     public Boolean getHrEmployee() {
@@ -507,6 +457,14 @@ public class User implements UserDetails {
         this.employeeReviews = employeeReviews;
     }
 
+    public List<Module> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
+    }
+
     public List<Goal> getGoals() {
         return goals;
     }
@@ -539,31 +497,126 @@ public class User implements UserDetails {
         this.teams = teams;
     }
 
-    public String getPassword() {
-        return this.password;
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 
-    public PayInformation getCurrentPayInformation() {
-        return currentPayInformation;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(this.userRole.name());
+
+        return Collections.singletonList(authority);
     }
 
-    public void setCurrentPayInformation(PayInformation currentPayInformation) {
-        this.currentPayInformation = currentPayInformation;
+    @Override
+    public String getUsername() {
+        if (userRole.equals(RoleEnum.APPLICANT)) {
+            return this.email;
+        } else {
+            return this.workEmail;
+        }
     }
 
-    public ReactivationRequest getReactivationRequest() {
-        return reactivationRequest;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setReactivationRequest(ReactivationRequest reactivationRequest) {
-        this.reactivationRequest = reactivationRequest;
+    @Override
+    public boolean isAccountNonLocked() {
+        return !this.isBlackListed;
     }
 
-    public List<TaskListItem> getTaskListItems() {
-        return taskListItems;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setTaskListItems(List<TaskListItem> taskListItems) {
-        this.taskListItems = taskListItems;
+    @Override
+    public boolean isEnabled() {
+        return this.isEnabled;
+    }
+
+    public List<TaskListItem> addTaskListItem(TaskListItem item) {
+        this.taskListItems.add(item);
+        return this.taskListItems;
+    }
+
+    public PreferredDates getPreferredDates() {
+        return preferredDates;
+    }
+
+    public void setPreferredDates(PreferredDates preferredDates) {
+        this.preferredDates = preferredDates;
+    }
+
+    public List<Block> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(List<Block> blocks) {
+        this.blocks = blocks;
+    }
+
+    public List<Block> addBlock(Block block) {
+        this.blocks.add(block);
+        return this.blocks;
+    }
+
+    public List<Block> removeBlock(Block block) {
+        this.blocks.remove(block);
+        return this.blocks;
+    }
+
+    public List<ShiftListItem> getShiftListItems() {
+        return shiftListItems;
+    }
+
+    public void setShiftListItems(List<ShiftListItem> shiftListItems) {
+        this.shiftListItems = shiftListItems;
+    }
+
+    public List<ShiftListItem> addShiftListItems(ShiftListItem shiftListItem) {
+        this.shiftListItems.add(shiftListItem);
+        return this.shiftListItems;
+    }
+
+    public List<ShiftListItem> removeShiftListItems(ShiftListItem shiftListItem) {
+        this.shiftListItems.remove(shiftListItem);
+        return this.shiftListItems;
+    }
+
+    public List<SwapRequest> addSwapRequestsRequested(SwapRequest swapRequest) {
+        this.swapRequestsRequested.add(swapRequest);
+        return this.swapRequestsRequested;
+    }
+
+    public List<SwapRequest> removeSwapRequestsRequested(SwapRequest swapRequest) {
+        this.swapRequestsRequested.remove(swapRequest);
+        return this.swapRequestsRequested;
+    }
+
+    public List<SwapRequest> addSwapRequestsReceived(SwapRequest swapRequest) {
+        this.swapRequestsReceived.add(swapRequest);
+        return this.swapRequestsReceived;
+    }
+
+    public List<SwapRequest> removeSwapRequestsReceived(SwapRequest swapRequest) {
+        this.swapRequestsReceived.remove(swapRequest);
+        return this.swapRequestsReceived;
+    }
+
+    public Boolean getPartTimer() {
+        return isPartTimer;
+    }
+
+    public void setPartTimer(Boolean partTimer) {
+        isPartTimer = partTimer;
     }
 }

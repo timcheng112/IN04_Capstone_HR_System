@@ -1,12 +1,18 @@
-import Navbar from "../../../components/Navbar.js";
+import Navbar from "../../components/Navbar.js";
 import { useState, useEffect } from "react";
-import api from "../../../utils/api.js";
+import api from "../../utils/api.js";
 
 const people = [
   {
     name: "Lindsay Walton",
     title: "Front-end Developer",
     email: "lindsay.walton@example.com",
+    role: "Member",
+  },
+  {
+    name: "James Walton",
+    title: "Front-end Developer",
+    email: "James.walton@example.com",
     role: "Member",
   },
   // More people...
@@ -17,14 +23,43 @@ export default function Roster() {
     <>
       <Navbar />
 
-      {/*Top Part Above the Table*/}
-      <div className="px-4 sm:px-6 lg:px-8">
+      {/*Top Part Above the Table Need to unify the fire nation*/}
+      <div className="px-4 sm:px-6 lg:px-8 mt-3">
         <div className="sm:flex sm:items-center">
+          <div className="isolate inline-flex -space-x-px rounded-md shadow-sm mx-4">
+            <button className="relative inline-flex items-center rounded-md border border-indigo-600 font-extrabold bg-white px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-600 hover:text-white focus:z-20">
+              Bishan Outlet
+            </button>
+          </div>
+
+          <div className="sm:flex sm:items-center">
+            <div>
+              <nav
+                className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+                aria-label="Pagination"
+              >
+                <a
+                  href="#"
+                  className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                >
+                  Day
+                </a>
+                {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
+                <a
+                  href="#"
+                  className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                >
+                  Week
+                </a>
+              </nav>
+            </div>
+          </div>
+
           <div className="sm:flex-auto">
             <h1 className="text-xl font-semibold text-gray-900">Roster</h1>
-            <p className="mt-2 text-sm text-gray-700">
+            {/* <p className="mt-2 text-sm text-gray-700">
               We probably don't need text here.
-            </p>
+            </p> */}
           </div>
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <button
@@ -48,25 +83,49 @@ export default function Roster() {
                         scope="col"
                         className="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Name
+                        Employee
                       </th>
                       <th
                         scope="col"
                         className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Title
+                        Mon
                       </th>
                       <th
                         scope="col"
                         className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Email
+                        Tue
                       </th>
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pr-6"
+                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Role
+                        Wed
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Thu
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Fri
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Sat
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Sun
                       </th>
                     </tr>
                   </thead>
@@ -79,15 +138,13 @@ export default function Roster() {
                         <td className="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6">
                           {person.name}
                         </td>
-                        <td className="whitespace-nowrap p-4 text-sm text-gray-500">
-                          {person.title}
-                        </td>
-                        <td className="whitespace-nowrap p-4 text-sm text-gray-500">
-                          {person.email}
-                        </td>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-4 text-sm text-gray-500 sm:pr-6">
-                          {person.role}
-                        </td>
+                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
+                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
+                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
+                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
+                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
+                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
+                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
                       </tr>
                     ))}
                   </tbody>
