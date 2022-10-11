@@ -31,8 +31,9 @@ public class Leave {
     @Column(name="approval_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusEnum approvalStatus;
-
-    @Column(name="user", nullable = false)
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
 
