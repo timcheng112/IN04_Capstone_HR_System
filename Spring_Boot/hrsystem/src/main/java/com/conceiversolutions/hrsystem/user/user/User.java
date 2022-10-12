@@ -145,7 +145,8 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "receiver")
     private List<SwapRequest> swapRequestsReceived;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "user")
+    @Column(name = "leaves")
     private List<Leave> leaves;
 
 
@@ -217,6 +218,47 @@ public class User implements UserDetails {
         this.isEnabled = false; // only change to true after email is confirmed
         this.profilePic = null;
         this.currentPosition = null;
+        this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
+        this.preferredDates = null;
+    }
+
+    public User(String firstName, String lastName, Integer phone, String email, String workEmail,
+            LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+            LocalDate dateJoined, PayInformation currentPayInformation, List<Position> positions) {
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.userRole = userRole;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.dateJoined = dateJoined;
+        this.currentPayInformation = currentPayInformation;
+        this.isBlackListed = false;
+        this.isEnabled = false; // only change to true after email is confirmed
+        this.profilePic = null;
+        this.positions = positions;
+        this.currentPosition = positions.get(0);
         this.qualificationInformation = null;
         this.applications = new ArrayList<>();
         this.jobRequests = new ArrayList<>();

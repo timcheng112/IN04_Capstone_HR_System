@@ -11,6 +11,8 @@ import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepository;
+import com.conceiversolutions.hrsystem.user.position.Position;
+import com.conceiversolutions.hrsystem.user.position.PositionRepository;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
 import com.conceiversolutions.hrsystem.user.registration.EmailValidator;
@@ -44,6 +46,7 @@ public class UserService implements UserDetailsService {
     private final ReactivationRequestRepository reactivationRequestRepository;
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
+    private final PositionRepository positionRepository;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -231,6 +234,7 @@ public class UserService implements UserDetailsService {
 
     public Long addNewUser(User user) {
         System.out.println("UserService.addNewUser");
+
         // Check if email is valid
         boolean isValidEmail = emailValidator.test(user.getEmail());
         if (!isValidEmail) {
@@ -268,6 +272,10 @@ public class UserService implements UserDetailsService {
             encodedPassword = bCryptPasswordEncoder.encode(user.getWorkEmail());
         }
         user.setPassword(encodedPassword);
+
+        List<Position> newPositions = user.getPositions();
+        positionRepository.saveAll(newPositions);
+        
         User newUser = userRepository.saveAndFlush(user);
 
         // Sending confirmation TOKEN to set user's isEnabled
@@ -377,6 +385,18 @@ public class UserService implements UserDetailsService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
+
+        Optional<User> optionalUser = userRepository.findUserByToken(token);
+
+        if (optionalUser.isPresent()) {
+            User confirmedUser = optionalUser.get();
+            //System.out.println("Confirmed User Work Email = " + confirmedUser.getWorkEmail());
+            if (confirmedUser.getWorkEmail().isEmpty()) {
+                System.out.println("User about to be enabled " + getUserFromToken(token));
+                enableUser(getUserFromToken(token));
+            }
+        }
+        
         return "Token has been confirmed.";
     }
 

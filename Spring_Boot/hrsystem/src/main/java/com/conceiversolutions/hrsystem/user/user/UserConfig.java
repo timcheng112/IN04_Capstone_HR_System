@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
+import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationService;
 import org.springframework.boot.CommandLineRunner;
@@ -150,12 +151,11 @@ public class UserConfig {
                 userService.initAdmin(manager3);
                 userService.initAdmin(manager4);
                 userService.initAdmin(manager5);
-
+                organizationService.addNewOrganization("Libro", ceoId);
             } else {
                 System.out.println("Administrators already exist, do not init Administrator users");
             }
 
-            organizationService.addNewOrganization("Libro", ceoId);
         };
     }
 }
