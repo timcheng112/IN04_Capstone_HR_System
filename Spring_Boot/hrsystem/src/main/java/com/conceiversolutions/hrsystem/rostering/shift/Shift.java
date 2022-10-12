@@ -1,12 +1,16 @@
 package com.conceiversolutions.hrsystem.rostering.shift;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.user.user.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "shifts")
@@ -17,15 +21,13 @@ public class Shift {
     @Column(name = "shift_id", nullable = false)
     private Long shiftId;
     @Column(name = "start_time", nullable = false)
-    private LocalDate startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Singapore")
+    private LocalDateTime startTime;
     @Column(name = "end_time", nullable = false)
-    private LocalDate endTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Singapore")
+    private LocalDateTime endTime;
     @Column(name = "shift_title", nullable = false)
     private String shiftTitle;
-    @Column(name = "unpaid_break", nullable = false)
-    private Long unpaidBreak;
-    @Column(name = "location", nullable = true)
-    private String location;
     @Column(name = "remarks", nullable = true)
     private String remarks;
     @Column(name = "min_quota", nullable = false)
@@ -34,25 +36,38 @@ public class Shift {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "roster_id")
     private Roster roster;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
+    @Column(name = "shift_list_items")
+    private List<ShiftListItem> shiftListItems;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "shift", joinColumns = @JoinColumn(name = "shift_id", referencedColumnName = "shift_id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"))
-    private List<User> employees_involved;
+    // @ManyToMany(cascade = CascadeType.ALL)
+    // @JoinTable(name = "shift", joinColumns = @JoinColumn(name = "shift_id",
+    // referencedColumnName = "shift_id"), inverseJoinColumns = @JoinColumn(name =
+    // "user_id", referencedColumnName = "user_id"))
+    // private List<User> employees_involved;
 
     public Shift() {
     }
 
-    public Shift(LocalDate startTime, LocalDate endTime, String shiftTitle, Long unpaidBreak, String location,
-            String remarks, Long minQuota, Roster roster, List<User> employees_involved) {
+    public Shift(LocalDateTime startTime, LocalDateTime endTime, String shiftTitle, String remarks,
+            Long minQuota) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.shiftTitle = shiftTitle;
-        this.unpaidBreak = unpaidBreak;
-        this.location = location;
+        this.remarks = remarks;
+        this.minQuota = minQuota;
+        this.shiftListItems = new ArrayList<>();
+    }
+
+    public Shift(LocalDateTime startTime, LocalDateTime endTime, String shiftTitle,
+            String remarks, Long minQuota, Roster roster) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.shiftTitle = shiftTitle;
         this.remarks = remarks;
         this.minQuota = minQuota;
         this.roster = roster;
-        this.employees_involved = employees_involved;
+        this.shiftListItems = new ArrayList<>();
     }
 
     public Long getShiftId() {
@@ -63,19 +78,19 @@ public class Shift {
         this.shiftId = shiftId;
     }
 
-    public LocalDate getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDate startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDate getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDate endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -85,22 +100,6 @@ public class Shift {
 
     public void setShiftTitle(String shiftTitle) {
         this.shiftTitle = shiftTitle;
-    }
-
-    public Long getUnpaidBreak() {
-        return unpaidBreak;
-    }
-
-    public void setUnpaidBreak(Long unpaidBreak) {
-        this.unpaidBreak = unpaidBreak;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getRemarks() {
@@ -127,19 +126,29 @@ public class Shift {
         this.roster = roster;
     }
 
-    public List<User> getEmployees_involved() {
-        return employees_involved;
+    public List<ShiftListItem> getShiftListItems() {
+        return shiftListItems;
     }
 
-    public void setEmployees_involved(List<User> employees_involved) {
-        this.employees_involved = employees_involved;
+    public void setShiftListItems(List<ShiftListItem> shiftListItems) {
+        this.shiftListItems = shiftListItems;
+    }
+
+    public List<ShiftListItem> addShiftListItem(ShiftListItem shiftListItem) {
+        this.shiftListItems.add(shiftListItem);
+        return this.shiftListItems;
+    }
+
+    public List<ShiftListItem> removeShiftListItem(ShiftListItem shiftListItem) {
+        this.shiftListItems.remove(shiftListItem);
+        return this.shiftListItems;
     }
 
     @Override
     public String toString() {
-        return "Shift [employees_involved=" + employees_involved + ", endTime=" + endTime + ", location=" + location
-                + ", minQuota=" + minQuota + ", remarks=" + remarks + ", roster=" + roster + ", shiftId=" + shiftId
-                + ", shiftTitle=" + shiftTitle + ", startTime=" + startTime + ", unpaidBreak=" + unpaidBreak + "]";
+        return "Shift [shiftId=" + shiftId + ", startTime=" + startTime + ", endTime=" + endTime + ", shiftTitle="
+                + shiftTitle + ", remarks=" + remarks + ", minQuota=" + minQuota + ", roster=" + roster
+                + ", shiftListItems=" + shiftListItems + "]";
     }
 
 }

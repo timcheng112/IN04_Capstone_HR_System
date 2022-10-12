@@ -26,13 +26,22 @@ public class Block {
     @Column(nullable = false)
     private Boolean isPaid;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
+    @JoinColumn(name = "user_id")
     private User employee;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "roster_id")
     private Roster roster;
 
     public Block() {
+    }
+
+    public Block(LocalDate startTime, LocalDate endTime, String blockTitle, String reason, Boolean isPaid) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.blockTitle = blockTitle;
+        this.reason = reason;
+        this.isPaid = isPaid;
     }
 
     public Block(LocalDate startTime, LocalDate endTime, String blockTitle, String reason, Boolean isPaid,

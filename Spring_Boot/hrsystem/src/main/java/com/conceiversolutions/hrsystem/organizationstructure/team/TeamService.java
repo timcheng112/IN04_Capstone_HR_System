@@ -1,4 +1,5 @@
 package com.conceiversolutions.hrsystem.organizationstructure.team;
+
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
@@ -27,10 +28,10 @@ public class TeamService {
     private final RosterRepository rosterRepository;
     private final OutletService outletService;
 
-//    @Autowired
-//    public TeamService(TeamRepository teamRepository) {
-//        this.teamRepository = teamRepository;
-//    }
+    // @Autowired
+    // public TeamService(TeamRepository teamRepository) {
+    // this.teamRepository = teamRepository;
+    // }
 
     public List<Team> getAllTeams() {
         System.out.println("TeamService.getAllTeams");
@@ -62,9 +63,52 @@ public class TeamService {
         return teams;
     }
 
-    public Team getTeam(Long id){
+    public List<Team> getAllTeamsInDept(Long deptId) {
+        System.out.println("TeamService.getAllTeamsInDept");
+        List<Team> teams = teamRepository.findAll();
+
+        List<Team> teamsInDept = new ArrayList<>();
+
+        if (teams.isEmpty()) {
+            throw new IllegalStateException("Unable to retrieve, no teams exist");
+        }
+
+        for (Team t : teams) {
+
+            System.out.println("Team ID is : " + t.getTeamId() + ", Team name is : " + t.getTeamName());
+            Department d = t.getDepartment();
+
+            if (d.getDepartmentId() == deptId) {
+                teamsInDept.add(t);
+            }
+        }
+
+        for (Team t : teamsInDept) {
+            System.out.println("Team ID is : " + t.getTeamId() + ", Team name is : " + t.getTeamName());
+            Department d = t.getDepartment();
+
+            d.setTeams(new ArrayList<>());
+            d.setDepartmentHead(null);
+            d.setOrganization(null);
+
+            List<User> teamMembers = t.getUsers();
+            for (User member : teamMembers) {
+                member.setTeams(new ArrayList<>());
+            }
+
+            t.getRoster().setTeam(null);
+            t.getRoster().setBlocks(new ArrayList<>());
+            t.getRoster().setShifts(new ArrayList<>());
+
+            t.getTeamHead().setTeams(new ArrayList<>());
+        }
+
+        return teamsInDept;
+    }
+
+    public Team getTeam(Long id) {
         Optional<Team> team = teamRepository.findById(id);
-        if(team.isPresent()){
+        if (team.isPresent()) {
             Team t = team.get();
 
             System.out.println("Team ID is : " + t.getTeamId() + ", Team name is : " + t.getTeamName());
@@ -82,7 +126,7 @@ public class TeamService {
             t.getRoster().setBlocks(new ArrayList<>());
             t.getRoster().setShifts(new ArrayList<>());
 
-            //added by shihan not too sure.
+            // added by shihan not too sure.
             t.getOutlet();
             t.getOutlet().getAddress();
             t.getDepartment().setTeams(new ArrayList<>());
@@ -95,9 +139,9 @@ public class TeamService {
         }
     }
 
-//    public void addNewTeam(Team team) {
-//        teamRepository.save(team);
-//    }
+    // public void addNewTeam(Team team) {
+    // teamRepository.save(team);
+    // }
 
     public void updateTeam(Team team, Long teamId) {
         Team t1 = getTeam(teamId);
@@ -110,18 +154,56 @@ public class TeamService {
         t1.setUsers(team.getUsers());
     }
 
-    public void deleteTeam(Long teamId) {
-        teamRepository.deleteById(teamId);
+    public String deleteTeam(Long teamId) {
+        Team t = getTeam(teamId);
+        Long deptId = t.getDepartment().getDepartmentId();
+
+        Optional<Department> d = departmentRepository.findById(Long.valueOf(deptId));
+        Department dept = d.get();
+
+        // remove team members & team head
+        List<User> teamMembers = t.getUsers();
+        for (User u : teamMembers) {
+            removeMemberFromTeam(teamId.intValue(), u.getUserId().intValue());
+        }
+        t.setTeamHead(null);
+        // delete from user team head
+        // User th1 = t.getTeamHead();
+        // List<Team> tempTeams = th1.getTeams();
+        // tempTeams.remove(t);
+        // th1.setTeams(tempTeams);
+        // userRepository.saveAndFlush(th1);
+
+        t.getDepartment().removeTeam(t);
+        // delete from team
+        dept.removeTeam(t);
+        departmentRepository.saveAndFlush(dept);
+
+        t.getRoster().setTeam(null);
+        // delete from roster
+        Long r = t.getRoster().getRosterId();
+        Optional<Roster> roster = rosterRepository.findById(r);
+        if (roster.isEmpty()) {
+            throw new IllegalStateException("Roster does not exist.");
+        }
+        Roster ros = roster.get();
+        ros.setTeam(null);
+        rosterRepository.saveAndFlush(ros);
+        // rosterRepository.findAll().remove(ros);
+
+        teamRepository.delete(t);
+        return teamId + "is deleted successfully";
     }
 
     public Long addNewTeam(String teamName, Integer teamHeadId, Integer outletId, Boolean isOffice, Integer deptId) {
         System.out.println("TeamService.addNewTeam");
-        System.out.println("teamName = " + teamName + ", teamHeadId = " + teamHeadId + ", outletId = " + outletId + ", isOffice = " + isOffice + ", deptId = " + deptId);
+        System.out.println("teamName = " + teamName + ", teamHeadId = " + teamHeadId + ", outletId = " + outletId
+                + ", isOffice = " + isOffice + ", deptId = " + deptId);
 
         Outlet outlet = outletService.getOutletById(Long.valueOf(outletId));
 
         Optional<Department> d = departmentRepository.findById(Long.valueOf(deptId));
-        if (d.isEmpty()){
+        if (d.isEmpty()) {
             throw new IllegalStateException("Department does not exist.");
         }
 
@@ -131,12 +213,13 @@ public class TeamService {
         if (!teamHead.getUserRole().equals(RoleEnum.MANAGER)) {
             throw new IllegalStateException("User selected is not a Manager, please appoint a manager instead");
         } else if (!teamHead.isEnabled()) {
-            throw new IllegalStateException("Manager selected is not an active employee, please appoint an active employee instead");
+            throw new IllegalStateException(
+                    "Manager selected is not an active employee, please appoint an active employee instead");
         }
 
         List<User> teamMembers = List.of(teamHead);
 
-        Roster tempRoster = new Roster("temp", new ArrayList<>(), new ArrayList<>());
+        Roster tempRoster = new Roster("temp");
         Roster emptyRoster = rosterRepository.saveAndFlush(tempRoster);
 
         Team newTeam = new Team(teamName, outlet, isOffice, dept, emptyRoster, teamMembers, teamHead);
@@ -171,11 +254,13 @@ public class TeamService {
         User user = u.get();
 
         if (user.getUserRole().equals(RoleEnum.APPLICANT) || user.getUserRole().equals(RoleEnum.ADMINISTRATOR)) {
-            throw new IllegalStateException("User being assigned is not an employee, please add an active employee instead");
+            throw new IllegalStateException(
+                    "User being assigned is not an employee, please add an active employee instead");
         }
 
         if (!user.isEnabled()) {
-            throw new IllegalStateException("Employee being assigned is not an active employee, please appoint an active employee instead");
+            throw new IllegalStateException(
+                    "Employee being assigned is not an active employee, please appoint an active employee instead");
         }
 
         for (Team t1 : user.getTeams()) {
@@ -195,7 +280,6 @@ public class TeamService {
 
         return true;
     }
-
 
     public boolean removeMemberFromTeam(Integer teamId, Integer userId) {
         Optional<Team> t = teamRepository.findById(Long.valueOf(teamId));
@@ -278,7 +362,8 @@ public class TeamService {
         if (!newTeamHead.getUserRole().equals(RoleEnum.MANAGER)) {
             throw new IllegalStateException("User selected is not a Manager, please appoint a manager instead");
         } else if (!newTeamHead.isEnabled()) {
-            throw new IllegalStateException("Manager selected is not an active employee, please appoint an active employee instead");
+            throw new IllegalStateException(
+                    "Manager selected is not an active employee, please appoint an active employee instead");
         }
 
         team.setTeamHead(newTeamHead);
@@ -288,6 +373,7 @@ public class TeamService {
 
         teamRepository.save(team);
 
-        return "Team " + team.getTeamName() + " head has been successfully updated to be " + newTeamHead.getFirstName() + " " + newTeamHead.getLastName();
+        return "Team " + team.getTeamName() + " head has been successfully updated to be " + newTeamHead.getFirstName()
+                + " " + newTeamHead.getLastName();
     }
 }

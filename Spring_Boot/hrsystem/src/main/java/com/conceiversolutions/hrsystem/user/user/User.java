@@ -1,8 +1,8 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
-import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
@@ -13,12 +13,18 @@ import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.goal.Goal;
 import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
+import com.conceiversolutions.hrsystem.rostering.block.Block;
+import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
+import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +39,8 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @EqualsAndHashCode
+@Getter
+@Setter
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,9 +64,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 
-    @Column(name = "job_type", nullable = true)
-    @Enumerated(EnumType.STRING)
-    private JobTypeEnum jobType;
     @Column(name = "user_role", nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleEnum userRole;
@@ -78,8 +83,11 @@ public class User implements UserDetails {
     @JoinColumn(name = "profile_pic")
     private DocData profilePic;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Position.class)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "positions")
     private List<Position> positions;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Position.class, optional = true)
+    @JoinColumn(name = "current_position_id")
+    private Position currentPosition;
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
     private QualificationInformation qualificationInformation;
 
@@ -124,16 +132,50 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.LAZY, targetEntity = ReactivationRequest.class, optional = true)
     @JoinColumn(name = "reactivation_request_id")
     private ReactivationRequest reactivationRequest;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = PreferredDates.class, mappedBy = "user")
+    private PreferredDates preferredDates;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Block.class, mappedBy = "employee")
+    @Column(name = "blocks")
+    private List<Block> blocks;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ShiftListItem.class, mappedBy = "user")
+    @Column(name = "shift_list_items")
+    private List<ShiftListItem> shiftListItems;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "requestor")
+    private List<SwapRequest> swapRequestsRequested;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "receiver")
+    private List<SwapRequest> swapRequestsReceived;
+
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "user")
+    @Column(name = "leaves")
+    private List<Leave> leaves;
+
 
     // TODO add on other relationships to other classes
 
     public User() {
+        this.positions = new ArrayList<>();
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.modules = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+        this.leaves = new ArrayList<>();
     }
 
     // this should be for making a new applicant's account
     public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob,
             GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
             PayInformation currentPayInformation) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -149,27 +191,17 @@ public class User implements UserDetails {
         this.isEnabled = false; // only change to true after email is confirmed
         this.dateJoined = LocalDate.now();
         this.profilePic = null;
-        this.positions = new ArrayList<>();
+        this.currentPosition = null;
         this.qualificationInformation = null;
-        this.applications = new ArrayList<>();
-        this.jobRequests = new ArrayList<>();
-        this.payslips = new ArrayList<>();
-        this.attendances = new ArrayList<>();
-        this.employeeAppraisals = new ArrayList<>();
-        this.managerAppraisals = new ArrayList<>();
-        this.managerReviews = new ArrayList<>();
-        this.employeeReviews = new ArrayList<>();
-        this.modules = new ArrayList<>();
-        this.goals = new ArrayList<>();
-        this.teams = new ArrayList<>();
-        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
+        this.preferredDates = null;
     }
 
     // this should be for making an employee's account
     public User(String firstName, String lastName, Integer phone, String email, String workEmail,
-            LocalDate dob, GenderEnum gender, JobTypeEnum jobType, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+            LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
             LocalDate dateJoined, PayInformation currentPayInformation) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -177,7 +209,7 @@ public class User implements UserDetails {
         this.workEmail = workEmail;
         this.dob = dob;
         this.gender = gender;
-        this.jobType = jobType;
+        
         this.userRole = userRole;
         this.isPartTimer = isPartTimer;
         this.isHrEmployee = isHrEmployee;
@@ -186,7 +218,7 @@ public class User implements UserDetails {
         this.isBlackListed = false;
         this.isEnabled = false; // only change to true after email is confirmed
         this.profilePic = null;
-        this.positions = new ArrayList<>();
+        this.currentPosition = null;
         this.qualificationInformation = null;
         this.applications = new ArrayList<>();
         this.jobRequests = new ArrayList<>();
@@ -200,15 +232,22 @@ public class User implements UserDetails {
         this.goals = new ArrayList<>();
         this.teams = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
+        this.preferredDates = null;
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
             LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
             Boolean isBlackListed,
             Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions,
+            Position currentPosition,
             QualificationInformation qualificationInformation,
             List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
             List<Attendance> attendances, PayInformation currentPayInformation) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -225,20 +264,18 @@ public class User implements UserDetails {
         this.dateJoined = dateJoined;
         this.profilePic = profilePic;
         this.positions = positions;
+        this.currentPosition = currentPosition;
         this.qualificationInformation = qualificationInformation;
         this.applications = applications;
         this.jobRequests = jobRequests;
         this.payslips = payslips;
         this.attendances = attendances;
-        this.employeeAppraisals = new ArrayList<>();
-        this.managerAppraisals = new ArrayList<>();
-        this.managerReviews = new ArrayList<>();
-        this.employeeReviews = new ArrayList<>();
-        this.modules = new ArrayList<>();
-        this.goals = new ArrayList<>();
-        this.teams = new ArrayList<>();
-        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
+        this.blocks = new ArrayList<>();
+        this.shiftListItems = new ArrayList<>();
+        this.swapRequestsRequested = new ArrayList<>();
+        this.swapRequestsReceived = new ArrayList<>();
+        this.preferredDates = null;
     }
 
     public Long getUserId() {
@@ -315,14 +352,6 @@ public class User implements UserDetails {
 
     public void setUserRole(RoleEnum userRole) {
         this.userRole = userRole;
-    }
-
-    public Boolean getPartTimer() {
-        return isPartTimer;
-    }
-
-    public void setPartTimer(Boolean partTimer) {
-        isPartTimer = partTimer;
     }
 
     public Boolean getHrEmployee() {
@@ -486,10 +515,6 @@ public class User implements UserDetails {
         return Collections.singletonList(authority);
     }
 
-    public String getPassword() {
-        return this.password;
-    }
-
     @Override
     public String getUsername() {
         if (userRole.equals(RoleEnum.APPLICANT)) {
@@ -519,40 +544,80 @@ public class User implements UserDetails {
         return this.isEnabled;
     }
 
-    public PayInformation getCurrentPayInformation() {
-        return currentPayInformation;
-    }
-
-    public void setCurrentPayInformation(PayInformation currentPayInformation) {
-        this.currentPayInformation = currentPayInformation;
-    }
-
-    public ReactivationRequest getReactivationRequest() {
-        return reactivationRequest;
-    }
-
-    public void setReactivationRequest(ReactivationRequest reactivationRequest) {
-        this.reactivationRequest = reactivationRequest;
-    }
-
-    public List<TaskListItem> getTaskListItems() {
-        return taskListItems;
-    }
-
-    public void setTaskListItems(List<TaskListItem> taskListItems) {
-        this.taskListItems = taskListItems;
-    }
-
     public List<TaskListItem> addTaskListItem(TaskListItem item) {
         this.taskListItems.add(item);
         return this.taskListItems;
     }
 
-    public JobTypeEnum getJobType() {
-        return jobType;
+    public PreferredDates getPreferredDates() {
+        return preferredDates;
     }
 
-    public void setJobType(JobTypeEnum jobType) {
-        this.jobType = jobType;
+    public void setPreferredDates(PreferredDates preferredDates) {
+        this.preferredDates = preferredDates;
+    }
+
+    public List<Block> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(List<Block> blocks) {
+        this.blocks = blocks;
+    }
+
+    public List<Block> addBlock(Block block) {
+        this.blocks.add(block);
+        return this.blocks;
+    }
+
+    public List<Block> removeBlock(Block block) {
+        this.blocks.remove(block);
+        return this.blocks;
+    }
+
+    public List<ShiftListItem> getShiftListItems() {
+        return shiftListItems;
+    }
+
+    public void setShiftListItems(List<ShiftListItem> shiftListItems) {
+        this.shiftListItems = shiftListItems;
+    }
+
+    public List<ShiftListItem> addShiftListItems(ShiftListItem shiftListItem) {
+        this.shiftListItems.add(shiftListItem);
+        return this.shiftListItems;
+    }
+
+    public List<ShiftListItem> removeShiftListItems(ShiftListItem shiftListItem) {
+        this.shiftListItems.remove(shiftListItem);
+        return this.shiftListItems;
+    }
+
+    public List<SwapRequest> addSwapRequestsRequested(SwapRequest swapRequest) {
+        this.swapRequestsRequested.add(swapRequest);
+        return this.swapRequestsRequested;
+    }
+
+    public List<SwapRequest> removeSwapRequestsRequested(SwapRequest swapRequest) {
+        this.swapRequestsRequested.remove(swapRequest);
+        return this.swapRequestsRequested;
+    }
+
+    public List<SwapRequest> addSwapRequestsReceived(SwapRequest swapRequest) {
+        this.swapRequestsReceived.add(swapRequest);
+        return this.swapRequestsReceived;
+    }
+
+    public List<SwapRequest> removeSwapRequestsReceived(SwapRequest swapRequest) {
+        this.swapRequestsReceived.remove(swapRequest);
+        return this.swapRequestsReceived;
+    }
+
+    public Boolean getPartTimer() {
+        return isPartTimer;
+    }
+
+    public void setPartTimer(Boolean partTimer) {
+        isPartTimer = partTimer;
     }
 }

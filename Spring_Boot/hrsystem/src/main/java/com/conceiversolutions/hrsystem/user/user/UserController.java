@@ -275,7 +275,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/getEmployeesNotInGivenTeam")
-    public List<User> getEmployeesNotInGivenTeam(@RequestParam("teamId") Integer teamId) {
+    public List<User> getEmployeesNotInGivenTeam(@RequestParam(name = "teamId") Integer teamId) {
         return userService.getEmployeesNotInGivenTeam(teamId);
     }
 

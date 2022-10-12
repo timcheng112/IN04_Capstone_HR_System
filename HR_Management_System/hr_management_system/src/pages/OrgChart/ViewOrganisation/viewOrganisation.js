@@ -20,10 +20,11 @@ import { getUserId } from "../../../utils/Common.js";
 //TODO: UPDATE TABLE WHEN ADDING DEPT ETC? anyway to just update the list without refreshing the whole page? look into!
 
 export default function ViewOrganisation() {
-  const userId = getUserId()
+  const userId = getUserId();
   const [org, setOrg] = useState([]);
   const history = useHistory();
-  const [toDelete, setToDelete] = useState(0)
+  const [toDelete, setToDelete] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     api.getOrganization().then((response) => {
@@ -31,33 +32,33 @@ export default function ViewOrganisation() {
       //console.log(org);
       //console.log(response.data.departments[0].departmentId);
     });
-  }, [org]);
+  }, [refreshKey]);
   //what is this [org] for?
 
   const [openAdd, setOpenAdd] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
   const [openChange, setOpenChange] = useState(false);
-  const [deptName, setDeptName] = useState("");
 
   function deleteDept() {
-    console.log("delete department " + toDelete)
-    // console.log("adddeptfunc :" + deptName + " " + deptHeadId);
+    console.log("delete department " + toDelete);
     api
       .deleteDept(toDelete)
       .then((response) => {
-        console.log('deleted? ' + response.data);
+        console.log("deleted? " + response.data);
         // api.getOrganization().then((response) => {
         //   setOrg(response.data);
         // });
-        setToDelete('')
-      }).then(() => {
-        alert("Department is successfully deleted.")
-        })
+        setToDelete("");
+      })
+      .then(() => {
+        alert("Department is successfully deleted.");
+        setRefreshKey((oldKey) => oldKey + 1);
+      })
       .catch((error) => {
         var message = error.request.response;
         if (message.includes("Department still has teams unable to delete"))
-        console.log(message);
+          console.log(message);
         alert("Department still has teams");
       });
   }
@@ -70,6 +71,7 @@ export default function ViewOrganisation() {
           <AddDepartmentModal
             open={openAdd}
             onClose={() => setOpenAdd(false)}
+            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           />
 
           <DeleteDeptModal
@@ -81,10 +83,27 @@ export default function ViewOrganisation() {
             newOrgName={org.organizationName}
             open={openChange}
             onClose={() => setOpenChange(false)}
+            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           />
 
           <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
+              <a href="/home">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="border-2 rounded-full border-black w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75"
+                  />
+                </svg>
+              </a>
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
                   <h1 className="text-xl font-semibold text-gray-900">
@@ -275,7 +294,7 @@ export default function ViewOrganisation() {
                                 <a
                                   onClick={() => {
                                     setOpenDelete(true);
-                                    setToDelete(dept.departmentId)
+                                    setToDelete(dept.departmentId);
                                   }}
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
