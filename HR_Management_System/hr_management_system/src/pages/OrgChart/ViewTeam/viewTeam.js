@@ -1,6 +1,6 @@
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS FILE
 import Navbar from "../../../components/Navbar.js";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../../../utils/api.js";
 import AddUserModal from "./addUserModal.js";
 
@@ -28,37 +28,41 @@ export default function ViewTeam() {
   //         }
 
   //shihan 3/10/2022
-  const [teamId, setTeamId] = useState(1);
+  // const [teamId, setTeamId] = useState(1);
+  const teamId = useRef(-1);
   const [team, setTeam] = useState(null);
 
   const [openAdd, setOpenAdd] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     console.log("use effect!");
     const url = window.location.href;
     const tempTeamId = url.substring(31);
     console.log("urlSubstring:" + tempTeamId);
-    setTeamId(tempTeamId);
+    // setTeamId(tempTeamId);
+    teamId.current = tempTeamId;
 
-    api.getTeam(teamId).then((response) => {
+    api.getTeam(teamId.current).then((response) => {
       setTeam(response.data);
       console.log(team);
     });
-  }, [team]);
+  }, [teamId, refreshKey]);
 
   return (
     <>
       {team ? (
         <>
-          {/* <Navbar/> */}
+          <Navbar />
           <AddUserModal
             open={openAdd}
             onClose={() => setOpenAdd(false)}
-            teamId={teamId}
+            teamId={teamId.current}
+            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           />
           <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
-              <a href="/viewOrg" >
+              <a href="/viewOrg">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -263,7 +267,7 @@ export default function ViewTeam() {
 
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                 <a
-                                  href="#"
+                                  href="https://www.change.org/p/allow-andrew-tate-on-the-internet"
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
                                   Move An Employee

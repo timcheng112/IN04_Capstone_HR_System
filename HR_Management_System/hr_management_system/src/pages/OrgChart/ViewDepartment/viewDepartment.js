@@ -22,6 +22,7 @@ export default function ViewDepartment() {
   const [openChange, setOpenChange] = useState(false);
   const [toDelete, setToDelete] = useState(0);
   const [openDelete, setOpenDelete] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   //   function getURL(){
   //     const url = window.location.href;
@@ -53,8 +54,7 @@ export default function ViewDepartment() {
       // console.log(response.data.teams);
     });
     // console.log(dept);
-  }, [deptId]);
-
+  }, [refreshKey]);
 
   // useEffect for getTeam
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function ViewDepartment() {
     });
 
     // console.log(dept);
-  }, [deptId, teams]);
+  }, [refreshKey, deptId]);
 
   // function deleteTeam() {
   //   console.log("delete department " + toDelete);
@@ -89,8 +89,6 @@ export default function ViewDepartment() {
   //     });
   // }
 
-
-
   return (
     dept &&
     deptId &&
@@ -106,6 +104,7 @@ export default function ViewDepartment() {
           open={openAddTeam}
           onClose={() => setOpenAddTeam(false)}
           deptId={deptId}
+          refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
         />
 
         <ChangeDeptHeadModal
@@ -141,7 +140,7 @@ export default function ViewDepartment() {
             <div className="sm:flex sm:items-center">
               <div className="sm:flex-auto">
                 <h1 className="text-xl font-semibold text-gray-900">
-                  {dept.departmentN}
+                  {dept.departmentName}
                 </h1>
                 <p className="mt-2 text-sm text-gray-700">
                   A list of all the teams in the Department including their
@@ -318,9 +317,9 @@ export default function ViewDepartment() {
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <button
                                 className="text-indigo-600 hover:text-indigo-900"
-                                onClick={() =>
-                                  history.push("/viewTeam/" + team.teamId)
-                                }
+                                onClick={() => {
+                                  history.push("/viewTeam/" + team.teamId);
+                                }}
                               >
                                 View
                                 <span className="sr-only">, {dept.name}</span>
