@@ -20,6 +20,8 @@ export default function Register() {
   const [dobYear, setDobYear] = useState("");
   const [gender, setGender] = useState("Male");
   const [role, setRole] = useState("Employee");
+  const [positionName, setPositionName] = useState("");
+  const [positionDescription, setPositionDescription] = useState("");
   const [jobType, setJobType] = useState("Full-Time");
   const [isPartTimer, setIsPartTime] = useState(false);
   const [isHrEmployee, setIsHrEmployee] = useState(false);
@@ -80,11 +82,13 @@ export default function Register() {
         workEmail.trim() + "@libro.com",
         dob.trim(),
         gender.toUpperCase(),
-        jobType.toUpperCase().replaceAll('-', ''),
         role.toUpperCase(),
         isPartTimer,
         isHrEmployee,
-        dateJoined.trim()
+        dateJoined.trim(),
+        positionName,
+        positionDescription,
+        jobType.toUpperCase().replaceAll("-", "")
       )
       .then(() =>
         alert("Account creation successful for " + firstName + " " + lastName)
@@ -208,44 +212,6 @@ export default function Register() {
                   </span>
                 </div>
               </div>
-              {/* <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm mt-5 font-medium text-gray-700"
-                >
-                  Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(p) => setPassword(p.target.value)}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="confirm-password"
-                  className="block text-sm mt-5 font-medium text-gray-700"
-                >
-                  Confirm password
-                </label>
-                <input
-                  id="confirm-password"
-                  name="confirm-password"
-                  type="password"
-                  autoComplete="confirm-password"
-                  required
-                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Confirm password"
-                  value={confirmPassword}
-                  onChange={(p) => setConfirmPassword(p.target.value)}
-                />
-              </div> */}
               <div>
                 <label
                   htmlFor="phone"
@@ -391,23 +357,43 @@ export default function Register() {
                   />
                 </div>
               </div>
-              {/* <div>
+              <div>
                 <label
-                  htmlFor="role"
+                  htmlFor="position-name"
                   className="block text-sm mt-5 font-medium text-gray-700"
                 >
-                  Role
+                  Position Name
                 </label>
                 <input
+                  id="position-name"
+                  name="position-name"
                   type="text"
-                  name="role"
-                  id="role"
+                  autoComplete="text"
+                  required
                   className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Role"
-                  value={role}
-                  onChange={(r) => setRole(r.target.value)}
+                  placeholder="Project Manager"
+                  value={positionName}
+                  onChange={(f) => setPositionName(f.target.value)}
                 />
-              </div> */}
+              </div>
+              <div>
+                <label
+                  htmlFor="position-description"
+                  className="block text-sm font-medium text-gray-700 mt-5"
+                >
+                  Position Description
+                </label>
+                <textarea
+                  id="position-description"
+                  name="position-description"
+                  rows={3}
+                  className="mt-1 p-2 block w-full text-gray-900 bg-white rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Oversees multiple teams"
+                  required
+                  value={positionDescription}
+                  onChange={(e) => setPositionDescription(e.target.value)}
+                />
+              </div>
               <div>
                 <label
                   htmlFor="job-type"
