@@ -1,6 +1,9 @@
 import Navbar from "../../components/Navbar.js";
 import { useState, useEffect } from "react";
 import api from "../../utils/api.js";
+import AddShiftModal from "../../features/rostering/AddShiftModal.js";
+import ViewTemplateShiftsSlideover from "../../features/rostering/ViewTemplateShiftsSlideover.js";
+import ComboBox from "../../components/ComboBox/ComboBox.js";
 
 const people = [
   {
@@ -18,7 +21,24 @@ const people = [
   // More people...
 ];
 
+const outlets = [
+  {
+    id: 1,
+    name: "Bishan Outlet",
+  },
+  {
+    id: 2,
+    name: "Marymount Outlet",
+  },
+  {
+    id: 3,
+    name: "Lentor Outlet",
+  },
+];
 export default function Roster() {
+  const [open, setOpen] = useState(false);
+  const [openSlideover, setOpenSlideover] = useState(false);
+
   return (
     <>
       <Navbar />
@@ -27,9 +47,7 @@ export default function Roster() {
       <div className="px-4 sm:px-6 lg:px-8 mt-3">
         <div className="sm:flex sm:items-center">
           <div className="isolate inline-flex -space-x-px rounded-md shadow-sm mx-4">
-            <button className="relative inline-flex items-center rounded-md border border-indigo-600 font-extrabold bg-white px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-600 hover:text-white focus:z-20">
-              Bishan Outlet
-            </button>
+            <ComboBox items={outlets} searchParam={["name"]} />
           </div>
 
           <div className="sm:flex sm:items-center">
@@ -67,6 +85,20 @@ export default function Roster() {
               className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
             >
               Add user
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2"
+              onClick={() => setOpenSlideover(true)}
+            >
+              View Template Shifts
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2"
+              onClick={() => setOpen(true)}
+            >
+              Add a Shift (Temp button)
             </button>
           </div>
         </div>
@@ -145,6 +177,10 @@ export default function Roster() {
                         <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
                         <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
                         <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
+                        <AddShiftModal
+                          open={open}
+                          onClose={() => setOpen(false)}
+                        />
                       </tr>
                     ))}
                   </tbody>
@@ -153,6 +189,10 @@ export default function Roster() {
             </div>
           </div>
         </div>
+        <ViewTemplateShiftsSlideover
+          open={openSlideover}
+          onClose={() => setOpenSlideover(false)}
+        />
       </div>
     </>
   );

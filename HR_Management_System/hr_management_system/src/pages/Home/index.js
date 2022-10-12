@@ -298,6 +298,15 @@ export default function Home() {
                               >
                                 Reports
                               </a>
+                              <a
+                                key="Rostering"
+                                href="/rostering"
+                                className={classNames(
+                                  "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
+                                )}
+                              >
+                                Rostering
+                              </a>
                             </nav>
                           </div>
                           {/* <div className="px-12 lg:px-0">
