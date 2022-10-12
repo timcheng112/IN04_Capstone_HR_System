@@ -301,6 +301,16 @@ const api = {
         `http://localhost:9191/api/department/getDepartmentByEmployeeId?employeeId=${employeeId}`
     );
   },
+  approveJobRequestById(jobRequestId, approverId) {
+    return axios.put(
+        `http://localhost:9191/api/jobrequest/approveJobRequestById?jobRequestId=${jobRequestId}&approverId=${approverId}`
+    );
+  },
+  rejectJobRequestById(jobRequestId, approverId, reason) {
+    return axios.put(
+        `http://localhost:9191/api/jobrequest/rejectJobRequestById?jobRequestId=${jobRequestId}&approverId=${approverId}&reason=${reason}`
+    );
+  },
   // SKILLSET
   getAllSkillsets() {
     return axios.get(
