@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
+import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -82,13 +83,14 @@ public class UserController {
             @RequestParam("workEmail") String workEmail,
             @RequestParam("dob") String dob,
             @RequestParam("gender") String gender,
+            @RequestParam("jobType") String jobType,
             @RequestParam("userRole") String userRole,
             @RequestParam("isPartTimer") Boolean isPartTimer,
             @RequestParam("isHrEmployee") Boolean isHrEmployee,
             @RequestParam("dateJoined") String dateJoined) {
         System.out.println("UserController.registerNewAccountJMP");
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
-                GenderEnum.valueOf(gender), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
+                GenderEnum.valueOf(gender), JobTypeEnum.valueOf(jobType), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
                 LocalDate.parse(dateJoined), null);
         try {
             Long employeeId = userService.addNewUser(newEmployee);

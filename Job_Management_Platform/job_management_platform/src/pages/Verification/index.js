@@ -12,7 +12,7 @@ export default function Verification() {
 
   useEffect(() => {
     var token = window.location.href.substring(29);
-    console.log(token.length);
+    //console.log(token.length);
     if (token.length > 0) {
       setVerified(true);
       api.confirmToken(token).then((response) => {

@@ -209,6 +209,7 @@ public class User implements UserDetails {
         this.workEmail = workEmail;
         this.dob = dob;
         this.gender = gender;
+        
         this.userRole = userRole;
         this.isPartTimer = isPartTimer;
         this.isHrEmployee = isHrEmployee;
