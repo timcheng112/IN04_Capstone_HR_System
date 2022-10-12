@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
+import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
@@ -55,6 +56,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 
+    @Column(name = "job_type", nullable = true)
+    @Enumerated(EnumType.STRING)
+    private JobTypeEnum jobType;
     @Column(name = "user_role", nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleEnum userRole;
@@ -164,7 +168,7 @@ public class User implements UserDetails {
 
     // this should be for making an employee's account
     public User(String firstName, String lastName, Integer phone, String email, String workEmail,
-            LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+            LocalDate dob, GenderEnum gender, JobTypeEnum jobType, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
             LocalDate dateJoined, PayInformation currentPayInformation) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -173,6 +177,7 @@ public class User implements UserDetails {
         this.workEmail = workEmail;
         this.dob = dob;
         this.gender = gender;
+        this.jobType = jobType;
         this.userRole = userRole;
         this.isPartTimer = isPartTimer;
         this.isHrEmployee = isHrEmployee;
@@ -541,5 +546,13 @@ public class User implements UserDetails {
     public List<TaskListItem> addTaskListItem(TaskListItem item) {
         this.taskListItems.add(item);
         return this.taskListItems;
+    }
+
+    public JobTypeEnum getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(JobTypeEnum jobType) {
+        this.jobType = jobType;
     }
 }

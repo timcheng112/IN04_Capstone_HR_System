@@ -12,7 +12,6 @@ function classNames(...classes) {
 export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [workEmail, setWorkEmail] = useState("");
@@ -21,6 +20,7 @@ export default function Register() {
   const [dobYear, setDobYear] = useState("");
   const [gender, setGender] = useState("Male");
   const [role, setRole] = useState("Employee");
+  const [jobType, setJobType] = useState("Full-Time");
   const [isPartTimer, setIsPartTime] = useState(false);
   const [isHrEmployee, setIsHrEmployee] = useState(false);
   const [joinedDay, setJoinedDay] = useState("");
@@ -80,6 +80,7 @@ export default function Register() {
         workEmail.trim() + "@libro.com",
         dob.trim(),
         gender.toUpperCase(),
+        jobType.toUpperCase().replaceAll('-', ''),
         role.toUpperCase(),
         isPartTimer,
         isHrEmployee,
@@ -407,6 +408,26 @@ export default function Register() {
                   onChange={(r) => setRole(r.target.value)}
                 />
               </div> */}
+              <div>
+                <label
+                  htmlFor="job-type"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Job Type
+                </label>
+                <select
+                  id="job-type"
+                  name="job-type"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+                  value={jobType}
+                  onChange={(j) => setJobType(j.target.value)}
+                >
+                  <option>Full-Time</option>
+                  <option>Part-Time</option>
+                  <option>Contract</option>
+                  <option>Intern</option>
+                </select>
+              </div>
               <div>
                 <label
                   htmlFor="role"
