@@ -21,7 +21,14 @@ export default function NewRequest() {
   const [department, setDepartment] = useState(null);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
-  const [add, setAdd] = useState(false);
+  const [title, setTitle]= useState("");
+  const [description, setDescription]= useState("");
+  const [justification, setJustification]= useState("");
+  const [salary, setSalary]= useState(0.00);
+  const [jobType, setJobType] = useState();
+  const [jobRole, setJobRole] = useState();
+
+  
 
   useEffect(() => {
     api
@@ -44,6 +51,13 @@ export default function NewRequest() {
       })
       .catch((error) => setError(error));
   }, []);
+  
+  function saveRequest() {
+    api
+      .saveJobRequest(title, description, justification, startDate, jobType, jobRole, salary, 0, getUserId())
+      .then(() => alert("Successfully created category."))
+      .catch((error) => setError(error));
+  }
 
 
   return (
@@ -68,8 +82,10 @@ export default function NewRequest() {
                       type="text"
                       name="title"
                       id="title"
-                      autoComplete="title"
+                      required
+                      value={title}
                       className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      onChange={(e) => setTitle(e.target.value)}    
                     />
                   </div>
                 </div>
@@ -84,7 +100,10 @@ export default function NewRequest() {
                     id="description"
                     name="description"
                     rows={5}
+                    //required
+                    value={description}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    onChange={(e) => setDescription(e.target.value)} 
                   />
                 </div>
               </div>
@@ -98,7 +117,10 @@ export default function NewRequest() {
                     id="justification"
                     name="justification"
                     rows={5}
+                    //required
+                    value={justification}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    onChange={(e) => setJustification(e.target.value)}
                   />
                 </div>
               </div>
@@ -121,13 +143,7 @@ export default function NewRequest() {
                 <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Requirements
                 </label>
-                <button
-                  type="button"
-                  className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={() => setAdd(true)}
-                >
-                  Add Job Requirements
-                </button>
+                <JobRequirements />
         
               </div>
 
@@ -146,6 +162,9 @@ export default function NewRequest() {
                     className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="0.00"
                     aria-describedby="salary-currency"
+                    //required
+                    value={salary}
+                    onChange={(e) => setSalary(e.target.value)}
                   />
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <span className="text-gray-500 sm:text-sm" id="salary-currency">
@@ -209,7 +228,6 @@ export default function NewRequest() {
         </div>
 
       </form>
-      <JobRequirements open = {add} setOpen = {() => setAdd(false)}/>
     </div>
   )
 }
