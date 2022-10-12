@@ -268,7 +268,6 @@ public class UserService implements UserDetailsService {
             encodedPassword = bCryptPasswordEncoder.encode(user.getWorkEmail());
         }
         user.setPassword(encodedPassword);
-        System.out.println("jobType enum = " + user.getJobType());
         User newUser = userRepository.saveAndFlush(user);
 
         // Sending confirmation TOKEN to set user's isEnabled
