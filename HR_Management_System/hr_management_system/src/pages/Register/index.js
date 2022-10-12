@@ -73,6 +73,8 @@ export default function Register() {
     console.log("dob = " + dob);
     var dateJoined = joinedYear + "-" + joinedMonth + "-" + joinedDay;
     console.log("joined = " + dateJoined);
+    var isPartTime = (jobType == "Part-Time: ") ? true : false;
+    console.log("isPartTime" + isPartTime)
     api
       .register(
         firstName.trim(),
@@ -83,7 +85,7 @@ export default function Register() {
         dob.trim(),
         gender.toUpperCase(),
         role.toUpperCase(),
-        isPartTimer,
+        isPartTime,
         isHrEmployee,
         dateJoined.trim(),
         positionName,
@@ -93,6 +95,13 @@ export default function Register() {
       .then(() =>
         alert("Account creation successful for " + firstName + " " + lastName)
       )
+      .catch(error => {
+        var message = error.request.response;
+        console.log(error.message)
+        if (message.includes("User's emails are already in use")) {
+          alert("The email(s) provided are already registered with an account with us")
+        }
+      })
       .finally(() => history.goBack());
   }
 
@@ -433,7 +442,7 @@ export default function Register() {
                   <option>Administrator</option>
                 </select>
               </div>
-              <div>
+              {/*<div>
                 <Switch.Group
                   as="div"
                   className="flex items-center justify-between mt-10"
@@ -464,7 +473,7 @@ export default function Register() {
                     />
                   </Switch>
                 </Switch.Group>
-              </div>
+              </div> */}
               <div>
                 <Switch.Group
                   as="div"
@@ -476,7 +485,7 @@ export default function Register() {
                       className="text-sm font-medium text-gray-900"
                       passive
                     >
-                      HR
+                      HR Department
                     </Switch.Label>
                   </span>
                   <Switch
