@@ -41,7 +41,10 @@ export default function ForgotPassword() {
         .forgotPassword(email)
         .then((response) =>
           console.log("Sent email to user with id " + response.data)
-        );
+        )
+        .then(() => {
+              alert("Please check your email to reset your password.")
+        });
     }
   }
 
@@ -134,8 +137,7 @@ export default function ForgotPassword() {
       alt="Your Company"
     /> */}
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-              Click to send an email to change your password. Check your email
-              address
+              Please check your email address and click 'Send' to reset your password.
             </h2>
             <div>
               <div className="mt-1">

@@ -312,6 +312,8 @@ public class UserService implements UserDetailsService {
             } else if (!userRecord.isEnabled()) {
                 throw new IllegalStateException(
                         "User account is not activated yet, please check your email or request to be activated");
+            } else if (!user.get().getUserRole().equals(RoleEnum.APPLICANT)) {
+                throw new IllegalStateException("User account is not an applicant");
             }
 
             if (bCryptPasswordEncoder.matches(password, userRecord.getPassword())) {
