@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class JobRequestController {
                                @RequestParam("jobType") String jobType,
                                @RequestParam("jobRole") String jobRole,
                                @RequestParam("salary") BigDecimal salary,
-                               @RequestParam("jobRequirementIds") List<Long> jobRequirementIds,
+                               @RequestParam("jobRequirements") List<Skillset> jobRequirements,
                                @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamId") Long teamId,
                                @RequestParam("requestedById") Long requestedById,
@@ -44,7 +45,7 @@ public class JobRequestController {
         }
 
         return jobRequestService.saveJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), salary, jobRequirementIds, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), salary, jobRequirements, departmentId, requestedById, teamId, jobRequestId);
     }
 
     @PutMapping(path = "/submitJobRequest")
@@ -55,7 +56,7 @@ public class JobRequestController {
                                @RequestParam("jobType") String jobType,
                                @RequestParam("jobRole") String jobRole,
                                @RequestParam("salary") BigDecimal salary,
-                               @RequestParam("jobRequirementIds") List<Long> jobRequirementIds,
+                               @RequestParam("jobRequirements") List<Skillset> jobRequirements,
                                @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamId") Long teamId,
                                @RequestParam("requestedById") Long requestedById,
@@ -70,7 +71,7 @@ public class JobRequestController {
         }
 
         return jobRequestService.submitJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), salary, jobRequirementIds, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), salary, jobRequirements, departmentId, requestedById, teamId, jobRequestId);
     }
 
     @GetMapping(path = "/getJobRequestById")
@@ -107,4 +108,18 @@ public class JobRequestController {
 //    public List<JobRequest> getJobRequestsByApproverId(@RequestParam("approverId") Long id) {
 //        return jobRequestService.getJobRequestsByApproverId(id);
 //    }
+
+    @PutMapping(path = "/approveJobRequestById")
+    public Boolean approveJobRequestById(@RequestParam("jobRequestId") Long jobRequestId,
+                                         @RequestParam("approverId") Long approverId) {
+        return jobRequestService.approveJobRequestById(jobRequestId, approverId);
+    }
+
+    @PutMapping(path = "/rejectJobRequestById")
+    public Boolean rejectJobRequestById(@RequestParam("jobRequestId") Long jobRequestId,
+                                        @RequestParam("approverId") Long approverId,
+                                        @RequestParam("reason") String reason) {
+        return jobRequestService.rejectJobRequestById(jobRequestId, approverId, reason);
+
+    }
 }

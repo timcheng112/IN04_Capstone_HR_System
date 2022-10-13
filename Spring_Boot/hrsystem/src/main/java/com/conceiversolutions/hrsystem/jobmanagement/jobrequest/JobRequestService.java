@@ -3,6 +3,9 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.enums.StatusEnum;
+import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
+import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPostingRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
@@ -29,6 +32,7 @@ public class JobRequestService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final SkillsetRepository skillsetRepository;
+    private final JobPostingRepository jobPostingRepository;
 
     public List<JobRequest> getAllJobRequests() {
         System.out.println("JobRequestService.getAllJobRequests");
@@ -107,16 +111,29 @@ public class JobRequestService {
         return jobRequests;
     }
 
-    public Long saveJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, List<Long> jobRequirementIds, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
+    public Long saveJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, List<Skillset> jobRequirements, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
         System.out.println("JobRequestService.saveJobRequest");
 
-        checkInput(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, roleEnum, salary, departmentId, requestedById);
-
-        Optional<Department> d = departmentRepository.findById(departmentId);
-        if (d.isEmpty()) {
-            throw new IllegalStateException("Department cannot be found, cannot proceed");
+        checkInput(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, roleEnum, salary, requestedById);
+        if (departmentId == null) {
+            throw new IllegalStateException("departmentId is null");
         }
-        Department dept = d.get();
+
+        Department dept;
+
+        if (departmentId.equals(0L)) {
+            Optional<Department> d = departmentRepository.findDepartmentByEmployeeId(requestedById);
+            if (d.isEmpty()) {
+                throw new IllegalStateException("Department cannot be found, cannot proceed");
+            }
+            dept = d.get();
+        } else {
+            Optional<Department> d = departmentRepository.findById(departmentId);
+            if (d.isEmpty()) {
+                throw new IllegalStateException("Department cannot be found, cannot proceed");
+            }
+            dept = d.get();
+        }
 
         Team team = null;
         if (!teamId.equals(0L)) {
@@ -128,11 +145,6 @@ public class JobRequestService {
             throw new IllegalStateException("Requestor cannot be found, cannot proceed");
         }
         User requestor = r.get();
-
-        List<Skillset> skillsets = new ArrayList<>();
-        if (jobRequirementIds != null) {
-            skillsets = skillsetRepository.findAllById(jobRequirementIds);
-        }
 
         if (!jobRequestId.equals(0L)) {
             System.out.println("Job Request already exists, now is editing");
@@ -147,7 +159,7 @@ public class JobRequestService {
             jr.setJobType(jobTypeEnum);
             jr.setJobRole(roleEnum);
             jr.setSalary(salary);
-            jr.setJobRequirements(skillsets);
+            jr.setJobRequirements(jobRequirements);
             jr.setDepartment(dept);
             jr.setTeam(team);
             jr.setStatus(JobStatusEnum.PENDING);
@@ -157,7 +169,7 @@ public class JobRequestService {
             return done.getRequestId();
         } else {
             System.out.println("Job Request doesnt exists, will create a new one");
-            JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, salary, skillsets, dept, team, requestor, roleEnum);
+            JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, salary, jobRequirements, dept, team, requestor, roleEnum);
             jr.setStatus(JobStatusEnum.PENDING);
             jr.setLastEditedDate(LocalDateTime.now());
             JobRequest done = jobRequestRepository.saveAndFlush(jr);
@@ -170,16 +182,29 @@ public class JobRequestService {
         }
     }
 
-    public Long submitJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, List<Long> jobRequirementIds, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
+    public Long submitJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, List<Skillset> jobRequirements, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
         System.out.println("JobRequestService.saveJobRequest");
 
-        checkInput(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, roleEnum, salary, departmentId, requestedById);
-
-        Optional<Department> d = departmentRepository.findById(departmentId);
-        if (d.isEmpty()) {
-            throw new IllegalStateException("Department cannot be found, cannot proceed");
+        checkInput(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, roleEnum, salary, requestedById);
+        if (departmentId == null) {
+            throw new IllegalStateException("departmentId is null");
         }
-        Department dept = d.get();
+
+        Department dept;
+
+        if (departmentId.equals(0L)) {
+            Optional<Department> d = departmentRepository.findDepartmentByEmployeeId(requestedById);
+            if (d.isEmpty()) {
+                throw new IllegalStateException("Department cannot be found, cannot proceed");
+            }
+            dept = d.get();
+        } else {
+            Optional<Department> d = departmentRepository.findById(departmentId);
+            if (d.isEmpty()) {
+                throw new IllegalStateException("Department cannot be found, cannot proceed");
+            }
+            dept = d.get();
+        }
 
         Team team = null;
         if (!teamId.equals(0L)) {
@@ -191,11 +216,6 @@ public class JobRequestService {
             throw new IllegalStateException("Requestor cannot be found, cannot proceed");
         }
         User requestor = r.get();
-
-        List<Skillset> skillsets = new ArrayList<>();
-        if (jobRequirementIds != null) {
-            skillsets = skillsetRepository.findAllById(jobRequirementIds);
-        }
 
         if (!jobRequestId.equals(0L)) {
             System.out.println("Job Request already exists, now is editing");
@@ -210,7 +230,7 @@ public class JobRequestService {
             jr.setJobType(jobTypeEnum);
             jr.setJobRole(roleEnum);
             jr.setSalary(salary);
-            jr.setJobRequirements(skillsets);
+            jr.setJobRequirements(jobRequirements);
             jr.setDepartment(dept);
             jr.setTeam(team);
             jr.setStatus(JobStatusEnum.CREATED);
@@ -220,7 +240,7 @@ public class JobRequestService {
             return done.getRequestId();
         } else {
             System.out.println("Job Request doesnt exists, will create a new one");
-            JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, salary, skillsets, dept, team, requestor, roleEnum);
+            JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, salary, jobRequirements, dept, team, requestor, roleEnum);
             jr.setStatus(JobStatusEnum.CREATED);
             jr.setLastEditedDate(LocalDateTime.now());
             JobRequest done = jobRequestRepository.saveAndFlush(jr);
@@ -233,7 +253,7 @@ public class JobRequestService {
         }
     }
 
-    private void checkInput(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, Long departmentId, Long requestedById) {
+    private void checkInput(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, Long requestedById) {
         System.out.println("JobRequestService.checkInput");
         if (jobTitle.equals("")) {
             throw new IllegalStateException("jobTitle is missing");
@@ -253,8 +273,6 @@ public class JobRequestService {
             throw new IllegalStateException("salary is missing");
         } else if (salary.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalStateException("salary is invalid");
-        } else if (departmentId == null || departmentId.compareTo(0L) < 0) {
-            throw new IllegalStateException("departmentId is invalid");
         } else if (requestedById == null || requestedById.compareTo(0L) < 0) {
             throw new IllegalStateException("requestedById is invalid");
         }
@@ -659,6 +677,46 @@ public class JobRequestService {
             }
         }
         return jobRequests;
+    }
+
+    public Boolean approveJobRequestById(Long jobRequestId, Long approverId) {
+        System.out.println("JobRequestService.approveJobRequestById");
+        System.out.println("jobRequestId = " + jobRequestId);
+
+        // get job request
+        JobRequest jr = jobRequestRepository.findById(jobRequestId).get();
+        User approver = userRepository.findById(approverId).get();
+
+        // create job posting
+        JobPosting newJP = new JobPosting(jr.getJobTitle(), jr.getJobDescription(), jr.getPreferredStartDate()
+                , jr.getJobType(), jr.getJobRole(), jr.getStatus(), jr.getSalary(), LocalDate.now(), true, approver, jr, jr.getJobRequirements());
+
+        JobPosting savedJP = jobPostingRepository.saveAndFlush(newJP);
+        System.out.println("Job Posting Id " + savedJP.getPostingId() + " is created");
+
+        // set job request as approved
+        jr.setApprover(approver);
+        jr.setStatus(JobStatusEnum.APPROVED);
+        jobRequestRepository.save(jr);
+
+        return true;
+    }
+
+    public Boolean rejectJobRequestById(Long jobRequestId, Long approverId, String reason) {
+        System.out.println("JobRequestService.rejectJobRequestById");
+        System.out.println("jobRequestId = " + jobRequestId + ", approverId = " + approverId);
+
+        JobRequest jr = jobRequestRepository.findById(jobRequestId).get();
+        User approver = userRepository.findById(approverId).get();
+
+        jr.setStatus(JobStatusEnum.REJECTED);
+        jr.setApprover(approver);
+
+        jobRequestRepository.save(jr);
+
+        //TODO: Send notification for reason of rejecting.
+
+        return true;
     }
 //
 //    public List<JobRequest> getJobRequestsByApproverId(Long approverId) {
