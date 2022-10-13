@@ -12,17 +12,17 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Team(department) {
+export default function Team({department,selectedTeam, setSelectedTeam}) {
   const [query, setQuery] = useState('')
   const [teams, setTeams] = useState([])
-  const [selectedTeam, setSelectedTeam] = useState()
+  //const [selectedTeam, setSelectedTeam] = useState()
   const [error, setError] = useState(null);
 
   useEffect(() => {
     // console.log(department);
 
     api
-      .getAllTeamsInDept(department.department.departmentId)
+      .getAllTeamsInDept(department.departmentId)
       .then((response) => {
         setTeams(response.data);
       })

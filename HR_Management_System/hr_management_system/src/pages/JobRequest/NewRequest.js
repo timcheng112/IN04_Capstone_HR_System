@@ -24,11 +24,11 @@ export default function NewRequest() {
   const [title, setTitle]= useState("");
   const [description, setDescription]= useState("");
   const [justification, setJustification]= useState("");
-  const [salary, setSalary]= useState(0.00);
+  const [salary, setSalary]= useState(0);
   const [jobType, setJobType] = useState();
   const [jobRole, setJobRole] = useState();
-
-  
+  const [requirements, setRequirements] = useState([]);
+  const [team, setTeam] = useState();
 
   useEffect(() => {
     api
@@ -53,24 +53,36 @@ export default function NewRequest() {
   }, []);
   
   function saveRequest() {
+    console.log("AA");
+    console.log(requirements);
+    let arr = Array.of(requirements);
+    console.log(team);
+    console.log(salary);
+    console.log(jobRole);
     api
-      .saveJobRequest(title, description, justification, startDate, jobType, jobRole, salary, 0, getUserId())
+      .saveJobRequest(title, description, justification, startDate, jobType, jobRole, salary, arr, 0, team.teamId, getUserId(),0)
       .then(() => alert("Successfully created category."))
-      .catch((error) => setError(error));
+      .catch((error) => console.log(error));
+      // .catch((error) => setError(error));
   }
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    saveRequest();
+    history.push("/hiring/jobrequest")
+  };
 
 
   return (
     <div className="">
       <Navbar />
       <div className="py-5"></div>
-      <form className="space-y-8 divide-y divide-gray-200">
+      <form className="space-y-8 divide-y divide-gray-200" onSubmit={handleSubmit}>
         <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
           <div className="space-y-6 sm:space-y-5">
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900">New Job Request</h3>
             </div>
-
             <div className="space-y-6 sm:space-y-5">
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -129,21 +141,21 @@ export default function NewRequest() {
                 <label htmlFor="type" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Job Type
                 </label>
-                <JobType />
+                <JobType selectedJobType={jobType} setSelectedJobType={setJobType}/>
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="role" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Job Role
                 </label>
-                <JobRole />
+                <JobRole selectedRole={jobRole} setSelectedRole={setJobRole}/>
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Requirements
                 </label>
-                <JobRequirements />
+                <JobRequirements selectedSkills={requirements} setSelectedSkills={setRequirements}/>
         
               </div>
 
@@ -186,7 +198,7 @@ export default function NewRequest() {
                 <label htmlFor="department" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Team
                 </label>
-                {department !== null && <Team department={department} />}
+                {department !== null && <Team department={department} selectedTeam = {team} setSelectedTeam = {setTeam}/>}
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -213,7 +225,7 @@ export default function NewRequest() {
               <button
                 type="submit"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={() => history.push("/hiring/jobrequest")}
+                //onClick={() => history.push("/hiring/jobrequest")}
               >
                 Save
               </button>}

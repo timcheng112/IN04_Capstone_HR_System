@@ -10,7 +10,7 @@ import AddSkillSet from '../jobrequest/AddSkillSet';
 //   { value:"Python", label: "Python"},
 //   { value:"SQL", label: "SQL"},]
 
-export default function JobRequirements() {
+export default function JobRequirements({selectedSkills, setSelectedSkills}) {
 
   const cancelButtonRef = useRef(null)
   // const checkbox = useRef()
@@ -19,7 +19,7 @@ export default function JobRequirements() {
   const [open, setOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [skillSet, setSkillSet] = useState([]);
-  const [selectedSkills, setSelectedSkills] = useState([]);
+  //var [selectedSkills, setSelectedSkills] = useState([]);
   const [error, setError] = useState(null);
   const divStyle = {
     display: 'flex',
@@ -37,26 +37,37 @@ export default function JobRequirements() {
   }, [refreshKey]);
 
   const options = skillSet.map(skill => ({
-    "value" : skill.skillsetName,
+    "value" : skill.skillsetId,
     "label" : skill.skillsetName
   }))
 
-  const handleSelect = function (selectedItems) {
-    const skills = [];
-    for (let i = 0; i < selectedItems.length; i++) {
-      skills.push(selectedItems[i].value);
-    }
-    setSelectedSkills(skills);
+  // const handleSelect = function (selectedItems) {
+  //   const skills = [];
+  //   for (let i = 0; i < selectedItems.length; i++) {
+  //     skills.push(selectedItems[i].value);
+  //   }
+  //   setSelectedSkills(skills);
+  // }
+  const handleSelect = (e) => {
+    console.log(e);
+    let sk = [];
+    e.map((y) => sk.push(y.value));
+    console.log(sk);
+    setSelectedSkills(sk);
+    // setSelectedSkills=(e.map(x => x.value));
+    // console.log(selectedSkills);
+    // console.log(options);
   }
 
   return (
     <div style={divStyle}>
         <Select 
           isMulti 
-          //value={selectedSkills} 
+          //value={options.filter(obj => selectedSkills.includes(obj))} 
           options={options}
           className="basic-multi-select"
-          onChange={(e)=> {handleSelect(e.selectedOptions)}}
+          //onChange={(e)=> {handleSelect(Array.from(e.options))}}
+          onChange = {handleSelect}
           >
         </Select>
       <button
