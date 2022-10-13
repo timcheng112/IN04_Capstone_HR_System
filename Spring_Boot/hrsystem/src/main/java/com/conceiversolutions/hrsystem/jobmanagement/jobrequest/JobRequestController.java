@@ -36,16 +36,16 @@ public class JobRequestController {
                                @RequestParam("requestedById") Long requestedById,
                                @RequestParam("jobRequestId") Long jobRequestId) {
         JobTypeEnum jobT = null;
-        if (jobType.equals("Contract") || jobType.equals("Intern")) {
+        if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
             jobT = JobTypeEnum.valueOf(jobType);
-        } else if (jobType.equals("Full Time")) {
+        } else if (jobType.equals("FULL TIME")) {
             jobT = JobTypeEnum.FULLTIME;
         } else {
             jobT = JobTypeEnum.PARTTIME;
         }
 
         return jobRequestService.saveJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirements, Long.valueOf(departmentId), Long.valueOf(requestedById), Long.valueOf(teamId), Long.valueOf(jobRequestId));
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
     }
 
     @PutMapping(path = "/submitJobRequest")

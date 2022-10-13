@@ -57,11 +57,30 @@ export default function NewRequest() {
     console.log(requirements);
     let arr = Array.of(requirements);
     console.log(team);
+    var teamId = team == null ? 0: team.teamId;
+    console.log(teamId);
     console.log(salary);
     console.log(jobRole);
+    console.log(startDate);
+    console.log(startDate.getDate())
+    console.log(startDate.getMonth())
+    console.log(startDate.getYear()+1900)
+    var date = startDate.getDate()
+    if (startDate.getDate() < 10) {
+        date = "0" + date;
+    }
+    var month = startDate.getMonth() + 1;
+    if (month == 9) {
+        month = 10;
+    } else if (month < 10) {
+        month = "0" + (startDate.getMonth() + 1);
+    }
+
+    var preferredStartDate =  (startDate.getYear()+1900) + "-" + month + "-" + date;
+    console.log(title);
     api
-      .saveJobRequest(title, description, justification, startDate, jobType, jobRole, salary, arr, 0, team.teamId, getUserId(),0)
-      .then(() => alert("Successfully created category."))
+      .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(),0)
+      .then(() => alert("Successfully created Job Request."))
       .catch((error) => console.log(error));
       // .catch((error) => setError(error));
   }

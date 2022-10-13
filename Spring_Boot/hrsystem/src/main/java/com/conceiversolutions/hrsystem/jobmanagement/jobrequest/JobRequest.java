@@ -55,17 +55,17 @@ public class JobRequest {
     @JoinColumn(name = "requirements")
     private List<Skillset> jobRequirements;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Department.class, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Department.class, optional = false)
     @JoinColumn(name = "department")
     private Department department;
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Team.class, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Team.class, optional = true)
     @JoinColumn(name = "team")
     private Team team;
 
     @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "requestor")
     private User requestedBy;
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = User.class, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class, optional = true)
     @JoinColumn(name = "approver")
     private User approver;
     @Column(name = "approved_date", nullable = true)
