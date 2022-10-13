@@ -1,8 +1,8 @@
 import { CheckIcon } from "@heroicons/react/24/solid";
 
 const steps = [
-  { id: "01", name: "Module details", href: "/career/traininghr" },
-  { id: "02", name: "Assigning module", href: "/career/traininghr" },
+  { id: "01", name: "Module details", href: "" },
+  { id: "02", name: "Assigning module", href: "" },
 ];
 
 export default function AddModuleSteps({ status }) {

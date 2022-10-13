@@ -37,10 +37,10 @@ public class ModuleController {
         return moduleService.getModule(moduleId);
     }
 
-    // @GetMapping(path = "user/{userId}")
-    // public Iterable<Module> getUserModules(@PathVariable("userId") Long userId) throws Exception {
-    //     return moduleService.getUserModules(userId);
-    // }
+    @GetMapping(path = "user/{userId}")
+    public Iterable<Module> getUserModules(@PathVariable("userId") Long userId) throws Exception {
+        return moduleService.getUserModules(userId);
+    }
 
     @PostMapping
     public Long addModule(@RequestBody Module module) {

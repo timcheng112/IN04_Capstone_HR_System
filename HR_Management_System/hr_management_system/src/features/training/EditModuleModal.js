@@ -22,7 +22,7 @@ export default function EditModuleModal({
   };
 
   function editModule() {
-    console.log("id " + module.moduleId);
+    //console.log("id " + module.moduleId);
     const editedModule = {
       title: title,
       description: description,

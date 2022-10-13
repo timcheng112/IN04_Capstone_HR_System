@@ -11,7 +11,7 @@ export default function ModuleGrid({ files }) {
     >
       {files.map((file) => (
         <li key={file.title} className="relative">
-          <button onClick={() => history.push(`traininghr/module/${file.moduleId}`)}>
+          <button onClick={() => history.push(`/module/${file.moduleId}`)}>
           <div className="bg-white py-6 px-4 shadow sm:rounded-lg sm:px-10 group block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 hover:opacity-75">
             <img
               src={file.thumbnail}

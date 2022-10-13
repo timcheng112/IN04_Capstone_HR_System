@@ -122,4 +122,19 @@ public class ModuleService {
             throw new IllegalStateException("Module does not exist");
         }
     }
+
+    public Iterable<Module> getUserModules(Long userId) {
+        List<Module> userModules = new ArrayList<>();
+
+        List<Module> allModules = moduleRepository.findAll();
+        for (Module module : allModules) {
+            for (User employee : module.getEmployees()) {
+                if (employee.getUserId() == userId) {
+                    module.setEmployees(new ArrayList<>());
+                    userModules.add(module);
+                }
+             }
+        }
+        return userModules;
+    }
 }

@@ -10,6 +10,7 @@ import { Fragment, useState } from "react";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import ModuleBreadcrumb from "../Breadcrumb/ModuleBreadcrumb";
 import TrainingBreadcrumb from "../Breadcrumb/TrainingBreadcrumb";
+import VideoBreadcrumb from "../Breadcrumb/VideoBreadcrumb";
 
 const navigation = [
   { name: "My Training", href: "/mytraining", icon: UsersIcon, current: false },
@@ -27,7 +28,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ModuleSidebar({ pageTitle, moduleId }) {
+export default function VideoSidebar({ modulePageTitle, moduleId, pageTitle, videoId }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -139,10 +140,15 @@ export default function ModuleSidebar({ pageTitle, moduleId }) {
               >
                 <span>{pageTitle}</span>
               </button> */}
-              <ModuleBreadcrumb
+              <VideoBreadcrumb
+                modulePage={{
+                  name: modulePageTitle,
+                  href: `/module/${moduleId}`,
+                  current: false,
+                }}
                 currentPage={{
                   name: pageTitle,
-                  href: `/module/${moduleId}`,
+                  href: `/module/${moduleId}/video/${videoId}`,
                   current: true,
                 }}
               />

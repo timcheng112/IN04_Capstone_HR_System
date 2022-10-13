@@ -26,4 +26,13 @@ public class VideoService {
     public List<Video> getVideos() {
         return videoRepository.findAll();
     }
+
+    public Video getVideo(Long videoId) throws Exception {
+        Optional<Video> optionalVideo = videoRepository.findById(videoId);
+        if (optionalVideo.isPresent()) {
+            return optionalVideo.get();
+        } else {
+            throw new IllegalStateException("Video doesn't exist");
+        }
+    }
 }

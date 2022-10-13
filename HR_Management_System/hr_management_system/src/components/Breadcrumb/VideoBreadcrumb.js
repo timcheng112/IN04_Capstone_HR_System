@@ -1,8 +1,8 @@
 import React from "react";
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid";
 
-export default function ModuleBreadcrumb({ currentPage }) {
-  const pages = [{ name: "Training", href: "/training", current: false }, currentPage];
+export default function VideoBreadcrumb({ modulePage, currentPage }) {
+  const pages = [{ name: "Training", href: "/training", current: false }, modulePage, currentPage];
 
   return (
     <nav className="flex" aria-label="Breadcrumb">

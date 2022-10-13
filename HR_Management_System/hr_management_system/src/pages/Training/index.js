@@ -14,10 +14,6 @@ export default function Training() {
   const history = useHistory();
 
   useEffect(() => {
-    // api.getUserModules(getUserId()).then((response) => {
-    //   setModules(response.data);
-    //   console.log(response.data);
-    // });
     api
       .getUser(getUserId())
       .then((response) => {
@@ -25,6 +21,9 @@ export default function Training() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
+    api
+      .getUserModules(getUserId())
+      .then((response) => setModules(response.data));
   }, []);
 
   if (error) return `Error`;
@@ -42,22 +41,13 @@ export default function Training() {
           <div className="sm:flex-auto">
             <h1 className="text-xl font-semibold text-gray-900">Training</h1>
           </div>
-          <div className="flex items-center">
-            <div className="mt-4 ml-auto mr-6">
-              {user && user.hrEmployee && (
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                  onClick={() => history.push("/career/traininghr")}
-                >
-                  HR Mode
-                </button>
-              )}
+          {modules.length > 0 ? (
+            <div className="py-4 px-6">
+              <ModuleGrid files={modules} />
             </div>
-          </div>
-          <div className="py-4 px-6">
-            <ModuleGrid files={modules} />
-          </div>
+          ) : (
+            <h1>No Training Left</h1>
+          )}
         </main>
       </div>
     </div>

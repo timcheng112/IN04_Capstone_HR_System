@@ -3,7 +3,6 @@ import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid";
 
 export default function TrainingBreadcrumb({ currentPage }) {
   const pages = [
-    { name: "Career", href: "/mytraining", current: false },
     currentPage,
   ];
 

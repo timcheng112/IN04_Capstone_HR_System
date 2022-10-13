@@ -283,11 +283,17 @@ const api = {
   editModule(moduleId, module) {
     return axios.put(`http://localhost:9191/api/module/${moduleId}`, module)
   },
+  getUserModules(userId) {
+    return axios.get(`http://localhost:9191/api/module/user/${userId}`)
+  },
   getVideosInModule(moduleId) {
     return axios.get(`http://localhost:9191/api/module/${moduleId}/videos`)
   },
   addVideo(moduleId, video) {
     return axios.post(`http://localhost:9191/api/module/${moduleId}`, video)
+  },
+  getVideo(videoId) {
+    return axios.get(`http://localhost:9191/api/video/${videoId}`)
   },
   // JOB REQUEST
   getAllJobRequests() {

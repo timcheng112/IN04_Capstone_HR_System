@@ -44,11 +44,11 @@ export default function AddVideoModal({
       position: position,
     };
 
-    console.log("moduleId " + module.moduleId)
+    //console.log("moduleId " + module.moduleId)
 
     api.addVideo(module.moduleId, video).then((response) => {
       alert("Successfully added video to module.");
-      console.log(response.data);
+      //console.log(response.data);
     });
   }
 
