@@ -128,6 +128,7 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
 
             return u;
         } else {
@@ -162,7 +163,7 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
-
+            u.setJobRequests(new ArrayList<>());
             return u;
         } else {
             throw new IllegalStateException("User does not exist.");
@@ -195,7 +196,7 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
-
+            u.setJobRequests(new ArrayList<>());
             return u;
         } else {
             throw new IllegalStateException("Employee does not exist.");

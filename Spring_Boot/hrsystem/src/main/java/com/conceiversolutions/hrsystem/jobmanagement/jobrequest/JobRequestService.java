@@ -269,6 +269,8 @@ public class JobRequestService {
         } else if (preferredStartDate == null) {
             throw new IllegalStateException("preferredStartDate is missing");
         } else if (preferredStartDate.isBefore(LocalDate.now())) {
+            System.out.println(preferredStartDate);
+            System.out.println(LocalDate.now());
             throw new IllegalStateException("preferredStartDate is invalid");
         } else if (jobTypeEnum == null) {
             throw new IllegalStateException("jobTypeEnum is missing");
@@ -615,6 +617,8 @@ public class JobRequestService {
         List<JobRequest> jobRequests = jobRequestRepository.findJobRequestsByRequestorId(requestorId);
 
         for (JobRequest jr : jobRequests) {
+            jr.setJobPosting(null);
+            jr.setRequestedBy(null);
             jr.getDepartment().setDepartmentHead(null);
             jr.getDepartment().setOrganization(null);
             List<Team> teams = jr.getDepartment().getTeams();
@@ -645,25 +649,25 @@ public class JobRequestService {
                 approver.setJobRequests(new ArrayList<>());
             }
 
-            User requestor = jr.getRequestedBy();
-            if (requestor != null){
-                requestor.setTaskListItems(new ArrayList<>());
-                requestor.setTeams(new ArrayList<>());
-                requestor.setQualificationInformation(null);
-                requestor.setCurrentPosition(null);
-                requestor.setReactivationRequest(null);
-                requestor.setAttendances(new ArrayList<>());
-                requestor.setCurrentPayInformation(null);
-                requestor.setEmployeeAppraisals(new ArrayList<>());
-                requestor.setManagerAppraisals(new ArrayList<>());
-                requestor.setManagerReviews(new ArrayList<>());
-                requestor.setEmployeeReviews(new ArrayList<>());
-                requestor.setModules(new ArrayList<>());
-                requestor.setApplications(new ArrayList<>());
-                requestor.setGoals(new ArrayList<>());
-                requestor.setPositions(new ArrayList<>());
-                requestor.setJobRequests(new ArrayList<>());
-            }
+//            User requestor = jr.getRequestedBy();
+//            if (requestor != null){
+//                requestor.setTaskListItems(new ArrayList<>());
+//                requestor.setTeams(new ArrayList<>());
+//                requestor.setQualificationInformation(null);
+//                requestor.setCurrentPosition(null);
+//                requestor.setReactivationRequest(null);
+//                requestor.setAttendances(new ArrayList<>());
+//                requestor.setCurrentPayInformation(null);
+//                requestor.setEmployeeAppraisals(new ArrayList<>());
+//                requestor.setManagerAppraisals(new ArrayList<>());
+//                requestor.setManagerReviews(new ArrayList<>());
+//                requestor.setEmployeeReviews(new ArrayList<>());
+//                requestor.setModules(new ArrayList<>());
+//                requestor.setApplications(new ArrayList<>());
+//                requestor.setGoals(new ArrayList<>());
+//                requestor.setPositions(new ArrayList<>());
+//                requestor.setJobRequests(new ArrayList<>());
+//            }
 
             jr.getJobRequirements().size();
             if (jr.getTeam() != null) {

@@ -276,14 +276,14 @@ const api = {
         `http://localhost:9191/api/jobrequest/getJobRequestsByRequestorId?requestorId=${managerId}`
     );
   },
-  saveJobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobType, jobRole, salary, jobRequirements, departmentId, requestedById, jobRequestId) {
+  saveJobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobType, jobRole, salary, jobRequirements, departmentId, teamId, requestedById, jobRequestId) {
     return axios.post(
-        `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
+        `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
     );
   },
-  submitJobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobType, jobRole, salary, jobRequirements, departmentId, requestedById, jobRequestId) {
+  submitJobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobType, jobRole, salary, jobRequirements, departmentId, teamId, requestedById, jobRequestId) {
     return axios.put(
-        `http://localhost:9191/api/jobrequest/submitJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
+        `http://localhost:9191/api/jobrequest/submitJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
     );
    },
   getJobRequestById(jobRequestId) {
