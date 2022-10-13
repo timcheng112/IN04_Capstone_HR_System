@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import EditModuleModal from "../../features/training/EditModuleModal";
+import AddVideoModal from "../../features/training/AddVideoModal";
 
 const people = [
   {
@@ -35,10 +36,10 @@ export default function Module() {
   const [error, setError] = useState(null);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [openAdd, setOpenAdd] = useState(false);
   const moduleId = window.location.href.substring(47);
 
   useEffect(() => {
-    console.log("moduleId = " + moduleId);
     api.getUser(getUserId()).then((response) => setUser(response.data));
     api.getModule(moduleId).then((response) => {
       setModule(response.data);
@@ -52,6 +53,13 @@ export default function Module() {
       //setEmployees(response.data.employees);
     });
   }, [openEdit]);
+
+  useEffect(() =>  {
+    api.getVideosInModule(moduleId).then((response) => {
+      setVideos(response.data);
+      console.log(response.data);
+    });
+  })
 
   function deleteModule() {
     if (module.employees.length !== 0) {
@@ -98,7 +106,7 @@ export default function Module() {
                     className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                     onClick={() => history.push("/admin/onboarding")}
                   >
-                    {/* replace history.push url to redirect to view a module */}
+                    {/*TODO: replace history.push url to redirect to view a module */}
                     Non-HR Mode
                   </button>
                 )}
@@ -156,10 +164,19 @@ export default function Module() {
                   <button
                     type="button"
                     className="inline-flex mt-7 mr-7 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                    onClick={() => setOpenAdd(true)}
                   >
                     <PlusCircleIcon className="-ml-1 mr-1 h-5 w-5 text-white" />
                     Add Video
                   </button>
+                  <AddVideoModal
+                    open={openAdd}
+                    onClose={() => setOpenAdd(false)}
+                    module={module}
+                    refreshKeyHandler={() =>
+                      setRefreshKey((oldKey) => oldKey + 1)
+                    }
+                  />
                 </div>
                 <div className="mt-8 flex">
                   <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -192,13 +209,13 @@ export default function Module() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 bg-white">
-                            {people.map((person) => (
-                              <tr key={person.email}>
+                            {videos.map((video) => (
+                              <tr key={video.videoId}>
                                 <td className="whitespace-nowrap py-4 pl-6 pr-1 text-sm font-medium text-gray-900 text-left">
-                                  {person.name}
+                                  {video.title}
                                 </td>
                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
-                                  {person.title}
+                                  {video.description}
                                 </td>
                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                   <a

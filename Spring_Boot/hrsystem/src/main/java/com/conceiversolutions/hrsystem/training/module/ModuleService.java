@@ -9,6 +9,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.conceiversolutions.hrsystem.training.video.Video;
+import com.conceiversolutions.hrsystem.training.video.VideoRepository;
+import com.conceiversolutions.hrsystem.training.video.VideoService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
@@ -19,10 +22,13 @@ public class ModuleService {
     private final ModuleRepository moduleRepository;
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final VideoRepository videoRepository;
 
-    public ModuleService(ModuleRepository moduleRepository, UserRepository userRepository) {
+    public ModuleService(ModuleRepository moduleRepository, UserRepository userRepository, VideoRepository videoRepository) {
         this.moduleRepository = moduleRepository;
         this.userRepository = userRepository;
+        this.videoRepository = videoRepository;
     }
 
     public List<Module> getModules() {
@@ -98,4 +104,22 @@ public class ModuleService {
         return module.getTitle() + " successfuly edited";
     }
 
+    public Iterable<Video> getVideosInModule(Long moduleId) {
+        return moduleRepository.getVideosInModule(moduleId);
+    }
+
+    @Transactional
+    public String addVideoToModule(Long moduleId, Video video) throws Exception {
+        videoRepository.save(video);
+
+        Optional<Module> m = moduleRepository.findById(moduleId);
+        if (m.isPresent()) {
+            Module module = m.get();
+            module.getVideoList().add(video);
+            System.out.println("module " + module.getModuleId() + "; videos = " + module.getVideoList());
+            return video.getTitle() + " has been added to " + module.getTitle();
+        } else {
+            throw new IllegalStateException("Module does not exist");
+        }
+    }
 }

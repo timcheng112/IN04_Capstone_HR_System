@@ -28,9 +28,8 @@ public class Module {
     private String description;
     private String thumbnail;
 
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Video.class, mappedBy = "videoId")
-    @Column(name = "videos")
-    private List<String> videoList;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Video> videoList;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "assigned_to", referencedColumnName = "user_id")
@@ -40,7 +39,7 @@ public class Module {
 
     }
 
-    public Module(String title, String description, String thumbnail, List<String> videoList, List<User> employees) {
+    public Module(String title, String description, String thumbnail, List<Video> videoList, List<User> employees) {
         this.title = title;
         this.description = description;
         this.thumbnail = thumbnail;
@@ -48,7 +47,7 @@ public class Module {
         this.employees = employees;
     }
 
-    public Module(String title, String description, String thumbnail, List<String> videoList) {
+    public Module(String title, String description, String thumbnail, List<Video> videoList) {
         this.title = title;
         this.description = description;
         this.thumbnail = thumbnail;
@@ -87,11 +86,11 @@ public class Module {
         this.thumbnail = thumbnail;
     }
 
-    public List<String> getVideoList() {
+    public List<Video> getVideoList() {
         return videoList;
     }
 
-    public void setVideoList(List<String> videoList) {
+    public void setVideoList(List<Video> videoList) {
         this.videoList = videoList;
     }
 

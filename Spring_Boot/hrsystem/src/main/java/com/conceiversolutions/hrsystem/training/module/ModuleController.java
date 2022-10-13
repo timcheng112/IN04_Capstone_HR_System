@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.conceiversolutions.hrsystem.training.video.Video;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/module")
@@ -59,6 +61,16 @@ public class ModuleController {
     @PutMapping(path = "{moduleId}")
     public String editModule(@PathVariable("moduleId") Long moduleId, @RequestBody Module module) throws Exception {
         return moduleService.editModule(moduleId, module);
+    }
+
+    @GetMapping(path = "{moduleId}/videos")
+    public Iterable<Video> getVideosInModule(@PathVariable("moduleId") Long moduleId) {
+        return moduleService.getVideosInModule(moduleId);
+    }
+
+    @PostMapping(path = "{moduleId}")
+    public String addVideoToModule(@PathVariable("moduleId") Long moduleId, @RequestBody Video video) throws Exception {
+        return moduleService.addVideoToModule(moduleId, video);
     }
 
 }
