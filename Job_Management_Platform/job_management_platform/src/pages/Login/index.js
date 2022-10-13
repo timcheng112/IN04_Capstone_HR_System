@@ -43,6 +43,8 @@ export default function Login() {
             .getUserIdByEmail(email)
             .then((response) => sessionStorage.setItem("userEmail", email))
             .finally(() => history.push("/verify"));
+        } else if (message.includes("User does not exist")) {
+          alert("The email provided is not a valid email")
         }
       });
   }

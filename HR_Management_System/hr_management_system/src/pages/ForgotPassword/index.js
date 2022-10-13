@@ -57,7 +57,7 @@ export default function ForgotPassword() {
       api
         .forgotPassword(email)
         .then((response) =>
-          console.log("Sent email to user with id " + response.data)
+          alert("Please check your email to reset your password.")
         );
     }
   }

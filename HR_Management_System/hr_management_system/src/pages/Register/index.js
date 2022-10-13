@@ -73,7 +73,7 @@ export default function Register() {
     console.log("dob = " + dob);
     var dateJoined = joinedYear + "-" + joinedMonth + "-" + joinedDay;
     console.log("joined = " + dateJoined);
-    var isPartTime = (jobType == "Part-Time: ") ? true : false;
+    var isPartTime = (jobType === "Part-Time") ? true : false;
     console.log("isPartTime" + isPartTime)
     api
       .register(
