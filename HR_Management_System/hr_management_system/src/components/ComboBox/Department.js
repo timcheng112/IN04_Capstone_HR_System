@@ -11,9 +11,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Department() {
+export default function Department(selectedDepartment, setSelectedDepartment) {
   const [query, setQuery] = useState('')
-  const [selectedDepartment, setSelectedDepartment] = useState()
+  // const [selectedDepartment, setSelectedDepartment] = useState()
 
   const filteredDepartment =
     query === ''

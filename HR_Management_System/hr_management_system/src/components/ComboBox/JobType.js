@@ -13,9 +13,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function JobType() {
+export default function JobType({selectedJobType, setSelectedJobType}) {
   const [query, setQuery] = useState('')
-  const [selectedJobType, setSelectedJobType] = useState()
+  //const [selectedJobType, setSelectedJobType] = useState()
 
   const filteredJobType =
     query === ''

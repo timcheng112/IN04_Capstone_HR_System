@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import api from "../../utils/api";
 import { getUserId} from "../../utils/Common";
+import RequestOption from "../../features/jobrequest/RequestOption";
 
 // const requests = [
 //   { title: 'Product Manager', department: 'Product', lastEditedDate: '2022-08-15', status: 'Created' },
@@ -20,6 +21,7 @@ export default function JobRequest() {
   const [requests,setRequests] = useState([]);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+
   const [filteredRequests, setFilteredRequests] =
     useState(requests);
   const [searchParam] = useState([
@@ -31,7 +33,7 @@ export default function JobRequest() {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        console.log(user);
+        // console.log(user);
       })
       .catch((error) => setError(error));
   }, []);
@@ -44,6 +46,7 @@ export default function JobRequest() {
       })
       .catch((error) => setError(error));
   }, []);
+
 
   function search(e, items) {
     const value = e.target.value;
@@ -134,29 +137,7 @@ export default function JobRequest() {
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.lastEditedDate}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <div className="space-x-4">
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                              onClick={()=> history.push("/hiring/jobrequestdetail")}
-                            >
-                              <EyeIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Detail</span>
-                            </button>
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                              <TrashIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Delete</span>
-                            </button>
-                          </div>
+                          <RequestOption request = {request}/>
                         </td>
                       </tr>
                     ))}

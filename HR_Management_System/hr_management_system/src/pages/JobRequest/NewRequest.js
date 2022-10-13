@@ -18,44 +18,71 @@ function classNames(...classes) {
 export default function NewRequest() {
   const [startDate, setStartDate] = useState(new Date());
   const history = useHistory();
-  const [dept, setDept] = useState(null);
+  const [department, setDepartment] = useState(null);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [title, setTitle]= useState("");
+  const [description, setDescription]= useState("");
+  const [justification, setJustification]= useState("");
+  const [salary, setSalary]= useState(0);
+  const [jobType, setJobType] = useState();
+  const [jobRole, setJobRole] = useState();
+  const [requirements, setRequirements] = useState([]);
+  const [team, setTeam] = useState();
 
   useEffect(() => {
     api
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        //console.log(response.data);
-        console.log(user);
+        console.log(response.data);
+        //console.log(user);
       })
       .catch((error) => setError(error));
   }, []);
-  
+
   useEffect(() => {
     api
       .getDepartmentByEmployeeId(getUserId())
       .then((response) => {
-        setDept(response.data);
-        //console.log(response.data);
-        //console.log(dept);
+        setDepartment(response.data);
+        console.log(response.data);
+        //console.log(department);
       })
       .catch((error) => setError(error));
   }, []);
   
+  function saveRequest() {
+    console.log("AA");
+    console.log(requirements);
+    let arr = Array.of(requirements);
+    console.log(team);
+    console.log(salary);
+    console.log(jobRole);
+    api
+      .saveJobRequest(title, description, justification, startDate, jobType, jobRole, salary, arr, 0, team.teamId, getUserId(),0)
+      .then(() => alert("Successfully created category."))
+      .catch((error) => console.log(error));
+      // .catch((error) => setError(error));
+  }
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    saveRequest();
+    history.push("/hiring/jobrequest")
+  };
+
 
   return (
     <div className="">
       <Navbar />
       <div className="py-5"></div>
-      <form className="space-y-8 divide-y divide-gray-200">
+      <form className="space-y-8 divide-y divide-gray-200" onSubmit={handleSubmit}>
         <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
           <div className="space-y-6 sm:space-y-5">
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900">New Job Request</h3>
             </div>
-
             <div className="space-y-6 sm:space-y-5">
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -67,8 +94,10 @@ export default function NewRequest() {
                       type="text"
                       name="title"
                       id="title"
-                      autoComplete="title"
+                      required
+                      value={title}
                       className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      onChange={(e) => setTitle(e.target.value)}    
                     />
                   </div>
                 </div>
@@ -83,7 +112,10 @@ export default function NewRequest() {
                     id="description"
                     name="description"
                     rows={5}
+                    //required
+                    value={description}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    onChange={(e) => setDescription(e.target.value)} 
                   />
                 </div>
               </div>
@@ -97,7 +129,10 @@ export default function NewRequest() {
                     id="justification"
                     name="justification"
                     rows={5}
+                    //required
+                    value={justification}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    onChange={(e) => setJustification(e.target.value)}
                   />
                 </div>
               </div>
@@ -106,21 +141,22 @@ export default function NewRequest() {
                 <label htmlFor="type" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Job Type
                 </label>
-                <JobType />
+                <JobType selectedJobType={jobType} setSelectedJobType={setJobType}/>
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="role" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Job Role
                 </label>
-                <JobRole />
+                <JobRole selectedRole={jobRole} setSelectedRole={setJobRole}/>
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Requirements
                 </label>
-                <JobRequirements />
+                <JobRequirements selectedSkills={requirements} setSelectedSkills={setRequirements}/>
+        
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -138,6 +174,9 @@ export default function NewRequest() {
                     className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="0.00"
                     aria-describedby="salary-currency"
+                    //required
+                    value={salary}
+                    onChange={(e) => setSalary(e.target.value)}
                   />
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <span className="text-gray-500 sm:text-sm" id="salary-currency">
@@ -159,7 +198,7 @@ export default function NewRequest() {
                 <label htmlFor="department" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Team
                 </label>
-                <Team dept= {dept} setDept = {setDept}  />
+                {department !== null && <Team department={department} selectedTeam = {team} setSelectedTeam = {setTeam}/>}
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -186,7 +225,7 @@ export default function NewRequest() {
               <button
                 type="submit"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={() => history.push("/hiring/jobrequest")}
+                //onClick={() => history.push("/hiring/jobrequest")}
               >
                 Save
               </button>}
