@@ -3,10 +3,13 @@ package com.conceiversolutions.hrsystem.user.user;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.user.position.Position;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -83,15 +86,22 @@ public class UserController {
             @RequestParam("workEmail") String workEmail,
             @RequestParam("dob") String dob,
             @RequestParam("gender") String gender,
-            @RequestParam("jobType") String jobType,
             @RequestParam("userRole") String userRole,
             @RequestParam("isPartTimer") Boolean isPartTimer,
             @RequestParam("isHrEmployee") Boolean isHrEmployee,
-            @RequestParam("dateJoined") String dateJoined) {
+            @RequestParam("dateJoined") String dateJoined,
+            @RequestParam("positionName") String positionName,
+            @RequestParam("positionDescription") String positionDescription,
+            @RequestParam("jobType") String jobType) {
         System.out.println("UserController.registerNewAccountJMP");
+        
+        List<Position> newPositionList = new ArrayList<Position>();
+
+        newPositionList.add(new Position(positionName, positionDescription, LocalDate.parse(dateJoined), JobTypeEnum.valueOf(jobType)));
+    
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
                 GenderEnum.valueOf(gender), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
-                LocalDate.parse(dateJoined), null);
+                LocalDate.parse(dateJoined), null, newPositionList);
         try {
             Long employeeId = userService.addNewUser(newEmployee);
             System.out.println("UserController.registerNewAccountHRMS");
