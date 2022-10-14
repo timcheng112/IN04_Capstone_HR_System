@@ -11,6 +11,7 @@ import { useState } from "react";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import ApprovalModal from "../../features/leave/ApproveModal";
 import RejectModal from "../../features/leave/RejectModal";
+import ViewModal from "../../features/leave/ViewModal";
 
 const leaves = [
   { id: 1, applicant: 'Xinyue', appliedDate: '2022-08-15', type: 'ANL', status: 'Created' },
@@ -21,6 +22,8 @@ export default function Leave() {
   const history = useHistory();
   const [approve, setApprove] = useState(false);
   const [reject, setReject] = useState(false);
+  const [view, setView] = useState(false);
+
   const [filteredLeaves, setFilteredLeaves] =
     useState(leaves);
   const [searchParam] = useState([
@@ -117,7 +120,7 @@ export default function Leave() {
                             <button
                               type="button"
                               className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                              onClick={() => history.push("/hiring/jobrequestdetail")}//needs to change
+                              onClick={() => setView(true)}
                             >
                               <EyeIcon
                                 className="md:-ml-0.5 md:mr-2 h-4 w-4"
@@ -157,6 +160,10 @@ export default function Leave() {
                           <RejectModal
                             open={reject}
                             setOpen={() => setReject(false)}
+                            leave={leave}/>
+                          <ViewModal
+                            open={view}
+                            setOpen={() => setView(false)}
                             leave={leave}/>
                         </td>
                       </tr>
