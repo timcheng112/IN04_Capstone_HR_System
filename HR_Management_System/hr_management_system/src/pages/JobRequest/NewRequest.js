@@ -53,7 +53,6 @@ export default function NewRequest() {
   }, []);
   
   function saveRequest() {
-    console.log("AA");
     console.log(requirements);
     let arr = Array.of(requirements);
     console.log(team);

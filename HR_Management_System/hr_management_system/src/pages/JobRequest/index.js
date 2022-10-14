@@ -21,11 +21,9 @@ export default function JobRequest() {
   const [requests,setRequests] = useState([]);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-
-  const [filteredRequests, setFilteredRequests] =
-    useState(requests);
+  const [filteredRequests, setFilteredRequests] = useState(requests);
   const [searchParam] = useState([
-    "title"
+    "jobTitle"
   ]);
 
   useEffect(() => {
@@ -33,7 +31,7 @@ export default function JobRequest() {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        // console.log(user);
+        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, []);
@@ -43,9 +41,12 @@ export default function JobRequest() {
       .getManagerJobRequests(getUserId())
       .then((response) => {
         setRequests(response.data);
+        setFilteredRequests(response.data);
+        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, []);
+
 
 
   function search(e, items) {
@@ -129,11 +130,11 @@ export default function JobRequest() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {filteredRequests.map((request) => (
-                      <tr key={request.title}>
+                      <tr key={request.jobTitle}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {request.title}
+                          {request.jobTitle}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.department}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.department.departmentName}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.lastEditedDate}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

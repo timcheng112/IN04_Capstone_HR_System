@@ -71,7 +71,7 @@ function App() {
           <PrivateRoute exact path="/admin/offboardinghr" component={OffboardingHrPage} />
 
           <PrivateRoute exact path="/hiring/jobrequest" component={JobRequestPage} />
-          <PublicRoute exact path="/hiring/jobrequestdetail" component={JobRequestDetailPage} />
+          <PrivateRoute exact path="/hiring/jobrequest/details" component={JobRequestDetailPage} />
           <PrivateRoute exact path="/hiring/newjobrequest" component={NewJobRequestPage} />
           <PublicRoute exact path="/hiring/jobrequesthr" component={JobRequestHrPage} />
           <PublicRoute exact path="/hiring/jobpost" component={JobPostPage} />

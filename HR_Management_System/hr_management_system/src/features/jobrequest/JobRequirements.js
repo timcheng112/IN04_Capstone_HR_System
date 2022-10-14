@@ -27,6 +27,8 @@ export default function JobRequirements({selectedSkills, setSelectedSkills}) {
   };
 
   useEffect(() => {
+    console.log("ASASD")
+    console.log(selectedSkills);
     api
       .getAllSkillsets()
       .then((response) => {
@@ -49,9 +51,17 @@ export default function JobRequirements({selectedSkills, setSelectedSkills}) {
   //   setSelectedSkills(skills);
   // }
   const handleSelect = (e) => {
-    console.log(e);
-    let sk = [];
-    e.map((y) => sk.push(y.value));
+    console.log("options")
+    console.log(options)
+  
+    console.log(e); // matt will need to fix this
+    let sk = selectedSkills;
+    if (sk.includes(e[0].value)) {
+      sk = sk.filter((item) => item.value !== e[0].value);
+    } else {
+      sk.push(e[0]);
+    }
+    // e.map((y) => sk.push(y.value));
     console.log(sk);
     setSelectedSkills(sk);
     // setSelectedSkills=(e.map(x => x.value));
@@ -63,7 +73,8 @@ export default function JobRequirements({selectedSkills, setSelectedSkills}) {
     <div style={divStyle}>
         <Select 
           isMulti 
-          //value={options.filter(obj => selectedSkills.includes(obj))} 
+          // value={options.filter(obj => selectedSkills.includes(obj))} 
+          // value={selectedSkills}
           options={options}
           className="basic-multi-select"
           //onChange={(e)=> {handleSelect(Array.from(e.options))}}
