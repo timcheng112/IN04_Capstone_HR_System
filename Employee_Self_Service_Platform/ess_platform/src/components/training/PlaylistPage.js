@@ -1,86 +1,100 @@
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 // import { Text, View, StyleSheet, SafeAreaView } from "react-native";
-import { Card, Button, Title, Paragraph, Icon } from "react-native-paper";
+import { Card, Button, Title, Paragraph, Icon, FAB } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 
-// const PlaylistPage = () => {
-//   return (
-//     <View>
-//       <Text>PlaylistPage</Text>
-//     </View>
-//   )
-// }
-
-// export default PlaylistPage
 export default function PlaylistPage() {
-  const data = [
+  const [video, setVideos] = useState([
     { id: 1, name: "Video #1" },
     { id: 2, name: "Video #2" },
     { id: 3, name: "Video #3" },
     { id: 4, name: "Video #4" },
-  ];
+    { id: 5, name: "Video #5" },
+    { id: 6, name: "Video #6" },
+    { id: 7, name: "Video #7" },
+  ]);
+
+  const [playlist, setPlaylist] = useState([
+    { id: 1, name: "Playlist #1", desc:"Sample description for PlayList ##."}
+  ]);
+  const MORE_ICON = Platform.OS === "ios" ? "dots-horizontal" : "dots-vertical";
+//   useEffect(() => {
+//     // This will run when the page first loads and whenever the title changes
+//     playlist.name;
+//   }, [title]);
+
   return (
     <>
-      <Text>test</Text>
-      {/* <Paragraph>Test</Paragraph> */}
-      {/* <View>
-        <FlatList
-          //   ListHeaderComponent={<Text>Playlist</Text>}
-          data={data}
-          renderItem={({ item }) => 
-            <Card>
-              <View style={{ flex: 1, flexDirection: "row", padding: "10" }}>
-                <Text>Id: </Text>
-                <Text>{item.id}</Text>
-              </View>
-            </Card>
-          }
-          keyExtractor={(item) => item.id}
+      <Appbar.Header style={{margin: 10, height:40 }}>
+        <Appbar.BackAction
+          onPress={() => {
+            HomeScreen;
+          }}
         />
-      </View> */}
+        <Appbar.Content  title="My Training" />
+        {/* <Appbar.Content title="Training" subtitle={"Subtitle"} /> */}
+        {/* <Appbar.Action icon="magnify" onPress={() => {}} /> */}
+        <Appbar.Action icon={MORE_ICON} onPress={() => {}} />
+      </Appbar.Header>
+      {/* <Text>test</Text> */}
+      <View style={styles.container}>
+
+      <FlatList
+          data={playlist}
+          //destructure item in array as it is another value
+          renderItem={({ item }) => (
+            <><Title style={styles.title}>{item.name}</Title>
+            <Paragraph style={styles.paragraph}>{item.desc} </Paragraph></>
+          )}
+        />
+        
+        <FlatList
+          data={video}
+          //destructure item in array as it is another value
+          renderItem={({ item }) => (
+            <><Text style={styles.item}><Button  icon="play">
+             {item.name} </Button> </Text></>
+          
+          )}
+        />
+      </View>
     </>
   );
 }
 
 // const styles = StyleSheet.create({});
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     // justifyContent: 'center',
 
-    backgroundColor: "#ecf0f1",
+    backgroundColor: "#ffff",
+    paddingTop: 40,
+    paddingHorizontal: 20,
   },
   paragraph: {
     fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-    padding: 20,
+    fontWeight: "500",
+    // textAlign: "center",
+    padding: 10,
   },
+  item: {
+    marginTop: 20,
+    padding: 20,
+    backgroundColor: "#dedede",
+    fontSize: 20,
+    fontWeight: "700",
+    borderRadius: 50/10,
+    textAlign: "center",
+    textDecorationColor:"black",
+    // flex:1,    
+    // justifyContent:"center",
+    // alignItems:"center",
+  },
+  title:{
+    textAlign: "center",
+    fontSize: 30,
+    flex:1
+  }
 });
-
-// Inspiration: https://dribbble.com/shots/14154226-Rolodex-Scrolling-Animation/attachments/5780833?mode=media
-
-
-// import * as React from 'react';
-// import { StatusBar, FlatList, Image, Animated, Text, View, Dimensions, StyleSheet, TouchableOpacity, Easing, SafeAreaViewBase, SafeAreaView } from 'react-native';
-// const { width, height } = Dimensions.get('screen');
-// // import faker from 'faker'
-
-// // faker.seed(10);
-// const DATA = [...Array(5).keys()].map((_, i) => {
-//     return {
-//         key: 1,
-//         image: `https://www.pexels.com/photo/pink-rose-closeup-photography-1231265/`,
-//         name: <Text>Text</Text>,
-//         email: <Text>email@email.com</Text>,
-//     };
-// });
-
-// const SPACING = 20;
-// const AVATAR_SIZE = 70;
-
-// export default () => {
-//     return <View style={{flex: 1, backgroundColor: '#fff'}}>
-//         <StatusBar hidden/>
-//     </View>
-// }

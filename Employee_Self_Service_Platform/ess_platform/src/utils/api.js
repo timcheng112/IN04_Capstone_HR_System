@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const URL = "172.17.154.228";
+// const URL = "172.17.154.228";
+const URL = "192.168.1.101";
 
 const api = {
   login(email, password) {
@@ -41,6 +42,14 @@ const api = {
   markTaskListItemAsComplete(taskListItemId) {
     return axios.put(`http://${URL}:9191/api/task_list_item/${taskListItemId}`);
   },
+
+  //training
+  getAllPlaylists(){
+    return axios.get(`http://${URL}:9191/api/module`);
+  },
+  getUserPlaylists(employeeId){
+    return axios.get(`http://${URL}:9191/api/module/user/${employeeId}`);
+  }
 };
 
 export default api;
