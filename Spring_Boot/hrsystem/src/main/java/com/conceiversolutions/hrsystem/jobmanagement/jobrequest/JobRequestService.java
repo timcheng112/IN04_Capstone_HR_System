@@ -187,7 +187,7 @@ public class JobRequestService {
         }
     }
 
-    public Long submitJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, List<Skillset> jobRequirements, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
+    public Long submitJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, List<Long> jobRequirements, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
         System.out.println("JobRequestService.saveJobRequest");
 
         checkInput(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, roleEnum, salary, requestedById);
@@ -222,6 +222,11 @@ public class JobRequestService {
         }
         User requestor = r.get();
 
+        List<Skillset> skillsets = new ArrayList<>();
+        if (!jobRequirements.isEmpty()) {
+            skillsets = skillsetRepository.findAllById(jobRequirements);
+        }
+
         if (!jobRequestId.equals(0L)) {
             System.out.println("Job Request already exists, now is editing");
             Optional<JobRequest> jobRequest = jobRequestRepository.findById(jobRequestId);
@@ -235,7 +240,7 @@ public class JobRequestService {
             jr.setJobType(jobTypeEnum);
             jr.setJobRole(roleEnum);
             jr.setSalary(salary);
-            jr.setJobRequirements(jobRequirements);
+            jr.setJobRequirements(skillsets);
             jr.setDepartment(dept);
             jr.setTeam(team);
             jr.setStatus(JobStatusEnum.CREATED);
@@ -245,7 +250,7 @@ public class JobRequestService {
             return done.getRequestId();
         } else {
             System.out.println("Job Request doesnt exists, will create a new one");
-            JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, salary, jobRequirements, dept, team, requestor, roleEnum);
+            JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, salary, skillsets, dept, team, requestor, roleEnum);
             jr.setStatus(JobStatusEnum.CREATED);
             jr.setLastEditedDate(LocalDateTime.now());
             JobRequest done = jobRequestRepository.saveAndFlush(jr);

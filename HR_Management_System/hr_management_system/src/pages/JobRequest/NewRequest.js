@@ -79,14 +79,42 @@ export default function NewRequest() {
     console.log(title);
     api
       .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(),0)
-      .then(() => alert("Successfully created Job Request."))
+      .then(() => alert("Successfully saved Job Request."))
+      .catch((error) => console.log(error));
+      // .catch((error) => setError(error));
+  }
+
+  function submitRequest() {
+    let arr = Array.of(requirements);
+    var teamId = team == null ? 0: team.teamId;
+    var date = startDate.getDate()
+    if (startDate.getDate() < 10) {
+        date = "0" + date;
+    }
+    var month = startDate.getMonth() + 1;
+    if (month == 9) {
+        month = 10;
+    } else if (month < 10) {
+        month = "0" + (startDate.getMonth() + 1);
+    }
+
+    var preferredStartDate =  (startDate.getYear()+1900) + "-" + month + "-" + date;
+
+    api
+      .submitJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(),0)
+      .then(() => alert("Successfully submitted Job Request."))
       .catch((error) => console.log(error));
       // .catch((error) => setError(error));
   }
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    saveRequest();
+    if(useState.button === 1){
+      saveRequest();
+    }
+    if(useState.button === 2){
+      submitRequest();
+    }
     history.push("/hiring/jobrequest")
   };
 
@@ -243,14 +271,14 @@ export default function NewRequest() {
               <button
                 type="submit"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                //onClick={() => history.push("/hiring/jobrequest")}
+                onClick={() => (useState.button = 1)}
               >
                 Save
               </button>}
             <button
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => history.push("/hiring/jobrequest")}
+              onClick={() => (useState.button = 2)}
             >
               Submit
             </button>
