@@ -94,6 +94,7 @@ export default function RequestDetail() {
       "value" : skill.skillsetId,
       "label" : skill.skillsetName
     }))
+    console.log("USER'S REQUIREMENTS")
     console.log(userOptions)
     setRequirements(userOptions)
 
@@ -121,32 +122,112 @@ export default function RequestDetail() {
   }, []);
 
   function saveRequest() {
-    let arr = Array.of(requirements);
+    let arr = []
+    arr = requirements.map(x => x.value)
     var teamId = team == null ? 0 : team.teamId;
     var date = startDate.getDate()
     if (startDate.getDate() < 10) {
       date = "0" + date;
     }
     var month = startDate.getMonth() + 1;
-    if (month == 9) {
-      month = 10;
-    } else if (month < 10) {
-      month = "0" + (startDate.getMonth() + 1);
+    if (month < 10) {
+        month = "0" + (month);
     }
 
     var preferredStartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
-    console.log(title);
+
+    if (jobType == null) {
+        alert("Please select a Job Type");
+        return 1
+    } else if (jobRole == null) {
+        alert("Please select a Job Role");
+        return 1;
+    }
+
+//    console.log(title);
     api
       .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(), request.requestId)
       .then(() => alert("Successfully saved Job Request."))
-      .catch((error) => console.log(error));
+      .catch((error) => {
+            var message = error.request.response;
+            if (message.includes("jobTitle is missing") || message.includes("jobDescription is missing") || message.includes("justification is missing") || message.includes("salary is missing")) {
+              alert("Job Title, Description, Justification and Salary cannot be blank");
+            } else if (message.includes("preferredStartDate is missing") || message.includes("preferredStartDate is invalid")) {
+              alert("Preferred Start Date provided is invalid");
+            } else if (message.includes("jobTypeEnum is missing")) {
+              alert("Please select a Job Type");
+            } else if (message.includes("roleEnum is missing")) {
+              alert("Please select a Job Role");
+            } else if (message.includes("salary is invalid")) {
+              alert("Please input a valid salary amount");
+            } else {
+              setError(error);
+            }
+            console.log("returning 1")
+        });
+        return 0;
     // .catch((error) => setError(error));
+  }
+
+  function submitRequest() {
+      let arr = []
+      arr = requirements.map(x => x.value)
+      var teamId = team == null ? 0: team.teamId;
+      var date = startDate.getDate()
+      if (startDate.getDate() < 10) {
+          date = "0" + date;
+      }
+      var month = startDate.getMonth() + 1;
+      if (month < 10) {
+          month = "0" + (month);
+      }
+
+      var preferredStartDate =  (startDate.getYear()+1900) + "-" + month + "-" + date;
+
+      if (jobType == null) {
+          alert("Please select a Job Type");
+          return 1
+      } else if (jobRole == null) {
+          alert("Please select a Job Role");
+          return 1;
+      }
+
+      api
+        .submitJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(),request.requestId)
+        .then(() => alert("Successfully submitted Job Request."))
+        .catch((error) => {
+            var message = error.request.response;
+            if (message.includes("jobTitle is missing") || message.includes("jobDescription is missing") || message.includes("justification is missing") || message.includes("salary is missing")) {
+              alert("Job Title, Description, Justification and Salary cannot be blank");
+            } else if (message.includes("preferredStartDate is missing") || message.includes("preferredStartDate is invalid")) {
+              alert("Preferred Start Date provided is invalid");
+            } else if (message.includes("jobTypeEnum is missing")) {
+              alert("Please select a Job Type");
+            } else if (message.includes("roleEnum is missing")) {
+              alert("Please select a Job Role");
+            } else if (message.includes("salary is invalid")) {
+              alert("Please input a valid salary amount");
+            } else {
+              setError(error);
+            }
+            console.log("returning 1")
+        });
+        return 0;
+        // .catch((error) => setError(error));
   }
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    saveRequest();
-    history.push("/hiring/jobrequest")
+    var result = 0;
+    if(useState.button === 1){
+      result = saveRequest();
+    }
+    if(useState.button === 2){
+      result = submitRequest();
+    }
+    if (result === 0) {
+      history.push("/hiring/jobrequest")
+    }
   };
 
 
@@ -189,7 +270,7 @@ export default function RequestDetail() {
                     id="description"
                     name="description"
                     rows={5}
-                    //required
+                    required
                     value={description}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     onChange={(e) => setDescription(e.target.value)}
@@ -206,7 +287,7 @@ export default function RequestDetail() {
                     id="justification"
                     name="justification"
                     rows={5}
-                    //required
+                    required
                     value={justification}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     onChange={(e) => setJustification(e.target.value)}
@@ -251,7 +332,7 @@ export default function RequestDetail() {
                     className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="0.00"
                     aria-describedby="salary-currency"
-                    //required
+                    required
                     value={salary}
                     onChange={(e) => setSalary(e.target.value)}
                   />
@@ -302,14 +383,14 @@ export default function RequestDetail() {
               <button
                 type="submit"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              //onClick={() => history.push("/hiring/jobrequest")}
+                onClick={() => (useState.button = 1)}
               >
                 Save
               </button>}
             <button
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => history.push("/hiring/jobrequest")}
+              onClick={() => (useState.button = 2)}
             >
               Submit
             </button>

@@ -21,7 +21,20 @@ export default function RequestOption({request}) {
       alert("Successfully deleted!");
       //refreshKeyHandler();
     })
-      .catch((error) => setError(error));
+      .catch((error) => {
+        var message = error.request.response;
+        if (message.includes("Job Request cannot be found")) {
+          alert("Unknown error has occured, please try again");
+        } else if (message.includes("Job Request is already approved") || message.includes("Job Request is linked to a Job Posting")) {
+          alert("This Job Request has already been approved, unable to delete. Please contact an Administrator");
+        } else if (message.includes("Job Request is already cancelled")) {
+          alert("This Job Request is already cancelled, cannot be deleted");
+        } else if (message.includes("Job Request is already closed")) {
+          alert("This Job Request is already closed, cannot be deleted");
+        } else {
+          setError(error);
+        }
+      });
   }
   return (
     <div>
