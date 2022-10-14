@@ -30,6 +30,8 @@ import NewJobRequestPage from "./pages/JobRequest/NewRequest";
 import JobRequestHrPage from "./pages/JobRequest/indexHR";
 import JobPostPage from "./pages/JobPost/indexHR";
 
+import LeavePage from "./pages/Leave/indexHR";
+import LeaveQuotaPage from "./pages/Leave/quota";
 
 function App() {
   return (
@@ -75,6 +77,9 @@ function App() {
           <PrivateRoute exact path="/hiring/newjobrequest" component={NewJobRequestPage} />
           <PublicRoute exact path="/hiring/jobrequesthr" component={JobRequestHrPage} />
           <PublicRoute exact path="/hiring/jobpost" component={JobPostPage} />
+
+          <PrivateRoute exact path="/admin/leaves" component={LeavePage} />
+          <PrivateRoute exact path="/admin/leavequota" component={LeaveQuotaPage} />
         </Switch>
       </div>
     </BrowserRouter>

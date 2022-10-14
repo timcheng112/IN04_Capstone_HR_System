@@ -21,7 +21,7 @@ export default function RequestOption({request}) {
       alert("Successfully deleted!");
       //refreshKeyHandler();
     })
-      .catch((error) => setError(error));
+      .catch((error) => alert(error.message));
   }
   return (
     <div>
