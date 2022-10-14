@@ -31,7 +31,6 @@ public class UserConfig {
                     null);
             testUser.setWorkEmail("simj@libro.com");
             testUser.setEnabled(true);
-            testUser.setJobType(JobTypeEnum.FULLTIME);
 
             User testUser2 = new User(
                     "Matthew",
@@ -47,7 +46,6 @@ public class UserConfig {
                     null);
             testUser2.setWorkEmail("leem@libro.com");
             testUser2.setEnabled(true);
-            testUser2.setJobType(JobTypeEnum.FULLTIME);
 
             User ceo = new User(
                     "Jeremy",
@@ -63,7 +61,6 @@ public class UserConfig {
                     null);
             ceo.setWorkEmail("ongj@libro.com");
             ceo.setEnabled(true);
-            ceo.setJobType(JobTypeEnum.FULLTIME);
 
             Long ceoId = Long.valueOf(0);
 

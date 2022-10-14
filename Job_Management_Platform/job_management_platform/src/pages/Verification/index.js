@@ -71,7 +71,7 @@ export default function Verification() {
                   Check your email.
                 </h1>
                 <p className="mt-2 text-lg text-gray-500">
-                  A verification link will be sent to you within 5 minutes.
+                  A verification link has been sent to you.
                 </p>
               </div>
               <div className="mt-12">
