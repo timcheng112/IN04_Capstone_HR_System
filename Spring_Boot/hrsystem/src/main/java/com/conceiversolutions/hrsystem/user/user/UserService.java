@@ -1443,6 +1443,12 @@ public class UserService implements UserDetailsService {
 //        attendanceRepository.saveAndFlush(attendance);
 //
 //    }
+    public List<ShiftListItem> getMyShifts(Long userId){
+        User u1 = getUser(userId);
+        //assuming they reset every month
+        List lst = u1.getShiftListItems();
+        return lst;
+    }
 }
 
 
