@@ -34,6 +34,7 @@ import JobRequestHrPage from "./pages/JobRequest/indexHR";
 import JobPostPage from "./pages/JobPost/indexHR";
 import VideoPage from "./pages/Video";
 import AllTrainingPage from "./pages/Training/indexAll";
+import AllVideosPage from "./pages/Video/indexAll";
 
 
 function App() {
@@ -78,6 +79,7 @@ function App() {
           <PrivateRoute exact path="/training" component={AllTrainingPage} />  
           <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />     
           <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
+          <PrivateRoute exact path="/video" component={AllVideosPage} />  
 
           <PublicRoute exact path="/hiring/jobrequest" component={JobRequestPage} />
           <PublicRoute exact path="/hiring/jobrequestdetail" component={JobRequestDetailPage} />

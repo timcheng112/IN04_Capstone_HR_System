@@ -32,12 +32,12 @@ const api = {
   verifyTempPassword(workEmail, tempPassword) {
     return axios.get(
       `http://localhost:9191/api/user/register/verifyTempPassword?workEmail=${workEmail}&tempPassword=${tempPassword}`
-    )
+    );
   },
   setFirstPassword(workEmail, password) {
     return axios.get(
       `http://localhost:9191/api/user/register/setFirstPassword?workEmail=${workEmail}&password=${password}`
-    )
+    );
   },
   resendConfirmation(email) {
     return axios.get(
@@ -186,16 +186,17 @@ const api = {
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
-  getUserIdByEmail(email) { // this mght nt work
+  getUserIdByEmail(email) {
+    // this mght nt work
     return axios.get(
       `http://localhost:9191/api/user/login/getUserIdByWorkEmail?workEmail=${email}`
     );
   },
   getEmployeeIdByEmail(email) {
-      return axios.get(
-        `http://localhost:9191/api/user/login/getEmployeeIdByEmail?workEmail=${email}`
-      );
-    },
+    return axios.get(
+      `http://localhost:9191/api/user/login/getEmployeeIdByEmail?workEmail=${email}`
+    );
+  },
   getDept(deptId) {
     return axios.get(`http://localhost:9191/api/department/${deptId}`);
   },
@@ -206,7 +207,10 @@ const api = {
     return axios.delete(`http://localhost:9191/api/team/${teamId}`);
   },
   uploadFile(file) {
-    return axios.post(`http://localhost:9191/api/docData/uploadDocument/`, file);
+    return axios.post(
+      `http://localhost:9191/api/docData/uploadDocument/`,
+      file
+    );
   },
   addDepartment(deptName, deptHeadId) {
     return axios.post(
@@ -257,69 +261,100 @@ const api = {
   },
   changeDepartmentHead(deptId, newHeadId) {
     return axios.put(
-        `http://localhost:9191/api/department/changeDepartmentHead?deptId=${deptId}&newHeadId=${newHeadId}`
+      `http://localhost:9191/api/department/changeDepartmentHead?deptId=${deptId}&newHeadId=${newHeadId}`
     );
   },
   getAllTeamsInDept(deptId) {
     return axios.get(
-        `http://localhost:9191/api/team/getAllTeamsInDept/${deptId}`
+      `http://localhost:9191/api/team/getAllTeamsInDept/${deptId}`
     );
   },
   getAllModules() {
-    return axios.get(`http://localhost:9191/api/module`)
+    return axios.get(`http://localhost:9191/api/module`);
   },
   getModule(moduleId) {
-    return axios.get(`http://localhost:9191/api/module/${moduleId}`)
+    return axios.get(`http://localhost:9191/api/module/${moduleId}`);
   },
   addModule(module) {
-    return axios.post(`http://localhost:9191/api/module`, module)
+    return axios.post(`http://localhost:9191/api/module`, module);
   },
   assignModule(moduleId, employees) {
-    return axios.post(`http://localhost:9191/api/module/user/${moduleId}`, employees)
+    return axios.post(
+      `http://localhost:9191/api/module/user/${moduleId}`,
+      employees
+    );
   },
   deleteModule(moduleId) {
-    return axios.delete(`http://localhost:9191/api/module/${moduleId}`)
+    return axios.delete(`http://localhost:9191/api/module/${moduleId}`);
   },
   editModule(moduleId, module) {
-    return axios.put(`http://localhost:9191/api/module/${moduleId}`, module)
+    return axios.put(`http://localhost:9191/api/module/${moduleId}`, module);
   },
   getUserModules(userId) {
-    return axios.get(`http://localhost:9191/api/module/user/${userId}`)
+    return axios.get(`http://localhost:9191/api/module/user/${userId}`);
+  },
+  getModuleFromVideo(videoId) {
+    return axios.get(`http://localhost:9191/api/module/video/${videoId}`);
+  },
+  getEmployeesAssignedToModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/user`)
+  },
+  getEmployeesUnassignedToModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/unAssignedUser`)
   },
   getVideosInModule(moduleId) {
-    return axios.get(`http://localhost:9191/api/module/${moduleId}/videos`)
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/videos`);
   },
   addVideo(moduleId, video) {
-    return axios.post(`http://localhost:9191/api/module/${moduleId}`, video)
+    return axios.post(`http://localhost:9191/api/module/${moduleId}`, video);
   },
   getVideo(videoId) {
-    return axios.get(`http://localhost:9191/api/video/${videoId}`)
+    return axios.get(`http://localhost:9191/api/video/${videoId}`);
+  },
+  getVideos() {
+    return axios.get(`http://localhost:9191/api/video`);
+  },
+  editVideo(videoId, video) {
+    return axios.put(`http://localhost:9191/api/video/${videoId}`, video);
+  },
+  deleteVideo(videoId) {
+    return axios.delete(`http://localhost:9191/api/video/${videoId}`)
   },
   // JOB REQUEST
   getAllJobRequests() {
-      return axios.get(
-          `http://localhost:9191/api/jobrequest/getAllJobRequests`
-      );
+    return axios.get(`http://localhost:9191/api/jobrequest/getAllJobRequests`);
   },
   getManagerJobRequests(managerId) {
-        return axios.get(
-            `http://localhost:9191/api/jobrequest/getJobRequestsByRequestorId?requestorId=${managerId}`
-        );
+    return axios.get(
+      `http://localhost:9191/api/jobrequest/getJobRequestsByRequestorId?requestorId=${managerId}`
+    );
   },
-  saveJobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobType, jobRole, salary, jobRequirementIds, departmentId, requestedById, jobRequestId) {
-        return axios.post(
-            `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirementsId=${jobRequirementIds}&departmentId=${departmentId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
-        );
+  saveJobRequest(
+    jobTitle,
+    jobDescription,
+    justification,
+    preferredStartDate,
+    jobType,
+    jobRole,
+    salary,
+    jobRequirementIds,
+    departmentId,
+    requestedById,
+    jobRequestId
+  ) {
+    return axios.post(
+      `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirementsId=${jobRequirementIds}&departmentId=${departmentId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
+    );
   },
   getJobRequestById(jobRequestId) {
-        return axios.get(
-            `http://localhost:9191/api/jobrequest/getJobRequestById?jobRequestId=${jobRequestId}`
-        );
+    return axios.get(
+      `http://localhost:9191/api/jobrequest/getJobRequestById?jobRequestId=${jobRequestId}`
+    );
   },
   deleteJobRequest(jobRequestId) {
-        return axios.delete(
-            `http://localhost:9191/api/jobrequest/deleteJobRequest?jobRequestId=${jobRequestId}`
-        );
+    return axios.delete(
+      `http://localhost:9191/api/jobrequest/deleteJobRequest?jobRequestId=${jobRequestId}`
+    );
   },
 };
 

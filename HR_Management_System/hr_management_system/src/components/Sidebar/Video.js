@@ -21,7 +21,7 @@ const navigation = [
     current: false,
   },
   { name: "All Modules", href: "/training", icon: UsersIcon, current: false },
-  { name: "All Videos", href: "/training", icon: UsersIcon, current: false },
+  { name: "All Videos", href: "/video", icon: UsersIcon, current: false },
 ];
 
 function classNames(...classes) {

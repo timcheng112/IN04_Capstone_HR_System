@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.conceiversolutions.hrsystem.training.video.Video;
 import com.conceiversolutions.hrsystem.training.video.VideoRepository;
-import com.conceiversolutions.hrsystem.training.video.VideoService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
@@ -42,8 +41,9 @@ public class ModuleService {
     public Module getModule(Long moduleId) throws Exception {
         Optional<Module> m = moduleRepository.findById(moduleId);
         if (m.isPresent()) {
-            System.out.println("get employees " + m.get().getEmployees());
-            return m.get();
+            Module module = m.get();
+            module.setEmployees(new ArrayList<>());
+            return module;
         } else {
             throw new IllegalStateException("Module not found");
         }
@@ -70,10 +70,12 @@ public class ModuleService {
         Optional<Module> m = moduleRepository.findById(moduleId);
         if (m.isPresent()) {
             Module module = m.get();
+            module.setEmployees(new ArrayList<>());
             for (Long userId : employees) {
                 System.out.println("userId = " + userId);
                 Optional<User> user = userRepository.findById(userId);
                 if (user.isPresent()) {
+                    
                     if (module.getEmployees() != null) {
                         module.getEmployees().add(user.get());
                     } else {
@@ -101,7 +103,7 @@ public class ModuleService {
         m.setTitle(module.getTitle());
         m.setDescription(module.getDescription());
         m.setThumbnail(module.getThumbnail());
-        return module.getTitle() + " successfuly edited";
+        return module.getTitle() + " has been successfuly edited";
     }
 
     public Iterable<Video> getVideosInModule(Long moduleId) {
@@ -136,5 +138,38 @@ public class ModuleService {
              }
         }
         return userModules;
+    }
+
+    public Module getModuleFromVideo(Long videoId) throws Exception {
+        List<Module> allModules = moduleRepository.findAll();
+        for (Module module : allModules) {
+            for (Video video : module.getVideoList()) {
+                if (video.getVideoId() == videoId) {
+                    module.setEmployees(new ArrayList<>());
+                    module.setVideoList(new ArrayList<>());
+                    return module;
+                }
+            }
+        }
+        throw new IllegalStateException("Could not find module");
+    }
+
+    public List<User> getEmployeesAssignedToModule(Long moduleId) throws Exception {
+        Optional<Module> optionalModule = moduleRepository.findById(moduleId);
+        if (optionalModule.isPresent()) {
+            return optionalModule.get().getEmployees();
+        } else {
+            throw new IllegalStateException("Module does not exist");
+        }
+    }
+
+    public List<User> getEmployeesUnassignedToModule(Long moduleId) throws Exception {
+        List<User> assignedEmployees = getEmployeesAssignedToModule(moduleId);
+        List<User> allEmployees = userRepository.findAll();
+        for (User assigned : assignedEmployees) {
+            allEmployees.remove(assigned);
+            System.out.println("Removed user " + assigned.getUserId());
+        }
+        return allEmployees;
     }
 }

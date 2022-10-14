@@ -61,7 +61,7 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
       setDescription("")
       setThumbnail("")
       setShowStepOne(true)
-      console.log("to assign " + response.data);
+      //console.log("to assign " + response.data);
       assignModule(response.data);
     });
     // api

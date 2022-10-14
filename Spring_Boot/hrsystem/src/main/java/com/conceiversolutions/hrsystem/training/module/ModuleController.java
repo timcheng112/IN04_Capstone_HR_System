@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.conceiversolutions.hrsystem.training.video.Video;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @CrossOrigin("*")
 @RestController
@@ -58,6 +59,18 @@ public class ModuleController {
         return moduleService.assignModulesToEmployees(moduleId, employees);
     }
 
+    @GetMapping(path = "{moduleId}/user")
+    public List<User> getEmployeesAssignedToModule(@PathVariable("moduleId") Long moduleId)
+            throws Exception {
+        return moduleService.getEmployeesAssignedToModule(moduleId);
+    }
+
+    @GetMapping(path = "{moduleId}/unAssignedUser")
+    public List<User> getEmployeesUnassignedToModule(@PathVariable("moduleId") Long moduleId)
+            throws Exception {
+        return moduleService.getEmployeesUnassignedToModule(moduleId);
+    }
+
     @PutMapping(path = "{moduleId}")
     public String editModule(@PathVariable("moduleId") Long moduleId, @RequestBody Module module) throws Exception {
         return moduleService.editModule(moduleId, module);
@@ -71,6 +84,11 @@ public class ModuleController {
     @PostMapping(path = "{moduleId}")
     public String addVideoToModule(@PathVariable("moduleId") Long moduleId, @RequestBody Video video) throws Exception {
         return moduleService.addVideoToModule(moduleId, video);
+    }
+
+    @GetMapping(path = "video/{videoId}")
+    public Module getModuleFromVideo(@PathVariable("videoId") Long videoId) throws Exception {
+        return moduleService.getModuleFromVideo(videoId);
     }
 
 }
