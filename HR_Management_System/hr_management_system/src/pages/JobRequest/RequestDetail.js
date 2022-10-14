@@ -64,35 +64,28 @@ export default function RequestDetail() {
     } else {
       jobT = jobTypesLib[3];
     }
-    // console.log("jobT")
-    // console.log(jobT)
     setJobType(jobT)
-  
+
     // reset JobRole
     var roleT;
-    if (location.state.request.jobRole== "EMPLOYEE") {
+    if (location.state.request.jobRole == "EMPLOYEE") {
       roleT = rolesLib[0];
     } else {
       roleT = rolesLib[1];
     }
-    // console.log("roleT")
-    // console.log(roleT)
     setJobRole(roleT)
 
-    // reset preferred start date
-    // console.log(location.state.request.preferredStartDate)
-    // console.log(typeof location.state.request.preferredStartDate)
-    let yyyy = location.state.request.preferredStartDate.slice(0,4)
-    let mm = location.state.request.preferredStartDate.slice(5,7)
-    let dd = location.state.request.preferredStartDate.slice(8,10)
+    let yyyy = location.state.request.preferredStartDate.slice(0, 4)
+    let mm = location.state.request.preferredStartDate.slice(5, 7)
+    let dd = location.state.request.preferredStartDate.slice(8, 10)
     // console.log(yyyy + " " + mm + " " + dd)
     console.log(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
     setStartDate(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
 
     // reset requirements
     const userOptions = location.state.request.jobRequirements.map(skill => ({
-      "value" : skill.skillsetId,
-      "label" : skill.skillsetName
+      "value": skill.skillsetId,
+      "label": skill.skillsetName
     }))
     console.log("USER'S REQUIREMENTS")
     console.log(userOptions)
@@ -215,6 +208,20 @@ export default function RequestDetail() {
         return 0;
         // .catch((error) => setError(error));
   }
+  
+  /*
+  function approveRequest(){
+    api.approveJobRequestById(request.requestId, getUserId())
+       .catch((error) => console.log(error));
+    history.push("/hiring/jobrequest")
+  }
+  
+  function rejectRequest(){
+    api.rejectJobRequestById(request.requestId, getUserId())
+       .catch((error) => console.log(error));
+    history.push("/hiring/jobrequest")
+  }
+  */
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -386,6 +393,22 @@ export default function RequestDetail() {
                 onClick={() => (useState.button = 1)}
               >
                 Save
+              </button>}
+            {user !== null && user.hrEmployee &&
+              <button
+                type="button"
+                className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                onClick={approveRequest}
+              >
+                Approve
+              </button>}
+            {user !== null && user.hrEmployee &&
+              <button
+                type="button"
+                className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                onClick={rejectRequest}
+              >
+                Reject
               </button>}
             <button
               type="submit"

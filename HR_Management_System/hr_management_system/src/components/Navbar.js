@@ -17,7 +17,7 @@ export default function Navbar() {
     { name: 'Company', path: '/company'},
     { name: 'Career', path: '/career'},
     { name: 'Welfare', path: '/welfare'},
-    { name: 'Hiring', path: '/hiring'},
+    { name: 'Hiring', path: '/hiring/jobrequest'},
     { name: 'Reports', path: '/reports'},
   ] 
   const { url } = useRouteMatch()
