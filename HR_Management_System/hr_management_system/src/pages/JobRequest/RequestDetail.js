@@ -1,33 +1,165 @@
 import Navbar from "../../components/Navbar";
 import Department from "../../components/ComboBox/Department";
+import Team from "../../components/ComboBox/Team";
 import JobType from "../../components/ComboBox/JobType";
 import JobRole from "../../components/ComboBox/Role";
 import JobRequirements from "../../features/jobrequest/JobRequirements";
-import Team from "../../components/ComboBox/Team";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from 'react-router';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function RequestDetails(request) {
-  const [startDate, setStartDate] = useState(new Date());
+export default function RequestDetail() {
+  const [startDate, setStartDate] = useState();//needs to change to default value
   const history = useHistory();
+  const [request, setRequest] = useState();
+  const [requestId, setRequestId] = useState();
+  const [department, setDepartment] = useState(null);
+  const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [title, setTitle] = useState();
+  const [description, setDescription] = useState();
+  const [justification, setJustification] = useState();
+  const [salary, setSalary] = useState();
+  const [jobType, setJobType] = useState();
+  const [jobRole, setJobRole] = useState();
+  const [requirements, setRequirements] = useState();
+  const [team, setTeam] = useState();
+  const location = useLocation();
+
+  const jobTypesLib = [
+    { id: 1, name: 'Full Time' },
+    { id: 2, name: 'Part Time' },
+    { id: 3, name: 'Contract' },
+    { id: 4, name: 'Intern' },
+  ]
+
+  const rolesLib = [
+    { id: 1, name: 'Employee' },
+    { id: 2, name: 'Manager' },
+  ]
+
+  useEffect(() => {
+    console.log(location.state.request);
+    setRequest(location.state.request)
+    setTitle(location.state.request.jobTitle)
+    setDescription(location.state.request.jobDescription)
+    setJustification(location.state.request.justification)
+    setSalary(location.state.request.salary)
+    // reset JobType into JSON Object from String
+    var jobT;
+    if (location.state.request.jobType == "FULLTIME") {
+      jobT = jobTypesLib[0];
+    } else if (location.state.request.jobType == "PARTTIME") {
+      jobT = jobTypesLib[1];
+    } else if (location.state.request.jobType == "CONTRACT") {
+      jobT = jobTypesLib[2];
+    } else {
+      jobT = jobTypesLib[3];
+    }
+    // console.log("jobT")
+    // console.log(jobT)
+    setJobType(jobT)
+  
+    // reset JobRole
+    var roleT;
+    if (location.state.request.jobRole== "EMPLOYEE") {
+      roleT = rolesLib[0];
+    } else {
+      roleT = rolesLib[1];
+    }
+    // console.log("roleT")
+    // console.log(roleT)
+    setJobRole(roleT)
+
+    // reset preferred start date
+    // console.log(location.state.request.preferredStartDate)
+    // console.log(typeof location.state.request.preferredStartDate)
+    let yyyy = location.state.request.preferredStartDate.slice(0,4)
+    let mm = location.state.request.preferredStartDate.slice(5,7)
+    let dd = location.state.request.preferredStartDate.slice(8,10)
+    // console.log(yyyy + " " + mm + " " + dd)
+    console.log(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
+    setStartDate(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
+
+    // reset requirements
+    const userOptions = location.state.request.jobRequirements.map(skill => ({
+      "value" : skill.skillsetId,
+      "label" : skill.skillsetName
+    }))
+    console.log(userOptions)
+    setRequirements(userOptions)
+
+    setTeam(location.state.request.team)
+  }, [location]);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+
+  useEffect(() => {
+    api
+      .getDepartmentByEmployeeId(getUserId())
+      .then((response) => {
+        setDepartment(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  function saveRequest() {
+    let arr = Array.of(requirements);
+    var teamId = team == null ? 0 : team.teamId;
+    var date = startDate.getDate()
+    if (startDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = startDate.getMonth() + 1;
+    if (month == 9) {
+      month = 10;
+    } else if (month < 10) {
+      month = "0" + (startDate.getMonth() + 1);
+    }
+
+    var preferredStartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
+    console.log(title);
+    api
+      .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(), request.requestId)
+      .then(() => alert("Successfully saved Job Request."))
+      .catch((error) => console.log(error));
+    // .catch((error) => setError(error));
+  }
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    saveRequest();
+    history.push("/hiring/jobrequest")
+  };
+
 
   return (
     <div className="">
       <Navbar />
       <div className="py-5"></div>
-      <form className="space-y-8 divide-y divide-gray-200">
+      <form className="space-y-8 divide-y divide-gray-200" onSubmit={handleSubmit}>
         <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
           <div className="space-y-6 sm:space-y-5">
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900">Job Request Details</h3>
             </div>
-
             <div className="space-y-6 sm:space-y-5">
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -39,8 +171,10 @@ export default function RequestDetails(request) {
                       type="text"
                       name="title"
                       id="title"
-                      autoComplete="title"
+                      required
+                      value={title}
                       className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      onChange={(e) => setTitle(e.target.value)}
                     />
                   </div>
                 </div>
@@ -55,7 +189,10 @@ export default function RequestDetails(request) {
                     id="description"
                     name="description"
                     rows={5}
+                    //required
+                    value={description}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
               </div>
@@ -69,7 +206,10 @@ export default function RequestDetails(request) {
                     id="justification"
                     name="justification"
                     rows={5}
+                    //required
+                    value={justification}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    onChange={(e) => setJustification(e.target.value)}
                   />
                 </div>
               </div>
@@ -78,21 +218,22 @@ export default function RequestDetails(request) {
                 <label htmlFor="type" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Job Type
                 </label>
-                <JobType />
+                <JobType selectedJobType={jobType} setSelectedJobType={setJobType} />
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="role" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Job Role
                 </label>
-                <JobRole />
+                <JobRole selectedRole={jobRole} setSelectedRole={setJobRole} />
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Requirements
                 </label>
-                <JobRequirements />
+                <JobRequirements selectedSkills={requirements} setSelectedSkills={setRequirements} />
+
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -110,6 +251,9 @@ export default function RequestDetails(request) {
                     className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="0.00"
                     aria-describedby="salary-currency"
+                    //required
+                    value={salary}
+                    onChange={(e) => setSalary(e.target.value)}
                   />
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <span className="text-gray-500 sm:text-sm" id="salary-currency">
@@ -125,12 +269,13 @@ export default function RequestDetails(request) {
                 </label>
                 <Department />
               </div> */}
+              {/* show only when user is HR */}
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="department" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Team
                 </label>
-                <Team />
+                {department !== null && <Team department={department} selectedTeam={team} setSelectedTeam={setTeam} />}
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -153,33 +298,20 @@ export default function RequestDetails(request) {
             >
               Cancel
             </button>
+            {user !== null && user.hrEmployee &&
+              <button
+                type="submit"
+                className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              //onClick={() => history.push("/hiring/jobrequest")}
+              >
+                Save
+              </button>}
             <button
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               onClick={() => history.push("/hiring/jobrequest")}
-            >
-              Save
-            </button>
-            {/* <button
-              type="submit"
-              className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={()=> history.push("/hiring/jobrequest")}
             >
               Submit
-            </button> */}
-            <button
-              type="button"
-              className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => history.push("/hiring/jobrequest")}
-            >
-              Approve
-            </button>
-            <button
-              type="submit"
-              className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => history.push("/hiring/jobrequest")}
-            >
-              Reject
             </button>
           </div>
         </div>
