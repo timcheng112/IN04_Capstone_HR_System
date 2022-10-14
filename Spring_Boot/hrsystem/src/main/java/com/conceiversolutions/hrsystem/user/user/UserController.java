@@ -90,7 +90,7 @@ public class UserController {
             @RequestParam("dateJoined") String dateJoined) {
         System.out.println("UserController.registerNewAccountJMP");
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
-                GenderEnum.valueOf(gender), JobTypeEnum.valueOf(jobType), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
+                GenderEnum.valueOf(gender), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
                 LocalDate.parse(dateJoined), null);
         try {
             Long employeeId = userService.addNewUser(newEmployee);
