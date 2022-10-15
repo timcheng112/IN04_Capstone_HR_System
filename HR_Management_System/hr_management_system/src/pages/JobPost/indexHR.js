@@ -6,24 +6,44 @@ import {
   MagnifyingGlassIcon
 } from "@heroicons/react/20/solid";
 import { useHistory } from 'react-router-dom';
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import Tabs from '../../features/jobrequest/Tab'
-
-const posts = [
-  { title: 'Product Manager', department: 'Product', approvedDate: '2022-08-15', requestor: 'Xinyue', status: 'Closed' },
-  { title: 'Software Engineer', department: 'IT', approvedDate: '2022-08-20', requestor: 'Matthew', status: 'Approved' },
-]
-
+import api from "../../utils/api";
+import { getUserId} from "../../utils/Common";
+import PostOption from "../../features/jobrequest/RequestOption";
 
 
 export default function JobPost() {
   const history = useHistory();
+  const [posts, setPosts] = useState();
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
   const [filteredPosts, setFilteredPosts] =
     useState(posts);
   const [searchParam] = useState([
-    "title",
-    "requestor"
+    "jobTitle"
   ]);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  
+  useEffect(() => {
+    api
+      .getAllJobPosts()
+      .then((response) => {
+        setPosts(response.data);
+        setFilteredPosts(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   function search(e, items) {
     const value = e.target.value;
@@ -102,38 +122,16 @@ export default function JobPost() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {filteredPosts.map((post) => (
-                      <tr key={post.title}>
+                      <tr key={post.postId}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {post.title}
+                          {post.jobTitle}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.department}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.department.departmentName}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.approvedDate}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.requestor}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.requestedBy.firstName}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <div className="space-x-4">
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                              <EyeIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Detail</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                              <XMarkIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Close</span>
-                            </button>
-                          </div>
+                          <PostOption post={post}/>
                         </td>
                       </tr>
                     ))}
