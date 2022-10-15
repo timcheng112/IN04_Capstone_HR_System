@@ -20,10 +20,10 @@ export default function JobRequestHR() {
   const [error, setError] = useState(null);
   const [filteredRequests, setFilteredRequests] =
     useState(requests);
-  const [searchParam] = useState([
-    "jobTitle",
-    "requestedBy"
-  ]);
+//  const [searchParam] = useState([
+//    "jobTitle", "status",
+//    "requestedBy"
+//  ]);
 
   useEffect(() => {
     api
@@ -47,19 +47,55 @@ export default function JobRequestHR() {
   }, []);
 
   function search(e, items) {
+//    console.log("e");
+//    console.log(e);
+//    console.log("items");
+//    console.log(items);
+
     const value = e.target.value;
-    setFilteredRequests(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        );
+//    console.log("looking for this value");
+//    console.log(value);
+    let finding = Array.of(value.toLowerCase());
+//    console.log(finding);
+
+    let filtered = new Set();
+    var titleFilter = items.filter(x => finding.some(y => x.jobTitle.toLowerCase().indexOf(y) != -1))
+//    console.log("titleFilter")
+//    console.log(titleFilter)
+    titleFilter.forEach(item => filtered.add(item))
+
+    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
+//    console.log("statusFilter")
+//    console.log(statusFilter)
+    statusFilter.forEach(item => filtered.add(item))
+
+    var deptFilter = items.filter(x => finding.some(y => x.department.departmentName.toLowerCase().indexOf(y) != -1))
+//    console.log("deptFilter")
+//    console.log(deptFilter)
+    deptFilter.forEach(item => filtered.add(item))
+
+    var requestorFilter = items.filter(x => finding.some(y => x.requestedBy.firstName.toLowerCase().indexOf(y) != -1))
+//    console.log("requestorFilter")
+//    console.log(requestorFilter)
+    requestorFilter.forEach(item => filtered.add(item))
+
+//    console.log("filtered")
+//    console.log(filtered)
+
+    setFilteredRequests(Array.from(filtered))
+
+//    setFilteredRequests(
+//          items.filter((item) => {
+//            return searchParam.some((newItem) => {
+//              return (
+//                item[newItem]
+//                  .toString()
+//                  .toLowerCase()
+//                  .indexOf(value.toLowerCase()) > -1
+//              );
+//            });
+//          })
+//        );
   }
 
   return (
