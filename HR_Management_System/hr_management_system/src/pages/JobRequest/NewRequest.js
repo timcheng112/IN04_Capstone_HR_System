@@ -294,8 +294,8 @@ export default function NewRequest() {
                   Department
                 </label>
                 <Department />
-              </div> */}
-              {/* show only when user is HR */}
+              </div>} */}
+             
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="department" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">

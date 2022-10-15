@@ -6,10 +6,10 @@ import {
 import { useState, useEffect } from "react";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
-import ConfirmDialog from "../../components/ConfirmDialog";
+import CloseDialog from "../jobrequest/CloseDialog";
 import { useHistory  } from 'react-router-dom';
 
-export default function PostOption({post}) {
+export default function PostOption({post, refreshKeyHandler}) {
   const history = useHistory();
   const [trash, setTrash] = useState(false);
   const [user, setUser] = useState(null);
@@ -26,9 +26,9 @@ export default function PostOption({post}) {
   }, []);
 
   function closePost() {
-    api.closeJobPost(post.postId).then(() => {
+    api.closeJobPost(post.postingId).then(() => {
       alert("Successfully closed!");
-      //refreshKeyHandler();
+      refreshKeyHandler();
     })
       .catch((error) => setError(error));
   }
@@ -48,7 +48,7 @@ export default function PostOption({post}) {
         </button>
          <button
           type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           onClick={() => setTrash(true)}
         >
           <XMarkIcon
@@ -58,7 +58,7 @@ export default function PostOption({post}) {
           <span className="hidden md:block">Close</span>
         </button>
       </div>
-      <ConfirmDialog
+      <CloseDialog
         title="Job Post"
         item="Job Post"
         open={trash}
