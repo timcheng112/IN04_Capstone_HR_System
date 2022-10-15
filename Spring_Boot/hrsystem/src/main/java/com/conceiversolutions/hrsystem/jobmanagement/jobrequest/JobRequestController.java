@@ -22,6 +22,11 @@ public class JobRequestController {
         return jobRequestService.getAllJobRequests();
     }
 
+    @GetMapping(path = "/getAllSubmittedJobRequests")
+    public List<JobRequest> getAllSubmittedJobRequest() {
+        return jobRequestService.getAllSubmittedJobRequests();
+    }
+
     @PostMapping(path = "/saveJobRequest")
     public Long saveJobRequest(@RequestParam("jobTitle") String jobTitle,
                                @RequestParam("jobDescription") String jobDescription,

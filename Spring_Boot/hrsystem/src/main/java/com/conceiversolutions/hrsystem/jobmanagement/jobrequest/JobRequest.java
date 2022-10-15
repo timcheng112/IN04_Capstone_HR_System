@@ -51,8 +51,12 @@ public class JobRequest {
     private JobStatusEnum status;
     @Column(name = "salary", nullable = false)
     private BigDecimal salary;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
-    @JoinColumn(name = "requirements")
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
+    @JoinTable(
+            name = "job_request_requirements",
+            joinColumns = @JoinColumn(name = "job_requeest_id"),
+            inverseJoinColumns = @JoinColumn(name = "requirement_id")
+    )
     private List<Skillset> jobRequirements;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Department.class, optional = false)
