@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
+import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,6 @@ public interface JobRequestRepository extends JpaRepository<JobRequest, Long> {
 
     @Query("SELECT jr FROM JobRequest jr WHERE jr.approver.userId = ?1")
     List<JobRequest> findJobRequestsByApproverId(Long approverId);
+
+    List<JobRequest> findJobRequestsByStatus(JobStatusEnum status);
 }

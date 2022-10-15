@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.skillset.skillset;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -12,7 +13,13 @@ public class SkillsetService {
 
     public List<Skillset> getAllSkillsets() {
         System.out.println("SkillsetService.getAllSkillsets");
-        return skillsetRepository.findAll();
+        List<Skillset> skillsets = skillsetRepository.findAll();
+
+        for (Skillset sk : skillsets) {
+            sk.setJobRequests(new ArrayList<>());
+            sk.setJobPostings(new ArrayList<>());
+        }
+        return skillsets;
     }
 
     public Long addSkillset(String skillsetName) {

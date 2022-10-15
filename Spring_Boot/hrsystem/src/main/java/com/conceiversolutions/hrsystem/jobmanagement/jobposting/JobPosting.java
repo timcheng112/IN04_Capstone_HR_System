@@ -55,9 +55,13 @@ public class JobPosting {
     private User postedBy;
     @OneToOne(targetEntity = JobRequest.class, fetch = FetchType.LAZY, optional = false, mappedBy = "jobPosting")
     private JobRequest jobRequest;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
-    @JoinColumn(name = "job_requirements")
-    private List<Skillset> jobRequirements;
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
+    @JoinTable(
+            name = "job_post_requirements",
+            joinColumns = @JoinColumn(name = "job_posting_id"),
+            inverseJoinColumns = @JoinColumn(name = "posting_requirement_id")
+    )
+    private List<Skillset> jobPostRequirements;
 
     public JobPosting() {
     }
@@ -74,6 +78,6 @@ public class JobPosting {
         this.isActive = isActive;
         this.postedBy = postedBy;
         this.jobRequest = jobRequest;
-        this.jobRequirements = jobRequirements;
+        this.jobPostRequirements = jobRequirements;
     }
 }

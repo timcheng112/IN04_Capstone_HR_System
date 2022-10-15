@@ -3,7 +3,6 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
-import com.conceiversolutions.hrsystem.enums.StatusEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPostingRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
@@ -91,7 +90,13 @@ public class JobRequestService {
                 requestor.setJobRequests(new ArrayList<>());
             }
 
-            jr.getJobRequirements().size();
+            if (jr.getJobRequirements().size() != 0) {
+                for (Skillset sk : jr.getJobRequirements()) {
+                    sk.setJobRequests(new ArrayList<>());
+                    sk.setJobPostings(new ArrayList<>());
+                }
+            }
+
             if (jr.getTeam() != null) {
                 Team team = jr.getTeam();
                 team.setTeamHead(null);
@@ -104,7 +109,7 @@ public class JobRequestService {
             if (jr.getJobPosting() != null) {
                 jr.getJobPosting().setJobRequest(null);
                 jr.getJobPosting().setPostedBy(null);
-                jr.getJobPosting().setJobRequirements(new ArrayList<>());
+                jr.getJobPosting().setJobPostRequirements(new ArrayList<>());
             }
         }
 
@@ -348,7 +353,13 @@ public class JobRequestService {
                 requestor.setJobRequests(new ArrayList<>());
             }
 
-            jr.getJobRequirements().size();
+            if (jr.getJobRequirements().size() != 0) {
+                for (Skillset sk : jr.getJobRequirements()) {
+                    sk.setJobRequests(new ArrayList<>());
+                    sk.setJobPostings(new ArrayList<>());
+                }
+            }
+
             if (jr.getTeam() != null) {
                 Team team = jr.getTeam();
                 team.setTeamHead(null);
@@ -361,7 +372,7 @@ public class JobRequestService {
             if (jr.getJobPosting() != null) {
                 jr.getJobPosting().setJobRequest(null);
                 jr.getJobPosting().setPostedBy(null);
-                jr.getJobPosting().setJobRequirements(new ArrayList<>());
+                jr.getJobPosting().setJobPostRequirements(new ArrayList<>());
             }
             return jr;
         } else {
@@ -387,6 +398,14 @@ public class JobRequestService {
             throw new IllegalStateException("Job Request is linked to a Job Posting, contact Admin to delete");
         }
 
+        if (jr.getJobRequirements().size() != 0) {
+            for (Skillset sk : jr.getJobRequirements()) {
+                List<JobRequest> jrs = sk.getJobRequests();
+                jrs.remove(jr);
+                sk.setJobRequests(jrs);
+            }
+        }
+
         User requestor = userRepository.findById(jr.getRequestedBy().getUserId()).get();
         List<JobRequest> jobRequests = requestor.getJobRequests();
         jobRequests.remove(jr);
@@ -397,228 +416,6 @@ public class JobRequestService {
         return "Job Request has been successfully deleted";
     }
 
-//    public List<JobRequest> getJobRequestsByIncludeTitle(String title) {
-//        System.out.println("JobRequestService.findJobRequestsByIncludeTitle");
-//        List<JobRequest> jobRequests = jobRequestRepository.findJobRequestsByIncludeTitle(title);
-//
-//        for (JobRequest jr : jobRequests) {
-//            jr.getDepartment().setDepartmentHead(null);
-//            jr.getDepartment().setOrganization(null);
-//            List<Team> teams = jr.getDepartment().getTeams();
-//            for (Team t : teams) {
-//                t.setTeamHead(null);
-//                t.setUsers(new ArrayList<>());
-//                t.setRoster(null);
-//                t.setDepartment(null);
-//                t.getOutlet().setAddress(null);
-//            }
-//            User approver = jr.getApprover();
-//            if (approver != null){
-//                approver.setTaskListItems(new ArrayList<>());
-//                approver.setTeams(new ArrayList<>());
-//                approver.setQualificationInformation(null);
-//                approver.setCurrentPosition(null);
-//                approver.setReactivationRequest(null);
-//                approver.setAttendances(new ArrayList<>());
-//                approver.setCurrentPayInformation(null);
-//                approver.setEmployeeAppraisals(new ArrayList<>());
-//                approver.setManagerAppraisals(new ArrayList<>());
-//                approver.setManagerReviews(new ArrayList<>());
-//                approver.setEmployeeReviews(new ArrayList<>());
-//                approver.setModules(new ArrayList<>());
-//                approver.setApplications(new ArrayList<>());
-//                approver.setGoals(new ArrayList<>());
-//                approver.setPositions(new ArrayList<>());
-//                approver.setJobRequests(new ArrayList<>());
-//            }
-//
-//            User requestor = jr.getRequestedBy();
-//            if (requestor != null){
-//                requestor.setTaskListItems(new ArrayList<>());
-//                requestor.setTeams(new ArrayList<>());
-//                requestor.setQualificationInformation(null);
-//                requestor.setCurrentPosition(null);
-//                requestor.setReactivationRequest(null);
-//                requestor.setAttendances(new ArrayList<>());
-//                requestor.setCurrentPayInformation(null);
-//                requestor.setEmployeeAppraisals(new ArrayList<>());
-//                requestor.setManagerAppraisals(new ArrayList<>());
-//                requestor.setManagerReviews(new ArrayList<>());
-//                requestor.setEmployeeReviews(new ArrayList<>());
-//                requestor.setModules(new ArrayList<>());
-//                requestor.setApplications(new ArrayList<>());
-//                requestor.setGoals(new ArrayList<>());
-//                requestor.setPositions(new ArrayList<>());
-//                requestor.setJobRequests(new ArrayList<>());
-//            }
-//
-//            jr.getJobRequirements().size();
-//            if (jr.getTeam() != null) {
-//                Team team = jr.getTeam();
-//                team.setTeamHead(null);
-//                team.setUsers(new ArrayList<>());
-//                team.setRoster(null);
-//                team.setDepartment(null);
-//                team.getOutlet().setAddress(null);
-//            }
-//
-//            if (jr.getJobPosting() != null) {
-//                jr.getJobPosting().setJobRequest(null);
-//                jr.getJobPosting().setPostedBy(null);
-//                jr.getJobPosting().setJobRequirements(new ArrayList<>());
-//            }
-//        }
-//        return jobRequests;
-//    }
-//
-//    public List<JobRequest> getJobRequestsByIncludeDescription(String description) {
-//        System.out.println("JobRequestService.findJobRequestsByIncludeDescription");
-//        List<JobRequest> jobRequests = jobRequestRepository.findJobRequestsByIncludeDescription(description);
-//
-//        for (JobRequest jr : jobRequests) {
-//            jr.getDepartment().setDepartmentHead(null);
-//            jr.getDepartment().setOrganization(null);
-//            List<Team> teams = jr.getDepartment().getTeams();
-//            for (Team t : teams) {
-//                t.setTeamHead(null);
-//                t.setUsers(new ArrayList<>());
-//                t.setRoster(null);
-//                t.setDepartment(null);
-//                t.getOutlet().setAddress(null);
-//            }
-//            User approver = jr.getApprover();
-//            if (approver != null){
-//                approver.setTaskListItems(new ArrayList<>());
-//                approver.setTeams(new ArrayList<>());
-//                approver.setQualificationInformation(null);
-//                approver.setCurrentPosition(null);
-//                approver.setReactivationRequest(null);
-//                approver.setAttendances(new ArrayList<>());
-//                approver.setCurrentPayInformation(null);
-//                approver.setEmployeeAppraisals(new ArrayList<>());
-//                approver.setManagerAppraisals(new ArrayList<>());
-//                approver.setManagerReviews(new ArrayList<>());
-//                approver.setEmployeeReviews(new ArrayList<>());
-//                approver.setModules(new ArrayList<>());
-//                approver.setApplications(new ArrayList<>());
-//                approver.setGoals(new ArrayList<>());
-//                approver.setPositions(new ArrayList<>());
-//                approver.setJobRequests(new ArrayList<>());
-//            }
-//
-//            User requestor = jr.getRequestedBy();
-//            if (requestor != null){
-//                requestor.setTaskListItems(new ArrayList<>());
-//                requestor.setTeams(new ArrayList<>());
-//                requestor.setQualificationInformation(null);
-//                requestor.setCurrentPosition(null);
-//                requestor.setReactivationRequest(null);
-//                requestor.setAttendances(new ArrayList<>());
-//                requestor.setCurrentPayInformation(null);
-//                requestor.setEmployeeAppraisals(new ArrayList<>());
-//                requestor.setManagerAppraisals(new ArrayList<>());
-//                requestor.setManagerReviews(new ArrayList<>());
-//                requestor.setEmployeeReviews(new ArrayList<>());
-//                requestor.setModules(new ArrayList<>());
-//                requestor.setApplications(new ArrayList<>());
-//                requestor.setGoals(new ArrayList<>());
-//                requestor.setPositions(new ArrayList<>());
-//                requestor.setJobRequests(new ArrayList<>());
-//            }
-//
-//            jr.getJobRequirements().size();
-//            if (jr.getTeam() != null) {
-//                Team team = jr.getTeam();
-//                team.setTeamHead(null);
-//                team.setUsers(new ArrayList<>());
-//                team.setRoster(null);
-//                team.setDepartment(null);
-//                team.getOutlet().setAddress(null);
-//            }
-//
-//            if (jr.getJobPosting() != null) {
-//                jr.getJobPosting().setJobRequest(null);
-//                jr.getJobPosting().setPostedBy(null);
-//                jr.getJobPosting().setJobRequirements(new ArrayList<>());
-//            }
-//        }
-//        return jobRequests;
-//    }
-//
-//    public List<JobRequest> getJobRequestsByDepartmentId(Long departmentId) {
-//        System.out.println("JobRequestService.findJobRequestsByDepartmentId");
-//        List<JobRequest> jobRequests = jobRequestRepository.findJobRequestsByDepartmentId(departmentId);
-//
-//        for (JobRequest jr : jobRequests) {
-//            jr.getDepartment().setDepartmentHead(null);
-//            jr.getDepartment().setOrganization(null);
-//            List<Team> teams = jr.getDepartment().getTeams();
-//            for (Team t : teams) {
-//                t.setTeamHead(null);
-//                t.setUsers(new ArrayList<>());
-//                t.setRoster(null);
-//                t.setDepartment(null);
-//                t.getOutlet().setAddress(null);
-//            }
-//            User approver = jr.getApprover();
-//            if (approver != null){
-//                approver.setTaskListItems(new ArrayList<>());
-//                approver.setTeams(new ArrayList<>());
-//                approver.setQualificationInformation(null);
-//                approver.setCurrentPosition(null);
-//                approver.setReactivationRequest(null);
-//                approver.setAttendances(new ArrayList<>());
-//                approver.setCurrentPayInformation(null);
-//                approver.setEmployeeAppraisals(new ArrayList<>());
-//                approver.setManagerAppraisals(new ArrayList<>());
-//                approver.setManagerReviews(new ArrayList<>());
-//                approver.setEmployeeReviews(new ArrayList<>());
-//                approver.setModules(new ArrayList<>());
-//                approver.setApplications(new ArrayList<>());
-//                approver.setGoals(new ArrayList<>());
-//                approver.setPositions(new ArrayList<>());
-//                approver.setJobRequests(new ArrayList<>());
-//            }
-//
-//            User requestor = jr.getRequestedBy();
-//            if (requestor != null){
-//                requestor.setTaskListItems(new ArrayList<>());
-//                requestor.setTeams(new ArrayList<>());
-//                requestor.setQualificationInformation(null);
-//                requestor.setCurrentPosition(null);
-//                requestor.setReactivationRequest(null);
-//                requestor.setAttendances(new ArrayList<>());
-//                requestor.setCurrentPayInformation(null);
-//                requestor.setEmployeeAppraisals(new ArrayList<>());
-//                requestor.setManagerAppraisals(new ArrayList<>());
-//                requestor.setManagerReviews(new ArrayList<>());
-//                requestor.setEmployeeReviews(new ArrayList<>());
-//                requestor.setModules(new ArrayList<>());
-//                requestor.setApplications(new ArrayList<>());
-//                requestor.setGoals(new ArrayList<>());
-//                requestor.setPositions(new ArrayList<>());
-//                requestor.setJobRequests(new ArrayList<>());
-//            }
-//
-//            jr.getJobRequirements().size();
-//            if (jr.getTeam() != null) {
-//                Team team = jr.getTeam();
-//                team.setTeamHead(null);
-//                team.setUsers(new ArrayList<>());
-//                team.setRoster(null);
-//                team.setDepartment(null);
-//                team.getOutlet().setAddress(null);
-//            }
-//
-//            if (jr.getJobPosting() != null) {
-//                jr.getJobPosting().setJobRequest(null);
-//                jr.getJobPosting().setPostedBy(null);
-//                jr.getJobPosting().setJobRequirements(new ArrayList<>());
-//            }
-//        }
-//        return jobRequests;
-//    }
-//
     public List<JobRequest> getJobRequestsByRequestorId(Long requestorId) {
         System.out.println("JobRequestService.findJobRequestsByRequestorId");
         List<JobRequest> jobRequests = jobRequestRepository.findJobRequestsByRequestorId(requestorId);
@@ -656,27 +453,13 @@ public class JobRequestService {
                 approver.setJobRequests(new ArrayList<>());
             }
 
-//            User requestor = jr.getRequestedBy();
-//            if (requestor != null){
-//                requestor.setTaskListItems(new ArrayList<>());
-//                requestor.setTeams(new ArrayList<>());
-//                requestor.setQualificationInformation(null);
-//                requestor.setCurrentPosition(null);
-//                requestor.setReactivationRequest(null);
-//                requestor.setAttendances(new ArrayList<>());
-//                requestor.setCurrentPayInformation(null);
-//                requestor.setEmployeeAppraisals(new ArrayList<>());
-//                requestor.setManagerAppraisals(new ArrayList<>());
-//                requestor.setManagerReviews(new ArrayList<>());
-//                requestor.setEmployeeReviews(new ArrayList<>());
-//                requestor.setModules(new ArrayList<>());
-//                requestor.setApplications(new ArrayList<>());
-//                requestor.setGoals(new ArrayList<>());
-//                requestor.setPositions(new ArrayList<>());
-//                requestor.setJobRequests(new ArrayList<>());
-//            }
+            if (jr.getJobRequirements().size() != 0) {
+                for (Skillset sk : jr.getJobRequirements()) {
+                    sk.setJobRequests(new ArrayList<>());
+                    sk.setJobPostings(new ArrayList<>());
+                }
+            }
 
-            jr.getJobRequirements().size();
             if (jr.getTeam() != null) {
                 Team team = jr.getTeam();
                 team.setTeamHead(null);
@@ -689,7 +472,7 @@ public class JobRequestService {
             if (jr.getJobPosting() != null) {
                 jr.getJobPosting().setJobRequest(null);
                 jr.getJobPosting().setPostedBy(null);
-                jr.getJobPosting().setJobRequirements(new ArrayList<>());
+                jr.getJobPosting().setJobPostRequirements(new ArrayList<>());
             }
         }
         return jobRequests;
@@ -737,82 +520,88 @@ public class JobRequestService {
 
         return true;
     }
-//
-//    public List<JobRequest> getJobRequestsByApproverId(Long approverId) {
-//        System.out.println("JobRequestService.findJobRequestsByApproverId");
-//        List<JobRequest> jobRequests = jobRequestRepository.findJobRequestsByApproverId(approverId);
-//
-//        for (JobRequest jr : jobRequests) {
-//            jr.getDepartment().setDepartmentHead(null);
-//            jr.getDepartment().setOrganization(null);
-//            List<Team> teams = jr.getDepartment().getTeams();
-//            for (Team t : teams) {
-//                t.setTeamHead(null);
-//                t.setUsers(new ArrayList<>());
-//                t.setRoster(null);
-//                t.setDepartment(null);
-//                t.getOutlet().setAddress(null);
-//            }
-//            User approver = jr.getApprover();
-//            if (approver != null){
-//                approver.setTaskListItems(new ArrayList<>());
-//                approver.setTeams(new ArrayList<>());
-//                approver.setQualificationInformation(null);
-//                approver.setCurrentPosition(null);
-//                approver.setReactivationRequest(null);
-//                approver.setAttendances(new ArrayList<>());
-//                approver.setCurrentPayInformation(null);
-//                approver.setEmployeeAppraisals(new ArrayList<>());
-//                approver.setManagerAppraisals(new ArrayList<>());
-//                approver.setManagerReviews(new ArrayList<>());
-//                approver.setEmployeeReviews(new ArrayList<>());
-//                approver.setModules(new ArrayList<>());
-//                approver.setApplications(new ArrayList<>());
-//                approver.setGoals(new ArrayList<>());
-//                approver.setPositions(new ArrayList<>());
-//                approver.setJobRequests(new ArrayList<>());
-//            }
-//
-//            User requestor = jr.getRequestedBy();
-//            if (requestor != null){
-//                requestor.setTaskListItems(new ArrayList<>());
-//                requestor.setTeams(new ArrayList<>());
-//                requestor.setQualificationInformation(null);
-//                requestor.setCurrentPosition(null);
-//                requestor.setReactivationRequest(null);
-//                requestor.setAttendances(new ArrayList<>());
-//                requestor.setCurrentPayInformation(null);
-//                requestor.setEmployeeAppraisals(new ArrayList<>());
-//                requestor.setManagerAppraisals(new ArrayList<>());
-//                requestor.setManagerReviews(new ArrayList<>());
-//                requestor.setEmployeeReviews(new ArrayList<>());
-//                requestor.setModules(new ArrayList<>());
-//                requestor.setApplications(new ArrayList<>());
-//                requestor.setGoals(new ArrayList<>());
-//                requestor.setPositions(new ArrayList<>());
-//                requestor.setJobRequests(new ArrayList<>());
-//            }
-//
-//            jr.getJobRequirements().size();
-//            if (jr.getTeam() != null) {
-//                Team team = jr.getTeam();
-//                team.setTeamHead(null);
-//                team.setUsers(new ArrayList<>());
-//                team.setRoster(null);
-//                team.setDepartment(null);
-//                team.getOutlet().setAddress(null);
-//            }
-//
-//            if (jr.getJobPosting() != null) {
-//                jr.getJobPosting().setJobRequest(null);
-//                jr.getJobPosting().setPostedBy(null);
-//                jr.getJobPosting().setJobRequirements(new ArrayList<>());
-//            }
-//        }
-//        return jobRequests;
-//    }
 
-//    public Long approveJobRequest(Long jobRequestId) {
-//        System.out.println("JobRequestService.approveJobRequest");
-//    }
+    public List<JobRequest> getAllSubmittedJobRequests() {
+        System.out.println("JobRequestService.getAllSubmittedJobRequests");
+
+        List<JobRequest> jobRequests = jobRequestRepository.findJobRequestsByStatus(JobStatusEnum.CREATED);
+        System.out.println("size of submitted job request list is " + jobRequests.size());
+
+        for (JobRequest jr : jobRequests) {
+            jr.getDepartment().setDepartmentHead(null);
+            jr.getDepartment().setOrganization(null);
+            List<Team> teams = jr.getDepartment().getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                t.setRoster(null);
+                t.setDepartment(null);
+                t.getOutlet().setAddress(null);
+            }
+            User approver = jr.getApprover();
+            if (approver != null){
+                approver.setTaskListItems(new ArrayList<>());
+                approver.setTeams(new ArrayList<>());
+                approver.setQualificationInformation(null);
+                approver.setCurrentPosition(null);
+                approver.setReactivationRequest(null);
+                approver.setAttendances(new ArrayList<>());
+                approver.setCurrentPayInformation(null);
+                approver.setEmployeeAppraisals(new ArrayList<>());
+                approver.setManagerAppraisals(new ArrayList<>());
+                approver.setManagerReviews(new ArrayList<>());
+                approver.setEmployeeReviews(new ArrayList<>());
+                approver.setModules(new ArrayList<>());
+                approver.setApplications(new ArrayList<>());
+                approver.setGoals(new ArrayList<>());
+                approver.setPositions(new ArrayList<>());
+                approver.setJobRequests(new ArrayList<>());
+            }
+
+            User requestor = jr.getRequestedBy();
+            if (requestor != null){
+                requestor.setTaskListItems(new ArrayList<>());
+                requestor.setTeams(new ArrayList<>());
+                requestor.setQualificationInformation(null);
+                requestor.setCurrentPosition(null);
+                requestor.setReactivationRequest(null);
+                requestor.setAttendances(new ArrayList<>());
+                requestor.setCurrentPayInformation(null);
+                requestor.setEmployeeAppraisals(new ArrayList<>());
+                requestor.setManagerAppraisals(new ArrayList<>());
+                requestor.setManagerReviews(new ArrayList<>());
+                requestor.setEmployeeReviews(new ArrayList<>());
+                requestor.setModules(new ArrayList<>());
+                requestor.setApplications(new ArrayList<>());
+                requestor.setGoals(new ArrayList<>());
+                requestor.setPositions(new ArrayList<>());
+                requestor.setJobRequests(new ArrayList<>());
+            }
+
+            if (jr.getJobRequirements().size() != 0) {
+                for (Skillset sk : jr.getJobRequirements()) {
+                    sk.setJobRequests(new ArrayList<>());
+                    sk.setJobPostings(new ArrayList<>());
+                }
+            }
+
+            if (jr.getTeam() != null) {
+                Team team = jr.getTeam();
+                team.setTeamHead(null);
+                team.setUsers(new ArrayList<>());
+                team.setRoster(null);
+                team.setDepartment(null);
+                team.getOutlet().setAddress(null);
+            }
+
+            if (jr.getJobPosting() != null) {
+                jr.getJobPosting().setJobRequest(null);
+                jr.getJobPosting().setPostedBy(null);
+                jr.getJobPosting().setJobPostRequirements(new ArrayList<>());
+            }
+        }
+
+        return jobRequests;
+    }
+
 }
