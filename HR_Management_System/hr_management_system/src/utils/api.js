@@ -224,6 +224,9 @@ const api = {
   getTeam(teamId) {
     return axios.get(`http://localhost:9191/api/team/${teamId}`);
   },
+  getAllDepartments(){
+    return axios.get('http://localhost:9191/api/department/getAllDepartments')
+  },
   getAllTeams() {
     return axios.get(`http://localhost:9191/api/team/getAllTeams`);
   },

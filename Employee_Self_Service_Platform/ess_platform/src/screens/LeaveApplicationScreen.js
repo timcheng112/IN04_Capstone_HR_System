@@ -27,22 +27,15 @@ const styles = StyleSheet.create({
   }
 });
 
-const LeaveScreen = () => {
+const LeaveApplicationScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.headlines}>Application History</Text>
-        <Button
-          icon="plus"
-          mode="contained"
-          color="#ffd700"
-          onPress={() => Alert.alert('Right button pressed')}>
-          Apply for Leave
-        </Button>
+        <Text style={styles.headlines}>Leave Application</Text>
 
       </View>
     </SafeAreaView>
   )
 };
 
-export default LeaveScreen;
+export default LeaveApplicationScreen;

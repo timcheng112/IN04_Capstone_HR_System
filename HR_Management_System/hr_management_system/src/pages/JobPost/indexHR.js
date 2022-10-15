@@ -10,14 +10,15 @@ import { useState, useEffect  } from "react";
 import Tabs from '../../features/jobrequest/Tab'
 import api from "../../utils/api";
 import { getUserId} from "../../utils/Common";
-import PostOption from "../../features/jobrequest/RequestOption";
+import PostOption from "../../features/jobrequest/PostOption";
 
 
 export default function JobPost() {
   const history = useHistory();
-  const [posts, setPosts] = useState();
+  const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [filteredPosts, setFilteredPosts] =
     useState(posts);
   const [searchParam] = useState([
@@ -43,7 +44,7 @@ export default function JobPost() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
   function search(e, items) {
     const value = e.target.value;
@@ -103,14 +104,14 @@ export default function JobPost() {
                       <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                         Title
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      {/* <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         Department
+                      </th> */}
+                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        Post Date
                       </th>
                       <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                        Approve Date
-                      </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                        Requestor
+                        Posted By
                       </th>
                       <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         Status
@@ -122,16 +123,16 @@ export default function JobPost() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {filteredPosts.map((post) => (
-                      <tr key={post.postId}>
+                      <tr key={post.postingId}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
                           {post.jobTitle}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.department.departmentName}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.approvedDate}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.requestedBy.firstName}</td>
+                        {/* <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.department.departmentName}</td> */}
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.postDate}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.postedBy.firstName}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <PostOption post={post}/>
+                          <PostOption post={post} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                         </td>
                       </tr>
                     ))}
