@@ -38,7 +38,7 @@ export default function PostOption({post, refreshKeyHandler}) {
         <button
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          onClick={() => history.push({pathname: "/hiring/jobrequest/details" , state: {request: post}})}
+          onClick={() => history.push({pathname: "/hiring/jobpost/details" , state: {post: post}})}
         >
           <EyeIcon
             className="md:-ml-0.5 md:mr-2 h-4 w-4"
@@ -46,7 +46,7 @@ export default function PostOption({post, refreshKeyHandler}) {
           />
           <span className="hidden md:block">Detail</span>
         </button>
-         <button
+         {post.status !== "CLOSED" && <button
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           onClick={() => setTrash(true)}
@@ -56,7 +56,7 @@ export default function PostOption({post, refreshKeyHandler}) {
             aria-hidden="true"
           />
           <span className="hidden md:block">Close</span>
-        </button>
+        </button>}
       </div>
       <CloseDialog
         title="Job Post"

@@ -9,6 +9,7 @@ import {
 import api from "../utils/api";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
+import LeaveApplicationScreen from "./LeaveApplicationScreen";
 
 const styles = StyleSheet.create({
   container: {

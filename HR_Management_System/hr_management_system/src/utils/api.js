@@ -350,9 +350,9 @@ const api = {
           `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
       );
     },
-  editJobPost(jobTitle, jobDescription, justification, preferredStartDate, jobType, jobRole, salary, jobRequirements, departmentId, teamId, requestedById, jobRequestId) {
-      return axios.post(
-          `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
+  editJobPost(jobPostId, jobTitle, jobDescription, preferredStartDate, jobType, jobRole, salary, jobRequirements) {
+      return axios.put(
+          `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
       );
     },
 };

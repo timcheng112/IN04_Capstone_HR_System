@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import OffboardingScreen from "../screens/OffboardingScreen";
 import LeaveScreen from "../screens/LeaveScreen";
+import LeaveApplicationScreen from "../screens/LeaveApplicationScreen";
 import Header from "../components/general/Header";
 import { Appbar, Button } from "react-native-paper";
 import { StatusBar } from "react-native";
