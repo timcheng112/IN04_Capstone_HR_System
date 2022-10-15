@@ -48,6 +48,7 @@ export default function RequestDetail() {
   ]
 
   useEffect(() => {
+    console.log(location.state.request.jobType)
     console.log(location.state.request);
     setRequest(location.state.request)
     setTitle(location.state.request.jobTitle)
@@ -226,6 +227,9 @@ export default function RequestDetail() {
     user !== null && user.hrEmployee ? (history.push("/hiring/jobrequesthr")) : (history.push("/hiring/jobrequest"))
   }
 
+  function getJobType() {
+    return jobType;
+  }
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -319,7 +323,7 @@ export default function RequestDetail() {
                     name="type"
                     id="type"
                     disabled
-                    value = {jobType}
+                    value = {location.state.request.jobType.toUpperCase()}
                     className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 }
@@ -336,7 +340,7 @@ export default function RequestDetail() {
                     name="role"
                     id="role"
                     disabled
-                    value={jobRole}
+                    value={location.state.request.jobRole.toUpperCase()}
                     className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 }
@@ -346,7 +350,7 @@ export default function RequestDetail() {
                 <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Requirements
                 </label>
-                <JobRequirements selectedSkills={requirements} setSelectedSkills={setRequirements} />
+                <JobRequirements selectedSkills={requirements} setSelectedSkills={setRequirements} status={status}/>
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
