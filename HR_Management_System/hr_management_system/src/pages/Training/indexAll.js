@@ -9,6 +9,8 @@ import { useHistory } from "react-router";
 import TrainingSidebar from "../../components/Sidebar/Training";
 import AddModuleModal from "../../features/training/AddModuleModal";
 import ModuleGrid from "../../components/Grid/Module";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import AllModuleGrid from "../../components/Grid/AllModule";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -17,17 +19,20 @@ function classNames(...classes) {
 export default function AllTraining() {
   const [user, setUser] = useState(null);
   const [modules, setModules] = useState([]);
+  const [filteredModules, setFilteredModules] = useState(modules);
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState(null);
   const [hrMode, setHrMode] = useState(false);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [searchParam] = useState(["title", "description"]);
 
   useEffect(() => {
     api
       .getAllModules()
       .then((response) => {
         setModules(response.data);
+        setFilteredModules(response.data);
       })
       .catch((error) => setError(error));
     api.getUser(getUserId()).then((response) => {
@@ -43,6 +48,22 @@ export default function AllTraining() {
       })
       .catch((error) => setError(error));
   }, [openCreate]);
+
+  function search(e, items) {
+    const value = e.target.value;
+    setFilteredModules(
+      items.filter((item) => {
+        return searchParam.some((newItem) => {
+          return (
+            item[newItem]
+              .toString()
+              .toLowerCase()
+              .indexOf(value.toLowerCase()) > -1
+          );
+        });
+      })
+    );
+  }
 
   if (error) return `Error`;
 
@@ -93,8 +114,22 @@ export default function AllTraining() {
                 </div>
               )}
             </div>
-            <p className="text-xl mb-5">All Modules</p>
-            <ModuleGrid files={modules} />
+            <p className="font-sans text-xl mb-3">All Modules</p>
+            <div className="flex row justify-center">
+              <input
+                id="module-search"
+                name="module-search"
+                type="module-search"
+                autoComplete="module-search"
+                required
+                className="block appearance-none w-1/3 rounded-md mr-3 mb-5 border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                placeholder="Name, Description"
+                onChange={(e) => {
+                  search(e, modules);
+                }}
+              />
+            </div>
+            <AllModuleGrid files={filteredModules} />
             <AddModuleModal
               open={openCreate}
               onClose={() => setOpenCreate(false)}

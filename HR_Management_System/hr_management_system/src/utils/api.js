@@ -326,6 +326,12 @@ const api = {
   getIsVideoWatchedByEmployee(videoId, userId) {
     return axios.get(`http://localhost:9191/api/video/${videoId}/user/${userId}`)
   },
+  getUserProgress(moduleId, userId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/user/${userId}`)
+  },
+  getUserCompletedModules(userId) {
+    return axios.get(`http://localhost:9191/api/module/user/${userId}/completed`)
+  },
   // JOB REQUEST
   getAllJobRequests() {
     return axios.get(`http://localhost:9191/api/jobrequest/getAllJobRequests`);

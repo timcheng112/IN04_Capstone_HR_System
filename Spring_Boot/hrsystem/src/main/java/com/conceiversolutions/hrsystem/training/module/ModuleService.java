@@ -14,6 +14,8 @@ import com.conceiversolutions.hrsystem.training.video.VideoRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
+import net.bytebuddy.asm.Advice.OffsetMapping.Factory.Illegal;
+
 @Service
 public class ModuleService {
 
@@ -24,7 +26,8 @@ public class ModuleService {
     @Autowired
     private final VideoRepository videoRepository;
 
-    public ModuleService(ModuleRepository moduleRepository, UserRepository userRepository, VideoRepository videoRepository) {
+    public ModuleService(ModuleRepository moduleRepository, UserRepository userRepository,
+            VideoRepository videoRepository) {
         this.moduleRepository = moduleRepository;
         this.userRepository = userRepository;
         this.videoRepository = videoRepository;
@@ -59,7 +62,7 @@ public class ModuleService {
     }
 
     public void deleteModule(Long moduleId) {
-        if(!moduleRepository.existsById(moduleId)) {
+        if (!moduleRepository.existsById(moduleId)) {
             throw new IllegalStateException("module with id " + moduleId + " does not exist");
         }
         moduleRepository.deleteById(moduleId);
@@ -89,7 +92,7 @@ public class ModuleService {
             }
             moduleRepository.save(module);
             System.out.println(module.getEmployees() instanceof List);
-            
+
             return employees.size() + " employee(s) have been assigned to module " + moduleId;
         } else {
             throw new IllegalStateException("Module does not exist");
@@ -98,10 +101,15 @@ public class ModuleService {
 
     @Transactional
     public String editModule(Long moduleId, Module module) throws Exception {
-        Module m = getModule(moduleId);
-        m.setTitle(module.getTitle());
-        m.setDescription(module.getDescription());
-        m.setThumbnail(module.getThumbnail());
+        Optional<Module> optionalModule = moduleRepository.findById(moduleId);
+        if (optionalModule.isPresent()) {
+            Module m = optionalModule.get();
+            m.setTitle(module.getTitle());
+            m.setDescription(module.getDescription());
+            m.setThumbnail(module.getThumbnail());
+        } else {
+            throw new IllegalStateException("Module does not exist");
+        }
         return module.getTitle() + " has been successfuly edited";
     }
 
@@ -134,23 +142,26 @@ public class ModuleService {
                     module.setEmployees(new ArrayList<>());
                     userModules.add(module);
                 }
-             }
+            }
         }
         return userModules;
     }
 
     public Module getModuleFromVideo(Long videoId) throws Exception {
-        List<Module> allModules = moduleRepository.findAll();
-        for (Module module : allModules) {
-            for (Video video : module.getVideoList()) {
-                if (video.getVideoId() == videoId) {
-                    module.setEmployees(new ArrayList<>());
-                    module.setVideoList(new ArrayList<>());
+        Optional<Video> optionalVideo = videoRepository.findById(videoId);
+        if (optionalVideo.isPresent()) {
+            Video v = optionalVideo.get();
+            List<Module> allModules = moduleRepository.findAll();
+            for (Module module : allModules) {
+                if (module.getVideoList().contains(v)) {
                     return module;
                 }
             }
+            throw new IllegalStateException("Could not find module");
+        } else {
+            throw new IllegalStateException("Video does not exist");
         }
-        throw new IllegalStateException("Could not find module");
+
     }
 
     public List<User> getEmployeesAssignedToModule(Long moduleId) throws Exception {
@@ -170,5 +181,59 @@ public class ModuleService {
             System.out.println("Removed user " + assigned.getUserId());
         }
         return allEmployees;
+    }
+
+    public String getUserProgress(Long moduleId, Long userId) throws Exception {
+        System.out.println("ModuleService.getUserProgress");
+        Iterable<Module> userModules = getUserModules(userId);
+        System.out.println("user mods = " + userModules);
+        for (Module module : userModules) {
+            
+            if (module.getModuleId() == moduleId) {
+                Integer watched = 0;
+                for (Video video : module.getVideoList()) {
+                    Optional<User> optionalUser = userRepository.findById(userId);
+                    if (optionalUser.isPresent()) {
+                        User user = optionalUser.get();
+                        if (video.getWatchedBy().contains(user)) {
+                            watched++;
+                        }
+                    } else {
+                        throw new IllegalStateException("User does not exist");
+                    }
+                }
+                return watched + " out of " + module.getVideoList().size() + " watched";
+            }
+        }
+        throw new IllegalStateException("User is not assigned to this module");
+    }
+
+    public List<Module> getUserCompletedModules(Long userId) throws Exception {
+
+        System.out.println("ModuleService.getUserCompletedModules");
+        Iterable<Module> userModules = getUserModules(userId);
+        List<Module> completedModules = new ArrayList<>();
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        System.out.println(userModules);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            for (Module module : userModules) {
+                int watched = 0;
+                int total = module.getVideoList().size();
+                for (Video v : module.getVideoList()) {
+                    if (v.getWatchedBy().contains(user)) {
+                        watched++;
+                    }
+                }
+                if (watched == total) {
+                    completedModules.add(module);
+                }
+            }
+            return completedModules;
+        } else {
+            throw new IllegalStateException("User does not exist");
+        }
     }
 }

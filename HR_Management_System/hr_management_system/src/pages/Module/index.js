@@ -36,17 +36,16 @@ export default function Module() {
     console.log(moduleId);
     api.getUser(getUserId()).then((response) => {
       setUser(response.data);
-      console.log("user");
+      //console.log("user");
     });
     api.getModule(moduleId).then((response) => {
       setModule(response.data);
-      console.log("module");
-      console.log(response.data);
-      //setEmployees(response.data.employees);
+      //console.log("module");
+      //console.log(response.data);
     });
     api
       .getEmployeesAssignedToModule(moduleId)
-      .then((response) => setEmployees(response.data));
+      .then((response) => setProgress(response.data));
   }, []);
 
   useEffect(() => {
@@ -58,8 +57,8 @@ export default function Module() {
   useEffect(() => {
     api.getVideosInModule(moduleId).then((response) => {
       setVideos(response.data);
-      console.log("video");
-      console.log(response.data);
+      //console.log("video");
+      //console.log(response.data);
     });
   }, []);
 
@@ -86,6 +85,21 @@ export default function Module() {
         .catch((error) => setError(error));
     }
   }
+
+  function setProgress(assigned) {
+    assigned.forEach((e) => {
+      //console.log("progress " + e.userId);
+      api.getUserProgress(moduleId, e.userId).then((response) => {
+        e.progress = response.data;
+        console.log("? " + response.data);
+      });
+    });
+    setEmployees(assigned);
+  }
+
+  const findProgress = (user) => {
+    return user.progress;
+  };
 
   if (error) return `Error`;
 
@@ -253,7 +267,6 @@ export default function Module() {
                     </div>
                   </div>
                 </div>
-
                 {hrMode && (
                   <>
                     <div className="mt-8 ml-5 flex">
@@ -311,7 +324,7 @@ export default function Module() {
                                       {employee.userRole}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
-                                      {employee.email}
+                                      {findProgress(employee)}
                                     </td>
                                     {/* <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                   <a

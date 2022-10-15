@@ -91,4 +91,14 @@ public class ModuleController {
         return moduleService.getModuleFromVideo(videoId);
     }
 
+    @GetMapping(path = "{moduleId}/user/{userId}")
+    public String getUserProgress(@PathVariable("moduleId") Long moduleId, @PathVariable("userId") Long userId) throws Exception {
+        return moduleService.getUserProgress(moduleId, userId);
+    }
+
+    @GetMapping(path = "user/{userId}/completed")
+    public List<Module> getUserCompletedModules(@PathVariable("userId") Long userId) throws Exception {
+        return moduleService.getUserCompletedModules(userId);
+    }
+
 }

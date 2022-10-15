@@ -18,12 +18,10 @@ import HomePage from "./pages/Home";
 import TrainingPage from "./pages/Training/index"
 
 import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
-import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 import OnboardingHrPage from "./pages/Onboarding/indexHR";
 import OnboardingPage from "./pages/Onboarding/index";
 import OffboardingHrPage from "./pages/Offboarding/indexHr";
 import OffboardingPage from "./pages/Offboarding/index";
-import TrainingHRPage from "./pages/Training/indexAll";
 import ModulePage from "./pages/Module";
 import AdminPage from "./pages/AdminPage";
 
@@ -35,6 +33,7 @@ import JobPostPage from "./pages/JobPost/indexHR";
 import VideoPage from "./pages/Video";
 import AllTrainingPage from "./pages/Training/indexAll";
 import AllVideosPage from "./pages/Video/indexAll";
+import TrainingCompletedPage from "./pages/Training/indexCompleted";
 
 
 function App() {
@@ -76,6 +75,7 @@ function App() {
           <PrivateRoute exact path="/admin/offboarding" component={OffboardingPage} />
           <PrivateRoute exact path="/admin/offboardinghr" component={OffboardingHrPage} />
           <PrivateRoute exact path="/mytraining" component={TrainingPage} />
+          <PrivateRoute exact path="/mytraining/completed" component={TrainingCompletedPage} />
           <PrivateRoute exact path="/training" component={AllTrainingPage} />  
           <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />     
           <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  

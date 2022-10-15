@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useEffect, useState } from "react";
 import api from "../../utils/api";
+import { getUserId } from "../../utils/Common";
 import AssignModuleToEmployee from "./AssignModuleToEmployee";
 
 export default function AssignModuleModal({
@@ -24,29 +25,21 @@ export default function AssignModuleModal({
 
   useEffect(() => {
       api.getEmployeesAssignedToModule(module.moduleId).then((response) => {
-        console.log("assigned")
-        console.log(response.data)
-        setAssignedEmployees(response.data);
-        setFilteredAssignedEmployees(response.data);
+        // console.log("assigned")
+        // console.log(response.data)
+        const filterOutSelf = response.data.filter((e) => e.userId !== parseInt(getUserId()));
+        setAssignedEmployees(filterOutSelf);
+        setFilteredAssignedEmployees(filterOutSelf);
       });
       api.getEmployeesUnassignedToModule(module.moduleId).then((response) => {
-        console.log("unassigned " + response.data.length)
-        setUnassignedEmployees(response.data)
-        setFilteredUnassignedEmployees(response.data)
+        // console.log("unassigned " + response.data.length)
+        const filterOutSelf = response.data.filter((e) => e.userId !== parseInt(getUserId()));
+        setUnassignedEmployees(filterOutSelf)
+        setFilteredUnassignedEmployees(filterOutSelf)
       })
-    // api
-    //   .getEmployeesWithoutTask(task.taskId)
-    //   .then((response) => {
-    //     setUnassignedEmployees(response.data);
-    //     setFilteredUnassignedEmployees(response.data);
-    //     setAssignedEmployees([]);
-    //     setFilteredAssignedEmployees([]);
-    //   })
-    //   .catch((error) => console.log(error.response.data.message));
   }, [open]);
 
   const handleSubmit = () => {
-    // createTaskListItem(task.taskId);
     assignModule();
     onClose();
     refreshKeyHandler();
@@ -68,26 +61,6 @@ export default function AssignModuleModal({
         )
       );
   }
-
-  // function getUnassignedEmployees(assignedEmployees) {
-  //   var unassigned = [];
-  //   if (allEmployees.length > 0 && assignedEmployees.length > 0) {
-  //     allEmployees.forEach((e) => {
-  //       assignedEmployees.forEach((employee) => {
-  //         if (e.userId !== employee.userId) {
-  //           unassigned.push(e);
-  //         }
-  //       });
-  //     });
-  //     console.log("unassigned " + unassigned);
-  //     setUnassignedEmployees(unassigned);
-  //     setFilteredUnassignedEmployees(unassigned);
-  //   } else if (assignedEmployees.length === 0) {
-  //     console.log(assignedEmployees)
-  //     setUnassignedEmployees(allEmployees)
-  //     setFilteredUnassignedEmployees(allEmployees)
-  //   }
-  // }
 
   function search(e, items, isUnassigned) {
     const value = e.target.value;

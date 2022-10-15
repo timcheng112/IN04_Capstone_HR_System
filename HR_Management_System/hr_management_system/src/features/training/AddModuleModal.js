@@ -8,8 +8,6 @@ import AddModuleSteps from "./AddModuleSteps";
 import AssignModuleToEmployee from "./AssignModuleToEmployee";
 
 export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
-  const history = useHistory();
-  const [user, setUser] = useState(getUserId());
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
@@ -34,12 +32,16 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
     api
       .getAllEmployees()
       .then((response) => {
-        setUnassignedEmployees(response.data);
-        setFilteredUnassignedEmployees(response.data);
-        //console.log(response.data);
+        filterOutSelf(response.data)
       })
       .catch((error) => setError(error));
   }, []);
+
+  function filterOutSelf(employees) {
+    const filteredEmployees = employees.filter((e) => e.userId !== parseInt(getUserId()))
+    setUnassignedEmployees(filteredEmployees)
+    setFilteredUnassignedEmployees(filteredEmployees)
+  }
 
   const handleSubmit = () => {
     createModule();
@@ -57,10 +59,10 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
     //console.log("description = " + description);
     api.addModule(module).then((response) => {
       alert("Successfully created module.");
-      setTitle("")
-      setDescription("")
-      setThumbnail("")
-      setShowStepOne(true)
+      setTitle("");
+      setDescription("");
+      setThumbnail("");
+      setShowStepOne(true);
       //console.log("to assign " + response.data);
       assignModule(response.data);
     });
@@ -78,10 +80,10 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
     const userIdList = [];
     //console.log(assignedEmployees.length)
     assignedEmployees.forEach((employee) => {
-        //console.log(employee.userId)
-        userIdList.push(employee.userId)
-        setAssignedEmployees([])
-        setUnassignedEmployees([])
+      //console.log(employee.userId)
+      userIdList.push(employee.userId);
+      setAssignedEmployees([]);
+      setUnassignedEmployees([]);
     });
     //console.log('user id list ' + userIdList)
     api

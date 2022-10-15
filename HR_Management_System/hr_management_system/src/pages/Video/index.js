@@ -52,7 +52,7 @@ export default function Video() {
       .getEmployeesAssignedToModule(moduleId)
       .then((response) => {
         setAllWatched(response.data);
-        console.log(response.data)
+        console.log(response.data);
       })
       .then(() => console.log(assignedTo));
     api
@@ -80,10 +80,17 @@ export default function Video() {
 
   function setAllWatched(assigned) {
     assigned.forEach((e) => {
-      e.watched = false;
+      //e.watched = false;
+      api
+        .getIsVideoWatchedByEmployee(videoId, e.userId)
+        .then((response) => (e.watched = response.data));
     });
     setAssignedTo(assigned);
   }
+
+  const findStatusHandler = (user) => {
+    return user.watched;
+  };
 
   if (error) return `Error`;
 
@@ -131,32 +138,53 @@ export default function Video() {
             </div>
             <div className="px-4 sm:px-6 lg:px-8">
               {showInfo && (
-                <div className="rounded-md bg-blue-50 max-w-100 p-4 mt-5 mb-5">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <InformationCircleIcon
-                        className="h-5 w-5 text-blue-400"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div className="ml-3 flex-1 md:flex md:justify-between">
-                      <p className="text-sm text-blue-700">
-                        Please do not close the browser while watching. Your
-                        progress will be lost!
-                      </p>
-                    </div>
-                    <div className="-mx-1.5 -my-1.5">
-                      <button
-                        type="button"
-                        className="inline-flex rounded-md bg-blue-50 p-1.5 text-blue-500 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-blue-50"
-                        onClick={() => setShowInfo(false)}
-                      >
-                        <span className="sr-only">Dismiss</span>
-                        <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                    </div>
+                <div
+                  type="button"
+                  className="mb-5 inline-flex items-center rounded-md border border-transparent bg-blue-50 px-4 py-2 text-base font-medium text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  <InformationCircleIcon
+                    className="h-5 w-5 mr-2 text-blue-400"
+                    aria-hidden="true"
+                  />
+                  Please do not close the browser while watching. Your progress
+                  will be lost!
+                  <div className="-mx-1.5 -my-1.5 ml-3">
+                    <button
+                      type="button"
+                      className="inline-flex rounded-md bg-blue-50 p-1.5 text-blue-500 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-blue-50"
+                      onClick={() => setShowInfo(false)}
+                    >
+                      <span className="sr-only">Dismiss</span>
+                      <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
                   </div>
                 </div>
+                // <div className="rounded-md bg-blue-50 max-w-100 p-4 mt-5 mb-5">
+                //   <div className="flex">
+                //     <div className="flex-shrink-0">
+                //       <InformationCircleIcon
+                //         className="h-5 w-5 text-blue-400"
+                //         aria-hidden="true"
+                //       />
+                //     </div>
+                //     <div className="ml-3 flex-1 md:flex md:justify-between">
+                //       <p className="text-sm text-blue-700">
+                //         Please do not close the browser while watching. Your
+                //         progress will be lost!
+                //       </p>
+                //     </div>
+                //     <div className="-mx-1.5 -my-1.5">
+                //       <button
+                //         type="button"
+                //         className="inline-flex rounded-md bg-blue-50 p-1.5 text-blue-500 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-blue-50"
+                //         onClick={() => setShowInfo(false)}
+                //       >
+                //         <span className="sr-only">Dismiss</span>
+                //         <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                //       </button>
+                //     </div>
+                //   </div>
+                // </div>
               )}
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
@@ -354,11 +382,11 @@ export default function Video() {
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
                                       {!findStatusHandler(employee) ? (
                                         <span className="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">
-                                          Not Done
+                                          Not Watched
                                         </span>
                                       ) : (
                                         <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                                          Done
+                                          Watched
                                         </span>
                                       )}
                                     </td>

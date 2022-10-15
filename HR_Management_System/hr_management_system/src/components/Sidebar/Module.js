@@ -19,7 +19,7 @@ const navigation = [
   { name: "My Training", href: "/mytraining", icon: AcademicCapIcon, current: false },
   {
     name: "My Completed Training",
-    href: "/mytraining",
+    href: "/mytraining/completed",
     icon: ClipboardDocumentCheckIcon,
     current: false,
   },
