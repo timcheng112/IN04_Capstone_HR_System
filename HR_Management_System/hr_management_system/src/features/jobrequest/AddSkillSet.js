@@ -18,6 +18,8 @@ export default function JobRequirements({ open, setOpen, refreshKeyHandler }) {
     evt.preventDefault();
     create();
     refreshKeyHandler();
+    setOpen(false)
+    //
   };
 
   return (
@@ -46,7 +48,7 @@ export default function JobRequirements({ open, setOpen, refreshKeyHandler }) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <form onSubmit={handleSubmit}>
+              <form>
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 <div>
                   <div className="mt-3 text-center sm:mt-5">
@@ -73,9 +75,9 @@ export default function JobRequirements({ open, setOpen, refreshKeyHandler }) {
                 </div>
                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                   <button
-                    type="submit"
+                    type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                    onClick={setOpen}
+                    onClick={handleSubmit}
                   >
                     Submit
                   </button>

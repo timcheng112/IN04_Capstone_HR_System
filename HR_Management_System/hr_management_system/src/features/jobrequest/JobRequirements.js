@@ -27,13 +27,16 @@ export default function JobRequirements({selectedSkills, setSelectedSkills}) {
   };
 
   useEffect(() => {
-    console.log("ASASD")
-    console.log(selectedSkills);
+//    console.log("ASASD")
+//    console.log(selectedSkills);
     api
       .getAllSkillsets()
       .then((response) => {
         setSkillSet(response.data);
-        console.log(response.data);
+//        console.log("ALL SKILLS")
+//        console.log(response.data);
+//        console.log("USER SKILLS")
+//        console.log(selectedSkills);
       })
       .catch((error) => setError(error));
   }, [refreshKey]);
@@ -51,22 +54,43 @@ export default function JobRequirements({selectedSkills, setSelectedSkills}) {
   //   setSelectedSkills(skills);
   // }
   const handleSelect = (e) => {
-    console.log("options")
-    console.log(options)
-  
-    console.log(e); // matt will need to fix this
+//    console.log("OPTIONS ARE")
+//    console.log(options)
+//
+//    console.log("E IS")
+//    console.log(e);
     let sk = selectedSkills;
-    if (sk.includes(e[0].value)) {
-      sk = sk.filter((item) => item.value !== e[0].value);
-    } else {
-      sk.push(e[0]);
+//    console.log("sk IS")
+//    console.log(sk);
+
+    let newList = [];
+    for (let i = 0; i < e.length; i++) {
+//        console.log("print " + i)
+//        console.log(e[i])
+//        console.log(e[i].value)
+        newList.push(e[i])
+//        if (sk.includes(e[i])) {
+//           console.log("ALR HAVE")
+//           sk = sk.filter(function(obj) {
+//                return obj.
+//           })
+//        } else {
+//           console.log("NEED TO ADD IN")
+//           sk.push(e[i].value)
+//        }
     }
+
+//    if (sk.includes(e[0].value)) {
+//      sk = sk.filter((item) => item.value !== e[0].value);
+//    } else {
+//      sk.push(e[0]);
+//    }
     // e.map((y) => sk.push(y.value));
-    console.log(sk);
-    setSelectedSkills(sk);
+//    console.log("NEWLIST IS NOW")
+//    console.log(newList);
+    setSelectedSkills(newList);
+//    console.log("set selected skill as SK")
     // setSelectedSkills=(e.map(x => x.value));
-    // console.log(selectedSkills);
-    // console.log(options);
   }
 
   return (
@@ -74,7 +98,7 @@ export default function JobRequirements({selectedSkills, setSelectedSkills}) {
         <Select 
           isMulti 
           // value={options.filter(obj => selectedSkills.includes(obj))} 
-          // value={selectedSkills}
+          value={selectedSkills}
           options={options}
           className="basic-multi-select"
           //onChange={(e)=> {handleSelect(Array.from(e.options))}}
@@ -88,7 +112,7 @@ export default function JobRequirements({selectedSkills, setSelectedSkills}) {
       >
         Add Skill Set
       </button>
-      <AddSkillSet open={open} setOpen={() => setOpen(false)} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} />
+      <AddSkillSet open={open} setOpen={() => setOpen(false)}  refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
     </div>
 
 

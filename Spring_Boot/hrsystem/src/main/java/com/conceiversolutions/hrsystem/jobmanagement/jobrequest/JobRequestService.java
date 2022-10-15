@@ -376,21 +376,23 @@ public class JobRequestService {
             throw new IllegalStateException("Job Request cannot be found, cannot proceed");
         }
         JobRequest jr = j.get();
-
+        System.out.println(jr.getJobTitle());
         if (jr.getStatus().equals(JobStatusEnum.APPROVED)) {
             throw new IllegalStateException("Job Request is already approved, cannot delete");
         } else if (jr.getStatus().equals(JobStatusEnum.CANCELLED)) {
             throw new IllegalStateException("Job Request is already cancelled, cannot delete");
         } else if (jr.getStatus().equals(JobStatusEnum.CLOSED)) {
             throw new IllegalStateException("Job Request is already closed, cannot delete");
+        } else if (jr.getJobPosting() != null) {
+            throw new IllegalStateException("Job Request is linked to a Job Posting, contact Admin to delete");
         }
 
-        User requestor = jr.getRequestedBy();
+        User requestor = userRepository.findById(jr.getRequestedBy().getUserId()).get();
         List<JobRequest> jobRequests = requestor.getJobRequests();
         jobRequests.remove(jr);
         requestor.setJobRequests(jobRequests);
         userRepository.save(requestor);
-
+        jobRequestRepository.deleteById(jr.getRequestId());
         System.out.println("Job Request has been successfully deleted");
         return "Job Request has been successfully deleted";
     }
