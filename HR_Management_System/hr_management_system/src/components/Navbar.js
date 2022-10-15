@@ -4,7 +4,9 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import logo from '../assets/libro-transparent-logo.png'
 import { NavLink, useRouteMatch  } from 'react-router-dom'
-import { deleteUser } from '../utils/Common'
+import api from "../utils/api";
+import { getUserId } from "../utils/Common";
+import { useState, useEffect } from "react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -20,7 +22,27 @@ export default function Navbar() {
     { name: 'Hiring', path: '/hiring/jobrequest'},
     { name: 'Reports', path: '/reports'},
   ] 
+  const navigationHR = [
+    { name: 'Dashboard', path: '/'},
+    { name: 'Admin', path: '/admin/onboarding'},
+    { name: 'Company', path: '/company'},
+    { name: 'Career', path: '/career'},
+    { name: 'Welfare', path: '/welfare'},
+    { name: 'Hiring', path: '/hiring/jobrequesthr'},
+    { name: 'Reports', path: '/reports'},
+  ] 
   const { url } = useRouteMatch()
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   return (
     <Disclosure as="nav" className="bg-white shadow">
@@ -43,7 +65,20 @@ export default function Navbar() {
                 </div>
                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8 items-center">
                   {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-                  {navigation.map((item) => (
+                  {user !== null && user.hrEmployee && navigationHR.map((item) => (
+                    <NavLink
+                      key={item.name}
+                      to={item.path}
+                      aria-current={item.path === url ? 'page' : undefined}
+                      className={classNames(
+                        item.path === url ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-50',
+                        'block rounded-md py-2 px-3 text-base font-medium'
+                      )}
+                    >
+                      {item.name}
+                    </NavLink>
+                  ))}
+                  {user !== null && !user.hrEmployee && navigation.map((item) => (
                     <NavLink
                       key={item.name}
                       to={item.path}
