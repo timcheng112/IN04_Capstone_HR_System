@@ -4,13 +4,14 @@ import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import api from "../../utils/api";
 import AddSkillSet from '../jobrequest/AddSkillSet';
+import { getUserId} from "../../utils/Common";
 
 // const skillSet = [ 
 //   { value:"Java", label: "Java"},
 //   { value:"Python", label: "Python"},
 //   { value:"SQL", label: "SQL"},]
 
-export default function JobRequirements({selectedSkills, setSelectedSkills}) {
+export default function JobRequirements({selectedSkills, setSelectedSkills, status}) {
 
   const cancelButtonRef = useRef(null)
   // const checkbox = useRef()
@@ -21,10 +22,21 @@ export default function JobRequirements({selectedSkills, setSelectedSkills}) {
   const [skillSet, setSkillSet] = useState([]);
   //var [selectedSkills, setSelectedSkills] = useState([]);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
   const divStyle = {
     display: 'flex',
     alignItems: 'center'
   };
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+//        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   useEffect(() => {
 //    console.log("ASASD")
@@ -106,13 +118,14 @@ export default function JobRequirements({selectedSkills, setSelectedSkills}) {
           onChange = {handleSelect}
           >
         </Select>
-      <button
-        type="button"
-        className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        onClick={() => setOpen(true)}
-      >
-        Add Skill Set
-      </button>
+      {user !== null && status === "PENDING" &&
+          <button
+            type="button"
+            className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            onClick={() => setOpen(true)}
+          >
+            Add Skill Set
+          </button>}
       <AddSkillSet open={open} setOpen={() => setOpen(false)}  refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
     </div>
 
