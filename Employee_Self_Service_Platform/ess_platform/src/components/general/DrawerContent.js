@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import React from "react";
 import { View } from "react-native";
@@ -44,6 +44,19 @@ const DrawerContent = (props) => {
               label="Offboarding"
               onPress={() => {
                 props.navigation.navigate("Offboarding");
+              }}
+            ></DrawerItem>
+            <DrawerItem
+              icon={({ color, size }) => (
+                <AntDesign
+                  name="flag"
+                  size={size}
+                  color={color}
+                />
+              )}
+              label="Leave"
+              onPress={() => {
+                props.navigation.navigate("Leave");
               }}
             ></DrawerItem>
           </Drawer.Section>

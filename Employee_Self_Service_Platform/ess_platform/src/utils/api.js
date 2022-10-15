@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "172.17.154.228";
+const URL = "172.25.105.28";
 
 const api = {
   login(email, password) {
