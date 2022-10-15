@@ -21,9 +21,9 @@ export default function JobPost() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [filteredPosts, setFilteredPosts] =
     useState(posts);
-  const [searchParam] = useState([
-    "jobTitle"
-  ]);
+//  const [searchParam] = useState([
+//    "jobTitle"
+//  ]);
 
   useEffect(() => {
     api
@@ -48,18 +48,32 @@ export default function JobPost() {
 
   function search(e, items) {
     const value = e.target.value;
-    setFilteredPosts(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        );
+
+    let finding = Array.of(value.toLowerCase());
+
+    let filtered = new Set();
+    var titleFilter = items.filter(x => finding.some(y => x.jobTitle.toLowerCase().indexOf(y) != -1))
+    titleFilter.forEach(item => filtered.add(item))
+
+    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
+    statusFilter.forEach(item => filtered.add(item))
+
+    var posterFilter = items.filter(x => finding.some(y => x.postedBy.firstName.toLowerCase().indexOf(y) != -1))
+    posterFilter.forEach(item => filtered.add(item))
+
+    setFilteredPosts(Array.from(filtered))
+//    setFilteredPosts(
+//          items.filter((item) => {
+//            return searchParam.some((newItem) => {
+//              return (
+//                item[newItem]
+//                  .toString()
+//                  .toLowerCase()
+//                  .indexOf(value.toLowerCase()) > -1
+//              );
+//            });
+//          })
+//        );
   }
 
   return (

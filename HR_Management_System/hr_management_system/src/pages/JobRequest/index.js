@@ -22,9 +22,9 @@ export default function JobRequest() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [filteredRequests, setFilteredRequests] = useState(requests);
-  const [searchParam] = useState([
-    "jobTitle"
-  ]);
+//  const [searchParam] = useState([
+//    "jobTitle", "status"
+//  ]);
 
   useEffect(() => {
     api
@@ -51,18 +51,36 @@ export default function JobRequest() {
 
   function search(e, items) {
     const value = e.target.value;
-    setFilteredRequests(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        );
+
+    let finding = Array.of(value.toLowerCase());
+
+    let filtered = new Set();
+    var titleFilter = items.filter(x => finding.some(y => x.jobTitle.toLowerCase().indexOf(y) != -1))
+    titleFilter.forEach(item => filtered.add(item))
+
+    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
+    statusFilter.forEach(item => filtered.add(item))
+
+    var deptFilter = items.filter(x => finding.some(y => x.department.departmentName.toLowerCase().indexOf(y) != -1))
+    deptFilter.forEach(item => filtered.add(item))
+
+    var requestorFilter = items.filter(x => finding.some(y => x.requestedBy.firstName.toLowerCase().indexOf(y) != -1))
+    requestorFilter.forEach(item => filtered.add(item))
+
+    setFilteredRequests(Array.from(filtered))
+
+//    setFilteredRequests(
+//          items.filter((item) => {
+//            return searchParam.some((newItem) => {
+//              return (
+//                item[newItem]
+//                  .toString()
+//                  .toLowerCase()
+//                  .indexOf(value.toLowerCase()) > -1
+//              );
+//            });
+//          })
+//        );
   }
 
   return (
