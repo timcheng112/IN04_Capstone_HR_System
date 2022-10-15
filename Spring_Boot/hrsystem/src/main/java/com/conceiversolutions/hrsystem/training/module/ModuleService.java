@@ -75,7 +75,6 @@ public class ModuleService {
                 System.out.println("userId = " + userId);
                 Optional<User> user = userRepository.findById(userId);
                 if (user.isPresent()) {
-                    
                     if (module.getEmployees() != null) {
                         module.getEmployees().add(user.get());
                     } else {

@@ -320,6 +320,12 @@ const api = {
   deleteVideo(videoId) {
     return axios.delete(`http://localhost:9191/api/video/${videoId}`)
   },
+  markVideoAsWatched(videoId, userId) {
+    return axios.post(`http://localhost:9191/api/video/${videoId}/user/${userId}`)
+  },
+  getIsVideoWatchedByEmployee(videoId, userId) {
+    return axios.get(`http://localhost:9191/api/video/${videoId}/user/${userId}`)
+  },
   // JOB REQUEST
   getAllJobRequests() {
     return axios.get(`http://localhost:9191/api/jobrequest/getAllJobRequests`);

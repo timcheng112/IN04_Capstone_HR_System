@@ -1,7 +1,7 @@
 export const getUserId = () => {
   var cookieEmail = document.cookie.valueOf("userEmail=").split(";")[0];
   var cookieId = document.cookie.valueOf("userSession=").split(";")[1];
-  
+
   if (cookieId) {
     const tempId = cookieId.substring(13);
     const tempEmail = cookieEmail.substring(10);
@@ -31,7 +31,7 @@ export const getUserId = () => {
 export const getUserEmail = () => {
   var cookieEmail = document.cookie.valueOf("userEmail=").split(";")[0];
   var cookieId = document.cookie.valueOf("userSession=").split(";")[1];
-  
+
   if (cookieEmail) {
     const tempId = cookieId.substring(13);
     const tempEmail = cookieEmail.substring(10);
@@ -66,4 +66,5 @@ export const deleteUser = () => {
     "userEmail=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure";
   document.cookie =
     "userSession=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure";
+  sessionStorage.clear();
 };

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,5 +41,14 @@ public class VideoController {
         videoService.deleteVideo(videoId);
     }
 
+    @PostMapping(path = "{videoId}/user/{userId}")
+    public String markAsWatched(@PathVariable("videoId") Long videoId, @PathVariable("userId") Long userId) throws Exception {
+        return videoService.markAsWatched(videoId, userId);
+    }
+
+    @GetMapping(path = "{videoId}/user/{userId}")
+    public Boolean getWatched(@PathVariable("videoId") Long videoId, @PathVariable("userId") Long userId) throws Exception {
+        return videoService.getWatched(videoId, userId);
+    }
 
 }

@@ -3,17 +3,14 @@ import Navbar from "../../components/Navbar";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 import { useHistory } from "react-router";
-import AddModuleModal from "../../features/training/AddModuleModal";
-import ModuleSidebar from "../../components/Sidebar/Module";
 import {
+  CheckCircleIcon,
+  InformationCircleIcon,
   PencilIcon,
-  PlusCircleIcon,
   TrashIcon,
-  UserPlusIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import ConfirmDialog from "../../components/ConfirmDialog";
-import EditModuleModal from "../../features/training/EditModuleModal";
-import AddVideoModal from "../../features/training/AddVideoModal";
 import VideoSidebar from "../../components/Sidebar/Video";
 import ReactPlayer from "react-player";
 import EditVideoModal from "../../features/training/EditVideoModal";
@@ -23,16 +20,20 @@ export default function Video() {
   const [videos, setVideos] = useState([]);
   const [module, setModule] = useState(null);
   const [video, setVideo] = useState(null);
-  const [employees, setEmployees] = useState([]);
-  const [openCreate, setOpenCreate] = useState(false);
+  const [watchedBy, setWatchedBy] = useState([]);
+  const [assignedTo, setAssignedTo] = useState([]);
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [error, setError] = useState(null);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
   const [hrMode, setHrMode] = useState(false);
+  const [videoSession, setVideoSession] = useState("");
+  const [showInfo, setShowInfo] = useState(true);
+  const [watched, setWatched] = useState(false);
   const moduleId = window.location.href.substring(29, 30);
   const videoId = window.location.href.substring(37);
+  var videoLength = 0;
 
   useEffect(() => {
     api
@@ -41,8 +42,22 @@ export default function Video() {
     api.getModule(moduleId).then((response) => {
       setModule(response.data);
     });
-    api.getVideo(videoId).then((response) => setVideo(response.data));
+    api.getVideo(videoId).then((response) => {
+      setVideo(response.data);
+      setWatchedBy(response.data.watchedBy);
+    });
     api.getUser(getUserId()).then((response) => setUser(response.data));
+    setVideoSession(`secondsWatched${videoId}`);
+    api
+      .getEmployeesAssignedToModule(moduleId)
+      .then((response) => {
+        setAllWatched(response.data);
+        console.log(response.data)
+      })
+      .then(() => console.log(assignedTo));
+    api
+      .getIsVideoWatchedByEmployee(videoId, getUserId())
+      .then((response) => setWatched(response.data));
   }, []);
 
   useEffect(() => {
@@ -50,13 +65,24 @@ export default function Video() {
     api
       .getVideosInModule(moduleId)
       .then((response) => setVideos(response.data));
-  });
+  }, []);
 
   function deleteVideo() {
     api.deleteVideo(videoId).then(() => {
       alert("Video successfully deleted");
       history.goBack();
     });
+  }
+
+  function markAsWatched() {
+    api.markVideoAsWatched(videoId, getUserId());
+  }
+
+  function setAllWatched(assigned) {
+    assigned.forEach((e) => {
+      e.watched = false;
+    });
+    setAssignedTo(assigned);
   }
 
   if (error) return `Error`;
@@ -104,17 +130,67 @@ export default function Video() {
               )}
             </div>
             <div className="px-4 sm:px-6 lg:px-8">
+              {showInfo && (
+                <div className="rounded-md bg-blue-50 max-w-100 p-4 mt-5 mb-5">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <InformationCircleIcon
+                        className="h-5 w-5 text-blue-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div className="ml-3 flex-1 md:flex md:justify-between">
+                      <p className="text-sm text-blue-700">
+                        Please do not close the browser while watching. Your
+                        progress will be lost!
+                      </p>
+                    </div>
+                    <div className="-mx-1.5 -my-1.5">
+                      <button
+                        type="button"
+                        className="inline-flex rounded-md bg-blue-50 p-1.5 text-blue-500 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-blue-50"
+                        onClick={() => setShowInfo(false)}
+                      >
+                        <span className="sr-only">Dismiss</span>
+                        <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
                   <div className="flex grid justify-items-center">
                     <ReactPlayer
                       controls
                       url={video.video}
-                      onEnded={() =>
-                        console.log(
-                          "To updated watched attribute with logged in user"
-                        )
-                      }
+                      onStart={() => {
+                        sessionStorage.setItem(videoSession, 1);
+                      }}
+                      onProgress={(progress) => {
+                        if (
+                          progress.played ===
+                          progress.playedSeconds / progress.loadedSeconds
+                        ) {
+                          videoLength =
+                            progress.played * progress.loadedSeconds;
+                        }
+                        var seconds =
+                          parseInt(sessionStorage.getItem(videoSession)) + 1;
+                        sessionStorage.setItem(videoSession, seconds);
+                        //console.log(sessionStorage.getItem(videoSession))
+                      }}
+                      onEnded={() => {
+                        if (
+                          videoLength > 0 &&
+                          sessionStorage.getItem(videoSession) > videoLength &&
+                          !watched
+                        ) {
+                          //console.log("You have completed watching this video");
+                          markAsWatched();
+                          console.log(videoLength);
+                        }
+                      }}
                     />
                   </div>
                   <h1 className="mt-3 text-xl font-semibold text-gray-900">
@@ -123,6 +199,15 @@ export default function Video() {
                   <p className="mt-2 text-sm text-gray-700">
                     {video.description}
                   </p>
+                  {watched && (
+                    <div className="mt-3 mb-2 inline-flex items-center rounded-md border border-transparent bg-green-50 px-10 py-3 text-sm font-medium leading-4 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                      <CheckCircleIcon
+                        className="h-5 w-5 mr-2 text-green-400"
+                        aria-hidden="true"
+                      />
+                      Watched
+                    </div>
+                  )}
                   {hrMode && (
                     <div className="pt-3">
                       <button
@@ -154,24 +239,6 @@ export default function Video() {
                 </div>
               </div>
               <div className="flex flex-row justify-center">
-                {/* <div className="mt-8 sm:mt-0 sm:ml-16 sm:flex-none">
-                  <button
-                    type="button"
-                    className="inline-flex mt-7 mr-7 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                    onClick={() => setOpenAdd(true)}
-                  >
-                    <PlusCircleIcon className="-ml-1 mr-1 h-5 w-5 text-white" />
-                    Add Video
-                  </button>
-                  <AddVideoModal
-                    open={openAdd}
-                    onClose={() => setOpenAdd(false)}
-                    module={module}
-                    refreshKeyHandler={() =>
-                      setRefreshKey((oldKey) => oldKey + 1)
-                    }
-                  />
-                </div> */}
                 <div className="mt-8 flex">
                   <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -273,7 +340,7 @@ export default function Video() {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {employees.map((employee) => (
+                                {assignedTo.map((employee) => (
                                   <tr key={employee.email}>
                                     <td className="whitespace-nowrap py-4 pl-6 pr-1 text-sm font-medium text-gray-900 text-left">
                                       {employee.firstName} {employee.lastName}
@@ -285,7 +352,7 @@ export default function Video() {
                                       {employee.userRole}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
-                                      {employee.email}
+                                      {employee.watched}
                                     </td>
                                   </tr>
                                 ))}
@@ -327,7 +394,7 @@ export default function Video() {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {employees.map((employee) => (
+                                {watchedBy.map((employee) => (
                                   <tr key={employee.email}>
                                     <td className="whitespace-nowrap py-4 pl-6 pr-1 text-sm font-medium text-gray-900 text-left">
                                       {employee.firstName} {employee.lastName}
