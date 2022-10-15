@@ -1,8 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Dialog, Transition } from "@headlessui/react";
 import {
+  AcademicCapIcon,
   Bars3BottomLeftIcon,
+  BookOpenIcon,
+  ClipboardDocumentCheckIcon,
   FolderIcon,
+  PlayIcon,
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -12,15 +16,15 @@ import ModuleBreadcrumb from "../Breadcrumb/ModuleBreadcrumb";
 import TrainingBreadcrumb from "../Breadcrumb/TrainingBreadcrumb";
 
 const navigation = [
-  { name: "My Training", href: "/mytraining", icon: UsersIcon, current: false },
+  { name: "My Training", href: "/mytraining", icon: AcademicCapIcon, current: false },
   {
     name: "My Completed Training",
     href: "/mytraining",
-    icon: UsersIcon,
+    icon: ClipboardDocumentCheckIcon,
     current: false,
   },
-  { name: "All Modules", href: "/training", icon: UsersIcon, current: false },
-  { name: "All Videos", href: "/video", icon: UsersIcon, current: false },
+  { name: "All Modules", href: "/training", icon: BookOpenIcon, current: false },
+  { name: "All Videos", href: "/video", icon: PlayIcon, current: false },
 ];
 
 function classNames(...classes) {

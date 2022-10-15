@@ -64,16 +64,16 @@ export default function Module() {
   }, []);
 
   function deleteModule() {
-    if (module.employees.length !== 0) {
+    if (employees.length !== 0) {
       alert(
         "There are " +
-          module.employees.length +
+          employees.length +
           " employees assigned to this module. Unassign them before deleting."
       );
-    } else if (module.videoList.length !== 0) {
+    } else if (videos.length !== 0) {
       alert(
         "There are " +
-          module.videoList.length +
+          videos.length +
           " videos in this module. Delete the videos first."
       );
     } else {
