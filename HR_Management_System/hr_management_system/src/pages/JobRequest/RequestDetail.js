@@ -86,7 +86,8 @@ export default function RequestDetail() {
     setStartDate(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
 
     // reset requirements
-    const userOptions = location.state.request.jobRequirements.map(skill => ({
+    console.log(location.state.request);
+    const userOptions = location.state.request.jobPostRequirements.map(skill => ({
       "value": skill.skillsetId,
       "label": skill.skillsetName
     }))

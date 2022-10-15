@@ -90,7 +90,7 @@ public class JobPostingService {
         return true;
     }
 
-    public Long editJobPost(Long jobPostingId, String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal remuneration, List<Long> jobRequirementIds) {
+    public Long editJobPost(Long jobPostingId, String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary, List<Long> jobRequirementIds) {
         System.out.println("JobPostingService.editJobPost");
 
         Optional<JobPosting> jp = jobPostingRepository.findById(jobPostingId);
@@ -101,14 +101,14 @@ public class JobPostingService {
 
         JobPosting jobPost = jp.get();
 
-        checkInput(jobTitle, jobDescription, preferredStartDate, jobTypeEnum, roleEnum, remuneration);
+        checkInput(jobTitle, jobDescription, preferredStartDate, jobTypeEnum, roleEnum, salary);
 
         jobPost.setJobTitle(jobTitle);
         jobPost.setJobDescription(jobDescription);
         jobPost.setPreferredStartDate(preferredStartDate);
         jobPost.setJobType(jobTypeEnum);
         jobPost.setJobRole(roleEnum);
-        jobPost.setRemuneration(remuneration);
+        jobPost.setSalary(salary);
 
         List<Skillset> skillsets = new ArrayList<>();
         if (!jobRequirementIds.isEmpty()) {
@@ -121,7 +121,7 @@ public class JobPostingService {
         return jobPostingId;
     }
 
-    private void checkInput(String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal remuneration) {
+    private void checkInput(String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salary) {
         System.out.println("JobPostingService.checkInput");
         if (jobTitle.equals("")) {
             throw new IllegalStateException("jobTitle is missing");
@@ -137,10 +137,10 @@ public class JobPostingService {
             throw new IllegalStateException("jobTypeEnum is missing");
         } else if (roleEnum == null) {
             throw new IllegalStateException("roleEnum is missing");
-        } else if (remuneration == null) {
-            throw new IllegalStateException("remuneration is missing");
-        } else if (remuneration.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalStateException("remuneration is invalid");
+        } else if (salary == null) {
+            throw new IllegalStateException("salary is missing");
+        } else if (salary.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalStateException("salary is invalid");
         }
     }
 }
