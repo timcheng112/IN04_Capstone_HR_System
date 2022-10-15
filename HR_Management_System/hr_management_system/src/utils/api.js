@@ -271,9 +271,9 @@ const api = {
         `http://localhost:9191/api/jobrequest/getAllJobRequests`
     );
   },
-  getAllSubmittedJobRequests() {
+  getAllSubmittedJobRequests(hrId) {
     return axios.get(
-        `http://localhost:9191/api/jobrequest/getAllSubmittedJobRequests`
+        `http://localhost:9191/api/jobrequest/getAllSubmittedJobRequests?hrId=${hrId}`
     );
   },
   getManagerJobRequests(managerId) {
