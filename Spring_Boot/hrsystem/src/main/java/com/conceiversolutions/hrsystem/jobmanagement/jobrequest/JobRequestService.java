@@ -703,9 +703,12 @@ public class JobRequestService {
         JobRequest jr = jobRequestRepository.findById(jobRequestId).get();
         User approver = userRepository.findById(approverId).get();
 
+        checkInput(jr.getJobTitle(), jr.getJobDescription(), jr.getJustification(), jr.getPreferredStartDate(), jr.getJobType(), jr.getJobRole(), jr.getSalary(), jr.getRequestedBy().getUserId());
+
+        List<Skillset> skillsets = List.copyOf(jr.getJobRequirements());
         // create job posting
         JobPosting newJP = new JobPosting(jr.getJobTitle(), jr.getJobDescription(), jr.getPreferredStartDate()
-                , jr.getJobType(), jr.getJobRole(), jr.getStatus(), jr.getSalary(), LocalDate.now(), true, approver, jr, jr.getJobRequirements());
+                , jr.getJobType(), jr.getJobRole(), jr.getStatus(), jr.getSalary(), LocalDate.now(), true, approver, jr, skillsets);
 
         JobPosting savedJP = jobPostingRepository.saveAndFlush(newJP);
         System.out.println("Job Posting Id " + savedJP.getPostingId() + " is created");

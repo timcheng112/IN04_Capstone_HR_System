@@ -50,12 +50,13 @@ public class JobPosting {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
     // this is the admin that approved the job request
-    @OneToOne(targetEntity = User.class, optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "poster")
     private User postedBy;
     @OneToOne(targetEntity = JobRequest.class, fetch = FetchType.LAZY, optional = false, mappedBy = "jobPosting")
     private JobRequest jobRequest;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
-    @JoinColumn(name = "posting_id")
+    @JoinColumn(name = "job_requirements")
     private List<Skillset> jobRequirements;
 
     public JobPosting() {
