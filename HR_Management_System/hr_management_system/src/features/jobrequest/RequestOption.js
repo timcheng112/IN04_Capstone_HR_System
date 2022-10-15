@@ -13,8 +13,18 @@ import { useHistory  } from 'react-router-dom';
 export default function RequestOption({request}) {
   const history = useHistory();
   const [trash, setTrash] = useState(false);
+  const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   function deleteRequest() {
     api.deleteJobRequest(request.requestId).then(() => {
@@ -50,7 +60,7 @@ export default function RequestOption({request}) {
           />
           <span className="hidden md:block">Detail</span>
         </button>
-        <button
+         <button
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           onClick={() => setTrash(true)}

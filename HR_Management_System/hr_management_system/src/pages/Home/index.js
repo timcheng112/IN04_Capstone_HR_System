@@ -280,7 +280,16 @@ export default function Home() {
                               >
                                 Welfare
                               </a>
-                              <a
+                              {user.hrEmployee && <a
+                                key="Hiring"
+                                href="/hiring/jobrequesthr"
+                                className={classNames(
+                                  "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
+                                )}
+                              >
+                                Hiring
+                              </a>}
+                              {!user.hrEmployee && user.userRole === 'MANAGER' && <a
                                 key="Hiring"
                                 href="/hiring/jobrequest"
                                 className={classNames(
@@ -288,7 +297,7 @@ export default function Home() {
                                 )}
                               >
                                 Hiring
-                              </a>
+                              </a>}
                               <a
                                 key="Reports"
                                 href="/home"
