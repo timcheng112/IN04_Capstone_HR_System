@@ -21,7 +21,8 @@ export default function JobRequestHR() {
   const [filteredRequests, setFilteredRequests] =
     useState(requests);
   const [searchParam] = useState([
-    "jobTitle"
+    "jobTitle",
+    "requestedBy"
   ]);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export default function JobRequestHR() {
   
   useEffect(() => {
     api
-      .getAllJobRequests()
+      .getAllSubmittedJobRequests(getUserId())
       .then((response) => {
         setRequests(response.data);
         setFilteredRequests(response.data);
