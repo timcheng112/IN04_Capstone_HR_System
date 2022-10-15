@@ -43,8 +43,8 @@ public class JobPosting {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private JobStatusEnum status;
-    @Column(name = "remuneration", nullable = false, length = 64)
-    private BigDecimal remuneration;
+    @Column(name = "salary", nullable = false, length = 64)
+    private BigDecimal salary;
     @Column(name = "post_date", nullable = false)
     private LocalDate postDate;
     @Column(name = "is_active", nullable = false)
@@ -66,14 +66,14 @@ public class JobPosting {
     public JobPosting() {
     }
 
-    public JobPosting(String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobType, RoleEnum jobRole, JobStatusEnum status, BigDecimal remuneration, LocalDate postDate, Boolean isActive, User postedBy, JobRequest jobRequest, List<Skillset> jobRequirements) {
+    public JobPosting(String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobType, RoleEnum jobRole, JobStatusEnum status, BigDecimal salary, LocalDate postDate, Boolean isActive, User postedBy, JobRequest jobRequest, List<Skillset> jobRequirements) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.preferredStartDate = preferredStartDate;
         this.jobType = jobType;
         this.jobRole = jobRole;
         this.status = status;
-        this.remuneration = remuneration;
+        this.salary = salary;
         this.postDate = postDate;
         this.isActive = isActive;
         this.postedBy = postedBy;
