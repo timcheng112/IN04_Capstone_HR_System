@@ -208,20 +208,20 @@ export default function RequestDetail() {
         return 0;
         // .catch((error) => setError(error));
   }
-  
-  /*
+
   function approveRequest(){
     api.approveJobRequestById(request.requestId, getUserId())
+       .then(() => alert("Job Request approved, Job Posting successfully created"))
        .catch((error) => console.log(error));
     history.push("/hiring/jobrequest")
   }
-  
+
   function rejectRequest(){
     api.rejectJobRequestById(request.requestId, getUserId())
+       .then(() => alert("Job Request rejected"))
        .catch((error) => console.log(error));
     history.push("/hiring/jobrequest")
   }
-  */
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -386,7 +386,7 @@ export default function RequestDetail() {
             >
               Cancel
             </button>
-            {user !== null && user.hrEmployee &&
+            {user !== null && user.hrEmployee && request.status != "REJECTED" && request.status != "APPROVED" &&
               <button
                 type="submit"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -394,7 +394,7 @@ export default function RequestDetail() {
               >
                 Save
               </button>}
-            {user !== null && user.hrEmployee &&
+            {user !== null && user.hrEmployee && request.status == "CREATED" && request.status != "REJECTED" && request.status != "APPROVED" &&
               <button
                 type="button"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -402,7 +402,7 @@ export default function RequestDetail() {
               >
                 Approve
               </button>}
-            {user !== null && user.hrEmployee &&
+            {user !== null && user.hrEmployee && request.status == "CREATED" && request.status != "REJECTED" && request.status != "APPROVED" &&
               <button
                 type="button"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -410,13 +410,14 @@ export default function RequestDetail() {
               >
                 Reject
               </button>}
-            <button
-              type="submit"
-              className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => (useState.button = 2)}
-            >
-              Submit
-            </button>
+            {user !== null && request.status != "REJECTED" && request.status != "APPROVED" &&
+                <button
+                  type="submit"
+                  className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => (useState.button = 2)}
+                >
+                  Submit
+                </button>}
           </div>
         </div>
 
