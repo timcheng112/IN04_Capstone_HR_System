@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -521,11 +519,21 @@ public class JobRequestService {
         return true;
     }
 
-    public List<JobRequest> getAllSubmittedJobRequests() {
+    public List<JobRequest> getAllSubmittedJobRequests(Long hrId) {
         System.out.println("JobRequestService.getAllSubmittedJobRequests");
 
-        List<JobRequest> jobRequests = jobRequestRepository.findJobRequestsByStatus(JobStatusEnum.CREATED);
-        System.out.println("size of submitted job request list is " + jobRequests.size());
+        System.out.println("Getting submitted job requests");
+        List<JobRequest> submittedJobRequests = jobRequestRepository.findJobRequestsByStatus(JobStatusEnum.CREATED);
+        System.out.println("size of submitted job request list is " + submittedJobRequests.size());
+
+        List<JobRequest> hrJobRequests = jobRequestRepository.findJobRequestsByRequestorId(hrId);
+
+        // Use set to prevent duplicates
+        Set<JobRequest> set = new LinkedHashSet<>(submittedJobRequests);
+        set.addAll(hrJobRequests);
+
+        // Convert back to Arraylist
+        List<JobRequest> jobRequests = new ArrayList<>(set);
 
         for (JobRequest jr : jobRequests) {
             jr.getDepartment().setDepartmentHead(null);

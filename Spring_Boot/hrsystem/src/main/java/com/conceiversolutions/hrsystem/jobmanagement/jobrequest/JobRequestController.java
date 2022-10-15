@@ -23,8 +23,8 @@ public class JobRequestController {
     }
 
     @GetMapping(path = "/getAllSubmittedJobRequests")
-    public List<JobRequest> getAllSubmittedJobRequest() {
-        return jobRequestService.getAllSubmittedJobRequests();
+    public List<JobRequest> getAllSubmittedJobRequest(@RequestParam("hrId") Long hrId) {
+        return jobRequestService.getAllSubmittedJobRequests(hrId);
     }
 
     @PostMapping(path = "/saveJobRequest")
