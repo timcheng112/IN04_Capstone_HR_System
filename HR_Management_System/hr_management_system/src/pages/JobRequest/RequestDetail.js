@@ -82,11 +82,11 @@ export default function RequestDetail() {
     let mm = location.state.request.preferredStartDate.slice(5, 7)
     let dd = location.state.request.preferredStartDate.slice(8, 10)
     // console.log(yyyy + " " + mm + " " + dd)
-    console.log(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
+//    console.log(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
     setStartDate(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
 
     // reset requirements
-    console.log(location.state.request);
+//    console.log(location.state.request);
     var tempOptions;
    if (location.state.request.jobRequirements == null) {
         tempOptions = location.state.request.jobPostRequirements
@@ -97,8 +97,8 @@ export default function RequestDetail() {
       "value": skill.skillsetId,
       "label": skill.skillsetName
     }))
-    console.log("USER'S REQUIREMENTS")
-    console.log(userOptions)
+//    console.log("USER'S REQUIREMENTS")
+//    console.log(userOptions)
     setRequirements(userOptions)
 
     setTeam(location.state.request.team)
@@ -109,7 +109,7 @@ export default function RequestDetail() {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        console.log(response.data);
+//        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, []);
@@ -166,7 +166,7 @@ export default function RequestDetail() {
         } else {
           setError(error);
         }
-        console.log("returning 1")
+//        console.log("returning 1")
       });
     return 0;
     // .catch((error) => setError(error));
@@ -213,7 +213,7 @@ export default function RequestDetail() {
         } else {
           setError(error);
         }
-        console.log("returning 1")
+//        console.log("returning 1")
       });
     return 0;
     // .catch((error) => setError(error));
