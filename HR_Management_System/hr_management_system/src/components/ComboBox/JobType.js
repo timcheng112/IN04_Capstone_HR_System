@@ -3,8 +3,8 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { Combobox } from '@headlessui/react'
 
 const jobTypes = [
-  { id: 1, name: 'FullTime' },
-  { id: 2, name: 'PartTime' },
+  { id: 1, name: 'Full Time' },
+  { id: 2, name: 'Part Time' },
   { id: 3, name: 'Contract' },
   { id: 4, name: 'Intern' },
 ]
@@ -13,9 +13,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function JobType() {
+export default function JobType({selectedJobType, setSelectedJobType}) {
   const [query, setQuery] = useState('')
-  const [selectedJobType, setSelectedJobType] = useState()
+  //const [selectedJobType, setSelectedJobType] = useState()
 
   const filteredJobType =
     query === ''

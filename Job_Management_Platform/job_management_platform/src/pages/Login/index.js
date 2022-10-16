@@ -24,7 +24,9 @@ export default function Login() {
       .catch((error) => {
         var message = error.request.response;
         //console.log(message);
-        if (message.includes("User password does not match the record.")) {
+        if (message.includes("User account is not an applicant")) {
+          alert("The password is not linked to a valid applicant account");
+        } else if (message.includes("User password does not match the record.")) {
           alert("The password you entered was incorrect");
         } else if (
           message.includes(
@@ -41,6 +43,8 @@ export default function Login() {
             .getUserIdByEmail(email)
             .then((response) => sessionStorage.setItem("userEmail", email))
             .finally(() => history.push("/verify"));
+        } else if (message.includes("User does not exist")) {
+          alert("The email provided is not a valid email")
         }
       });
   }
@@ -56,7 +60,16 @@ export default function Login() {
           console.log(email);
           sessionStorage.setItem("userEmail", email);
         })
-        .then(() => history.push("/forgot"));
+        .then(() => history.push("/forgot"))
+        .catch(error => {
+          var message = error.request.response;
+          console.log(error.message)
+          if (message.includes("User does not exist")) {
+            alert("The email " + email + " is not registered with an account with us")
+          } else if (message.includes("Email is not linked to a Job Applicant")) {
+            alert("The email " + email + " is not registered as a Job Applicant account with us")
+          }
+        });
     }
   }
 

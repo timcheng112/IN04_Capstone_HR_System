@@ -3,24 +3,29 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import ShiftBlock from "./ShiftBlock";
 import AddTemplateShiftModal from "./AddTemplateShiftModal";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const shifts = [
   {
+    id: "1",
     shiftTitle: "Morning Shift",
     startTime: "08:00",
     endTime: "14:00",
   },
   {
+    id: "2",
     shiftTitle: "Afternoon Shift",
     startTime: "14:00",
     endTime: "20:00",
   },
   {
+    id: "3",
     shiftTitle: "Morning Shift",
     startTime: "06:00",
     endTime: "14:00",
   },
   {
+    id: "4",
     shiftTitle: "Afternoon Shift",
     startTime: "14:00",
     endTime: "22:00",
@@ -96,12 +101,16 @@ export default function ViewTemplateShiftsSlideover({ open, onClose }) {
                           className="h-full border-2 border-dashed border-gray-200"
                           aria-hidden="true"
                         >
-                          {shifts.map((shift) => (
-                            <div className="pb-2">
-                              {/* RENDERING EACH TEMPLATE SHIFT */}
-                              <ShiftBlock shift={shift} />
-                            </div>
-                          ))}
+                          <ul>
+                            {shifts.map((shift, index) => {
+                              return (
+                                <li className="pb-2">
+                                  {/* RENDERING EACH TEMPLATE SHIFT */}
+                                  <ShiftBlock shift={shift} />
+                                </li>
+                              );
+                            })}
+                          </ul>
                         </div>
                       </div>
                     </div>

@@ -28,7 +28,9 @@ export default function Login() {
       .catch((error) => {
         var message = error.request.response;
         console.log(getWorkEmail());
-        if (message.includes("account is not activated yet")) {
+        if (message.includes("User does not exist")) {
+          alert("The email provided is not a valid company email")
+        } else if (message.includes("account is not activated yet")) {
 
           console.log("unactivated account " + getWorkEmail());
           api.getEmployeeIdByEmail(getWorkEmail()).then((response) => {
@@ -50,7 +52,16 @@ export default function Login() {
       api
         .forgotCheckEmail(getWorkEmail())
         .then((response) => sessionStorage.setItem("userEmail", getWorkEmail()))
-        .then(() => history.push("/forgot"));
+        .then(() => history.push("/forgot"))
+        .catch((error) => {
+          var message = error.request.response;
+          console.log(message);
+          if (message.includes("Employee does not exist")) {
+            alert("The email provided is not a valid company email")
+          } else if (message.includes("Email is not linked to an Employee account")) {
+            alert("The password is not linked to a valid employee account");
+          }
+        });
     }
   }
 

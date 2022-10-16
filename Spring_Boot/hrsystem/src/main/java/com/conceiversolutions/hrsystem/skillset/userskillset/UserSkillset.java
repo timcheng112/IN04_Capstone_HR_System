@@ -13,17 +13,17 @@ public class UserSkillset {
     private Long userSkillsetId;
     @Column(name = "skill_level", nullable = true, length = 1)
     private Integer skillLevel;
-    @Column(name = "skill_description", nullable = true, length = 255)
-    private String skillDescription;
-    @OneToOne(targetEntity = Skillset.class, fetch = FetchType.LAZY, optional = false)
+//    @Column(name = "skill_description", nullable = true, length = 255)
+//    private String skillDescription;
+    @ManyToOne(targetEntity = Skillset.class, fetch = FetchType.LAZY, optional = false)
     private Skillset skillset;
 
     public UserSkillset() {
     }
 
-    public UserSkillset(Integer skillLevel, String skillDescription, Skillset skillset) {
+    public UserSkillset(Integer skillLevel, /*String skillDescription,*/ Skillset skillset) {
         this.skillLevel = skillLevel;
-        this.skillDescription = skillDescription;
+//        this.skillDescription = skillDescription;
         this.skillset = skillset;
     }
 
@@ -43,13 +43,13 @@ public class UserSkillset {
         this.skillLevel = skillLevel;
     }
 
-    public String getSkillDescription() {
-        return skillDescription;
-    }
-
-    public void setSkillDescription(String skillDescription) {
-        this.skillDescription = skillDescription;
-    }
+//    public String getSkillDescription() {
+//        return skillDescription;
+//    }
+//
+//    public void setSkillDescription(String skillDescription) {
+//        this.skillDescription = skillDescription;
+//    }
 
     public Skillset getSkillset() {
         return skillset;
@@ -64,7 +64,7 @@ public class UserSkillset {
         return "UserSkillset{" +
                 "userSkillsetId=" + userSkillsetId +
                 ", skillLevel=" + skillLevel +
-                ", skillDescription='" + skillDescription + '\'' +
+//                ", skillDescription='" + skillDescription + '\'' +
                 ", skillset=" + skillset +
                 '}';
     }
