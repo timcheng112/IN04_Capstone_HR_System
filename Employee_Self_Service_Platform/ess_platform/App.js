@@ -37,7 +37,7 @@ export default function Main({ navigation }) {
           console.log("userId = " + response.data);
           try {
             userToken = response.data + "";
-            AsyncStorage.setItem("userToken", userToken);
+            AsyncStorage.setItem("userId", userToken);
             console.log("token = " + userToken);
             dispatch({ type: "SIGNIN", id: email, token: userToken });
           } catch (error) {
@@ -50,7 +50,7 @@ export default function Main({ navigation }) {
         });
     },
     signOut: async () => {
-      await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userId");
       dispatch({ type: "SIGNOUT" });
     },
   }));
@@ -59,7 +59,7 @@ export default function Main({ navigation }) {
     setTimeout(async () => {
       let userToken = null;
       try {
-        userToken = await AsyncStorage.getItem("userToken");
+        userToken = await AsyncStorage.getItem("userId");
       } catch (error) {
         console.log(error);
       }

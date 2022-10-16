@@ -23,7 +23,7 @@ function LoginComponent() {
         <View
           style={{ alignItems: "center", minHeight: Math.round(windowHeight) }}
         >
-          <View style={{ padding: 80 }}></View>
+          <View style={{ padding: 60 }}></View>
           <Image
             source={require("../../../assets/libro-logo.png")}
             resizeMode="contain"
@@ -46,6 +46,7 @@ function LoginComponent() {
                 borderColor: "#738A9B",
                 backgroundColor: "#FFFFF",
                 borderTopRightRadius: 0,
+                borderBottomLeftRadius: 4,
               }}
               label="Email"
               value={email}
@@ -70,7 +71,14 @@ function LoginComponent() {
             </Text>
           </View>
           <TextInput
-            style={{ width: "90%", marginTop: 30 }}
+            style={{
+              width: "90%",
+              marginTop: 15,
+              backgroundColor: "#FFFFF",
+              borderWidth: 1,
+              borderColor: "#738A9B",
+              borderRadius: 4,
+            }}
             label="Password"
             value={password}
             keyboardType={"visible-password"}
