@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.rostering.shiftlistitem;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,12 @@ public class ShiftListItemService {
     private final ShiftRepository shiftRepository;
     private final UserRepository userRepository;
 
+    //doesnt really work
     public List<ShiftListItem> getShiftListItems() {
         List<ShiftListItem> shiftListItems = shiftListItemRepository.findAll();
         for (ShiftListItem shiftListItem : shiftListItems) {
             shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
             shiftListItem.setUser(null);
         }
         return shiftListItems;
@@ -32,8 +35,24 @@ public class ShiftListItemService {
         ShiftListItem shiftListItem = shiftListItemRepository.findById(shiftListItemId).orElseThrow(
                 () -> new IllegalStateException("Shift List Item with ID: " + shiftListItemId + " does not exist!"));
         shiftListItem.getShift().setRoster(null);
+        shiftListItem.getShift().setShiftListItems(new ArrayList<>());
         shiftListItem.setUser(null);
         return shiftListItem;
+    }
+
+    public List<ShiftListItem> getShiftListItemByShift(Long shiftId) {
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByShiftId(shiftId);
+        for (ShiftListItem shiftListItem : shiftListItems) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().setTeams(new ArrayList<>());
+            shiftListItem.getUser().setQualificationInformation(null);
+            shiftListItem.getUser().setPositions(new ArrayList<>());
+            shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+            shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+            
+        }
+        return shiftListItems;
     }
 
     public Long addNewShiftListItem(ShiftListItem shiftListItem, Long shiftId, Long userId) {

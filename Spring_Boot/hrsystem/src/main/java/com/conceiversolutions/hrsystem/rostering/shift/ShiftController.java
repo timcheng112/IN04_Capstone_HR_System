@@ -1,5 +1,7 @@
 package com.conceiversolutions.hrsystem.rostering.shift;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +40,14 @@ public class ShiftController {
     @DeleteMapping(path = "{shiftId}")
     public void deleteShift(@PathVariable("shiftId") Long shiftId) {
         shiftService.deleteShift(shiftId);
+    }
+
+    @GetMapping(path="/getShiftByTeamAndTime")
+    public Shift getShiftByTeamAndTime(@RequestParam("teamId") Long teamId, @RequestParam("dateString") String date ){
+
+        LocalDateTime dateTime = LocalDateTime.parse(date);
+
+        return shiftService.getShiftByTeamAndTime(teamId, dateTime);
     }
 
 }
