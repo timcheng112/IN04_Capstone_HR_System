@@ -59,6 +59,19 @@ const DrawerContent = (props) => {
                 props.navigation.navigate("Leave");
               }}
             ></DrawerItem>
+            <DrawerItem
+              icon={({ color, size }) => (
+                <AntDesign
+                  name="flag"
+                  size={size}
+                  color={color}
+                />
+              )}
+              label="Apply"
+              onPress={() => {
+                props.navigation.navigate("Apply");
+              }}
+            ></DrawerItem>
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>

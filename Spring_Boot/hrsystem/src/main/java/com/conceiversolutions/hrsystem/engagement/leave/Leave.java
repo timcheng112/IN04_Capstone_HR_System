@@ -58,7 +58,7 @@ public class Leave {
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class, optional = false)
     private User employee;
 
-    public Leave(LocalDate startDate, LocalDate endDate, String applicationRemarks, DocData supportingDocument, LeaveTypeEnum leaveType, User employee) {
+    public Leave(LocalDate startDate, LocalDate endDate, LeaveTypeEnum leaveType, String applicationRemarks, User employee, DocData supportingDocument) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.applicationRemarks = applicationRemarks;
