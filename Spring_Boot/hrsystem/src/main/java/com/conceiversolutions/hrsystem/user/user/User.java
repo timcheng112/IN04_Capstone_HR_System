@@ -147,7 +147,7 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = SwapRequest.class, mappedBy = "receiver")
     private List<SwapRequest> swapRequestsReceived;
 
-    @OneToOne(optional = false, targetEntity = LeaveQuota.class, fetch = FetchType.LAZY)
+    @OneToOne(optional = true, targetEntity = LeaveQuota.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "current_leave_quota")
     private LeaveQuota currentLeaveQuota;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = LeaveQuota.class)
@@ -155,7 +155,6 @@ public class User implements UserDetails {
     private List<LeaveQuota> leaveQuotas;
 
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "employee")
-    @JoinColumn(name = "leaves")
     private List<Leave> leaves;
 
     // TODO add on other relationships to other classes
@@ -180,6 +179,7 @@ public class User implements UserDetails {
         this.leaves = new ArrayList<>();
         this.swapRequestsRequested = new ArrayList<>();
         this.swapRequestsReceived = new ArrayList<>();
+        this.preferredDates = null;
     }
 
     // this should be for making a new applicant's account
@@ -205,7 +205,6 @@ public class User implements UserDetails {
         this.currentPosition = null;
         this.qualificationInformation = null;
         this.currentPayInformation = currentPayInformation;
-        this.preferredDates = null;
     }
 
     // this should be for making an employee's account
@@ -230,7 +229,6 @@ public class User implements UserDetails {
         this.profilePic = null;
         this.currentPosition = null;
         this.qualificationInformation = null;
-        this.preferredDates = null;
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
@@ -264,13 +262,12 @@ public class User implements UserDetails {
         this.payslips = payslips;
         this.attendances = attendances;
         this.currentPayInformation = currentPayInformation;
-        this.preferredDates = null;
     }
 
     // this should be for making an employee's account
     public User(String firstName, String lastName, Integer phone, String email, String workEmail,
             LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
-            LocalDate dateJoined, PayInformation currentPayInformation, PreferredDates preferredDates) {
+            LocalDate dateJoined, PayInformation currentPayInformation, Position currentPosition) {
         this();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -288,7 +285,8 @@ public class User implements UserDetails {
         this.isEnabled = false; // only change to true after email is confirmed
         this.profilePic = null;
         this.qualificationInformation = null;
-        this.preferredDates = preferredDates;
+        this.currentPosition = currentPosition;
+        this.positions.add(currentPosition);
     }
 
     @Override

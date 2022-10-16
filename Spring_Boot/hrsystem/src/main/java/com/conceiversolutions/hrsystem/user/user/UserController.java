@@ -5,6 +5,8 @@ import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.position.Position;
 
+import com.conceiversolutions.hrsystem.user.position.PositionRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +17,15 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/user")
+@AllArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final PositionRepository positionRepository;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+//    @Autowired
+//    public UserController(UserService userService) {
+//        this.userService = userService;
+//    }
 
     // @GetMapping
     // public List<User> getTestUser() {
@@ -96,12 +100,12 @@ public class UserController {
         System.out.println("UserController.registerNewAccountJMP");
         
         List<Position> newPositionList = new ArrayList<Position>();
+        Position position = new Position(positionName, positionDescription, LocalDate.parse(dateJoined), JobTypeEnum.valueOf(jobType));
+        Position newPos = positionRepository.saveAndFlush(position);
 
-        newPositionList.add(new Position(positionName, positionDescription, LocalDate.parse(dateJoined), JobTypeEnum.valueOf(jobType)));
-    
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
                 GenderEnum.valueOf(gender), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
-                LocalDate.parse(dateJoined), null, newPositionList);
+                LocalDate.parse(dateJoined), null, newPos);
         try {
             Long employeeId = userService.addNewUser(newEmployee);
             System.out.println("UserController.registerNewAccountHRMS");
