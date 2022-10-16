@@ -5,39 +5,97 @@ import {
   XMarkIcon,
   MagnifyingGlassIcon
 } from "@heroicons/react/20/solid";
-import { useHistory } from 'react-router-dom';
 import Tabs from '../../features/jobrequest/Tab'
-import { useState } from "react";
-
-const requests = [
-  { title: 'Product Manager', department: 'Product', requestDate: '2022-08-15', lastEditedDate: '2022-07-15', requestor: 'Xinyue', status: 'Created' },
-  { title: 'Software Engineer', department: 'IT', requestDate: '2022-08-20', lastEditedDate: '2022-07-16', requestor: 'Matthew', status: 'Approved' },
-]
-
+import { useHistory } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import api from "../../utils/api";
+import { getUserId} from "../../utils/Common";
+import RequestOption from "../../features/jobrequest/RequestOption";
 
 
 export default function JobRequestHR() {
   const history = useHistory();
+  const [requests,setRequests] = useState([]);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
   const [filteredRequests, setFilteredRequests] =
     useState(requests);
-  const [searchParam] = useState([
-    "title"
-  ]);
+//  const [searchParam] = useState([
+//    "jobTitle", "status",
+//    "requestedBy"
+//  ]);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  
+  useEffect(() => {
+    api
+      .getAllSubmittedJobRequests(getUserId())
+      .then((response) => {
+        setRequests(response.data);
+        setFilteredRequests(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   function search(e, items) {
+//    console.log("e");
+//    console.log(e);
+//    console.log("items");
+//    console.log(items);
+
     const value = e.target.value;
-    setFilteredRequests(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        );
+//    console.log("looking for this value");
+//    console.log(value);
+    let finding = Array.of(value.toLowerCase());
+//    console.log(finding);
+
+    let filtered = new Set();
+    var titleFilter = items.filter(x => finding.some(y => x.jobTitle.toLowerCase().indexOf(y) != -1))
+//    console.log("titleFilter")
+//    console.log(titleFilter)
+    titleFilter.forEach(item => filtered.add(item))
+
+    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
+//    console.log("statusFilter")
+//    console.log(statusFilter)
+    statusFilter.forEach(item => filtered.add(item))
+
+    var deptFilter = items.filter(x => finding.some(y => x.department.departmentName.toLowerCase().indexOf(y) != -1))
+//    console.log("deptFilter")
+//    console.log(deptFilter)
+    deptFilter.forEach(item => filtered.add(item))
+
+    var requestorFilter = items.filter(x => finding.some(y => x.requestedBy.firstName.toLowerCase().indexOf(y) != -1))
+//    console.log("requestorFilter")
+//    console.log(requestorFilter)
+    requestorFilter.forEach(item => filtered.add(item))
+
+//    console.log("filtered")
+//    console.log(filtered)
+
+    setFilteredRequests(Array.from(filtered))
+
+//    setFilteredRequests(
+//          items.filter((item) => {
+//            return searchParam.some((newItem) => {
+//              return (
+//                item[newItem]
+//                  .toString()
+//                  .toLowerCase()
+//                  .indexOf(value.toLowerCase()) > -1
+//              );
+//            });
+//          })
+//        );
   }
 
   return (
@@ -112,51 +170,17 @@ export default function JobRequestHR() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {filteredRequests.map((request) => (
-                      <tr key={request.title}>
+                      <tr key={request.requestId}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {request.title}
+                          {request.jobTitle}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.department}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.department.departmentName}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.requestDate}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.lastEditedDate}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.requestor}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.requestedBy.firstName}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <div className="space-x-4">
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                              onClick={()=> history.push("/hiring/jobrequestdetail")}
-                            >
-                              <EyeIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Detail</span>
-                            </button>
-
-                            {/* <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                              <CheckIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Approve</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                              <XMarkIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Reject</span>
-                            </button> */}
-                          </div>
+                          <RequestOption request = {request}/>
                         </td>
                       </tr>
                     ))}

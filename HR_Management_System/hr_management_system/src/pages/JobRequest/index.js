@@ -6,37 +6,81 @@ import {
   MagnifyingGlassIcon
 } from "@heroicons/react/20/solid";
 import { useHistory } from 'react-router-dom';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../utils/api";
+import { getUserId} from "../../utils/Common";
+import RequestOption from "../../features/jobrequest/RequestOption";
 
-const requests = [
-  { title: 'Product Manager', department: 'Product', lastEditedDate: '2022-08-15', status: 'Created' },
-  { title: 'Software Engineer', department: 'IT', lastEditedDate: '2022-08-20', status: 'Approved' },
-]
-
-
+// const requests = [
+//   { title: 'Product Manager', department: 'Product', lastEditedDate: '2022-08-15', status: 'Created' },
+//   { title: 'Software Engineer', department: 'IT', lastEditedDate: '2022-08-20', status: 'Approved' },
+// ]
 
 export default function JobRequest() {
   const history = useHistory();
-  const [filteredRequests, setFilteredRequests] =
-    useState(requests);
-  const [searchParam] = useState([
-    "title"
-  ]);
+  const [requests,setRequests] = useState([]);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [filteredRequests, setFilteredRequests] = useState(requests);
+//  const [searchParam] = useState([
+//    "jobTitle", "status"
+//  ]);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  
+  useEffect(() => {
+    api
+      .getManagerJobRequests(getUserId())
+      .then((response) => {
+        setRequests(response.data);
+        setFilteredRequests(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+
 
   function search(e, items) {
     const value = e.target.value;
-    setFilteredRequests(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        );
+
+    let finding = Array.of(value.toLowerCase());
+
+    let filtered = new Set();
+    var titleFilter = items.filter(x => finding.some(y => x.jobTitle.toLowerCase().indexOf(y) != -1))
+    titleFilter.forEach(item => filtered.add(item))
+
+    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
+    statusFilter.forEach(item => filtered.add(item))
+
+    var deptFilter = items.filter(x => finding.some(y => x.department.departmentName.toLowerCase().indexOf(y) != -1))
+    deptFilter.forEach(item => filtered.add(item))
+
+    var requestorFilter = items.filter(x => finding.some(y => x.requestedBy.firstName.toLowerCase().indexOf(y) != -1))
+    requestorFilter.forEach(item => filtered.add(item))
+
+    setFilteredRequests(Array.from(filtered))
+
+//    setFilteredRequests(
+//          items.filter((item) => {
+//            return searchParam.some((newItem) => {
+//              return (
+//                item[newItem]
+//                  .toString()
+//                  .toLowerCase()
+//                  .indexOf(value.toLowerCase()) > -1
+//              );
+//            });
+//          })
+//        );
   }
 
   return (
@@ -104,37 +148,15 @@ export default function JobRequest() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {filteredRequests.map((request) => (
-                      <tr key={request.title}>
+                      <tr key={request.jobTitle}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {request.title}
+                          {request.jobTitle}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.department}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.department.departmentName}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.lastEditedDate}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <div className="space-x-4">
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                              onClick={()=> history.push("/hiring/jobrequestdetail")}
-                            >
-                              <EyeIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Detail</span>
-                            </button>
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                              <TrashIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Delete</span>
-                            </button>
-                          </div>
+                          <RequestOption request = {request}/>
                         </td>
                       </tr>
                     ))}
