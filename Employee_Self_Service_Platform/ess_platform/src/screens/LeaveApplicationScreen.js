@@ -10,7 +10,7 @@ import api from "../utils/api";
 import Constants from "expo-constants";
 import { TextInput, RadioButton, Button } from "react-native-paper";
 import DatePicker from '@react-native-community/datetimepicker';
-import DocumentPicker from 'react-native-document-picker';
+import * as DocumentPicker from "expo-document-picker";
 
 const styles = StyleSheet.create({
   container: {
@@ -48,16 +48,19 @@ const LeaveApplicationScreen = () => {
   const [showEnd, setShowEnd] = React.useState(false);
   const [fileResponse, setFileResponse] = useState([]);
 
-  const handleDocumentSelection = useCallback(async () => {
+  const pickDocument = useCallback(async () => {
     try {
-      const response = await DocumentPicker.pick({
-        presentationStyle: 'fullScreen',
-      });
+      const response = await DocumentPicker.getDocumentAsync({});
       setFileResponse(response);
     } catch (err) {
       console.warn(err);
     }
   }, []);
+  // const pickDocument = async () => {
+  //   let result = await DocumentPicker.getDocumentAsync({});
+  //   console.log(result.uri);
+  //   console.log(result);
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -117,13 +120,18 @@ const LeaveApplicationScreen = () => {
           multiline
           onChangeText={remarks => setRemarks(remarks)}
         />
-        <Button
-          icon="plus"
-          mode="contained"
-          color="#ffd700"
-          onPress={() => handleDocumentSelection}>
-          SELECT
-        </Button>
+        <View style={styles.content}>
+          <Button
+            icon="plus"
+            mode="contained"
+            color="#ffd700"
+            onPress={pickDocument}>
+            Upload Document
+          </Button>
+          <Text>
+            {fileResponse?.uri}
+          </Text>
+        </View>
       </View>
 
     </SafeAreaView>

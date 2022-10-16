@@ -9,6 +9,8 @@ import {
 import api from "../utils/api";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import LeaveApplicationScreen from "./LeaveApplicationScreen";
 
 const styles = StyleSheet.create({
@@ -28,7 +30,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const LeaveScreen = () => {
+const LeaveScreen = ({navigation}) => {
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -37,7 +40,7 @@ const LeaveScreen = () => {
           icon="plus"
           mode="contained"
           color="#ffd700"
-          onPress={() => Alert.alert('Right button pressed')}>
+          onPress={() => navigation.navigate('LeaveApplication')}>
           Apply for Leave
         </Button>
 
@@ -45,5 +48,6 @@ const LeaveScreen = () => {
     </SafeAreaView>
   )
 };
+
 
 export default LeaveScreen;

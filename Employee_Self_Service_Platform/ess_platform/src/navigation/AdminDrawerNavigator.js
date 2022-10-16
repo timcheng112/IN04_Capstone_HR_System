@@ -19,7 +19,7 @@ const AdminDrawerNavigator = () => {
       <AdminDrawer.Screen name="Onboarding" component={OnboardingScreen} />
       <AdminDrawer.Screen name="Offboarding" component={OffboardingScreen} />
       <AdminDrawer.Screen name="Leave" component={LeaveScreen} />
-      <AdminDrawer.Screen name="Apply" component={LeaveApplicationScreen} />
+      <AdminDrawer.Screen name="LeaveApplication" component={LeaveApplicationScreen} />
     </AdminDrawer.Navigator>
   );
 };
