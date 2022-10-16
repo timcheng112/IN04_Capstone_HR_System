@@ -31,18 +31,12 @@ export default function Main({ navigation }) {
       console.log(email);
       console.log(password);
 
-      // api
-      //   .login(email, password)
-      const conn = axios.create({ baseURL: "http://localhost:9191", proxy: false });
-
-      conn
-        .get(
-          `http://localhost/api/user/login/loginHRMS?workEmail=leem@libro.com&password=password`
-        )
+      api
+        .login(email + "@libro.com", password)
         .then((response) => {
           console.log("userId = " + response.data);
           try {
-            userToken = response.data;
+            userToken = response.data + "";
             AsyncStorage.setItem("userToken", userToken);
             console.log("token = " + userToken);
             dispatch({ type: "SIGNIN", id: email, token: userToken });
@@ -86,7 +80,7 @@ export default function Main({ navigation }) {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <PaperProvider>
-          {loginState.userToken === null ? <TabNavigator /> : <LoginScreen />}
+          {loginState.userToken === null ? <LoginScreen /> : <TabNavigator />}
         </PaperProvider>
       </NavigationContainer>
     </AuthContext.Provider>
