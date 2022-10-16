@@ -44,8 +44,8 @@ export default function JobRequirements({selectedSkills, setSelectedSkills, stat
     api
       .getAllSkillsets()
       .then((response) => {
-        console.log("ALL SKILLS")
-        console.log(response.data);
+//        console.log("ALL SKILLS")
+//        console.log(response.data);
         setSkillSet(response.data);
 
 //        console.log("USER SKILLS")

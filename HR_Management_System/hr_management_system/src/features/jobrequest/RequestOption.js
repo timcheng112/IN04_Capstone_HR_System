@@ -21,7 +21,7 @@ export default function RequestOption({request, refreshKeyHandler}) {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        console.log(response.data);
+//        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, []);
