@@ -9,6 +9,7 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepository;
 import com.conceiversolutions.hrsystem.user.position.Position;
@@ -88,6 +89,7 @@ public class UserService implements UserDetailsService {
         for (User u : users) {
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
@@ -100,8 +102,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
         }
 
         return users;
@@ -119,6 +138,7 @@ public class UserService implements UserDetailsService {
 
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
@@ -131,8 +151,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
 
             return u;
         } else {
@@ -153,6 +190,7 @@ public class UserService implements UserDetailsService {
 
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
@@ -165,9 +203,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
-
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
             return u;
         } else {
             throw new IllegalStateException("User does not exist.");
@@ -186,6 +240,7 @@ public class UserService implements UserDetailsService {
 
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
@@ -198,9 +253,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
-
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
             return u;
         } else {
             throw new IllegalStateException("Employee does not exist.");
@@ -275,7 +346,7 @@ public class UserService implements UserDetailsService {
 
         List<Position> newPositions = user.getPositions();
         positionRepository.saveAll(newPositions);
-        
+
         User newUser = userRepository.saveAndFlush(user);
 
         // Sending confirmation TOKEN to set user's isEnabled
@@ -392,13 +463,14 @@ public class UserService implements UserDetailsService {
 
         if (optionalUser.isPresent()) {
             User confirmedUser = optionalUser.get();
-            //System.out.println("Confirmed User Work Email = " + confirmedUser.getWorkEmail());
+            // System.out.println("Confirmed User Work Email = " +
+            // confirmedUser.getWorkEmail());
             if (confirmedUser.getWorkEmail().isEmpty()) {
                 System.out.println("User about to be enabled " + getUserFromToken(token));
                 enableUser(getUserFromToken(token));
             }
         }
-        
+
         return "Token has been confirmed.";
     }
 
@@ -982,6 +1054,7 @@ public class UserService implements UserDetailsService {
         for (User u : managers) {
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setRoster(null);
@@ -994,7 +1067,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            // u.setTeams(new ArrayList<>());
+            u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
         }
 
         return managers;
@@ -1007,6 +1098,7 @@ public class UserService implements UserDetailsService {
         for (User u : employees) {
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setRoster(null);
@@ -1019,8 +1111,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            // u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
 
         }
         return employees;
@@ -1032,6 +1141,7 @@ public class UserService implements UserDetailsService {
         for (User u : employees) {
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setRoster(null);
@@ -1044,9 +1154,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            // u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
-
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
         }
 
         return employees;
@@ -1098,6 +1224,7 @@ public class UserService implements UserDetailsService {
             if (!deptHeadIds.contains(u.getUserId()) && !teamHeadIds.contains(u.getUserId())) {
                 List<Team> teams = u.getTeams();
                 for (Team t : teams) {
+                    t.setTeamHead(null);
                     t.setUsers(new ArrayList<>());
                     t.setDepartment(null);
                     t.setRoster(null);
@@ -1111,6 +1238,24 @@ public class UserService implements UserDetailsService {
                 }
                 u.setQualificationInformation(null);
                 u.setBlocks(new ArrayList<>());
+                u.setShiftListItems(new ArrayList<>());
+                u.setSwapRequestsReceived(new ArrayList<>());
+                u.setSwapRequestsRequested(new ArrayList<>());
+                u.setReactivationRequest(null);
+                u.setAttendances(new ArrayList<>());
+                u.setCurrentPayInformation(null);
+                u.setEmployeeAppraisals(new ArrayList<>());
+                u.setManagerAppraisals(new ArrayList<>());
+                u.setManagerReviews(new ArrayList<>());
+                u.setEmployeeReviews(new ArrayList<>());
+                u.setModules(new ArrayList<>());
+                u.setApplications(new ArrayList<>());
+                u.setGoals(new ArrayList<>());
+                u.setPositions(new ArrayList<>());
+                u.setJobRequests(new ArrayList<>());
+                u.setLeaves(new ArrayList<>());
+                u.setLeaveQuotas(new ArrayList<>());
+                u.setCurrentLeaveQuota(null);
 
                 availManagers.add(u);
             }
@@ -1125,7 +1270,7 @@ public class UserService implements UserDetailsService {
 
         List<User> employees = userRepository.getEmployeesNotInGivenTeam(RoleEnum.MANAGER, RoleEnum.EMPLOYEE,
                 Long.valueOf(teamId));
-        
+
         System.out.println("EMPLOYEES NOT IN GIVEN TEAM: " + employees);
 
         if (employees.isEmpty()) {
@@ -1149,6 +1294,24 @@ public class UserService implements UserDetailsService {
             }
             e.setQualificationInformation(null);
             e.setBlocks(new ArrayList<>());
+            e.setShiftListItems(new ArrayList<>());
+            e.setSwapRequestsReceived(new ArrayList<>());
+            e.setSwapRequestsRequested(new ArrayList<>());
+            e.setReactivationRequest(null);
+            e.setAttendances(new ArrayList<>());
+            e.setCurrentPayInformation(null);
+            e.setEmployeeAppraisals(new ArrayList<>());
+            e.setManagerAppraisals(new ArrayList<>());
+            e.setManagerReviews(new ArrayList<>());
+            e.setEmployeeReviews(new ArrayList<>());
+            e.setModules(new ArrayList<>());
+            e.setApplications(new ArrayList<>());
+            e.setGoals(new ArrayList<>());
+            e.setPositions(new ArrayList<>());
+            e.setJobRequests(new ArrayList<>());
+            e.setLeaves(new ArrayList<>());
+            e.setLeaveQuotas(new ArrayList<>());
+            e.setCurrentLeaveQuota(null);
 
         }
 
@@ -1173,97 +1336,95 @@ public class UserService implements UserDetailsService {
         return "Successfully set password";
     }
 
-    //need to figure out how it looks on front end first
-    //check if today, they have any attendance first
-    //and on shift, if yes then add
-    //need to tally
-    //check if need to use ZonedDateTime
-    //paid lunch break
+    // need to figure out how it looks on front end first
+    // check if today, they have any attendance first
+    // and on shift, if yes then add
+    // need to tally
+    // check if need to use ZonedDateTime
+    // paid lunch break
 
+    // FULL-TIME
+    // Allowance
+    // Basic Monthly Rate, Overtime Hourly Pay
+    // Deduction
+    // Self Help Group Contribution Type
 
-    //FULL-TIME
-    //Allowance
-    //Basic Monthly Rate, Overtime Hourly Pay
-    //Deduction
-    //Self Help Group Contribution Type
+    // PART-TIME
+    // Allowance
+    // Basic Hourly Rate, Weekend Hourly Rate, Overtime Hourly Rate, PH/Event Hourly
+    // Rate
+    // Deduction
+    // Self Help Group Contribution Type
 
-    //PART-TIME
-    //Allowance
-    //Basic Hourly Rate, Weekend Hourly Rate, Overtime Hourly Rate, PH/Event Hourly Rate
-    //Deduction
-    //Self Help Group Contribution Type
+    // INTERN
+    // Allowance
+    // Basic Monthly Rate, Overtime Hourly Pay
 
-    //INTERN
-    //Allowance
-    //Basic Monthly Rate, Overtime Hourly Pay
+    // CONTRACT
+    // Allowance
+    // PH/Event Hourly Rate
 
-    //CONTRACT
-    //Allowance
-    //PH/Event Hourly Rate
-
-    //part timer
+    // part timer
     public HashMap<String, Integer> attendancePartTimeMonthly(Long userId) {
 
         int totalHours = 0;
         int weekend = 0;
         int event = 0;
         Integer ot = 0;
-        //Basic Monthly Rate, Overtime Hourly Pay
+        // Basic Monthly Rate, Overtime Hourly Pay
         HashMap<String, Integer> attendance = new HashMap<String, Integer>();
 
         User u1 = getUser(userId);
 
-        //need to check if leaves renew every month
-//        List<Leave> l = u1.getLeaves();
-//        int numOfLeaves = l.size();
-
+        // need to check if leaves renew every month
+        // List<Leave> l = u1.getLeaves();
+        // int numOfLeaves = l.size();
 
         List<ShiftListItem> sli = u1.getShiftListItems();
-        //count no. of shifts
+        // count no. of shifts
         if (!sli.isEmpty()) {
 
             for (ShiftListItem i : sli) {
 
-
-
                 LocalDateTime dt1 = i.getCheckInTiming();
                 LocalDateTime dt2 = i.getCheckOutTiming();
 
-                //LocalDateTime timeWorked =  dt2 - dt1;
-                //Chronos hours return Long
-                //lunch break included
+                // LocalDateTime timeWorked = dt2 - dt1;
+                // Chronos hours return Long
+                // lunch break included
 
                 Long hours = ChronoUnit.HOURS.between(dt1, dt2);
-//                Integer clocked = hours.intValue() - 1;
+                // Integer clocked = hours.intValue() - 1;
                 totalHours = hours.intValue();
-                //need to check with shift which kind of shift is it. event or normal for payroll.
-                //normal employee so monthly. no need to care.
+                // need to check with shift which kind of shift is it. event or normal for
+                // payroll.
+                // normal employee so monthly. no need to care.
                 if (totalHours > 8) {
                     ot = totalHours - 8;
 
                 }
 
-                //count for days in month
+                // count for days in month
                 String monthOfName = "";
                 int year = 0;
 
                 ShiftListItem s = sli.get(0);
                 LocalDateTime localDateTime = s.getCheckInTiming();
                 Month month = localDateTime.getMonth();
-                //            month.toString().getClass().getSimpleName();
+                // month.toString().getClass().getSimpleName();
                 monthOfName = month.toString().toUpperCase();
                 year = localDateTime.getYear();
                 int days = daysInMonth(monthOfName, year);
 
-                //currently no leave mechanism set
-                //take it that 1 shift per day first
+                // currently no leave mechanism set
+                // take it that 1 shift per day first
                 int daysWorked = days - sli.size();
 
-                if(i.getIsWeekend()){
+                if (i.getIsWeekend()) {
                     weekend += totalHours;
 
                 }
-                if(i.getIsPhEvent()){
+                if (i.getIsPhEvent()) {
                     event += totalHours;
                 }
             }
@@ -1272,19 +1433,18 @@ public class UserService implements UserDetailsService {
             attendance.put("weekend", weekend);
             attendance.put("OT", ot);
             attendance.put("totalHours", totalHours);
-        }else{
-            //absent so total hours =0
+        } else {
+            // absent so total hours =0
             Integer totalHoursinInteger = totalHours;
             attendance.put("totalHours", totalHoursinInteger);
 
         }
 
-
         return attendance;
     }
 
-    //count for days in month
-    private int daysInMonth(String monthOfName, int year){
+    // count for days in month
+    private int daysInMonth(String monthOfName, int year) {
 
         int daysInOneMonth = 0;
         switch (monthOfName) {
@@ -1329,28 +1489,25 @@ public class UserService implements UserDetailsService {
                 daysInOneMonth = 31;
         }
 
-
-
         return daysInOneMonth;
     }
 
-    //contract
+    // contract
     public HashMap<String, Integer> attendanceContractMonthly(Long userId) {
 
         int totalHours = 0;
         int event = 0;
-        //Basic Monthly Rate, Overtime Hourly Pay
+        // Basic Monthly Rate, Overtime Hourly Pay
         HashMap<String, Integer> attendance = new HashMap<String, Integer>();
 
         User u1 = getUser(userId);
 
-        //need to check if leaves renew every month
-//        List<Leave> l = u1.getLeaves();
-//        int numOfLeaves = l.size();
-
+        // need to check if leaves renew every month
+        // List<Leave> l = u1.getLeaves();
+        // int numOfLeaves = l.size();
 
         List<ShiftListItem> sli = u1.getShiftListItems();
-        //count no. of shifts
+        // count no. of shifts
         if (!sli.isEmpty()) {
 
             for (ShiftListItem i : sli) {
@@ -1358,42 +1515,39 @@ public class UserService implements UserDetailsService {
                 LocalDateTime dt1 = i.getCheckInTiming();
                 LocalDateTime dt2 = i.getCheckOutTiming();
 
-                //LocalDateTime timeWorked =  dt2 - dt1;
-                //Chronos hours return Long
-                //lunch break included
+                // LocalDateTime timeWorked = dt2 - dt1;
+                // Chronos hours return Long
+                // lunch break included
 
                 Long hours = ChronoUnit.HOURS.between(dt1, dt2);
                 totalHours = hours.intValue();
 
-
-
-
-                //count for days in month
+                // count for days in month
                 String monthOfName = "";
                 int year = 0;
 
                 ShiftListItem s = sli.get(0);
                 LocalDateTime localDateTime = s.getCheckInTiming();
                 Month month = localDateTime.getMonth();
-                //            month.toString().getClass().getSimpleName();
+                // month.toString().getClass().getSimpleName();
                 monthOfName = month.toString().toUpperCase();
                 year = localDateTime.getYear();
                 int days = daysInMonth(monthOfName, year);
 
-                //currently no leave mechanism set
-                //take it that 1 shift per day first
+                // currently no leave mechanism set
+                // take it that 1 shift per day first
                 int daysWorked = days - sli.size();
 
-                if(i.getIsPhEvent()){
-                    //definitely event but check first
+                if (i.getIsPhEvent()) {
+                    // definitely event but check first
                     event += totalHours;
                 }
             }
-            //contract phevent
+            // contract phevent
             attendance.put("PhEvent", event);
             attendance.put("totalHours", totalHours);
-        }else{
-            //absent so total hours =0
+        } else {
+            // absent so total hours =0
             Integer totalHoursinInteger = totalHours;
             attendance.put("totalHours", totalHoursinInteger);
 
@@ -1402,47 +1556,47 @@ public class UserService implements UserDetailsService {
         return attendance;
     }
 
-    //contract
-//    public void countAttendanceForToday(Long userId){
-//
-////        User u1 = userRepository.findById(attendance.getUser().getUserId()).get();
-//        User u1 = getUser(attendance.getUser().getUserId());
-//        //will have user
-//
-//        //Check time for today
-//        //find
-//        LocalDateTime dt1 = attendance.getPeriodStart();
-//        LocalDateTime dt2 = attendance.getPeriodEnd();
-//        //https://stackoverflow.com/questions/25747499/java-8-difference-between-two-localdatetime-in-multiple-units
-//        //https://docs.oracle.com/javase/tutorial/datetime/iso/period.html
-//        //dont use minus(). gives u back 1 LDT and u have to translate again BOO
-//
-////        test -ve for between
-////        LocalDateTime localDT1 = LocalDateTime.parse("1979-12-09T09:00:25");
-////        LocalDateTime localDT2 = LocalDateTime.parse("1979-12-09T18:00:24");
-////        Long hours = ChronoUnit.HOURS.between(localDT1,localDT2);
-////        System.out.println(hours);
-//        if(dt2.isAfter(dt1)){
-////            LocalDateTime timeWorked =  dt2. dt1;
-//            //Chronos hours return Long
-//            //minus 1 cos lunch break
-//            Long hours = ChronoUnit.HOURS.between(dt1,dt2);
-//            Integer clocked = hours.intValue() - 1;
-//
-//            //need to check with shift which kind of shift is it. event or normal for payroll
-//            if(clocked > 8){
-//                Integer ot = clocked -8;
-//                attendance.setPhEventHoursWorked(ot.longValue());
-//                attendance.setTotalCount(attendance.getTotalCount() + clocked + ot);
-//            }else{
-//                attendance.setTotalCount(attendance.getTotalCount() + clocked);
-//            }
-//
-//        }
-//        //they need to pass this info to payroll. need to check if today is weekday, weekend or event for pay
-//        attendanceRepository.saveAndFlush(attendance);
-//
-//    }
+    // contract
+    // public void countAttendanceForToday(Long userId){
+    //
+    //// User u1 = userRepository.findById(attendance.getUser().getUserId()).get();
+    // User u1 = getUser(attendance.getUser().getUserId());
+    // //will have user
+    //
+    // //Check time for today
+    // //find
+    // LocalDateTime dt1 = attendance.getPeriodStart();
+    // LocalDateTime dt2 = attendance.getPeriodEnd();
+    // //https://stackoverflow.com/questions/25747499/java-8-difference-between-two-localdatetime-in-multiple-units
+    // //https://docs.oracle.com/javase/tutorial/datetime/iso/period.html
+    // //dont use minus(). gives u back 1 LDT and u have to translate again BOO
+    //
+    //// test -ve for between
+    //// LocalDateTime localDT1 = LocalDateTime.parse("1979-12-09T09:00:25");
+    //// LocalDateTime localDT2 = LocalDateTime.parse("1979-12-09T18:00:24");
+    //// Long hours = ChronoUnit.HOURS.between(localDT1,localDT2);
+    //// System.out.println(hours);
+    // if(dt2.isAfter(dt1)){
+    //// LocalDateTime timeWorked = dt2. dt1;
+    // //Chronos hours return Long
+    // //minus 1 cos lunch break
+    // Long hours = ChronoUnit.HOURS.between(dt1,dt2);
+    // Integer clocked = hours.intValue() - 1;
+    //
+    // //need to check with shift which kind of shift is it. event or normal for
+    // payroll
+    // if(clocked > 8){
+    // Integer ot = clocked -8;
+    // attendance.setPhEventHoursWorked(ot.longValue());
+    // attendance.setTotalCount(attendance.getTotalCount() + clocked + ot);
+    // }else{
+    // attendance.setTotalCount(attendance.getTotalCount() + clocked);
+    // }
+    //
+    // }
+    // //they need to pass this info to payroll. need to check if today is weekday,
+    // weekend or event for pay
+    // attendanceRepository.saveAndFlush(attendance);
+    //
+    // }
 }
-
-

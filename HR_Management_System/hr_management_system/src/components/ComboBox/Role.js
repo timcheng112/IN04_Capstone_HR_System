@@ -11,9 +11,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Role() {
+export default function Role({selectedRole, setSelectedRole}) {
   const [query, setQuery] = useState('')
-  const [selectedRole, setSelectedRole] = useState()
+  //const [selectedRole, setSelectedRole] = useState()
 
   const filteredRole =
     query === ''
