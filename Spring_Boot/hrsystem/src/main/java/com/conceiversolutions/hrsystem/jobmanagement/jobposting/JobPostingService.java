@@ -49,6 +49,12 @@ public class JobPostingService {
                 poster.setSwapRequestsReceived(new ArrayList<>());
                 poster.setSwapRequestsRequested(new ArrayList<>());
                 poster.setLeaves(new ArrayList<>());
+                poster.setLeaveQuotas(new ArrayList<>());
+                poster.setCurrentLeaveQuota(null);
+                poster.setTaskListItems(null);
+                poster.setCurrentPosition(null);
+                poster.setTeams(null);
+                poster.setPayslips(new ArrayList<>());
             }
 
             if (jp.getJobPostRequirements().size() != 0) {

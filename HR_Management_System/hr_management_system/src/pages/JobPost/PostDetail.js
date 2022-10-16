@@ -174,7 +174,7 @@ export default function PostDetail() {
         <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
           <div className="space-y-6 sm:space-y-5">
             <div>
-              <h3 className="text-lg font-medium leading-6 text-gray-900">Job Request Details</h3>
+              <h3 className="text-lg font-medium leading-6 text-gray-900">Job Posting Details</h3>
             </div>
             <div className="space-y-6 sm:space-y-5">
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
