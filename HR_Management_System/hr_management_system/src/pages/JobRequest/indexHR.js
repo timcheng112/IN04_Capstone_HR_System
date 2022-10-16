@@ -31,7 +31,7 @@ export default function JobRequestHR() {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        console.log(response.data);
+//        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, []);
@@ -42,7 +42,7 @@ export default function JobRequestHR() {
       .then((response) => {
         setRequests(response.data);
         setFilteredRequests(response.data);
-        console.log(response.data);
+//        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, [refreshKey]);

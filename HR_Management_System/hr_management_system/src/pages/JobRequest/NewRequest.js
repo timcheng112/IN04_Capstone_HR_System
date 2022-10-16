@@ -108,7 +108,7 @@ export default function NewRequest() {
           } else {
             setError(error);
           }
-          console.log("returning 1")
+//          console.log("returning 1")
       });
       return 0;
       // .catch((error) => setError(error));
@@ -155,7 +155,7 @@ export default function NewRequest() {
             } else {
               setError(error);
             }
-            console.log("returning 1")
+//            console.log("returning 1")
         });
         return 0;
       // .catch((error) => setError(error));
