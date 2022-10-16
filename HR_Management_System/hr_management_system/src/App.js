@@ -30,6 +30,9 @@ import NewJobRequestPage from "./pages/JobRequest/NewRequest";
 import JobRequestHrPage from "./pages/JobRequest/indexHR";
 import JobPostPage from "./pages/JobPost/indexHR";
 import Roster from "./pages/Rostering/roster";
+import JobPostDetailPage from "./pages/JobPost/PostDetail";
+import LeavePage from "./pages/Leave/indexHR";
+import LeaveQuotaPage from "./pages/Leave/quota";
 
 function App() {
   return (
@@ -90,29 +93,40 @@ function App() {
             component={OffboardingHrPage}
           />
 
-          <PublicRoute
+          <PrivateRoute exact path="/rostering" component={Roster} />
+          <PrivateRoute
             exact
             path="/hiring/jobrequest"
             component={JobRequestPage}
           />
-          <PublicRoute
+          <PrivateRoute
             exact
-            path="/hiring/jobrequestdetail"
+            path="/hiring/jobrequest/details"
             component={JobRequestDetailPage}
           />
-          <PublicRoute
+          <PrivateRoute
             exact
             path="/hiring/newjobrequest"
             component={NewJobRequestPage}
           />
-          <PublicRoute
+          <PrivateRoute
             exact
             path="/hiring/jobrequesthr"
             component={JobRequestHrPage}
           />
-          <PublicRoute exact path="/hiring/jobpost" component={JobPostPage} />
+          <PrivateRoute exact path="/hiring/jobpost" component={JobPostPage} />
+          <PrivateRoute
+            exact
+            path="/hiring/jobpost/details"
+            component={JobPostDetailPage}
+          />
 
-          <PrivateRoute exact path="/rostering" component={Roster} />
+          <PrivateRoute exact path="/admin/leaves" component={LeavePage} />
+          <PrivateRoute
+            exact
+            path="/admin/leavequota"
+            component={LeaveQuotaPage}
+          />
         </Switch>
       </div>
     </BrowserRouter>

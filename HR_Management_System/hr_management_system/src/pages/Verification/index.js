@@ -78,7 +78,7 @@ export default function Verification() {
   }
 
   function setFirstPassword() {
-    console.log("work email = " + email)
+    console.log("work email = " + email);
     api
       .setFirstPassword(email, password)
       .then((response) => alert(response.data))
@@ -209,7 +209,7 @@ export default function Verification() {
                   Check your email.
                 </h1>
                 <p className="mt-2 text-lg text-gray-500">
-                  A verification email should have been sent to you.
+                  A verification link has been sent to you.
                 </p>
               </div>
               <div className="mt-12">
