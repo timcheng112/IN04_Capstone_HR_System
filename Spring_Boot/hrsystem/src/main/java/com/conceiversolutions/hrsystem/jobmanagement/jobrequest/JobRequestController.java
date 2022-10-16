@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +17,14 @@ import java.util.List;
 public class JobRequestController {
     private final JobRequestService jobRequestService;
 
-    @GetMapping(path = "getAllJobRequests")
+    @GetMapping(path = "/getAllJobRequests")
     public List<JobRequest> getAllJobRequests() {
         return jobRequestService.getAllJobRequests();
+    }
+
+    @GetMapping(path = "/getAllSubmittedJobRequests")
+    public List<JobRequest> getAllSubmittedJobRequest(@RequestParam("hrId") Long hrId) {
+        return jobRequestService.getAllSubmittedJobRequests(hrId);
     }
 
     @PostMapping(path = "/saveJobRequest")
@@ -28,22 +34,57 @@ public class JobRequestController {
                                @RequestParam("preferredStartDate") String preferredStartDate,
                                @RequestParam("jobType") String jobType,
                                @RequestParam("jobRole") String jobRole,
-                               @RequestParam("salary") BigDecimal salary,
-                               @RequestParam("jobRequirementIds") List<Long> jobRequirementIds,
+                               @RequestParam("salary") Float salary,
+                               @RequestParam("jobRequirements") List<Long> jobRequirements,
                                @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamId") Long teamId,
                                @RequestParam("requestedById") Long requestedById,
                                @RequestParam("jobRequestId") Long jobRequestId) {
+        JobTypeEnum jobT = null;
+        if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
+            jobT = JobTypeEnum.valueOf(jobType);
+        } else if (jobType.equals("FULL TIME")) {
+            jobT = JobTypeEnum.FULLTIME;
+        } else {
+            jobT = JobTypeEnum.PARTTIME;
+        }
+
         return jobRequestService.saveJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                JobTypeEnum.valueOf(jobType), RoleEnum.valueOf(jobRole),salary, jobRequirementIds, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
     }
 
-    @GetMapping(path = "getJobRequestById")
+    @PutMapping(path = "/submitJobRequest")
+    public Long submitJobRequest(@RequestParam("jobTitle") String jobTitle,
+                               @RequestParam("jobDescription") String jobDescription,
+                               @RequestParam("justification") String justification,
+                               @RequestParam("preferredStartDate") String preferredStartDate,
+                               @RequestParam("jobType") String jobType,
+                               @RequestParam("jobRole") String jobRole,
+                               @RequestParam("salary") Float salary,
+                               @RequestParam("jobRequirements") List<Long> jobRequirements,
+                               @RequestParam("departmentId") Long departmentId,
+                               @RequestParam("teamId") Long teamId,
+                               @RequestParam("requestedById") Long requestedById,
+                               @RequestParam("jobRequestId") Long jobRequestId) {
+        JobTypeEnum jobT = null;
+        if (jobType.equals("Contract") || jobType.equals("Intern")) {
+            jobT = JobTypeEnum.valueOf(jobType);
+        } else if (jobType.equals("Full Time")) {
+            jobT = JobTypeEnum.FULLTIME;
+        } else {
+            jobT = JobTypeEnum.PARTTIME;
+        }
+
+        return jobRequestService.submitJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
+    }
+
+    @GetMapping(path = "/getJobRequestById")
     public JobRequest getJobRequestById(@RequestParam("jobRequestId") Long jobRequestId) {
         return jobRequestService.getJobRequestById(jobRequestId);
     }
 
-    @DeleteMapping(path = "deleteJobRequest")
+    @DeleteMapping(path = "/deleteJobRequest")
     public String deleteJobRequest(Long jobRequestId) {
         return jobRequestService.deleteJobRequest(jobRequestId);
     }
@@ -63,7 +104,7 @@ public class JobRequestController {
 //        return jobRequestService.getJobRequestsByDepartmentId(id);
 //    }
 //
-    @GetMapping(path = "getJobRequestsByRequestorId")
+    @GetMapping(path = "/getJobRequestsByRequestorId")
     public List<JobRequest> getJobRequestsByRequestorId(@RequestParam("requestorId") Long id) {
         return jobRequestService.getJobRequestsByRequestorId(id);
     }
@@ -72,4 +113,18 @@ public class JobRequestController {
 //    public List<JobRequest> getJobRequestsByApproverId(@RequestParam("approverId") Long id) {
 //        return jobRequestService.getJobRequestsByApproverId(id);
 //    }
+
+    @PutMapping(path = "/approveJobRequestById")
+    public Boolean approveJobRequestById(@RequestParam("jobRequestId") Long jobRequestId,
+                                         @RequestParam("approverId") Long approverId) {
+        return jobRequestService.approveJobRequestById(jobRequestId, approverId);
+    }
+
+    @PutMapping(path = "/rejectJobRequestById")
+    public Boolean rejectJobRequestById(@RequestParam("jobRequestId") Long jobRequestId,
+                                        @RequestParam("approverId") Long approverId,
+                                        @RequestParam("reason") String reason) {
+        return jobRequestService.rejectJobRequestById(jobRequestId, approverId, reason);
+
+    }
 }

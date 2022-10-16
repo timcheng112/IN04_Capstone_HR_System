@@ -12,6 +12,7 @@ import Breadcrumb from "../Breadcrumb/Breadcrumb";
 const navigation = [
   { name: "Onboarding", href: "/admin/onboarding", icon: UsersIcon, current: false },
   { name: "Offboarding", href: "/admin/offboarding", icon: FolderIcon, current: false },
+  { name: "Leaves", href: "/admin/leaves", icon: FolderIcon, current: false },
 ];
 
 function classNames(...classes) {

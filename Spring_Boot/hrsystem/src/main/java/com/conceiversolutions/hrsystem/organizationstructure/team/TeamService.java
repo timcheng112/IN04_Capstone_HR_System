@@ -58,6 +58,10 @@ public class TeamService {
             t.getRoster().setShifts(new ArrayList<>());
 
             t.getTeamHead().setTeams(new ArrayList<>());
+            t.getTeamHead().setQualificationInformation(null);
+            t.getTeamHead().setPositions(new ArrayList<>());
+            t.getTeamHead().setTaskListItems(new ArrayList<>());
+            t.getTeamHead().setShiftListItems(new ArrayList<>());
         }
 
         return teams;
@@ -94,6 +98,16 @@ public class TeamService {
             List<User> teamMembers = t.getUsers();
             for (User member : teamMembers) {
                 member.setTeams(new ArrayList<>());
+                member.setJobRequests(new ArrayList<>());
+                member.setApplications(new ArrayList<>());
+                member.setGoals(new ArrayList<>());
+                member.setPositions(new ArrayList<>());
+                member.setModules(new ArrayList<>());
+                member.setShiftListItems(new ArrayList<>());
+                member.setTaskListItems(new ArrayList<>());
+                member.setEmployeeReviews(new ArrayList<>());
+                member.setAttendances(new ArrayList<>());
+                member.setEmployeeAppraisals(new ArrayList<>());
             }
 
             t.getRoster().setTeam(null);
@@ -101,6 +115,10 @@ public class TeamService {
             t.getRoster().setShifts(new ArrayList<>());
 
             t.getTeamHead().setTeams(new ArrayList<>());
+            t.getTeamHead().setQualificationInformation(null);
+            t.getTeamHead().setPositions(new ArrayList<>());
+            t.getTeamHead().setTaskListItems(new ArrayList<>());
+            t.getTeamHead().setShiftListItems(new ArrayList<>());
         }
 
         return teamsInDept;
@@ -132,6 +150,10 @@ public class TeamService {
             t.getDepartment().setTeams(new ArrayList<>());
 
             t.getTeamHead().setTeams(new ArrayList<>());
+            t.getTeamHead().setQualificationInformation(null);
+            t.getTeamHead().setPositions(new ArrayList<>());
+            t.getTeamHead().setTaskListItems(new ArrayList<>());
+            t.getTeamHead().setShiftListItems(new ArrayList<>());
 
             return t;
         } else {
