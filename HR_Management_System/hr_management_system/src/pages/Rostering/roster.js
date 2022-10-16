@@ -7,6 +7,7 @@ import ComboBox from "../../components/ComboBox/ComboBox.js";
 import Calendar from "../../features/rostering/Calendar/Calendar.js";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import ShiftBlock from "../../features/rostering/ShiftBlock.js";
+import InfoPanel from "../../components/rostering/InfoPanel.js";
 
 const people = [
   {
@@ -154,6 +155,7 @@ export default function Roster() {
         </div>
 
         {/*The table and stuff below it*/}
+        <InfoPanel />
         <Calendar
           people={people}
           addShiftHandler={(shiftToBeAdded) =>
