@@ -41,6 +41,26 @@ const api = {
   markTaskListItemAsComplete(taskListItemId) {
     return axios.put(`http://${URL}:9191/api/task_list_item/${taskListItemId}`);
   },
+
+  // Leaves
+  getAllPendingLeaves() {
+    return axios.get(`http://${URL}:9191/api/leaves/getAllPendingLeaves`);
+  },
+  getLeaveById(leaveId) {
+    return axios.get(`http://${URL}:9191/api/leaves/getLeaveById?leaveId=${leaveId}`);
+  },
+  createLeave(employeeId, leaveType, startDate, endDate, remark, document) {
+    return axios.post(`http://${URL}:9191/api/leaves/createLeave?employeeId=${employeeId}&leaveType=${leaveType}&startDate=${startDate}&endDate=${endDate}&remark=${remark}&document=${document}&`);
+  },
+  getEmployeeLeaves(employeeId) {
+    return axios.get(`http://${URL}:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`);
+  },
+  approveLeave(leaveId, approverRemarks) {
+    return axios.put(`http://${URL}:9191/api/leaves/approveLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
+  rejectLeave(leaveId, approverRemarks) {
+    return axios.put(`http://${URL}:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
 };
 
 export default api;

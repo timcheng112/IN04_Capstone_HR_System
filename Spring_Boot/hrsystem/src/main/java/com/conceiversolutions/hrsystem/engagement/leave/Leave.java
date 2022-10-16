@@ -65,5 +65,6 @@ public class Leave {
         this.supportingDocument = supportingDocument;
         this.leaveType = leaveType;
         this.employee = employee;
+        this.applicationDate = LocalDate.now();
     }
 }

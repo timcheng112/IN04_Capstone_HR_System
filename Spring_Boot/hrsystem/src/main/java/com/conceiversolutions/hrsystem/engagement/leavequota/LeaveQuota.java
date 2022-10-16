@@ -28,10 +28,10 @@ public class LeaveQuota {
     @Column(name = "anl_allocated", nullable = false)
     private Integer ANLAllocated;
 
-    @Column(name = "mdl", nullable = false)
-    private Integer MDL; // medical leave
-    @Column(name = "mdl_allocated", nullable = false)
-    private Integer MDLAllocated;
+    @Column(name = "mcl", nullable = false)
+    private Integer MCL; // medical leave
+    @Column(name = "mcl_allocated", nullable = false)
+    private Integer MCLAllocated;
 
     @Column(name = "hpl", nullable = false)
     private Integer HPL; // hospital leave
@@ -73,13 +73,13 @@ public class LeaveQuota {
     @Column(name = "npl_allocated", nullable = false)
     private Integer NPLAllocated;
 
-    public LeaveQuota(Integer year, LeaveQuota previousLeaveQuota, Integer ANLAllocated, Integer MDLAllocated, Integer HPLAllocated, Integer CCLAllocated, Integer MPLAllocated, Integer BDLAllocated, Integer CPLAllocated, Integer ECLAllocated, Integer MALAllocated, Integer NPLAllocated) {
+    public LeaveQuota(Integer year, LeaveQuota previousLeaveQuota, Integer ANLAllocated, Integer MCLAllocated, Integer HPLAllocated, Integer CCLAllocated, Integer MPLAllocated, Integer BDLAllocated, Integer CPLAllocated, Integer ECLAllocated, Integer MALAllocated, Integer NPLAllocated) {
         this.year = year;
         this.previousLeaveQuota = previousLeaveQuota;
         this.ANL = ANLAllocated;
         this.ANLAllocated = ANLAllocated;
-        this.MDL = MDLAllocated;
-        this.MDLAllocated = MDLAllocated;
+        this.MCL = MCLAllocated;
+        this.MCLAllocated = MCLAllocated;
         this.HPL = HPLAllocated;
         this.HPLAllocated = HPLAllocated;
         this.CCL = CCLAllocated;
@@ -96,5 +96,13 @@ public class LeaveQuota {
         this.MALAllocated = MALAllocated;
         this.NPL = NPLAllocated;
         this.NPLAllocated = NPLAllocated;
+    }
+
+    public int getAvailableANL() {
+        if (this.previousLeaveQuota == null) {
+            return this.ANL;
+        } else {
+            return this.ANL + this.previousLeaveQuota.getANL();
+        }
     }
 }
