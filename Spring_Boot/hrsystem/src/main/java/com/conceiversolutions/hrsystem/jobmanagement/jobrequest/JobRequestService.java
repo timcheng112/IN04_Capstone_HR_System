@@ -53,7 +53,6 @@ public class JobRequestService {
                 approver.setTaskListItems(new ArrayList<>());
                 approver.setTeams(new ArrayList<>());
                 approver.setQualificationInformation(null);
-                approver.setCurrentPosition(null);
                 approver.setReactivationRequest(null);
                 approver.setAttendances(new ArrayList<>());
                 approver.setCurrentPayInformation(null);
@@ -66,6 +65,11 @@ public class JobRequestService {
                 approver.setGoals(new ArrayList<>());
                 approver.setPositions(new ArrayList<>());
                 approver.setJobRequests(new ArrayList<>());
+                approver.setBlocks(new ArrayList<>());
+                approver.setShiftListItems(new ArrayList<>());
+                approver.setSwapRequestsReceived(new ArrayList<>());
+                approver.setSwapRequestsRequested(new ArrayList<>());
+                approver.setLeaves(new ArrayList<>());
             }
 
             User requestor = jr.getRequestedBy();
@@ -73,7 +77,6 @@ public class JobRequestService {
                 requestor.setTaskListItems(new ArrayList<>());
                 requestor.setTeams(new ArrayList<>());
                 requestor.setQualificationInformation(null);
-                requestor.setCurrentPosition(null);
                 requestor.setReactivationRequest(null);
                 requestor.setAttendances(new ArrayList<>());
                 requestor.setCurrentPayInformation(null);
@@ -86,6 +89,11 @@ public class JobRequestService {
                 requestor.setGoals(new ArrayList<>());
                 requestor.setPositions(new ArrayList<>());
                 requestor.setJobRequests(new ArrayList<>());
+                requestor.setBlocks(new ArrayList<>());
+                requestor.setShiftListItems(new ArrayList<>());
+                requestor.setSwapRequestsReceived(new ArrayList<>());
+                requestor.setSwapRequestsRequested(new ArrayList<>());
+                requestor.setLeaves(new ArrayList<>());
             }
 
             if (jr.getJobRequirements().size() != 0) {
@@ -316,7 +324,6 @@ public class JobRequestService {
                 approver.setTaskListItems(new ArrayList<>());
                 approver.setTeams(new ArrayList<>());
                 approver.setQualificationInformation(null);
-                approver.setCurrentPosition(null);
                 approver.setReactivationRequest(null);
                 approver.setAttendances(new ArrayList<>());
                 approver.setCurrentPayInformation(null);
@@ -329,6 +336,7 @@ public class JobRequestService {
                 approver.setGoals(new ArrayList<>());
                 approver.setPositions(new ArrayList<>());
                 approver.setJobRequests(new ArrayList<>());
+                approver.setLeaves(new ArrayList<>());
             }
 
             User requestor = jr.getRequestedBy();
@@ -336,7 +344,6 @@ public class JobRequestService {
                 requestor.setTaskListItems(new ArrayList<>());
                 requestor.setTeams(new ArrayList<>());
                 requestor.setQualificationInformation(null);
-                requestor.setCurrentPosition(null);
                 requestor.setReactivationRequest(null);
                 requestor.setAttendances(new ArrayList<>());
                 requestor.setCurrentPayInformation(null);
@@ -349,6 +356,11 @@ public class JobRequestService {
                 requestor.setGoals(new ArrayList<>());
                 requestor.setPositions(new ArrayList<>());
                 requestor.setJobRequests(new ArrayList<>());
+                requestor.setBlocks(new ArrayList<>());
+                requestor.setShiftListItems(new ArrayList<>());
+                requestor.setSwapRequestsReceived(new ArrayList<>());
+                requestor.setSwapRequestsRequested(new ArrayList<>());
+                requestor.setLeaves(new ArrayList<>());
             }
 
             if (jr.getJobRequirements().size() != 0) {
@@ -436,7 +448,6 @@ public class JobRequestService {
                 approver.setTaskListItems(new ArrayList<>());
                 approver.setTeams(new ArrayList<>());
                 approver.setQualificationInformation(null);
-                approver.setCurrentPosition(null);
                 approver.setReactivationRequest(null);
                 approver.setAttendances(new ArrayList<>());
                 approver.setCurrentPayInformation(null);
@@ -449,6 +460,11 @@ public class JobRequestService {
                 approver.setGoals(new ArrayList<>());
                 approver.setPositions(new ArrayList<>());
                 approver.setJobRequests(new ArrayList<>());
+                approver.setBlocks(new ArrayList<>());
+                approver.setShiftListItems(new ArrayList<>());
+                approver.setSwapRequestsReceived(new ArrayList<>());
+                approver.setSwapRequestsRequested(new ArrayList<>());
+                approver.setLeaves(new ArrayList<>());
             }
 
             if (jr.getJobRequirements().size() != 0) {
@@ -551,7 +567,6 @@ public class JobRequestService {
                 approver.setTaskListItems(new ArrayList<>());
                 approver.setTeams(new ArrayList<>());
                 approver.setQualificationInformation(null);
-                approver.setCurrentPosition(null);
                 approver.setReactivationRequest(null);
                 approver.setAttendances(new ArrayList<>());
                 approver.setCurrentPayInformation(null);
@@ -564,6 +579,11 @@ public class JobRequestService {
                 approver.setGoals(new ArrayList<>());
                 approver.setPositions(new ArrayList<>());
                 approver.setJobRequests(new ArrayList<>());
+                approver.setBlocks(new ArrayList<>());
+                approver.setShiftListItems(new ArrayList<>());
+                approver.setSwapRequestsReceived(new ArrayList<>());
+                approver.setSwapRequestsRequested(new ArrayList<>());
+                approver.setLeaves(new ArrayList<>());
             }
 
             User requestor = jr.getRequestedBy();
@@ -571,7 +591,6 @@ public class JobRequestService {
                 requestor.setTaskListItems(new ArrayList<>());
                 requestor.setTeams(new ArrayList<>());
                 requestor.setQualificationInformation(null);
-                requestor.setCurrentPosition(null);
                 requestor.setReactivationRequest(null);
                 requestor.setAttendances(new ArrayList<>());
                 requestor.setCurrentPayInformation(null);
@@ -584,6 +603,11 @@ public class JobRequestService {
                 requestor.setGoals(new ArrayList<>());
                 requestor.setPositions(new ArrayList<>());
                 requestor.setJobRequests(new ArrayList<>());
+                requestor.setBlocks(new ArrayList<>());
+                requestor.setShiftListItems(new ArrayList<>());
+                requestor.setSwapRequestsReceived(new ArrayList<>());
+                requestor.setSwapRequestsRequested(new ArrayList<>());
+                requestor.setLeaves(new ArrayList<>());
             }
 
             if (jr.getJobRequirements().size() != 0) {

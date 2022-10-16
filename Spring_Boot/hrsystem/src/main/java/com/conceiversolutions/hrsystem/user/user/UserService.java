@@ -89,6 +89,7 @@ public class UserService implements UserDetailsService {
         for (User u : users) {
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
@@ -101,11 +102,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
             u.setShiftListItems(new ArrayList<>());
             u.setSwapRequestsReceived(new ArrayList<>());
             u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
         }
 
         return users;
@@ -123,6 +138,7 @@ public class UserService implements UserDetailsService {
 
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
@@ -135,12 +151,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
             u.setShiftListItems(new ArrayList<>());
             u.setSwapRequestsReceived(new ArrayList<>());
             u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
             u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
 
             return u;
         } else {
@@ -161,6 +190,7 @@ public class UserService implements UserDetailsService {
 
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
@@ -173,12 +203,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
             u.setShiftListItems(new ArrayList<>());
             u.setSwapRequestsReceived(new ArrayList<>());
             u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
             u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
             return u;
         } else {
             throw new IllegalStateException("User does not exist.");
@@ -197,6 +240,7 @@ public class UserService implements UserDetailsService {
 
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setOutlet(null);
@@ -209,12 +253,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
             u.setShiftListItems(new ArrayList<>());
             u.setSwapRequestsReceived(new ArrayList<>());
             u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
             u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
             return u;
         } else {
             throw new IllegalStateException("Employee does not exist.");
@@ -997,6 +1054,7 @@ public class UserService implements UserDetailsService {
         for (User u : managers) {
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setRoster(null);
@@ -1013,7 +1071,21 @@ public class UserService implements UserDetailsService {
             u.setShiftListItems(new ArrayList<>());
             u.setSwapRequestsReceived(new ArrayList<>());
             u.setSwapRequestsRequested(new ArrayList<>());
-            // u.setTeams(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
         }
 
         return managers;
@@ -1026,6 +1098,7 @@ public class UserService implements UserDetailsService {
         for (User u : employees) {
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setRoster(null);
@@ -1038,11 +1111,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            // u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
             u.setShiftListItems(new ArrayList<>());
             u.setSwapRequestsReceived(new ArrayList<>());
             u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
 
         }
         return employees;
@@ -1054,6 +1141,7 @@ public class UserService implements UserDetailsService {
         for (User u : employees) {
             List<Team> teams = u.getTeams();
             for (Team t : teams) {
+                t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
                 t.setRoster(null);
@@ -1066,11 +1154,25 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
-            // u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
             u.setShiftListItems(new ArrayList<>());
             u.setSwapRequestsReceived(new ArrayList<>());
             u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
         }
 
         return employees;
@@ -1122,6 +1224,7 @@ public class UserService implements UserDetailsService {
             if (!deptHeadIds.contains(u.getUserId()) && !teamHeadIds.contains(u.getUserId())) {
                 List<Team> teams = u.getTeams();
                 for (Team t : teams) {
+                    t.setTeamHead(null);
                     t.setUsers(new ArrayList<>());
                     t.setDepartment(null);
                     t.setRoster(null);
@@ -1138,6 +1241,21 @@ public class UserService implements UserDetailsService {
                 u.setShiftListItems(new ArrayList<>());
                 u.setSwapRequestsReceived(new ArrayList<>());
                 u.setSwapRequestsRequested(new ArrayList<>());
+                u.setReactivationRequest(null);
+                u.setAttendances(new ArrayList<>());
+                u.setCurrentPayInformation(null);
+                u.setEmployeeAppraisals(new ArrayList<>());
+                u.setManagerAppraisals(new ArrayList<>());
+                u.setManagerReviews(new ArrayList<>());
+                u.setEmployeeReviews(new ArrayList<>());
+                u.setModules(new ArrayList<>());
+                u.setApplications(new ArrayList<>());
+                u.setGoals(new ArrayList<>());
+                u.setPositions(new ArrayList<>());
+                u.setJobRequests(new ArrayList<>());
+                u.setLeaves(new ArrayList<>());
+                u.setLeaveQuotas(new ArrayList<>());
+                u.setCurrentLeaveQuota(null);
 
                 availManagers.add(u);
             }
@@ -1179,6 +1297,21 @@ public class UserService implements UserDetailsService {
             e.setShiftListItems(new ArrayList<>());
             e.setSwapRequestsReceived(new ArrayList<>());
             e.setSwapRequestsRequested(new ArrayList<>());
+            e.setReactivationRequest(null);
+            e.setAttendances(new ArrayList<>());
+            e.setCurrentPayInformation(null);
+            e.setEmployeeAppraisals(new ArrayList<>());
+            e.setManagerAppraisals(new ArrayList<>());
+            e.setManagerReviews(new ArrayList<>());
+            e.setEmployeeReviews(new ArrayList<>());
+            e.setModules(new ArrayList<>());
+            e.setApplications(new ArrayList<>());
+            e.setGoals(new ArrayList<>());
+            e.setPositions(new ArrayList<>());
+            e.setJobRequests(new ArrayList<>());
+            e.setLeaves(new ArrayList<>());
+            e.setLeaveQuotas(new ArrayList<>());
+            e.setCurrentLeaveQuota(null);
 
         }
 
