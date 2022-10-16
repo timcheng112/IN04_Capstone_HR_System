@@ -8,6 +8,7 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
 import com.conceiversolutions.hrsystem.user.registration.EmailValidator;
@@ -97,6 +98,9 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
         }
 
         return users;
@@ -128,6 +132,9 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
 
             return u;
         } else {
@@ -162,6 +169,9 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
 
             return u;
         } else {
@@ -195,6 +205,9 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
 
             return u;
         } else {
@@ -970,6 +983,10 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setCategory(null);
             }
             u.setQualificationInformation(null);
+            u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
             // u.setTeams(new ArrayList<>());
         }
 
@@ -997,6 +1014,9 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             // u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
 
         }
         return employees;
@@ -1022,7 +1042,9 @@ public class UserService implements UserDetailsService {
             u.setQualificationInformation(null);
             // u.setTeams(new ArrayList<>());
             u.setBlocks(new ArrayList<>());
-
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
         }
 
         return employees;
@@ -1087,6 +1109,9 @@ public class UserService implements UserDetailsService {
                 }
                 u.setQualificationInformation(null);
                 u.setBlocks(new ArrayList<>());
+                u.setShiftListItems(new ArrayList<>());
+                u.setSwapRequestsReceived(new ArrayList<>());
+                u.setSwapRequestsRequested(new ArrayList<>());
 
                 availManagers.add(u);
             }
@@ -1101,7 +1126,7 @@ public class UserService implements UserDetailsService {
 
         List<User> employees = userRepository.getEmployeesNotInGivenTeam(RoleEnum.MANAGER, RoleEnum.EMPLOYEE,
                 Long.valueOf(teamId));
-        
+
         System.out.println("EMPLOYEES NOT IN GIVEN TEAM: " + employees);
 
         if (employees.isEmpty()) {
@@ -1125,6 +1150,9 @@ public class UserService implements UserDetailsService {
             }
             e.setQualificationInformation(null);
             e.setBlocks(new ArrayList<>());
+            e.setShiftListItems(new ArrayList<>());
+            e.setSwapRequestsReceived(new ArrayList<>());
+            e.setSwapRequestsRequested(new ArrayList<>());
 
         }
 

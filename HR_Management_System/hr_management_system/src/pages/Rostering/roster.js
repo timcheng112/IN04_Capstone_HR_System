@@ -4,6 +4,9 @@ import api from "../../utils/api.js";
 import AddShiftModal from "../../features/rostering/AddShiftModal.js";
 import ViewTemplateShiftsSlideover from "../../features/rostering/ViewTemplateShiftsSlideover.js";
 import ComboBox from "../../components/ComboBox/ComboBox.js";
+import Calendar from "../../features/rostering/Calendar/Calendar.js";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import ShiftBlock from "../../features/rostering/ShiftBlock.js";
 
 const people = [
   {
@@ -16,6 +19,18 @@ const people = [
     name: "James Walton",
     title: "Front-end Developer",
     email: "James.walton@example.com",
+    role: "Member",
+  },
+  {
+    name: "Mo Salah",
+    title: "Back-end Developer",
+    email: "mo.salah@example.com",
+    role: "Member",
+  },
+  {
+    name: "Jurgen Klopp",
+    title: "Full-stack Developer",
+    email: "kloppo@example.com",
     role: "Member",
   },
   // More people...
@@ -35,9 +50,53 @@ const outlets = [
     name: "Lentor Outlet",
   },
 ];
+
+const shifts = [
+  {
+    id: "1",
+    shiftTitle: "Morning Shift",
+    startTime: "08:00",
+    endTime: "14:00",
+  },
+  {
+    id: "2",
+    shiftTitle: "Afternoon Shift",
+    startTime: "14:00",
+    endTime: "20:00",
+  },
+  {
+    id: "3",
+    shiftTitle: "Morning Shift",
+    startTime: "06:00",
+    endTime: "14:00",
+  },
+  {
+    id: "4",
+    shiftTitle: "Afternoon Shift",
+    startTime: "14:00",
+    endTime: "22:00",
+  },
+];
+
 export default function Roster() {
   const [open, setOpen] = useState(false);
   const [openSlideover, setOpenSlideover] = useState(false);
+  const [shiftsToBeAdded, setShiftsToBeAdded] = useState([]);
+
+  const onDragEnd = (result) => {
+    const { destination, source } = result;
+    // If user tries to drop in an unknown destination
+    if (!destination) return;
+
+    // if the user drags and drops back in the same position
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+    console.log(destination.droppableId);
+  };
 
   return (
     <>
@@ -72,9 +131,7 @@ export default function Roster() {
               </nav>
             </div>
           </div>
-
           <div className="sm:flex-auto">
-            <h1 className="text-xl font-semibold text-gray-900">Roster</h1>
             {/* <p className="mt-2 text-sm text-gray-700">
               We probably don't need text here.
             </p> */}
@@ -93,106 +150,21 @@ export default function Roster() {
             >
               View Template Shifts
             </button>
-            <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2"
-              onClick={() => setOpen(true)}
-            >
-              Add a Shift (Temp button)
-            </button>
           </div>
         </div>
 
         {/*The table and stuff below it*/}
-        <div className="mt-8 flex flex-col">
-          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-300">
-                  <thead className="bg-gray-50">
-                    <tr className="divide-x divide-gray-200">
-                      <th
-                        scope="col"
-                        className="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        Employee
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Mon
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Tue
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Wed
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Thu
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Fri
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Sat
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Sun
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 bg-white">
-                    {people.map((person) => (
-                      <tr
-                        key={person.email}
-                        className="divide-x divide-gray-200"
-                      >
-                        <td className="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6">
-                          {person.name}
-                        </td>
-                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
-                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
-                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
-                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
-                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
-                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
-                        <td className="whitespace-nowrap p-4 text-sm text-gray-500"></td>
-                        <AddShiftModal
-                          open={open}
-                          onClose={() => setOpen(false)}
-                        />
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Calendar
+          people={people}
+          addShiftHandler={(shiftToBeAdded) =>
+            setShiftsToBeAdded(...shiftsToBeAdded, shiftToBeAdded)
+          }
+        />
         <ViewTemplateShiftsSlideover
           open={openSlideover}
           onClose={() => setOpenSlideover(false)}
         />
+        <AddShiftModal open={open} onClose={() => setOpen(false)} />
       </div>
     </>
   );
