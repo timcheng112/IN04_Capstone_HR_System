@@ -46,4 +46,9 @@ public class ShiftListItemController {
     public List<ShiftListItem> getShiftListItemByShiftId(@RequestParam("shiftId") Long shiftId){
         return shiftListItemService.getShiftListItemByShift(shiftId);
     }
+
+    @GetMapping(path="/getShiftListItemByPosition")
+    public List<ShiftListItem> getShiftListItemByPosition(@RequestParam("shiftId") Long shiftId, @RequestParam("posType") String posType){
+        return shiftListItemService.getShiftListItemByPosition(shiftId, posType);
+    }
 }

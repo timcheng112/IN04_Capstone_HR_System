@@ -397,6 +397,11 @@ const api = {
       `http://localhost:9191/api/shift_list_item/getShiftListItemByShiftId?shiftId=${shiftId}`
     );
   },
+  getShiftListItemByPosition(shiftId, posType) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByPosition?shiftId=${shiftId}&posType=${posType}`
+    );
+  },
 };
 
 export default api;

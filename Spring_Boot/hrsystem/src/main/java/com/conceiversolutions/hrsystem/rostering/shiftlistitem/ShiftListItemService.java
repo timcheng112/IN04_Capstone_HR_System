@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 import com.conceiversolutions.hrsystem.rostering.shift.ShiftRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -42,6 +43,22 @@ public class ShiftListItemService {
 
     public List<ShiftListItem> getShiftListItemByShift(Long shiftId) {
         List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByShiftId(shiftId);
+        for (ShiftListItem shiftListItem : shiftListItems) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().setTeams(new ArrayList<>());
+            shiftListItem.getUser().setQualificationInformation(null);
+            shiftListItem.getUser().setPositions(new ArrayList<>());
+            shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+            shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+            
+        }
+        return shiftListItems;
+    }
+
+    public List<ShiftListItem> getShiftListItemByPosition(Long shiftId, String posType) {
+        PositionTypeEnum posTypeEnum = PositionTypeEnum.valueOf(posType);
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByPosition(shiftId, posTypeEnum);
         for (ShiftListItem shiftListItem : shiftListItems) {
             shiftListItem.getShift().setRoster(null);
             shiftListItem.getShift().setShiftListItems(new ArrayList<>());
