@@ -11,24 +11,28 @@ import InfoPanel from "../../components/rostering/InfoPanel.js";
 
 const people = [
   {
+    userId: 1,
     name: "Lindsay Walton",
     title: "Front-end Developer",
     email: "lindsay.walton@example.com",
     role: "Member",
   },
   {
+    userId: 2,
     name: "James Walton",
     title: "Front-end Developer",
     email: "James.walton@example.com",
     role: "Member",
   },
   {
+    userId: 3,
     name: "Mo Salah",
     title: "Back-end Developer",
     email: "mo.salah@example.com",
     role: "Member",
   },
   {
+    userId: 4,
     name: "Jurgen Klopp",
     title: "Full-stack Developer",
     email: "kloppo@example.com",
@@ -84,26 +88,21 @@ export default function Roster() {
   const [openSlideover, setOpenSlideover] = useState(false);
   const [shiftsToBeAdded, setShiftsToBeAdded] = useState([]);
 
-  const onDragEnd = (result) => {
-    const { destination, source } = result;
-    // If user tries to drop in an unknown destination
-    if (!destination) return;
+  useEffect(() => {
+    console.log(shiftsToBeAdded);
+  }, [shiftsToBeAdded]);
 
-    // if the user drags and drops back in the same position
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-    console.log(destination.droppableId);
-  };
+  // SHOW WARNING PROMPT ON REFRESH IF EDITS EXIST
+  if (shiftsToBeAdded.length !== 0) {
+    window.onbeforeunload = function () {
+      return "Changes made will be lost if you leave the page, are you sure?";
+    };
+  }
 
   return (
     <>
       <Navbar />
 
-      {/*Top Part Above the Table Need to unify the fire nation*/}
       <div className="px-4 sm:px-6 lg:px-8 mt-3">
         <div className="sm:flex sm:items-center">
           <div className="isolate inline-flex -space-x-px rounded-md shadow-sm mx-4">
@@ -159,8 +158,16 @@ export default function Roster() {
         <Calendar
           people={people}
           addShiftHandler={(shiftToBeAdded) =>
-            setShiftsToBeAdded(...shiftsToBeAdded, shiftToBeAdded)
+            setShiftsToBeAdded(shiftsToBeAdded.concat(shiftToBeAdded))
           }
+          removeShiftHandler={(shiftToBeRemoved) => {
+            setShiftsToBeAdded(
+              shiftsToBeAdded.filter(
+                (shift) => shift.shift !== shiftToBeRemoved
+              )
+            );
+          }}
+          shiftsToBeAdded={shiftsToBeAdded}
         />
         <ViewTemplateShiftsSlideover
           open={openSlideover}
