@@ -10,7 +10,7 @@ import { getUserId } from "../../utils/Common";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useHistory  } from 'react-router-dom';
 
-export default function RequestOption({request}) {
+export default function RequestOption({request, refreshKeyHandler}) {
   const history = useHistory();
   const [trash, setTrash] = useState(false);
   const [user, setUser] = useState(null);
@@ -29,7 +29,7 @@ export default function RequestOption({request}) {
   function deleteRequest() {
     api.deleteJobRequest(request.requestId).then(() => {
       alert("Successfully deleted!");
-      //refreshKeyHandler();
+      refreshKeyHandler();
     })
       .catch((error) => {
         var message = error.request.response;

@@ -24,6 +24,7 @@ export default function JobRequestHR() {
 //    "jobTitle", "status",
 //    "requestedBy"
 //  ]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     api
@@ -44,7 +45,7 @@ export default function JobRequestHR() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
   function search(e, items) {
 //    console.log("e");
@@ -180,7 +181,7 @@ export default function JobRequestHR() {
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.requestedBy.firstName}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <RequestOption request = {request}/>
+                          <RequestOption request = {request} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                         </td>
                       </tr>
                     ))}

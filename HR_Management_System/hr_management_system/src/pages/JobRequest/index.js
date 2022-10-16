@@ -22,6 +22,7 @@ export default function JobRequest() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [filteredRequests, setFilteredRequests] = useState(requests);
+  const [refreshKey, setRefreshKey] = useState(0);
 //  const [searchParam] = useState([
 //    "jobTitle", "status"
 //  ]);
@@ -45,7 +46,7 @@ export default function JobRequest() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
 
 
@@ -156,7 +157,7 @@ export default function JobRequest() {
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.lastEditedDate}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <RequestOption request = {request}/>
+                          <RequestOption request = {request} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                         </td>
                       </tr>
                     ))}

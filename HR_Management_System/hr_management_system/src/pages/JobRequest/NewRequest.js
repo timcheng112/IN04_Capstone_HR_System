@@ -258,7 +258,7 @@ export default function NewRequest() {
                 <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Requirements
                 </label>
-                <JobRequirements selectedSkills={requirements} setSelectedSkills={setRequirements}/>
+                <JobRequirements selectedSkills={requirements} setSelectedSkills={setRequirements} status ="PENDING"/>
         
               </div>
 
