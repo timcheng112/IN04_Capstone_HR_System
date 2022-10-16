@@ -1,5 +1,8 @@
 package com.conceiversolutions.hrsystem.rostering.shift;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,5 +76,16 @@ public class ShiftService {
         }
 
         shiftRepository.deleteById(shiftId);
+    }
+
+    public Shift getShiftByTeamAndTime(Long teamId, LocalDateTime date){
+        List<Shift> shiftList = shiftRepository.findShiftByTeamTime(teamId, date);
+        if (shiftList.isEmpty()){
+            throw new IllegalStateException("Shift with teamId: " + teamId + " date: " + date + "does not exist!");
+        } else if (shiftList.size()>1) {
+            throw new IllegalStateException("More than 1 Shifts were found at this time!");
+        } else {
+            return shiftList.get(0);
+        }
     }
 }
