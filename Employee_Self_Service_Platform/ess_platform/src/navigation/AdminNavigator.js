@@ -58,6 +58,14 @@ const AdminNavigator = () => {
           headerTitle: "Leave",
         }}
       />
+      <AdminStack.Screen
+        name="Leave"
+        component={LeaveApplicationScreen}
+        options={{
+          title: "Apply for leaves",
+          headerTitle: "Leave",
+        }}
+      />
     </AdminStack.Navigator>
   );
 };
