@@ -101,9 +101,9 @@ public class UserController {
             @RequestParam("jobType") String jobType) {
         System.out.println("UserController.registerNewAccountJMP");
 
-        List<Position> newPositionList = new ArrayList<Position>();
         Position position = new Position(positionName, positionDescription, LocalDate.parse(dateJoined),
                 JobTypeEnum.valueOf(jobType), PositionTypeEnum.valueOf(positionType));
+
         Position newPos = positionRepository.saveAndFlush(position);
 
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
@@ -318,11 +318,3 @@ public class UserController {
     }
 
 }
-
-    
-
-     
-     
-     
-      
-         
