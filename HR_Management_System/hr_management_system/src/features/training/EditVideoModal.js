@@ -3,45 +3,42 @@ import { Fragment, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import api from "../../utils/api";
 
-export default function EditModuleModal({
+export default function EditVideoModal({
   open,
   onClose,
-  module,
+  video,
   refreshKeyHandler,
 }) {
   const [user, setUser] = useState(null);
-  const [title, setTitle] = useState(module.title);
-  const [description, setDescription] = useState(module.description);
-  const [thumbnail, setThumbnail] = useState(module.thumbnail);
+  const [title, setTitle] = useState(video.title);
+  const [description, setDescription] = useState(video.description);
+  const [videoLink, setVideoLink] = useState(video.video);
   const history = useHistory();
 
   useEffect(() => {
-    if (!open) {
-      setTitle(module.title)
-      setDescription(module.description)
-      setThumbnail(module.thumbnail)
-    }
+    setTitle(video.title)
+    setDescription(video.description)
+    setVideoLink(video.video)
   }, [open])
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    editVideo();
     onClose();
-    editModule();
   };
 
-  function editModule() {
-    const editedModule = {
+  function editVideo() {
+    console.log("id " + video.videoId);
+    const editedVideo = {
       title: title,
       description: description,
-      thumbnail: thumbnail,
+      video: videoLink,
     };
-    api
-      .editModule(module.moduleId, editedModule)
-      .then((response) => {
-        alert(response.data);
-      })
+    api.editVideo(video.videoId, editedVideo).then(response => alert(response.data))
   }
 
   return (
+    video &&
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
@@ -81,7 +78,7 @@ export default function EditModuleModal({
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900 mb-2"
                     >
-                      Edit Module
+                      Edit Video
                     </Dialog.Title>
                     <div className="mt-2">
                       <form onSubmit={handleSubmit}>
@@ -120,20 +117,20 @@ export default function EditModuleModal({
                           />
                         </div>
                         <label
-                          htmlFor="thumbnail"
+                          htmlFor="link"
                           className="block text-sm font-medium text-gray-700 mt-2"
                         >
-                          Thumbnail
+                          Link
                         </label>
                         <div className="mt-1">
                           <textarea
-                            id="thumbnail"
-                            name="thumbnail"
-                            rows={2}
+                            id="link"
+                            name="link"
+                            rows={1}
                             className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             required
-                            value={thumbnail}
-                            onChange={(e) => setThumbnail(e.target.value)}
+                            value={videoLink}
+                            onChange={(e) => setVideoLink(e.target.value)}
                           />
                         </div>
                       </form>

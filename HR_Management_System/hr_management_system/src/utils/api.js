@@ -277,22 +277,67 @@ const api = {
     );
   },
   getAllModules() {
-    return axios.get(`http://localhost:9191/api/module`)
+    return axios.get(`http://localhost:9191/api/module`);
   },
   getModule(moduleId) {
-    return axios.get(`http://localhost:9191/api/module/${moduleId}`)
+    return axios.get(`http://localhost:9191/api/module/${moduleId}`);
   },
   addModule(module) {
-    return axios.post(`http://localhost:9191/api/module`, module)
+    return axios.post(`http://localhost:9191/api/module`, module);
   },
   assignModule(moduleId, employees) {
-    return axios.post(`http://localhost:9191/api/module/user/${moduleId}`, employees)
+    return axios.post(
+      `http://localhost:9191/api/module/user/${moduleId}`,
+      employees
+    );
   },
   deleteModule(moduleId) {
-    return axios.delete(`http://localhost:9191/api/module/${moduleId}`)
+    return axios.delete(`http://localhost:9191/api/module/${moduleId}`);
   },
   editModule(moduleId, module) {
-    return axios.put(`http://localhost:9191/api/module/${moduleId}`, module)
+    return axios.put(`http://localhost:9191/api/module/${moduleId}`, module);
+  },
+  getUserModules(userId) {
+    return axios.get(`http://localhost:9191/api/module/user/${userId}`);
+  },
+  getModuleFromVideo(videoId) {
+    return axios.get(`http://localhost:9191/api/module/video/${videoId}`);
+  },
+  getEmployeesAssignedToModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/user`)
+  },
+  getEmployeesUnassignedToModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/unAssignedUser`)
+  },
+  getVideosInModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/videos`);
+  },
+  addVideo(moduleId, video) {
+    return axios.post(`http://localhost:9191/api/module/${moduleId}`, video);
+  },
+  getVideo(videoId) {
+    return axios.get(`http://localhost:9191/api/video/${videoId}`);
+  },
+  getVideos() {
+    return axios.get(`http://localhost:9191/api/video`);
+  },
+  editVideo(videoId, video) {
+    return axios.put(`http://localhost:9191/api/video/${videoId}`, video);
+  },
+  deleteVideo(videoId) {
+    return axios.delete(`http://localhost:9191/api/video/${videoId}`)
+  },
+  markVideoAsWatched(videoId, userId) {
+    return axios.post(`http://localhost:9191/api/video/${videoId}/user/${userId}`)
+  },
+  getIsVideoWatchedByEmployee(videoId, userId) {
+    return axios.get(`http://localhost:9191/api/video/${videoId}/user/${userId}`)
+  },
+  getUserProgress(moduleId, userId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/user/${userId}`)
+  },
+  getUserCompletedModules(userId) {
+    return axios.get(`http://localhost:9191/api/module/user/${userId}/completed`)
   },
   // JOB REQUEST
   getAllJobRequests() {

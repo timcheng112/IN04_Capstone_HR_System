@@ -10,11 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.conceiversolutions.hrsystem.training.module.Module;
-import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
@@ -29,25 +28,24 @@ public class Video {
     private String video;
     private Integer position; //position of video in the module
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Video.class)
+    @JoinColumn(name = "module_id")
+    private Video moduleVideo;
+
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private List<User> watchedBy;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Module.class)
-    @JoinColumn(name = "module_id")
-    private Module module;
 
     public Video() {
 
     }
 
-    public Video(String title, String description, String video, Integer position, List<User> watchedBy, Module module) {
+    public Video(String title, String description, String video, Integer position, List<User> watchedBy) {
         this.title = title;
         this.description = description;
         this.video = video;
         this.position = position;
         this.watchedBy = watchedBy;
-        this.module = module;
     }
 
     public Long getVideoId() {
@@ -82,14 +80,6 @@ public class Video {
         this.video = video;
     }
 
-    public Module getModule() {
-        return module;
-    }
-
-    public void setModule(Module module) {
-        this.module = module;
-    }
-
     public List<User> getWatchedBy() {
         return watchedBy;
     }
@@ -115,7 +105,6 @@ public class Video {
                 ", video=" + video +
                 ", position=" + position +
                 ", watchedBy=" + watchedBy +
-                ", module=" + module +
                 '}';
     }
 }

@@ -264,12 +264,21 @@ export default function Home() {
                               </a>
                               <a
                                 key="Career"
-                                href="/mytraining"
+                                href="/career"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
                                 Career
+                              </a>
+                              <a
+                                key="Training"
+                                href="/mytraining"
+                                className={classNames(
+                                  "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
+                                )}
+                              >
+                                Training
                               </a>
                               <a
                                 key="Welfare"
