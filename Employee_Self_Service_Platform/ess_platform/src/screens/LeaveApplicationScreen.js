@@ -11,6 +11,7 @@ import Constants from "expo-constants";
 import { TextInput, RadioButton, Button } from "react-native-paper";
 import DatePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from "expo-document-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const LeaveApplicationScreen = () => {
+const LeaveApplicationScreen = ({navigation}) => {
   const [startDate, setStartDate] = React.useState(new Date());
   const [endDate, setEndDate] = React.useState(new Date());
   const [remarks, setRemarks] = React.useState("");
@@ -47,6 +48,7 @@ const LeaveApplicationScreen = () => {
   const [showStart, setShowStart] = React.useState(false);
   const [showEnd, setShowEnd] = React.useState(false);
   const [fileResponse, setFileResponse] = useState([]);
+  const [userId, setUserId] = useState();
 
   const pickDocument = useCallback(async () => {
     try {
@@ -56,11 +58,31 @@ const LeaveApplicationScreen = () => {
       console.warn(err);
     }
   }, []);
+  const setId = async () => {
+    try {
+      const response = await AsyncStorage.getItem("userId");
+      setUserId(Number(response));
+    } catch (err) {
+      console.warn(err);
+    };
+  }
+  
   // const pickDocument = async () => {
   //   let result = await DocumentPicker.getDocumentAsync({});
   //   console.log(result.uri);
   //   console.log(result);
   // };
+
+  function applyLeave({navigation}) {
+    api.createLeave(userId,type, startDate, endDate, remarks, fileResponse)
+      .then(() => {
+        console.log("Successfully applied!");
+        navigation.navigate('LeaveApplication')
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -132,6 +154,12 @@ const LeaveApplicationScreen = () => {
             {fileResponse?.uri}
           </Text>
         </View>
+        <Button
+          mode="contained"
+          color="#ffd700"
+          onPress={() => applyLeave({navigation})}>
+          Submit
+        </Button>
       </View>
 
     </SafeAreaView>

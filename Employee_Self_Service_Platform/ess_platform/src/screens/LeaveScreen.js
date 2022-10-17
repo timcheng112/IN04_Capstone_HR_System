@@ -9,9 +9,6 @@ import {
 import api from "../utils/api";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import LeaveApplicationScreen from "./LeaveApplicationScreen";
 
 const styles = StyleSheet.create({
   container: {
