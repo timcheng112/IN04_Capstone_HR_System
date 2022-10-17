@@ -31,6 +31,7 @@ public class Shift {
     @Column(name = "remarks", nullable = true)
     private String remarks;
     @Column(name = "min_quota", nullable = false)
+    @ElementCollection(targetClass=Long.class)
     private List<Long> minQuota;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
