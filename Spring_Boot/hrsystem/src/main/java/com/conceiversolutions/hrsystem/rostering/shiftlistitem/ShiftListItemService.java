@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.rostering.shiftlistitem;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.time.*;
 
 import org.springframework.stereotype.Service;
 
@@ -101,5 +102,37 @@ public class ShiftListItemService {
         shiftListItem.setUser(null);
 
         shiftListItemRepository.deleteById(shiftListItemId);
+    }
+
+    // controller should convert string date into localdate
+    public ShiftListItem getShiftListItemByDateAndUserId(LocalDate date, Long userId) {
+        LocalDateTime start = LocalDateTime.of(date, LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(date, LocalTime.of(23, 59, 59));
+        ShiftListItem shiftListItem = null;
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByDateAndUserId(start, end,
+                userId);
+        if (shiftListItems.size() == 0) {
+            // failtofind
+            throw new IllegalStateException("No shiftListItems found for specified date and userId");
+        } else if (shiftListItems.size() > 1) {
+            // unexpected found more than 1 shiftListItem for user on specified date.
+            throw new IllegalStateException("Found more than 1 shiftListItem for specified date and userId");
+        } else {
+            // default
+            shiftListItem = shiftListItems.get(0);
+        }
+
+        if (shiftListItem != null) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().setTeams(new ArrayList<>());
+            shiftListItem.getUser().setQualificationInformation(null);
+            shiftListItem.getUser().setPositions(new ArrayList<>());
+            shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+            shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+        }
+
+        return shiftListItem;
     }
 }

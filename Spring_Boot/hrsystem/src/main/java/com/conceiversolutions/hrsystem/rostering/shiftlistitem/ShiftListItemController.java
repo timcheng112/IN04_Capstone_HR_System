@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.rostering.shiftlistitem;
 
 import java.util.List;
+import java.time.*;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,5 +51,11 @@ public class ShiftListItemController {
     @GetMapping(path="/getShiftListItemByPosition")
     public List<ShiftListItem> getShiftListItemByPosition(@RequestParam("shiftId") Long shiftId, @RequestParam("posType") String posType){
         return shiftListItemService.getShiftListItemByPosition(shiftId, posType);
+    }
+
+    @GetMapping(path="/getShiftListItemByDateAndUserId")
+    public ShiftListItem getShiftListItemByDateAndUserId(@RequestParam("date") String date, @RequestParam("userId") Long userId ){
+        LocalDate dateTemp = LocalDate.parse(date);
+        return shiftListItemService.getShiftListItemByDateAndUserId(dateTemp, userId);
     }
 }
