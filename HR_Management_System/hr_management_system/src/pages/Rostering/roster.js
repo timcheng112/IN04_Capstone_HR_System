@@ -8,6 +8,7 @@ import Calendar from "../../features/rostering/Calendar/Calendar.js";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import ShiftBlock from "../../features/rostering/ShiftBlock.js";
 import InfoPanel from "../../components/rostering/InfoPanel.js";
+import { isWeekend } from "date-fns";
 
 const people = [
   {
@@ -87,6 +88,9 @@ export default function Roster() {
   const [open, setOpen] = useState(false);
   const [openSlideover, setOpenSlideover] = useState(false);
   const [shiftsToBeAdded, setShiftsToBeAdded] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState();
+  const [teams, setTeams] = useState();
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     console.log(shiftsToBeAdded);
@@ -97,6 +101,43 @@ export default function Roster() {
     window.onbeforeunload = function () {
       return "Changes made will be lost if you leave the page, are you sure?";
     };
+  }
+
+  function publishHandler() {
+    for (let i = 0; i < shiftsToBeAdded.length; i++) {
+      api
+        .addNewShift(shiftsToBeAdded[i].shift, selectedTeam.roster.rosterId)
+        .then((response) =>
+          addNewShiftListItemHandler(shiftsToBeAdded[i], response.data)
+        )
+        .catch((error) => {
+          console.log(error.response.data.message);
+          setError(true);
+        });
+    }
+    if (error) {
+      alert("Encountered errors during publish!");
+      setError(false);
+    } else {
+      alert("Successfully published!");
+      setShiftsToBeAdded([]);
+    }
+  }
+
+  function addNewShiftListItemHandler(shift, shiftId) {
+    const shiftListItem = {
+      isWeekend: isWeekend(shift.shift.startDate),
+      isPhEvent: shift.shift.isPhEvent,
+    };
+    api
+      .addNewShiftListItem(shiftListItem, shiftId, shift.userId)
+      .then(() =>
+        console.log("Shift List Item created for User with ID: " + shift.userId)
+      )
+      .catch((error) => {
+        console.log(error.response.data.message);
+        setError(true);
+      });
   }
 
   return (
@@ -150,6 +191,15 @@ export default function Roster() {
             >
               View Template Shifts
             </button>
+            {shiftsToBeAdded.length !== 0 && (
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2"
+                onClick={() => console.log("published")}
+              >
+                Publish
+              </button>
+            )}
           </div>
         </div>
 

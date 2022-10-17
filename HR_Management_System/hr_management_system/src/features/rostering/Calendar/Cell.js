@@ -1,6 +1,13 @@
 import { RadioGroup } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/20/solid";
-import { compareAsc, format, isBefore, isToday, startOfToday } from "date-fns";
+import {
+  compareAsc,
+  format,
+  isAfter,
+  isBefore,
+  isToday,
+  startOfToday,
+} from "date-fns";
 import React, { useState } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import AddShiftModal from "../AddShiftModal";
@@ -143,7 +150,7 @@ const Cell = ({
       ) : (
         date &&
         isHovering &&
-        !isBefore(date, startOfToday()) && (
+        isAfter(date, startOfToday()) && (
           <div className="text-center">
             <p className="mt-1 text-sm text-gray-500">
               Get started by assigning a shift.
