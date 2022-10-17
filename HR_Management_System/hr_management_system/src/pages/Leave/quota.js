@@ -17,7 +17,7 @@ import api from "../../utils/api";
 //   { id:2, employee: 'Matthew', year: '2022', ANL: 12, MCL: 15},
 // ]
 
-export default function Leave() {
+export default function LeaveQuota() {
   const history = useHistory();
   const [employees, setEmployees] = useState([]);
   const [user, setUser] = useState(null);

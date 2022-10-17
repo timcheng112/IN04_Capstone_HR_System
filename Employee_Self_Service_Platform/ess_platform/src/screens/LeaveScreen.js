@@ -9,7 +9,7 @@ import {
 import api from "../utils/api";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import LeaveList from "../components/leave/LeaveList";
 
 const styles = StyleSheet.create({
   container: {
@@ -25,24 +25,31 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     lineHeight: 50,
     color: "#000000",
-  }
+  },
+  inline: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 80,
+  },
 });
 
 const LeaveScreen = ({navigation}) => {
   
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <View style={styles.inline}>
         <Text style={styles.headlines}>Application History</Text>
         <Button
           icon="plus"
           mode="contained"
           color="#ffd700"
           onPress={() => navigation.navigate('LeaveApplication')}>
-          Apply for Leave
+          Apply 
         </Button>
-
-      </View>
+        </View>
+        <LeaveList />
+      
     </SafeAreaView>
   )
 };
