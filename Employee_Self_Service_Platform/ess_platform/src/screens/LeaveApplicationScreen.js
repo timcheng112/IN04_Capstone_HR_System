@@ -141,7 +141,7 @@ const LeaveApplicationScreen = ({ navigation }) => {
     api.createLeave(formDataPayload)
       .then(() => {
         console.log("Successfully applied!");
-        navigation.navigate('LeaveApplication')
+        navigation.navigate('Leave')
       })
       .catch((error) => {
         alert(error.response.data.message);
@@ -223,12 +223,20 @@ const LeaveApplicationScreen = ({ navigation }) => {
             {fileResponse?.uri}
           </Text>
         </View>
+        <View style={styles.inline}>
+        <Button
+          mode="contained"
+          color="#daa520"
+          onPress={() => navigation.navigate('Leave')}>
+          Back
+        </Button>
         <Button
           mode="contained"
           color="#ffd700"
           onPress={() => applyLeave({ navigation })}>
           Submit
         </Button>
+        </View>
       </View>
 
     </SafeAreaView>

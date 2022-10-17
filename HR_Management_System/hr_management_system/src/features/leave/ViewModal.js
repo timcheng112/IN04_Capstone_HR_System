@@ -32,7 +32,7 @@ export default function ViewModal({ open, setOpen, leave }) {
                     <div className="px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
                       <div className="py-2"></div>
-                      <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">{leave.applicant}</h3>
+                      <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">{leave.employee.firstName}</h3>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
@@ -52,43 +52,35 @@ export default function ViewModal({ open, setOpen, leave }) {
                         <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
                         <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Leave type</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">New York, NY, USA</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.leaveType}</dd>
                           </div>
                           <div>
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Period</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                              <p>
-                                Enim feugiat ut ipsum, neque ut. Tristique mi id elementum praesent. Gravida in tempus
-                                feugiat netus enim aliquet a, quam scelerisque. Dictumst in convallis nec in bibendum
-                                aenean arcu.
-                              </p>
-                            </dd>
+                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Begin From</dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.startDate}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">End On</dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.endDate}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Remark</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">New York, NY, USA</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.applicationRemarks}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Applied Date</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">ashleyporter.com</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.applicationDate}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Status</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                              <time dateTime="1988-06-23">June 23, 1988</time>
-                            </dd>
-                          </div>
-                          <div>
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Status</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">ashleyporter.com</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.status}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">HR Remarks</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">ashleyporter.com</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.approverRemarks}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Supporting Document</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">ashleyporter.com</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.supportingDocument}</dd>
                           </div>
                         </dl>
                       </div>

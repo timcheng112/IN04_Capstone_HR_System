@@ -6,26 +6,50 @@ import {
   MagnifyingGlassIcon
 } from "@heroicons/react/20/solid";
 import { useHistory } from 'react-router-dom';
-import Tabs from '../../features/leave/Tab'
-import { useState } from "react";
+import Tabs from '../../features/leave/Tab';
+import { getUserId} from "../../utils/Common";
+import { useState,useEffect } from "react";
 import AdminSidebar from "../../components/Sidebar/Admin";
+import api from "../../utils/api";
 
-const quotas = [
-  { id:1, employee: 'Xinyue', year: '2022', ANL: 10, MCL: 14},
-  { id:2, employee: 'Matthew', year: '2022', ANL: 12, MCL: 15},
-]
+// const quotas = [
+//   { id:1, employee: 'Xinyue', year: '2022', ANL: 10, MCL: 14},
+//   { id:2, employee: 'Matthew', year: '2022', ANL: 12, MCL: 15},
+// ]
 
 export default function Leave() {
   const history = useHistory();
-  const [filteredQuotas, setFilteredQuotas] =
-    useState(quotas);
+  const [employees, setEmployees] = useState([]);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [filteredEmployees, setFilteredEmployees] = useState(employees);
   const [searchParam] = useState([
-    "employee"
+    "firstName"
   ]);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  useEffect(() => {
+    api
+      .getAllEmployees()
+      .then((response) => {
+        setEmployees(response.data);
+        setFilteredEmployees(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   function search(e, items) {
     const value = e.target.value;
-    setFilteredQuotas(
+    setFilteredEmployees(
           items.filter((item) => {
             return searchParam.some((newItem) => {
               return (
@@ -69,7 +93,7 @@ export default function Leave() {
                 placeholder="Search"
                 type="search"
                 onChange={(e) => {
-                  search(e, quotas);
+                  search(e, employees);
                 }}
               />
             </div>
@@ -100,14 +124,14 @@ export default function Leave() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {filteredQuotas.map((quota) => (
-                      <tr key={quota.id}>
+                    {filteredEmployees.map((employee) => (
+                      <tr key={employee.userId}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {quota.employee}
+                          {employee.firstName}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{quota.year}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{quota.ANL}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{quota.MCL}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{employee.currentLeaveQuota.year}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{employee.currentLeaveQuota.ANL}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{employee.currentLeaveQuota.MCL}</td>
                         {/* <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <div className="space-x-4">
                             <button

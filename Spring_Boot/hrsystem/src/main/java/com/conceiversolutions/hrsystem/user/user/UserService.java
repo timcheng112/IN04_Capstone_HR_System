@@ -124,7 +124,11 @@ public class UserService implements UserDetailsService {
             u.setJobRequests(new ArrayList<>());
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
-            u.setCurrentLeaveQuota(null);
+            if (u.getCurrentLeaveQuota() != null ) { // first layer
+                if (u.getCurrentLeaveQuota().getPreviousLeaveQuota() != null) { // second layer
+                    u.getCurrentLeaveQuota().getPreviousLeaveQuota().setPreviousLeaveQuota(null); // third layer don't need
+                }
+            }
         }
 
         return users;
