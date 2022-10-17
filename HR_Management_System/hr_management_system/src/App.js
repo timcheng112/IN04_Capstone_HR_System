@@ -36,6 +36,7 @@ import Roster from "./pages/Rostering/roster";
 import JobPostDetailPage from "./pages/JobPost/PostDetail";
 import LeavePage from "./pages/Leave/indexHR";
 import LeaveQuotaPage from "./pages/Leave/quota";
+import Attendance from "./pages/Attendance";
 
 function App() {
   return (
@@ -70,8 +71,7 @@ function App() {
           <PrivateRoute exact path="/viewDept/:deptId" component={ViewDepartment}/>
           <PrivateRoute exact path="/offboarding" component={OffboardingPage}/>
           <PrivateRoute exact path="/mytraining" component={TrainingPage} />
-//          <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart} />
-//          <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam} />
+
           <PrivateRoute
             exact
             path="/viewDept/:deptId"
@@ -87,6 +87,7 @@ function App() {
           <PrivateRoute exact path="/career/traininghr" component={TrainingHRPage} />
           <PrivateRoute exact path="/career/traininghr/module/:moduleId" component={ModulePage} />
           <PrivateRoute exact path="/admin" component={AdminPage} />
+          <PrivateRoute exact path="/rostering/attendance" component={Attendance}/>
           <PrivateRoute
             exact
             path="/admin/onboarding"
