@@ -3,9 +3,9 @@ import axios from "axios";
 const URL = "172.31.52.96";
 
 const api = {
-  login(email, password) {
+  login(workEmail, password) {
     return axios.get(
-      `http://localhost:9191/api/user/login/loginHRMS?workEmail=${email}&password=${password}`
+      `http://${URL}:9191/api/user/login/loginHRMS?workEmail=${workEmail}&password=${password}`
     );
   },
 
