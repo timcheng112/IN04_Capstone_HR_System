@@ -302,4 +302,16 @@ public class UserController {
     public List<User> getEmployeesWithTask(@RequestParam("taskId") Long taskId) {
         return userService.getEmployeesWithTask(taskId);
     }
+
+//    @GetMapping(path = "/getMyAttendanceToday")
+//    public List<Integer> getMyAttendanceToday(Long sliId, Long userId){
+//        return getMyAttendanceToday(sliId, userId);
+//    }
+
+    @GetMapping(path = "/getAttendanceToday")
+    public List<Integer> getAttendanceToday(Long sliId, Long userId){
+//        return getMyAttendanceToday();
+        return getAttendanceToday(sliId, userId);
+    }
+
 }
