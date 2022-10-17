@@ -6,39 +6,39 @@ import AdminSidebar from "../../components/Sidebar/Admin";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 import { useHistory } from "react-router";
+import TrainingSidebar from "../../components/Sidebar/Training";
+import AddModuleModal from "../../features/training/AddModuleModal";
+import ModuleGrid from "../../components/Grid/Module";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function OnboardingHR() {
+export default function TrainingHR() {
   const [user, setUser] = useState(null);
-  const [categories, setCategories] = useState([]);
+  const [modules, setModules] = useState([]);
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState(null);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
-  //const [tasks, setTasks] = useState(null)
 
   useEffect(() => {
     api
-      .getUser(getUserId())
+      .getAllModules()
       .then((response) => {
-        setUser(response.data);
-        console.log(response.data);
+        setModules(response.data);
       })
       .catch((error) => setError(error));
   }, []);
 
   useEffect(() => {
     api
-      .getCategories()
+      .getAllModules()
       .then((response) => {
-        console.log(categories);
-        setCategories(response.data);
+        setModules(response.data);
       })
       .catch((error) => setError(error));
-  }, [refreshKey]);
+  }, [modules]);
 
   if (error) return `Error`;
 
@@ -47,7 +47,7 @@ export default function OnboardingHR() {
       <Navbar />
       <div className="flex">
         <div className="flex-1">
-          <AdminSidebar pageTitle="Onboarding (HR)" />
+          <TrainingSidebar pageTitle="Training (HR)" />
         </div>
         <div className="flex items-center">
           <div className="mt-4 ml-auto mr-6">
@@ -56,7 +56,7 @@ export default function OnboardingHR() {
               className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
               onClick={() => setOpenCreate(true)}
             >
-              New Category
+              New Module
             </button>
           </div>
         </div>
@@ -76,12 +76,9 @@ export default function OnboardingHR() {
               )}
             </div>
           </div>
-          <TasklistTable
-            categories={categories}
-            setCategories={setCategories}
-            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
-          />
-          <AddCategoryModal
+          <p className="text-xl mb-5">All Modules</p>
+          <ModuleGrid files={modules} />
+          <AddModuleModal
             open={openCreate}
             onClose={() => setOpenCreate(false)}
             refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
