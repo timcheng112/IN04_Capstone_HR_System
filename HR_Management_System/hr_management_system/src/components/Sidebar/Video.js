@@ -1,4 +1,3 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Dialog, Transition } from "@headlessui/react";
 import {
   AcademicCapIcon,
@@ -9,7 +8,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
-import ModuleBreadcrumb from "../Breadcrumb/ModuleBreadcrumb";
+import VideoBreadcrumb from "../Breadcrumb/VideoBreadcrumb";
 
 const navigation = [
   { name: "My Training", href: "/mytraining", icon: AcademicCapIcon, current: false },
@@ -27,10 +26,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ModuleSidebar({ currentPage, previousPage }) {
-
+export default function VideoSidebar({ modulePageTitle, moduleId, pageTitle, videoId, initialPage }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  
   return (
     <div>
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -118,6 +116,7 @@ export default function ModuleSidebar({ currentPage, previousPage }) {
               </Dialog.Panel>
             </Transition.Child>
             <div className="w-14 flex-shrink-0" aria-hidden="true">
+              {/* Dummy element to force sidebar to shrink to fit close icon */}
             </div>
           </div>
         </Dialog>
@@ -133,9 +132,24 @@ export default function ModuleSidebar({ currentPage, previousPage }) {
           </button>
           <div className="flex flex-1 justify-between px-4">
             <div className="ml-4 flex items-center md:ml-6">
-              <ModuleBreadcrumb
-                currentPage={currentPage}
-                previousPage = {previousPage}
+              {/* <button
+                type="button"
+                className="p-1 text-xl font-semibold text-gray-900"
+              >
+                <span>{pageTitle}</span>
+              </button> */}
+              <VideoBreadcrumb
+                modulePage={{
+                  name: modulePageTitle,
+                  href: `/module/${moduleId}`,
+                  current: false,
+                }}
+                currentPage={{
+                  name: pageTitle,
+                  href: `/module/${moduleId}/video/${videoId}`,
+                  current: true,
+                }}
+                initialPage={initialPage}
               />
             </div>
           </div>

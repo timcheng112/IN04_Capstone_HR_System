@@ -41,6 +41,35 @@ const api = {
   markTaskListItemAsComplete(taskListItemId) {
     return axios.put(`http://${URL}:9191/api/task_list_item/${taskListItemId}`);
   },
+
+  //training
+  getAllModules(){
+    return axios.get(`http://${URL}:9191/api/module`);
+  },
+  getUserModules(employeeId){
+    return axios.get(`http://${URL}:9191/api/module/user/${employeeId}`);
+  },
+  getModule(moduleId) {
+    return axios.get(`http://${URL}:9191/api/module/${moduleId}`);
+  },
+  getVideo(videoId) {
+    return axios.get(`http://${URL}:9191/api/video/${videoId}`)
+  },
+  getIsVideoWatchedByEmployee(videoId, userId) {
+    return axios.get(`http://${URL}:9191/api/video/${videoId}/user/${userId}`)
+  },
+  getUserProgress(moduleId, userId) {
+    return axios.get(`http://${URL}:9191/api/module/${moduleId}/user/${userId}`)
+  },
+  getUserCompletedModules(userId) {
+    return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`)
+  },
+  markVideoAsWatched(videoId, userId) {
+    return axios.post(`http://${URL}:9191/api/video/${videoId}/user/${userId}`)
+  },
+  getUserCompletedModules(userId) {
+    return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`)
+  },
 };
 
 export default api;

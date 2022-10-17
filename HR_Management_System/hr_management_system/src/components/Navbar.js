@@ -27,6 +27,7 @@ export default function Navbar() {
     { name: 'Admin', path: '/admin/onboarding'},
     { name: 'Company', path: '/company'},
     { name: 'Career', path: '/career'},
+    { name: 'Training', path: '/mytraining'},
     { name: 'Welfare', path: '/welfare'},
     { name: 'Hiring', path: '/hiring/jobrequesthr'},
     { name: 'Reports', path: '/reports'},

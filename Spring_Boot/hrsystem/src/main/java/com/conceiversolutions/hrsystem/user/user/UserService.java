@@ -118,7 +118,6 @@ public class UserService implements UserDetailsService {
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
             u.setEmployeeReviews(new ArrayList<>());
-            u.setModules(new ArrayList<>());
             u.setApplications(new ArrayList<>());
             u.setGoals(new ArrayList<>());
             u.setPositions(new ArrayList<>());
@@ -167,7 +166,6 @@ public class UserService implements UserDetailsService {
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
             u.setEmployeeReviews(new ArrayList<>());
-            u.setModules(new ArrayList<>());
             u.setApplications(new ArrayList<>());
             u.setGoals(new ArrayList<>());
             u.setPositions(new ArrayList<>());
@@ -219,7 +217,6 @@ public class UserService implements UserDetailsService {
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
             u.setEmployeeReviews(new ArrayList<>());
-            u.setModules(new ArrayList<>());
             u.setApplications(new ArrayList<>());
             u.setGoals(new ArrayList<>());
             u.setPositions(new ArrayList<>());
@@ -269,7 +266,6 @@ public class UserService implements UserDetailsService {
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
             u.setEmployeeReviews(new ArrayList<>());
-            u.setModules(new ArrayList<>());
             u.setApplications(new ArrayList<>());
             u.setGoals(new ArrayList<>());
             u.setPositions(new ArrayList<>());
@@ -1082,7 +1078,6 @@ public class UserService implements UserDetailsService {
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
             u.setEmployeeReviews(new ArrayList<>());
-            u.setModules(new ArrayList<>());
             u.setApplications(new ArrayList<>());
             u.setGoals(new ArrayList<>());
             u.setPositions(new ArrayList<>());
@@ -1126,7 +1121,6 @@ public class UserService implements UserDetailsService {
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
             u.setEmployeeReviews(new ArrayList<>());
-            u.setModules(new ArrayList<>());
             u.setApplications(new ArrayList<>());
             u.setGoals(new ArrayList<>());
             u.setPositions(new ArrayList<>());
@@ -1169,7 +1163,6 @@ public class UserService implements UserDetailsService {
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
             u.setEmployeeReviews(new ArrayList<>());
-            u.setModules(new ArrayList<>());
             u.setApplications(new ArrayList<>());
             u.setGoals(new ArrayList<>());
             u.setPositions(new ArrayList<>());
@@ -1252,7 +1245,6 @@ public class UserService implements UserDetailsService {
                 u.setManagerAppraisals(new ArrayList<>());
                 u.setManagerReviews(new ArrayList<>());
                 u.setEmployeeReviews(new ArrayList<>());
-                u.setModules(new ArrayList<>());
                 u.setApplications(new ArrayList<>());
                 u.setGoals(new ArrayList<>());
                 u.setPositions(new ArrayList<>());
@@ -1308,7 +1300,6 @@ public class UserService implements UserDetailsService {
             e.setManagerAppraisals(new ArrayList<>());
             e.setManagerReviews(new ArrayList<>());
             e.setEmployeeReviews(new ArrayList<>());
-            e.setModules(new ArrayList<>());
             e.setApplications(new ArrayList<>());
             e.setGoals(new ArrayList<>());
             e.setPositions(new ArrayList<>());
@@ -1479,7 +1470,7 @@ public class UserService implements UserDetailsService {
     //part timer
     public HashMap<String, Integer> attendancePartTimeMonthly(Long userId) {
 
-        int totalHours = 0;
+        //int totalHours = 0;
         int weekend = 0;
         int event = 0;
         Integer ot = 0;

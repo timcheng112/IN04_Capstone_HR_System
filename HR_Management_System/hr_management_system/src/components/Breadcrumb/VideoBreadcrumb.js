@@ -1,13 +1,16 @@
 import React from "react";
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid";
-
 import { useHistory } from "react-router";
 
-export default function ModuleBreadcrumb({ currentPage, previousPage }) {
+export default function VideoBreadcrumb({
+  modulePage,
+  currentPage,
+  initialPage,
+}) {
   const pages =
-    currentPage.name === previousPage.name
-      ? [currentPage]
-      : [previousPage, currentPage];
+    initialPage.href === ""
+      ? [modulePage, currentPage]
+      : [initialPage, modulePage, currentPage];
   const history = useHistory();
 
   return (
@@ -29,11 +32,10 @@ export default function ModuleBreadcrumb({ currentPage, previousPage }) {
                 aria-hidden="true"
               />
               <button
-                href={page.href}
                 className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
                 aria-current={page.current ? "page" : undefined}
                 onClick={() => {
-                  history.push(page.href, { params: previousPage.href });
+                  history.push(page.href, { params: initialPage.href });
                 }}
               >
                 {page.name}
