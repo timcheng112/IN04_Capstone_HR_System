@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import AddModuleModal from "../../features/training/AddModuleModal";
 import ModuleSidebar from "../../components/Sidebar/Module";
 import {
@@ -32,8 +32,25 @@ export default function Module() {
   const [hrMode, setHrMode] = useState(false);
   const moduleId = window.location.href.substring(29);
 
+  const location = useLocation();
+  var previousPageName = 'My Training';
+  var previousPage = '/mytraining';
+  if (location.state !== undefined) {
+    previousPage = location.state.params;
+    if (previousPage === "/mytraining") {
+      previousPageName = "My Training";
+    } else if (previousPage === "/training") {
+      previousPageName = "All Modules";
+    } else if (previousPage === "/video") {
+      previousPageName = "All Videos";
+    } else if (previousPage === '/mytraining/completed') {
+      previousPageName = "Completed Training";
+    }
+  }
+
   useEffect(() => {
-    console.log(moduleId);
+    console.log("prev " + previousPage);
+
     api.getUser(getUserId()).then((response) => {
       setUser(response.data);
       //console.log("user");
@@ -110,7 +127,18 @@ export default function Module() {
         <Navbar />
         <div className="flex">
           <div className="flex-1">
-            <ModuleSidebar pageTitle={module.title} moduleId={moduleId} />
+            <ModuleSidebar
+              currentPage={{
+                name: module.title,
+                href: `/module/${moduleId}`,
+                current: true,
+              }}
+              previousPage={{
+                name: previousPageName,
+                href: previousPage,
+                current: false,
+              }}
+            />
           </div>
         </div>
         <main className="flex-1">
@@ -251,7 +279,8 @@ export default function Module() {
                                   <button
                                     onClick={() =>
                                       history.push(
-                                        `/module/${moduleId}/video/${video.videoId}`
+                                        `/module/${moduleId}/video/${video.videoId}`,
+                                        { params: previousPage }
                                       )
                                     }
                                     className="text-indigo-600 hover:text-indigo-900"

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import {
   CheckCircleIcon,
   InformationCircleIcon,
@@ -34,8 +34,21 @@ export default function Video() {
   const moduleId = window.location.href.substring(29, 30);
   const videoId = window.location.href.substring(37);
   var videoLength = 0;
+  const location = useLocation();
+  const initialPage = location.state === undefined ? "" : location.state.params;
+  var initialPageName = "";
+  if (initialPage === "/mytraining") {
+    initialPageName = "My Training";
+  } else if (initialPage === "/training") {
+    initialPageName = "All Modules";
+  } else if (initialPage === "/video") {
+    initialPageName = "All Videos";
+  } else if (initialPage === '/mytraining/completed') {
+    initialPageName = "Completed Training";
+  }
 
   useEffect(() => {
+    console.log("initial page " + initialPage);
     api
       .getVideosInModule(moduleId)
       .then((response) => setVideos(response.data));
@@ -108,6 +121,11 @@ export default function Video() {
               moduleId={moduleId}
               pageTitle={video.title}
               videoId={video.videoId}
+              initialPage={{
+                name: initialPageName,
+                href: initialPage,
+                current: false,
+              }}
             />
           </div>
         </div>
@@ -159,32 +177,6 @@ export default function Video() {
                     </button>
                   </div>
                 </div>
-                // <div className="rounded-md bg-blue-50 max-w-100 p-4 mt-5 mb-5">
-                //   <div className="flex">
-                //     <div className="flex-shrink-0">
-                //       <InformationCircleIcon
-                //         className="h-5 w-5 text-blue-400"
-                //         aria-hidden="true"
-                //       />
-                //     </div>
-                //     <div className="ml-3 flex-1 md:flex md:justify-between">
-                //       <p className="text-sm text-blue-700">
-                //         Please do not close the browser while watching. Your
-                //         progress will be lost!
-                //       </p>
-                //     </div>
-                //     <div className="-mx-1.5 -my-1.5">
-                //       <button
-                //         type="button"
-                //         className="inline-flex rounded-md bg-blue-50 p-1.5 text-blue-500 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-blue-50"
-                //         onClick={() => setShowInfo(false)}
-                //       >
-                //         <span className="sr-only">Dismiss</span>
-                //         <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-                //       </button>
-                //     </div>
-                //   </div>
-                // </div>
               )}
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
@@ -310,10 +302,12 @@ export default function Video() {
                                   {video.videoId + "" !== videoId + "" && (
                                     <button
                                       onClick={() => {
+                                        console.log('push ' + initialPage)
                                         history.push(
-                                          `/module/${moduleId}/video/${video.videoId}`
+                                          `/module/${moduleId}/video/${video.videoId}`,
+                                          { params: initialPage }
                                         );
-                                        window.location.reload();
+                                        //window.location.reload();
                                       }}
                                       className="text-indigo-600 hover:text-indigo-900"
                                     >

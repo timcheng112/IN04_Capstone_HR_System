@@ -1,19 +1,13 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Dialog, Transition } from "@headlessui/react";
 import {
   AcademicCapIcon,
   Bars3BottomLeftIcon,
   BookOpenIcon,
   ClipboardDocumentCheckIcon,
-  FolderIcon,
   PlayIcon,
-  UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
-import ModuleBreadcrumb from "../Breadcrumb/ModuleBreadcrumb";
-import TrainingBreadcrumb from "../Breadcrumb/TrainingBreadcrumb";
 import VideoBreadcrumb from "../Breadcrumb/VideoBreadcrumb";
 
 const navigation = [
@@ -32,9 +26,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function VideoSidebar({ modulePageTitle, moduleId, pageTitle, videoId }) {
+export default function VideoSidebar({ modulePageTitle, moduleId, pageTitle, videoId, initialPage }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  
   return (
     <div>
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -155,6 +149,7 @@ export default function VideoSidebar({ modulePageTitle, moduleId, pageTitle, vid
                   href: `/module/${moduleId}/video/${videoId}`,
                   current: true,
                 }}
+                initialPage={initialPage}
               />
             </div>
           </div>

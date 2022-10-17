@@ -3,7 +3,7 @@ import { useHistory } from "react-router";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 
-export default function ModuleGrid({ files }) {
+export default function ModuleGrid({ files, currentPage }) {
   const history = useHistory();
   const [modules, setModules] = useState(files)
 
@@ -40,7 +40,7 @@ export default function ModuleGrid({ files }) {
     >
       {modules.map((file) => (
         <li key={file.title} className="relative">
-          <button onClick={() => history.push(`/module/${file.moduleId}`)}>
+          <button onClick={() => history.push(`/module/${file.moduleId}`, {params: currentPage})}>
             <div className="bg-white py-6 px-4 shadow sm:rounded-lg sm:px-10 group block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 hover:opacity-75">
               <img
                 src={file.thumbnail}

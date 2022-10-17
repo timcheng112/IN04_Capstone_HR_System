@@ -26,7 +26,7 @@ export default function AllVideos() {
   function goToVideo(vId) {
     api.getModuleFromVideo(vId).then((response) => {
       console.log("vId " + vId);
-      history.push(`/module/${response.data.moduleId}/video/${vId}`);
+      history.push(`/module/${response.data.moduleId}/video/${vId}`, {params: '/video'});
     });
   }
 
@@ -55,7 +55,18 @@ export default function AllVideos() {
         <Navbar />
         <div className="flex">
           <div className="flex-1">
-            <ModuleSidebar pageTitle="Videos" moduleId={moduleId} />
+            <ModuleSidebar 
+            currentPage={{
+              name: 'All Videos',
+              href: '/video',
+              current: true
+            }}
+            previousPage={{
+              name: 'All Videos',
+              href: '/video',
+              current: false
+            }}
+            />
           </div>
         </div>
         <main className="flex-1">

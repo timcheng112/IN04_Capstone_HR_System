@@ -1,8 +1,17 @@
 import React from "react";
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid";
+import { useHistory } from "react-router";
 
-export default function VideoBreadcrumb({ modulePage, currentPage }) {
-  const pages = [{ name: "Training", href: "/training", current: false }, modulePage, currentPage];
+export default function VideoBreadcrumb({
+  modulePage,
+  currentPage,
+  initialPage,
+}) {
+  const pages =
+    initialPage.href === ""
+      ? [modulePage, currentPage]
+      : [initialPage, modulePage, currentPage];
+  const history = useHistory();
 
   return (
     <nav className="flex" aria-label="Breadcrumb">
@@ -22,13 +31,15 @@ export default function VideoBreadcrumb({ modulePage, currentPage }) {
                 className="h-5 w-5 flex-shrink-0 text-gray-400"
                 aria-hidden="true"
               />
-              <a
-                href={page.href}
+              <button
                 className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
                 aria-current={page.current ? "page" : undefined}
+                onClick={() => {
+                  history.push(page.href, { params: initialPage.href });
+                }}
               >
                 {page.name}
-              </a>
+              </button>
             </div>
           </li>
         ))}

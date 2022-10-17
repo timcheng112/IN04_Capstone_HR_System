@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid";
 
 export default function TrainingBreadcrumb({ currentPage }) {

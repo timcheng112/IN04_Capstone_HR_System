@@ -5,13 +5,10 @@ import {
   Bars3BottomLeftIcon,
   BookOpenIcon,
   ClipboardDocumentCheckIcon,
-  FolderIcon,
   PlayIcon,
-  UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import TrainingBreadcrumb from "../Breadcrumb/TrainingBreadcrumb";
 
 const navigation = [
@@ -30,7 +27,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function TrainingSidebar({ pageTitle }) {
+export default function TrainingSidebar({ currentPage }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -127,44 +124,6 @@ export default function TrainingSidebar({ pageTitle }) {
       </Transition.Root>
 
       {/* Static sidebar for desktop */}
-      {/* <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
-        <div className="flex flex-grow flex-col overflow-y-auto border-r border-gray-200 bg-white pt-5">
-          <div className="flex flex-shrink-0 items-center px-4">
-            <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            />
-          </div>
-          <div className="mt-5 flex flex-grow flex-col">
-            <nav className="flex-1 space-y-1 px-2 pb-4">
-              {navigation.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={classNames(
-                    item.current
-                      ? "bg-gray-100 text-gray-900"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-                    "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                  )}
-                >
-                  <item.icon
-                    className={classNames(
-                      item.current
-                        ? "text-gray-500"
-                        : "text-gray-400 group-hover:text-gray-500",
-                      "mr-3 flex-shrink-0 h-6 w-6"
-                    )}
-                    aria-hidden="true"
-                  />
-                  {item.name}
-                </a>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </div> */}
       <div className="flex flex-1 flex-col px-6">
         <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow rounded-lg mt-4">
           <button
@@ -176,18 +135,8 @@ export default function TrainingSidebar({ pageTitle }) {
           </button>
           <div className="flex flex-1 justify-between px-4">
             <div className="ml-4 flex items-center md:ml-6">
-              {/* <button
-                type="button"
-                className="p-1 text-xl font-semibold text-gray-900"
-              >
-                <span>{pageTitle}</span>
-              </button> */}
               <TrainingBreadcrumb
-                currentPage={{
-                  name: pageTitle,
-                  href: "/mytraining",
-                  current: true,
-                }}
+                currentPage={currentPage}
               />
             </div>
           </div>

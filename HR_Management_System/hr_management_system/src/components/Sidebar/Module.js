@@ -5,15 +5,11 @@ import {
   Bars3BottomLeftIcon,
   BookOpenIcon,
   ClipboardDocumentCheckIcon,
-  FolderIcon,
   PlayIcon,
-  UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import ModuleBreadcrumb from "../Breadcrumb/ModuleBreadcrumb";
-import TrainingBreadcrumb from "../Breadcrumb/TrainingBreadcrumb";
 
 const navigation = [
   { name: "My Training", href: "/mytraining", icon: AcademicCapIcon, current: false },
@@ -31,7 +27,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ModuleSidebar({ pageTitle, moduleId }) {
+export default function ModuleSidebar({ currentPage, previousPage }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -121,7 +117,6 @@ export default function ModuleSidebar({ pageTitle, moduleId }) {
               </Dialog.Panel>
             </Transition.Child>
             <div className="w-14 flex-shrink-0" aria-hidden="true">
-              {/* Dummy element to force sidebar to shrink to fit close icon */}
             </div>
           </div>
         </Dialog>
@@ -137,18 +132,9 @@ export default function ModuleSidebar({ pageTitle, moduleId }) {
           </button>
           <div className="flex flex-1 justify-between px-4">
             <div className="ml-4 flex items-center md:ml-6">
-              {/* <button
-                type="button"
-                className="p-1 text-xl font-semibold text-gray-900"
-              >
-                <span>{pageTitle}</span>
-              </button> */}
               <ModuleBreadcrumb
-                currentPage={{
-                  name: pageTitle,
-                  href: `/module/${moduleId}`,
-                  current: true,
-                }}
+                currentPage={currentPage}
+                previousPage = {previousPage}
               />
             </div>
           </div>

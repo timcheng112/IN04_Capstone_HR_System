@@ -73,7 +73,11 @@ export default function AllTraining() {
         <Navbar />
         <div className="flex">
           <div className="flex-1">
-            <TrainingSidebar pageTitle="Training" />
+            <TrainingSidebar currentPage={{
+                name: "All Modules",
+                href: "/training",
+                current: true,
+              }} />
           </div>
           {hrMode && (
             <div className="flex items-center">
@@ -129,7 +133,7 @@ export default function AllTraining() {
                 }}
               />
             </div>
-            <AllModuleGrid files={filteredModules} />
+            <AllModuleGrid files={filteredModules} currentPage={'/training'} />
             <AddModuleModal
               open={openCreate}
               onClose={() => setOpenCreate(false)}
