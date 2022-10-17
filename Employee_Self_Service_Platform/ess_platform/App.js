@@ -31,19 +31,13 @@ export default function Main({ navigation }) {
       console.log(email);
       console.log(password);
 
-      // api
-      //   .login(email, password)
-      const conn = axios.create({ baseURL: "http://localhost:9191", proxy: false });
-
-      conn
-        .get(
-          `http://localhost/api/user/login/loginHRMS?workEmail=leem@libro.com&password=password`
-        )
+      api
+        .login(email, password)
         .then((response) => {
           console.log("userId = " + response.data);
           try {
-            userToken = response.data;
-            AsyncStorage.setItem("userToken", userToken);
+            userToken = response.data + "";
+            AsyncStorage.setItem("userId", userToken);
             console.log("token = " + userToken);
             dispatch({ type: "SIGNIN", id: email, token: userToken });
           } catch (error) {
@@ -56,7 +50,7 @@ export default function Main({ navigation }) {
         });
     },
     signOut: async () => {
-      await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userId");
       dispatch({ type: "SIGNOUT" });
     },
   }));
@@ -65,7 +59,8 @@ export default function Main({ navigation }) {
     setTimeout(async () => {
       let userToken = null;
       try {
-        userToken = await AsyncStorage.getItem("userToken");
+        userToken = await AsyncStorage.getItem("userId");
+        //console.log(userToken);
       } catch (error) {
         console.log(error);
       }
@@ -86,7 +81,7 @@ export default function Main({ navigation }) {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <PaperProvider>
-          {loginState.userToken === null ? <TabNavigator /> : <LoginScreen />}
+          {loginState.userToken === null ? <LoginScreen /> : <TabNavigator />}
         </PaperProvider>
       </NavigationContainer>
     </AuthContext.Provider>

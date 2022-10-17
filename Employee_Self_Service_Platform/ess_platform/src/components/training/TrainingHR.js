@@ -45,7 +45,7 @@ export default function TrainingHR() {
   useEffect(() => {
     setRefreshing(true);
     api
-      .getAllPlaylists()
+      .getAllModules()
       .then((response) => {
         setPlaylist(response.data);
         // setRefreshing(false);
@@ -58,7 +58,7 @@ export default function TrainingHR() {
   useEffect(() => {
     setRefreshing(true);
     api
-      .getUserPlaylists(6)
+      .getUserModules(6)
       .then((response) => {
         setMyPlaylist(response.data);
         // setRefreshing(false);

@@ -32,7 +32,7 @@ public class Video {
     @JoinColumn(name = "module_id")
     private Video moduleVideo;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private List<User> watchedBy;
 

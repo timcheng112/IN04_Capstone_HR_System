@@ -1,12 +1,12 @@
 import axios from "axios";
 
 // const URL = "172.17.154.228";
-const URL = "192.168.1.101";
+const URL = "192.168.1.35";
 
 const api = {
   login(email, password) {
     return axios.get(
-      `http://localhost:9191/api/user/login/loginHRMS?workEmail=${email}&password=${password}`
+      `http://${URL}:9191/api/user/login/loginHRMS?workEmail=${email}&password=${password}`
     );
   },
 
@@ -44,12 +44,33 @@ const api = {
   },
 
   //training
-  getAllPlaylists(){
+  getAllModules(){
     return axios.get(`http://${URL}:9191/api/module`);
   },
-  getUserPlaylists(employeeId){
+  getUserModules(employeeId){
     return axios.get(`http://${URL}:9191/api/module/user/${employeeId}`);
-  }
+  },
+  getModule(moduleId) {
+    return axios.get(`http://${URL}:9191/api/module/${moduleId}`);
+  },
+  getVideo(videoId) {
+    return axios.get(`http://${URL}:9191/api/video/${videoId}`)
+  },
+  getIsVideoWatchedByEmployee(videoId, userId) {
+    return axios.get(`http://${URL}:9191/api/video/${videoId}/user/${userId}`)
+  },
+  getUserProgress(moduleId, userId) {
+    return axios.get(`http://${URL}:9191/api/module/${moduleId}/user/${userId}`)
+  },
+  getUserCompletedModules(userId) {
+    return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`)
+  },
+  markVideoAsWatched(videoId, userId) {
+    return axios.post(`http://${URL}:9191/api/video/${videoId}/user/${userId}`)
+  },
+  getUserCompletedModules(userId) {
+    return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`)
+  },
 };
 
 export default api;

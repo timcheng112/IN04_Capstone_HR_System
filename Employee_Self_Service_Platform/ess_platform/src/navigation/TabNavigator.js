@@ -1,13 +1,9 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
-import { BottomNavigation } from "react-native-paper";
-import OnboardingScreen from "../screens/OnboardingScreen";
-import HomeScreen from "../screens/HomeScreen";
-import AdminNavigator from "./AdminNavigator";
 import HomeNavigator from "./HomeNavigator";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import AdminDrawerNavigator from "./AdminDrawerNavigator";
+import TrainingNavigator from "./TrainingNavigator";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -39,6 +35,15 @@ const TabNavigator = () => {
               size={24}
               color={color}
             />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Training"
+        component={TrainingNavigator}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="book" size={24} color={color} />
           ),
         }}
       />
