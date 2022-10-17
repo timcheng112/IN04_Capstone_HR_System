@@ -22,7 +22,6 @@ export default function EditModuleModal({
       setThumbnail(module.thumbnail)
     }
   }, [open])
-
   const handleSubmit = (evt) => {
     evt.preventDefault();
     onClose();
@@ -30,7 +29,6 @@ export default function EditModuleModal({
   };
 
   function editModule() {
-    //console.log("id " + module.moduleId);
     const editedModule = {
       title: title,
       description: description,

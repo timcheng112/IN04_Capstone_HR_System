@@ -1,23 +1,32 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
+import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.user.position.Position;
+
+import com.conceiversolutions.hrsystem.user.position.PositionRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/user")
+@AllArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final PositionRepository positionRepository;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+//    @Autowired
+//    public UserController(UserService userService) {
+//        this.userService = userService;
+//    }
 
     // @GetMapping
     // public List<User> getTestUser() {
@@ -85,11 +94,20 @@ public class UserController {
             @RequestParam("userRole") String userRole,
             @RequestParam("isPartTimer") Boolean isPartTimer,
             @RequestParam("isHrEmployee") Boolean isHrEmployee,
-            @RequestParam("dateJoined") String dateJoined) {
+            @RequestParam("dateJoined") String dateJoined,
+            @RequestParam("positionType") String positionType,
+            @RequestParam("positionName") String positionName,
+            @RequestParam("positionDescription") String positionDescription,
+            @RequestParam("jobType") String jobType) {
         System.out.println("UserController.registerNewAccountJMP");
+
+        List<Position> newPositionList = new ArrayList<Position>();
+        Position position = new Position(positionName, positionDescription, LocalDate.parse(dateJoined), JobTypeEnum.valueOf(jobType), PositionTypeEnum.valueOf(positionType));
+        Position newPos = positionRepository.saveAndFlush(position);
+
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
                 GenderEnum.valueOf(gender), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
-                LocalDate.parse(dateJoined), null);
+                LocalDate.parse(dateJoined), null, newPos);
         try {
             Long employeeId = userService.addNewUser(newEmployee);
             System.out.println("UserController.registerNewAccountHRMS");
@@ -286,4 +304,16 @@ public class UserController {
     public List<User> getEmployeesWithTask(@RequestParam("taskId") Long taskId) {
         return userService.getEmployeesWithTask(taskId);
     }
+
+//    @GetMapping(path = "/getMyAttendanceToday")
+//    public List<Integer> getMyAttendanceToday(Long sliId, Long userId){
+//        return getMyAttendanceToday(sliId, userId);
+//    }
+
+    @GetMapping(path = "/getAttendanceToday")
+    public List<Integer> getAttendanceToday(Long sliId, Long userId){
+//        return getMyAttendanceToday();
+        return getAttendanceToday(sliId, userId);
+    }
+
 }

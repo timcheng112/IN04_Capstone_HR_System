@@ -25,7 +25,7 @@ public class VideoController {
     public Iterable<Video> getVideos() {
         return videoService.getVideos();
     }
-
+   
     @GetMapping(path = "{videoId}")
     public Video getVideo(@PathVariable("videoId") Long videoId) throws Exception {
         return videoService.getVideo(videoId);
@@ -50,5 +50,4 @@ public class VideoController {
     public Boolean getWatched(@PathVariable("videoId") Long videoId, @PathVariable("userId") Long userId) throws Exception {
         return videoService.getWatched(videoId, userId);
     }
-
 }

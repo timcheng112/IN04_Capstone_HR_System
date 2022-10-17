@@ -236,4 +236,5 @@ public class ModuleService {
             throw new IllegalStateException("User does not exist");
         }
     }
+
 }

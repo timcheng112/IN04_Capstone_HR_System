@@ -124,6 +124,7 @@ export default function TrainingSidebar({ currentPage }) {
       </Transition.Root>
 
       {/* Static sidebar for desktop */}
+
       <div className="flex flex-1 flex-col px-6">
         <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow rounded-lg mt-4">
           <button

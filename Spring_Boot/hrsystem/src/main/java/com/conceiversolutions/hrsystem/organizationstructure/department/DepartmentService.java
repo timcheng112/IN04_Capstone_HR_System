@@ -183,4 +183,30 @@ public class DepartmentService {
 
         return "Department " + dept.getDepartmentName() + " head has been successfully updated to be " + newDeptHead.getFirstName() + " " + newDeptHead.getLastName();
     }
+
+    public Department getDepartmentByEmployeeId(Long employeeId) {
+        Optional<Department> dept = departmentRepository.findDepartmentByEmployeeId(employeeId);
+        if(dept.isPresent()){
+            Department d = dept.get();
+            System.out.println("Department ID is : " + d.getDepartmentId() + ", Department name is : " + d.getDepartmentName());
+            Organization org = d.getOrganization();
+            org.setDepartments(new ArrayList<>());
+            org.setOrganizationHead(null);
+            d.setDepartmentHead(null);
+
+            List<Team> deptTeams = d.getTeams();
+
+            for(Team t : deptTeams){
+                System.out.println("for each team " + t.getTeamName());
+                t.setRoster(null);
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setTeamHead(null);
+            }
+            return d;
+        } else {
+            throw new IllegalStateException("Department does not exist.");
+        }
+    }
 }

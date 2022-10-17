@@ -28,6 +28,7 @@ function classNames(...classes) {
 }
 
 export default function ModuleSidebar({ currentPage, previousPage }) {
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (

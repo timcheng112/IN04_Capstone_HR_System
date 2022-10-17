@@ -90,7 +90,7 @@ public class Module {
         return videoList;
     }
 
-    public void setVideoList(List<Video> videoList) {
+    public void setVideoList(List<String> videoList) {
         this.videoList = videoList;
     }
 

@@ -32,7 +32,7 @@ export default function Main({ navigation }) {
       console.log(password);
 
       api
-        .login(email, password)
+        .login(email + "@libro.com", password)
         .then((response) => {
           console.log("userId = " + response.data);
           try {
@@ -60,7 +60,6 @@ export default function Main({ navigation }) {
       let userToken = null;
       try {
         userToken = await AsyncStorage.getItem("userId");
-        //console.log(userToken);
       } catch (error) {
         console.log(error);
       }

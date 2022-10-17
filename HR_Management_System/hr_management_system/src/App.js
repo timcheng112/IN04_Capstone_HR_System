@@ -30,10 +30,17 @@ import JobRequestDetailPage from "./pages/JobRequest/RequestDetail";
 import NewJobRequestPage from "./pages/JobRequest/NewRequest";
 import JobRequestHrPage from "./pages/JobRequest/indexHR";
 import JobPostPage from "./pages/JobPost/indexHR";
+
 import VideoPage from "./pages/Video";
 import AllTrainingPage from "./pages/Training/indexAll";
 import AllVideosPage from "./pages/Video/indexAll";
 import TrainingCompletedPage from "./pages/Training/indexCompleted";
+
+import Roster from "./pages/Rostering/roster";
+import JobPostDetailPage from "./pages/JobPost/PostDetail";
+import LeavePage from "./pages/Leave/indexHR";
+import LeaveQuotaPage from "./pages/Leave/quota";
+import Attendance from "./pages/Attendance";
 
 
 function App() {
@@ -58,9 +65,9 @@ function App() {
           <PrivateRoute exact path="/reset" component={ResetPasswordPage} />
           <PublicRoute exact path="/timeout" component={Timeout} />
           <PrivateRoute exact path="/onboarding" component={OnboardingHrPage} />
-          <PrivateRoute exact path="/profile" component={ProfilePage}/>
-          <PrivateRoute exact path="/viewOrg" component={ViewOrganisation}/>
-          <PrivateRoute exact path="/updateProfile" component={UpdateProfile}/>
+          <PrivateRoute exact path="/profile" component={ProfilePage} />
+          <PrivateRoute exact path="/viewOrg" component={ViewOrganisation} />
+          <PrivateRoute exact path="/updateProfile" component={UpdateProfile} />
           {/* //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/> */}
           {/* //          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart} /> */}
           <PrivateRoute exact path="/home" component={HomePage} />
@@ -68,8 +75,16 @@ function App() {
           <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam}/>
           <PrivateRoute exact path="/viewDept/:deptId" component={ViewDepartment}/>
           <PrivateRoute exact path="/offboarding" component={OffboardingPage}/>
+          <PrivateRoute exact path="/mytraining" component={TrainingPage} />
+
+          <PrivateRoute
+            exact
+            path="/viewDept/:deptId"
+            component={ViewDepartment}
+          />
+          <PrivateRoute exact path="/offboarding" component={OffboardingPage} />
           {/* <ViewTeam/> */}
-          <PrivateRoute exact path="/admin" component={AdminPage}/> 
+          <PrivateRoute exact path="/admin" component={AdminPage}/>
           <PrivateRoute exact path="/admin/onboarding" component={OnboardingPage} />
           <PrivateRoute exact path="/admin/onboardinghr" component={OnboardingHrPage} />
           <PrivateRoute exact path="/admin/offboarding" component={OffboardingPage} />
@@ -81,11 +96,40 @@ function App() {
           <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
           <PrivateRoute exact path="/video" component={AllVideosPage} />  
 
-          <PublicRoute exact path="/hiring/jobrequest" component={JobRequestPage} />
-          <PublicRoute exact path="/hiring/jobrequestdetail" component={JobRequestDetailPage} />
-          <PublicRoute exact path="/hiring/newjobrequest" component={NewJobRequestPage} />
-          <PublicRoute exact path="/hiring/jobrequesthr" component={JobRequestHrPage} />
-          <PublicRoute exact path="/hiring/jobpost" component={JobPostPage} />
+          <PrivateRoute exact path="/rostering" component={Roster} />
+          <PrivateRoute
+            exact
+            path="/hiring/jobrequest"
+            component={JobRequestPage}
+          />
+          <PrivateRoute
+            exact
+            path="/hiring/jobrequest/details"
+            component={JobRequestDetailPage}
+          />
+          <PrivateRoute
+            exact
+            path="/hiring/newjobrequest"
+            component={NewJobRequestPage}
+          />
+          <PrivateRoute
+            exact
+            path="/hiring/jobrequesthr"
+            component={JobRequestHrPage}
+          />
+          <PrivateRoute exact path="/hiring/jobpost" component={JobPostPage} />
+          <PrivateRoute
+            exact
+            path="/hiring/jobpost/details"
+            component={JobPostDetailPage}
+          />
+
+          <PrivateRoute exact path="/admin/leaves" component={LeavePage} />
+          <PrivateRoute
+            exact
+            path="/admin/leavequota"
+            component={LeaveQuotaPage}
+          />
         </Switch>
       </div>
     </BrowserRouter>

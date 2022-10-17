@@ -6,7 +6,7 @@ import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
-import com.conceiversolutions.hrsystem.skillset.jobskillset.JobSkillset;
+import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,21 +51,25 @@ public class JobRequest {
     private JobStatusEnum status;
     @Column(name = "salary", nullable = false)
     private BigDecimal salary;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = JobSkillset.class)
-    @JoinColumn(name = "requirements")
-    private List<JobSkillset> jobRequirements;
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
+    @JoinTable(
+            name = "job_request_requirements",
+            joinColumns = @JoinColumn(name = "job_requeest_id"),
+            inverseJoinColumns = @JoinColumn(name = "requirement_id")
+    )
+    private List<Skillset> jobRequirements;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Department.class, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Department.class, optional = false)
     @JoinColumn(name = "department")
     private Department department;
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Team.class, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Team.class, optional = true)
     @JoinColumn(name = "team")
     private Team team;
 
     @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "requestor")
     private User requestedBy;
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = User.class, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class, optional = true)
     @JoinColumn(name = "approver")
     private User approver;
     @Column(name = "approved_date", nullable = true)
@@ -78,7 +82,7 @@ public class JobRequest {
     public JobRequest() {
     }
 
-    public JobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobType, BigDecimal salary, List<JobSkillset> jobRequirements, Department department, Team team, User requestedBy, RoleEnum jobRole) {
+    public JobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobType, BigDecimal salary, List<Skillset> jobRequirements, Department department, Team team, User requestedBy, RoleEnum jobRole) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.justification = justification;

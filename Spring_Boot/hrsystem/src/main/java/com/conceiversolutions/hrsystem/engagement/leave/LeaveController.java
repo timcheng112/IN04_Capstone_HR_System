@@ -25,4 +25,9 @@ public class LeaveController {
     public List<Leave> getLeaves() {
         return leaveService.getLeaves();
     }
+
+    @GetMapping(path = "getAllPendingLeaves")
+    public List<Leave> getAllPendingLeaves() {
+        return leaveService.getAllPendingLeaves();
+    }
 }

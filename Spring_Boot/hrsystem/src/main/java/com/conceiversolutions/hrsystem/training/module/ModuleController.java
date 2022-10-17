@@ -100,5 +100,4 @@ public class ModuleController {
     public List<Module> getUserCompletedModules(@PathVariable("userId") Long userId) throws Exception {
         return moduleService.getUserCompletedModules(userId);
     }
-
 }

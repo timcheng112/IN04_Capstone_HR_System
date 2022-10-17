@@ -91,5 +91,4 @@ public class VideoService {
             throw new IllegalStateException("User does not exist");
         }
     }
-
 }

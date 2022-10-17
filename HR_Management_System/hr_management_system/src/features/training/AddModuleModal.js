@@ -33,6 +33,10 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
       .getAllEmployees()
       .then((response) => {
         filterOutSelf(response.data)
+
+        setUnassignedEmployees(response.data);
+        setFilteredUnassignedEmployees(response.data);
+        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, []);
