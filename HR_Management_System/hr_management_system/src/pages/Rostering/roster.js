@@ -8,27 +8,32 @@ import Calendar from "../../features/rostering/Calendar/Calendar.js";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import ShiftBlock from "../../features/rostering/ShiftBlock.js";
 import InfoPanel from "../../components/rostering/InfoPanel.js";
+import { isWeekend } from "date-fns";
 
 const people = [
   {
+    userId: 1,
     name: "Lindsay Walton",
     title: "Front-end Developer",
     email: "lindsay.walton@example.com",
     role: "Member",
   },
   {
+    userId: 2,
     name: "James Walton",
     title: "Front-end Developer",
     email: "James.walton@example.com",
     role: "Member",
   },
   {
+    userId: 3,
     name: "Mo Salah",
     title: "Back-end Developer",
     email: "mo.salah@example.com",
     role: "Member",
   },
   {
+    userId: 4,
     name: "Jurgen Klopp",
     title: "Full-stack Developer",
     email: "kloppo@example.com",
@@ -83,27 +88,62 @@ export default function Roster() {
   const [open, setOpen] = useState(false);
   const [openSlideover, setOpenSlideover] = useState(false);
   const [shiftsToBeAdded, setShiftsToBeAdded] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState();
+  const [teams, setTeams] = useState();
+  const [error, setError] = useState(false);
 
-  const onDragEnd = (result) => {
-    const { destination, source } = result;
-    // If user tries to drop in an unknown destination
-    if (!destination) return;
+  useEffect(() => {
+    console.log(shiftsToBeAdded);
+  }, [shiftsToBeAdded]);
 
-    // if the user drags and drops back in the same position
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
+  // SHOW WARNING PROMPT ON REFRESH IF EDITS EXIST
+  if (shiftsToBeAdded.length !== 0) {
+    window.onbeforeunload = function () {
+      return "Changes made will be lost if you leave the page, are you sure?";
+    };
+  }
+
+  function publishHandler() {
+    for (let i = 0; i < shiftsToBeAdded.length; i++) {
+      api
+        .addNewShift(shiftsToBeAdded[i].shift, selectedTeam.roster.rosterId)
+        .then((response) =>
+          addNewShiftListItemHandler(shiftsToBeAdded[i], response.data)
+        )
+        .catch((error) => {
+          console.log(error.response.data.message);
+          setError(true);
+        });
     }
-    console.log(destination.droppableId);
-  };
+    if (error) {
+      alert("Encountered errors during publish!");
+      setError(false);
+    } else {
+      alert("Successfully published!");
+      setShiftsToBeAdded([]);
+    }
+  }
+
+  function addNewShiftListItemHandler(shift, shiftId) {
+    const shiftListItem = {
+      isWeekend: isWeekend(shift.shift.startDate),
+      isPhEvent: shift.shift.isPhEvent,
+    };
+    api
+      .addNewShiftListItem(shiftListItem, shiftId, shift.userId)
+      .then(() =>
+        console.log("Shift List Item created for User with ID: " + shift.userId)
+      )
+      .catch((error) => {
+        console.log(error.response.data.message);
+        setError(true);
+      });
+  }
 
   return (
     <>
       <Navbar />
 
-      {/*Top Part Above the Table Need to unify the fire nation*/}
       <div className="px-4 sm:px-6 lg:px-8 mt-3">
         <div className="sm:flex sm:items-center">
           <div className="isolate inline-flex -space-x-px rounded-md shadow-sm mx-4">
@@ -151,6 +191,15 @@ export default function Roster() {
             >
               View Template Shifts
             </button>
+            {shiftsToBeAdded.length !== 0 && (
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2"
+                onClick={() => console.log("published")}
+              >
+                Publish
+              </button>
+            )}
           </div>
         </div>
 
@@ -159,8 +208,16 @@ export default function Roster() {
         <Calendar
           people={people}
           addShiftHandler={(shiftToBeAdded) =>
-            setShiftsToBeAdded(...shiftsToBeAdded, shiftToBeAdded)
+            setShiftsToBeAdded(shiftsToBeAdded.concat(shiftToBeAdded))
           }
+          removeShiftHandler={(shiftToBeRemoved) => {
+            setShiftsToBeAdded(
+              shiftsToBeAdded.filter(
+                (shift) => shift.shift !== shiftToBeRemoved
+              )
+            );
+          }}
+          shiftsToBeAdded={shiftsToBeAdded}
         />
         <ViewTemplateShiftsSlideover
           open={openSlideover}

@@ -2,7 +2,16 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import AddShiftForm from "./AddShiftForm";
-import { format, getDay, nextDay } from "date-fns";
+import {
+  add,
+  differenceInCalendarDays,
+  format,
+  getDate,
+  getDay,
+  getMonth,
+  getYear,
+  nextDay,
+} from "date-fns";
 
 export default function AddShiftModal({
   open,
@@ -11,17 +20,88 @@ export default function AddShiftModal({
   date,
   addShiftHandler,
 }) {
-  const [duplicateEndDateValue, setDuplicateEndDateValue] = useState();
-  const [startTimeValue, setStartTimeValue] = useState();
-  const [endTimeValue, setEndTimeValue] = useState();
-  const [quotaValues, setQuotaValues] = useState();
+  const [duplicateEndDateValue, setDuplicateEndDateValue] = useState(null);
+  const [shiftTitleValue, setShiftTitleValue] = useState("");
+  const [startTimeValue, setStartTimeValue] = useState(null);
+  const [endTimeValue, setEndTimeValue] = useState(null);
+  const [salesmanQuotaValue, setSalesmanQuotaValue] = useState("");
+  const [cashierQuotaValue, setCashierQuotaValue] = useState("");
+  const [storemanagerQuotaValue, setStoremanagerQuotaValue] = useState("");
+  const [asstStoremanagerQuotaValue, setAsstStoremanagerQuotaValue] =
+    useState("");
+  const [shiftRemarksValue, setShiftRemarksValue] = useState("");
 
-  // const createShiftHandler = () => {
-  //   const shiftToBeAdded = {
-  //     startDate: date,
-
-  //   }
-  // }
+  const createShiftHandler = () => {
+    // Check for empty fields
+    if (
+      shiftTitleValue !== "" &&
+      startTimeValue !== null &&
+      endTimeValue !== null &&
+      salesmanQuotaValue !== "" &&
+      cashierQuotaValue !== "" &&
+      storemanagerQuotaValue !== "" &&
+      asstStoremanagerQuotaValue !== ""
+    ) {
+      // Check for invalid start time & end time (end time cannot be before start time)
+      if (startTimeValue < endTimeValue) {
+        let numOfDays = 0;
+        if (duplicateEndDateValue != null) {
+          numOfDays = differenceInCalendarDays(
+            new Date(
+              duplicateEndDateValue.substring(0, 4),
+              duplicateEndDateValue.substring(5, 7) - 1,
+              duplicateEndDateValue.substring(8, 10)
+            ),
+            date
+          );
+        }
+        let arr = [];
+        for (let i = 0; i <= numOfDays; i++) {
+          let currDate = add(date, {
+            days: i,
+          });
+          let shiftToBeAdded = {
+            userId: person.userId,
+            shift: {
+              shiftTitle: shiftTitleValue,
+              startDate: new Date(
+                getYear(currDate),
+                getMonth(currDate),
+                getDate(currDate),
+                startTimeValue.substring(0, 2),
+                startTimeValue.substring(3, 5),
+                0,
+                0
+              ),
+              endDate: new Date(
+                getYear(currDate),
+                getMonth(currDate),
+                getDate(currDate),
+                endTimeValue.substring(0, 2),
+                endTimeValue.substring(3, 5),
+                0,
+                0
+              ),
+              minQuota: [
+                salesmanQuotaValue,
+                cashierQuotaValue,
+                storemanagerQuotaValue,
+                asstStoremanagerQuotaValue,
+              ],
+              shiftRemarks: shiftRemarksValue,
+            },
+          };
+          arr.push(shiftToBeAdded);
+        }
+        addShiftHandler(arr);
+        onClose();
+      } else {
+        alert("End time must be after start time!");
+      }
+    } else {
+      alert("Invalid fields!");
+    }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -66,13 +146,13 @@ export default function AddShiftModal({
                         Assigned Employee
                       </label>
                       <div className="col-span-2">
-                        <text
+                        <p
                           id="employee-name"
                           name="employee-name"
                           className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         >
                           {person && person.name}
-                        </text>
+                        </p>
                       </div>
                     </div>
                     <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -121,9 +201,18 @@ export default function AddShiftModal({
                       </div>
                     </div>
                     <AddShiftForm
+                      setShiftTitle={(value) => setShiftTitleValue(value)}
                       setStartTime={(value) => setStartTimeValue(value)}
                       setEndTime={(value) => setEndTimeValue(value)}
-                      setQuotas={(value) => setQuotaValues(value)}
+                      setSalesmanQuota={(value) => setSalesmanQuotaValue(value)}
+                      setCashierQuota={(value) => setCashierQuotaValue(value)}
+                      setStoremanagerQuota={(value) =>
+                        setStoremanagerQuotaValue(value)
+                      }
+                      setAsstStoremanagerQuota={(value) =>
+                        setAsstStoremanagerQuotaValue(value)
+                      }
+                      setShiftRemarks={(value) => setShiftRemarksValue(value)}
                     />
                   </div>
                 </div>
@@ -138,9 +227,9 @@ export default function AddShiftModal({
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-                    onClick={onClose}
+                    onClick={createShiftHandler}
                   >
-                    Add Template Shift
+                    Add Shift
                   </button>
                 </div>
               </Dialog.Panel>

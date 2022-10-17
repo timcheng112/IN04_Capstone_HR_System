@@ -22,7 +22,7 @@ public class ShiftListItemService {
     private final ShiftRepository shiftRepository;
     private final UserRepository userRepository;
 
-    //doesnt really work
+    // doesnt really work
     public List<ShiftListItem> getShiftListItems() {
         List<ShiftListItem> shiftListItems = shiftListItemRepository.findAll();
         for (ShiftListItem shiftListItem : shiftListItems) {
@@ -52,7 +52,7 @@ public class ShiftListItemService {
             shiftListItem.getUser().setPositions(new ArrayList<>());
             shiftListItem.getUser().setTaskListItems(new ArrayList<>());
             shiftListItem.getUser().setShiftListItems(new ArrayList<>());
-            
+
         }
         return shiftListItems;
     }
@@ -68,7 +68,7 @@ public class ShiftListItemService {
             shiftListItem.getUser().setPositions(new ArrayList<>());
             shiftListItem.getUser().setTaskListItems(new ArrayList<>());
             shiftListItem.getUser().setShiftListItems(new ArrayList<>());
-            
+
         }
         return shiftListItems;
     }

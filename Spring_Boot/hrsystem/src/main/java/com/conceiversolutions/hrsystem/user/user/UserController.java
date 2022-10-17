@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.position.Position;
 
@@ -90,15 +91,17 @@ public class UserController {
             @RequestParam("isPartTimer") Boolean isPartTimer,
             @RequestParam("isHrEmployee") Boolean isHrEmployee,
             @RequestParam("dateJoined") String dateJoined,
+            @RequestParam("positionType") String positionType,
             @RequestParam("positionName") String positionName,
             @RequestParam("positionDescription") String positionDescription,
             @RequestParam("jobType") String jobType) {
         System.out.println("UserController.registerNewAccountJMP");
-        
+
         List<Position> newPositionList = new ArrayList<Position>();
 
-        newPositionList.add(new Position(positionName, positionDescription, LocalDate.parse(dateJoined), JobTypeEnum.valueOf(jobType)));
-    
+        newPositionList.add(new Position(positionName, positionDescription, LocalDate.parse(dateJoined),
+                JobTypeEnum.valueOf(jobType), PositionTypeEnum.valueOf(positionType)));
+
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
                 GenderEnum.valueOf(gender), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
                 LocalDate.parse(dateJoined), null, newPositionList);

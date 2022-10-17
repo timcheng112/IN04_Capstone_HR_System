@@ -19,12 +19,13 @@ const api = {
     isPartTimer,
     isHrEmployee,
     dateJoined,
+    positionType,
     positionName,
     positionDescription,
     jobType
   ) {
     return axios.post(
-      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}&positionName=${positionName}&positionDescription=${positionDescription}&jobType=${jobType}`
+      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}&positionType=${positionType}&positionName=${positionName}&positionDescription=${positionDescription}&jobType=${jobType}`
     );
   },
   confirmToken(token) {
@@ -400,6 +401,18 @@ const api = {
   getShiftListItemByPosition(shiftId, posType) {
     return axios.get(
       `http://localhost:9191/api/shift_list_item/getShiftListItemByPosition?shiftId=${shiftId}&posType=${posType}`
+    );
+  },
+  addNewShift(shift, rosterId) {
+    return axios.post(
+      `http://localhost:9191/api/shift?rosterId=${rosterId}`,
+      shift
+    );
+  },
+  addNewShiftListItem(shiftListItem, shiftId, userId) {
+    return axios.post(
+      `http://localhost:9191/api/shift_list_item?shiftId=${shiftId}&userId=${userId}`,
+      shiftListItem
     );
   },
 };

@@ -39,7 +39,15 @@ public class Position {
         this.posType = posType;
     }
 
-    public Position(String positionName, String description, LocalDate startDate, JobTypeEnum jobType, PositionTypeEnum posType) {
+    public Position(String positionName, String description, LocalDate startDate, JobTypeEnum jobType) {
+        this.positionName = positionName;
+        this.description = description;
+        this.startDate = startDate;
+        this.jobType = jobType;
+    }
+
+    public Position(String positionName, String description, LocalDate startDate, JobTypeEnum jobType,
+            PositionTypeEnum posType) {
         this.positionName = positionName;
         this.description = description;
         this.startDate = startDate;
@@ -47,7 +55,8 @@ public class Position {
         this.posType = posType;
     }
 
-    public Position(String positionName, String description, LocalDate startDate, LocalDate endDate, JobTypeEnum jobType, PositionTypeEnum posType) {
+    public Position(String positionName, String description, LocalDate startDate, LocalDate endDate,
+            JobTypeEnum jobType, PositionTypeEnum posType) {
         this.positionName = positionName;
         this.description = description;
         this.startDate = startDate;

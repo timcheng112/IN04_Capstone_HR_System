@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   eachDayOfInterval,
   format,
+  isSameDay,
   nextMonday,
   nextSunday,
   previousMonday,
@@ -12,7 +13,13 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const Calendar = ({ value = new Date(), addShiftHandler, people }) => {
+const Calendar = ({
+  value = new Date(),
+  addShiftHandler,
+  removeShiftHandler,
+  people,
+  shiftsToBeAdded,
+}) => {
   const [startWeek, setStartWeek] = useState(
     startOfWeek(value, { weekStartsOn: 1 })
   );
@@ -20,6 +27,18 @@ const Calendar = ({ value = new Date(), addShiftHandler, people }) => {
     start: startWeek,
     end: nextSunday(startWeek),
   });
+
+  const shiftHandler = (person, dayIndex) => {
+    for (let i = 0; i < shiftsToBeAdded.length; i++) {
+      if (
+        shiftsToBeAdded[i].userId === person.userId &&
+        isSameDay(shiftsToBeAdded[i].shift.startDate, weekArr[dayIndex])
+      ) {
+        return shiftsToBeAdded[i].shift;
+      }
+    }
+    return null;
+  };
 
   return (
     <div className="mt-2 mb-4 border-t border-l">
@@ -75,6 +94,8 @@ const Calendar = ({ value = new Date(), addShiftHandler, people }) => {
               className="h-32"
               person={person}
               addShiftHandler={addShiftHandler}
+              removeShiftHandler={removeShiftHandler}
+              shift={shiftHandler(person, 0)}
             />
             <Cell
               date={weekArr[1]}
@@ -82,6 +103,8 @@ const Calendar = ({ value = new Date(), addShiftHandler, people }) => {
               className="h-32"
               person={person}
               addShiftHandler={addShiftHandler}
+              removeShiftHandler={removeShiftHandler}
+              shift={shiftHandler(person, 1)}
             />
             <Cell
               date={weekArr[2]}
@@ -89,6 +112,8 @@ const Calendar = ({ value = new Date(), addShiftHandler, people }) => {
               className="h-32"
               person={person}
               addShiftHandler={addShiftHandler}
+              removeShiftHandler={removeShiftHandler}
+              shift={shiftHandler(person, 2)}
             />
             <Cell
               date={weekArr[3]}
@@ -96,6 +121,8 @@ const Calendar = ({ value = new Date(), addShiftHandler, people }) => {
               className="h-32"
               person={person}
               addShiftHandler={addShiftHandler}
+              removeShiftHandler={removeShiftHandler}
+              shift={shiftHandler(person, 3)}
             />
             <Cell
               date={weekArr[4]}
@@ -103,6 +130,8 @@ const Calendar = ({ value = new Date(), addShiftHandler, people }) => {
               className="h-32"
               person={person}
               addShiftHandler={addShiftHandler}
+              removeShiftHandler={removeShiftHandler}
+              shift={shiftHandler(person, 4)}
             />
             <Cell
               date={weekArr[5]}
@@ -110,6 +139,8 @@ const Calendar = ({ value = new Date(), addShiftHandler, people }) => {
               className="h-32"
               person={person}
               addShiftHandler={addShiftHandler}
+              removeShiftHandler={removeShiftHandler}
+              shift={shiftHandler(person, 5)}
             />
             <Cell
               date={weekArr[6]}
@@ -117,6 +148,8 @@ const Calendar = ({ value = new Date(), addShiftHandler, people }) => {
               className="h-32"
               person={person}
               addShiftHandler={addShiftHandler}
+              removeShiftHandler={removeShiftHandler}
+              shift={shiftHandler(person, 6)}
             />
           </>
         ))}
