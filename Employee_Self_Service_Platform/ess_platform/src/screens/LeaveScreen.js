@@ -9,6 +9,7 @@ import {
 import api from "../utils/api";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
 });
 
 const LeaveScreen = ({navigation}) => {
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>

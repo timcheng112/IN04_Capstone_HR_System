@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const LeaveApplicationScreen = ({navigation}) => {
+const LeaveApplicationScreen = ({ navigation }) => {
   const [startDate, setStartDate] = React.useState(new Date());
   const [endDate, setEndDate] = React.useState(new Date());
   const [remarks, setRemarks] = React.useState("");
@@ -58,23 +58,27 @@ const LeaveApplicationScreen = ({navigation}) => {
       console.warn(err);
     }
   }, []);
-  const setId = async () => {
-    try {
-      const response = await AsyncStorage.getItem("userId");
-      setUserId(Number(response));
-    } catch (err) {
-      console.warn(err);
-    };
-  }
   
+  useEffect(() => {
+    const setId = async () => {
+      try {
+        const response = await AsyncStorage.getItem("userId");
+        setUserId(response);
+      } catch (err) {
+        console.warn(err);
+      };
+    }
+    setId();
+   }, []);
+
   // const pickDocument = async () => {
   //   let result = await DocumentPicker.getDocumentAsync({});
   //   console.log(result.uri);
   //   console.log(result);
   // };
 
-  function applyLeave({navigation}) {
-    api.createLeave(userId,type, startDate, endDate, remarks, fileResponse)
+  function applyLeave({ navigation }) {
+    api.createLeave(userId, type, startDate, endDate, remarks, fileResponse)
       .then(() => {
         console.log("Successfully applied!");
         navigation.navigate('LeaveApplication')
@@ -83,6 +87,11 @@ const LeaveApplicationScreen = ({navigation}) => {
         alert(error.response.data.message);
       });
   }
+
+  // function myFunction({ navigation }) {
+  //   setId().catch(console.error);
+  //   applyLeave({ navigation });
+  // }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -157,7 +166,7 @@ const LeaveApplicationScreen = ({navigation}) => {
         <Button
           mode="contained"
           color="#ffd700"
-          onPress={() => applyLeave({navigation})}>
+          onPress={() => applyLeave({ navigation })}>
           Submit
         </Button>
       </View>
