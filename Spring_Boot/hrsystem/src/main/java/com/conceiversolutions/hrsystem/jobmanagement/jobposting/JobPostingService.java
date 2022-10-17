@@ -31,10 +31,7 @@ public class JobPostingService {
         for (JobPosting jp : jobPosts) {
             User poster = jp.getPostedBy();
             if (poster != null){
-                poster.setTaskListItems(new ArrayList<>());
-                poster.setTeams(new ArrayList<>());
                 poster.setQualificationInformation(null);
-                poster.setCurrentPosition(null);
                 poster.setReactivationRequest(null);
                 poster.setAttendances(new ArrayList<>());
                 poster.setCurrentPayInformation(null);
@@ -47,6 +44,11 @@ public class JobPostingService {
                 poster.setGoals(new ArrayList<>());
                 poster.setPositions(new ArrayList<>());
                 poster.setJobRequests(new ArrayList<>());
+                poster.setBlocks(new ArrayList<>());
+                poster.setShiftListItems(new ArrayList<>());
+                poster.setSwapRequestsReceived(new ArrayList<>());
+                poster.setSwapRequestsRequested(new ArrayList<>());
+                poster.setLeaves(new ArrayList<>());
             }
 
             if (jp.getJobPostRequirements().size() != 0) {

@@ -276,6 +276,24 @@ const api = {
       `http://localhost:9191/api/team/getAllTeamsInDept/${deptId}`
     );
   },
+  getAllModules() {
+    return axios.get(`http://localhost:9191/api/module`)
+  },
+  getModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}`)
+  },
+  addModule(module) {
+    return axios.post(`http://localhost:9191/api/module`, module)
+  },
+  assignModule(moduleId, employees) {
+    return axios.post(`http://localhost:9191/api/module/user/${moduleId}`, employees)
+  },
+  deleteModule(moduleId) {
+    return axios.delete(`http://localhost:9191/api/module/${moduleId}`)
+  },
+  editModule(moduleId, module) {
+    return axios.put(`http://localhost:9191/api/module/${moduleId}`, module)
+  },
   // JOB REQUEST
   getAllJobRequests() {
     return axios.get(`http://localhost:9191/api/jobrequest/getAllJobRequests`);
