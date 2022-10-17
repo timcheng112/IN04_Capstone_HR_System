@@ -9,7 +9,6 @@ import {
   startOfToday,
 } from "date-fns";
 import React, { useState } from "react";
-import { Droppable } from "react-beautiful-dnd";
 import AddShiftModal from "../AddShiftModal";
 import ChoiceModal from "../ChoiceModal";
 import ShiftBlock from "../ShiftBlock";
