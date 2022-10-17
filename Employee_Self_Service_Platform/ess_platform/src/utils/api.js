@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "172.31.52.96";
+const URL = "192.168.10.128";
 
 const api = {
   login(workEmail, password) {
@@ -49,8 +49,8 @@ const api = {
   getLeaveById(leaveId) {
     return axios.get(`http://${URL}:9191/api/leaves/getLeaveById?leaveId=${leaveId}`);
   },
-  createLeave(employeeId, leaveType, startDate, endDate, remark, document) {
-    return axios.post(`http://${URL}:9191/api/leaves/createLeave?employeeId=${employeeId}&leaveType=${leaveType}&startDate=${startDate}&endDate=${endDate}&remark=${remark}&document=${document}&`);
+  createLeave(formDataPayload) {
+    return axios.post(`http://${URL}:9191/api/leaves/createLeave`, formDataPayload, {headers: {'Content-Type': 'multipart/form-data'}});
   },
   getEmployeeLeaves(employeeId) {
     return axios.get(`http://${URL}:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`);

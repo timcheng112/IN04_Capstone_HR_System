@@ -52,8 +52,37 @@ const LeaveApplicationScreen = ({ navigation }) => {
 
   const pickDocument = useCallback(async () => {
     try {
-      const response = await DocumentPicker.getDocumentAsync({});
-      setFileResponse(response);
+      const response = await DocumentPicker.getDocumentAsync({type: "*/*", copyToCacheDirectory: true});
+      console.log("AAA")
+      console.log(response);
+      if (response.type == 'success') {
+//         let nameParts = response.name.split('.');
+//         let fileType = nameParts[nameParts.length - 1];
+//
+//         var fileToUpload = {
+//             name: response.name,
+//             size: response.size,
+//             uri: response.uri,
+//             type: "application/" + fileType
+//         };
+//         console.log("fileToUpload")
+//        console.log(fileToUpload);
+//
+//        const formData = new FormData();
+//        formData.append('file', {
+//            uri: response.uri,
+//            type: "application/" + fileType,
+//            name: response.name,
+//            size: response.size
+//        });
+//
+//        console.log("formdata");
+//        console.log(formData)
+         setFileResponse(response);
+      } else {
+        console.log("error uploading file")
+      }
+
     } catch (err) {
       console.warn(err);
     }
@@ -78,7 +107,35 @@ const LeaveApplicationScreen = ({ navigation }) => {
   // };
 
   function applyLeave({ navigation }) {
-    api.createLeave(userId, type, startDate, endDate, remarks, fileResponse)
+    console.log("submit button pressed");
+
+    let docProperties = {
+        uri: fileResponse.uri,
+        type: fileResponse.mimeType,
+        name: fileResponse.name,
+    }
+    let formDataPayload = new FormData();
+    formDataPayload.append('document', {
+        uri: docProperties.uri,
+        name: docProperties.name,
+        type: docProperties.type,
+    });
+
+    formDataPayload.append('employeeId', userId);
+    console.log(userId);
+    formDataPayload.append('leaveType', type);
+    console.log(type);
+
+    formDataPayload.append('startDate', startDate.toISOString().slice(0, 10));
+    console.log(startDate);
+
+    formDataPayload.append('endDate', endDate.toISOString().slice(0, 10));
+    console.log(endDate);
+
+    formDataPayload.append('remark', remarks);
+    console.log(remarks);
+
+    api.createLeave(formDataPayload)
       .then(() => {
         console.log("Successfully applied!");
         navigation.navigate('LeaveApplication')
