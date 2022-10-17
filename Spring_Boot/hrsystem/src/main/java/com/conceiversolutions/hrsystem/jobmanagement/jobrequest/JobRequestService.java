@@ -451,7 +451,6 @@ public class JobRequestService {
                 approver.setManagerAppraisals(new ArrayList<>());
                 approver.setManagerReviews(new ArrayList<>());
                 approver.setEmployeeReviews(new ArrayList<>());
-                approver.setModules(new ArrayList<>());
                 approver.setApplications(new ArrayList<>());
                 approver.setGoals(new ArrayList<>());
                 approver.setPositions(new ArrayList<>());
