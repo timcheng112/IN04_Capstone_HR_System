@@ -1354,6 +1354,12 @@ public class UserService implements UserDetailsService {
         int shiftAttended =0;
         //Basic Hourly Rate, Weekend Hourly Rate, Overtime Hourly Rate, PH/Event Hourly Rate
         HashMap<String, Integer> attendance = new HashMap<String, Integer>();
+        if(attendance.get("clockedMonth") == null ){
+            //means never had it before
+//            int clockedMonth = 0;
+            attendance.put("clockedMonth", 0);
+        }
+        int clockedMonth = attendance.get("clockedMonth");
 
         User u1 = getUser(userId);
 
@@ -1430,18 +1436,31 @@ public class UserService implements UserDetailsService {
                             attendance.put("weekend", currentWeekend);
                         }
 
-            attendance.put("PhEvent", event);
-            attendance.put("weekend", weekend);
-            attendance.put("OT", ot);
-            attendance.put("totalHours", totalHours);
-        }else{
-            //absent so total hours =0
-            Integer totalHoursinInteger = totalHours;
-            attendance.put("totalHours", totalHoursinInteger);
 
+//                        attendance.put("OT", ot);
+//                        attendance.put("totalHours", totalHours);
+                    }else{
+                        //absent so total hours =0
+                        absent += 1;
+                        clockedMonth += 0;
+//                        Integer totalHoursinInteger = totalHours;
+//                        attendance.put("totalHours", totalHoursinInteger);
+                    }
+                }
+            Integer attended = shiftAttended;
+            attendance.put("shiftsAttended", attended);
+
+            //ot hours start after 44th hour.
+            if(clockedMonth > 44){
+                ot = clockedMonth - 44;
+                attendance.put("OT", ot);
+            }else{
+                //0
+                attendance.put("OT", ot);
+            }
+            attendance.put("absent", absent);
+            attendance.put("currentClocked", clockedMonth);
         }
-
-
         return attendance;
     }
 
@@ -1490,31 +1509,38 @@ public class UserService implements UserDetailsService {
             case "DECEMBER":
                 daysInOneMonth = 31;
         }
-
-
-
         return daysInOneMonth;
     }
 
     //contract
-    public HashMap<String, Integer> attendanceContractMonthly(Long userId) {
-
-        int totalHours = 0;
+    public HashMap<String, Integer> attendanceContractMonthly(Long userId){
+//        int totalHours = 0;
+        Integer ot = 0;
         int event = 0;
         int shiftAttended = 0;
 
 
         //PH/Event Hourly Rate
         HashMap<String, Integer> attendance = new HashMap<String, Integer>();
+        if(attendance.get("clockedMonth") == null ){
+            //means never had it before
+//            int clockedMonth = 0;
+            attendance.put("clockedMonth", 0);
+        }
+        int clockedMonth = attendance.get("clockedMonth");
 
         User u1 = getUser(userId);
         List<ShiftListItem> sli = u1.getShiftListItems();
         if (!sli.isEmpty()) {
 
             for (ShiftListItem i : sli) {
-
-                LocalDateTime dt1 = i.getCheckInTiming();
-                LocalDateTime dt2 = i.getCheckOutTiming();
+                int totalHours = 0;
+                //tim said even if they are absent, they will still have sli...
+                // so i have to check if check in time is there
+                if (!i.getCheckInTiming().equals(null)) {
+                    shiftAttended += 1;
+                    LocalDateTime dt1 = i.getCheckInTiming();
+                    LocalDateTime dt2 = i.getCheckOutTiming();
 
                     //LocalDateTime timeWorked =  dt2 - dt1;
                     //Chronos hours return Long
@@ -1561,10 +1587,30 @@ public class UserService implements UserDetailsService {
                     Integer totalHoursinInteger = totalHours;
                     attendance.put("totalHours", totalHoursinInteger);
 
+                }
+
+            }
+
+            Integer attended = shiftAttended;
+            attendance.put("shiftsAttended", attended);
+
+            //ot hours start after 44th hour.
+            //first and last time calculating ot
+            if(clockedMonth > 44){
+                ot = clockedMonth - 44;
+                attendance.put("OT", ot);
+            }else{
+                //0
+                attendance.put("OT", ot);
+            }
+            //every sli should still have it
+            attendance.put("clockedMonth", clockedMonth);
         }
 
         return attendance;
     }
+
+    //intern
 
     //contract
 //    public void countAttendanceForToday(Long userId){
