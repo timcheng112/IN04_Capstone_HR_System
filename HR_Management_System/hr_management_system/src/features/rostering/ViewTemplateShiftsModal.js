@@ -1,5 +1,14 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { format, getDay, nextDay } from "date-fns";
+import {
+  add,
+  differenceInCalendarDays,
+  format,
+  getDate,
+  getDay,
+  getMonth,
+  getYear,
+  nextDay,
+} from "date-fns";
 import React, { Fragment, useEffect, useState } from "react";
 import ShiftBlock from "./ShiftBlock";
 import TemplateShiftRadioGroup from "./TemplateShiftRadioGroup";
@@ -7,33 +16,37 @@ import TemplateShiftRadioGroup from "./TemplateShiftRadioGroup";
 const shifts = [
   {
     id: "1",
-    shiftTitle: "Morning Shift",
+    shiftTitle: "6H Morning Shift",
     startTime: "08:00",
     endTime: "14:00",
+    minQuota: [2, 2, 1, 0],
     remarks:
       "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
   },
   {
     id: "2",
-    shiftTitle: "Afternoon Shift",
+    shiftTitle: "6H Afternoon Shift",
     startTime: "14:00",
     endTime: "20:00",
+    minQuota: [3, 3, 0, 1],
     remarks:
       "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
   },
   {
     id: "3",
-    shiftTitle: "Morning Shift",
+    shiftTitle: "8H Morning Shift",
     startTime: "06:00",
     endTime: "14:00",
+    minQuota: [2, 2, 0, 0],
     remarks:
       "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
   },
   {
     id: "4",
-    shiftTitle: "Afternoon Shift",
+    shiftTitle: "8H Afternoon Shift",
     startTime: "14:00",
     endTime: "22:00",
+    minQuota: [1, 3, 1, 0],
     remarks:
       "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
   },
@@ -43,12 +56,68 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const ViewTemplateShiftsModal = ({ open, onClose, person, date }) => {
+const ViewTemplateShiftsModal = ({
+  open,
+  onClose,
+  person,
+  date,
+  addShiftHandler,
+}) => {
   const [selectedShift, setSelectedShift] = useState();
+  const [duplicateEndDateValue, setDuplicateEndDateValue] = useState(null);
 
   useEffect(() => {
     setSelectedShift();
   }, [open]);
+
+  const createShiftHandler = () => {
+    let numOfDays = 0;
+    if (duplicateEndDateValue != null) {
+      numOfDays = differenceInCalendarDays(
+        new Date(
+          duplicateEndDateValue.substring(0, 4),
+          duplicateEndDateValue.substring(5, 7) - 1,
+          duplicateEndDateValue.substring(8, 10)
+        ),
+        date
+      );
+    }
+    let arr = [];
+    for (let i = 0; i <= numOfDays; i++) {
+      let currDate = add(date, {
+        days: i,
+      });
+      let shiftToBeAdded = {
+        userId: person.userId,
+        shift: {
+          shiftTitle: selectedShift.shiftTitle,
+          startDate: new Date(
+            getYear(currDate),
+            getMonth(currDate),
+            getDate(currDate),
+            selectedShift.startTime.substring(0, 2),
+            selectedShift.startTime.substring(3, 5),
+            0,
+            0
+          ),
+          endDate: new Date(
+            getYear(currDate),
+            getMonth(currDate),
+            getDate(currDate),
+            selectedShift.endTime.substring(0, 2),
+            selectedShift.endTime.substring(3, 5),
+            0,
+            0
+          ),
+          minQuota: selectedShift.minQuota,
+          remarks: selectedShift.remarks,
+        },
+      };
+      arr.push(shiftToBeAdded);
+    }
+    addShiftHandler(arr);
+    onClose();
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -143,16 +212,19 @@ const ViewTemplateShiftsModal = ({ open, onClose, person, date }) => {
                                 )
                               : ""
                           }
+                          onChange={(e) =>
+                            setDuplicateEndDateValue(e.target.value)
+                          }
                         />
                       </div>
                     </div>
                     <div className="sm:border-t sm:border-gray-200 sm:pt-5">
                       <label>Choose from the following template shifts:</label>
                       <div
-                        className="p-2 border-2 border-dashed border-gray-200 my-2 grid grid-flow-col"
+                        className="p-2 border-2 border-dashed border-gray-200 my-2 grid grid-flow-col overflow-y-scroll"
                         aria-hidden="true"
                       >
-                        <div className="overflow-y-scroll h-96">
+                        <div>
                           <TemplateShiftRadioGroup
                             selected={selectedShift}
                             setSelected={setSelectedShift}
@@ -185,11 +257,43 @@ const ViewTemplateShiftsModal = ({ open, onClose, person, date }) => {
                                       {selectedShift.endTime}
                                     </dd>
                                   </div>
+                                  <div className="sm:col-span-1">
+                                    <dt className="text-sm font-medium text-gray-500">
+                                      Salesman Quota
+                                    </dt>
+                                    <dd className="mt-1 text-sm text-gray-900">
+                                      {selectedShift.minQuota[0]}
+                                    </dd>
+                                  </div>
+                                  <div className="sm:col-span-1">
+                                    <dt className="text-sm font-medium text-gray-500">
+                                      Cashier Quota
+                                    </dt>
+                                    <dd className="mt-1 text-sm text-gray-900">
+                                      {selectedShift.minQuota[1]}
+                                    </dd>
+                                  </div>
+                                  <div className="sm:col-span-1">
+                                    <dt className="text-sm font-medium text-gray-500">
+                                      Store Manager Quota
+                                    </dt>
+                                    <dd className="mt-1 text-sm text-gray-900">
+                                      {selectedShift.minQuota[2]}
+                                    </dd>
+                                  </div>
+                                  <div className="sm:col-span-1">
+                                    <dt className="text-sm font-medium text-gray-500">
+                                      Asst Store Manager Quota
+                                    </dt>
+                                    <dd className="mt-1 text-sm text-gray-900">
+                                      {selectedShift.minQuota[3]}
+                                    </dd>
+                                  </div>
                                   <div className="sm:col-span-2">
                                     <dt className="text-sm font-medium text-gray-500">
                                       Remarks
                                     </dt>
-                                    <dd className="mt-1 text-sm text-gray-900 overflow-y-scroll h-40">
+                                    <dd className="mt-1 text-sm text-gray-900">
                                       {selectedShift.remarks}
                                     </dd>
                                   </div>
@@ -214,7 +318,7 @@ const ViewTemplateShiftsModal = ({ open, onClose, person, date }) => {
                       <button
                         type="button"
                         className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-                        onClick={onClose}
+                        onClick={createShiftHandler}
                       >
                         Assign Shift
                       </button>

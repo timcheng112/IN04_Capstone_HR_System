@@ -31,7 +31,7 @@ public class Shift {
     @Column(name = "remarks", nullable = true)
     private String remarks;
     @Column(name = "min_quota", nullable = false)
-    private Long minQuota;
+    private List<Long> minQuota;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "roster_id")
@@ -50,7 +50,7 @@ public class Shift {
     }
 
     public Shift(LocalDateTime startTime, LocalDateTime endTime, String shiftTitle, String remarks,
-            Long minQuota) {
+            List<Long> minQuota) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.shiftTitle = shiftTitle;
@@ -60,7 +60,7 @@ public class Shift {
     }
 
     public Shift(LocalDateTime startTime, LocalDateTime endTime, String shiftTitle,
-            String remarks, Long minQuota, Roster roster) {
+            String remarks, List<Long> minQuota, Roster roster) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.shiftTitle = shiftTitle;
@@ -110,11 +110,11 @@ public class Shift {
         this.remarks = remarks;
     }
 
-    public Long getMinQuota() {
+    public List<Long> getMinQuota() {
         return minQuota;
     }
 
-    public void setMinQuota(Long minQuota) {
+    public void setMinQuota(List<Long> minQuota) {
         this.minQuota = minQuota;
     }
 

@@ -29,6 +29,7 @@ export default function Register() {
   const [joinedMonth, setJoinedMonth] = useState("");
   const [joinedYear, setJoinedYear] = useState("");
   const [isHr, setIsHr] = useState(true);
+  const [position, setPosition] = useState("SALESMAN");
 
   const history = useHistory();
 
@@ -73,8 +74,8 @@ export default function Register() {
     console.log("dob = " + dob);
     var dateJoined = joinedYear + "-" + joinedMonth + "-" + joinedDay;
     console.log("joined = " + dateJoined);
-    var isPartTime = (jobType === "Part-Time") ? true : false;
-    console.log("isPartTime" + isPartTime)
+    var isPartTime = jobType === "Part-Time" ? true : false;
+    console.log("isPartTime" + isPartTime);
     api
       .register(
         firstName.trim(),
@@ -88,6 +89,7 @@ export default function Register() {
         isPartTime,
         isHrEmployee,
         dateJoined.trim(),
+        position,
         positionName,
         positionDescription,
         jobType.toUpperCase().replaceAll("-", "")
@@ -95,11 +97,13 @@ export default function Register() {
       .then(() =>
         alert("Account creation successful for " + firstName + " " + lastName)
       )
-      .catch(error => {
+      .catch((error) => {
         var message = error.request.response;
-        console.log(error.message)
+        console.log(error.message);
         if (message.includes("User's emails are already in use")) {
-          alert("The email(s) provided are already registered with an account with us")
+          alert(
+            "The email(s) provided are already registered with an account with us"
+          );
         }
       })
       .finally(() => history.goBack());
@@ -368,10 +372,31 @@ export default function Register() {
               </div>
               <div>
                 <label
+                  htmlFor="position"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Position Type
+                </label>
+                <select
+                  id="position"
+                  name="position"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+                  value={position}
+                  onChange={(r) => setPosition(r.target.value)}
+                >
+                  <option value="SALESMAN">Salesman</option>
+                  <option value="CASHIER">Cashier</option>
+                  <option value="STOREMANAGER">Store Manager</option>
+                  <option value="OFFICEWORKER">Office Worker</option>
+                  <option value="EXECUTIVE">Executive</option>
+                </select>
+              </div>
+              <div>
+                <label
                   htmlFor="position-name"
                   className="block text-sm mt-5 font-medium text-gray-700"
                 >
-                  Position Name
+                  Position Title
                 </label>
                 <input
                   id="position-name"

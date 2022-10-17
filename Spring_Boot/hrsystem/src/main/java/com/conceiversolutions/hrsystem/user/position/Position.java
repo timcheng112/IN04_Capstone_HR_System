@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.position;
 
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,13 +25,18 @@ public class Position {
     @Column(name = "job_type", nullable = false)
     private JobTypeEnum jobType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pos_type", nullable = false)
+    private PositionTypeEnum posType;
+
     public Position() {
     }
 
-    public Position(String positionName, String description, JobTypeEnum jobType) {
+    public Position(String positionName, String description, JobTypeEnum jobType, PositionTypeEnum posType) {
         this.positionName = positionName;
         this.description = description;
         this.jobType = jobType;
+        this.posType = posType;
     }
 
     public Position(String positionName, String description, LocalDate startDate, JobTypeEnum jobType) {
@@ -40,12 +46,31 @@ public class Position {
         this.jobType = jobType;
     }
 
-    public Position(String positionName, String description, LocalDate startDate, LocalDate endDate, JobTypeEnum jobType) {
+    public Position(String positionName, String description, LocalDate startDate, JobTypeEnum jobType,
+            PositionTypeEnum posType) {
+        this.positionName = positionName;
+        this.description = description;
+        this.startDate = startDate;
+        this.jobType = jobType;
+        this.posType = posType;
+    }
+
+    public Position(String positionName, String description, LocalDate startDate, LocalDate endDate,
+            JobTypeEnum jobType, PositionTypeEnum posType) {
         this.positionName = positionName;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.jobType = jobType;
+        this.posType = posType;
+    }
+
+    public PositionTypeEnum getPosType() {
+        return posType;
+    }
+
+    public void setPosType(PositionTypeEnum posType) {
+        this.posType = posType;
     }
 
     public Long getPositionId() {
@@ -105,6 +130,7 @@ public class Position {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", jobType=" + jobType +
+                ", posType=" + posType +
                 '}';
     }
 }

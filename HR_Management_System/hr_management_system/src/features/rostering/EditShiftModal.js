@@ -1,14 +1,8 @@
-import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/24/outline";
+import React, { Fragment, useState } from "react";
 import AddShiftForm from "./AddShiftForm";
-import { getDate, getMonth, getYear } from "date-fns";
 
-export default function AddTemplateShiftModal({
-  open,
-  onClose,
-  addTemplateShiftHandler,
-}) {
+const EditShiftModal = ({ open, onClose, shift }) => {
   const [shiftTitleValue, setShiftTitleValue] = useState("");
   const [startTimeValue, setStartTimeValue] = useState(null);
   const [endTimeValue, setEndTimeValue] = useState(null);
@@ -18,52 +12,6 @@ export default function AddTemplateShiftModal({
   const [asstStoremanagerQuotaValue, setAsstStoremanagerQuotaValue] =
     useState("");
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
-
-  const createTemplateShiftHandler = () => {
-    if (
-      shiftTitleValue !== "" &&
-      startTimeValue !== null &&
-      endTimeValue !== null &&
-      salesmanQuotaValue !== "" &&
-      cashierQuotaValue !== "" &&
-      storemanagerQuotaValue !== "" &&
-      asstStoremanagerQuotaValue !== ""
-    ) {
-      const dummyDate = new Date();
-      let templateShiftToBeAdded = {
-        shiftTitle: shiftTitleValue,
-        startDate: new Date(
-          getYear(dummyDate),
-          getMonth(dummyDate),
-          getDate(dummyDate),
-          startTimeValue.substring(0, 2),
-          startTimeValue.substring(3, 5),
-          0,
-          0
-        ),
-        endDate: new Date(
-          getYear(dummyDate),
-          getMonth(dummyDate),
-          getDate(dummyDate),
-          endTimeValue.substring(0, 2),
-          endTimeValue.substring(3, 5),
-          0,
-          0
-        ),
-        minQuota: [
-          salesmanQuotaValue,
-          cashierQuotaValue,
-          storemanagerQuotaValue,
-          asstStoremanagerQuotaValue,
-        ],
-        shiftRemarks: shiftRemarksValue,
-      };
-      addTemplateShiftHandler(templateShiftToBeAdded);
-      onClose();
-    } else {
-      alert("Invalid fields!");
-    }
-  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -92,32 +40,29 @@ export default function AddTemplateShiftModal({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-                <div>
-                  <div className="mt-3 sm:mt-5">
-                    <Dialog.Title
-                      as="h3"
-                      className="text-lg font-bold leading-6 text-gray-900"
-                    >
-                      Adding Template Shift
-                    </Dialog.Title>
-                    <div className="space-y-6 sm:space-y-5">
-                      <AddShiftForm
-                        setShiftTitle={(value) => setShiftTitleValue(value)}
-                        setStartTime={(value) => setStartTimeValue(value)}
-                        setEndTime={(value) => setEndTimeValue(value)}
-                        setSalesmanQuota={(value) =>
-                          setSalesmanQuotaValue(value)
-                        }
-                        setCashierQuota={(value) => setCashierQuotaValue(value)}
-                        setStoremanagerQuota={(value) =>
-                          setStoremanagerQuotaValue(value)
-                        }
-                        setAsstStoremanagerQuota={(value) =>
-                          setAsstStoremanagerQuotaValue(value)
-                        }
-                        setShiftRemarks={(value) => setShiftRemarksValue(value)}
-                      />
-                    </div>
+                <div className="mt-3 sm:mt-5">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-bold leading-6 text-gray-900"
+                  >
+                    Editing Shift
+                  </Dialog.Title>
+                  <div className="space-y-6 sm:space-y-5">
+                    <AddShiftForm
+                      setShiftTitle={(value) => setShiftTitleValue(value)}
+                      setStartTime={(value) => setStartTimeValue(value)}
+                      setEndTime={(value) => setEndTimeValue(value)}
+                      setSalesmanQuota={(value) => setSalesmanQuotaValue(value)}
+                      setCashierQuota={(value) => setCashierQuotaValue(value)}
+                      setStoremanagerQuota={(value) =>
+                        setStoremanagerQuotaValue(value)
+                      }
+                      setAsstStoremanagerQuota={(value) =>
+                        setAsstStoremanagerQuotaValue(value)
+                      }
+                      setShiftRemarks={(value) => setShiftRemarksValue(value)}
+                      shift={shift}
+                    />
                   </div>
                 </div>
                 <div className="mt-5 sm:mt-6 flex">
@@ -131,9 +76,9 @@ export default function AddTemplateShiftModal({
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-                    onClick={createTemplateShiftHandler}
+                    onClick={onClose}
                   >
-                    Add Template Shift
+                    Submit Changes
                   </button>
                 </div>
               </Dialog.Panel>
@@ -143,4 +88,6 @@ export default function AddTemplateShiftModal({
       </Dialog>
     </Transition.Root>
   );
-}
+};
+
+export default EditShiftModal;

@@ -8,32 +8,82 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 const shifts = [
   {
     id: "1",
-    shiftTitle: "Morning Shift",
-    startTime: "08:00",
-    endTime: "14:00",
+    shiftTitle: "6H Morning Shift",
+    startDate: new Date(2022, 9, 16, 8, 0, 0, 0),
+    endDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+    minQuota: [2, 2, 1, 0],
+    remarks:
+      "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
   },
   {
     id: "2",
-    shiftTitle: "Afternoon Shift",
-    startTime: "14:00",
-    endTime: "20:00",
+    shiftTitle: "6H Afternoon Shift",
+    startDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+    endDate: new Date(2022, 9, 16, 20, 0, 0, 0),
+    minQuota: [3, 3, 0, 1],
+    remarks:
+      "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
   },
   {
     id: "3",
-    shiftTitle: "Morning Shift",
-    startTime: "06:00",
-    endTime: "14:00",
+    shiftTitle: "8H Morning Shift",
+    startDate: new Date(2022, 9, 16, 6, 0, 0, 0),
+    endDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+    minQuota: [2, 2, 0, 0],
+    remarks:
+      "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
   },
   {
     id: "4",
-    shiftTitle: "Afternoon Shift",
-    startTime: "14:00",
-    endTime: "22:00",
+    shiftTitle: "8H Afternoon Shift",
+    startDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+    endDate: new Date(2022, 9, 16, 22, 0, 0, 0),
+    minQuota: [1, 3, 1, 0],
+    remarks:
+      "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
   },
 ];
 
 export default function ViewTemplateShiftsSlideover({ open, onClose }) {
   const [openAddTemplateShift, setOpenAddTemplateShift] = useState(false);
+  const [templateShifts, setTemplateShifts] = useState([
+    {
+      id: "1",
+      shiftTitle: "6H Morning Shift",
+      startDate: new Date(2022, 9, 16, 8, 0, 0, 0),
+      endDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+      minQuota: [2, 2, 1, 0],
+      remarks:
+        "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
+    },
+    {
+      id: "2",
+      shiftTitle: "6H Afternoon Shift",
+      startDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+      endDate: new Date(2022, 9, 16, 20, 0, 0, 0),
+      minQuota: [3, 3, 0, 1],
+      remarks:
+        "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
+    },
+    {
+      id: "3",
+      shiftTitle: "8H Morning Shift",
+      startDate: new Date(2022, 9, 16, 6, 0, 0, 0),
+      endDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+      minQuota: [2, 2, 0, 0],
+      remarks:
+        "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
+    },
+    {
+      id: "4",
+      shiftTitle: "8H Afternoon Shift",
+      startDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+      endDate: new Date(2022, 9, 16, 22, 0, 0, 0),
+      minQuota: [1, 3, 1, 0],
+      remarks:
+        "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
+    },
+  ]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -54,6 +104,12 @@ export default function ViewTemplateShiftsSlideover({ open, onClose }) {
         <AddTemplateShiftModal
           open={openAddTemplateShift}
           onClose={() => setOpenAddTemplateShift(false)}
+          addTemplateShiftHandler={(templateShiftToBeAdded) =>
+            setTemplateShifts((oldTemplateShifts) => [
+              ...oldTemplateShifts,
+              templateShiftToBeAdded,
+            ])
+          }
         />
 
         <div className="fixed inset-0 overflow-hidden">
@@ -98,11 +154,11 @@ export default function ViewTemplateShiftsSlideover({ open, onClose }) {
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       <div className="absolute inset-0 px-4 sm:px-6">
                         <div
-                          className="h-full border-2 border-dashed border-gray-200"
+                          className="h-full border-2 border-dashed border-gray-200 p-2"
                           aria-hidden="true"
                         >
                           <ul>
-                            {shifts.map((shift, index) => {
+                            {templateShifts.map((shift, index) => {
                               return (
                                 <li className="pb-2">
                                   {/* RENDERING EACH TEMPLATE SHIFT */}

@@ -1,11 +1,17 @@
+import { format } from "date-fns";
 import React, { useState } from "react";
 
-const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
-  const [salesmanQuota, setSalesmanQuota] = useState();
-  const [cashierQuota, setCashierQuota] = useState();
-  const [managerQuota, setManagerQuota] = useState();
-  const [asstManagerQuota, setAsstManagerQuota] = useState();
-
+const AddShiftForm = ({
+  setShiftTitle,
+  setStartTime,
+  setEndTime,
+  setSalesmanQuota,
+  setCashierQuota,
+  setStoremanagerQuota,
+  setAsstStoremanagerQuota,
+  setShiftRemarks,
+  shift,
+}) => {
   return (
     <div className="space-y-6 sm:space-y-5">
       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -21,6 +27,9 @@ const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
             name="shift-title"
             id="shift-title"
             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+            onChange={(e) => setShiftTitle(e.target.value)}
+            placeholder={shift && shift.shiftTitle}
+            defaultValue={shift && shift.shiftTitle}
           />
         </div>
       </div>
@@ -38,7 +47,10 @@ const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
             name="start-time"
             id="start-time"
             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-            onChange={(e) => setStartTime(e.target.value)}
+            onChange={(e) => {
+              setStartTime(e.target.value);
+            }}
+            value={shift && format(shift.startDate, "HH:mm")}
           />
         </div>
       </div>
@@ -46,7 +58,6 @@ const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
         <label
           htmlFor="end-time"
           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-          onChange={(e) => setEndTime(e.target.value)}
         >
           End Time
         </label>
@@ -56,6 +67,10 @@ const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
             name="end-time"
             id="end-time"
             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+            onChange={(e) => {
+              setEndTime(e.target.value);
+            }}
+            value={shift && format(shift.endDate, "HH:mm")}
           />
         </div>
       </div>
@@ -71,7 +86,10 @@ const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
             id="salesman-quota"
             name="salesman-quota"
             className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+            onChange={(e) => setSalesmanQuota(e.target.value)}
+            value={shift && shift.minQuota[0]}
           >
+            <option value=""></option>
             <option value={1}>1</option>
             <option value={2}>2</option>
             <option value={3}>3</option>
@@ -93,7 +111,10 @@ const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
             id="cashier-quota"
             name="cashier-quota"
             className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+            onChange={(e) => setCashierQuota(e.target.value)}
+            value={shift && shift.minQuota[1]}
           >
+            <option value=""></option>
             <option value={1}>1</option>
             <option value={2}>2</option>
             <option value={3}>3</option>
@@ -115,7 +136,11 @@ const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
             id="storemanager-quota"
             name="storemanager-quota"
             className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+            onChange={(e) => setStoremanagerQuota(e.target.value)}
+            value={shift && shift.minQuota[2]}
           >
+            <option value=""></option>
+            <option value={0}>0</option>
             <option value={1}>1</option>
             <option value={2}>2</option>
             <option value={3}>3</option>
@@ -137,7 +162,11 @@ const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
             id="assistantstoremanager-quota"
             name="assistantstoremanager-quota"
             className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+            onChange={(e) => setAsstStoremanagerQuota(e.target.value)}
+            value={shift && shift.minQuota[3]}
           >
+            <option value=""></option>
+            <option value={0}>0</option>
             <option value={1}>1</option>
             <option value={2}>2</option>
             <option value={3}>3</option>
@@ -147,6 +176,24 @@ const AddShiftForm = ({ setStartTime, setEndTime, setQuotas }) => {
             <option value={7}>7</option>
             <option value={8}>8</option>
           </select>
+        </div>
+      </div>
+      <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+        <label
+          htmlFor="shift-remarks"
+          className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+        >
+          Shift Remarks
+        </label>
+        <div className="mt-1 sm:col-span-2 sm:mt-0">
+          <textarea
+            type="textarea"
+            name="shift-remarks"
+            id="shift-remarks"
+            className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+            onChange={(e) => setShiftRemarks(e.target.value)}
+            value={shift && shift.remarks}
+          />
         </div>
       </div>
     </div>
