@@ -3,7 +3,10 @@ package com.conceiversolutions.hrsystem.user.user;
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.engagement.leave.Leave;
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuotaRepository;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
+import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
@@ -48,6 +51,7 @@ public class UserService implements UserDetailsService {
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
     private final PositionRepository positionRepository;
+    private final LeaveQuotaRepository leaveQuotaRepository;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -344,8 +348,21 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(encodedPassword);
 
-        List<Position> newPositions = user.getPositions();
-        positionRepository.saveAll(newPositions);
+        // Add Leave Quota for staff
+        if (user.getUserRole().equals(RoleEnum.MANAGER) || user.getUserRole().equals(RoleEnum.EMPLOYEE)) {
+            // fulltime gets all
+            if (user.getCurrentPosition().getJobType().equals(JobTypeEnum.FULLTIME)) {
+                LeaveQuota lq = new LeaveQuota();
+                lq = lq.populateFullTime(user.getCurrentPosition().getStartDate());
+                LeaveQuota savedLQ = leaveQuotaRepository.saveAndFlush(lq);
+
+                user.setCurrentLeaveQuota(savedLQ);
+                user.setLeaveQuotas(List.of(savedLQ));
+            }
+        }
+
+//        List<Position> newPositions = user.getPositions();
+//        positionRepository.saveAll(newPositions);
 
         User newUser = userRepository.saveAndFlush(user);
 

@@ -47,7 +47,7 @@ const LeaveApplicationScreen = ({ navigation }) => {
   const [type, setType] = React.useState();
   const [showStart, setShowStart] = React.useState(false);
   const [showEnd, setShowEnd] = React.useState(false);
-  const [fileResponse, setFileResponse] = useState([]);
+  const [fileResponse, setFileResponse] = useState();
   const [userId, setUserId] = useState();
 
   const pickDocument = useCallback(async () => {
@@ -108,18 +108,21 @@ const LeaveApplicationScreen = ({ navigation }) => {
 
   function applyLeave({ navigation }) {
     console.log("submit button pressed");
-
-    let docProperties = {
-        uri: fileResponse.uri,
-        type: fileResponse.mimeType,
-        name: fileResponse.name,
-    }
     let formDataPayload = new FormData();
-    formDataPayload.append('document', {
-        uri: docProperties.uri,
-        name: docProperties.name,
-        type: docProperties.type,
-    });
+
+    if (fileResponse != null) {
+        let docProperties = {
+            uri: fileResponse.uri,
+            type: fileResponse.mimeType,
+            name: fileResponse.name,
+        }
+
+        formDataPayload.append('document', {
+            uri: docProperties.uri,
+            name: docProperties.name,
+            type: docProperties.type,
+        });
+    }
 
     formDataPayload.append('employeeId', userId);
     console.log(userId);

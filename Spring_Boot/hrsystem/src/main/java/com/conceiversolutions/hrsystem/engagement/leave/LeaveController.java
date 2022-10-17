@@ -47,7 +47,7 @@ public class LeaveController {
                             @RequestParam("startDate") String startDate,
                             @RequestParam("endDate") String endDate,
                             @RequestParam("remark") String remark,
-                            @RequestParam("document") MultipartFile file) throws IOException {
+                            @RequestParam(value = "document", required = false) MultipartFile file) throws IOException {
         DocData doc = null;
         if (file != null) {
             doc = docDataService.uploadDoc(file);
