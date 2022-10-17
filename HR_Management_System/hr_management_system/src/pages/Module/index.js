@@ -33,8 +33,8 @@ export default function Module() {
   const moduleId = window.location.href.substring(29);
 
   const location = useLocation();
-  var previousPageName = 'My Training';
-  var previousPage = '/mytraining';
+  var previousPageName = "My Training";
+  var previousPage = "/mytraining";
   if (location.state !== undefined) {
     previousPage = location.state.params;
     if (previousPage === "/mytraining") {
@@ -43,7 +43,7 @@ export default function Module() {
       previousPageName = "All Modules";
     } else if (previousPage === "/video") {
       previousPageName = "All Videos";
-    } else if (previousPage === '/mytraining/completed') {
+    } else if (previousPage === "/mytraining/completed") {
       previousPageName = "Completed Training";
     }
   }
@@ -105,7 +105,7 @@ export default function Module() {
 
   function setProgress(assigned) {
     assigned.forEach((e) => {
-      //console.log("progress " + e.userId);
+      console.log("progress " + e.userId);
       api.getUserProgress(moduleId, e.userId).then((response) => {
         e.progress = response.data;
         console.log("? " + response.data);

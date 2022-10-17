@@ -46,9 +46,9 @@ export default function AssignModuleModal({
   };
 
   function assignModule() {
-    console.log(assignedEmployees)
-    var assigned = []
-    assignedEmployees.forEach(e => assigned.push(e.userId))
+    console.log(assignedEmployees);
+    var assigned = [];
+    assignedEmployees.forEach((e) => assigned.push(e.userId));
     api
       .assignModule(module.moduleId, assigned)
       .then((response) => console.log(response.data))
@@ -121,9 +121,7 @@ export default function AssignModuleModal({
     setFilteredUnassignedEmployees([...unassignedEmployees, employee]);
   }
 
-  function refreshKeyHandler() {
-
-  }
+  function refreshKeyHandler() {}
 
   return (
     <Transition.Root show={open} as={Fragment}>

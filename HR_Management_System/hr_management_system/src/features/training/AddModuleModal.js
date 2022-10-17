@@ -41,6 +41,16 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
       .catch((error) => setError(error));
   }, []);
 
+  useEffect(() => {
+    api
+      .getAllEmployees()
+      .then((response) => {
+        filterOutSelf(response.data)
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, [open]);
+
   function filterOutSelf(employees) {
     const filteredEmployees = employees.filter((e) => e.userId !== parseInt(getUserId()))
     setUnassignedEmployees(filteredEmployees)
@@ -87,7 +97,9 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
       //console.log(employee.userId)
       userIdList.push(employee.userId);
       setAssignedEmployees([]);
+      setFilteredAssignedEmployees([]);
       setUnassignedEmployees([]);
+      setFilteredUnassignedEmployees([]);
     });
     //console.log('user id list ' + userIdList)
     api

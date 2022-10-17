@@ -1,20 +1,10 @@
 import { useState, useEffect } from "react";
-import TasklistTable from "../../features/onboarding/TasklistTable";
-import AddCategoryModal from "../../features/offboarding/AddCategoryModal";
 import Navbar from "../../components/Navbar";
-import AdminSidebar from "../../components/Sidebar/Admin";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
-import { useHistory } from "react-router";
 import TrainingSidebar from "../../components/Sidebar/Training";
 import AddModuleModal from "../../features/training/AddModuleModal";
-import ModuleGrid from "../../components/Grid/Module";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import AllModuleGrid from "../../components/Grid/AllModule";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function AllTraining() {
   const [user, setUser] = useState(null);
@@ -23,7 +13,6 @@ export default function AllTraining() {
   const [openCreate, setOpenCreate] = useState(false);
   const [error, setError] = useState(null);
   const [hrMode, setHrMode] = useState(false);
-  const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
   const [searchParam] = useState(["title", "description"]);
 
@@ -41,12 +30,17 @@ export default function AllTraining() {
   }, []);
 
   useEffect(() => {
-    api
+    const timer = setTimeout(() => {
+      api
       .getAllModules()
       .then((response) => {
         setModules(response.data);
+        setFilteredModules(response.data);
       })
       .catch((error) => setError(error));
+      console.log('lag')
+    }, 5000);
+    return () => clearTimeout(timer);
   }, [openCreate]);
 
   function search(e, items) {
@@ -73,11 +67,13 @@ export default function AllTraining() {
         <Navbar />
         <div className="flex">
           <div className="flex-1">
-            <TrainingSidebar currentPage={{
+            <TrainingSidebar
+              currentPage={{
                 name: "All Modules",
                 href: "/training",
                 current: true,
-              }} />
+              }}
+            />
           </div>
           {hrMode && (
             <div className="flex items-center">
@@ -133,10 +129,12 @@ export default function AllTraining() {
                 }}
               />
             </div>
-            <AllModuleGrid files={filteredModules} currentPage={'/training'} />
+            <AllModuleGrid files={filteredModules} currentPage={"/training"} />
             <AddModuleModal
               open={openCreate}
-              onClose={() => setOpenCreate(false)}
+              onClose={() => {
+                setOpenCreate(false);
+              }}
               refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
             />
           </div>
