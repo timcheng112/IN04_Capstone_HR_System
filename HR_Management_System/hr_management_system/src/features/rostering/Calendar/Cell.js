@@ -1,7 +1,6 @@
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { compareAsc, format, isBefore, isToday, startOfToday } from "date-fns";
 import React, { useState } from "react";
-import { Droppable } from "react-beautiful-dnd";
 import AddShiftModal from "../AddShiftModal";
 import ChoiceModal from "../ChoiceModal";
 import ShiftBlock from "../ShiftBlock";

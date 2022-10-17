@@ -5,7 +5,6 @@ import AddShiftModal from "../../features/rostering/AddShiftModal.js";
 import ViewTemplateShiftsSlideover from "../../features/rostering/ViewTemplateShiftsSlideover.js";
 import ComboBox from "../../components/ComboBox/ComboBox.js";
 import Calendar from "../../features/rostering/Calendar/Calendar.js";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import ShiftBlock from "../../features/rostering/ShiftBlock.js";
 import InfoPanel from "../../components/rostering/InfoPanel.js";
 

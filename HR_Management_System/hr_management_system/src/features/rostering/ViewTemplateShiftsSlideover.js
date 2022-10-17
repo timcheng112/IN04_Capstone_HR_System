@@ -3,7 +3,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import ShiftBlock from "./ShiftBlock";
 import AddTemplateShiftModal from "./AddTemplateShiftModal";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const shifts = [
   {
