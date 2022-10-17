@@ -102,7 +102,6 @@ public class TeamService {
                 member.setApplications(new ArrayList<>());
                 member.setGoals(new ArrayList<>());
                 member.setPositions(new ArrayList<>());
-                member.setModules(new ArrayList<>());
                 member.setShiftListItems(new ArrayList<>());
                 member.setTaskListItems(new ArrayList<>());
                 member.setEmployeeReviews(new ArrayList<>());
