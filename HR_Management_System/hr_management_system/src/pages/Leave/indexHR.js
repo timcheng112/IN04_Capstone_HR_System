@@ -58,18 +58,41 @@ export default function Leave() {
 
   function search(e, items) {
     const value = e.target.value;
-    setFilteredLeaves(
-      items.filter((item) => {
-        return searchParam.some((newItem) => {
-          return (
-            item[newItem]
-              .toString()
-              .toLowerCase()
-              .indexOf(value.toLowerCase()) > -1
-          );
-        });
-      })
-    );
+//    console.log("value");
+//    console.log(value);
+//
+//    console.log("items");
+//    console.log(items);
+
+    let finding = Array.of(value.toLowerCase());
+    let filtered = new Set();
+
+    // employee Name
+    var nameFilter = items.filter(x => finding.some(y => x.employee.firstName.toLowerCase().indexOf(y) != -1))
+    nameFilter.forEach(item => filtered.add(item))
+
+    // leave type Name
+    var leaveTypeFilter = items.filter(x => finding.some(y => x.leaveType.toLowerCase().indexOf(y) != -1))
+    leaveTypeFilter.forEach(item => filtered.add(item))
+
+    // status
+    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
+    statusFilter.forEach(item => filtered.add(item))
+
+    setFilteredLeaves(Array.from(filtered));
+
+//    setFilteredLeaves(
+//      items.filter((item) => {
+//        return searchParam.some((newItem) => {
+//          return (
+//            item[newItem]
+//              .toString()
+//              .toLowerCase()
+//              .indexOf(value.toLowerCase()) > -1
+//          );
+//        });
+//      })
+//    );
   }
 
   return (
