@@ -1197,6 +1197,7 @@ public class UserService implements UserDetailsService {
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        positionRepository.save(user.getCurrentPosition());
         User newUser = userRepository.saveAndFlush(user);
         return newUser.getUserId();
     }
