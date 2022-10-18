@@ -146,7 +146,7 @@ public class LeaveQuota {
         int completedMonths = 12 - month;
         double proRated = (double) completedMonths/12 * 14;
 
-        System.out.println("prorated is " + proRated);
+//        System.out.println("prorated is " + proRated);
         // according to MOM law, if proRated amount fractice is < 0.5, round down. else round up
         if (proRated % 1 < 0.5) {
             return (int) Math.floor(proRated);

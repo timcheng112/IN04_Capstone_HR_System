@@ -113,19 +113,22 @@ public class LeaveService {
 
         // count number of days
         int days = (int) ChronoUnit.DAYS.between(start, end);
+        days++;
 
         // if no error, will carry on after this check
         checkQuota(leaveTypeEnum.name(), lq, days);
 
         // if enough, create leave object then deduct from quota
         Leave newLeave = new Leave(start, end, leaveTypeEnum, remark, employee, doc);
+        System.out.println(newLeave);
 
         // save leave
         Leave savedLeave = leaveRepository.saveAndFlush(newLeave);
 
         // update quota
-        LeaveQuota updateQuota = updateQuota(leaveTypeEnum.name(), lq, days);
-        leaveQuotaRepository.save(updateQuota);
+        // when approve then deduct
+//        LeaveQuota updateQuota = updateQuota(leaveTypeEnum.name(), lq, days);
+//        leaveQuotaRepository.save(updateQuota);
 
         // add leave to user's leaves list and save user
         List<Leave> employeeLeaves = employee.getLeaves();
@@ -204,14 +207,25 @@ public class LeaveService {
     public String approveLeave(Long leaveId, String approverRemarks) {
         System.out.println("LeaveService.approveLeave");
         System.out.println("leaveId = " + leaveId + ", approverRemarks = " + approverRemarks);
-
         Optional<Leave> l = leaveRepository.findById(leaveId);
         if (l.isEmpty()) {
             System.out.println("cant find leave");
             throw new IllegalStateException("Leave does not exist");
         }
-
         Leave leave = l.get();
+
+        User employee = userRepository.findById(leave.getEmployee().getUserId()).get();
+        LeaveQuota lq = leaveQuotaRepository.findById(employee.getCurrentLeaveQuota().getLeaveQuotaId()).get();
+        // count number of days
+        int days = (int) ChronoUnit.DAYS.between(leave.getStartDate(), leave.getEndDate());
+        days++;
+        // check quota is enough
+        // if no error, will carry on after this check
+        checkQuota(leave.getLeaveType().name(), lq, days);
+        // update quota
+        // when apply will deduct. if rejected will refund
+        LeaveQuota updateQuota = updateQuota(leave.getLeaveType().name(), lq, days);
+        leaveQuotaRepository.save(updateQuota);
 
         leave.setApproverRemarks(approverRemarks);
         leave.setApprovalDate(LocalDate.now());
@@ -241,5 +255,23 @@ public class LeaveService {
         leaveRepository.save(leave);
 
         return "Leave has been rejected sadly";
+    }
+
+    public boolean cancelLeave(Long leaveId) {
+        System.out.println("LeaveService.cancelLeave");
+        System.out.println("leaveId = " + leaveId);
+
+        Optional<Leave> l = leaveRepository.findById(leaveId);
+        if (l.isEmpty()) {
+            System.out.println("cant find leave");
+            throw new IllegalStateException("Leave does not exist");
+        }
+        Leave leave = l.get();
+        if (!leave.getStatus().equals(StatusEnum.PENDING)) {
+            throw new IllegalStateException("Leave cannot be cancelled");
+        }
+        leave.setStatus(StatusEnum.CANCELLED);
+        leaveRepository.save(leave);
+        return true;
     }
 }

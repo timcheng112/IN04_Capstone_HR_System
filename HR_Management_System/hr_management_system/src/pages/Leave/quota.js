@@ -38,7 +38,7 @@ export default function LeaveQuota() {
 
   useEffect(() => {
     api
-      .getAllEmployees()
+      .getAllEmployeesInclLeaveQuotas()
       .then((response) => {
         setEmployees(response.data);
         setFilteredEmployees(response.data);

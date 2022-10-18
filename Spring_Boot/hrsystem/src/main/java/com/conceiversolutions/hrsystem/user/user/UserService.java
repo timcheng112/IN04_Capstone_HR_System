@@ -32,6 +32,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
@@ -353,7 +354,7 @@ public class UserService implements UserDetailsService {
         user.setPassword(encodedPassword);
 
         // Add Leave Quota for staff
-        if (user.getUserRole().equals(RoleEnum.MANAGER) || user.getUserRole().equals(RoleEnum.EMPLOYEE)) {
+        if (!user.getUserRole().equals(RoleEnum.APPLICANT)) {
             // fulltime gets all
             if (user.getCurrentPosition().getJobType().equals(JobTypeEnum.FULLTIME)) {
                 LeaveQuota lq = new LeaveQuota();
@@ -363,6 +364,7 @@ public class UserService implements UserDetailsService {
                 user.setCurrentLeaveQuota(savedLQ);
                 user.setLeaveQuotas(List.of(savedLQ));
             }
+            // TODO : deal with contract
         }
 
 //        List<Position> newPositions = user.getPositions();
@@ -1156,6 +1158,58 @@ public class UserService implements UserDetailsService {
         return employees;
     }
 
+    public List<User> getAllEmployeesInclLeaveQuotas() {
+        System.out.println("UserService.getAllEmployeesInclLeaveQuotas");
+        List<User> employees = userRepository.findAllByRole(RoleEnum.EMPLOYEE);
+        employees.addAll(userRepository.findAllByRole(RoleEnum.MANAGER));
+        System.out.println("size of employees list is " + employees.size());
+        for (User u : employees) {
+            List<Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+            u.setQualificationInformation(null);
+            u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            for (LeaveQuota lq : u.getLeaveQuotas()) {
+                u.getCurrentLeaveQuota().setPreviousLeaveQuota(null);
+            }
+            if (u.getCurrentLeaveQuota() != null) {
+                if (u.getCurrentLeaveQuota().getPreviousLeaveQuota() != null) {
+                    u.getCurrentLeaveQuota().getPreviousLeaveQuota().setPreviousLeaveQuota(null);
+                }
+            }
+
+        }
+        return employees;
+    }
+
     public List<User> getAllStaff() {
         List<User> employees = userRepository.findAllStaff(RoleEnum.MANAGER, RoleEnum.EMPLOYEE);
         System.out.println("size of employee list is " + employees.size());
@@ -1217,6 +1271,19 @@ public class UserService implements UserDetailsService {
         if (employeeByWorkEmail1.isPresent() || employeeByWorkEmail2.isPresent()) {
             System.out.println("Email(s) already in use.");
             throw new IllegalStateException("User's emails are already in use");
+        }
+
+        // Add Leave Quota for staff
+        if (!user.getUserRole().equals(RoleEnum.APPLICANT)) {
+            // fulltime gets all
+            if (!user.getIsPartTimer()) {
+                LeaveQuota lq = new LeaveQuota();
+                lq = lq.populateFullTime(LocalDate.now());
+                LeaveQuota savedLQ = leaveQuotaRepository.saveAndFlush(lq);
+
+                user.setCurrentLeaveQuota(savedLQ);
+                user.setLeaveQuotas(List.of(savedLQ));
+            }
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
@@ -1349,7 +1416,8 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public String setFirstPassword(String workEmail, String password) {
-        User user = getEmployee(workEmail);
+//        User user = getEmployee(workEmail);
+        User user = userRepository.findUserByWorkEmail(workEmail).get();
         String encodedPassword = bCryptPasswordEncoder.encode(password);
         user.setPassword(encodedPassword);
         enableUser(user.getEmail());

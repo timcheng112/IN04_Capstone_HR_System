@@ -164,6 +164,9 @@ const api = {
   getAllEmployees() {
     return axios.get(`http://localhost:9191/api/user/getAllEmployees`);
   },
+  getAllEmployeesInclLeaveQuotas() {
+    return axios.get(`http://localhost:9191/api/user/getAllEmployeesInclLeaveQuotas`);
+  },
   getEmployeesWithTask(taskId) {
     return axios.get(
       `http://localhost:9191/api/user/getAssignedEmployees?taskId=${taskId}`
@@ -378,6 +381,9 @@ const api = {
   rejectLeave(leaveId, approverRemarks) {
     return axios.put(`http://localhost:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
   },
+  cancelLeave(leaveId) {
+    return axios.put(`http://${URL}:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+  }
 };
 
 export default api;

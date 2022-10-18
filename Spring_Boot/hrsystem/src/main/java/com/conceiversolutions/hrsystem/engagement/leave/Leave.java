@@ -66,5 +66,6 @@ public class Leave {
         this.leaveType = leaveType;
         this.employee = employee;
         this.applicationDate = LocalDate.now();
+        this.status = StatusEnum.PENDING;
     }
 }

@@ -79,4 +79,9 @@ public class LeaveController {
                                @RequestParam("approverRemarks") String approverRemarks) {
         return leaveService.rejectLeave(leaveId, approverRemarks);
     }
+
+    @PutMapping(path = "cancelLeave")
+    public boolean cancelLeave(@RequestParam("leaveId") Long leaveId) {
+        return leaveService.cancelLeave(leaveId);
+    }
 }

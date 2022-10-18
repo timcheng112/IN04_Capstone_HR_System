@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const URL = "172.31.52.96";
+const URL = "192.168.10.128"; // MATT
+//const URL = "172.31.52.96"; // XINYUE
 
 const api = {
   login(workEmail, password) {
@@ -61,6 +62,9 @@ const api = {
   rejectLeave(leaveId, approverRemarks) {
     return axios.put(`http://${URL}:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
   },
+  cancelLeave(leaveId) {
+    return axios.put(`http://${URL}:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+  }
 };
 
 export default api;
