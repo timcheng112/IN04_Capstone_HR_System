@@ -230,8 +230,8 @@ public class TeamService {
         }
 
         Department dept = d.get();
-
-        User teamHead = userService.getUser(Long.valueOf(teamHeadId));
+        User teamHead = userRepository.findById(Long.valueOf(teamHeadId)).get();
+//        User teamHead = userService.getUser(Long.valueOf(teamHeadId));
         if (!teamHead.getUserRole().equals(RoleEnum.MANAGER)) {
             throw new IllegalStateException("User selected is not a Manager, please appoint a manager instead");
         } else if (!teamHead.isEnabled()) {
