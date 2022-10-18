@@ -16,7 +16,7 @@ export default function Navbar() {
   const navigation = [
     { name: 'Dashboard', path: '/'},
     { name: 'Admin', path: '/admin/onboarding'},
-    { name: 'Company', path: '/company'},
+    { name: 'Company', path: '/vieworg'},
     { name: 'Career', path: '/career'},
     { name: 'Welfare', path: '/welfare'},
     { name: 'Hiring', path: '/hiring/jobrequest'},
@@ -25,7 +25,7 @@ export default function Navbar() {
   const navigationHR = [
     { name: 'Dashboard', path: '/'},
     { name: 'Admin', path: '/admin/onboarding'},
-    { name: 'Company', path: '/company'},
+    { name: 'Company', path: '/vieworg'},
     { name: 'Career', path: '/career'},
     { name: 'Welfare', path: '/welfare'},
     { name: 'Hiring', path: '/hiring/jobrequesthr'},
