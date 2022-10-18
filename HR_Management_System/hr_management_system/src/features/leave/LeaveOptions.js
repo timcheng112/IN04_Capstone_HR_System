@@ -26,7 +26,7 @@ export default function LeaveOptions({ leave, refreshKeyHandler }) {
             className="md:-ml-0.5 md:mr-2 h-4 w-4"
             aria-hidden="true"
           />
-          <span className="hidden md:block">view</span>
+          <span className="hidden md:block">View</span>
         </button>
 
         {leave.status === 'PENDING' && <button

@@ -93,7 +93,20 @@ const LeaveApplicationScreen = ({ navigation }) => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   setStartDate(new Date());
+  //   setEndDate(new Date());
+  //   setRemarks("");
+  //   setFileResponse();
+  // }, []);
+
+
   useEffect(() => {
+    setStartDate(new Date());
+    setEndDate(new Date());
+    setType();
+    setRemarks("");
+    setFileResponse();
     api.getEmployeeInclLeaveQuotas(route.params.userId)
       .then((response) => {
         if (response.data.previousLeaveQuota == null) {
@@ -174,7 +187,7 @@ const LeaveApplicationScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.headlines}>Leave Application</Text>
+        {/* <Text style={styles.headlines}>Leave Application</Text> */}
         <RadioButton.Group onValueChange={type => setType(type)} value={type} >
           <View style={styles.inline}>
             <RadioButton.Item label="Annual Leave" value="ANL" />
