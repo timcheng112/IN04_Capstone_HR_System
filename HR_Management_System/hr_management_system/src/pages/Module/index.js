@@ -33,8 +33,8 @@ export default function Module() {
   const moduleId = window.location.href.substring(29);
 
   const location = useLocation();
-  var previousPageName = 'My Training';
-  var previousPage = '/mytraining';
+  var previousPageName = "My Training";
+  var previousPage = "/mytraining";
   if (location.state !== undefined) {
     previousPage = location.state.params;
     if (previousPage === "/mytraining") {
@@ -43,14 +43,12 @@ export default function Module() {
       previousPageName = "All Modules";
     } else if (previousPage === "/video") {
       previousPageName = "All Videos";
-    } else if (previousPage === '/mytraining/completed') {
+    } else if (previousPage === "/mytraining/completed") {
       previousPageName = "Completed Training";
     }
   }
 
   useEffect(() => {
-    console.log("prev " + previousPage);
-
     api.getUser(getUserId()).then((response) => {
       setUser(response.data);
       //console.log("user");
@@ -60,24 +58,59 @@ export default function Module() {
       //console.log("module");
       //console.log(response.data);
     });
-    api
-      .getEmployeesAssignedToModule(moduleId)
-      .then((response) => setProgress(response.data));
-  }, []);
-
-  useEffect(() => {
-    api.getModule(moduleId).then((response) => {
-      setModule(response.data);
+    api.getEmployeesAssignedToModule(moduleId).then((response) => {
+      const assigned = response.data;
+      console.log("assign");
+      assigned.forEach((e) => {
+        console.log("progress " + e.userId);
+        api.getUserProgress(moduleId, e.userId).then((response) => {
+          e.progress = response.data;
+        });
+      });
+      setEmployees(response.data);
     });
-  }, [openEdit]);
-
-  useEffect(() => {
     api.getVideosInModule(moduleId).then((response) => {
       setVideos(response.data);
-      //console.log("video");
-      //console.log(response.data);
     });
   }, []);
+
+  useEffect(() => {
+    //console.log('edit modal')
+    const timer = setTimeout(() => {
+      api.getModule(moduleId).then((response) => {
+        setModule(response.data);
+      });
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [module, moduleId]);
+
+  useEffect(() => {
+    //console.log('video modal')
+    const timer = setTimeout(() => {
+      api.getVideosInModule(moduleId).then((response) => {
+        setVideos(response.data);
+      });
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [videos, moduleId]);
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     console.log('employees changed')
+  //     api.getEmployeesAssignedToModule(moduleId).then((response) => {
+  //       const assigned = response.data;
+  //       console.log("assign");
+  //       assigned.forEach((e) => {
+  //         //console.log("progress " + e.userId);
+  //         api.getUserProgress(moduleId, e.userId).then((response) => {
+  //           e.progress = response.data;
+  //         });
+  //       });
+  //       setEmployees(response.data);
+  //     });
+  //   }, 5000)
+  //   return () => clearTimeout(timer);
+  // }, [module]);
 
   function deleteModule() {
     if (employees.length !== 0) {
@@ -101,17 +134,6 @@ export default function Module() {
         })
         .catch((error) => setError(error));
     }
-  }
-
-  function setProgress(assigned) {
-    assigned.forEach((e) => {
-      //console.log("progress " + e.userId);
-      api.getUserProgress(moduleId, e.userId).then((response) => {
-        e.progress = response.data;
-        console.log("? " + response.data);
-      });
-    });
-    setEmployees(assigned);
   }
 
   const findProgress = (user) => {
@@ -384,6 +406,8 @@ export default function Module() {
                         open={openAssign}
                         onClose={() => setOpenAssign(false)}
                         module={module}
+                        assigned={employees}
+                        refreshKey={refreshKey}
                       />
                     </div>
                   </>

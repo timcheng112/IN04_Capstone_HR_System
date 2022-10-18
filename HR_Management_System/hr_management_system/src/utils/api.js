@@ -285,9 +285,9 @@ const api = {
   addModule(module) {
     return axios.post(`http://localhost:9191/api/module`, module);
   },
-  assignModule(moduleId, employees) {
+  assignModule(moduleId, employees, userId) {
     return axios.post(
-      `http://localhost:9191/api/module/user/${moduleId}`,
+      `http://localhost:9191/api/module/${moduleId}/user/${userId}`,
       employees
     );
   },
@@ -308,6 +308,9 @@ const api = {
   },
   getEmployeesUnassignedToModule(moduleId) {
     return axios.get(`http://localhost:9191/api/module/${moduleId}/unAssignedUser`)
+  },
+  getIsUserAssignedToModule(moduleId, userId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/user/${userId}/assigned`)
   },
   getVideosInModule(moduleId) {
     return axios.get(`http://localhost:9191/api/module/${moduleId}/videos`);

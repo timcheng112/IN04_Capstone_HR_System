@@ -53,10 +53,10 @@ public class ModuleController {
         moduleService.deleteModule(id);
     }
 
-    @PostMapping(path = "user/{moduleId}")
-    public String assignModulesToEmployees(@PathVariable("moduleId") Long moduleId, @RequestBody List<Long> employees)
+    @PostMapping(path = "{moduleId}/user/{userId}")
+    public String assignModulesToEmployees(@PathVariable("moduleId") Long moduleId, @PathVariable("userId") Long userId, @RequestBody List<Long> employees)
             throws Exception {
-        return moduleService.assignModulesToEmployees(moduleId, employees);
+        return moduleService.assignModulesToEmployees(moduleId, userId, employees);
     }
 
     @GetMapping(path = "{moduleId}/user")
@@ -99,5 +99,10 @@ public class ModuleController {
     @GetMapping(path = "user/{userId}/completed")
     public List<Module> getUserCompletedModules(@PathVariable("userId") Long userId) throws Exception {
         return moduleService.getUserCompletedModules(userId);
+    }
+
+    @GetMapping(path = "{moduleId}/user/{userId}/assigned")
+    public Boolean getIsUserAssigned(@PathVariable("moduleId") Long moduleId, @PathVariable("userId") Long userId) throws Exception {
+        return moduleService.getIsUserAssigned(moduleId, userId);
     }
 }
