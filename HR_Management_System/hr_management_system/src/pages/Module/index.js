@@ -198,13 +198,13 @@ export default function Module() {
                       className="pointer-events-none h-25 w-15 object-contain w-1/6"
                     />
                   </div>
-                  <h1 className="mt-3 text-xl font-semibold text-gray-900">
+                  <h1 className="font-sans mt-3 text-xl font-semibold text-gray-900">
                     {module.title}
                   </h1>
-                  <p className="mt-2 text-md text-gray-700">
-                    {module.videoList.length} videos
+                  <p className="font-sans mt-2 text-md text-gray-700">
+                    {module.videoList.length} video(s)
                   </p>
-                  <p className="mt-2 text-sm text-gray-700">
+                  <p className="font-sans mt-2 text-sm text-gray-700">
                     {module.description}
                   </p>
                   {hrMode && (
@@ -261,7 +261,7 @@ export default function Module() {
                 <div className="mt-8 flex">
                   <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                      <h1 className="text-xl font-semibold text-gray-900">
+                      <h1 className="font-sans text-xl font-semibold text-gray-900">
                         Videos
                       </h1>
                       <div className="mt-5 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -270,13 +270,13 @@ export default function Module() {
                             <tr>
                               <th
                                 scope="col"
-                                className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                className="font-sans py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                               >
                                 Title
                               </th>
                               <th
                                 scope="col"
-                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                className="font-sans px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                               >
                                 Description
                               </th>
@@ -291,10 +291,10 @@ export default function Module() {
                           <tbody className="divide-y divide-gray-200 bg-white">
                             {videos.map((video) => (
                               <tr key={video.videoId}>
-                                <td className="whitespace-nowrap py-4 pl-6 pr-1 text-sm font-medium text-gray-900 text-left">
+                                <td className="font-sans whitespace-nowrap py-4 pl-6 pr-1 text-sm font-medium text-gray-900 text-left">
                                   {video.title}
                                 </td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+                                <td className="font-sans whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
                                   {video.description}
                                 </td>
                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
@@ -305,7 +305,7 @@ export default function Module() {
                                         { params: previousPage }
                                       )
                                     }
-                                    className="text-indigo-600 hover:text-indigo-900"
+                                    className="font-sans text-indigo-600 hover:text-indigo-900"
                                   >
                                     View
                                   </button>
@@ -323,7 +323,7 @@ export default function Module() {
                     <div className="mt-8 ml-5 flex">
                       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                          <h1 className="text-xl font-semibold text-gray-900">
+                          <h1 className=" font-sans text-xl font-semibold text-gray-900">
                             Assigned to
                           </h1>
                           <div className="mt-5 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -332,25 +332,25 @@ export default function Module() {
                                 <tr>
                                   <th
                                     scope="col"
-                                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                    className="font-sans py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                   >
                                     Name
                                   </th>
                                   <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                    className="font-sans px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                   >
                                     Work Email
                                   </th>
                                   <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                    className="font-sans px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                   >
                                     Role
                                   </th>
                                   <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                    className="font-sans px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                   >
                                     Progress
                                   </th>
@@ -365,16 +365,16 @@ export default function Module() {
                               <tbody className="divide-y divide-gray-200 bg-white">
                                 {employees.map((employee) => (
                                   <tr key={employee.email}>
-                                    <td className="whitespace-nowrap py-4 pl-6 pr-1 text-sm font-medium text-gray-900 text-left">
+                                    <td className="font-sans whitespace-nowrap py-4 pl-6 pr-1 text-sm font-medium text-gray-900 text-left">
                                       {employee.firstName} {employee.lastName}
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+                                    <td className="font-sans whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
                                       {employee.workEmail}
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+                                    <td className="font-sans whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
                                       {employee.userRole}
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+                                    <td className="font-sans whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
                                       {findProgress(employee)}
                                     </td>
                                     {/* <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

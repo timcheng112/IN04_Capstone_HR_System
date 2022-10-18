@@ -18,7 +18,6 @@ export default function EditVideoModal({
   useEffect(() => {
     setTitle(video.title)
     setDescription(video.description)
-    setVideoLink(video.video)
   }, [open])
 
   const handleSubmit = (evt) => {
@@ -32,7 +31,6 @@ export default function EditVideoModal({
     const editedVideo = {
       title: title,
       description: description,
-      video: videoLink,
     };
     api.editVideo(video.videoId, editedVideo).then(response => alert(response.data))
   }
@@ -116,7 +114,7 @@ export default function EditVideoModal({
                             onChange={(e) => setDescription(e.target.value)}
                           />
                         </div>
-                        <label
+                        {/* <label
                           htmlFor="link"
                           className="block text-sm font-medium text-gray-700 mt-2"
                         >
@@ -132,7 +130,7 @@ export default function EditVideoModal({
                             value={videoLink}
                             onChange={(e) => setVideoLink(e.target.value)}
                           />
-                        </div>
+                        </div> */}
                       </form>
                     </div>
                   </div>

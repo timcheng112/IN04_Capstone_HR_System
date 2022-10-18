@@ -44,7 +44,6 @@ public class VideoService {
         Video v = getVideo(videoId);
         v.setTitle(video.getTitle());
         v.setDescription(video.getDescription());
-        v.setVideo(video.getVideo());
         return v.getTitle() + " has been successfully edited";
     }
 
