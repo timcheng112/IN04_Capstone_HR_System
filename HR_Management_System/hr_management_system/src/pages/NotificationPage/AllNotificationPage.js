@@ -8,6 +8,46 @@ import { deleteUser, getUserId } from "../../utils/Common.js";
 import { useHistory } from "react-router";
 import Notification from "../../components/Notification";
 
+import Notification from "../../components/Notification";
+/*
+
+
+  This example requires some changes to your config:
+
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/line-clamp'),
+    ],
+  }
+  ```
+*/
+
+// const messages = [
+//   {
+//     id: 1,
+//     subject: "Velit placeat sit ducimus non sed",
+//     sender: "Gloria Roberston",
+//     time: "1d ago",
+//     datetime: "2021-01-27T16:35",
+//     preview:
+//       "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+//   },
+//   {
+//     id: 2,
+//     subject: "asdfgjkl;",
+//     sender: "test",
+//     time: "1d ago",
+//     datetime: "2021-01-27T16:35",
+//     preview:
+//       "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor. Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+//   },
+//   // More messages...
+// ];
+
 export default function Example() {
   // const [userId, setUser] = useState("");
   // setUser(getUserId());
@@ -18,94 +58,90 @@ export default function Example() {
   let [userInfo, setUserInfo] = useState([]);
   const history = useHistory();
 
-  useEffect(() => {
-    // console.log(userId)
-    api
-      .getAllNotificationsForUser(getUserId())
-      .then((response) => {
-        // console.log(response.data);
-        setNotification(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Unable to get all notifications right now");
-      });
-  }, []);
+      useEffect(() => {
+        // console.log(userId)
+        api
+          .getAllNotificationsForUser(getUserId()).then((response) => {
+            // console.log(response.data);
+            setNotification(response.data);
+    
+          })
+          .catch((error) => {
+            console.log(error);
+            alert("Unable to get all notifications right now")
+          });
+      },[]);
 
-  useEffect(() => {
-    async function getUserInfo() {
-      await api.getUserInfo(userId).then((response) => {
-        setUserInfo(response.data);
-        // console.log(userInfo);
-      });
+  const deleteANotification = ( notificationId ) => {
+    // evt.preventDefault();
+    // console.log(userInfo.authorities);
+    const boo = window.confirm(
+      "Are you sure you want to delete this notification?"
+    );
+
+    if(boo){
+      api
+        .deleteANotification(notificationId, getUserId())
+        .then((response) => {
+          console.log(response.data);
+          //   setNotification(response.data);
+        })
+        .then(() => {
+          console.log("are you here");
+          // history.push("/home");
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Unable to delete your notification right now");
+        });
     }
-    getUserInfo();
-  }, []);
+  };
 
-  // const deleteANotification = ({notificationId}) => {
-  // // evt.preventDefault();
-  // // console.log(userInfo.authorities);
-  // const boo = window.confirm("Are you sure you want to delete this notification?");
+  const deleteAllNotifications = (notificationId) => {
+    // evt.preventDefault();
+    // console.log(userInfo.authorities);
+    const boo = window.confirm(
+      "Are you sure you want to delete all notifications?"
+    );
 
-  // if(boo){
-  //     api
-  //     .deleteANotification(notificationId, getUserId())
-  //     .then((response) => {
-  //         console.log(response.data);
-  //         setNotification(response.data);
+    if (boo) {
+      api
+        .deleteAllNotifications(getUserId())
+        .then((response) => {
+          console.log(response.data);
+          //   setNotification(response.data);
+        })
+        .then(() => {
+          console.log("are you here");
 
-  //     })
-  //     .then(() => {
-  //         console.log("are you here");
+          history.push("/home");
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Unable to delete your notification right now");
+        });
+    }
+  };
 
-  //         // history.push("/home");
-  //     }).catch((error) => {
-  //         console.log(error);
-  //         alert("Unable to delete your notification right now")
-  //     });
-  // }
-  // };
+        // useEffect(() => {
+        //     // console.log(userId)
+        //     api
+        //         .deleteAllNotifications(getUserId()).then((response) => {
+        //         // console.log(response.data);
+        //         setNotification(response.data);
+        
+        //         })
+        //         .catch((error) => {
+        //         console.log(error);
+        //         alert("Unable to delete all your notifications right now")
+        //         });
+        //     },[]);
 
-  // const deleteAllNotifications = ({notificationId}) => {
-  //     // evt.preventDefault();
-  //     // console.log(userInfo.authorities);
-  //     const boo = window.confirm("Are you sure you want to delete this notification?");
-
-  //     if(boo){
-  //         api
-  //         .deleteAllNotifications(getUserId()).then((response) => {
-  //             console.log(response.data);
-  //             setNotification(response.data);
-
-  //             })
-  //         .then(() => {
-  //             console.log("are you here");
-
-  //             // history.push("/home");
-  //         }).catch((error) => {
-  //             console.log(error);
-  //             alert("Unable to delete your notification right now")
-  //         });
-  //     }
-  //     };
-
-  // useEffect(() => {
-  //     // console.log(userId)
-  //     api
-  //         .deleteAllNotifications(getUserId()).then((response) => {
-  //         // console.log(response.data);
-  //         setNotification(response.data);
-
-  //         })
-  //         .catch((error) => {
-  //         console.log(error);
-  //         alert("Unable to delete all your notifications right now")
-  //         });
-  //     },[]);
-
+        
   return (
+
     <>
-      <Navbar />
+    <Navbar/>
       <div className="relative bg-indigo-800">
         <div className="absolute inset-0">
           <img
@@ -122,8 +158,13 @@ export default function Example() {
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
             All Notifications
           </h1>
+
         </div>
       </div>
+
+        
+
+
 
       {/* start of list */}
       <ul role="list" className="divide-y divide-gray-200 p-40">
@@ -131,7 +172,7 @@ export default function Example() {
         <button
           type="button"
           className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-          // onClick={()=> {deleteAllNotifications()}}
+           onClick={()=> {deleteAllNotifications()}}
         >
           <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
           Delete All Notifications
@@ -144,6 +185,18 @@ export default function Example() {
           <PlusCircleIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
           Add Notification
         </button>
+        {/* trash button to trash all */}
+        <button
+          type="button"
+          className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
+          onClick={() => {
+            deleteAllNotifications();
+          }}
+        >
+          <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+          Delete All Notifications
+        </button>
+
 
         {notification.map((message) => (
           <li
@@ -151,22 +204,23 @@ export default function Example() {
             className="relative bg-white py-5 px-4 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 hover:bg-gray-50"
           >
             <div className="flex justify-between space-x-3">
-              <button
+              
+            <button
                 type="button"
                 className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-                // onClick={() => {deleteANotification(message.id)}}
+                onClick={() => {
+                  deleteANotification(message.id);
+                }}
               >
                 <TrashIcon
                   className="-ml-0.5 mr-2 h-4 w-4"
                   aria-hidden="true"
                 />
                 Delete
-              </button>
+            </button>
               <div className="min-w-0 flex-1">
-                <a
-                  href="/NotificationExpandPage"
-                  className="block focus:outline-none"
-                >
+              
+                <a href="/NotificationExpandPage" className="block focus:outline-none">
                   <span className="absolute inset-0" aria-hidden="true" />
 
                   <p className="truncate text-sm text-black-1500 font-bold">
@@ -183,7 +237,7 @@ export default function Example() {
             </div>
             <div className="mt-1">
               <p className="text-sm text-gray-600 line-clamp-1">
-                {message.description}
+                {message.description}   
               </p>
             </div>
           </li>
