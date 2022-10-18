@@ -68,32 +68,42 @@ public class ModuleService {
         moduleRepository.deleteById(moduleId);
     }
 
-    public String assignModulesToEmployees(Long moduleId, List<Long> employees) throws Exception {
+    public String assignModulesToEmployees(Long moduleId, Long currentUserId, List<Long> employees) throws Exception {
         System.out.println("ModuleService.assignModulesToEmployees");
         Optional<Module> m = moduleRepository.findById(moduleId);
+        List<User> newEmployeeList = new ArrayList<>();
         if (m.isPresent()) {
+
             Module module = m.get();
+            
+            Optional<User> optionalUser = userRepository.findById(currentUserId);
+            if (optionalUser.isPresent()) {
+                User currentUser = optionalUser.get();
+                if (module.getEmployees().contains(currentUser)) {
+                    newEmployeeList.add(currentUser);
+                }
+            } else {
+                throw new IllegalStateException("Current user does not exist");
+            }
+            
             module.setEmployees(new ArrayList<>());
             for (Long userId : employees) {
                 System.out.println("userId = " + userId);
                 Optional<User> user = userRepository.findById(userId);
+                
                 if (user.isPresent()) {
-                    if (module.getEmployees() != null) {
-                        module.getEmployees().add(user.get());
-                    } else {
-                        module.setEmployees(new ArrayList<>());
-                        module.getEmployees().add(user.get());
-                        System.out.println(module.getEmployees() + " ");
-                    }
+                    newEmployeeList.add(user.get());
                     System.out.println("Employee with id " + userId + " has been found");
                 } else {
                     throw new IllegalStateException("Employee does not exist");
                 }
+
             }
+            module.setEmployees(newEmployeeList);
             moduleRepository.save(module);
             System.out.println(module.getEmployees() instanceof List);
 
-            return employees.size() + " employee(s) have been assigned to module " + moduleId;
+            return newEmployeeList.size() + " employee(s) have been assigned to module " + moduleId;
         } else {
             throw new IllegalStateException("Module does not exist");
         }
@@ -188,7 +198,7 @@ public class ModuleService {
         Iterable<Module> userModules = getUserModules(userId);
         System.out.println("user mods = " + userModules);
         for (Module module : userModules) {
-            
+
             if (module.getModuleId() == moduleId) {
                 Integer watched = 0;
                 for (Video video : module.getVideoList()) {
@@ -235,6 +245,16 @@ public class ModuleService {
         } else {
             throw new IllegalStateException("User does not exist");
         }
+    }
+
+    public Boolean getIsUserAssigned(Long moduleId, Long userId) throws Exception {
+        List<User> assignedEmployees = getEmployeesAssignedToModule(moduleId);
+        for (User u : assignedEmployees) {
+            if (u.getUserId() == userId) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

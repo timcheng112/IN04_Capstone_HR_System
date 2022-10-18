@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "react-native-paper";
-import { FlatList, SafeAreaView, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import {
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import api from "./../utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -31,9 +37,10 @@ const ModuleScreen = ({ route, navigation }) => {
     api.getModule(moduleId).then((response) => {
       //console.log(response.data.videoList);
       setWatchedStatus(response.data.videoList, userId);
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setModule(response.data);
       }, 1000);
+      return () => clearTimeout(timer);
     });
   };
 

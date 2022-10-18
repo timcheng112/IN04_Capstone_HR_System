@@ -16,12 +16,17 @@ export default function EditModuleModal({
   const history = useHistory();
 
   useEffect(() => {
-    if (!open) {
-      setTitle(module.title)
-      setDescription(module.description)
-      setThumbnail(module.thumbnail)
-    }
-  }, [open])
+    setTitle(module.title);
+    setDescription(module.description);
+    setThumbnail(module.thumbnail);
+  }, [open, module.title, module.description, module.thumbnail]);
+
+  useEffect(() => {
+    setTitle(module.title);
+    setDescription(module.description);
+    setThumbnail(module.thumbnail);
+  }, [module.title, module.description, module.thumbnail]);
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
     onClose();
@@ -34,11 +39,9 @@ export default function EditModuleModal({
       description: description,
       thumbnail: thumbnail,
     };
-    api
-      .editModule(module.moduleId, editedModule)
-      .then((response) => {
-        alert(response.data);
-      })
+    api.editModule(module.moduleId, editedModule).then((response) => {
+      alert(response.data);
+    });
   }
 
   return (

@@ -8,6 +8,9 @@ export default function AssignModuleModal({
   open,
   onClose,
   module,
+  assigned,
+  refreshKey,
+  setRefreshKey,
   refreshKeyHandler,
 }) {
   const [searchParam] = useState([
@@ -22,22 +25,27 @@ export default function AssignModuleModal({
     useState(unassignedEmployees);
   const [filteredAssignedEmployees, setFilteredAssignedEmployees] =
     useState(assignedEmployees);
+  const [employees, setEmployees] = useState(assigned);
 
   useEffect(() => {
-      api.getEmployeesAssignedToModule(module.moduleId).then((response) => {
-        // console.log("assigned")
-        // console.log(response.data)
-        const filterOutSelf = response.data.filter((e) => e.userId !== parseInt(getUserId()));
-        setAssignedEmployees(filterOutSelf);
-        setFilteredAssignedEmployees(filterOutSelf);
-      });
-      api.getEmployeesUnassignedToModule(module.moduleId).then((response) => {
-        // console.log("unassigned " + response.data.length)
-        const filterOutSelf = response.data.filter((e) => e.userId !== parseInt(getUserId()));
-        setUnassignedEmployees(filterOutSelf)
-        setFilteredUnassignedEmployees(filterOutSelf)
-      })
-  }, [open]);
+    api.getEmployeesAssignedToModule(module.moduleId).then((response) => {
+      //console.log("assigned")
+      // console.log(response.data)
+      const filterOutSelf = response.data.filter(
+        (e) => e.userId !== parseInt(getUserId())
+      );
+      setAssignedEmployees(filterOutSelf);
+      setFilteredAssignedEmployees(filterOutSelf);
+    });
+    api.getEmployeesUnassignedToModule(module.moduleId).then((response) => {
+      // console.log("unassigned " + response.data.length)
+      const filterOutSelf = response.data.filter(
+        (e) => e.userId !== parseInt(getUserId())
+      );
+      setUnassignedEmployees(filterOutSelf);
+      setFilteredUnassignedEmployees(filterOutSelf);
+    });
+  }, []);
 
   const handleSubmit = () => {
     assignModule();
@@ -50,16 +58,11 @@ export default function AssignModuleModal({
     var assigned = [];
     assignedEmployees.forEach((e) => assigned.push(e.userId));
     api
-      .assignModule(module.moduleId, assigned)
-      .then((response) => console.log(response.data))
-      .then(() =>
-        alert(
-          module.title +
-            " assigned to " +
-            assignedEmployees.length +
-            " employees"
-        )
-      );
+      .assignModule(module.moduleId, assigned, getUserId())
+      .then((response) => {
+        alert(response.data);
+      })
+      .finally(() => window.location.reload());
   }
 
   function search(e, items, isUnassigned) {
