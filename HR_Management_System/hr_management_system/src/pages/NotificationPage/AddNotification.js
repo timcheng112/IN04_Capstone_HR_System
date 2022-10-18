@@ -31,7 +31,7 @@ export default function AddNotification(props) {
           console.log(response.data);
         })
         .then(() => {
-          history.push("/home");
+          //history.push("/home");
         });
     }
   };
@@ -76,7 +76,7 @@ export default function AddNotification(props) {
       <div className="items-baseline bg-white py-16 px-4 sm:px-6 lg:col-span-3 lg:py-24 lg:px-8 xl:pl-12">
         <button
           className=" h-10 w-20 px-4 py-2 font-semibold text-sm bg-cyan-500 text-white rounded-full"
-          onClick={() => history.push("/home")}
+          onClick={() => history.goBack()}
         >
           Back
         </button>

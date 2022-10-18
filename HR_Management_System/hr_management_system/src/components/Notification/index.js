@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { Transition } from '@headlessui/react'
 import { InboxIcon } from '@heroicons/react/24/outline'
 import { XMarkIcon } from '@heroicons/react/20/solid'
+import { useHistory } from 'react-router'
 // import {toast, ToastContainer} from "react-toastify"
 // import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,6 +16,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 // export default function Notification({show}) {
 export default function Notification(props) {
   const [show, setShow] = useState(true)
+  const history = useHistory();
 
   return (
     <>
@@ -53,7 +55,8 @@ export default function Notification(props) {
                         type="button"
                         className="rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         onClick={() => {
-                            setShow(true)
+                            setShow(true);
+                            history.push(`/AllNotifications`)
                           }}                     
                       >
                         Open
