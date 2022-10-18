@@ -8,23 +8,28 @@ import api from "../../utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-export default function LeaveList() {
-  const [userId, setUserId] = useState();
-  const leaves = [
-    { id: 1, appliedDate: '2022-08-15', type: 'ANL', status: 'Created' },
-    { id: 2, appliedDate: '2022-08-17', type: 'MCL', status: 'Created' },
-  ]
+export default function LeaveList({userId}) {
+  // const leaves = [
+  //   { id: 1, appliedDate: '2022-08-15', type: 'ANL', status: 'Created' },
+  //   { id: 2, appliedDate: '2022-08-17', type: 'MCL', status: 'Created' },
+  // ]
+  const [leaves, setLeaves] =  useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
-    const setId = async () => {
-      try {
-        const response = await AsyncStorage.getItem("userId");
-        setUserId(response);
-      } catch (err) {
-        console.warn(err);
-      };
-    }
-    setId();
-  }, []);
+    // setRefreshing(true);
+    api
+    .getEmployeeLeaves(userId)
+    .then((response) => {
+      setLeaves(response.data);
+      //setRefreshing(true);
+      console.log("Successfully fetched Employee Leaves");
+    })
+    .catch(() => console.log("Error trying to fetch Employee Leaves"));
+
+  }, [refreshKey]);
+
 
   return (
     <DataTable>
@@ -36,8 +41,8 @@ export default function LeaveList() {
       
       {leaves.map((leave) => (
         <DataTable.Row>
-          <DataTable.Cell>{leave.type}</DataTable.Cell>
-          <DataTable.Cell>{leave.appliedDate}</DataTable.Cell>
+          <DataTable.Cell>{leave.leaveType}</DataTable.Cell>
+          <DataTable.Cell>{leave.applicationDate}</DataTable.Cell>
           <DataTable.Cell>{leave.status}</DataTable.Cell>
         </DataTable.Row>)
       )}

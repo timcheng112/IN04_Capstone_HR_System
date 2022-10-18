@@ -130,8 +130,8 @@ export default function LeaveQuota() {
                           {employee.firstName}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{employee.currentLeaveQuota.year}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{employee.currentLeaveQuota.ANL}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{employee.currentLeaveQuota.MCL}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{employee.currentLeaveQuota.anl}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{employee.currentLeaveQuota.mcl}</td>
                         {/* <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <div className="space-x-4">
                             <button

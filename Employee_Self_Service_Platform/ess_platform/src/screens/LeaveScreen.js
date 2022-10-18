@@ -10,6 +10,7 @@ import api from "../utils/api";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
 import LeaveList from "../components/leave/LeaveList";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -34,8 +35,26 @@ const styles = StyleSheet.create({
   },
 });
 
+
+
 const LeaveScreen = ({navigation}) => {
-  
+
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const setId = async () => {
+      try {
+        const response = await AsyncStorage.getItem("userId");
+        setUserId(response);
+        //console.log(response);
+      } catch (err) {
+        console.warn(err);
+      };
+    }
+    setId();
+    console.log(userId);
+   }, []);
+    
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inline}>
@@ -48,7 +67,7 @@ const LeaveScreen = ({navigation}) => {
           Apply 
         </Button>
         </View>
-        <LeaveList />
+        <LeaveList userId = {userId}/>
       
     </SafeAreaView>
   )
