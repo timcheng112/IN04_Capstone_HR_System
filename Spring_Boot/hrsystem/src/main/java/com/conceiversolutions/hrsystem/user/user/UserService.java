@@ -1645,6 +1645,56 @@ public class UserService implements UserDetailsService {
         return attendance;
     }
 
+    public User getEmployeeInclLeaveQuotas(Long employeeId) {
+        System.out.println("UserService.getEmployeeInclLeaveQuotas");
+        System.out.println("employeeId = " + employeeId);
+
+        User u = userRepository.findById(employeeId).get();
+        List<Team> teams = u.getTeams();
+        for (Team t : teams) {
+            t.setTeamHead(null);
+            t.setUsers(new ArrayList<>());
+            t.setDepartment(null);
+            t.setRoster(null);
+            t.setTeamHead(null);
+        }
+        // u.setTaskListItems(null);
+        for (TaskListItem taskListItem : u.getTaskListItems()) {
+            taskListItem.setUser(null);
+            taskListItem.getTask().setTaskListItems(new ArrayList<>());
+            taskListItem.getTask().setCategory(null);
+        }
+        u.setQualificationInformation(null);
+        u.setBlocks(new ArrayList<>());
+        u.setShiftListItems(new ArrayList<>());
+        u.setSwapRequestsReceived(new ArrayList<>());
+        u.setSwapRequestsRequested(new ArrayList<>());
+        u.setReactivationRequest(null);
+        u.setAttendances(new ArrayList<>());
+        u.setCurrentPayInformation(null);
+        u.setEmployeeAppraisals(new ArrayList<>());
+        u.setManagerAppraisals(new ArrayList<>());
+        u.setManagerReviews(new ArrayList<>());
+        u.setEmployeeReviews(new ArrayList<>());
+        u.setModules(new ArrayList<>());
+        u.setApplications(new ArrayList<>());
+        u.setGoals(new ArrayList<>());
+        u.setPositions(new ArrayList<>());
+        u.setJobRequests(new ArrayList<>());
+        u.setLeaves(new ArrayList<>());
+        u.setLeaveQuotas(new ArrayList<>());
+        for (LeaveQuota lq : u.getLeaveQuotas()) {
+            u.getCurrentLeaveQuota().setPreviousLeaveQuota(null);
+        }
+        if (u.getCurrentLeaveQuota() != null) {
+            if (u.getCurrentLeaveQuota().getPreviousLeaveQuota() != null) {
+                u.getCurrentLeaveQuota().getPreviousLeaveQuota().setPreviousLeaveQuota(null);
+            }
+        }
+
+        return u;
+    }
+
     // contract
     // public void countAttendanceForToday(Long userId){
     //

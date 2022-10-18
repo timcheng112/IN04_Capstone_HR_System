@@ -65,6 +65,9 @@ const api = {
   cancelLeave(leaveId) {
     return axios.put(`http://${URL}:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
   }
+  getEmployeeInclLeaveQuotas(employeeId) {
+    return axios.get(`http://localhost:9191/api/user/getEmployeeInclLeaveQuotas?employeeId=${employeeId}`);
+  },
 };
 
 export default api;

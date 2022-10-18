@@ -288,6 +288,11 @@ public class UserController {
         return userService.getAllEmployeesInclLeaveQuotas();
     }
 
+    @GetMapping(path = "/getEmployeeInclLeaveQuotas")
+    public User getEmployeeInclLeaveQuotas(@RequestParam("employeeId") Long employeeId) {
+        return userService.getEmployeeInclLeaveQuotas(employeeId);
+    }
+
     @GetMapping(path = "/getAllStaff")
     public List<User> getAllStaff() {
         return userService.getAllStaff();
