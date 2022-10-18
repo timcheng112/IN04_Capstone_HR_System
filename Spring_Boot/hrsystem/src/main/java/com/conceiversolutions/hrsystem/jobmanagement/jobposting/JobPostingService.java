@@ -39,7 +39,6 @@ public class JobPostingService {
                 poster.setManagerAppraisals(new ArrayList<>());
                 poster.setManagerReviews(new ArrayList<>());
                 poster.setEmployeeReviews(new ArrayList<>());
-                poster.setModules(new ArrayList<>());
                 poster.setApplications(new ArrayList<>());
                 poster.setGoals(new ArrayList<>());
                 poster.setPositions(new ArrayList<>());

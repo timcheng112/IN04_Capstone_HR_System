@@ -121,7 +121,6 @@ public class LeaveService {
             emp.setManagerAppraisals(new ArrayList<>());
             emp.setManagerReviews(new ArrayList<>());
             emp.setEmployeeReviews(new ArrayList<>());
-            emp.setModules(new ArrayList<>());
             emp.setApplications(new ArrayList<>());
             emp.setGoals(new ArrayList<>());
             emp.setPositions(new ArrayList<>());

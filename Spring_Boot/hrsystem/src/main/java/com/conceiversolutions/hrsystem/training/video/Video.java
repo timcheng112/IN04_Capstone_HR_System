@@ -1,10 +1,19 @@
 package com.conceiversolutions.hrsystem.training.video;
 
-import java.sql.Blob;
 import java.util.List;
-import javax.persistence.*;
 
-import com.conceiversolutions.hrsystem.training.module.Module;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
@@ -16,26 +25,27 @@ public class Video {
     private Long videoId;
     private String title;
     private String description;
-    private Blob video;
+    private String video;
+    private Integer position; //position of video in the module
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Video.class)
+    @JoinColumn(name = "module_id")
+    private Video moduleVideo;
+
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private List<User> watchedBy;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Module.class)
-    @JoinColumn(name = "module_id")
-    private Module module;
 
     public Video() {
 
     }
 
-    public Video(String title, String description, Blob video, List<User> watchedBy, Module module) {
+    public Video(String title, String description, String video, Integer position, List<User> watchedBy) {
         this.title = title;
         this.description = description;
         this.video = video;
+        this.position = position;
         this.watchedBy = watchedBy;
-        this.module = module;
     }
 
     public Long getVideoId() {
@@ -62,20 +72,12 @@ public class Video {
         this.description = description;
     }
 
-    public Blob getVideo() {
+    public String getVideo() {
         return video;
     }
 
-    public void setVideo(Blob video) {
+    public void setVideo(String video) {
         this.video = video;
-    }
-
-    public Module getModule() {
-        return module;
-    }
-
-    public void setModule(Module module) {
-        this.module = module;
     }
 
     public List<User> getWatchedBy() {
@@ -86,15 +88,23 @@ public class Video {
         this.watchedBy = watchedBy;
     }
 
-    @Override
-    public String toString() {
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    @java.lang.Override
+    public java.lang.String toString() {
         return "Video{" +
                 "videoId=" + videoId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", video=" + video +
+                ", position=" + position +
                 ", watchedBy=" + watchedBy +
-                ", module=" + module +
                 '}';
     }
 }
