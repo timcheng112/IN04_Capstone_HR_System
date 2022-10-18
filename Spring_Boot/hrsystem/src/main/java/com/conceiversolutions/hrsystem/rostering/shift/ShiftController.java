@@ -53,6 +53,11 @@ public class ShiftController {
         return shiftService.getShiftByTeamAndTime(teamId, dateTime);
     }
 
+    @GetMapping(path = "/getShiftsByTeam")
+    public List<Shift> getShiftsByTeam(@RequestParam("teamId") Long teamId) {
+        return shiftService.getShiftsByTeam(teamId);
+    }
+
     @GetMapping(path = "/getTemplateShiftsByRoster")
     public List<Shift> getTemplateShiftsByRoster(@RequestParam("rosterId") Long rosterId) {
         return shiftService.getTemplateShiftsByRoster(rosterId);

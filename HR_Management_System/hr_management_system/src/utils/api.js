@@ -507,6 +507,21 @@ const api = {
       shift
     );
   },
+  getShiftsByTeam(teamId) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getShiftsByTeam?teamId=${teamId}`
+    );
+  },
+  getShiftListItemByDateAndUserId(date, userId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndUserId?date=${date}&userId=${userId}`
+    );
+  },
+  deleteShiftListItem(shiftListItemId) {
+    return axios.delete(
+      `http://localhost:9191/api/shift_list_item/${shiftListItemId}`
+    );
+  },
 };
 
 export default api;

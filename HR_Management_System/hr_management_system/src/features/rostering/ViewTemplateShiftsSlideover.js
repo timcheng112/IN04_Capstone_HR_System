@@ -7,6 +7,7 @@ import EmptyStateTemplateShifts from "./EmptyStateTemplateShifts";
 import api from "../../utils/api";
 import { parseISO } from "date-fns";
 import DeleteShiftModal from "./DeleteShiftModal";
+import SuccessfullyAddedTemplateModal from "./SuccessfullyAddedTemplateModal";
 
 export default function ViewTemplateShiftsSlideover({
   open,
@@ -55,6 +56,7 @@ export default function ViewTemplateShiftsSlideover({
   const [templateShifts, setTemplateShifts] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const [openDeleteShift, setOpenDeleteShift] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
   const [shiftToBeDeletedId, setShiftToBeDeletedId] = useState();
 
   useEffect(() => {
@@ -73,7 +75,14 @@ export default function ViewTemplateShiftsSlideover({
         setTemplateShifts(tempData);
       })
       .catch((error) => console.log(error.response.data.message));
-  }, [open, refreshKey, openAddTemplateShift, openDeleteShift]);
+  }, [
+    open,
+    refreshKey,
+    openAddTemplateShift,
+    openDeleteShift,
+    rosterId,
+    openSuccess,
+  ]);
 
   function deleteTemplateShiftHandler(shiftId) {
     api
@@ -100,6 +109,10 @@ export default function ViewTemplateShiftsSlideover({
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
+        <SuccessfullyAddedTemplateModal
+          open={openSuccess}
+          onClose={() => setOpenSuccess(false)}
+        />
         {/* MODAL FOR ADDING A TEMPLATE SHIFT */}
         <AddTemplateShiftModal
           open={openAddTemplateShift}
@@ -112,6 +125,7 @@ export default function ViewTemplateShiftsSlideover({
           // }}
           refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           rosterId={rosterId}
+          openSuccess={() => setOpenSuccess(true)}
         />
         <DeleteShiftModal
           open={openDeleteShift}
@@ -188,6 +202,8 @@ export default function ViewTemplateShiftsSlideover({
                                       refreshKeyHandler={() =>
                                         setRefreshKey((oldKey) => oldKey + 1)
                                       }
+                                      willBePersisted
+                                      openSuccess={() => setOpenSuccess(true)}
                                     />
                                   </li>
                                 );

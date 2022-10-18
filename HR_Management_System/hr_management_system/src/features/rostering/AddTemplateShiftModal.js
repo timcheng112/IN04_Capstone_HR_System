@@ -11,6 +11,7 @@ export default function AddTemplateShiftModal({
   // addTemplateShiftHandler,
   rosterId,
   refreshKeyHandler,
+  openSuccess,
 }) {
   const [shiftTitleValue, setShiftTitleValue] = useState("");
   const [startTimeValue, setStartTimeValue] = useState(null);
@@ -29,45 +30,49 @@ export default function AddTemplateShiftModal({
       cashierQuotaValue !== "" &&
       storemanagerQuotaValue !== ""
     ) {
-      const dummyDate = new Date();
-      let templateShiftToBeAdded = {
-        shiftTitle: shiftTitleValue,
-        startTime: format(
-          new Date(
-            getYear(dummyDate),
-            getMonth(dummyDate),
-            getDate(dummyDate),
-            startTimeValue.substring(0, 2),
-            startTimeValue.substring(3, 5),
-            0,
-            0
+      if (startTimeValue < endTimeValue) {
+        const dummyDate = new Date();
+        let templateShiftToBeAdded = {
+          shiftTitle: shiftTitleValue,
+          startTime: format(
+            new Date(
+              getYear(dummyDate),
+              getMonth(dummyDate),
+              getDate(dummyDate),
+              startTimeValue.substring(0, 2),
+              startTimeValue.substring(3, 5),
+              0,
+              0
+            ),
+            "yyyy-MM-dd HH:mm:ss"
           ),
-          "yyyy-MM-dd HH:mm:ss"
-        ),
-        endTime: format(
-          new Date(
-            getYear(dummyDate),
-            getMonth(dummyDate),
-            getDate(dummyDate),
-            endTimeValue.substring(0, 2),
-            endTimeValue.substring(3, 5),
-            0,
-            0
+          endTime: format(
+            new Date(
+              getYear(dummyDate),
+              getMonth(dummyDate),
+              getDate(dummyDate),
+              endTimeValue.substring(0, 2),
+              endTimeValue.substring(3, 5),
+              0,
+              0
+            ),
+            "yyyy-MM-dd HH:mm:ss"
           ),
-          "yyyy-MM-dd HH:mm:ss"
-        ),
-        minQuota: [
-          salesmanQuotaValue,
-          cashierQuotaValue,
-          storemanagerQuotaValue,
-        ],
-        remarks: shiftRemarksValue,
-        isTemplateShift: true,
-      };
-      console.log(templateShiftToBeAdded.startTime);
-      addTemplateShiftHandler(templateShiftToBeAdded);
-      refreshKeyHandler();
-      onClose();
+          minQuota: [
+            salesmanQuotaValue,
+            cashierQuotaValue,
+            storemanagerQuotaValue,
+          ],
+          remarks: shiftRemarksValue,
+          isTemplateShift: true,
+        };
+        console.log(templateShiftToBeAdded.startTime);
+        addTemplateShiftHandler(templateShiftToBeAdded);
+        refreshKeyHandler();
+        onClose();
+      } else {
+        alert("End time must be after start time!");
+      }
     } else {
       alert("Invalid fields!");
     }
@@ -77,9 +82,10 @@ export default function AddTemplateShiftModal({
     api
       .addNewShift(templateShiftToBeAdded, rosterId)
       .then((response) =>
-        alert(
-          "Template shift with ID: " + response.data + " successfully added"
-        )
+        // alert(
+        //   "Template shift with ID: " + response.data + " successfully added"
+        // )
+        openSuccess()
       )
       .catch((error) => alert(error.response.data.message));
   }

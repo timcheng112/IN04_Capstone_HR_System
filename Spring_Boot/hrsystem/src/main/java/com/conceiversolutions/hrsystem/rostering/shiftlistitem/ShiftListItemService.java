@@ -84,6 +84,7 @@ public class ShiftListItemService {
         ShiftListItem savedShiftListItem = shiftListItemRepository.saveAndFlush(shiftListItem);
 
         shift.addShiftListItem(savedShiftListItem);
+        // System.out.println("SHIFT: " + shift.getShiftListItems());
         shiftRepository.saveAndFlush(shift);
 
         user.addShiftListItems(savedShiftListItem);
@@ -96,8 +97,10 @@ public class ShiftListItemService {
         ShiftListItem shiftListItem = shiftListItemRepository.findById(shiftListItemId).orElseThrow(
                 () -> new IllegalStateException("Shift List Item with ID: " + shiftListItemId + " does not exist!"));
 
-        shiftListItem.getShift().removeShiftListItem(shiftListItem);
-        shiftListItem.setShift(null);
+        if (shiftListItem.getShift() != null) {
+            shiftListItem.getShift().removeShiftListItem(shiftListItem);
+            shiftListItem.setShift(null);
+        }
         shiftListItem.getUser().removeShiftListItems(shiftListItem);
         shiftListItem.setUser(null);
 

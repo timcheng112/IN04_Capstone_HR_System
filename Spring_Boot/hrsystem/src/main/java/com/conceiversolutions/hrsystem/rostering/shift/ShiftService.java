@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
 import com.conceiversolutions.hrsystem.rostering.roster.RosterRepository;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
@@ -23,6 +25,7 @@ public class ShiftService {
     private final ShiftRepository shiftRepository;
     private final RosterRepository rosterRepository;
     private final ShiftListItemService shiftListItemService;
+    private final TeamRepository teamRepository;
 
     public List<Shift> getShifts() {
         List<Shift> shifts = shiftRepository.findAll();
@@ -32,7 +35,27 @@ public class ShiftService {
             shift.getRoster().setTeam(null);
             for (ShiftListItem shiftListItem : shift.getShiftListItems()) {
                 shiftListItem.setShift(null);
-                shiftListItem.setUser(null);
+                // shiftListItem.setUser(null);
+                shiftListItem.getUser().setTeams(new ArrayList<>());
+                shiftListItem.getUser().setQualificationInformation(null);
+                shiftListItem.getUser().setBlocks(new ArrayList<>());
+                shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+                shiftListItem.getUser().setSwapRequestsReceived(new ArrayList<>());
+                shiftListItem.getUser().setSwapRequestsRequested(new ArrayList<>());
+                shiftListItem.getUser().setReactivationRequest(null);
+                shiftListItem.getUser().setAttendances(new ArrayList<>());
+                shiftListItem.getUser().setCurrentPayInformation(null);
+                shiftListItem.getUser().setEmployeeAppraisals(new ArrayList<>());
+                shiftListItem.getUser().setManagerAppraisals(new ArrayList<>());
+                shiftListItem.getUser().setManagerReviews(new ArrayList<>());
+                shiftListItem.getUser().setEmployeeReviews(new ArrayList<>());
+                shiftListItem.getUser().setApplications(new ArrayList<>());
+                shiftListItem.getUser().setGoals(new ArrayList<>());
+                shiftListItem.getUser().setPositions(new ArrayList<>());
+                shiftListItem.getUser().setJobRequests(new ArrayList<>());
+                shiftListItem.getUser().setLeaves(new ArrayList<>());
+                shiftListItem.getUser().setLeaveQuotas(new ArrayList<>());
+                shiftListItem.getUser().setCurrentLeaveQuota(null);
             }
         }
         return shifts;
@@ -46,7 +69,27 @@ public class ShiftService {
         shift.getRoster().setTeam(null);
         for (ShiftListItem shiftListItem : shift.getShiftListItems()) {
             shiftListItem.setShift(null);
-            shiftListItem.setUser(null);
+            // shiftListItem.setUser(null);
+            shiftListItem.getUser().setTeams(new ArrayList<>());
+            shiftListItem.getUser().setQualificationInformation(null);
+            shiftListItem.getUser().setBlocks(new ArrayList<>());
+            shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().setSwapRequestsReceived(new ArrayList<>());
+            shiftListItem.getUser().setSwapRequestsRequested(new ArrayList<>());
+            shiftListItem.getUser().setReactivationRequest(null);
+            shiftListItem.getUser().setAttendances(new ArrayList<>());
+            shiftListItem.getUser().setCurrentPayInformation(null);
+            shiftListItem.getUser().setEmployeeAppraisals(new ArrayList<>());
+            shiftListItem.getUser().setManagerAppraisals(new ArrayList<>());
+            shiftListItem.getUser().setManagerReviews(new ArrayList<>());
+            shiftListItem.getUser().setEmployeeReviews(new ArrayList<>());
+            shiftListItem.getUser().setApplications(new ArrayList<>());
+            shiftListItem.getUser().setGoals(new ArrayList<>());
+            shiftListItem.getUser().setPositions(new ArrayList<>());
+            shiftListItem.getUser().setJobRequests(new ArrayList<>());
+            shiftListItem.getUser().setLeaves(new ArrayList<>());
+            shiftListItem.getUser().setLeaveQuotas(new ArrayList<>());
+            shiftListItem.getUser().setCurrentLeaveQuota(null);
         }
         return shift;
     }
@@ -115,5 +158,41 @@ public class ShiftService {
         shift.setMinQuota(editedShift.getMinQuota());
         shift.setRemarks(editedShift.getRemarks());
         shiftRepository.saveAndFlush(shift);
+    }
+
+    public List<Shift> getShiftsByTeam(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalStateException("Team with ID: " + teamId + " does not exist!"));
+
+        List<Shift> shifts = shiftRepository.findShiftsByTeam(teamId);
+        for (Shift shift : shifts) {
+            shift.getRoster().setShifts(new ArrayList<>());
+            shift.getRoster().setBlocks(new ArrayList<>());
+            shift.getRoster().setTeam(null);
+            for (ShiftListItem shiftListItem : shift.getShiftListItems()) {
+                shiftListItem.setShift(null);
+                shiftListItem.getUser().setTeams(new ArrayList<>());
+                shiftListItem.getUser().setQualificationInformation(null);
+                shiftListItem.getUser().setBlocks(new ArrayList<>());
+                shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+                shiftListItem.getUser().setSwapRequestsReceived(new ArrayList<>());
+                shiftListItem.getUser().setSwapRequestsRequested(new ArrayList<>());
+                shiftListItem.getUser().setReactivationRequest(null);
+                shiftListItem.getUser().setAttendances(new ArrayList<>());
+                shiftListItem.getUser().setCurrentPayInformation(null);
+                shiftListItem.getUser().setEmployeeAppraisals(new ArrayList<>());
+                shiftListItem.getUser().setManagerAppraisals(new ArrayList<>());
+                shiftListItem.getUser().setManagerReviews(new ArrayList<>());
+                shiftListItem.getUser().setEmployeeReviews(new ArrayList<>());
+                shiftListItem.getUser().setApplications(new ArrayList<>());
+                shiftListItem.getUser().setGoals(new ArrayList<>());
+                shiftListItem.getUser().setPositions(new ArrayList<>());
+                shiftListItem.getUser().setJobRequests(new ArrayList<>());
+                shiftListItem.getUser().setLeaves(new ArrayList<>());
+                shiftListItem.getUser().setLeaveQuotas(new ArrayList<>());
+                shiftListItem.getUser().setCurrentLeaveQuota(null);
+            }
+        }
+        return shifts;
     }
 }
