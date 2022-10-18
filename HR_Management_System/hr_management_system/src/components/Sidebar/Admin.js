@@ -5,14 +5,21 @@ import {
   FolderIcon,
   UsersIcon,
   XMarkIcon,
+  ClockIcon
 } from "@heroicons/react/24/outline";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import Breadcrumb from "../Breadcrumb";
+import { getUserId } from "../../utils/Common";
+import api from "../../utils/api";
 
+const navigationhr = [
+  { name: "Onboarding", href: "/admin/onboarding", icon: UsersIcon, current: false },
+  { name: "Offboarding", href: "/admin/offboarding", icon: FolderIcon, current: false },
+  { name: "Leaves", href: "/admin/leaves", icon: ClockIcon, current: false },
+];
 const navigation = [
   { name: "Onboarding", href: "/admin/onboarding", icon: UsersIcon, current: false },
   { name: "Offboarding", href: "/admin/offboarding", icon: FolderIcon, current: false },
-  { name: "Leaves", href: "/admin/leaves", icon: FolderIcon, current: false },
 ];
 
 function classNames(...classes) {
@@ -21,6 +28,17 @@ function classNames(...classes) {
 
 export default function AdminSidebar({ pageTitle }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   return (
     <div>
@@ -81,7 +99,30 @@ export default function AdminSidebar({ pageTitle }) {
                 </div>
                 <div className="mt-5 h-0 flex-1 overflow-y-auto">
                   <nav className="space-y-1 px-2">
-                    {navigation.map((item) => (
+                    {user !== null && user.hrEmployee && navigationhr.map((item) => (
+                      <a
+                        key={item.name}
+                        href={item.href}
+                        className={classNames(
+                          item.current
+                            ? "bg-gray-100 text-gray-900"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                          "group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                        )}
+                      >
+                        <item.icon
+                          className={classNames(
+                            item.current
+                              ? "text-gray-500"
+                              : "text-gray-400 group-hover:text-gray-500",
+                            "mr-4 flex-shrink-0 h-6 w-6"
+                          )}
+                          aria-hidden="true"
+                        />
+                        {item.name}
+                      </a>
+                    ))}
+                     {user !== null && !user.hrEmployee && navigation.map((item) => (
                       <a
                         key={item.name}
                         href={item.href}

@@ -14,21 +14,19 @@ export default function LeaveList({userId}) {
   //   { id: 2, appliedDate: '2022-08-17', type: 'MCL', status: 'Created' },
   // ]
   const [leaves, setLeaves] =  useState([]);
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(true);
 
   useEffect(() => {
-    // setRefreshing(true);
     api
     .getEmployeeLeaves(userId)
     .then((response) => {
+      //setRefreshing(false);
       setLeaves(response.data);
-      //setRefreshing(true);
       console.log("Successfully fetched Employee Leaves");
     })
     .catch(() => console.log("Error trying to fetch Employee Leaves"));
 
-  }, [refreshKey]);
+  }, []);
 
 
   return (

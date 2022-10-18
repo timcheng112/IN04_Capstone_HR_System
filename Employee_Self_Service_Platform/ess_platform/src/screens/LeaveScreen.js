@@ -52,10 +52,10 @@ const LeaveScreen = ({navigation}) => {
       };
     }
     setId();
-    console.log(userId);
    }, []);
     
   return (
+    userId  &&
     <SafeAreaView style={styles.container}>
       <View style={styles.inline}>
         <Text style={styles.headlines}>Application History</Text>
@@ -63,7 +63,7 @@ const LeaveScreen = ({navigation}) => {
           icon="plus"
           mode="contained"
           color="#ffd700"
-          onPress={() => navigation.navigate('LeaveApplication')}>
+          onPress={() => navigation.navigate('LeaveApplication',{userId})}>
           Apply 
         </Button>
         </View>

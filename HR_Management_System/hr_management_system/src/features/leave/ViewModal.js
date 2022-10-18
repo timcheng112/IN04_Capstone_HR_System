@@ -63,7 +63,7 @@ export default function ViewModal({ open, setOpen, leave }) {
                             <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.endDate}</dd>
                           </div>
                           <div>
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Remark</dt>
+                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Application Remark</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.applicationRemarks}</dd>
                           </div>
                           <div>

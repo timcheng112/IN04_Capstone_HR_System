@@ -47,7 +47,7 @@ export default function Leave() {
 
   useEffect(() => {
     api
-      .getAllPendingLeaves()
+      .getAllLeaves()
       .then((response) => {
         setLeaves(response.data);
         setFilteredLeaves(response.data);
@@ -178,7 +178,7 @@ export default function Leave() {
                               <span className="hidden md:block">view</span>
                             </button>
 
-                            <button
+                            {leave.status === 'PENDING' && <button
                               type="button"
                               className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                               onClick={() => setApprove(true)}
@@ -188,9 +188,9 @@ export default function Leave() {
                                 aria-hidden="true"
                               />
                               <span className="hidden md:block">Approve</span>
-                            </button>
+                            </button>}
 
-                            <button
+                            {leave.status === 'PENDING' &&<button
                               type="button"
                               className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                               onClick={() => setReject(true)}
@@ -200,7 +200,7 @@ export default function Leave() {
                                 aria-hidden="true"
                               />
                               <span className="hidden md:block">Reject</span>
-                            </button>
+                            </button>}
                           </div>
                           <ApprovalModal
                             open={approve}

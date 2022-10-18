@@ -12,6 +12,7 @@ import { TextInput, RadioButton, Button } from "react-native-paper";
 import DatePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from "expo-document-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRoute } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   container: {
@@ -49,36 +50,40 @@ const LeaveApplicationScreen = ({ navigation }) => {
   const [showEnd, setShowEnd] = React.useState(false);
   const [fileResponse, setFileResponse] = useState();
   const [userId, setUserId] = useState();
+  const [error, setError] = useState();
+  const [anl, setAnl] = useState();
+  const [mcl, setMcl] = useState(0);
+  const route = useRoute();
 
   const pickDocument = useCallback(async () => {
     try {
-      const response = await DocumentPicker.getDocumentAsync({type: "*/*", copyToCacheDirectory: true});
+      const response = await DocumentPicker.getDocumentAsync({ type: "*/*", copyToCacheDirectory: true });
       console.log("AAA")
       console.log(response);
       if (response.type == 'success') {
-//         let nameParts = response.name.split('.');
-//         let fileType = nameParts[nameParts.length - 1];
-//
-//         var fileToUpload = {
-//             name: response.name,
-//             size: response.size,
-//             uri: response.uri,
-//             type: "application/" + fileType
-//         };
-//         console.log("fileToUpload")
-//        console.log(fileToUpload);
-//
-//        const formData = new FormData();
-//        formData.append('file', {
-//            uri: response.uri,
-//            type: "application/" + fileType,
-//            name: response.name,
-//            size: response.size
-//        });
-//
-//        console.log("formdata");
-//        console.log(formData)
-         setFileResponse(response);
+        //         let nameParts = response.name.split('.');
+        //         let fileType = nameParts[nameParts.length - 1];
+        //
+        //         var fileToUpload = {
+        //             name: response.name,
+        //             size: response.size,
+        //             uri: response.uri,
+        //             type: "application/" + fileType
+        //         };
+        //         console.log("fileToUpload")
+        //        console.log(fileToUpload);
+        //
+        //        const formData = new FormData();
+        //        formData.append('file', {
+        //            uri: response.uri,
+        //            type: "application/" + fileType,
+        //            name: response.name,
+        //            size: response.size
+        //        });
+        //
+        //        console.log("formdata");
+        //        console.log(formData)
+        setFileResponse(response);
       } else {
         console.log("error uploading file")
       }
@@ -87,18 +92,31 @@ const LeaveApplicationScreen = ({ navigation }) => {
       console.warn(err);
     }
   }, []);
-  
+
   useEffect(() => {
-    const setId = async () => {
-      try {
-        const response = await AsyncStorage.getItem("userId");
-        setUserId(response);
-      } catch (err) {
-        console.warn(err);
-      };
-    }
-    setId();
-   }, []);
+    api.getEmployeeInclLeaveQuotas(route.params.userId)
+      .then((response) => {
+        if (response.data.previousLeaveQuota == null) {
+          setAnl(response.data.currentLeaveQuota.anl);
+          setMcl(response.data.currentLeaveQuota.mcl);
+          console.log(response.data.currentLeaveQuota.anl);
+        }
+        else {
+          setAnl(response.data.currentLeaveQuota.anl + response.data.previousLeaveQuota.anl);
+          setMcl(response.data.currentLeaveQuota.mcl + response.data.previousLeaveQuota.mcl);
+          console.log("AAA");
+        }
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    setUserId(route.params.userId);
+    console.log(route.params.userId);
+  }, []);
+
 
   // const pickDocument = async () => {
   //   let result = await DocumentPicker.getDocumentAsync({});
@@ -111,17 +129,17 @@ const LeaveApplicationScreen = ({ navigation }) => {
     let formDataPayload = new FormData();
 
     if (fileResponse != null) {
-        let docProperties = {
-            uri: fileResponse.uri,
-            type: fileResponse.mimeType,
-            name: fileResponse.name,
-        }
+      let docProperties = {
+        uri: fileResponse.uri,
+        type: fileResponse.mimeType,
+        name: fileResponse.name,
+      }
 
-        formDataPayload.append('document', {
-            uri: docProperties.uri,
-            name: docProperties.name,
-            type: docProperties.type,
-        });
+      formDataPayload.append('document', {
+        uri: docProperties.uri,
+        name: docProperties.name,
+        type: docProperties.type,
+      });
     }
 
     formDataPayload.append('employeeId', userId);
@@ -158,8 +176,14 @@ const LeaveApplicationScreen = ({ navigation }) => {
       <View style={styles.content}>
         <Text style={styles.headlines}>Leave Application</Text>
         <RadioButton.Group onValueChange={type => setType(type)} value={type} >
-          <RadioButton.Item label="Annual Leave" value="ANL" />
-          <RadioButton.Item label="Medical Leave" value="MCL" />
+          <View style={styles.inline}>
+            <RadioButton.Item label="Annual Leave" value="ANL" />
+            <Text style={{ fontSize: 15, color: "#dc143c" }}> {anl} days left</Text>
+          </View>
+          <View style={styles.inline}>
+            <RadioButton.Item label="Medical Leave" value="MCL" />
+            <Text style={{ fontSize: 15, color: "#dc143c" }}> {mcl} days left</Text>
+          </View>
         </RadioButton.Group>
         <View style={styles.inline}>
           <Button
@@ -224,18 +248,18 @@ const LeaveApplicationScreen = ({ navigation }) => {
           </Text>
         </View>
         <View style={styles.inline}>
-        <Button
-          mode="contained"
-          color="#daa520"
-          onPress={() => navigation.navigate('Leave')}>
-          Back
-        </Button>
-        <Button
-          mode="contained"
-          color="#ffd700"
-          onPress={() => applyLeave({ navigation })}>
-          Submit
-        </Button>
+          <Button
+            mode="contained"
+            color="#daa520"
+            onPress={() => navigation.navigate('Leave')}>
+            Back
+          </Button>
+          <Button
+            mode="contained"
+            color="#ffd700"
+            onPress={() => applyLeave({ navigation })}>
+            Submit
+          </Button>
         </View>
       </View>
 
