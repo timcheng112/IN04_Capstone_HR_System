@@ -42,12 +42,16 @@ public class ShiftController {
         shiftService.deleteShift(shiftId);
     }
 
-    @GetMapping(path="/getShiftByTeamAndTime")
-    public Shift getShiftByTeamAndTime(@RequestParam("teamId") Long teamId, @RequestParam("dateString") String date ){
+    @GetMapping(path = "/getShiftByTeamAndTime")
+    public Shift getShiftByTeamAndTime(@RequestParam("teamId") Long teamId, @RequestParam("dateString") String date) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
         return shiftService.getShiftByTeamAndTime(teamId, dateTime);
     }
 
+    @GetMapping(path = "/getTemplateShiftsByRoster")
+    public List<Shift> getTemplateShiftsByRoster(@RequestParam("rosterId") Long rosterId) {
+        return shiftService.getTemplateShiftsByRoster(rosterId);
+    }
 }

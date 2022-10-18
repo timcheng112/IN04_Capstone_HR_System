@@ -9,8 +9,6 @@ const EditShiftModal = ({ open, onClose, shift }) => {
   const [salesmanQuotaValue, setSalesmanQuotaValue] = useState("");
   const [cashierQuotaValue, setCashierQuotaValue] = useState("");
   const [storemanagerQuotaValue, setStoremanagerQuotaValue] = useState("");
-  const [asstStoremanagerQuotaValue, setAsstStoremanagerQuotaValue] =
-    useState("");
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
 
   return (
@@ -56,9 +54,6 @@ const EditShiftModal = ({ open, onClose, shift }) => {
                       setCashierQuota={(value) => setCashierQuotaValue(value)}
                       setStoremanagerQuota={(value) =>
                         setStoremanagerQuotaValue(value)
-                      }
-                      setAsstStoremanagerQuota={(value) =>
-                        setAsstStoremanagerQuotaValue(value)
                       }
                       setShiftRemarks={(value) => setShiftRemarksValue(value)}
                       shift={shift}

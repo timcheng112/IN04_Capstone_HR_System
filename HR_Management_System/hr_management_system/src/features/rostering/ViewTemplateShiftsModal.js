@@ -65,6 +65,7 @@ const ViewTemplateShiftsModal = ({
 }) => {
   const [selectedShift, setSelectedShift] = useState();
   const [duplicateEndDateValue, setDuplicateEndDateValue] = useState(null);
+  const [isPhEvent, setIsPhEvent] = useState(false);
 
   useEffect(() => {
     setSelectedShift();
@@ -89,6 +90,7 @@ const ViewTemplateShiftsModal = ({
       });
       let shiftToBeAdded = {
         userId: person.userId,
+        isPhEvent: isPhEvent,
         shift: {
           shiftTitle: selectedShift.shiftTitle,
           startDate: new Date(
@@ -218,6 +220,21 @@ const ViewTemplateShiftsModal = ({
                         />
                       </div>
                     </div>
+                    <div className="flex items-center sm:border-t sm:border-gray-200 sm:pt-5">
+                      <input
+                        id="isPhEvent"
+                        name="isPhEvent"
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        onChange={(e) => setIsPhEvent(e.target.value)}
+                      />
+                      <label
+                        htmlFor="isPhEvent"
+                        className="ml-2 block text-sm text-gray-900"
+                      >
+                        Is Public Holiday/Event
+                      </label>
+                    </div>
                     <div className="sm:border-t sm:border-gray-200 sm:pt-5">
                       <label>Choose from the following template shifts:</label>
                       <div
@@ -279,14 +296,6 @@ const ViewTemplateShiftsModal = ({
                                     </dt>
                                     <dd className="mt-1 text-sm text-gray-900">
                                       {selectedShift.minQuota[2]}
-                                    </dd>
-                                  </div>
-                                  <div className="sm:col-span-1">
-                                    <dt className="text-sm font-medium text-gray-500">
-                                      Asst Store Manager Quota
-                                    </dt>
-                                    <dd className="mt-1 text-sm text-gray-900">
-                                      {selectedShift.minQuota[3]}
                                     </dd>
                                   </div>
                                   <div className="sm:col-span-2">

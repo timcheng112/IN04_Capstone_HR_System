@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api.js";
-import { format, formatISO, getDay } from "date-fns";
+import {
+  format,
+  formatISO,
+  getDate,
+  getDay,
+  getMonth,
+  getYear,
+} from "date-fns";
 import Tabs from "./Tabs.js";
 import "./InfoPanel.css";
 import TabDisplay from "./TabDisplay.js";
@@ -49,15 +56,12 @@ const publicHolidays = [
 ];
 
 //dont instantiate date here later.
-const InfoPanel = (teamId, { selectedDate = new Date() }) => {
-  console.log(selectedDate);
+const InfoPanel = ({ teamId, selectedDate }) => {
   const [shift, setShift] = useState(null);
   // const [teamId, setTeamId] = useState(-1);
   // const [date, setDate] = useState(new Date("May 15, 2022 23:15:30"));
 
-  const [day, setDay] = useState("Noneday");
-  const [dateString, setDateString] = useState("27 Oct 2022");
-  const [apiDateString, setApiDateString] = useState("2022-10-27T00:01");
+  // const [apiDateString, setApiDateString] = useState(formatISO(selectedDate));
   const [startTimeString, setStartTimeString] = useState("00:01");
   const [endTimeString, setEndTimeString] = useState("00:02");
 
@@ -94,16 +98,37 @@ const InfoPanel = (teamId, { selectedDate = new Date() }) => {
     //make a string date in the form of i.e 27 Oct 2022
     console.log("day: " + getDay(selectedDate));
 
-    setDay(dayArray[getDay(selectedDate)]);
-    setDateString(format(selectedDate, "dd LLL yyyy"));
-    var apiDate = format(selectedDate, "dd");
-    setApiDateString(formatISO(selectedDate));
+    // setDay(dayArray[getDay(selectedDate)]);
+    // const dateStringArr = selectedDate.toDateString().split(" ");
+    // setDateString(
+    //   dateStringArr[2] + " " + dateStringArr[1] + " " + dateStringArr[3]
+    // );
+
+    // setDateString(format(selectedDate, "dd LLL yyyy"));
+    // setStartTimeString(format(shift.getStartTime(), "HH:mm"));
+    // setEndTimeString(format(shift.getEndTime(), "HH:mm"));
+
+    //make a string date in the form of YYYY-MM-DD
+    // var month = getMonth(selectedDate) + 1;
+    // if (month < 10) {
+    //   month = "0" + (getMonth(selectedDate) + 1);
+    // }
+    // var apiDate = format(selectedDate, "dd");
+    // setApiDateString(formatISO(selectedDate));
+    // setApiDateString(
+    //   dateStringArr[3] +
+    //     "-" +
+    //     month +
+    //     "-" +
+    //     apiDate +
+    //     "T" +
+    //     startTimeString +
+    //     ":00"
+    // );
   }
 
   // updateDateInfo(teamId, selectedDate);
-  if (shift == null) {
-    return <></>;
-  }
+
   return (
     //find shift information with cooresponding team & date.
     <div className=" overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg my-3">
@@ -114,7 +139,7 @@ const InfoPanel = (teamId, { selectedDate = new Date() }) => {
               <span className="float-left align-start inline-flex ml-10 mr-3 text-xl">
                 {day}, {dateString}
               </span>
-              {(day == "Sunday" || day == "Saturday") && (
+              {(day === "Sunday" || day === "Saturday") && (
                 <span className="float-right mr-20 mt-1 inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                   Weekend
                 </span>
@@ -128,39 +153,39 @@ const InfoPanel = (teamId, { selectedDate = new Date() }) => {
           </tr>
 
           {/* <tr>
-          <td colSpan={2} className="border-r">
-            <div className="px-3 py-3.5 font-semibold text-gray-900">
-              Day Shift
-            </div>
-          </td>
-          <td colSpan={2}>
-            <div className="px-3 py-3.5 font-semibold text-gray-900">
-              Evening Shift
-            </div>
-          </td>
-        </tr> */}
+            <td colSpan={2} className="border-r">
+              <div className="px-3 py-3.5 font-semibold text-gray-900">
+                Day Shift
+              </div>
+            </td>
+            <td colSpan={2}>
+              <div className="px-3 py-3.5 font-semibold text-gray-900">
+                Evening Shift
+              </div>
+            </td>
+          </tr> */}
 
           {/* <tr>
-          <td>
-            #Cashiers <br />
-            {0}/{4}
-          </td>
-          <td className="border-r">
-            #Salesmen
-            <br />
-            {0}/{4}
-          </td>
-          <td>
-            #Cashiers
-            <br />
-            {0}/{4}
-          </td>
-          <td>
-            #Salesmen
-            <br />
-            {0}/{4}
-          </td>
-        </tr> */}
+            <td>
+              #Cashiers <br />
+              {0}/{4}
+            </td>
+            <td className="border-r">
+              #Salesmen
+              <br />
+              {0}/{4}
+            </td>
+            <td>
+              #Cashiers
+              <br />
+              {0}/{4}
+            </td>
+            <td>
+              #Salesmen
+              <br />
+              {0}/{4}
+            </td>
+          </tr> */}
         </tbody>
       </table>
       <Tabs>

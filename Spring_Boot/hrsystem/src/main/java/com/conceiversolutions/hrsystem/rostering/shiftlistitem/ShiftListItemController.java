@@ -54,8 +54,9 @@ public class ShiftListItemController {
         return shiftListItemService.getShiftListItemByPosition(shiftId, posType);
     }
 
-    @GetMapping(path="/getShiftListItemByDateAndUserId")
-    public ShiftListItem getShiftListItemByDateAndUserId(@RequestParam("date") String date, @RequestParam("userId") Long userId ){
+    @GetMapping(path = "/getShiftListItemByDateAndUserId")
+    public ShiftListItem getShiftListItemByDateAndUserId(@RequestParam("date") String date,
+            @RequestParam("userId") Long userId) {
         LocalDate dateTemp = LocalDate.parse(date);
         return shiftListItemService.getShiftListItemByDateAndUserId(dateTemp, userId);
     }

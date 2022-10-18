@@ -27,9 +27,8 @@ export default function AddShiftModal({
   const [salesmanQuotaValue, setSalesmanQuotaValue] = useState("");
   const [cashierQuotaValue, setCashierQuotaValue] = useState("");
   const [storemanagerQuotaValue, setStoremanagerQuotaValue] = useState("");
-  const [asstStoremanagerQuotaValue, setAsstStoremanagerQuotaValue] =
-    useState("");
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
+  const [isPhEvent, setIsPhEvent] = useState(false);
 
   const createShiftHandler = () => {
     // Check for empty fields
@@ -39,8 +38,7 @@ export default function AddShiftModal({
       endTimeValue !== null &&
       salesmanQuotaValue !== "" &&
       cashierQuotaValue !== "" &&
-      storemanagerQuotaValue !== "" &&
-      asstStoremanagerQuotaValue !== ""
+      storemanagerQuotaValue !== ""
     ) {
       // Check for invalid start time & end time (end time cannot be before start time)
       if (startTimeValue < endTimeValue) {
@@ -62,6 +60,7 @@ export default function AddShiftModal({
           });
           let shiftToBeAdded = {
             userId: person.userId,
+            isPhEvent: isPhEvent,
             shift: {
               shiftTitle: shiftTitleValue,
               startDate: new Date(
@@ -86,9 +85,9 @@ export default function AddShiftModal({
                 salesmanQuotaValue,
                 cashierQuotaValue,
                 storemanagerQuotaValue,
-                asstStoremanagerQuotaValue,
               ],
               shiftRemarks: shiftRemarksValue,
+              isTemplateShift: false,
             },
           };
           arr.push(shiftToBeAdded);
@@ -200,6 +199,21 @@ export default function AddShiftModal({
                         />
                       </div>
                     </div>
+                    <div className="flex items-center sm:border-t sm:border-gray-200 sm:pt-5">
+                      <input
+                        id="isPhEvent"
+                        name="isPhEvent"
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        onChange={(e) => setIsPhEvent(e.target.value)}
+                      />
+                      <label
+                        htmlFor="isPhEvent"
+                        className="ml-2 block text-sm text-gray-900"
+                      >
+                        Is Public Holiday/Event
+                      </label>
+                    </div>
                     <AddShiftForm
                       setShiftTitle={(value) => setShiftTitleValue(value)}
                       setStartTime={(value) => setStartTimeValue(value)}
@@ -208,9 +222,6 @@ export default function AddShiftModal({
                       setCashierQuota={(value) => setCashierQuotaValue(value)}
                       setStoremanagerQuota={(value) =>
                         setStoremanagerQuotaValue(value)
-                      }
-                      setAsstStoremanagerQuota={(value) =>
-                        setAsstStoremanagerQuotaValue(value)
                       }
                       setShiftRemarks={(value) => setShiftRemarksValue(value)}
                     />
