@@ -49,7 +49,8 @@ const AddShiftForm = ({
             onChange={(e) => {
               setStartTime(e.target.value);
             }}
-            value={shift && format(parseISO(shift.startTime), "HH:mm")}
+            // value={shift && format(parseISO(shift.startTime), "HH:mm")}
+            value={shift && format(shift.startTime, "HH:mm")}
           />
         </div>
       </div>
@@ -69,7 +70,8 @@ const AddShiftForm = ({
             onChange={(e) => {
               setEndTime(e.target.value);
             }}
-            value={shift && format(parseISO(shift.endTime), "HH:mm")}
+            // value={shift && format(parseISO(shift.endTime), "HH:mm")}
+            value={shift && format(shift.endTime, "HH:mm")}
           />
         </div>
       </div>

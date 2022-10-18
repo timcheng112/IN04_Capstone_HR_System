@@ -93,7 +93,7 @@ const ViewTemplateShiftsModal = ({
         isPhEvent: isPhEvent,
         shift: {
           shiftTitle: selectedShift.shiftTitle,
-          startDate: new Date(
+          startTime: new Date(
             getYear(currDate),
             getMonth(currDate),
             getDate(currDate),
@@ -102,7 +102,7 @@ const ViewTemplateShiftsModal = ({
             0,
             0
           ),
-          endDate: new Date(
+          endTime: new Date(
             getYear(currDate),
             getMonth(currDate),
             getDate(currDate),
@@ -171,7 +171,8 @@ const ViewTemplateShiftsModal = ({
                           name="employee-name"
                           className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         >
-                          {person && person.name}
+                          {person && person.firstName}{" "}
+                          {person && person.lastName}
                         </text>
                       </div>
                     </div>
