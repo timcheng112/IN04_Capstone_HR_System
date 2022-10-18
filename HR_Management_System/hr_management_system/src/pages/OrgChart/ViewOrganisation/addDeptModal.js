@@ -47,7 +47,7 @@ export default function AddDepartmentModal({
     }
   }
 
-  const [options, setOptions] = useState(null);
+  const [options, setOptions] = useState([]);
   useEffect(() => {
     const availManagers = async () => {
       const arr = [];
@@ -162,7 +162,7 @@ export default function AddDepartmentModal({
                                   // placeholder="Select a Manager (might take a while...)"
                                   id="deptHead"
                                   name="deptHead"
-                                  className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                                  className="rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                                 >
                                   <option>Select A Manager...</option>
                                   {/*<option>1</option>*/}
@@ -170,7 +170,7 @@ export default function AddDepartmentModal({
                                     options.map((option, index) => {
                                       return (
                                         <option
-                                          key={index}
+                                          // key={index}
                                           value={option.value}
                                         >
                                           {option.label}

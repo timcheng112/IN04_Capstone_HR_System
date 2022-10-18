@@ -29,6 +29,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT c.user FROM ConfirmationToken c WHERE c.token = ?1")
     Optional<User> findUserByToken(String token);
 
+//    @Query("SELECT ")
+
     // @Query("SELECT u FROM User u WHERE u.userRole = ?1")
     // List<User> findAllEmployees(RoleEnum userRole);
 

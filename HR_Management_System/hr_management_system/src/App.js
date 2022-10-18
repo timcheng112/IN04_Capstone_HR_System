@@ -33,6 +33,10 @@ import Roster from "./pages/Rostering/roster";
 import JobPostDetailPage from "./pages/JobPost/PostDetail";
 import LeavePage from "./pages/Leave/indexHR";
 import LeaveQuotaPage from "./pages/Leave/quota";
+import Notification from "./components/Notification";
+import AllNotificationPage from "./pages/NotificationPage/AllNotificationPage";
+import NotificationExpandPage from "./pages/NotificationPage/NotificationExpandPage"
+import AddNotification from "./pages/NotificationPage/AddNotification";
 
 function App() {
   return (
@@ -127,6 +131,13 @@ function App() {
             path="/admin/leavequota"
             component={LeaveQuotaPage}
           />
+          <PublicRoute exact path="/notification" component={Notification}/>
+          <PrivateRoute exact path="/AllNotifications" component={AllNotificationPage}/>
+          {/* <PublicRoute exact path="/AllNotifications/:notificationId" component={NotificationExpandPage}/> */}
+          <PublicRoute exact path="/NotificationExpandPage" component={NotificationExpandPage}/>
+          <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
+
+          
         </Switch>
       </div>
     </BrowserRouter>

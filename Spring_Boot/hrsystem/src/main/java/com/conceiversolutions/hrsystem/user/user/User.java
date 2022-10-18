@@ -7,6 +7,7 @@ import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
+import com.conceiversolutions.hrsystem.notification.Notification;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.pay.attendance.Attendance;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
@@ -157,6 +158,15 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "employee")
     private List<Leave> leaves;
 
+
+    @OneToMany
+    @JoinColumn(name ="user_id")
+    private List<Notification> notificationsUnread;
+
+    @OneToMany
+    @JoinColumn(name ="user_id")
+    private List<Notification> notificationsRead;
+
     // TODO add on other relationships to other classes
 
     public User() {
@@ -180,6 +190,8 @@ public class User implements UserDetails {
         this.swapRequestsRequested = new ArrayList<>();
         this.swapRequestsReceived = new ArrayList<>();
         this.preferredDates = null;
+        this.notificationsRead = new ArrayList<>();
+        this.notificationsUnread = new ArrayList<>();
     }
 
     // this should be for making a new applicant's account
@@ -287,6 +299,52 @@ public class User implements UserDetails {
         this.qualificationInformation = null;
         this.currentPosition = currentPosition;
         this.positions.add(currentPosition);
+    }
+
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed, Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions, Position currentPosition, QualificationInformation qualificationInformation, List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances, List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<ManagerReview> managerReviews, List<ManagerReview> employeeReviews, List<Module> modules, List<Goal> goals, List<TaskListItem> taskListItems, List<Team> teams, PayInformation currentPayInformation, ReactivationRequest reactivationRequest, PreferredDates preferredDates, List<Block> blocks, List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested, List<SwapRequest> swapRequestsReceived, LeaveQuota currentLeaveQuota, List<LeaveQuota> leaveQuotas, List<Leave> leaves, List<Notification> notificationsUnread, List<Notification> notificationsRead) {
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.userRole = userRole;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.isBlackListed = isBlackListed;
+        this.isEnabled = isEnabled;
+        this.dateJoined = dateJoined;
+        this.profilePic = profilePic;
+        this.positions = positions;
+        this.currentPosition = currentPosition;
+        this.qualificationInformation = qualificationInformation;
+        this.applications = applications;
+        this.jobRequests = jobRequests;
+        this.payslips = payslips;
+        this.attendances = attendances;
+        this.employeeAppraisals = employeeAppraisals;
+        this.managerAppraisals = managerAppraisals;
+        this.managerReviews = managerReviews;
+        this.employeeReviews = employeeReviews;
+        this.modules = modules;
+        this.goals = goals;
+        this.taskListItems = taskListItems;
+        this.teams = teams;
+        this.currentPayInformation = currentPayInformation;
+        this.reactivationRequest = reactivationRequest;
+        this.preferredDates = preferredDates;
+        this.blocks = blocks;
+        this.shiftListItems = shiftListItems;
+        this.swapRequestsRequested = swapRequestsRequested;
+        this.swapRequestsReceived = swapRequestsReceived;
+        this.currentLeaveQuota = currentLeaveQuota;
+        this.leaveQuotas = leaveQuotas;
+        this.leaves = leaves;
+        this.notificationsUnread = new ArrayList<>();
+        this.notificationsRead = new ArrayList<>();
     }
 
     @Override
