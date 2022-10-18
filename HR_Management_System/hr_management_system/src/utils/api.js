@@ -476,7 +476,16 @@ const api = {
     return axios.put(`http://localhost:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
   },
   cancelLeave(leaveId) {
-    return axios.put(`http://${URL}:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+    return axios.put(`http://localhost:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+  },
+  getDocByteArray(docId) {
+    return axios.get(`http://localhost:9191/api/docData/getDocByteArray?id=${docId}`)
+  },
+  getDocById(docId) {
+    return axios.get(`http://localhost:9191/api/docData/getDocById?id=${docId}`)
+  },
+  downloadDocument(docId) {
+    return axios.get(`http://localhost:9191/api/docData/downloadDocument?id=${docId}`, {responseType: 'blob'})
   },
     
   //not tested

@@ -1,7 +1,9 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
+import api from '../../utils/api';
+import axios from "axios";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -9,6 +11,87 @@ function classNames(...classes) {
 
 export default function ViewModal({ open, setOpen, leave }) {
   //const [open, setOpen] = useState(true)
+
+  useEffect(() => {
+      console.log("view modal use effect");
+      console.log(leave);
+
+    }, []);
+
+  function base64ToArrayBuffer(data) {
+//    const binaryString = window.atob(base64); // Comment this if not using base64
+    const bytes = new Uint8Array(data);
+    return bytes.map((byte, i) => data.charCodeAt(i));
+  }
+
+  function createAndDownloadBlobFile(body, filename) {
+    const strArr = leave.supportingDocument.type.split("/");
+    console.log(strArr[1]);
+    const extension = strArr[1];
+
+    var blob = new Blob([body], {type: leave.supportingDocument.type});
+//    const blob = new Blob([body]);
+    const fileName = `${filename}.${extension}`;
+    if (navigator.msSaveBlob) {
+      // IE 10+
+      navigator.msSaveBlob(blob, fileName);
+    } else {
+      const link = document.createElement('a');
+      // Browsers that support HTML5 download attribute
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  }
+
+  function downloadFile() {
+    api.downloadDocument(Number(leave.leaveId)).then((response) => {
+        console.log("help");
+        console.log(response.data);
+        const filename =  response.headers['content-disposition'].split('filename=')[1];
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', filename);
+          document.body.appendChild(link);
+          link.click();
+    });
+
+//    api.downloadDocument(Number(leave.leaveId))
+//        .then(response => {
+//            console.log(response);
+//            console.log(response.headers['content-disposition']);
+//            const filename =  response.headers['content-disposition'].split('filename=')[1];
+//            console.log(filename)
+//
+//            const blob = new Blob([response.data])
+//
+//            let url = window.URL.createObjectURL(blob);
+//            let a = document.createElement('a');
+//            a.href = url;
+//            a.download = filename;
+//            a.click();
+//
+//        })
+//      api.getDocByteArray(Number(leave.leaveId))
+//        .then(response => {
+//            console.log("response");
+//            console.log(response.data);
+//            const data = response.data;
+//            const arrayBuffer = base64ToArrayBuffer(data);
+//
+//            const name = leave.supportingDocument.name.split(".");
+//            createAndDownloadBlobFile(arrayBuffer, name[0]);
+//        })
+
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -78,10 +161,17 @@ export default function ViewModal({ open, setOpen, leave }) {
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">HR Remarks</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.approverRemarks}</dd>
                           </div>
-                          <div>
+                          {leave.supportingDocument && <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Supporting Document</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.supportingDocument}</dd>
-                          </div>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.supportingDocument.name}</dd>
+                            <button
+                                  type="button"
+                                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                  onClick={() => downloadFile()}
+                                >
+                                  Download Document
+                                </button>
+                          </div>}
                         </dl>
                       </div>
                     </div>
