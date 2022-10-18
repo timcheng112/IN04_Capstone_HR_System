@@ -1,4 +1,4 @@
-import { EnvelopeIcon, TrashIcon } from "@heroicons/react/20/solid";
+import { EnvelopeIcon, PlusCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 import Navbar from "../../components/Navbar";
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
 
@@ -7,44 +7,6 @@ import { deleteUser, getUserId } from "../../utils/Common.js";
 // import { getUserId } from "../../Common";
 import { useHistory } from "react-router";
 import Notification from "../../components/Notification";
-/*
-
-
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/line-clamp'),
-    ],
-  }
-  ```
-*/
-
-// const messages = [
-//   {
-//     id: 1,
-//     subject: "Velit placeat sit ducimus non sed",
-//     sender: "Gloria Roberston",
-//     time: "1d ago",
-//     datetime: "2021-01-27T16:35",
-//     preview:
-//       "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-//   },
-//   {
-//     id: 2,
-//     subject: "asdfgjkl;",
-//     sender: "test",
-//     time: "1d ago",
-//     datetime: "2021-01-27T16:35",
-//     preview:
-//       "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor. Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-//   },
-//   // More messages...
-// ];
 
 export default function Example() {
   // const [userId, setUser] = useState("");
@@ -54,19 +16,8 @@ export default function Example() {
   const history = useHistory();
 
   const [notification, setNotification] = useState([]);
-
-  // useEffect(() => {
-  //     api
-  //       .getAllNotifications().then((response) => {
-  //         console.log(response.data);
-  //         setNotification(response.data);
-
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //         alert("Unable to get all employees right now")
-  //       });
-  //   }, []);
+  let [userInfo, setUserInfo] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     // console.log(userId)
@@ -147,7 +98,9 @@ export default function Example() {
   //         });
   //     },[]);
 
+        
   return (
+
     <>
       <Navbar />
       <div className="relative bg-indigo-800">
@@ -175,12 +128,18 @@ export default function Example() {
         <button
           type="button"
           className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-          onClick={() => {
-            deleteAllNotifications();
-          }}
+          // onClick={()=> {deleteAllNotifications()}}
         >
           <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
           Delete All Notifications
+        </button>
+        <button
+          type="button"
+          className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
+          onClick={() => history.push('/AddNotification')}
+        >
+          <PlusCircleIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+          Add Notification
         </button>
 
         {notification.map((message) => (

@@ -160,11 +160,11 @@ public class User implements UserDetails {
 
 
     @OneToMany
-    @JoinColumn(name ="user_id")
+    @JoinColumn(name ="unread_notifications")
     private List<Notification> notificationsUnread;
 
     @OneToMany
-    @JoinColumn(name ="user_id")
+    @JoinColumn(name ="read_notifications")
     private List<Notification> notificationsRead;
 
     // TODO add on other relationships to other classes
