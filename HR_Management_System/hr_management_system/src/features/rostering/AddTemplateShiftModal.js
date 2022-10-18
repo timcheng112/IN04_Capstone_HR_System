@@ -10,6 +10,7 @@ export default function AddTemplateShiftModal({
   onClose,
   // addTemplateShiftHandler,
   rosterId,
+  refreshKeyHandler,
 }) {
   const [shiftTitleValue, setShiftTitleValue] = useState("");
   const [startTimeValue, setStartTimeValue] = useState(null);
@@ -65,6 +66,7 @@ export default function AddTemplateShiftModal({
       };
       console.log(templateShiftToBeAdded.startTime);
       addTemplateShiftHandler(templateShiftToBeAdded);
+      refreshKeyHandler();
       onClose();
     } else {
       alert("Invalid fields!");

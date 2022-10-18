@@ -496,6 +496,12 @@ const api = {
   deleteShift(shiftId) {
     return axios.delete(`http://localhost:9191/api/shift/${shiftId}`);
   },
+  editShift(shiftId, shift) {
+    return axios.put(
+      `http://localhost:9191/api/shift/editShift/${shiftId}`,
+      shift
+    );
+  },
 };
 
 export default api;

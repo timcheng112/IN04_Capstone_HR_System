@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import ShiftBlock from "./ShiftBlock";
@@ -6,6 +6,7 @@ import AddTemplateShiftModal from "./AddTemplateShiftModal";
 import EmptyStateTemplateShifts from "./EmptyStateTemplateShifts";
 import api from "../../utils/api";
 import { parseISO } from "date-fns";
+import DeleteShiftModal from "./DeleteShiftModal";
 
 export default function ViewTemplateShiftsSlideover({
   open,
@@ -52,6 +53,9 @@ export default function ViewTemplateShiftsSlideover({
   //   },
   // ]);
   const [templateShifts, setTemplateShifts] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [openDeleteShift, setOpenDeleteShift] = useState(false);
+  const [shiftToBeDeletedId, setShiftToBeDeletedId] = useState();
 
   useEffect(() => {
     api
@@ -69,14 +73,17 @@ export default function ViewTemplateShiftsSlideover({
         setTemplateShifts(tempData);
       })
       .catch((error) => console.log(error.response.data.message));
-  }, [open, openAddTemplateShift, rosterId]);
+  }, [open, refreshKey, openAddTemplateShift, openDeleteShift]);
 
-  // function deleteTemplateShiftHandler(shiftId) {
-  //   api
-  //     .deleteShift(shiftId)
-  //     .then(() => alert("Shift has been successfully deleted!"))
-  //     .catch((error) => console.log(error.response.data.message));
-  // }
+  function deleteTemplateShiftHandler(shiftId) {
+    api
+      .deleteShift(shiftId)
+      .then(() => {
+        alert("Shift has been successfully deleted!");
+        setOpenDeleteShift(false);
+      })
+      .catch((error) => console.log(error.response.data.message));
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -97,13 +104,25 @@ export default function ViewTemplateShiftsSlideover({
         <AddTemplateShiftModal
           open={openAddTemplateShift}
           onClose={() => setOpenAddTemplateShift(false)}
-          addTemplateShiftHandler={(templateShiftToBeAdded) =>
-            setTemplateShifts((oldTemplateShifts) => [
-              ...oldTemplateShifts,
-              templateShiftToBeAdded,
-            ])
-          }
+          // addTemplateShiftHandler={(templateShiftToBeAdded) => {
+          //   setTemplateShifts((oldTemplateShifts) => [
+          //     ...oldTemplateShifts,
+          //     templateShiftToBeAdded,
+          //   ]);
+          // }}
+          refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           rosterId={rosterId}
+        />
+        <DeleteShiftModal
+          open={openDeleteShift}
+          onClose={() => setOpenDeleteShift(false)}
+          deleteShiftHandler={() =>
+            deleteTemplateShiftHandler(shiftToBeDeletedId)
+          }
+          refreshKeyHandler={() => {
+            setRefreshKey((oldKey) => oldKey + 1);
+            console.log(refreshKey);
+          }}
         />
 
         <div className="fixed inset-0 overflow-hidden">
@@ -140,7 +159,9 @@ export default function ViewTemplateShiftsSlideover({
                         <button
                           type="button"
                           className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-3 py-2 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                          onClick={() => setOpenAddTemplateShift(true)}
+                          onClick={() => {
+                            setOpenAddTemplateShift(true);
+                          }}
                         >
                           Add Template Shift
                         </button>
@@ -160,9 +181,13 @@ export default function ViewTemplateShiftsSlideover({
                                     {/* RENDERING EACH TEMPLATE SHIFT */}
                                     <ShiftBlock
                                       shift={shift}
-                                      // removeShiftHandler={deleteTemplateShiftHandler(
-                                      //   shift.shiftId
-                                      // )}
+                                      removeShiftHandler={() => {
+                                        setShiftToBeDeletedId(shift.shiftId);
+                                        setOpenDeleteShift(true);
+                                      }}
+                                      refreshKeyHandler={() =>
+                                        setRefreshKey((oldKey) => oldKey + 1)
+                                      }
                                     />
                                   </li>
                                 );

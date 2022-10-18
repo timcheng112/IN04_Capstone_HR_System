@@ -17,6 +17,7 @@ const ShiftBlock = ({
   shiftListItem,
   className,
   removeShiftHandler,
+  refreshKeyHandler,
 }) => {
   console.log(shift.startTime);
   const [open, setOpen] = useState(false);
@@ -39,6 +40,7 @@ const ShiftBlock = ({
         onClose={() => setOpenEdit(false)}
         shift={shift}
         shiftListItem={shiftListItem}
+        refreshKeyHandler={refreshKeyHandler}
       />
       <div className="flex-shrink-0 flex items-center justify-center w-2 text-white text-sm font-medium rounded-l-md bg-pink-600" />
       <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white">

@@ -105,4 +105,15 @@ public class ShiftService {
         }
         return shifts;
     }
+
+    public void editShift(Long shiftId, Shift editedShift) {
+        Shift shift = shiftRepository.findById(shiftId)
+                .orElseThrow(() -> new IllegalStateException("Shift with ID: " + shiftId + " does not exist!"));
+        shift.setShiftTitle(editedShift.getShiftTitle());
+        shift.setStartTime(editedShift.getStartTime());
+        shift.setEndTime(editedShift.getEndTime());
+        shift.setMinQuota(editedShift.getMinQuota());
+        shift.setRemarks(editedShift.getRemarks());
+        shiftRepository.saveAndFlush(shift);
+    }
 }
