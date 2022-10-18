@@ -31,6 +31,7 @@ public class DocDataService {
             throw new IllegalStateException("Document does not exist");
         }
         DocData doc = d.get();
+        System.out.println(doc);
 
         return DocDataUtil.decompressDoc(doc.getDocData());
     }
@@ -47,5 +48,13 @@ public class DocDataService {
         DocData doc = getDocData(id);
         docDataRepository.deleteById(id);
         return true;
+    }
+
+    public byte[] getDocByteArray(Long id) {
+        System.out.println("DocDataService.getDocByteArray");
+        DocData doc = docDataRepository.findById(id).get();
+        System.out.println(doc);
+
+        return doc.getDocData();
     }
 }

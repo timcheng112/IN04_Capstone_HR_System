@@ -1,7 +1,10 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
+import api from '../../utils/api';
+import axios from "axios";
+import fileDownload from 'js-file-download'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -9,6 +12,90 @@ function classNames(...classes) {
 
 export default function ViewModal({ open, setOpen, leave }) {
   //const [open, setOpen] = useState(true)
+
+  useEffect(() => {
+      console.log("view modal use effect");
+      console.log(leave);
+
+    }, []);
+
+  function base64ToArrayBuffer(data) {
+//    const binaryString = window.atob(base64); // Comment this if not using base64
+    const bytes = new Uint8Array(data);
+    return bytes.map((byte, i) => data.charCodeAt(i));
+  }
+
+  function createAndDownloadBlobFile(body, filename) {
+    const strArr = leave.supportingDocument.type.split("/");
+    console.log(strArr[1]);
+    const extension = strArr[1];
+
+    var blob = new Blob([body], {type: leave.supportingDocument.type});
+//    const blob = new Blob([body]);
+    const fileName = `${filename}.${extension}`;
+    if (navigator.msSaveBlob) {
+      // IE 10+
+      navigator.msSaveBlob(blob, fileName);
+    } else {
+      const link = document.createElement('a');
+      // Browsers that support HTML5 download attribute
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  }
+
+  function downloadFile() {
+    api.downloadDocument(Number(leave.leaveId)).then((response) => {
+        //console.log("help");
+        console.log(response.data);
+        const filename =  response.headers['content-disposition'].split('filename=')[1];
+        // fileDownload(response.data, filename)
+        const url = window.URL.createObjectURL(response.data);
+          const link = document.createElement('a');
+          link.style.display = "none";
+          link.href = url;
+          link.setAttribute('download', filename);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          //URL.revokeObjectURL(url);
+    });
+
+//    api.downloadDocument(Number(leave.leaveId))
+//        .then(response => {
+//            console.log(response);
+//            console.log(response.headers['content-disposition']);
+//            const filename =  response.headers['content-disposition'].split('filename=')[1];
+//            console.log(filename)
+//
+//            const blob = new Blob([response.data])
+//
+//            let url = window.URL.createObjectURL(blob);
+//            let a = document.createElement('a');
+//            a.href = url;
+//            a.download = filename;
+//            a.click();
+//
+//        })
+//      api.getDocByteArray(Number(leave.leaveId))
+//        .then(response => {
+//            console.log("response");
+//            console.log(response.data);
+//            const data = response.data;
+//            const arrayBuffer = base64ToArrayBuffer(data);
+//
+//            const name = leave.supportingDocument.name.split(".");
+//            createAndDownloadBlobFile(arrayBuffer, name[0]);
+//        })
+
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -32,7 +119,7 @@ export default function ViewModal({ open, setOpen, leave }) {
                     <div className="px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
                       <div className="py-2"></div>
-                      <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">{leave.applicant}</h3>
+                      <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">{leave.employee.firstName}</h3>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
@@ -52,44 +139,43 @@ export default function ViewModal({ open, setOpen, leave }) {
                         <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
                         <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Leave type</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">New York, NY, USA</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.leaveType}</dd>
                           </div>
                           <div>
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Period</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                              <p>
-                                Enim feugiat ut ipsum, neque ut. Tristique mi id elementum praesent. Gravida in tempus
-                                feugiat netus enim aliquet a, quam scelerisque. Dictumst in convallis nec in bibendum
-                                aenean arcu.
-                              </p>
-                            </dd>
+                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Begin From</dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.startDate}</dd>
                           </div>
                           <div>
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Remark</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">New York, NY, USA</dd>
+                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">End On</dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.endDate}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Application Remark</dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.applicationRemarks}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Applied Date</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">ashleyporter.com</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.applicationDate}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Status</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                              <time dateTime="1988-06-23">June 23, 1988</time>
-                            </dd>
-                          </div>
-                          <div>
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Status</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">ashleyporter.com</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.status}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">HR Remarks</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">ashleyporter.com</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.approverRemarks}</dd>
                           </div>
-                          <div>
+                          {leave.supportingDocument && <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Supporting Document</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">ashleyporter.com</dd>
-                          </div>
+                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{leave.supportingDocument.name}</dd>
+                            <button
+                                  type="button"
+                                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                  onClick={() => downloadFile()}
+                                >
+                                  Download Document
+                                </button>
+                          </div>}
                         </dl>
                       </div>
                     </div>

@@ -1,12 +1,28 @@
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
+import api from '../../utils/api';
 
-export default function ApprovalModal({ open, setOpen, leave }) {
+export default function ApprovalModal({ open, setOpen, leave, refreshKeyHandler }) {
   // const [open, setOpen] = useState(true)
 
   const cancelButtonRef = useRef(null)
   const [remarks, setRemarks] = useState("");
+  const [error, setError] = useState(null);
+
+  function approve() {
+    api.approveLeave(leave.leaveId, remarks)
+      .then(() => alert("Successfully aprroved."))
+      .catch((error) => setError(error));
+  }
+
+  const handleSubmit = (evt) => { //maybe add form
+    evt.preventDefault();
+    approve();
+    refreshKeyHandler();
+    setOpen(false);
+  };
+
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -45,28 +61,26 @@ export default function ApprovalModal({ open, setOpen, leave }) {
                     </Dialog.Title>
                     <div className="py-2"></div>
                     <div className="mt-2">
-                      <form>
-                        <div className="mt-1">
-                          <textarea
-                            id="approve-remarks"
-                            name="approve-remarks"
-                            rows={4}
-                            className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            required
-                            placeholder='Remarks'
-                            value={remarks}
-                            onChange={(e) => setRemarks(e.target.value)}
-                          />
-                        </div>
-                      </form>
+                      <div className="mt-1">
+                        <textarea
+                          id="approve-remarks"
+                          name="approve-remarks"
+                          rows={4}
+                          className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          required
+                          placeholder='Remarks'
+                          value={remarks}
+                          onChange={(e) => setRemarks(e.target.value)}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                   <button
-                    type="button"
+                    type="submit"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                    onClick={() => setOpen(false)}
+                    onClick={handleSubmit}
                   >
                     Approve
                   </button>

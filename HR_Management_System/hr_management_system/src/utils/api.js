@@ -165,6 +165,9 @@ const api = {
   getAllEmployees() {
     return axios.get(`http://localhost:9191/api/user/getAllEmployees`);
   },
+  getAllEmployeesInclLeaveQuotas() {
+    return axios.get(`http://localhost:9191/api/user/getAllEmployeesInclLeaveQuotas`);
+  },
   getEmployeesWithTask(taskId) {
     return axios.get(
       `http://localhost:9191/api/user/getAssignedEmployees?taskId=${taskId}`
@@ -440,24 +443,51 @@ const api = {
     return axios.get(`http://localhost:9191/api/jobposting/getAllJobPosts`);
   },
   closeJobPost(jobPostingId) {
-    return axios.put(
-      `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
-    );
+      return axios.put(
+          `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
+      );
+    },
+  editJobPost(jobPostId, jobTitle, jobDescription, preferredStartDate, jobType, jobRole, salary, jobRequirements) {
+      return axios.put(
+          `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
+      );
+    },
+
+  // Leaves
+  getAllPendingLeaves() {
+    return axios.get(`http://localhost:9191/api/leaves/getAllPendingLeaves`);
   },
-  editJobPost(
-    jobPostId,
-    jobTitle,
-    jobDescription,
-    preferredStartDate,
-    jobType,
-    jobRole,
-    salary,
-    jobRequirements
-  ) {
-    return axios.put(
-      `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
-    );
+  getAllLeaves() {
+    return axios.get(`http://localhost:9191/api/leaves/getAllLeaves`);
   },
+  getLeaveById(leaveId) {
+    return axios.get(`http://localhost:9191/api/leaves/getLeaveById?leaveId=${leaveId}`);
+  },
+  createLeave(employeeId, leaveType, startDate, endDate, remark, document) {
+    return axios.post(`http://localhost:9191/api/leaves/createLeave?employeeId=${employeeId}&leaveType=${leaveType}&startDate=${startDate}&endDate=${endDate}&remark=${remark}&document=${document}&`);
+  },
+  getEmployeeLeaves(employeeId) {
+    return axios.get(`http://localhost:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`);
+  },
+  approveLeave(leaveId, approverRemarks) {
+    return axios.put(`http://localhost:9191/api/leaves/approveLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
+  rejectLeave(leaveId, approverRemarks) {
+    return axios.put(`http://localhost:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
+  cancelLeave(leaveId) {
+    return axios.put(`http://localhost:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+  },
+  getDocByteArray(docId) {
+    return axios.get(`http://localhost:9191/api/docData/getDocByteArray?id=${docId}`)
+  },
+  getDocById(docId) {
+    return axios.get(`http://localhost:9191/api/docData/getDocById?id=${docId}`)
+  },
+  downloadDocument(docId) {
+    return axios.get(`http://localhost:9191/api/docData/downloadDocument?id=${docId}`, {responseType: 'blob'})
+  },
+    
   //not tested
   getShiftListItemByShiftId(shiftId) {
     return axios.get(
