@@ -50,7 +50,7 @@ const AddShiftForm = ({
               setStartTime(e.target.value);
             }}
             // value={shift && format(parseISO(shift.startTime), "HH:mm")}
-            value={shift && format(shift.startTime, "HH:mm")}
+            defaultValue={shift && format(shift.startTime, "HH:mm")}
           />
         </div>
       </div>
@@ -71,7 +71,7 @@ const AddShiftForm = ({
               setEndTime(e.target.value);
             }}
             // value={shift && format(parseISO(shift.endTime), "HH:mm")}
-            value={shift && format(shift.endTime, "HH:mm")}
+            defaultValue={shift && format(shift.endTime, "HH:mm")}
           />
         </div>
       </div>
@@ -88,7 +88,7 @@ const AddShiftForm = ({
             name="salesman-quota"
             className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
             onChange={(e) => setSalesmanQuota(e.target.value)}
-            value={shift && shift.minQuota[0]}
+            defaultValue={shift && shift.minQuota[0]}
           >
             <option value=""></option>
             <option value={1}>1</option>
@@ -113,7 +113,7 @@ const AddShiftForm = ({
             name="cashier-quota"
             className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
             onChange={(e) => setCashierQuota(e.target.value)}
-            value={shift && shift.minQuota[1]}
+            defaultValue={shift && shift.minQuota[1]}
           >
             <option value=""></option>
             <option value={1}>1</option>
@@ -138,7 +138,7 @@ const AddShiftForm = ({
             name="storemanager-quota"
             className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
             onChange={(e) => setStoremanagerQuota(e.target.value)}
-            value={shift && shift.minQuota[2]}
+            defaultValue={shift && shift.minQuota[2]}
           >
             <option value=""></option>
             <option value={0}>0</option>
@@ -167,7 +167,7 @@ const AddShiftForm = ({
             id="shift-remarks"
             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
             onChange={(e) => setShiftRemarks(e.target.value)}
-            value={shift && shift.remarks}
+            defaultValue={shift && shift.remarks}
           />
         </div>
       </div>

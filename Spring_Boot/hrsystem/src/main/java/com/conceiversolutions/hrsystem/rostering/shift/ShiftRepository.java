@@ -21,6 +21,9 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
     @Query("SELECT s FROM Shift s WHERE s.roster.rosterId = ?1 AND s.isTemplateShift = TRUE")
     List<Shift> findTemplateShiftsByRoster(Long rosterId);
 
+    @Query("SELECT s FROM Shift s WHERE s.roster.team.teamId = ?1")
+    List<Shift> findShiftsByTeam(Long teamId);
+
     // @Query("SELECT s FROM Shift s WHERE userId = ?1")
     // Optional<ShiftListItem> getAllShiftListItems(Long userId);
 

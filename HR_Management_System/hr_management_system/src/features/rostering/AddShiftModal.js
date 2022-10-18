@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import AddShiftForm from "./AddShiftForm";
@@ -11,7 +11,9 @@ import {
   getMonth,
   getYear,
   nextDay,
+  set,
 } from "date-fns";
+import SelectMenuPosition from "./SelectMenuPosition";
 
 export default function AddShiftModal({
   open,
@@ -29,6 +31,20 @@ export default function AddShiftModal({
   const [storemanagerQuotaValue, setStoremanagerQuotaValue] = useState("");
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
   const [isPhEvent, setIsPhEvent] = useState(false);
+  const [posType, setPosType] = useState({ id: 1, name: "SALESMAN" });
+
+  useEffect(() => {
+    setDuplicateEndDateValue(null);
+    setShiftTitleValue("");
+    setStartTimeValue(null);
+    setEndTimeValue(null);
+    setSalesmanQuotaValue("");
+    setCashierQuotaValue("");
+    setStoremanagerQuotaValue("");
+    setShiftRemarksValue("");
+    setIsPhEvent(false);
+    setPosType({ id: 1, name: "SALESMAN" });
+  }, [open]);
 
   const createShiftHandler = () => {
     // Check for empty fields
@@ -61,6 +77,7 @@ export default function AddShiftModal({
           let shiftToBeAdded = {
             userId: person.userId,
             isPhEvent: isPhEvent,
+            positionType: posType,
             shift: {
               shiftTitle: shiftTitleValue,
               startTime: new Date(
@@ -86,7 +103,7 @@ export default function AddShiftModal({
                 cashierQuotaValue,
                 storemanagerQuotaValue,
               ],
-              shiftRemarks: shiftRemarksValue,
+              remarks: shiftRemarksValue,
               isTemplateShift: false,
             },
           };
@@ -201,13 +218,21 @@ export default function AddShiftModal({
                         />
                       </div>
                     </div>
+                    <div className="space-y-6 sm:space-y-5">
+                      <div className="sm:grid sm:grid-cols-2 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                        <SelectMenuPosition
+                          posType={posType}
+                          setPosType={setPosType}
+                        />
+                      </div>
+                    </div>
                     <div className="flex items-center sm:border-t sm:border-gray-200 sm:pt-5">
                       <input
                         id="isPhEvent"
                         name="isPhEvent"
                         type="checkbox"
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        onChange={(e) => setIsPhEvent(e.target.value)}
+                        onChange={(e) => setIsPhEvent(e.target.checked)}
                       />
                       <label
                         htmlFor="isPhEvent"

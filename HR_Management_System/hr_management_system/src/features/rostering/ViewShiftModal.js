@@ -160,23 +160,42 @@ const ViewShiftModal = ({ open, onClose, shift, shiftListItem }) => {
                           </p>
                         </div>
                       </div>
-                      {shiftListItem && (
-                        <div className="flex items-center sm:border-t sm:border-gray-200 sm:pt-5">
-                          <input
-                            id="isPhEvent"
-                            name="isPhEvent"
-                            type="checkbox"
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            disabled="true"
-                            checked={shiftListItem.isPhEvent}
-                          />
-                          <label
-                            htmlFor="isPhEvent"
-                            className="ml-2 block text-sm text-gray-900"
-                          >
-                            Is Public Holiday/Event
-                          </label>
-                        </div>
+                      {shiftListItem && shiftListItem.positionType !== null && (
+                        <>
+                          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                            <label
+                              htmlFor="pos-type"
+                              className="block text-sm font-medium text-gray-700 mt-2"
+                            >
+                              Shift Position
+                            </label>
+                            <div className="col-span-2">
+                              <p
+                                id="pos-type"
+                                name="pos-type"
+                                className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              >
+                                {shiftListItem.positionType.name}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center sm:border-t sm:border-gray-200 sm:pt-5">
+                            <input
+                              id="isPhEvent"
+                              name="isPhEvent"
+                              type="checkbox"
+                              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              disabled="true"
+                              checked={shiftListItem.isPhEvent}
+                            />
+                            <label
+                              htmlFor="isPhEvent"
+                              className="ml-2 block text-sm text-gray-900"
+                            >
+                              Is Public Holiday/Event
+                            </label>
+                          </div>
+                        </>
                       )}
                     </div>
                   </div>

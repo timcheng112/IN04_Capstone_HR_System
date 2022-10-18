@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { format } from "date-fns";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -13,11 +14,11 @@ export default function TemplateShiftRadioGroup({
 }) {
   return (
     <RadioGroup value={selected} onChange={setSelected} className="p-2">
-      <RadioGroup.Label className="sr-only"> Server size </RadioGroup.Label>
+      <RadioGroup.Label className="sr-only"> Template Shifts </RadioGroup.Label>
       <div className="space-y-4">
         {shifts.map((shift) => (
           <RadioGroup.Option
-            key={shift.id}
+            key={shift.shiftId}
             value={shift}
             className={({ checked, active }) =>
               classNames(
@@ -40,7 +41,8 @@ export default function TemplateShiftRadioGroup({
                       {shift.shiftTitle}
                     </RadioGroup.Label>
                     <RadioGroup.Description as="span" className="text-gray-500">
-                      {shift.startTime} - {shift.endTime}
+                      {format(shift.startTime, "h:mmaa")} -{" "}
+                      {format(shift.endTime, "h:mmaa")}
                     </RadioGroup.Description>
                   </span>
                 </span>

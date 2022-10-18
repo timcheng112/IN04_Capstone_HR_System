@@ -20,6 +20,11 @@ const Calendar = ({
   people,
   shiftsToBeAdded,
   setInfoPanelDate,
+  teamShifts,
+  refreshKey,
+  openPublish,
+  closePublish,
+  rosterId,
 }) => {
   const [startWeek, setStartWeek] = useState(
     startOfWeek(value, { weekStartsOn: 1 })
@@ -36,6 +41,20 @@ const Calendar = ({
         isSameDay(shiftsToBeAdded[i].shift.startTime, weekArr[dayIndex])
       ) {
         return shiftsToBeAdded[i];
+      }
+    }
+    return null;
+  };
+
+  const teamShiftHandler = (person, dayIndex) => {
+    for (let i = 0; i < teamShifts.length; i++) {
+      for (let j = 0; j < teamShifts[i].shiftListItems.length; j++) {
+        if (
+          teamShifts[i].shiftListItems[j].userId === person.userId &&
+          isSameDay(teamShifts[i].shift.startTime, weekArr[dayIndex])
+        ) {
+          return teamShifts[i];
+        }
       }
     }
     return null;
@@ -97,6 +116,11 @@ const Calendar = ({
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
               shift={shiftHandler(person, 0)}
+              teamShift={teamShiftHandler(person, 0)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[1]}
@@ -106,6 +130,11 @@ const Calendar = ({
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
               shift={shiftHandler(person, 1)}
+              teamShift={teamShiftHandler(person, 1)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[2]}
@@ -115,6 +144,11 @@ const Calendar = ({
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
               shift={shiftHandler(person, 2)}
+              teamShift={teamShiftHandler(person, 2)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[3]}
@@ -124,6 +158,11 @@ const Calendar = ({
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
               shift={shiftHandler(person, 3)}
+              teamShift={teamShiftHandler(person, 3)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[4]}
@@ -133,6 +172,11 @@ const Calendar = ({
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
               shift={shiftHandler(person, 4)}
+              teamShift={teamShiftHandler(person, 4)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[5]}
@@ -142,6 +186,11 @@ const Calendar = ({
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
               shift={shiftHandler(person, 5)}
+              teamShift={teamShiftHandler(person, 5)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[6]}
@@ -151,6 +200,11 @@ const Calendar = ({
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
               shift={shiftHandler(person, 6)}
+              teamShift={teamShiftHandler(person, 6)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
           </>
         ))}

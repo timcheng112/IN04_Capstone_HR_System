@@ -8,49 +8,13 @@ import {
   getMonth,
   getYear,
   nextDay,
+  parseISO,
 } from "date-fns";
 import React, { Fragment, useEffect, useState } from "react";
+import api from "../../utils/api";
+import SelectMenuPosition from "./SelectMenuPosition";
 import ShiftBlock from "./ShiftBlock";
 import TemplateShiftRadioGroup from "./TemplateShiftRadioGroup";
-
-const shifts = [
-  {
-    id: "1",
-    shiftTitle: "6H Morning Shift",
-    startTime: "08:00",
-    endTime: "14:00",
-    minQuota: [2, 2, 1, 0],
-    remarks:
-      "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
-  },
-  {
-    id: "2",
-    shiftTitle: "6H Afternoon Shift",
-    startTime: "14:00",
-    endTime: "20:00",
-    minQuota: [3, 3, 0, 1],
-    remarks:
-      "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
-  },
-  {
-    id: "3",
-    shiftTitle: "8H Morning Shift",
-    startTime: "06:00",
-    endTime: "14:00",
-    minQuota: [2, 2, 0, 0],
-    remarks:
-      "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
-  },
-  {
-    id: "4",
-    shiftTitle: "8H Afternoon Shift",
-    startTime: "14:00",
-    endTime: "22:00",
-    minQuota: [1, 3, 1, 0],
-    remarks:
-      "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
-  },
-];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -62,13 +26,37 @@ const ViewTemplateShiftsModal = ({
   person,
   date,
   addShiftHandler,
+  rosterId,
 }) => {
   const [selectedShift, setSelectedShift] = useState();
   const [duplicateEndDateValue, setDuplicateEndDateValue] = useState(null);
   const [isPhEvent, setIsPhEvent] = useState(false);
+  const [templateShifts, setTemplateShifts] = useState([]);
+  const [posType, setPosType] = useState({ id: 1, name: "SALESMAN" });
 
   useEffect(() => {
     setSelectedShift();
+    setDuplicateEndDateValue(null);
+    setIsPhEvent(null);
+    setPosType({ id: 1, name: "SALESMAN" });
+  }, [open]);
+
+  useEffect(() => {
+    api
+      .getTemplateShiftsByRoster(rosterId)
+      .then((response) => {
+        // let dummyArr = response.data;
+        // for (let i = 0; i < dummyArr.length; i++) {
+        //   dummyArr.startTime
+        // }
+        let tempData = response.data;
+        for (let i = 0; i < response.data.length; i++) {
+          tempData[i].startTime = parseISO(response.data[i].startTime);
+          tempData[i].endTime = parseISO(response.data[i].endTime);
+        }
+        setTemplateShifts(tempData);
+      })
+      .catch((error) => console.log(error.response.data.message));
   }, [open]);
 
   const createShiftHandler = () => {
@@ -91,14 +79,17 @@ const ViewTemplateShiftsModal = ({
       let shiftToBeAdded = {
         userId: person.userId,
         isPhEvent: isPhEvent,
+        positionType: posType,
         shift: {
           shiftTitle: selectedShift.shiftTitle,
           startTime: new Date(
             getYear(currDate),
             getMonth(currDate),
             getDate(currDate),
-            selectedShift.startTime.substring(0, 2),
-            selectedShift.startTime.substring(3, 5),
+            format(selectedShift.startTime, "HH"),
+            format(selectedShift.startTime, "mm"),
+            // selectedShift.startTime.substring(0, 2),
+            // selectedShift.startTime.substring(3, 5),
             0,
             0
           ),
@@ -106,13 +97,14 @@ const ViewTemplateShiftsModal = ({
             getYear(currDate),
             getMonth(currDate),
             getDate(currDate),
-            selectedShift.endTime.substring(0, 2),
-            selectedShift.endTime.substring(3, 5),
+            format(selectedShift.endTime, "HH"),
+            format(selectedShift.endTime, "mm"),
             0,
             0
           ),
           minQuota: selectedShift.minQuota,
           remarks: selectedShift.remarks,
+          isTemplateShift: false,
         },
       };
       arr.push(shiftToBeAdded);
@@ -221,13 +213,21 @@ const ViewTemplateShiftsModal = ({
                         />
                       </div>
                     </div>
+                    <div className="space-y-6 sm:space-y-5">
+                      <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                        <SelectMenuPosition
+                          posType={posType}
+                          setPosType={setPosType}
+                        />
+                      </div>
+                    </div>
                     <div className="flex items-center sm:border-t sm:border-gray-200 sm:pt-5">
                       <input
                         id="isPhEvent"
                         name="isPhEvent"
                         type="checkbox"
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        onChange={(e) => setIsPhEvent(e.target.value)}
+                        onChange={(e) => setIsPhEvent(e.target.checked)}
                       />
                       <label
                         htmlFor="isPhEvent"
@@ -246,7 +246,7 @@ const ViewTemplateShiftsModal = ({
                           <TemplateShiftRadioGroup
                             selected={selectedShift}
                             setSelected={setSelectedShift}
-                            shifts={shifts}
+                            shifts={templateShifts}
                           />
                         </div>
                         {selectedShift && (
@@ -264,7 +264,10 @@ const ViewTemplateShiftsModal = ({
                                       Start Time
                                     </dt>
                                     <dd className="mt-1 text-sm text-gray-900">
-                                      {selectedShift.startTime}
+                                      {format(
+                                        selectedShift.startTime,
+                                        "h:mmaa"
+                                      )}
                                     </dd>
                                   </div>
                                   <div className="sm:col-span-1">
@@ -272,7 +275,7 @@ const ViewTemplateShiftsModal = ({
                                       End Time
                                     </dt>
                                     <dd className="mt-1 text-sm text-gray-900">
-                                      {selectedShift.endTime}
+                                      {format(selectedShift.endTime, "h:mmaa")}
                                     </dd>
                                   </div>
                                   <div className="sm:col-span-1">

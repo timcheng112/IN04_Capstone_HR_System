@@ -4,7 +4,14 @@ import React, { Fragment, useState } from "react";
 import api from "../../utils/api";
 import AddShiftForm from "./AddShiftForm";
 
-const EditShiftModal = ({ open, onClose, shift, refreshKeyHandler }) => {
+const EditShiftModal = ({
+  open,
+  onClose,
+  shift,
+  willBePersisted,
+  refreshKeyHandler,
+  openSuccess,
+}) => {
   const [shiftTitleValue, setShiftTitleValue] = useState(shift.shiftTitle);
   const [startTimeValue, setStartTimeValue] = useState(
     format(shift.startTime, "HH:mm")
@@ -69,10 +76,54 @@ const EditShiftModal = ({ open, onClose, shift, refreshKeyHandler }) => {
           .editShift(shift.shiftId, editedShift)
           .then(() => {
             alert("Edit was successful!");
-            refreshKeyHandler();
+            openSuccess();
             onClose();
           })
           .catch((error) => alert(error.response.data.message));
+      } else {
+        alert("End time must be after start time!");
+      }
+    } else {
+      alert("Invalid Fields!");
+    }
+  };
+
+  const editTempShiftHandler = () => {
+    if (
+      shiftTitleValue !== "" &&
+      startTimeValue !== null &&
+      endTimeValue !== null &&
+      salesmanQuotaValue !== "" &&
+      cashierQuotaValue !== "" &&
+      storemanagerQuotaValue !== ""
+    ) {
+      if (startTimeValue < endTimeValue) {
+        shift.shiftTitle = shiftTitleValue;
+        shift.startTime = new Date(
+          getYear(shift.startTime),
+          getMonth(shift.startTime),
+          getDate(shift.startTime),
+          startTimeValue.substring(0, 2),
+          startTimeValue.substring(3, 5),
+          0,
+          0
+        );
+        shift.endTime = new Date(
+          getYear(shift.startTime),
+          getMonth(shift.startTime),
+          getDate(shift.startTime),
+          endTimeValue.substring(0, 2),
+          endTimeValue.substring(3, 5),
+          0,
+          0
+        );
+        shift.minQuota = [
+          salesmanQuotaValue,
+          cashierQuotaValue,
+          storemanagerQuotaValue,
+        ];
+        shift.remarks = shiftRemarksValue;
+        onClose();
       } else {
         alert("End time must be after start time!");
       }
@@ -141,7 +192,9 @@ const EditShiftModal = ({ open, onClose, shift, refreshKeyHandler }) => {
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-                    onClick={editShiftHandler}
+                    onClick={
+                      willBePersisted ? editShiftHandler : editTempShiftHandler
+                    }
                   >
                     Submit Changes
                   </button>
