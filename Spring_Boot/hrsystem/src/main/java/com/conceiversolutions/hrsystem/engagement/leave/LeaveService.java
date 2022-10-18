@@ -79,6 +79,10 @@ public class LeaveService {
             emp.setSwapRequestsReceived(new ArrayList<>());
             emp.setSwapRequestsRequested(new ArrayList<>());
             emp.setLeaves(new ArrayList<>());
+
+            if (l.getSupportingDocument() != null) {
+                l.getSupportingDocument().setDocData(new byte[]{});
+            }
         }
 
         return leaves;
@@ -127,6 +131,10 @@ public class LeaveService {
             emp.setSwapRequestsReceived(new ArrayList<>());
             emp.setSwapRequestsRequested(new ArrayList<>());
             emp.setLeaves(new ArrayList<>());
+
+            if (l.getSupportingDocument() != null) {
+                l.getSupportingDocument().setDocData(new byte[]{});
+            }
         }
 
         return pending;
@@ -144,6 +152,10 @@ public class LeaveService {
 
         Leave leave = l.get();
         leave.setEmployee(null);
+
+        if (leave.getSupportingDocument() != null) {
+            leave.getSupportingDocument().setDocData(new byte[]{});
+        }
 
         return leave;
     }
