@@ -10,10 +10,8 @@ import Tabs from '../../features/leave/Tab'
 import { useState, useEffect } from "react";
 import { getUserId} from "../../utils/Common";
 import AdminSidebar from "../../components/Sidebar/Admin";
-import ApprovalModal from "../../features/leave/ApproveModal";
-import RejectModal from "../../features/leave/RejectModal";
-import ViewModal from "../../features/leave/ViewModal";
 import api from "../../utils/api";
+import LeaveOptions from "../../features/leave/LeaveOptions";
 
 // const leaves = [
 //   { id: 1, applicant: 'Xinyue', appliedDate: '2022-08-15', type: 'ANL', status: 'Created' },
@@ -22,9 +20,6 @@ import api from "../../utils/api";
 
 export default function Leave() {
   const history = useHistory();
-  const [approve, setApprove] = useState(false);
-  const [reject, setReject] = useState(false);
-  const [view, setView] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [leaves, setLeaves] = useState([]);
@@ -165,57 +160,7 @@ export default function Leave() {
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{leave.leaveType}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{leave.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <div className="space-x-4">
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                              onClick={() => setView(true)}
-                            >
-                              <EyeIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">view</span>
-                            </button>
-
-                            {leave.status === 'PENDING' && <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                              onClick={() => setApprove(true)}
-                            >
-                              <CheckIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Approve</span>
-                            </button>}
-
-                            {leave.status === 'PENDING' &&<button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                              onClick={() => setReject(true)}
-                            >
-                              <XMarkIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Reject</span>
-                            </button>}
-                          </div>
-                          <ApprovalModal
-                            open={approve}
-                            setOpen={() => setApprove(false)}
-                            leave={leave}
-                            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
-                          <RejectModal
-                            open={reject}
-                            setOpen={() => setReject(false)}
-                            leave={leave}
-                            refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
-                          <ViewModal
-                            open={view}
-                            setOpen={() => setView(false)}
-                            leave={leave}/>
+                          <LeaveOptions leave = {leave} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                         </td>
                       </tr>
                     ))}
