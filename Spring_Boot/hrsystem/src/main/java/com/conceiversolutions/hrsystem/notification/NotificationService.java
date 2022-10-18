@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -31,6 +33,32 @@ public class NotificationService {
         return notif;
     }
 
+    public List<Notification> getAllNotificationsForUser(Long userId){
+        System.out.println("NotificationService.getAllNotificationsForUser");
+
+//        List<Notification> notif = notificationRepository.findAll();
+        User u1 = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with id" + userId + "does not exist"));
+        List<Notification> n = u1.getNotificationsUnread();
+        List<Notification> n2 = u1.getNotificationsRead();
+//        n.addAll(n2);
+        System.out.println("size of list is " + n.size());
+        //
+//        List<Notification> newList = Stream.concat(n.stream(), n2.stream()).toList();
+        return n;
+    }
+
+    public Notification getANotification(Long notificationId, Long userId ){
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new IllegalStateException("Notification with ID: " + notificationId + " does not exist!"));
+        User u1 = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
+        u1.getNotificationsUnread().remove(notification);
+        u1.getNotificationsRead().add(notification);
+        userRepository.saveAndFlush(u1);
+        return notification;
+    }
+
 
     public Notification getNotification(Long notificationId){
         Notification notification = notificationRepository.findById(notificationId)
@@ -40,19 +68,25 @@ public class NotificationService {
     }
 
     //LocalDateTime notifTime, String title, String description, User employee
-    public void addNotification(Notification notification, Long userId){
-        if (notification.getNotificationId() != null) {
-            throw new IllegalStateException("notification already exists  is null");
-        }
+    public String addNotification(String notificationTitle, String notificationDescription, Long userId){
+
+        Notification n = new Notification(LocalDateTime.now(),notificationTitle, notificationDescription);
+//        if (notification.getNotificationId() != null) {
+//            throw new IllegalStateException("notification already exists  is null");
+//        }
 
         User u1 = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User with id" + userId + "does not exist"));
-        u1.getNotifications().add(notification);
+        u1.getNotificationsUnread().add(n);
 
-        notificationRepository.saveAndFlush(notification);
+
+        notificationRepository.saveAndFlush(n);
+        userRepository.saveAndFlush(u1);
+
+        return "Notification added successfully.";
     }
 
-    public void deleteNotification(Long notificationId, Long userId) {
+    public String deleteNotification(Long notificationId, Long userId) {
 
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new IllegalStateException("Notification with ID: " + notificationId + " does not exist!"));
@@ -60,8 +94,35 @@ public class NotificationService {
                 .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
         //without breaking relationship
 
-        u1.getNotifications().remove(notification);
+        //can only remove if notification read
+        u1.getNotificationsRead().remove(notification);
+
         notificationRepository.deleteById(notificationId);
+        return "notification with id" + userId+ "is deleted";
+    }
+
+    public String deleteAllNotification(Long userId){
+
+        User u1 = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
+
+        List<Notification> unreadLst = u1.getNotificationsUnread();
+        List<Notification> readLst = u1.getNotificationsRead();
+
+        unreadLst.clear();
+        readLst.clear();
+
+//        List<Notification> notifyLst = getAllNotifications();
+//        for(Notification n: notifyLst){
+//            Notification notification = notificationRepository.findById(notificationId)
+//                    .orElseThrow(() -> new IllegalStateException("Notification with ID: " + notificationId + " does not exist!"));
+//
+//        }
+//
+
+        userRepository.saveAndFlush(u1);
+
+        return "delete all function successful";
     }
 
     @Transactional

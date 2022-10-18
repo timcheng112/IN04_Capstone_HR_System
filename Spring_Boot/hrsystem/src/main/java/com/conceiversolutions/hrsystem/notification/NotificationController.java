@@ -23,14 +23,21 @@ public class NotificationController {
         return notificationService.getAllNotifications();
     }
 
-    @GetMapping(path = "/GetNotification")
-    public Notification getANotification(@PathVariable("notificationId") Long notificationId){
-        return notificationService.getNotification(notificationId);
+    @GetMapping(path = "/getAllNotificationsForUser/{userId}")
+    public List<Notification> getAllNotificationsForUser(@PathVariable("userId") Long userId){
+        return notificationService.getAllNotificationsForUser(userId);
+    }
+    @GetMapping(path = "/{notificationId}")
+    public Notification getANotification(@PathVariable("notificationId") Long notificationId, @PathVariable("userId") Long userId){
+        return notificationService.getANotification(notificationId, userId);
     }
 
     @PostMapping
-    public void addNotification(@RequestBody Notification notification, @PathVariable("userId") Long userId ) {
-        notificationService.addNotification(notification, userId);
+    public String addNotification( @RequestParam(name = "notificationTitle", required = false) String notificationTitle,
+                                   @RequestParam(name = "notificationDescription", required = false) String notificationDesc,
+                                   @RequestParam("userId") Long userId ) {
+//        System.out.println("are you here");
+        return notificationService.addNotification(notificationTitle, notificationDesc, userId);
     }
 
 
@@ -41,8 +48,13 @@ public class NotificationController {
 
     }
 
-    @DeleteMapping(path = "{notificationId}")
-    public void deleteCategory(@PathVariable("categoryId") Long notificationId, @PathVariable("userId") Long userId) throws IllegalStateException{
-        notificationService.deleteNotification(notificationId, userId);
+    @DeleteMapping(path = "/deleteOneNotif")
+    public String deleteNotification(@PathVariable("notificationId") Long notificationId, @PathVariable("userId") Long userId) throws IllegalStateException{
+        return notificationService.deleteNotification(notificationId, userId);
+    }
+
+    @DeleteMapping(path = "/deleteNotifications")
+    public String deleteAllNotifications(@PathVariable("userId") Long userId ) throws IllegalStateException{
+        return notificationService.deleteAllNotification(userId);
     }
 }
