@@ -203,7 +203,7 @@ export default function Roster() {
         </div>
 
         {/*The table and stuff below it*/}
-        <InfoPanel />
+        <InfoPanel teamId={selectedTeam.teamId} />
         <Calendar
           people={people}
           addShiftHandler={(shiftToBeAdded) =>

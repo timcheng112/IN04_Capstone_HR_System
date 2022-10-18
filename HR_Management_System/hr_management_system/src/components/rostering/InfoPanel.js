@@ -3,6 +3,7 @@ import api from "../../utils/api.js";
 import { format, formatISO, getDay } from "date-fns";
 import Tabs from "./Tabs.js";
 import "./InfoPanel.css";
+import TabDisplay from "./TabDisplay.js";
 
 // const dateTemp = new Date("May 15, 2022 23:15:30");
 const dayArray = [
@@ -48,7 +49,7 @@ const publicHolidays = [
 ];
 
 //dont instantiate date here later.
-const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
+const InfoPanel = (teamId, { selectedDate = new Date() }) => {
   console.log(selectedDate);
   const [shift, setShift] = useState(null);
   // const [teamId, setTeamId] = useState(-1);
@@ -94,36 +95,15 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
     console.log("day: " + getDay(selectedDate));
 
     setDay(dayArray[getDay(selectedDate)]);
-    // const dateStringArr = selectedDate.toDateString().split(" ");
-    // setDateString(
-    //   dateStringArr[2] + " " + dateStringArr[1] + " " + dateStringArr[3]
-    // );
-
     setDateString(format(selectedDate, "dd LLL yyyy"));
-    // setStartTimeString(format(shift.getStartTime(), "HH:mm"));
-    // setEndTimeString(format(shift.getEndTime(), "HH:mm"));
-
-    //make a string date in the form of YYYY-MM-DD
-    // var month = getMonth(selectedDate) + 1;
-    // if (month < 10) {
-    //   month = "0" + (getMonth(selectedDate) + 1);
-    // }
     var apiDate = format(selectedDate, "dd");
     setApiDateString(formatISO(selectedDate));
-    // setApiDateString(
-    //   dateStringArr[3] +
-    //     "-" +
-    //     month +
-    //     "-" +
-    //     apiDate +
-    //     "T" +
-    //     startTimeString +
-    //     ":00"
-    // );
   }
 
   // updateDateInfo(teamId, selectedDate);
-
+  if (shift == null) {
+    return <></>;
+  }
   return (
     //find shift information with cooresponding team & date.
     <div className=" overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg my-3">
@@ -148,43 +128,43 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
           </tr>
 
           {/* <tr>
-            <td colSpan={2} className="border-r">
-              <div className="px-3 py-3.5 font-semibold text-gray-900">
-                Day Shift
-              </div>
-            </td>
-            <td colSpan={2}>
-              <div className="px-3 py-3.5 font-semibold text-gray-900">
-                Evening Shift
-              </div>
-            </td>
-          </tr> */}
+          <td colSpan={2} className="border-r">
+            <div className="px-3 py-3.5 font-semibold text-gray-900">
+              Day Shift
+            </div>
+          </td>
+          <td colSpan={2}>
+            <div className="px-3 py-3.5 font-semibold text-gray-900">
+              Evening Shift
+            </div>
+          </td>
+        </tr> */}
 
           {/* <tr>
-            <td>
-              #Cashiers <br />
-              {0}/{4}
-            </td>
-            <td className="border-r">
-              #Salesmen
-              <br />
-              {0}/{4}
-            </td>
-            <td>
-              #Cashiers
-              <br />
-              {0}/{4}
-            </td>
-            <td>
-              #Salesmen
-              <br />
-              {0}/{4}
-            </td>
-          </tr> */}
+          <td>
+            #Cashiers <br />
+            {0}/{4}
+          </td>
+          <td className="border-r">
+            #Salesmen
+            <br />
+            {0}/{4}
+          </td>
+          <td>
+            #Cashiers
+            <br />
+            {0}/{4}
+          </td>
+          <td>
+            #Salesmen
+            <br />
+            {0}/{4}
+          </td>
+        </tr> */}
         </tbody>
       </table>
       <Tabs>
-        <div label="All">
+        {/* <div label="All">
           Deez nuts on yo chin, <em>All</em>!
         </div>
         <div label="Gator">
@@ -192,9 +172,18 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
         </div>
         <div label="Croc">
           After 'while, <em>Crocodile</em>!
+        </div> */}
+        <div label="All">
+          <TabDisplay shiftId={shift.shiftId} idx="-1" />
         </div>
-        <div label="Sarcosuchus">
-          Nothing to see here, this tab is <em>extinct</em>!
+        <div label="Salesmen">
+          <TabDisplay shiftId={shift.shiftId} idx="0" />
+        </div>
+        <div label="Cashiers">
+          <TabDisplay shiftId={shift.shiftId} idx="1" />
+        </div>
+        <div label="Managers">
+          <TabDisplay shiftId={shift.shiftId} idx="2" />
         </div>
       </Tabs>
     </div>
