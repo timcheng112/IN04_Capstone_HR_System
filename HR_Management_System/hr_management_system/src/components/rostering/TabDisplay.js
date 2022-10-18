@@ -26,6 +26,7 @@ const TabDisplay = (shiftId, idx) => {
     }
   }
 
+  //DISPLAY HERE
   //if empty return false else return true
   function getEmployeesOfPosition(shiftId, idx) {
     var position = roleArr[idx];

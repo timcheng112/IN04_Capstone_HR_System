@@ -493,6 +493,11 @@ const api = {
       `http://localhost:9191/api/shift/getTemplateShiftsByRoster?rosterId=${rosterId}`
     );
   },
+  getShiftListItemByDateAndUserId(date, userId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndUserId?date=${date}&userId=${userId}`
+    );
+  },
 };
 
 export default api;

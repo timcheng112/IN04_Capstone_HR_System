@@ -63,25 +63,46 @@ const Calendar = ({
         <Cell className="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
           Employee
         </Cell>
-        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[0])}>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[0])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[0]} ({format(weekArr[0], "dd/LL")})
         </Cell>
-        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[1])}>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[1])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[1]} ({format(weekArr[1], "dd/LL")})
         </Cell>
-        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[2])}>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[2])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[2]} ({format(weekArr[2], "dd/LL")})
         </Cell>
-        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[3])}>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[3])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[3]} ({format(weekArr[3], "dd/LL")})
         </Cell>
-        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[4])}>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[4])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[4]} ({format(weekArr[4], "dd/LL")})
         </Cell>
-        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[5])}>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[5])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[5]} ({format(weekArr[5], "dd/LL")})
         </Cell>
-        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[6])}>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[6])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[6]} ({format(weekArr[6], "dd/LL")})
         </Cell>
         {people.map((person) => (

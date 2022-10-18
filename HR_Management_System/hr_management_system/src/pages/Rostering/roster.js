@@ -228,7 +228,12 @@ export default function Roster() {
         </div>
 
         {/*The table and stuff below it*/}
-        <InfoPanel selectedDate={infoPanelDate} />
+        <InfoPanel
+          selectedDate={infoPanelDate}
+          addShiftHandler={(shiftToBeAdded) =>
+            setShiftsToBeAdded(shiftsToBeAdded.concat(shiftToBeAdded))
+          }
+        />
         <Calendar
           people={people}
           addShiftHandler={(shiftToBeAdded) =>
