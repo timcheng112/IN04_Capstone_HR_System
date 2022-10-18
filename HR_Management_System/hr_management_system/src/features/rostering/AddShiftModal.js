@@ -22,6 +22,7 @@ export default function AddShiftModal({
   person,
   date,
   addShiftHandler,
+  checkIfThereExistsShiftOnSameDay,
 }) {
   const [duplicateEndDateValue, setDuplicateEndDateValue] = useState(null);
   const [shiftTitleValue, setShiftTitleValue] = useState("");
@@ -108,16 +109,28 @@ export default function AddShiftModal({
               isTemplateShift: false,
             },
           };
-          // if (
-          //   api.getShiftListItemByDateAndUserId(
-          //     format(shiftToBeAdded.startDate, "yyyy-MM-dd"),
-          //     person.userId
-          //   ).then((response) => )
-          // )
-          arr.push(shiftToBeAdded);
+          if (checkIfThereExistsShiftOnSameDay(shiftToBeAdded)) {
+            //dont do anytg
+            console.log(
+              "shift is on the same day: " + shiftToBeAdded.shift.startTime
+            );
+          } else {
+            api
+              .getShiftListItemByDateAndUserId(
+                format(shiftToBeAdded.shift.startTime, "yyyy-MM-dd"),
+                person.userId
+              )
+              .then(() =>
+                console.log("THERE EXISTS A PERSISTED SHIFT ON THE SAME DAY")
+              )
+              .catch(() => {
+                arr.push(shiftToBeAdded);
+                addShiftHandler(arr);
+              });
+          }
         }
-        console.log("ARRAY: " + arr);
-        addShiftHandler(arr);
+        // console.log("ARRAY: " + arr);
+        // addShiftHandler(arr);
         onClose();
       } else {
         alert("End time must be after start time!");

@@ -7,7 +7,7 @@ import ComboBox from "../../components/ComboBox/ComboBox.js";
 import Calendar from "../../features/rostering/Calendar/Calendar.js";
 import ShiftBlock from "../../features/rostering/ShiftBlock.js";
 import InfoPanel from "../../components/rostering/InfoPanel.js";
-import { format, isWeekend, parseISO } from "date-fns";
+import { format, isSameDay, isWeekend, parseISO } from "date-fns";
 import { getUserId } from "../../utils/Common.js";
 import EmptyStateRostering from "../../features/rostering/EmptyStateRostering.js";
 
@@ -99,7 +99,7 @@ export default function Roster() {
   const [openPublish, setOpenPublish] = useState(false);
 
   useEffect(() => {
-    console.log(shiftsToBeAdded);
+    console.log("SHIFTS TO BE ADDED: " + shiftsToBeAdded);
   }, [shiftsToBeAdded]);
 
   useEffect(() => {
@@ -204,6 +204,19 @@ export default function Roster() {
       });
   }
 
+  function checkIfThereExistsShiftOnSameDay(shift) {
+    console.log("Checking if shifts exist on the same day");
+    for (let i = 0; i < shiftsToBeAdded.length; i++) {
+      if (
+        isSameDay(shiftsToBeAdded[i].shift.startTime, shift.shift.startTime) &&
+        shiftsToBeAdded[i].userId === shift.userId
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   return (
     <>
       <Navbar />
@@ -288,6 +301,9 @@ export default function Roster() {
                   )
                 );
               }}
+              checkIfThereExistsShiftOnSameDay={(value) =>
+                checkIfThereExistsShiftOnSameDay(value)
+              }
               shiftsToBeAdded={shiftsToBeAdded}
               setInfoPanelDate={(value) => setInfoPanelDate(value)}
               teamShifts={teamShifts}

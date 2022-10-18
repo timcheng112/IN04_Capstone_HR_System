@@ -27,6 +27,7 @@ const ViewTemplateShiftsModal = ({
   date,
   addShiftHandler,
   rosterId,
+  checkIfThereExistsShiftOnSameDay,
 }) => {
   const [selectedShift, setSelectedShift] = useState();
   const [duplicateEndDateValue, setDuplicateEndDateValue] = useState(null);
@@ -107,9 +108,28 @@ const ViewTemplateShiftsModal = ({
           isTemplateShift: false,
         },
       };
-      arr.push(shiftToBeAdded);
+      if (checkIfThereExistsShiftOnSameDay(shiftToBeAdded)) {
+        //dont do anytg
+        console.log(
+          "shift is on the same day: " + shiftToBeAdded.shift.startTime
+        );
+      } else {
+        api
+          .getShiftListItemByDateAndUserId(
+            format(shiftToBeAdded.shift.startTime, "yyyy-MM-dd"),
+            person.userId
+          )
+          .then(() =>
+            console.log("THERE EXISTS A PERSISTED SHIFT ON THE SAME DAY")
+          )
+          .catch(() => {
+            arr.push(shiftToBeAdded);
+            addShiftHandler(arr);
+          });
+      }
+      // arr.push(shiftToBeAdded);
     }
-    addShiftHandler(arr);
+    // addShiftHandler(arr);
     onClose();
   };
 
