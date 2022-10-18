@@ -3,7 +3,7 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import React, { useState } from "react";
 import EditShiftModal from "./EditShiftModal";
 import ViewShiftModal from "./ViewShiftModal";
@@ -12,7 +12,12 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const ShiftBlock = ({ shift, className, removeShiftHandler }) => {
+const ShiftBlock = ({
+  shift,
+  shiftListItem,
+  className,
+  removeShiftHandler,
+}) => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -26,11 +31,13 @@ const ShiftBlock = ({ shift, className, removeShiftHandler }) => {
         open={open}
         onClose={() => setOpen(false)}
         shift={shift}
+        shiftListItem={shiftListItem}
       />
       <EditShiftModal
         open={openEdit}
         onClose={() => setOpenEdit(false)}
         shift={shift}
+        shiftListItem={shiftListItem}
       />
       <div className="flex-shrink-0 flex items-center justify-center w-2 text-white text-sm font-medium rounded-l-md bg-pink-600" />
       <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white">
@@ -42,8 +49,8 @@ const ShiftBlock = ({ shift, className, removeShiftHandler }) => {
             {shift.shiftTitle}
           </p>
           <p className="text-gray-500">
-            {format(shift.startDate, "h:mmaaa")} -{" "}
-            {format(shift.endDate, "h:mmaaa")}
+            {format(parseISO(shift.startTime), "h:mmaaa")} -{" "}
+            {format(parseISO(shift.endTime), "h:mmaaa")}
           </p>
         </div>
         <div className="flex flex-col">

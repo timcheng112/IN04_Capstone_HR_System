@@ -78,14 +78,31 @@ public class ShiftService {
         shiftRepository.deleteById(shiftId);
     }
 
-    public Shift getShiftByTeamAndTime(Long teamId, LocalDateTime date){
+    public Shift getShiftByTeamAndTime(Long teamId, LocalDateTime date) {
         List<Shift> shiftList = shiftRepository.findShiftByTeamTime(teamId, date);
-        if (shiftList.isEmpty()){
+        if (shiftList.isEmpty()) {
             throw new IllegalStateException("Shift with teamId: " + teamId + " date: " + date + "does not exist!");
-        } else if (shiftList.size()>1) {
+        } else if (shiftList.size() > 1) {
             throw new IllegalStateException("More than 1 Shifts were found at this time!");
         } else {
             return shiftList.get(0);
         }
+    }
+
+    public List<Shift> getTemplateShiftsByRoster(Long rosterId) {
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new IllegalStateException("Roster with ID: " + rosterId + " does not exist!"));
+
+        List<Shift> shifts = shiftRepository.findTemplateShiftsByRoster(rosterId);
+        for (Shift shift : shifts) {
+            shift.getRoster().setShifts(new ArrayList<>());
+            shift.getRoster().setBlocks(new ArrayList<>());
+            shift.getRoster().setTeam(null);
+            for (ShiftListItem shiftListItem : shift.getShiftListItems()) {
+                shiftListItem.setShift(null);
+                shiftListItem.setUser(null);
+            }
+        }
+        return shifts;
     }
 }

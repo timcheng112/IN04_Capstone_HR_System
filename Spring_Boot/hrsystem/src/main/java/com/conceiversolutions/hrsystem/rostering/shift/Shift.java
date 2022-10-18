@@ -31,8 +31,10 @@ public class Shift {
     @Column(name = "remarks", nullable = true)
     private String remarks;
     @Column(name = "min_quota", nullable = false)
-    @ElementCollection(targetClass=Long.class)
+    @ElementCollection(targetClass = Long.class)
     private List<Long> minQuota;
+    @Column(name = "is_template_shift", nullable = false)
+    private Boolean isTemplateShift;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "roster_id")
@@ -51,22 +53,24 @@ public class Shift {
     }
 
     public Shift(LocalDateTime startTime, LocalDateTime endTime, String shiftTitle, String remarks,
-            List<Long> minQuota) {
+            List<Long> minQuota, Boolean isTemplateShift) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.shiftTitle = shiftTitle;
         this.remarks = remarks;
         this.minQuota = minQuota;
+        this.isTemplateShift = isTemplateShift;
         this.shiftListItems = new ArrayList<>();
     }
 
     public Shift(LocalDateTime startTime, LocalDateTime endTime, String shiftTitle,
-            String remarks, List<Long> minQuota, Roster roster) {
+            String remarks, List<Long> minQuota, Boolean isTemplateShift, Roster roster) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.shiftTitle = shiftTitle;
         this.remarks = remarks;
         this.minQuota = minQuota;
+        this.isTemplateShift = isTemplateShift;
         this.roster = roster;
         this.shiftListItems = new ArrayList<>();
     }
@@ -145,11 +149,19 @@ public class Shift {
         return this.shiftListItems;
     }
 
+    public Boolean getIsTemplateShift() {
+        return isTemplateShift;
+    }
+
+    public void setIsTemplateShift(Boolean isTemplateShift) {
+        this.isTemplateShift = isTemplateShift;
+    }
+
     @Override
     public String toString() {
         return "Shift [shiftId=" + shiftId + ", startTime=" + startTime + ", endTime=" + endTime + ", shiftTitle="
-                + shiftTitle + ", remarks=" + remarks + ", minQuota=" + minQuota + ", roster=" + roster
-                + ", shiftListItems=" + shiftListItems + "]";
+                + shiftTitle + ", remarks=" + remarks + ", minQuota=" + minQuota + ", isTemplateShift="
+                + isTemplateShift + ", roster=" + roster + ", shiftListItems=" + shiftListItems + "]";
     }
 
 }

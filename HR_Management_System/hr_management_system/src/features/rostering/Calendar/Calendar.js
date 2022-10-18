@@ -34,7 +34,7 @@ const Calendar = ({
         shiftsToBeAdded[i].userId === person.userId &&
         isSameDay(shiftsToBeAdded[i].shift.startDate, weekArr[dayIndex])
       ) {
-        return shiftsToBeAdded[i].shift;
+        return shiftsToBeAdded[i];
       }
     }
     return null;

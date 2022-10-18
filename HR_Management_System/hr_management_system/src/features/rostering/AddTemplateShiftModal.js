@@ -15,8 +15,6 @@ export default function AddTemplateShiftModal({
   const [salesmanQuotaValue, setSalesmanQuotaValue] = useState("");
   const [cashierQuotaValue, setCashierQuotaValue] = useState("");
   const [storemanagerQuotaValue, setStoremanagerQuotaValue] = useState("");
-  const [asstStoremanagerQuotaValue, setAsstStoremanagerQuotaValue] =
-    useState("");
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
 
   const createTemplateShiftHandler = () => {
@@ -26,8 +24,7 @@ export default function AddTemplateShiftModal({
       endTimeValue !== null &&
       salesmanQuotaValue !== "" &&
       cashierQuotaValue !== "" &&
-      storemanagerQuotaValue !== "" &&
-      asstStoremanagerQuotaValue !== ""
+      storemanagerQuotaValue !== ""
     ) {
       const dummyDate = new Date();
       let templateShiftToBeAdded = {
@@ -54,10 +51,11 @@ export default function AddTemplateShiftModal({
           salesmanQuotaValue,
           cashierQuotaValue,
           storemanagerQuotaValue,
-          asstStoremanagerQuotaValue,
         ],
-        shiftRemarks: shiftRemarksValue,
+        remarks: shiftRemarksValue,
+        isTemplateShift: true,
       };
+      console.log(templateShiftToBeAdded.startDate);
       addTemplateShiftHandler(templateShiftToBeAdded);
       onClose();
     } else {
@@ -111,9 +109,6 @@ export default function AddTemplateShiftModal({
                         setCashierQuota={(value) => setCashierQuotaValue(value)}
                         setStoremanagerQuota={(value) =>
                           setStoremanagerQuotaValue(value)
-                        }
-                        setAsstStoremanagerQuota={(value) =>
-                          setAsstStoremanagerQuotaValue(value)
                         }
                         setShiftRemarks={(value) => setShiftRemarksValue(value)}
                       />

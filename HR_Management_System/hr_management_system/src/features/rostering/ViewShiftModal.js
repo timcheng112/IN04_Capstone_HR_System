@@ -1,8 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import React, { Fragment } from "react";
 
-const ViewShiftModal = ({ open, onClose, shift }) => {
+const ViewShiftModal = ({ open, onClose, shift, shiftListItem }) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -69,7 +69,7 @@ const ViewShiftModal = ({ open, onClose, shift }) => {
                             name="start-time"
                             className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           >
-                            {format(shift.startDate, "h:mmaaa")}
+                            {format(parseISO(shift.startTime), "h:mmaaa")}
                           </p>
                         </div>
                       </div>
@@ -86,7 +86,7 @@ const ViewShiftModal = ({ open, onClose, shift }) => {
                             name="end-time"
                             className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           >
-                            {format(shift.endDate, "h:mmaaa")}
+                            {format(parseISO(shift.endTime), "h:mmaaa")}
                           </p>
                         </div>
                       </div>
@@ -143,23 +143,6 @@ const ViewShiftModal = ({ open, onClose, shift }) => {
                       </div>
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
-                          htmlFor="asststoremanager-quota"
-                          className="block text-sm font-medium text-gray-700 mt-2 col-span-2"
-                        >
-                          Asst Store Manager Quota
-                        </label>
-                        <div className="col-span-1">
-                          <p
-                            id="asststoremanager-quota"
-                            name="asststoremanager-quota"
-                            className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          >
-                            {shift.minQuota[3]}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                        <label
                           htmlFor="shift-remarks"
                           className="block text-sm font-medium text-gray-700 mt-2"
                         >
@@ -171,10 +154,28 @@ const ViewShiftModal = ({ open, onClose, shift }) => {
                             name="shift-remarks"
                             className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           >
-                            {shift.remarks}
+                            {!shift.remarks ? "-" : shift.remarks}
                           </p>
                         </div>
                       </div>
+                      {shiftListItem && (
+                        <div className="flex items-center sm:border-t sm:border-gray-200 sm:pt-5">
+                          <input
+                            id="isPhEvent"
+                            name="isPhEvent"
+                            type="checkbox"
+                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            disabled="true"
+                            checked={shiftListItem.isPhEvent}
+                          />
+                          <label
+                            htmlFor="isPhEvent"
+                            className="ml-2 block text-sm text-gray-900"
+                          >
+                            Is Public Holiday/Event
+                          </label>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

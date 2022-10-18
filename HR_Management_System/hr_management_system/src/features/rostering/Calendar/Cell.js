@@ -141,7 +141,8 @@ const Cell = ({
       {shift && shift !== null ? (
         <div>
           <ShiftBlock
-            shift={shift}
+            shift={shift.shift}
+            shiftListItem={shift}
             className="m-auto mb-2 border-green-600 border-2"
             removeShiftHandler={removeShiftHandler}
           />
