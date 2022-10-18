@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
 const LeaveScreen = ({navigation}) => {
 
   const [userId, setUserId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const setId = async () => {
