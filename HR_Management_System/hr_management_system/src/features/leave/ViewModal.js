@@ -4,6 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 import api from '../../utils/api';
 import axios from "axios";
+import fileDownload from 'js-file-download'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -52,16 +53,19 @@ export default function ViewModal({ open, setOpen, leave }) {
 
   function downloadFile() {
     api.downloadDocument(Number(leave.leaveId)).then((response) => {
-        console.log("help");
+        //console.log("help");
         console.log(response.data);
         const filename =  response.headers['content-disposition'].split('filename=')[1];
-
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        // fileDownload(response.data, filename)
+        const url = window.URL.createObjectURL(response.data);
           const link = document.createElement('a');
+          link.style.display = "none";
           link.href = url;
           link.setAttribute('download', filename);
           document.body.appendChild(link);
           link.click();
+          document.body.removeChild(link);
+          //URL.revokeObjectURL(url);
     });
 
 //    api.downloadDocument(Number(leave.leaveId))
