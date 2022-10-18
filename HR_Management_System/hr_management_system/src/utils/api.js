@@ -493,6 +493,9 @@ const api = {
       `http://localhost:9191/api/shift/getTemplateShiftsByRoster?rosterId=${rosterId}`
     );
   },
+  deleteShift(shiftId) {
+    return axios.delete(`http://localhost:9191/api/shift/${shiftId}`);
+  },
 };
 
 export default api;

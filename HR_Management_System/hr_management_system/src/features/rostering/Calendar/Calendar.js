@@ -33,7 +33,7 @@ const Calendar = ({
     for (let i = 0; i < shiftsToBeAdded.length; i++) {
       if (
         shiftsToBeAdded[i].userId === person.userId &&
-        isSameDay(shiftsToBeAdded[i].shift.startDate, weekArr[dayIndex])
+        isSameDay(shiftsToBeAdded[i].shift.startTime, weekArr[dayIndex])
       ) {
         return shiftsToBeAdded[i];
       }
@@ -87,7 +87,7 @@ const Calendar = ({
         {people.map((person) => (
           <>
             <Cell className="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6 h-32">
-              {person.name}
+              {person.firstName} {person.lastName}
             </Cell>
             <Cell
               date={weekArr[0]}

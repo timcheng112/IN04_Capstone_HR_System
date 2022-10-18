@@ -5,6 +5,7 @@ import ShiftBlock from "./ShiftBlock";
 import AddTemplateShiftModal from "./AddTemplateShiftModal";
 import EmptyStateTemplateShifts from "./EmptyStateTemplateShifts";
 import api from "../../utils/api";
+import { parseISO } from "date-fns";
 
 export default function ViewTemplateShiftsSlideover({
   open,
@@ -54,16 +55,28 @@ export default function ViewTemplateShiftsSlideover({
 
   useEffect(() => {
     api
-      .getTemplateShiftsByRoster(2)
+      .getTemplateShiftsByRoster(rosterId)
       .then((response) => {
         // let dummyArr = response.data;
         // for (let i = 0; i < dummyArr.length; i++) {
         //   dummyArr.startTime
         // }
-        setTemplateShifts(response.data);
+        let tempData = response.data;
+        for (let i = 0; i < response.data.length; i++) {
+          tempData[i].startTime = parseISO(response.data[i].startTime);
+          tempData[i].endTime = parseISO(response.data[i].endTime);
+        }
+        setTemplateShifts(tempData);
       })
       .catch((error) => console.log(error.response.data.message));
-  }, [open, rosterId]);
+  }, [open, openAddTemplateShift, rosterId]);
+
+  // function deleteTemplateShiftHandler(shiftId) {
+  //   api
+  //     .deleteShift(shiftId)
+  //     .then(() => alert("Shift has been successfully deleted!"))
+  //     .catch((error) => console.log(error.response.data.message));
+  // }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -90,6 +103,7 @@ export default function ViewTemplateShiftsSlideover({
               templateShiftToBeAdded,
             ])
           }
+          rosterId={rosterId}
         />
 
         <div className="fixed inset-0 overflow-hidden">
@@ -144,7 +158,12 @@ export default function ViewTemplateShiftsSlideover({
                                 return (
                                   <li key={shift.shiftId} className="pb-2">
                                     {/* RENDERING EACH TEMPLATE SHIFT */}
-                                    <ShiftBlock shift={shift} />
+                                    <ShiftBlock
+                                      shift={shift}
+                                      // removeShiftHandler={deleteTemplateShiftHandler(
+                                      //   shift.shiftId
+                                      // )}
+                                    />
                                   </li>
                                 );
                               })}

@@ -2,12 +2,14 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import AddShiftForm from "./AddShiftForm";
-import { getDate, getMonth, getYear } from "date-fns";
+import { format, getDate, getMonth, getYear } from "date-fns";
+import api from "../../utils/api";
 
 export default function AddTemplateShiftModal({
   open,
   onClose,
-  addTemplateShiftHandler,
+  // addTemplateShiftHandler,
+  rosterId,
 }) {
   const [shiftTitleValue, setShiftTitleValue] = useState("");
   const [startTimeValue, setStartTimeValue] = useState(null);
@@ -29,23 +31,29 @@ export default function AddTemplateShiftModal({
       const dummyDate = new Date();
       let templateShiftToBeAdded = {
         shiftTitle: shiftTitleValue,
-        startDate: new Date(
-          getYear(dummyDate),
-          getMonth(dummyDate),
-          getDate(dummyDate),
-          startTimeValue.substring(0, 2),
-          startTimeValue.substring(3, 5),
-          0,
-          0
+        startTime: format(
+          new Date(
+            getYear(dummyDate),
+            getMonth(dummyDate),
+            getDate(dummyDate),
+            startTimeValue.substring(0, 2),
+            startTimeValue.substring(3, 5),
+            0,
+            0
+          ),
+          "yyyy-MM-dd HH:mm:ss"
         ),
-        endDate: new Date(
-          getYear(dummyDate),
-          getMonth(dummyDate),
-          getDate(dummyDate),
-          endTimeValue.substring(0, 2),
-          endTimeValue.substring(3, 5),
-          0,
-          0
+        endTime: format(
+          new Date(
+            getYear(dummyDate),
+            getMonth(dummyDate),
+            getDate(dummyDate),
+            endTimeValue.substring(0, 2),
+            endTimeValue.substring(3, 5),
+            0,
+            0
+          ),
+          "yyyy-MM-dd HH:mm:ss"
         ),
         minQuota: [
           salesmanQuotaValue,
@@ -55,13 +63,24 @@ export default function AddTemplateShiftModal({
         remarks: shiftRemarksValue,
         isTemplateShift: true,
       };
-      console.log(templateShiftToBeAdded.startDate);
+      console.log(templateShiftToBeAdded.startTime);
       addTemplateShiftHandler(templateShiftToBeAdded);
       onClose();
     } else {
       alert("Invalid fields!");
     }
   };
+
+  function addTemplateShiftHandler(templateShiftToBeAdded) {
+    api
+      .addNewShift(templateShiftToBeAdded, rosterId)
+      .then((response) =>
+        alert(
+          "Template shift with ID: " + response.data + " successfully added"
+        )
+      )
+      .catch((error) => alert(error.response.data.message));
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>

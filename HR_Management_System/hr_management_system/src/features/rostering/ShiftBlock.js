@@ -18,6 +18,7 @@ const ShiftBlock = ({
   className,
   removeShiftHandler,
 }) => {
+  console.log(shift.startTime);
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -49,8 +50,10 @@ const ShiftBlock = ({
             {shift.shiftTitle}
           </p>
           <p className="text-gray-500">
-            {format(parseISO(shift.startTime), "h:mmaaa")} -{" "}
-            {format(parseISO(shift.endTime), "h:mmaaa")}
+            {/* {format(parseISO(shift.startTime), "h:mmaaa")} -{" "}
+            {format(parseISO(shift.endTime), "h:mmaaa")} */}
+            {format(shift.startTime, "h:mmaa")} -{" "}
+            {format(shift.endTime, "h:mmaa")}
           </p>
         </div>
         <div className="flex flex-col">

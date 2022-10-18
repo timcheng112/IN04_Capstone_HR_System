@@ -6,9 +6,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ComboBox({ items, searchParam }) {
+export default function ComboBox({
+  items,
+  searchParam,
+  selectedItem,
+  setSelectedItem,
+}) {
   const [query, setQuery] = useState("");
-  const [selectedItem, setSelectedItem] = useState(null);
 
   const filteredItem =
     query === ""

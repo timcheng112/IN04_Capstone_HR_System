@@ -69,7 +69,8 @@ const ViewShiftModal = ({ open, onClose, shift, shiftListItem }) => {
                             name="start-time"
                             className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           >
-                            {format(parseISO(shift.startTime), "h:mmaaa")}
+                            {/* {format(parseISO(shift.startTime), "h:mmaaa")} */}
+                            {format(shift.startTime, "h:mmaaa")}
                           </p>
                         </div>
                       </div>
@@ -86,7 +87,8 @@ const ViewShiftModal = ({ open, onClose, shift, shiftListItem }) => {
                             name="end-time"
                             className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           >
-                            {format(parseISO(shift.endTime), "h:mmaaa")}
+                            {/* {format(parseISO(shift.endTime), "h:mmaaa")} */}
+                            {format(shift.endTime, "h:mmaaa")}
                           </p>
                         </div>
                       </div>

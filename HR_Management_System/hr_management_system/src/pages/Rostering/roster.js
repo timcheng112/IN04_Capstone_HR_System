@@ -88,7 +88,7 @@ export default function Roster() {
   const [open, setOpen] = useState(false);
   const [openSlideover, setOpenSlideover] = useState(false);
   const [shiftsToBeAdded, setShiftsToBeAdded] = useState([]);
-  const [selectedTeam, setSelectedTeam] = useState();
+  const [selectedTeam, setSelectedTeam] = useState(null);
   const [teams, setTeams] = useState();
   const [error, setError] = useState(false);
   const [user, setUser] = useState(null);
@@ -97,6 +97,13 @@ export default function Roster() {
   useEffect(() => {
     console.log(shiftsToBeAdded);
   }, [shiftsToBeAdded]);
+
+  useEffect(() => {
+    if (selectedTeam !== null) {
+      console.log(selectedTeam);
+      console.log(selectedTeam.roster.rosterId);
+    }
+  }, [selectedTeam]);
 
   // SHOW WARNING PROMPT ON REFRESH IF EDITS EXIST
   if (shiftsToBeAdded.length !== 0) {
@@ -172,7 +179,12 @@ export default function Roster() {
       <div className="px-4 sm:px-6 lg:px-8 mt-3">
         <div className="sm:flex sm:items-center">
           <div className="isolate inline-flex -space-x-px rounded-md shadow-sm mx-4">
-            <ComboBox items={teams} searchParam={["name"]} />
+            <ComboBox
+              items={teams}
+              searchParam={["name"]}
+              selectedItem={selectedTeam}
+              setSelectedItem={setSelectedTeam}
+            />
           </div>
 
           <div className="sm:flex sm:items-center">
@@ -211,15 +223,16 @@ export default function Roster() {
             </button>
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2"
+              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
               onClick={() => setOpenSlideover(true)}
+              disabled={selectedTeam === null}
             >
               View Template Shifts
             </button>
             <button
               type="button"
               className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
-              onClick={() => console.log("published")}
+              onClick={() => publishHandler()}
               disabled={shiftsToBeAdded.length === 0}
             >
               Publish
@@ -230,7 +243,7 @@ export default function Roster() {
         {/*The table and stuff below it*/}
         <InfoPanel selectedDate={infoPanelDate} />
         <Calendar
-          people={people}
+          people={selectedTeam !== null ? selectedTeam.users : people}
           addShiftHandler={(shiftToBeAdded) =>
             setShiftsToBeAdded(shiftsToBeAdded.concat(shiftToBeAdded))
           }
@@ -247,6 +260,7 @@ export default function Roster() {
         <ViewTemplateShiftsSlideover
           open={openSlideover}
           onClose={() => setOpenSlideover(false)}
+          rosterId={selectedTeam !== null ? selectedTeam.roster.rosterId : ""}
         />
         <AddShiftModal open={open} onClose={() => setOpen(false)} />
       </div>
