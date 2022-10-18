@@ -366,6 +366,9 @@ const api = {
   getAllPendingLeaves() {
     return axios.get(`http://localhost:9191/api/leaves/getAllPendingLeaves`);
   },
+  getAllLeaves() {
+    return axios.get(`http://localhost:9191/api/leaves/getAllLeaves`);
+  },
   getLeaveById(leaveId) {
     return axios.get(`http://localhost:9191/api/leaves/getLeaveById?leaveId=${leaveId}`);
   },

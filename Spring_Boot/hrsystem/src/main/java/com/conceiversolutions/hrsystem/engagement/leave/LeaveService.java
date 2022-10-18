@@ -36,6 +36,54 @@ public class LeaveService {
         return leaveRepository.findAll();
     }
 
+    public List<Leave> getAllLeaves() {
+        System.out.println("LeaveService.getAllPendingLeaves");
+
+        List<Leave> leaves = leaveRepository.findAll();
+        System.out.println("Size of leaves list is " + leaves.size());
+
+        // settle user side cyclic dependency
+        for (Leave l : leaves) {
+            User emp = l.getEmployee();
+
+            for (Team t : emp.getTeams()) {
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setOutlet(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+
+            for (TaskListItem taskListItem : emp.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+
+            // deal with user cyclic dependencies
+            emp.setQualificationInformation(null);
+            emp.setReactivationRequest(null);
+            emp.setAttendances(new ArrayList<>());
+            emp.setCurrentPayInformation(null);
+            emp.setEmployeeAppraisals(new ArrayList<>());
+            emp.setManagerAppraisals(new ArrayList<>());
+            emp.setManagerReviews(new ArrayList<>());
+            emp.setEmployeeReviews(new ArrayList<>());
+            emp.setModules(new ArrayList<>());
+            emp.setApplications(new ArrayList<>());
+            emp.setGoals(new ArrayList<>());
+            emp.setPositions(new ArrayList<>());
+            emp.setJobRequests(new ArrayList<>());
+            emp.setBlocks(new ArrayList<>());
+            emp.setShiftListItems(new ArrayList<>());
+            emp.setSwapRequestsReceived(new ArrayList<>());
+            emp.setSwapRequestsRequested(new ArrayList<>());
+            emp.setLeaves(new ArrayList<>());
+        }
+
+        return leaves;
+    }
+
     public List<Leave> getAllPendingLeaves() {
         System.out.println("LeaveService.getAllPendingLeaves");
 

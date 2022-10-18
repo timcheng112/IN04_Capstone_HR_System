@@ -26,9 +26,14 @@ public class LeaveController {
 //        this.leaveService = leaveService;
 //    }
 
-    @GetMapping
-    public List<Leave> getLeaves() {
-        return leaveService.getLeaves();
+//    @GetMapping
+//    public List<Leave> getLeaves() {
+//        return leaveService.getLeaves();
+//    }
+
+    @GetMapping(path = "getAllLeaves")
+    public List<Leave> getAllLeaves() {
+        return leaveService.getAllLeaves();
     }
 
     @GetMapping(path = "getAllPendingLeaves")
