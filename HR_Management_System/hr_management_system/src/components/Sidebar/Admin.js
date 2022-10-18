@@ -8,7 +8,7 @@ import {
   ClockIcon
 } from "@heroicons/react/24/outline";
 import { Fragment, useState, useEffect } from "react";
-import Breadcrumb from "../Breadcrumb";
+import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import { getUserId } from "../../utils/Common";
 import api from "../../utils/api";
 
