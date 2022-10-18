@@ -54,7 +54,7 @@ export default function ViewTemplateShiftsSlideover({
 
   useEffect(() => {
     api
-      .getTemplateShiftsByRoster(rosterId)
+      .getTemplateShiftsByRoster(2)
       .then((response) => {
         // let dummyArr = response.data;
         // for (let i = 0; i < dummyArr.length; i++) {
@@ -142,7 +142,7 @@ export default function ViewTemplateShiftsSlideover({
                             <ul>
                               {templateShifts.map((shift, index) => {
                                 return (
-                                  <li className="pb-2">
+                                  <li key={shift.shiftId} className="pb-2">
                                     {/* RENDERING EACH TEMPLATE SHIFT */}
                                     <ShiftBlock shift={shift} />
                                   </li>

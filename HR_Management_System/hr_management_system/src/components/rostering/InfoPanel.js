@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api.js";
-import { format, formatISO, getDay } from "date-fns";
+import {
+  format,
+  formatISO,
+  getDate,
+  getDay,
+  getMonth,
+  getYear,
+} from "date-fns";
 import Tabs from "./Tabs.js";
 import "./InfoPanel.css";
 
@@ -48,15 +55,19 @@ const publicHolidays = [
 ];
 
 //dont instantiate date here later.
-const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
-  console.log(selectedDate);
+const InfoPanel = ({ teamId, selectedDate }) => {
   const [shift, setShift] = useState(null);
   // const [teamId, setTeamId] = useState(-1);
   // const [date, setDate] = useState(new Date("May 15, 2022 23:15:30"));
+  let day = format(selectedDate, "iiii");
+  let dateString = format(selectedDate, "dd MMM yyyy");
+  let apiDateString = formatISO(selectedDate);
+  // const [day, setDay] = useState(format(selectedDate, "iiii"));
+  // const [dateString, setDateString] = useState(
+  //   format(selectedDate, "dd MMM yyyy")
+  // );
 
-  const [day, setDay] = useState("Noneday");
-  const [dateString, setDateString] = useState("27 Oct 2022");
-  const [apiDateString, setApiDateString] = useState("2022-10-27T00:01");
+  // const [apiDateString, setApiDateString] = useState(formatISO(selectedDate));
   const [startTimeString, setStartTimeString] = useState("00:01");
   const [endTimeString, setEndTimeString] = useState("00:02");
 
@@ -93,13 +104,13 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
     //make a string date in the form of i.e 27 Oct 2022
     console.log("day: " + getDay(selectedDate));
 
-    setDay(dayArray[getDay(selectedDate)]);
+    // setDay(dayArray[getDay(selectedDate)]);
     // const dateStringArr = selectedDate.toDateString().split(" ");
     // setDateString(
     //   dateStringArr[2] + " " + dateStringArr[1] + " " + dateStringArr[3]
     // );
 
-    setDateString(format(selectedDate, "dd LLL yyyy"));
+    // setDateString(format(selectedDate, "dd LLL yyyy"));
     // setStartTimeString(format(shift.getStartTime(), "HH:mm"));
     // setEndTimeString(format(shift.getEndTime(), "HH:mm"));
 
@@ -108,8 +119,8 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
     // if (month < 10) {
     //   month = "0" + (getMonth(selectedDate) + 1);
     // }
-    var apiDate = format(selectedDate, "dd");
-    setApiDateString(formatISO(selectedDate));
+    // var apiDate = format(selectedDate, "dd");
+    // setApiDateString(formatISO(selectedDate));
     // setApiDateString(
     //   dateStringArr[3] +
     //     "-" +
@@ -134,7 +145,7 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
               <span className="float-left align-start inline-flex ml-10 mr-3 text-xl">
                 {day}, {dateString}
               </span>
-              {(day == "Sunday" || day == "Saturday") && (
+              {(day === "Sunday" || day === "Saturday") && (
                 <span className="float-right mr-20 mt-1 inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                   Weekend
                 </span>

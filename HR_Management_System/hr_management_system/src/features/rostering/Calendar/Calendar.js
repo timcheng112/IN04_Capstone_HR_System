@@ -19,6 +19,7 @@ const Calendar = ({
   removeShiftHandler,
   people,
   shiftsToBeAdded,
+  setInfoPanelDate,
 }) => {
   const [startWeek, setStartWeek] = useState(
     startOfWeek(value, { weekStartsOn: 1 })
@@ -62,25 +63,25 @@ const Calendar = ({
         <Cell className="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
           Employee
         </Cell>
-        <Cell>
+        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[0])}>
           {daysOfWeek[0]} ({format(weekArr[0], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[1])}>
           {daysOfWeek[1]} ({format(weekArr[1], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[2])}>
           {daysOfWeek[2]} ({format(weekArr[2], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[3])}>
           {daysOfWeek[3]} ({format(weekArr[3], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[4])}>
           {daysOfWeek[4]} ({format(weekArr[4], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[5])}>
           {daysOfWeek[5]} ({format(weekArr[5], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell setInfoPanelDate={() => setInfoPanelDate(weekArr[6])}>
           {daysOfWeek[6]} ({format(weekArr[6], "dd/LL")})
         </Cell>
         {people.map((person) => (

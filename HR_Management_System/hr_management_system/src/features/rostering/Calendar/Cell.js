@@ -63,6 +63,7 @@ const Cell = ({
   addShiftHandler,
   removeShiftHandler,
   shift,
+  setInfoPanelDate,
 }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [open, setOpen] = useState(false);
@@ -87,6 +88,8 @@ const Cell = ({
       }
     } else if (changeWeekHandler) {
       changeWeekHandler();
+    } else if (setInfoPanelDate) {
+      setInfoPanelDate();
     }
   };
   return (

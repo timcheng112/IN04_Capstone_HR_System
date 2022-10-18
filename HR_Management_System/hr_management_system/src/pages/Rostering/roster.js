@@ -8,6 +8,7 @@ import Calendar from "../../features/rostering/Calendar/Calendar.js";
 import ShiftBlock from "../../features/rostering/ShiftBlock.js";
 import InfoPanel from "../../components/rostering/InfoPanel.js";
 import { isWeekend } from "date-fns";
+import { getUserId } from "../../utils/Common.js";
 
 const people = [
   {
@@ -90,6 +91,8 @@ export default function Roster() {
   const [selectedTeam, setSelectedTeam] = useState();
   const [teams, setTeams] = useState();
   const [error, setError] = useState(false);
+  const [user, setUser] = useState(null);
+  const [infoPanelDate, setInfoPanelDate] = useState(new Date());
 
   useEffect(() => {
     console.log(shiftsToBeAdded);
@@ -101,6 +104,29 @@ export default function Roster() {
       return "Changes made will be lost if you leave the page, are you sure?";
     };
   }
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  useEffect(() => {
+    api
+      .getAllTeams()
+      .then((response) => setTeams(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
+
+  useEffect(() => {
+    if (user !== null && !user.hrEmployee) {
+      setSelectedTeam(user.teams[0]);
+      console.log("SELECTED TEAM: " + selectedTeam);
+    }
+  }, [teams, user]);
 
   function publishHandler() {
     for (let i = 0; i < shiftsToBeAdded.length; i++) {
@@ -146,7 +172,7 @@ export default function Roster() {
       <div className="px-4 sm:px-6 lg:px-8 mt-3">
         <div className="sm:flex sm:items-center">
           <div className="isolate inline-flex -space-x-px rounded-md shadow-sm mx-4">
-            <ComboBox items={outlets} searchParam={["name"]} />
+            <ComboBox items={teams} searchParam={["name"]} />
           </div>
 
           <div className="sm:flex sm:items-center">
@@ -202,7 +228,7 @@ export default function Roster() {
         </div>
 
         {/*The table and stuff below it*/}
-        <InfoPanel />
+        <InfoPanel selectedDate={infoPanelDate} />
         <Calendar
           people={people}
           addShiftHandler={(shiftToBeAdded) =>
@@ -216,6 +242,7 @@ export default function Roster() {
             );
           }}
           shiftsToBeAdded={shiftsToBeAdded}
+          setInfoPanelDate={(value) => setInfoPanelDate(value)}
         />
         <ViewTemplateShiftsSlideover
           open={openSlideover}
