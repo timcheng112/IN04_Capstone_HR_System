@@ -14,6 +14,7 @@ import {
   set,
 } from "date-fns";
 import SelectMenuPosition from "./SelectMenuPosition";
+import api from "../../utils/api";
 
 export default function AddShiftModal({
   open,
@@ -107,6 +108,12 @@ export default function AddShiftModal({
               isTemplateShift: false,
             },
           };
+          // if (
+          //   api.getShiftListItemByDateAndUserId(
+          //     format(shiftToBeAdded.startDate, "yyyy-MM-dd"),
+          //     person.userId
+          //   ).then((response) => )
+          // )
           arr.push(shiftToBeAdded);
         }
         console.log("ARRAY: " + arr);

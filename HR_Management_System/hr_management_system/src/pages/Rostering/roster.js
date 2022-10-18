@@ -273,27 +273,33 @@ export default function Roster() {
         </div>
 
         {/*The table and stuff below it*/}
-        <InfoPanel
-          selectedDate={infoPanelDate}
-          addShiftHandler={(shiftToBeAdded) =>
-            setShiftsToBeAdded(shiftsToBeAdded.concat(shiftToBeAdded))
-          }
-        />
-        <Calendar
-          people={selectedTeam !== null ? selectedTeam.users : people}
-          addShiftHandler={(shiftToBeAdded) =>
-            setShiftsToBeAdded(shiftsToBeAdded.concat(shiftToBeAdded))
-          }
-          removeShiftHandler={(shiftToBeRemoved) => {
-            setShiftsToBeAdded(
-              shiftsToBeAdded.filter(
-                (shift) => shift.shift !== shiftToBeRemoved
-              )
-            );
-          }}
-          shiftsToBeAdded={shiftsToBeAdded}
-          setInfoPanelDate={(value) => setInfoPanelDate(value)}
-        />
+        {selectedTeam !== null ? (
+          <>
+            <InfoPanel selectedDate={infoPanelDate} />
+            <Calendar
+              people={selectedTeam !== null && selectedTeam.users}
+              addShiftHandler={(shiftToBeAdded) =>
+                setShiftsToBeAdded(shiftsToBeAdded.concat(shiftToBeAdded))
+              }
+              removeShiftHandler={(shiftToBeRemoved) => {
+                setShiftsToBeAdded(
+                  shiftsToBeAdded.filter(
+                    (shift) => shift.shift !== shiftToBeRemoved
+                  )
+                );
+              }}
+              shiftsToBeAdded={shiftsToBeAdded}
+              setInfoPanelDate={(value) => setInfoPanelDate(value)}
+              teamShifts={teamShifts}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={() => setOpenPublish(false)}
+              rosterId={selectedTeam.roster.rosterId}
+            />
+          </>
+        ) : (
+          <EmptyStateRostering />
+        )}
         <ViewTemplateShiftsSlideover
           open={openSlideover}
           onClose={() => setOpenSlideover(false)}
