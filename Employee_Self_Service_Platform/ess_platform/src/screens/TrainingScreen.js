@@ -84,6 +84,7 @@ export default function Training({ navigation }) {
 
   const renderModule = ({ item }) => {
     const image = item.thumbnail;
+    //console.log('item.id ' + item.moduleId)
     return (
       <TouchableOpacity
         onPress={() =>

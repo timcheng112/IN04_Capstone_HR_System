@@ -37,11 +37,12 @@ export default function Register() {
     api
       .getUser(getUserId())
       .then((response) => setIsHr(response.data.hrEmployee))
-      .finally(() => {
+      .then(() => {
         if (!isHr) {
+          alert('You do not have authorization to enter this page');
           history.goBack();
         }
-      }, [isHr]);
+      })
   });
 
   const handleSubmit = (evt) => {
@@ -94,9 +95,10 @@ export default function Register() {
         positionDescription,
         jobType.toUpperCase().replaceAll("-", "")
       )
-      .then(() =>
-        alert("Account creation successful for " + firstName + " " + lastName)
-      )
+      .then(() => {
+        alert("Account creation successful for " + firstName + " " + lastName);
+        history.goBack();
+      })
       .catch((error) => {
         var message = error.request.response;
         console.log(error.message);
@@ -105,8 +107,7 @@ export default function Register() {
             "The email(s) provided are already registered with an account with us"
           );
         }
-      })
-      .finally(() => history.goBack());
+      });
   }
 
   return (

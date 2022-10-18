@@ -101,9 +101,9 @@ export default function AddModuleModal({ open, onClose, refreshKeyHandler }) {
       setUnassignedEmployees([]);
       setFilteredUnassignedEmployees([]);
     });
-    //console.log('user id list ' + userIdList)
+    console.log('user id list ' + userIdList)
     api
-      .assignModule(moduleId, userIdList)
+      .assignModule(moduleId, userIdList, getUserId())
       .then((response) => alert(response.data));
   }
 
