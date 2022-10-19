@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, Link } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
 import {
   AcademicCapIcon,
@@ -20,6 +20,7 @@ import api from "../../utils/api";
 import { deleteUser, getUserId } from "../../utils/Common";
 import loading from "../../assets/Spinner.svg";
 import { useHistory } from "react-router";
+import Notification from "../../components/Notification";
 
 // const navigation = [
 //   { name: "Home", href: "#", current: true },
@@ -142,6 +143,8 @@ export default function Home() {
   const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(getUserId());
   const history = useHistory();
+  const [show, setShow] = useState(true);
+  const [showNotification, setShowNotification] = useState(true);
 
   useEffect(() => {
     api
@@ -160,6 +163,7 @@ export default function Home() {
     <>
       {user ? (
         <>
+          {/* {user.notifications ? setShow(true) : setShow(false)} */}
           <div className="min-h-full">
             <Popover
               as="header"
@@ -181,6 +185,10 @@ export default function Home() {
                         <button
                           type="button"
                           className="flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                          onClick={() => {
+                            setShowNotification(true);
+                            console.log("bell pressed");
+                          }}
                         >
                           <span className="sr-only">View notifications</span>
                           <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -289,24 +297,28 @@ export default function Home() {
                               >
                                 Welfare
                               </a>
-                              {user.hrEmployee && <a
-                                key="Hiring"
-                                href="/hiring/jobrequesthr"
-                                className={classNames(
-                                  "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
-                                )}
-                              >
-                                Hiring
-                              </a>}
-                              {!user.hrEmployee && user.userRole === 'MANAGER' && <a
-                                key="Hiring"
-                                href="/hiring/jobrequest"
-                                className={classNames(
-                                  "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
-                                )}
-                              >
-                                Hiring
-                              </a>}
+                              {user.hrEmployee && (
+                                <a
+                                  key="Hiring"
+                                  href="/hiring/jobrequesthr"
+                                  className={classNames(
+                                    "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
+                                  )}
+                                >
+                                  Hiring
+                                </a>
+                              )}
+                              {!user.hrEmployee && user.userRole === "MANAGER" && (
+                                <a
+                                  key="Hiring"
+                                  href="/hiring/jobrequest"
+                                  className={classNames(
+                                    "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
+                                  )}
+                                >
+                                  Hiring
+                                </a>
+                              )}
                               <a
                                 key="Reports"
                                 href="/home"
@@ -481,14 +493,20 @@ export default function Home() {
                                 <button
                                   type="button"
                                   className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+                                  onClick={() => {
+                                    setShowNotification(true);
+                                    console.log("bell pressed 1");
+                                  }}
                                 >
                                   <span className="sr-only">
                                     View notifications
                                   </span>
+                                  <Link to="/AllNotifications">
                                   <BellIcon
                                     className="h-6 w-6"
                                     aria-hidden="true"
-                                  />
+                                    href=""
+                                  /></Link>
                                 </button>
                               </div>
                               <div className="mt-3 space-y-1 px-2">
@@ -511,6 +529,9 @@ export default function Home() {
                 </>
               )}
             </Popover>
+            {showNotification && (
+              <Notification showNotification={true} />
+            )}
             <main className="-mt-24 pb-8">
               <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                 <h1 className="sr-only">Profile</h1>
