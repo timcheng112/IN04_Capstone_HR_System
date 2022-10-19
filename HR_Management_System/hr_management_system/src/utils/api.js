@@ -468,7 +468,7 @@ const api = {
     return axios.get(`http://localhost:9191/api/docData/getDocByteArray?id=${docId}`)
   },
   getDocById(docId) {
-    return axios.get(`http://localhost:9191/api/docData/getDocById?id=${docId}`)
+    return axios.get(`http://localhost:9191/api/docData/getDocById?id=${docId}`, {responseType : 'blob'})
   },
   downloadDocument(docId) {
     return axios.get(`http://localhost:9191/api/docData/downloadDocument?id=${docId}`, {responseType: 'blob'})
