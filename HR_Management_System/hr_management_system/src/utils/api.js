@@ -531,25 +531,7 @@ const api = {
       `http://localhost:9191/api/shift_list_item/${shiftListItemId}`
     );
   },
-    return axios.put(
-      `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
-    );
-  },
-  editJobPost(
-    jobPostId,
-    jobTitle,
-    jobDescription,
-    preferredStartDate,
-    jobType,
-    jobRole,
-    salary,
-    jobRequirements
-  ) {
-    return axios.put(
-      `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
-    );
-  },
-
+    
   getAllNotifications() {
     return axios.get(
       `http://localhost:9191/api/notification/getAllNotifications`
