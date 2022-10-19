@@ -17,6 +17,7 @@
     "axios": "^0.27.2",
     "date-fns": "^2.29.3",
     "draft-js": "^0.11.7",
+    "moment": "^2.29.4",
     "randomcolor": "^0.6.2",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",

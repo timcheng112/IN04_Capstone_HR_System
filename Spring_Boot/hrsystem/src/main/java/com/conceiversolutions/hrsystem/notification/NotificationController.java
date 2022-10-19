@@ -49,12 +49,12 @@ public class NotificationController {
     }
 
     @DeleteMapping(path = "/deleteOneNotif")
-    public String deleteNotification(@PathVariable("notificationId") Long notificationId, @PathVariable("userId") Long userId) throws IllegalStateException{
+        public String deleteNotification(@RequestParam("notificationId") Long notificationId, @RequestParam("userId") Long userId) throws IllegalStateException{
         return notificationService.deleteNotification(notificationId, userId);
     }
 
     @DeleteMapping(path = "/deleteNotifications")
-    public String deleteAllNotifications(@PathVariable("userId") Long userId ) throws IllegalStateException{
+        public String deleteAllNotifications(@RequestParam("userId") Long userId ) throws IllegalStateException{
         return notificationService.deleteAllNotification(userId);
     }
 }

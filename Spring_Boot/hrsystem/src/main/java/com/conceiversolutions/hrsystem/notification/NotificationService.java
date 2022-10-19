@@ -41,11 +41,16 @@ public class NotificationService {
                 .orElseThrow(() -> new IllegalStateException("User with id" + userId + "does not exist"));
         List<Notification> n = u1.getNotificationsUnread();
         List<Notification> n2 = u1.getNotificationsRead();
+        for(Notification i : n){
+            n2.add(i);
+        }
+
 //        n.addAll(n2);
         System.out.println("size of list is " + n.size());
         //
 //        List<Notification> newList = Stream.concat(n.stream(), n2.stream()).toList();
-        return n;
+        n.clear();
+        return n2;
     }
 
     public Notification getANotification(Long notificationId, Long userId ){
@@ -111,6 +116,8 @@ public class NotificationService {
 
         unreadLst.clear();
         readLst.clear();
+        System.out.println("cleared unreadlist ");
+        System.out.println("cleared readLst ");
 
 //        List<Notification> notifyLst = getAllNotifications();
 //        for(Notification n: notifyLst){

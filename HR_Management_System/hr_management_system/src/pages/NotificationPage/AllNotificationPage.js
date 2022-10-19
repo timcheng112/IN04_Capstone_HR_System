@@ -17,7 +17,7 @@ export default function Example() {
 
   const [notification, setNotification] = useState([]);
   let [userInfo, setUserInfo] = useState([]);
-  const history = useHistory();
+//   const history = useHistory();
 
   useEffect(() => {
     // console.log(userId)
@@ -46,10 +46,13 @@ export default function Example() {
         .then((response) => {
           console.log(response.data);
           //   setNotification(response.data);
+        //   history.push("/AllNotifications");
+          window.location.reload();
         })
         .then(() => {
           console.log("are you here");
-          // history.push("/home");
+        //   history.push("/AllNotifications");
+            
         })
         .catch((error) => {
           console.log(error);
@@ -74,8 +77,8 @@ export default function Example() {
         })
         .then(() => {
           console.log("are you here");
-
-          history.push("/home");
+            window.location.reload();
+        //   history.push("/AllNotifications");
         })
         .catch((error) => {
           console.log(error);
@@ -128,7 +131,7 @@ export default function Example() {
         <button
           type="button"
           className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-          // onClick={()=> {deleteAllNotifications()}}
+          onClick={()=> {deleteAllNotifications()}}
         >
           <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
           Delete All Notifications
@@ -144,15 +147,18 @@ export default function Example() {
 
         {notification.map((message) => (
           <li
-            key={message.id}
+            key={message.notificationId}
             className="relative bg-white py-5 px-4 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 hover:bg-gray-50"
           >
             <div className="flex justify-between space-x-3">
               <button
                 type="button"
                 className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
+                // value={message.id}
                 onClick={() => {
-                  deleteANotification(message.id);
+                    // console.log("clicked");
+                    console.log(message.notificationId)
+                  deleteANotification(message.notificationId);
                 }}
               >
                 <TrashIcon
@@ -162,19 +168,20 @@ export default function Example() {
                 Delete
               </button>
               <div className="min-w-0 flex-1">
-                <a
+                {/* <a
                   href="/NotificationExpandPage"
                   className="block focus:outline-none"
-                >
-                  <span className="absolute inset-0" aria-hidden="true" />
+                > */}
+                  <span className="" aria-hidden="true" />
 
                   <p className="truncate text-sm text-black-1500 font-bold">
                     {message.title}
                   </p>
-                </a>
+                {/* </a> */}
               </div>
               <time
-                dateTime={message.datetime}
+                
+                dateTime={message.notifTime}
                 className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
               >
                 {message.time}

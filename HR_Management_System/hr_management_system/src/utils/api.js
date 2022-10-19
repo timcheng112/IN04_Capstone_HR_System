@@ -404,7 +404,8 @@ const api = {
     return axios.get(`http://localhost:9191/api/notification/getAllNotificationsForUser/${userId}`);
   },
   deleteAllNotifications(userId){
-    return axios.delete(`http://localhost:9191/api/notification/deletenotifications/${userId}`);
+    return axios.delete(`http://localhost:9191/api/notification/deleteNotifications?userId=${userId}`);
+    //http://localhost:9191/api/notification/deleteNotifications?userId=5
   },
   deleteANotification(notificationId, userId){
     return axios.delete(`http://localhost:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`)
