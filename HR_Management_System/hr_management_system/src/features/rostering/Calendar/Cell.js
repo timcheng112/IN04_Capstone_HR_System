@@ -6,12 +6,17 @@ import {
   isAfter,
   isBefore,
   isToday,
+  parseISO,
   startOfToday,
 } from "date-fns";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import api from "../../../utils/api";
 import AddShiftModal from "../AddShiftModal";
 import ChoiceModal from "../ChoiceModal";
+import DeleteShiftModal from "../DeleteShiftModal";
+import PublishSuccessModal from "../PublishSuccessModal";
 import ShiftBlock from "../ShiftBlock";
+import SuccessfullyAddedTemplateModal from "../SuccessfullyAddedTemplateModal";
 import ViewTemplateShiftsModal from "../ViewTemplateShiftsModal";
 
 const shifts = [
@@ -62,12 +67,22 @@ const Cell = ({
   person,
   addShiftHandler,
   removeShiftHandler,
+  checkIfThereExistsShiftOnSameDay,
   shift,
+  setInfoPanelDate,
+  teamShift,
+  refreshKey,
+  openPublish,
+  closePublish,
+  rosterId,
 }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [open, setOpen] = useState(false);
   const [openChoice, setOpenChoice] = useState(false);
   const [openTemplate, setOpenTemplate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [shiftListItem, setShiftListItem] = useState(null);
 
   const handleMouseOver = () => {
     setIsHovering(true);
@@ -79,16 +94,57 @@ const Cell = ({
 
   const onClickHandler = () => {
     if (date) {
-      console.log(date);
       if (compareAsc(date, dateToday) === -1 && !isToday(date)) {
-        console.log(date);
-        console.log(dateToday);
-        console.log("date has passed");
       }
     } else if (changeWeekHandler) {
       changeWeekHandler();
+    } else if (setInfoPanelDate) {
+      setInfoPanelDate();
     }
   };
+
+  const getShiftListItemByUserId = () => {
+    for (let i = 0; i < teamShift.shiftListItems.length; i++) {
+      if (teamShift.shiftListItems[i].user.userId === person.userId) {
+        return teamShift.shiftListItems[i];
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (date !== undefined) {
+      setShiftListItem(null);
+      api
+        .getShiftListItemByDateAndUserId(
+          format(date, "yyyy-MM-dd"),
+          person.userId
+        )
+        .then((response) => {
+          console.log("Shift List Item found! " + response.data);
+          let tempData = response.data;
+          tempData.shift.startTime = parseISO(response.data.shift.startTime);
+          tempData.shift.endTime = parseISO(response.data.shift.endTime);
+          setShiftListItem(tempData);
+        })
+        .catch((error) => console.log(error.response.data.message));
+    }
+  }, [date, person, refreshKey, openDelete, openPublish, openSuccess]);
+
+  const removeShiftAndShiftListItemHandler = (shiftListItem) => {
+    api
+      .deleteShiftListItem(shiftListItem.shiftListItemId)
+      .then(() => {
+        api
+          .deleteShift(shiftListItem.shift.shiftId)
+          .then(() => {
+            alert("Successfully deleted!");
+            setOpenDelete(false);
+          })
+          .catch((error) => alert(error.response.data.message));
+      })
+      .catch((error) => alert(error.response.data.message));
+  };
+
   return (
     <div
       className={
@@ -103,6 +159,22 @@ const Cell = ({
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
     >
+      {openPublish && (
+        <PublishSuccessModal open={openPublish} onClose={closePublish} />
+      )}
+      {openSuccess && (
+        <SuccessfullyAddedTemplateModal
+          open={openSuccess}
+          onClose={() => setOpenSuccess(false)}
+        />
+      )}
+      <DeleteShiftModal
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        deleteShiftHandler={() =>
+          removeShiftAndShiftListItemHandler(shiftListItem)
+        }
+      />
       <ChoiceModal
         open={openChoice}
         onClose={() => {
@@ -127,6 +199,7 @@ const Cell = ({
         person={person}
         date={date}
         addShiftHandler={addShiftHandler}
+        checkIfThereExistsShiftOnSameDay={checkIfThereExistsShiftOnSameDay}
       />
       <ViewTemplateShiftsModal
         open={openTemplate}
@@ -136,15 +209,31 @@ const Cell = ({
         person={person}
         date={date}
         addShiftHandler={addShiftHandler}
+        checkIfThereExistsShiftOnSameDay={checkIfThereExistsShiftOnSameDay}
+        rosterId={rosterId}
       />
       {children}
-      {shift && shift !== null ? (
+      {(shift && shift !== null) || shiftListItem !== null ? (
         <div>
-          <ShiftBlock
-            shift={shift}
-            className="m-auto mb-2 border-green-600 border-2"
-            removeShiftHandler={removeShiftHandler}
-          />
+          {shiftListItem !== null && (
+            <ShiftBlock
+              shift={shiftListItem.shift}
+              shiftListItem={shiftListItem}
+              className="m-auto mb-2"
+              removeShiftHandler={() => setOpenDelete(true)}
+              willBePersisted={true}
+              openSuccess={() => setOpenSuccess(true)}
+            />
+          )}
+          {shift && shift !== null && (
+            <ShiftBlock
+              shift={shift.shift}
+              shiftListItem={shift}
+              className="m-auto mb-2 border-green-600 border-2"
+              removeShiftHandler={removeShiftHandler}
+              willBePersisted={false}
+            />
+          )}
         </div>
       ) : (
         date &&

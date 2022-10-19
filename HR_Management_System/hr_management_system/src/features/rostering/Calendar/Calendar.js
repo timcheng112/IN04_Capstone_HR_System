@@ -17,8 +17,15 @@ const Calendar = ({
   value = new Date(),
   addShiftHandler,
   removeShiftHandler,
+  checkIfThereExistsShiftOnSameDay,
   people,
   shiftsToBeAdded,
+  setInfoPanelDate,
+  teamShifts,
+  refreshKey,
+  openPublish,
+  closePublish,
+  rosterId,
 }) => {
   const [startWeek, setStartWeek] = useState(
     startOfWeek(value, { weekStartsOn: 1 })
@@ -32,9 +39,23 @@ const Calendar = ({
     for (let i = 0; i < shiftsToBeAdded.length; i++) {
       if (
         shiftsToBeAdded[i].userId === person.userId &&
-        isSameDay(shiftsToBeAdded[i].shift.startDate, weekArr[dayIndex])
+        isSameDay(shiftsToBeAdded[i].shift.startTime, weekArr[dayIndex])
       ) {
-        return shiftsToBeAdded[i].shift;
+        return shiftsToBeAdded[i];
+      }
+    }
+    return null;
+  };
+
+  const teamShiftHandler = (person, dayIndex) => {
+    for (let i = 0; i < teamShifts.length; i++) {
+      for (let j = 0; j < teamShifts[i].shiftListItems.length; j++) {
+        if (
+          teamShifts[i].shiftListItems[j].userId === person.userId &&
+          isSameDay(teamShifts[i].shift.startTime, weekArr[dayIndex])
+        ) {
+          return teamShifts[i];
+        }
       }
     }
     return null;
@@ -62,31 +83,52 @@ const Calendar = ({
         <Cell className="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
           Employee
         </Cell>
-        <Cell>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[0])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[0]} ({format(weekArr[0], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[1])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[1]} ({format(weekArr[1], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[2])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[2]} ({format(weekArr[2], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[3])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[3]} ({format(weekArr[3], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[4])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[4]} ({format(weekArr[4], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[5])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[5]} ({format(weekArr[5], "dd/LL")})
         </Cell>
-        <Cell>
+        <Cell
+          setInfoPanelDate={() => setInfoPanelDate(weekArr[6])}
+          className="hover:bg-sky-200"
+        >
           {daysOfWeek[6]} ({format(weekArr[6], "dd/LL")})
         </Cell>
         {people.map((person) => (
           <>
             <Cell className="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6 h-32">
-              {person.name}
+              {person.firstName} {person.lastName}
             </Cell>
             <Cell
               date={weekArr[0]}
@@ -95,7 +137,15 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 0)}
+              // teamShift={teamShiftHandler(person, 0)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[1]}
@@ -104,7 +154,15 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 1)}
+              // teamShift={teamShiftHandler(person, 1)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[2]}
@@ -113,7 +171,15 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 2)}
+              // // teamShift={teamShiftHandler(person, 2)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[3]}
@@ -122,7 +188,15 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 3)}
+              // // teamShift={teamShiftHandler(person, 3)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[4]}
@@ -131,7 +205,15 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 4)}
+              // // teamShift={teamShiftHandler(person, 4)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[5]}
@@ -140,7 +222,15 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 5)}
+              // // teamShift={teamShiftHandler(person, 5)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
             <Cell
               date={weekArr[6]}
@@ -149,7 +239,15 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 6)}
+              // // teamShift={teamShiftHandler(person, 6)}
+              refreshKey={refreshKey}
+              openPublish={openPublish}
+              closePublish={closePublish}
+              rosterId={rosterId}
             />
           </>
         ))}

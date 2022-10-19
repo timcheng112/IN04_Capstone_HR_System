@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import AddShiftForm from "./AddShiftForm";
@@ -11,7 +11,10 @@ import {
   getMonth,
   getYear,
   nextDay,
+  set,
 } from "date-fns";
+import SelectMenuPosition from "./SelectMenuPosition";
+import api from "../../utils/api";
 
 export default function AddShiftModal({
   open,
@@ -19,6 +22,7 @@ export default function AddShiftModal({
   person,
   date,
   addShiftHandler,
+  checkIfThereExistsShiftOnSameDay,
 }) {
   const [duplicateEndDateValue, setDuplicateEndDateValue] = useState(null);
   const [shiftTitleValue, setShiftTitleValue] = useState("");
@@ -27,9 +31,22 @@ export default function AddShiftModal({
   const [salesmanQuotaValue, setSalesmanQuotaValue] = useState("");
   const [cashierQuotaValue, setCashierQuotaValue] = useState("");
   const [storemanagerQuotaValue, setStoremanagerQuotaValue] = useState("");
-  const [asstStoremanagerQuotaValue, setAsstStoremanagerQuotaValue] =
-    useState("");
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
+  const [isPhEvent, setIsPhEvent] = useState(false);
+  const [posType, setPosType] = useState({ id: 1, name: "SALESMAN" });
+
+  useEffect(() => {
+    setDuplicateEndDateValue(null);
+    setShiftTitleValue("");
+    setStartTimeValue(null);
+    setEndTimeValue(null);
+    setSalesmanQuotaValue("");
+    setCashierQuotaValue("");
+    setStoremanagerQuotaValue("");
+    setShiftRemarksValue("");
+    setIsPhEvent(false);
+    setPosType({ id: 1, name: "SALESMAN" });
+  }, [open]);
 
   const createShiftHandler = () => {
     // Check for empty fields
@@ -39,8 +56,7 @@ export default function AddShiftModal({
       endTimeValue !== null &&
       salesmanQuotaValue !== "" &&
       cashierQuotaValue !== "" &&
-      storemanagerQuotaValue !== "" &&
-      asstStoremanagerQuotaValue !== ""
+      storemanagerQuotaValue !== ""
     ) {
       // Check for invalid start time & end time (end time cannot be before start time)
       if (startTimeValue < endTimeValue) {
@@ -62,9 +78,11 @@ export default function AddShiftModal({
           });
           let shiftToBeAdded = {
             userId: person.userId,
+            isPhEvent: isPhEvent,
+            positionType: posType,
             shift: {
               shiftTitle: shiftTitleValue,
-              startDate: new Date(
+              startTime: new Date(
                 getYear(currDate),
                 getMonth(currDate),
                 getDate(currDate),
@@ -73,7 +91,7 @@ export default function AddShiftModal({
                 0,
                 0
               ),
-              endDate: new Date(
+              endTime: new Date(
                 getYear(currDate),
                 getMonth(currDate),
                 getDate(currDate),
@@ -86,14 +104,33 @@ export default function AddShiftModal({
                 salesmanQuotaValue,
                 cashierQuotaValue,
                 storemanagerQuotaValue,
-                asstStoremanagerQuotaValue,
               ],
-              shiftRemarks: shiftRemarksValue,
+              remarks: shiftRemarksValue,
+              isTemplateShift: false,
             },
           };
-          arr.push(shiftToBeAdded);
+          if (checkIfThereExistsShiftOnSameDay(shiftToBeAdded)) {
+            //dont do anytg
+            console.log(
+              "shift is on the same day: " + shiftToBeAdded.shift.startTime
+            );
+          } else {
+            api
+              .getShiftListItemByDateAndUserId(
+                format(shiftToBeAdded.shift.startTime, "yyyy-MM-dd"),
+                person.userId
+              )
+              .then(() =>
+                console.log("THERE EXISTS A PERSISTED SHIFT ON THE SAME DAY")
+              )
+              .catch(() => {
+                arr.push(shiftToBeAdded);
+                addShiftHandler(arr);
+              });
+          }
         }
-        addShiftHandler(arr);
+        // console.log("ARRAY: " + arr);
+        // addShiftHandler(arr);
         onClose();
       } else {
         alert("End time must be after start time!");
@@ -105,7 +142,12 @@ export default function AddShiftModal({
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={onClose}
+        // disableScrollLock
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -118,7 +160,8 @@ export default function AddShiftModal({
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-10 overflow-y-auto">
+        {/* <div className="fixed inset-0 z-10 overflow-y-auto"> */}
+        <div className="fixed inset-0 z-10">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
@@ -129,7 +172,7 @@ export default function AddShiftModal({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+              <Dialog.Panel className="relative transform h-[600px] overflow-scroll rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
                 <div className="mt-3 sm:mt-5">
                   <Dialog.Title
                     as="h3"
@@ -151,7 +194,8 @@ export default function AddShiftModal({
                           name="employee-name"
                           className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         >
-                          {person && person.name}
+                          {person && person.firstName}{" "}
+                          {person && person.lastName}
                         </p>
                       </div>
                     </div>
@@ -200,6 +244,29 @@ export default function AddShiftModal({
                         />
                       </div>
                     </div>
+                    <div className="space-y-6 sm:space-y-5">
+                      <div className="sm:grid sm:grid-cols-2 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                        <SelectMenuPosition
+                          posType={posType}
+                          setPosType={setPosType}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center sm:border-t sm:border-gray-200 sm:pt-5">
+                      <input
+                        id="isPhEvent"
+                        name="isPhEvent"
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        onChange={(e) => setIsPhEvent(e.target.checked)}
+                      />
+                      <label
+                        htmlFor="isPhEvent"
+                        className="ml-2 block text-sm text-gray-900"
+                      >
+                        Is Public Holiday/Event
+                      </label>
+                    </div>
                     <AddShiftForm
                       setShiftTitle={(value) => setShiftTitleValue(value)}
                       setStartTime={(value) => setStartTimeValue(value)}
@@ -208,9 +275,6 @@ export default function AddShiftModal({
                       setCashierQuota={(value) => setCashierQuotaValue(value)}
                       setStoremanagerQuota={(value) =>
                         setStoremanagerQuotaValue(value)
-                      }
-                      setAsstStoremanagerQuota={(value) =>
-                        setAsstStoremanagerQuotaValue(value)
                       }
                       setShiftRemarks={(value) => setShiftRemarksValue(value)}
                     />

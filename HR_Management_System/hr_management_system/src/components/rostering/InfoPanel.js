@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api.js";
-import { format, formatISO, getDay } from "date-fns";
+import {
+  format,
+  formatISO,
+  getDate,
+  getDay,
+  getMonth,
+  getYear,
+} from "date-fns";
 import Tabs from "./Tabs.js";
 import "./InfoPanel.css";
+import TabDisplay from "./TabDisplay.js";
 
 // const dateTemp = new Date("May 15, 2022 23:15:30");
 const dayArray = [
@@ -13,13 +21,6 @@ const dayArray = [
   "Thursday",
   "Friday",
   "Saturday",
-];
-
-const tabs = [
-  { name: "My Account", href: "#", current: false },
-  { name: "Company", href: "#", current: false },
-  { name: "Team Members", href: "#", current: true },
-  { name: "Billing", href: "#", current: false },
 ];
 
 const publicHolidays = [
@@ -48,32 +49,29 @@ const publicHolidays = [
 ];
 
 //dont instantiate date here later.
-const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
-  console.log(selectedDate);
+const InfoPanel = ({ teamId, selectedDate, addShiftHandler }) => {
   const [shift, setShift] = useState(null);
-  // const [teamId, setTeamId] = useState(-1);
-  // const [date, setDate] = useState(new Date("May 15, 2022 23:15:30"));
 
-  const [day, setDay] = useState("Noneday");
-  const [dateString, setDateString] = useState("27 Oct 2022");
-  const [apiDateString, setApiDateString] = useState("2022-10-27T00:01");
-  const [startTimeString, setStartTimeString] = useState("00:01");
-  const [endTimeString, setEndTimeString] = useState("00:02");
+  let day = format(selectedDate, "iiii");
+  let dateString = format(selectedDate, "dd MMMM yyyy");
+  let apiDateString = formatISO(selectedDate);
+  const shiftFound = false;
 
-  // const day = dayArray[date.getDay()];
-  // const isPH = publicHolidays.includes(dateString);
-  // const isWeekend =
-  //   dayArray[date.getDay()] == "Sunday" || dayArray[date.getDay()] == "Saturday";
+  console.log("DATESTRING|||" + dateString + "||");
+  console.log("IS IT A PH? " + publicHolidays.includes(dateString));
 
   useEffect(() => {
     const temp = async () => {
+      if (shift != null) {
+        shiftFound = true;
+      }
       await api
         .getShiftByTeamAndTime(teamId, apiDateString)
         .then((res) => {
           console.log("get shift by team and time: " + res);
           setShift(res.data);
 
-          updateDateInfo(teamId, selectedDate);
+          // updateDateInfo(teamId, selectedDate);
         })
         .catch((error) => {
           var message = error.request.response;
@@ -87,42 +85,7 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
           }
         });
     };
-  }, []);
-
-  function updateDateInfo(selectedDate) {
-    //make a string date in the form of i.e 27 Oct 2022
-    console.log("day: " + getDay(selectedDate));
-
-    setDay(dayArray[getDay(selectedDate)]);
-    // const dateStringArr = selectedDate.toDateString().split(" ");
-    // setDateString(
-    //   dateStringArr[2] + " " + dateStringArr[1] + " " + dateStringArr[3]
-    // );
-
-    setDateString(format(selectedDate, "dd LLL yyyy"));
-    // setStartTimeString(format(shift.getStartTime(), "HH:mm"));
-    // setEndTimeString(format(shift.getEndTime(), "HH:mm"));
-
-    //make a string date in the form of YYYY-MM-DD
-    // var month = getMonth(selectedDate) + 1;
-    // if (month < 10) {
-    //   month = "0" + (getMonth(selectedDate) + 1);
-    // }
-    var apiDate = format(selectedDate, "dd");
-    setApiDateString(formatISO(selectedDate));
-    // setApiDateString(
-    //   dateStringArr[3] +
-    //     "-" +
-    //     month +
-    //     "-" +
-    //     apiDate +
-    //     "T" +
-    //     startTimeString +
-    //     ":00"
-    // );
-  }
-
-  // updateDateInfo(teamId, selectedDate);
+  }, [shift]);
 
   return (
     //find shift information with cooresponding team & date.
@@ -134,7 +97,7 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
               <span className="float-left align-start inline-flex ml-10 mr-3 text-xl">
                 {day}, {dateString}
               </span>
-              {(day == "Sunday" || day == "Saturday") && (
+              {(day === "Sunday" || day === "Saturday") && (
                 <span className="float-right mr-20 mt-1 inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                   Weekend
                 </span>
@@ -183,7 +146,31 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
           </tr> */}
         </tbody>
       </table>
-      <Tabs>
+
+      <div>
+        {shiftFound ? (
+          <Tabs>
+            <div label="All">
+              <TabDisplay shiftId={shift.shiftId} idx="-1" />
+            </div>
+            <div label="Salesmen">
+              <TabDisplay shiftId={shift.shiftId} idx="0" />
+            </div>
+            <div label="Cashiers">
+              <TabDisplay shiftId={shift.shiftId} idx="1" />
+            </div>
+            <div label="Managers">
+              <TabDisplay shiftId={shift.shiftId} idx="2" />
+            </div>
+          </Tabs>
+        ) : (
+          <></>
+          // <div>
+          //   <div>No Shifts Assigned To This Date.</div>
+          // </div>
+        )}
+      </div>
+      {/* <Tabs>
         <div label="All">
           Deez nuts on yo chin, <em>All</em>!
         </div>
@@ -193,10 +180,19 @@ const InfoPanel = ({ teamId, selectedDate = new Date() }) => {
         <div label="Croc">
           After 'while, <em>Crocodile</em>!
         </div>
-        <div label="Sarcosuchus">
-          Nothing to see here, this tab is <em>extinct</em>!
+        <div label="All">
+          <TabDisplay shiftId={shift.shiftId} idx="-1" />
         </div>
-      </Tabs>
+        <div label="Salesmen">
+          <TabDisplay shiftId={shift.shiftId} idx="0" />
+        </div>
+        <div label="Cashiers">
+          <TabDisplay shiftId={shift.shiftId} idx="1" />
+        </div>
+        <div label="Managers">
+          <TabDisplay shiftId={shift.shiftId} idx="2" />
+        </div>
+      </Tabs> */}
     </div>
   );
 };

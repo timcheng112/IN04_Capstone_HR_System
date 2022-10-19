@@ -23,10 +23,10 @@ public class UserController {
     private final UserService userService;
     private final PositionRepository positionRepository;
 
-//    @Autowired
-//    public UserController(UserService userService) {
-//        this.userService = userService;
-//    }
+    // @Autowired
+    // public UserController(UserService userService) {
+    // this.userService = userService;
+    // }
 
     // @GetMapping
     // public List<User> getTestUser() {
@@ -101,8 +101,9 @@ public class UserController {
             @RequestParam("jobType") String jobType) {
         System.out.println("UserController.registerNewAccountHRMS");
 
-        List<Position> newPositionList = new ArrayList<Position>();
-        Position position = new Position(positionName, positionDescription, LocalDate.parse(dateJoined), JobTypeEnum.valueOf(jobType), PositionTypeEnum.valueOf(positionType));
+        Position position = new Position(positionName, positionDescription, LocalDate.parse(dateJoined),
+                JobTypeEnum.valueOf(jobType), PositionTypeEnum.valueOf(positionType));
+
         Position newPos = positionRepository.saveAndFlush(position);
 
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
@@ -315,14 +316,14 @@ public class UserController {
         return userService.getEmployeesWithTask(taskId);
     }
 
-//    @GetMapping(path = "/getMyAttendanceToday")
-//    public List<Integer> getMyAttendanceToday(Long sliId, Long userId){
-//        return getMyAttendanceToday(sliId, userId);
-//    }
+    // @GetMapping(path = "/getMyAttendanceToday")
+    // public List<Integer> getMyAttendanceToday(Long sliId, Long userId){
+    // return getMyAttendanceToday(sliId, userId);
+    // }
 
     @GetMapping(path = "/getAttendanceToday")
-    public List<Integer> getAttendanceToday(Long sliId, Long userId){
-//        return getMyAttendanceToday();
+    public List<Integer> getAttendanceToday(Long sliId, Long userId) {
+        // return getMyAttendanceToday();
         return getAttendanceToday(sliId, userId);
     }
 

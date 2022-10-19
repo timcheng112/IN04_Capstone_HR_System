@@ -307,10 +307,12 @@ const api = {
     return axios.get(`http://localhost:9191/api/module/video/${videoId}`);
   },
   getEmployeesAssignedToModule(moduleId) {
-    return axios.get(`http://localhost:9191/api/module/${moduleId}/user`)
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/user`);
   },
   getEmployeesUnassignedToModule(moduleId) {
-    return axios.get(`http://localhost:9191/api/module/${moduleId}/unAssignedUser`)
+    return axios.get(
+      `http://localhost:9191/api/module/${moduleId}/unAssignedUser`
+    );
   },
   getIsUserAssignedToModule(moduleId, userId) {
     return axios.get(`http://localhost:9191/api/module/${moduleId}/user/${userId}/assigned`)
@@ -331,19 +333,27 @@ const api = {
     return axios.put(`http://localhost:9191/api/video/${videoId}`, video);
   },
   deleteVideo(videoId) {
-    return axios.delete(`http://localhost:9191/api/video/${videoId}`)
+    return axios.delete(`http://localhost:9191/api/video/${videoId}`);
   },
   markVideoAsWatched(videoId, userId) {
-    return axios.post(`http://localhost:9191/api/video/${videoId}/user/${userId}`)
+    return axios.post(
+      `http://localhost:9191/api/video/${videoId}/user/${userId}`
+    );
   },
   getIsVideoWatchedByEmployee(videoId, userId) {
-    return axios.get(`http://localhost:9191/api/video/${videoId}/user/${userId}`)
+    return axios.get(
+      `http://localhost:9191/api/video/${videoId}/user/${userId}`
+    );
   },
   getUserProgress(moduleId, userId) {
-    return axios.get(`http://localhost:9191/api/module/${moduleId}/user/${userId}`)
+    return axios.get(
+      `http://localhost:9191/api/module/${moduleId}/user/${userId}`
+    );
   },
   getUserCompletedModules(userId) {
-    return axios.get(`http://localhost:9191/api/module/user/${userId}/completed`)
+    return axios.get(
+      `http://localhost:9191/api/module/user/${userId}/completed`
+    );
   },
   // JOB REQUEST
   getAllJobRequests() {
@@ -509,6 +519,40 @@ const api = {
     return axios.post(
       `http://localhost:9191/api/shift_list_item?shiftId=${shiftId}&userId=${userId}`,
       shiftListItem
+    );
+  },
+  getTemplateShiftsByRoster(rosterId) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getTemplateShiftsByRoster?rosterId=${rosterId}`
+    );
+  },
+  getShiftListItemByDateAndUserId(date, userId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndUserId?date=${date}&userId=${userId}`
+    );
+  },
+  deleteShift(shiftId) {
+    return axios.delete(`http://localhost:9191/api/shift/${shiftId}`);
+  },
+  editShift(shiftId, shift) {
+    return axios.put(
+      `http://localhost:9191/api/shift/editShift/${shiftId}`,
+      shift
+    );
+  },
+  getShiftsByTeam(teamId) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getShiftsByTeam?teamId=${teamId}`
+    );
+  },
+  getShiftListItemByDateAndUserId(date, userId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndUserId?date=${date}&userId=${userId}`
+    );
+  },
+  deleteShiftListItem(shiftListItemId) {
+    return axios.delete(
+      `http://localhost:9191/api/shift_list_item/${shiftListItemId}`
     );
   },
 };

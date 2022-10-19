@@ -2,12 +2,16 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import AddShiftForm from "./AddShiftForm";
-import { getDate, getMonth, getYear } from "date-fns";
+import { format, getDate, getMonth, getYear } from "date-fns";
+import api from "../../utils/api";
 
 export default function AddTemplateShiftModal({
   open,
   onClose,
-  addTemplateShiftHandler,
+  // addTemplateShiftHandler,
+  rosterId,
+  refreshKeyHandler,
+  openSuccess,
 }) {
   const [shiftTitleValue, setShiftTitleValue] = useState("");
   const [startTimeValue, setStartTimeValue] = useState(null);
@@ -15,8 +19,6 @@ export default function AddTemplateShiftModal({
   const [salesmanQuotaValue, setSalesmanQuotaValue] = useState("");
   const [cashierQuotaValue, setCashierQuotaValue] = useState("");
   const [storemanagerQuotaValue, setStoremanagerQuotaValue] = useState("");
-  const [asstStoremanagerQuotaValue, setAsstStoremanagerQuotaValue] =
-    useState("");
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
 
   const createTemplateShiftHandler = () => {
@@ -26,44 +28,67 @@ export default function AddTemplateShiftModal({
       endTimeValue !== null &&
       salesmanQuotaValue !== "" &&
       cashierQuotaValue !== "" &&
-      storemanagerQuotaValue !== "" &&
-      asstStoremanagerQuotaValue !== ""
+      storemanagerQuotaValue !== ""
     ) {
-      const dummyDate = new Date();
-      let templateShiftToBeAdded = {
-        shiftTitle: shiftTitleValue,
-        startDate: new Date(
-          getYear(dummyDate),
-          getMonth(dummyDate),
-          getDate(dummyDate),
-          startTimeValue.substring(0, 2),
-          startTimeValue.substring(3, 5),
-          0,
-          0
-        ),
-        endDate: new Date(
-          getYear(dummyDate),
-          getMonth(dummyDate),
-          getDate(dummyDate),
-          endTimeValue.substring(0, 2),
-          endTimeValue.substring(3, 5),
-          0,
-          0
-        ),
-        minQuota: [
-          salesmanQuotaValue,
-          cashierQuotaValue,
-          storemanagerQuotaValue,
-          asstStoremanagerQuotaValue,
-        ],
-        shiftRemarks: shiftRemarksValue,
-      };
-      addTemplateShiftHandler(templateShiftToBeAdded);
-      onClose();
+      if (startTimeValue < endTimeValue) {
+        const dummyDate = new Date();
+        let templateShiftToBeAdded = {
+          shiftTitle: shiftTitleValue,
+          startTime: format(
+            new Date(
+              getYear(dummyDate),
+              getMonth(dummyDate),
+              getDate(dummyDate),
+              startTimeValue.substring(0, 2),
+              startTimeValue.substring(3, 5),
+              0,
+              0
+            ),
+            "yyyy-MM-dd HH:mm:ss"
+          ),
+          endTime: format(
+            new Date(
+              getYear(dummyDate),
+              getMonth(dummyDate),
+              getDate(dummyDate),
+              endTimeValue.substring(0, 2),
+              endTimeValue.substring(3, 5),
+              0,
+              0
+            ),
+            "yyyy-MM-dd HH:mm:ss"
+          ),
+          minQuota: [
+            salesmanQuotaValue,
+            cashierQuotaValue,
+            storemanagerQuotaValue,
+          ],
+          remarks: shiftRemarksValue,
+          isTemplateShift: true,
+        };
+        console.log(templateShiftToBeAdded.startTime);
+        addTemplateShiftHandler(templateShiftToBeAdded);
+        refreshKeyHandler();
+        onClose();
+      } else {
+        alert("End time must be after start time!");
+      }
     } else {
       alert("Invalid fields!");
     }
   };
+
+  function addTemplateShiftHandler(templateShiftToBeAdded) {
+    api
+      .addNewShift(templateShiftToBeAdded, rosterId)
+      .then((response) =>
+        // alert(
+        //   "Template shift with ID: " + response.data + " successfully added"
+        // )
+        openSuccess()
+      )
+      .catch((error) => alert(error.response.data.message));
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -111,9 +136,6 @@ export default function AddTemplateShiftModal({
                         setCashierQuota={(value) => setCashierQuotaValue(value)}
                         setStoremanagerQuota={(value) =>
                           setStoremanagerQuotaValue(value)
-                        }
-                        setAsstStoremanagerQuota={(value) =>
-                          setAsstStoremanagerQuotaValue(value)
                         }
                         setShiftRemarks={(value) => setShiftRemarksValue(value)}
                       />

@@ -31,7 +31,6 @@ public class ShiftListItem {
     @Column(name = "is_ph_event")
     private Boolean isPhEvent;
 
-
     // ** replaced with position type **
     // @Column(name = "shift_role")
     // private String shiftRole;
@@ -44,7 +43,7 @@ public class ShiftListItem {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "pos_type", nullable = false)
+    @Column(name = "pos_type")
     private PositionTypeEnum posType;
 
     public ShiftListItem() {
