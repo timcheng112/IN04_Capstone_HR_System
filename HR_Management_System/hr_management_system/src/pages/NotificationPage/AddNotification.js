@@ -24,6 +24,7 @@ export default function AddNotification(props) {
     // console.log(userInfo.authorities);
     const boo = window.confirm("Are you sure you want to submit?");
     console.log("are you here");
+    console.log(users)
     if (boo) {
       api
         .addNotification(title, description, parseInt(users))
@@ -31,7 +32,7 @@ export default function AddNotification(props) {
           console.log(response.data);
         })
         .then(() => {
-          //history.push("/home");
+          history.push("/AllNotifications");
         });
     }
   };

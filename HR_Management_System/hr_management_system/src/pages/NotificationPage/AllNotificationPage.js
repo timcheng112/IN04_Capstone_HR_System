@@ -52,25 +52,26 @@ export default function Example() {
   // const [userId, setUser] = useState("");
   // setUser(getUserId());
   const userId = getUserId();
-  console.log(userId);
+  //   console.log(userId);
+  const history = useHistory();
 
   const [notification, setNotification] = useState([]);
   let [userInfo, setUserInfo] = useState([]);
-  const history = useHistory();
+//   const history = useHistory();
 
-      useEffect(() => {
-        // console.log(userId)
-        api
-          .getAllNotificationsForUser(getUserId()).then((response) => {
-            // console.log(response.data);
-            setNotification(response.data);
-    
-          })
-          .catch((error) => {
-            console.log(error);
-            alert("Unable to get all notifications right now")
-          });
-      },[]);
+  useEffect(() => {
+    // console.log(userId)
+    api
+      .getAllNotificationsForUser(getUserId())
+      .then((response) => {
+        // console.log(response.data);
+        setNotification(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Unable to get all notifications right now");
+      });
+  }, []);
 
   const deleteANotification = ( notificationId ) => {
     // evt.preventDefault();
@@ -85,6 +86,8 @@ export default function Example() {
         .then((response) => {
           console.log(response.data);
           //   setNotification(response.data);
+        //   history.push("/AllNotifications");
+          window.location.reload();
         })
         .then(() => {
           console.log("are you here");
@@ -113,8 +116,8 @@ export default function Example() {
         })
         .then(() => {
           console.log("are you here");
-
-          history.push("/home");
+            window.location.reload();
+        //   history.push("/AllNotifications");
         })
         .catch((error) => {
           console.log(error);
@@ -123,25 +126,25 @@ export default function Example() {
     }
   };
 
-        // useEffect(() => {
-        //     // console.log(userId)
-        //     api
-        //         .deleteAllNotifications(getUserId()).then((response) => {
-        //         // console.log(response.data);
-        //         setNotification(response.data);
-        
-        //         })
-        //         .catch((error) => {
-        //         console.log(error);
-        //         alert("Unable to delete all your notifications right now")
-        //         });
-        //     },[]);
+  // useEffect(() => {
+  //     // console.log(userId)
+  //     api
+  //         .deleteAllNotifications(getUserId()).then((response) => {
+  //         // console.log(response.data);
+  //         setNotification(response.data);
+
+  //         })
+  //         .catch((error) => {
+  //         console.log(error);
+  //         alert("Unable to delete all your notifications right now")
+  //         });
+  //     },[]);
 
         
   return (
 
     <>
-    <Navbar/>
+      <Navbar />
       <div className="relative bg-indigo-800">
         <div className="absolute inset-0">
           <img
@@ -162,7 +165,7 @@ export default function Example() {
         </div>
       </div>
 
-        
+
 
 
 
@@ -200,16 +203,19 @@ export default function Example() {
 
         {notification.map((message) => (
           <li
-            key={message.id}
+            key={message.notificationId}
             className="relative bg-white py-5 px-4 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 hover:bg-gray-50"
           >
             <div className="flex justify-between space-x-3">
-              
+
             <button
                 type="button"
                 className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
+                // value={message.id}
                 onClick={() => {
-                  deleteANotification(message.id);
+                    // console.log("clicked");
+                    console.log(message.notificationId)
+                  deleteANotification(message.notificationId);
                 }}
               >
                 <TrashIcon
@@ -219,17 +225,20 @@ export default function Example() {
                 Delete
             </button>
               <div className="min-w-0 flex-1">
-              
-                <a href="/NotificationExpandPage" className="block focus:outline-none">
-                  <span className="absolute inset-0" aria-hidden="true" />
+                {/* <a
+                  href="/NotificationExpandPage"
+                  className="block focus:outline-none"
+                > */}
+                  <span className="" aria-hidden="true" />
 
                   <p className="truncate text-sm text-black-1500 font-bold">
                     {message.title}
                   </p>
-                </a>
+                {/* </a> */}
               </div>
               <time
-                dateTime={message.datetime}
+
+                dateTime={message.notifTime}
                 className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
               >
                 {message.time}
@@ -237,7 +246,7 @@ export default function Example() {
             </div>
             <div className="mt-1">
               <p className="text-sm text-gray-600 line-clamp-1">
-                {message.description}   
+                {message.description}
               </p>
             </div>
           </li>

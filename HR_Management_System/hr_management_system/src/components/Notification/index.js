@@ -53,7 +53,7 @@ export default function Notification(props) {
                     <div className="mt-3 flex space-x-7">
                       <button
                         type="button"
-                        className="rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 "
                         onClick={() => {
                             setShow(true);
                             history.push(`/AllNotifications`)
@@ -61,7 +61,7 @@ export default function Notification(props) {
                       >
                         Open
                       </button>
-                      <button
+                      {/* <button
                         type="button"
                         className="rounded-md bg-white text-sm font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         onClick={() => {
@@ -69,7 +69,7 @@ export default function Notification(props) {
                           }}
                       >
                         Dismiss
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                   <div className="ml-4 flex flex-shrink-0">

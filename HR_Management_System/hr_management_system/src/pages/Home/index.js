@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, Link } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
 import {
   AcademicCapIcon,
@@ -501,11 +501,12 @@ export default function Home() {
                                   <span className="sr-only">
                                     View notifications
                                   </span>
+                                  <Link to="/AllNotifications">
                                   <BellIcon
                                     className="h-6 w-6"
                                     aria-hidden="true"
-                                    href="/AllNotificationPage"
-                                  />
+                                    href=""
+                                  /></Link>
                                 </button>
                               </div>
                               <div className="mt-3 space-y-1 px-2">
