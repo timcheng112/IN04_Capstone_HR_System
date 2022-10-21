@@ -149,6 +149,11 @@ function App() {
           <PublicRoute exact path="/NotificationExpandPage" component={NotificationExpandPage}/>
           <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
 
+          <PrivateRoute exact path="/mytraining/completed" component={TrainingCompletedPage} />
+          <PrivateRoute exact path="/training" component={AllTrainingPage} />  
+          <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />     
+          <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
+          <PrivateRoute exact path="/video" component={AllVideosPage} />  
 
         </Switch>
       </div>
