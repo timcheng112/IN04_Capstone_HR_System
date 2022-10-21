@@ -40,6 +40,7 @@ export default function AddTeamModal({
             refreshKeyHandler();
           } else {
             console.error("failed to add new team!");
+            alert("Failed to create team.");
           }
         })
         .catch((error) => {
@@ -108,6 +109,7 @@ export default function AddTeamModal({
   const handleSubmit = (evt) => {
     evt.preventDefault();
     addTeam();
+    onClose();
   };
 
   return (

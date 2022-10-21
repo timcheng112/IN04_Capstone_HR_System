@@ -1,7 +1,7 @@
 export const getUserId = () => {
   var cookieEmail = document.cookie.valueOf("userEmail=").split(";")[0];
   var cookieId = document.cookie.valueOf("userSession=").split(";")[1];
-  
+
   if (cookieId) {
     const tempId = cookieId.substring(13);
     const tempEmail = cookieEmail.substring(10);
@@ -11,12 +11,12 @@ export const getUserId = () => {
 
     //a request was called, extends user session by 30 minutes
     document.cookie =
-      "userEmail=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      "userEmail=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure";
     document.cookie =
-      "userSession=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      "userSession=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure";
 
-    document.cookie = `userEmail=${tempEmail}; max-age=3600; path=/;`;
-    document.cookie = `userSession=${tempId}; max-age=3600; path=/;`;
+    document.cookie = `userEmail=${tempEmail}; max-age=3600; path=/; SameSite=None; Secure`;
+    document.cookie = `userSession=${tempId}; max-age=3600; path=/; SameSite=None; Secure`;
 
     //console.log('30 more minutes')
 
@@ -31,7 +31,7 @@ export const getUserId = () => {
 export const getUserEmail = () => {
   var cookieEmail = document.cookie.valueOf("userEmail=").split(";")[0];
   var cookieId = document.cookie.valueOf("userSession=").split(";")[1];
-  
+
   if (cookieEmail) {
     const tempId = cookieId.substring(13);
     const tempEmail = cookieEmail.substring(10);
@@ -41,14 +41,12 @@ export const getUserEmail = () => {
 
     //a request was called, extends user session by 30 minutes
     document.cookie =
-      "userEmail=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      "userEmail=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure";
     document.cookie =
-      "userSession=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      "userSession=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure";
 
-    document.cookie = `userEmail=${tempEmail}; max-age=1800; path=/;`;
-    document.cookie = `userSession=${tempId}; max-age=1800; path=/;`;
-
-    //console.log('30 more minutes')
+    document.cookie = `userEmail=${tempEmail}; max-age=1800; path=/; SameSite=None; Secure`;
+    document.cookie = `userSession=${tempId}; max-age=1800; path=/; SameSite=None; Secure`;
 
     const userEmail = tempEmail;
     return userEmail;
@@ -59,13 +57,14 @@ export const getUserEmail = () => {
 };
 
 export const setUserSession = (userId, email) => {
-  document.cookie = `userEmail=${email}; max-age=1800; path=/;`;
-  document.cookie = `userSession=${userId}; max-age=1800; path=/;`;
+  document.cookie = `userEmail=${email}; max-age=1800; path=/; SameSite=None; Secure`;
+  document.cookie = `userSession=${userId}; max-age=1800; path=/; SameSite=None; Secure`;
 };
 
 export const deleteUser = () => {
   document.cookie =
-    "userEmail=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    "userEmail=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure";
   document.cookie =
-    "userSession=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    "userSession=none; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure";
+  sessionStorage.clear();
 };

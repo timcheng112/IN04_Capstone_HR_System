@@ -1,9 +1,12 @@
 package com.conceiversolutions.hrsystem.rostering.shiftlistitem;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.time.*;
 
 import org.springframework.stereotype.Service;
 
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 import com.conceiversolutions.hrsystem.rostering.shift.ShiftRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -19,10 +22,12 @@ public class ShiftListItemService {
     private final ShiftRepository shiftRepository;
     private final UserRepository userRepository;
 
+    // doesnt really work
     public List<ShiftListItem> getShiftListItems() {
         List<ShiftListItem> shiftListItems = shiftListItemRepository.findAll();
         for (ShiftListItem shiftListItem : shiftListItems) {
             shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
             shiftListItem.setUser(null);
         }
         return shiftListItems;
@@ -32,8 +37,40 @@ public class ShiftListItemService {
         ShiftListItem shiftListItem = shiftListItemRepository.findById(shiftListItemId).orElseThrow(
                 () -> new IllegalStateException("Shift List Item with ID: " + shiftListItemId + " does not exist!"));
         shiftListItem.getShift().setRoster(null);
+        shiftListItem.getShift().setShiftListItems(new ArrayList<>());
         shiftListItem.setUser(null);
         return shiftListItem;
+    }
+
+    public List<ShiftListItem> getShiftListItemByShift(Long shiftId) {
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByShiftId(shiftId);
+        for (ShiftListItem shiftListItem : shiftListItems) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().setTeams(new ArrayList<>());
+            shiftListItem.getUser().setQualificationInformation(null);
+            shiftListItem.getUser().setPositions(new ArrayList<>());
+            shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+            shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+
+        }
+        return shiftListItems;
+    }
+
+    public List<ShiftListItem> getShiftListItemByPosition(Long shiftId, String posType) {
+        PositionTypeEnum posTypeEnum = PositionTypeEnum.valueOf(posType);
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByPosition(shiftId, posTypeEnum);
+        for (ShiftListItem shiftListItem : shiftListItems) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().setTeams(new ArrayList<>());
+            shiftListItem.getUser().setQualificationInformation(null);
+            shiftListItem.getUser().setPositions(new ArrayList<>());
+            shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+            shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+
+        }
+        return shiftListItems;
     }
 
     public Long addNewShiftListItem(ShiftListItem shiftListItem, Long shiftId, Long userId) {
@@ -47,6 +84,7 @@ public class ShiftListItemService {
         ShiftListItem savedShiftListItem = shiftListItemRepository.saveAndFlush(shiftListItem);
 
         shift.addShiftListItem(savedShiftListItem);
+        // System.out.println("SHIFT: " + shift.getShiftListItems());
         shiftRepository.saveAndFlush(shift);
 
         user.addShiftListItems(savedShiftListItem);
@@ -59,11 +97,45 @@ public class ShiftListItemService {
         ShiftListItem shiftListItem = shiftListItemRepository.findById(shiftListItemId).orElseThrow(
                 () -> new IllegalStateException("Shift List Item with ID: " + shiftListItemId + " does not exist!"));
 
-        shiftListItem.getShift().removeShiftListItem(shiftListItem);
-        shiftListItem.setShift(null);
+        if (shiftListItem.getShift() != null) {
+            shiftListItem.getShift().removeShiftListItem(shiftListItem);
+            shiftListItem.setShift(null);
+        }
         shiftListItem.getUser().removeShiftListItems(shiftListItem);
         shiftListItem.setUser(null);
 
         shiftListItemRepository.deleteById(shiftListItemId);
+    }
+
+    // controller should convert string date into localdate
+    public ShiftListItem getShiftListItemByDateAndUserId(LocalDate date, Long userId) {
+        LocalDateTime start = LocalDateTime.of(date, LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(date, LocalTime.of(23, 59, 59));
+        ShiftListItem shiftListItem = null;
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByDateAndUserId(start, end,
+                userId);
+        if (shiftListItems.size() == 0) {
+            // failtofind
+            throw new IllegalStateException("No shiftListItems found for specified date and userId");
+        } else if (shiftListItems.size() > 1) {
+            // unexpected found more than 1 shiftListItem for user on specified date.
+            throw new IllegalStateException("Found more than 1 shiftListItem for specified date and userId");
+        } else {
+            // default
+            shiftListItem = shiftListItems.get(0);
+        }
+
+        if (shiftListItem != null) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().setTeams(new ArrayList<>());
+            shiftListItem.getUser().setQualificationInformation(null);
+            shiftListItem.getUser().setPositions(new ArrayList<>());
+            shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+            shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+        }
+
+        return shiftListItem;
     }
 }

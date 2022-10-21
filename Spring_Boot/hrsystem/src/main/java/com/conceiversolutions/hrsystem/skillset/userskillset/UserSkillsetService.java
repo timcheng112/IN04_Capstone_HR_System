@@ -33,8 +33,7 @@ public class UserSkillsetService {
         System.out.println("userId = " + userId + ", skillsetId = " + skillsetId + ", skillLevel = " + skillLevel);
 
         // get user
-        Optional<User> u = userRepository.findById(userId);
-        User user = u.get();
+        User user = userRepository.findById(userId).get();
 
         QualificationInformation qi = null;
 

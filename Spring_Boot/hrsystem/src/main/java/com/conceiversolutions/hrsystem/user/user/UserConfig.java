@@ -2,8 +2,11 @@ package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationService;
+import com.conceiversolutions.hrsystem.user.position.Position;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +20,10 @@ public class UserConfig {
     CommandLineRunner userCommandLineRunner(UserRepository userRepository, UserService userService, OrganizationService organizationService) {
         // User Init for 2 test users
         return args -> {
+
+                Position testUserPosition = new Position("Administrator", "Administrator position description", JobTypeEnum.FULLTIME,
+                PositionTypeEnum.OFFICEWORKER);
+
             User testUser = new User(
                     "Janice",
                     "Sim",
@@ -31,6 +38,7 @@ public class UserConfig {
                     null);
             testUser.setWorkEmail("simj@libro.com");
             testUser.setEnabled(true);
+            testUser.setCurrentPosition(testUserPosition);
 
             User testUser2 = new User(
                     "Matthew",
@@ -46,6 +54,7 @@ public class UserConfig {
                     null);
             testUser2.setWorkEmail("leem@libro.com");
             testUser2.setEnabled(true);
+            testUser2.setCurrentPosition(testUserPosition);
 
             User ceo = new User(
                     "Jeremy",
@@ -61,8 +70,13 @@ public class UserConfig {
                     null);
             ceo.setWorkEmail("ongj@libro.com");
             ceo.setEnabled(true);
+            ceo.setCurrentPosition(new Position("CEO", "CEO position description", JobTypeEnum.FULLTIME,
+            PositionTypeEnum.EXECUTIVE));
 
             Long ceoId = Long.valueOf(0);
+
+            Position managerPosition = new Position("Manager", "Manager position description", JobTypeEnum.FULLTIME,
+            PositionTypeEnum.SALESMAN);
 
             User manager1 = new User(
                     "Matthew",
@@ -78,6 +92,7 @@ public class UserConfig {
                     null);
             manager1.setWorkEmail("matthew@libro.com");
             manager1.setEnabled(true);
+            manager1.setCurrentPosition(managerPosition);
 
             User manager2 = new User(
                     "Xueqi",
@@ -93,6 +108,7 @@ public class UserConfig {
                     null);
             manager2.setWorkEmail("xueqi@libro.com");
             manager2.setEnabled(true);
+            manager2.setCurrentPosition(managerPosition);
 
             User manager3 = new User(
                     "Shihan",
@@ -108,6 +124,7 @@ public class UserConfig {
                     null);
             manager3.setWorkEmail("shihan@libro.com");
             manager3.setEnabled(true);
+            manager3.setCurrentPosition(managerPosition);
             
             User manager4 = new User(
                     "Xinyue",
@@ -123,6 +140,7 @@ public class UserConfig {
                     null);
             manager4.setWorkEmail("xinyue@libro.com");
             manager4.setEnabled(true);
+            manager4.setCurrentPosition(managerPosition);
 
             User manager5 = new User(
                     "Alison",
@@ -138,7 +156,7 @@ public class UserConfig {
                     null);
             manager5.setWorkEmail("alison@libro.com");
             manager5.setEnabled(true);
-
+            manager5.setCurrentPosition(managerPosition);
 
             // if any user exists already, don't run
             if (!userRepository.existsById(1L)) {

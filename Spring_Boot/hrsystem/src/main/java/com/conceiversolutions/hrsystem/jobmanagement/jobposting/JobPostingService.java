@@ -39,7 +39,6 @@ public class JobPostingService {
                 poster.setManagerAppraisals(new ArrayList<>());
                 poster.setManagerReviews(new ArrayList<>());
                 poster.setEmployeeReviews(new ArrayList<>());
-                poster.setModules(new ArrayList<>());
                 poster.setApplications(new ArrayList<>());
                 poster.setGoals(new ArrayList<>());
                 poster.setPositions(new ArrayList<>());
@@ -49,6 +48,12 @@ public class JobPostingService {
                 poster.setSwapRequestsReceived(new ArrayList<>());
                 poster.setSwapRequestsRequested(new ArrayList<>());
                 poster.setLeaves(new ArrayList<>());
+                poster.setLeaveQuotas(new ArrayList<>());
+                poster.setCurrentLeaveQuota(null);
+                poster.setTaskListItems(null);
+                poster.setCurrentPosition(null);
+                poster.setTeams(null);
+                poster.setPayslips(new ArrayList<>());
             }
 
             if (jp.getJobPostRequirements().size() != 0) {

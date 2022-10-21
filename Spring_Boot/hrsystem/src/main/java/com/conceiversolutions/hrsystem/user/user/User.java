@@ -7,6 +7,7 @@ import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobapplication.JobApplication;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
+import com.conceiversolutions.hrsystem.notification.Notification;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.pay.attendance.Attendance;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
@@ -18,15 +19,16 @@ import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
-import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -118,9 +120,6 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "employeeReviewing")
     @Column(name = "reviewed_by")
     private List<ManagerReview> employeeReviews;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Module.class, mappedBy = "employee")
-    @Column(name = "modules")
-    private List<Module> modules;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
@@ -157,6 +156,15 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "employee")
     private List<Leave> leaves;
 
+
+    @OneToMany
+    @JoinColumn(name ="unread_notifications")
+    private List<Notification> notificationsUnread;
+
+    @OneToMany
+    @JoinColumn(name ="read_notifications")
+    private List<Notification> notificationsRead;
+
     // TODO add on other relationships to other classes
 
     public User() {
@@ -169,7 +177,6 @@ public class User implements UserDetails {
         this.managerAppraisals = new ArrayList<>();
         this.managerReviews = new ArrayList<>();
         this.employeeReviews = new ArrayList<>();
-        this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
         this.teams = new ArrayList<>();
@@ -180,6 +187,8 @@ public class User implements UserDetails {
         this.swapRequestsRequested = new ArrayList<>();
         this.swapRequestsReceived = new ArrayList<>();
         this.preferredDates = null;
+        this.notificationsRead = new ArrayList<>();
+        this.notificationsUnread = new ArrayList<>();
     }
 
     // this should be for making a new applicant's account
@@ -204,6 +213,17 @@ public class User implements UserDetails {
         this.profilePic = null;
         this.currentPosition = null;
         this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
     }
 
@@ -261,6 +281,13 @@ public class User implements UserDetails {
         this.jobRequests = jobRequests;
         this.payslips = payslips;
         this.attendances = attendances;
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
     }
 
@@ -287,6 +314,52 @@ public class User implements UserDetails {
         this.qualificationInformation = null;
         this.currentPosition = currentPosition;
         this.positions.add(currentPosition);
+    }
+
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed, Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions, Position currentPosition, QualificationInformation qualificationInformation, List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances, List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<ManagerReview> managerReviews, List<ManagerReview> employeeReviews, List<Module> modules, List<Goal> goals, List<TaskListItem> taskListItems, List<Team> teams, PayInformation currentPayInformation, ReactivationRequest reactivationRequest, PreferredDates preferredDates, List<Block> blocks, List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested, List<SwapRequest> swapRequestsReceived, LeaveQuota currentLeaveQuota, List<LeaveQuota> leaveQuotas, List<Leave> leaves, List<Notification> notificationsUnread, List<Notification> notificationsRead) {
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.userRole = userRole;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.isBlackListed = isBlackListed;
+        this.isEnabled = isEnabled;
+        this.dateJoined = dateJoined;
+        this.profilePic = profilePic;
+        this.positions = positions;
+        this.currentPosition = currentPosition;
+        this.qualificationInformation = qualificationInformation;
+        this.applications = applications;
+        this.jobRequests = jobRequests;
+        this.payslips = payslips;
+        this.attendances = attendances;
+        this.employeeAppraisals = employeeAppraisals;
+        this.managerAppraisals = managerAppraisals;
+        this.managerReviews = managerReviews;
+        this.employeeReviews = employeeReviews;
+//        this.modules = modules;
+        this.goals = goals;
+        this.taskListItems = taskListItems;
+        this.teams = teams;
+        this.currentPayInformation = currentPayInformation;
+        this.reactivationRequest = reactivationRequest;
+        this.preferredDates = preferredDates;
+        this.blocks = blocks;
+        this.shiftListItems = shiftListItems;
+        this.swapRequestsRequested = swapRequestsRequested;
+        this.swapRequestsReceived = swapRequestsReceived;
+        this.currentLeaveQuota = currentLeaveQuota;
+        this.leaveQuotas = leaveQuotas;
+        this.leaves = leaves;
+        this.notificationsUnread = new ArrayList<>();
+        this.notificationsRead = new ArrayList<>();
     }
 
     @Override
@@ -412,6 +485,34 @@ public class User implements UserDetails {
         isPartTimer = partTimer;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
+    public PayInformation getCurrentPayInformation() {
+        return currentPayInformation;
+    }
+
+    public void setCurrentPayInformation(PayInformation currentPayInformation) {
+        this.currentPayInformation = currentPayInformation;
+    }
+
+    public ReactivationRequest getReactivationRequest() {
+        return reactivationRequest;
+    }
+
+    public void setReactivationRequest(ReactivationRequest reactivationRequest) {
+        this.reactivationRequest = reactivationRequest;
+    }
+
+    public List<TaskListItem> getTaskListItems() {
+        return taskListItems;
+    }
+
+    public void setTaskListItems(List<TaskListItem> taskListItems) {
+        this.taskListItems = taskListItems;
+    }
+    
     public Boolean getHrEmployee() {
         return isHrEmployee;
     }

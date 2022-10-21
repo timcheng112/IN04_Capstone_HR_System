@@ -2,8 +2,8 @@ import * as React from "react";
 import { View } from "react-native";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { Appbar } from "react-native-paper";
-import { Dialog, Portal } from 'react-native-paper';
-import HomeScreen from "../screens/HomeScreen";
+import { Dialog, Portal } from "react-native-paper";
+import HomeScreen from "../../screens/HomeScreen";
 
 //go to list of attendance maybe..
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
@@ -17,8 +17,8 @@ const dialog = () => {
     <Portal>
       <Dialog visible={visible} onDismiss={hideDialog}>
         <Dialog.Actions>
-          <Button onPress={() => console.log('Cancel')}>Cancel</Button>
-          <Button onPress={() => console.log('Ok')}>Confirm</Button>
+          <Button onPress={() => console.log("Cancel")}>Cancel</Button>
+          <Button onPress={() => console.log("Ok")}>Confirm</Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>
@@ -35,7 +35,11 @@ const actionCheckIn = (props) => (
 const CheckInOut = (props) => (
   <>
     <Appbar.Header>
-      <Appbar.BackAction onPress={() => {HomeScreen}} />
+      <Appbar.BackAction
+        onPress={() => {
+          HomeScreen;
+        }}
+      />
     </Appbar.Header>
 
     <Card>
@@ -45,21 +49,20 @@ const CheckInOut = (props) => (
         left={LeftContent}
       />
       <Card.Content>
-        <Title style={{textAlign:"center", padding:12  }}>CHECK IN/OUT</Title>
+        <Title style={{ textAlign: "center", padding: 12 }}>CHECK IN/OUT</Title>
 
         <Paragraph>Please check-in and out at your work place.</Paragraph>
       </Card.Content>
-      <Card.Cover style={{marginVertical:24  }}
+      <Card.Cover
+        style={{ marginVertical: 24 }}
         source={{
           uri: "https://cdn.stocksnap.io/img-thumbs/960w/home-office_YODJNTOBN9.jpg",
         }}
       />
 
-      <View style={{ flexDirection: "row", margin:10 }} >
+      <View style={{ flexDirection: "row", margin: 10 }}>
         <View style={{ flex: 1 }}>
-          
           <Button
-
             icon="clock"
             mode="contained"
             buttonColor="blue"

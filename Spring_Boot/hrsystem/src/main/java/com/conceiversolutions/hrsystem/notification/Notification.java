@@ -1,10 +1,18 @@
 package com.conceiversolutions.hrsystem.notification;
 
+import com.conceiversolutions.hrsystem.user.user.User;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name="notifications")
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +24,7 @@ public class Notification {
     public String title;
     @Column(name = "description", nullable = false)
     public String description;
+    //read?
 
     public Notification() {
     }
@@ -25,6 +34,14 @@ public class Notification {
         this.title = title;
         this.description = description;
     }
+
+//    public Notification(LocalDateTime notifTime, String title, String description, User employee) {
+//        this.notifTime = notifTime;
+//        this.title = title;
+//        this.description = description;
+//        this.employee = employee;
+//    }
+
 
     public Long getNotificationId() {
         return notificationId;

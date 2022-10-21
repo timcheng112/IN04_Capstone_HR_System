@@ -16,8 +16,8 @@ export default function Navbar() {
   const navigation = [
     { name: 'Dashboard', path: '/'},
     { name: 'Admin', path: '/admin/onboarding'},
-    { name: 'Company', path: '/company'},
-    { name: 'Career', path: '/career'},
+    { name: 'Company', path: '/vieworg'},
+    { name: 'Career', path: '/mytraining'},
     { name: 'Welfare', path: '/welfare'},
     { name: 'Hiring', path: '/hiring/jobrequest'},
     { name: 'Reports', path: '/reports'},
@@ -25,8 +25,9 @@ export default function Navbar() {
   const navigationHR = [
     { name: 'Dashboard', path: '/'},
     { name: 'Admin', path: '/admin/onboarding'},
-    { name: 'Company', path: '/company'},
+    { name: 'Company', path: '/vieworg'},
     { name: 'Career', path: '/career'},
+    { name: 'Training', path: '/mytraining'},
     { name: 'Welfare', path: '/welfare'},
     { name: 'Hiring', path: '/hiring/jobrequesthr'},
     { name: 'Reports', path: '/reports'},
@@ -99,7 +100,7 @@ export default function Navbar() {
                   className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <BellIcon className="h-6 w-6" aria-hidden="true" href="/AllNotifications" />
                 </button>
 
                 {/* Profile dropdown */}

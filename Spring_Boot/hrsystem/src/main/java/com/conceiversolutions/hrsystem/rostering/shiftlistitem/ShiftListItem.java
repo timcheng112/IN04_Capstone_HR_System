@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -29,8 +30,10 @@ public class ShiftListItem {
     private Boolean isWeekend;
     @Column(name = "is_ph_event")
     private Boolean isPhEvent;
-    @Column(name = "shift_role")
-    private String shiftRole;
+
+    // ** replaced with position type **
+    // @Column(name = "shift_role")
+    // private String shiftRole;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Shift.class)
     @JoinColumn(name = "shift_id")
@@ -39,31 +42,35 @@ public class ShiftListItem {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pos_type")
+    private PositionTypeEnum posType;
+
     public ShiftListItem() {
     }
 
-    public ShiftListItem(Boolean isWeekend, Boolean isPhEvent, String shiftRole) {
+    public ShiftListItem(Boolean isWeekend, Boolean isPhEvent, PositionTypeEnum posType) {
         this.isWeekend = isWeekend;
         this.isPhEvent = isPhEvent;
-        this.shiftRole = shiftRole;
+        this.posType = posType;
     }
 
     public ShiftListItem(LocalDateTime checkInTiming, LocalDateTime checkOutTiming, Boolean isWeekend,
-            Boolean isPhEvent, String shiftRole) {
+            Boolean isPhEvent, PositionTypeEnum posType) {
         this.checkInTiming = checkInTiming;
         this.checkOutTiming = checkOutTiming;
         this.isWeekend = isWeekend;
         this.isPhEvent = isPhEvent;
-        this.shiftRole = shiftRole;
+        this.posType = posType;
     }
 
     public ShiftListItem(LocalDateTime checkInTiming, LocalDateTime checkOutTiming, Boolean isWeekend,
-            Boolean isPhEvent, String shiftRole, Shift shift, User user) {
+            Boolean isPhEvent, PositionTypeEnum posType, Shift shift, User user) {
         this.checkInTiming = checkInTiming;
         this.checkOutTiming = checkOutTiming;
         this.isWeekend = isWeekend;
         this.isPhEvent = isPhEvent;
-        this.shiftRole = shiftRole;
+        this.posType = posType;
         this.shift = shift;
         this.user = user;
     }
@@ -124,19 +131,19 @@ public class ShiftListItem {
         this.user = user;
     }
 
-    public String getShiftRole() {
-        return shiftRole;
+    public PositionTypeEnum getPositionType() {
+        return posType;
     }
 
-    public void setShiftRole(String shiftRole) {
-        this.shiftRole = shiftRole;
+    public void setPositionType(PositionTypeEnum posType) {
+        this.posType = posType;
     }
 
     @Override
     public String toString() {
         return "ShiftListItem [shiftListItemId=" + shiftListItemId + ", checkInTiming=" + checkInTiming
                 + ", checkOutTiming=" + checkOutTiming + ", isWeekend=" + isWeekend + ", isPhEvent=" + isPhEvent
-                + ", shiftRole=" + shiftRole + ", shift=" + shift + ", user=" + user + "]";
+                + ", positionType=" + posType + ", shift=" + shift + ", user=" + user + "]";
     }
 
 }
