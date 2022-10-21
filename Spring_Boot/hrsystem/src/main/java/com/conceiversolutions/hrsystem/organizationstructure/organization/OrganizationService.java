@@ -59,6 +59,26 @@ public class OrganizationService {
 
         List<Department> departments = org.getDepartments();
         org.getOrganizationHead().setTeams(new ArrayList<>());
+        org.getOrganizationHead().setQualificationInformation(null);
+        org.getOrganizationHead().setBlocks(new ArrayList<>());
+        org.getOrganizationHead().setShiftListItems(new ArrayList<>());
+        org.getOrganizationHead().setSwapRequestsReceived(new ArrayList<>());
+        org.getOrganizationHead().setSwapRequestsRequested(new ArrayList<>());
+        org.getOrganizationHead().setReactivationRequest(null);
+        org.getOrganizationHead().setAttendances(new ArrayList<>());
+        org.getOrganizationHead().setCurrentPayInformation(null);
+        org.getOrganizationHead().setEmployeeAppraisals(new ArrayList<>());
+        org.getOrganizationHead().setManagerAppraisals(new ArrayList<>());
+        org.getOrganizationHead().setManagerReviews(new ArrayList<>());
+        org.getOrganizationHead().setEmployeeReviews(new ArrayList<>());
+        org.getOrganizationHead().setApplications(new ArrayList<>());
+        org.getOrganizationHead().setGoals(new ArrayList<>());
+        org.getOrganizationHead().setPositions(new ArrayList<>());
+        org.getOrganizationHead().setJobRequests(new ArrayList<>());
+        org.getOrganizationHead().setLeaves(new ArrayList<>());
+        org.getOrganizationHead().setLeaveQuotas(new ArrayList<>());
+        org.getOrganizationHead().setCurrentLeaveQuota(null);
+
 
         for (Department d : departments) {
             d.setOrganization(null);
