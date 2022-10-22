@@ -67,6 +67,7 @@ const Cell = ({
   person,
   addShiftHandler,
   removeShiftHandler,
+  checkIfThereExistsShiftOnSameDay,
   shift,
   setInfoPanelDate,
   teamShift,
@@ -198,6 +199,7 @@ const Cell = ({
         person={person}
         date={date}
         addShiftHandler={addShiftHandler}
+        checkIfThereExistsShiftOnSameDay={checkIfThereExistsShiftOnSameDay}
       />
       <ViewTemplateShiftsModal
         open={openTemplate}
@@ -207,6 +209,7 @@ const Cell = ({
         person={person}
         date={date}
         addShiftHandler={addShiftHandler}
+        checkIfThereExistsShiftOnSameDay={checkIfThereExistsShiftOnSameDay}
         rosterId={rosterId}
       />
       {children}

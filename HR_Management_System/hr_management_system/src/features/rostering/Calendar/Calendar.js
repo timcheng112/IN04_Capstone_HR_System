@@ -17,6 +17,7 @@ const Calendar = ({
   value = new Date(),
   addShiftHandler,
   removeShiftHandler,
+  checkIfThereExistsShiftOnSameDay,
   people,
   shiftsToBeAdded,
   setInfoPanelDate,
@@ -136,6 +137,9 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 0)}
               // teamShift={teamShiftHandler(person, 0)}
               refreshKey={refreshKey}
@@ -150,6 +154,9 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 1)}
               // teamShift={teamShiftHandler(person, 1)}
               refreshKey={refreshKey}
@@ -164,6 +171,9 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 2)}
               // // teamShift={teamShiftHandler(person, 2)}
               refreshKey={refreshKey}
@@ -178,6 +188,9 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 3)}
               // // teamShift={teamShiftHandler(person, 3)}
               refreshKey={refreshKey}
@@ -192,6 +205,9 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 4)}
               // // teamShift={teamShiftHandler(person, 4)}
               refreshKey={refreshKey}
@@ -206,6 +222,9 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 5)}
               // // teamShift={teamShiftHandler(person, 5)}
               refreshKey={refreshKey}
@@ -220,6 +239,9 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              checkIfThereExistsShiftOnSameDay={
+                checkIfThereExistsShiftOnSameDay
+              }
               shift={shiftHandler(person, 6)}
               // // teamShift={teamShiftHandler(person, 6)}
               refreshKey={refreshKey}

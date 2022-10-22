@@ -164,9 +164,10 @@ const InfoPanel = ({ teamId, selectedDate, addShiftHandler }) => {
             </div>
           </Tabs>
         ) : (
-          <div>
-            <div>No Shifts Assigned To This Date.</div>
-          </div>
+          <></>
+          // <div>
+          //   <div>No Shifts Assigned To This Date.</div>
+          // </div>
         )}
       </div>
       {/* <Tabs>
