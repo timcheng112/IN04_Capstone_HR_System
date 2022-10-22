@@ -6,47 +6,7 @@ import api from "../../utils/api";
 import { deleteUser, getUserId } from "../../utils/Common.js";
 // import { getUserId } from "../../Common";
 import { useHistory } from "react-router";
-// import Notification from "../../components/Notification";
-
 import Notification from "../../components/Notification";
-/*
-
-
-  This example requires some changes to your config:
-
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/line-clamp'),
-    ],
-  }
-  ```
-*/
-
-// const messages = [
-//   {
-//     id: 1,
-//     subject: "Velit placeat sit ducimus non sed",
-//     sender: "Gloria Roberston",
-//     time: "1d ago",
-//     datetime: "2021-01-27T16:35",
-//     preview:
-//       "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-//   },
-//   {
-//     id: 2,
-//     subject: "asdfgjkl;",
-//     sender: "test",
-//     time: "1d ago",
-//     datetime: "2021-01-27T16:35",
-//     preview:
-//       "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor. Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-//   },
-//   // More messages...
-// ];
 
 export default function Example() {
   // const [userId, setUser] = useState("");
@@ -161,13 +121,8 @@ export default function Example() {
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
             All Notifications
           </h1>
-
         </div>
       </div>
-
-
-
-
 
       {/* start of list */}
       <ul role="list" className="divide-y divide-gray-200 p-40">
@@ -175,7 +130,7 @@ export default function Example() {
         <button
           type="button"
           className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-           onClick={()=> {deleteAllNotifications()}}
+          onClick={() => {deleteAllNotifications()}}
         >
           <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
           Delete All Notifications
@@ -188,18 +143,6 @@ export default function Example() {
           <PlusCircleIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
           Add Notification
         </button>
-        {/* trash button to trash all */}
-        <button
-          type="button"
-          className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-          onClick={() => {
-            deleteAllNotifications();
-          }}
-        >
-          <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-          Delete All Notifications
-        </button>
-
 
         {notification.map((message) => (
           <li
@@ -223,7 +166,7 @@ export default function Example() {
                   aria-hidden="true"
                 />
                 Delete
-            </button>
+              </button>
               <div className="min-w-0 flex-1">
                 {/* <a
                   href="/NotificationExpandPage"
@@ -237,7 +180,6 @@ export default function Example() {
                 {/* </a> */}
               </div>
               <time
-
                 dateTime={message.notifTime}
                 className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
               >

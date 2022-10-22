@@ -529,7 +529,7 @@ export default function Home() {
                 </>
               )}
             </Popover>
-            {showNotification && <Notification showNotification={true} />}
+            {showNotification && (<Notification showNotification={true} />)}
             <main className="-mt-24 pb-8">
               <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                 <h1 className="sr-only">Profile</h1>

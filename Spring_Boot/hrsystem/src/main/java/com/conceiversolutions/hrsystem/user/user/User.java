@@ -344,7 +344,6 @@ public class User implements UserDetails {
         this.managerAppraisals = managerAppraisals;
         this.managerReviews = managerReviews;
         this.employeeReviews = employeeReviews;
-//        this.modules = modules;
         this.goals = goals;
         this.taskListItems = taskListItems;
         this.teams = teams;
