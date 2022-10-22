@@ -522,6 +522,18 @@ const api = {
       `http://localhost:9191/api/shift_list_item/${shiftListItemId}`
     );
   },
+
+  getShiftByTeamAndTime(teamId, dateString) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getShiftByTeamAndTime?teamId=${teamId}&dateString=${dateString}`
+    );
+  },
+
+  getShiftListItemByDateAndTeam(date, teamId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
+    );
+  },
 };
 
 export default api;
