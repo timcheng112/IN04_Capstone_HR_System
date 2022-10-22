@@ -58,7 +58,7 @@ export default function Attendance() {
         deleteUser();
         alert("Unable to get all employees right now")
       });
-  }, [userId]);
+  }, []);
 
   return (
     <>
