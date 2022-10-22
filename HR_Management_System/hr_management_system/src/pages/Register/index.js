@@ -39,10 +39,10 @@ export default function Register() {
       .then((response) => setIsHr(response.data.hrEmployee))
       .then(() => {
         if (!isHr) {
-          alert('You do not have authorization to enter this page');
+          alert("You do not have authorization to enter this page");
           history.goBack();
         }
-      })
+      });
   });
 
   const handleSubmit = (evt) => {

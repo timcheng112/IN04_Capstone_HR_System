@@ -5,6 +5,7 @@ import { getUserId } from "../../utils/Common.js";
 import api from "../../utils/api.js";
 import loading from "../../assets/Spinner.svg";
 import "../../utils/Common.js";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 
 export default function AddNotification(props) {
   const [user, setUser] = useState(getUserId()); //logged in user
@@ -18,13 +19,14 @@ export default function AddNotification(props) {
   const [description, setDescription] = useState("");
   const [users, setUsers] = useState(-1);
   const [type, setType] = useState("Info");
+  const [options, setOptions] = useState(null);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     // console.log(userInfo.authorities);
     const boo = window.confirm("Are you sure you want to submit?");
     console.log("are you here");
-    console.log(users)
+    console.log(users);
     if (boo) {
       api
         .addNotification(title, description, parseInt(users))
@@ -47,7 +49,6 @@ export default function AddNotification(props) {
   //     getUserInfo();
   //   }, [userId, userInfo]);
 
-  const [options, setOptions] = useState(null);
   useEffect(() => {
     const staff = async () => {
       const arr = [];
@@ -76,41 +77,58 @@ export default function AddNotification(props) {
       <Navbar />
       <div className="items-baseline bg-white py-16 px-4 sm:px-6 lg:col-span-3 lg:py-24 lg:px-8 xl:pl-12">
         <button
-          className=" h-10 w-20 px-4 py-2 font-semibold text-sm bg-cyan-500 text-white rounded-full"
-          onClick={() => history.goBack()}
+          className="inline-flex items-center h-10 w-30 px-4 py-2 font-semibold text-sm bg-indigo-600 text-white rounded-full"
+          onClick={() => history.push("/AllNotifications")}
         >
+          <ArrowLeftIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
           Back
         </button>
 
         <div className="m-10 p-24 mx-auto max-w-[550px]  box-border border-2">
-          <span className="text-medium">
+          <span className="text-xl">
             <b>Add Notification</b>
           </span>
           {/* change name, phone, email and password only?*/}
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-1 gap-y-6 mt-10"
+            className="grid grid-cols-1 gap-y-3 mt-10"
           >
             <div>
-              <label htmlFor="title">Title:</label>
+              <label
+                htmlFor="title"
+                className="block text-md mt-5 font-medium text-gray-700"
+              >
+                Title
+              </label>
               <input
-                onChange={(e) => setTitle(e.target.value)}
-                type="text"
-                name="title"
                 id="title"
-                className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm px-2"
+                name="title"
+                type="text"
+                autoComplete="text"
+                required
+                className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                placeholder="Title"
+                value={title}
+                onChange={(t) => setTitle(t.target.value)}
               />
             </div>
-
             <div>
-              <label htmlFor="description">Description:</label>
-
+              <label
+                htmlFor="description"
+                className="block text-md mt-5 font-medium text-gray-700"
+              >
+                Description
+              </label>
               <input
-                onChange={(e) => setDescription(e.target.value)}
-                type="text"
-                name="description"
                 id="description"
-                className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm px-2"
+                name="description"
+                type="text"
+                autoComplete="text"
+                required
+                className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                placeholder="Description"
+                value={description}
+                onChange={(d) => setDescription(d.target.value)}
               />
             </div>
 
@@ -135,9 +153,14 @@ export default function AddNotification(props) {
             </div> */}
 
             <div>
-              <label htmlFor="staff">Staff:</label>
-              </div>
-              <div>
+            <label
+                htmlFor="staff"
+                className="block text-md mt-5 font-medium text-gray-700"
+              >
+                Staff
+              </label>
+            </div>
+            <div>
               <select
                 onChange={(e) => setUsers(e.target.value)}
                 // placeholder="Select a Manager (might take a while...)"
@@ -145,7 +168,7 @@ export default function AddNotification(props) {
                 name="staff"
                 className="rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
               >
-                <option>Select Staff...</option>
+                <option>Select</option>
 
                 {options !== null &&
                   options.map((option, index) => {
@@ -161,7 +184,7 @@ export default function AddNotification(props) {
             <div>
               <button
                 type="submit"
-                className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-6 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="inline-flex mt-5 justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-6 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Submit
               </button>

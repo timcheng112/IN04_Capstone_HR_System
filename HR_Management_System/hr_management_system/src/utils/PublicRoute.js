@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { getUser, getUserId } from "./Common";
+import { getUserId } from "./Common";
 
 export default function PublicRoute({ component: Component, ...rest }) {
   return (
