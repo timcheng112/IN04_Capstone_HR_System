@@ -10,6 +10,11 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.conceiversolutions.hrsystem.administration.task.Task;
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItemService;
+import com.conceiversolutions.hrsystem.user.user.User;
+import com.conceiversolutions.hrsystem.user.user.UserRepository;
+import com.conceiversolutions.hrsystem.user.user.UserService;
 
 import lombok.AllArgsConstructor;
 
@@ -18,13 +23,20 @@ import lombok.AllArgsConstructor;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final TaskListItemService taskListItemService;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     public List<Category> getCategories() {
         List<Category> categories = categoryRepository.findAll();
         for (Category category : categories) {
             for (Task task : category.getTasks()) {
                 task.setCategory(null);
-                task.setTaskListItems(new ArrayList<>());
+                // task.setTaskListItems(new ArrayList<>());
+                for (TaskListItem taskListItem : task.getTaskListItems()) {
+                    taskListItem.setUser(null);
+                    taskListItem.setTask(null);
+                }
             }
         }
         return categories;
@@ -64,6 +76,34 @@ public class CategoryService {
         if (categoryName != null && categoryName.length() > 0 && !Objects.equals(category.getName(), categoryName)) {
             category.setName(categoryName);
         }
+    }
+
+    public void assignTaskToEmployeeByCategory(Long employeeId, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalStateException("Category with ID: " + categoryId + " does not exist!"));
+        User user = userRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId + " does not exist!"));
+
+        for (Task task : category.getTasks()) {
+            // Boolean hasTask = false;
+            // List<User> employees = userService.getEmployeesWithTask(task.getTaskId());
+            // for (User employee : employees) {
+            // if (employee.getUserId() == employeeId) {
+            // hasTask = true;
+            // }
+            // }
+            // if (!hasTask) {
+            // taskListItemService.addNewTaskListItem(new TaskListItem(false), employeeId,
+            // task.getTaskId());
+            // }
+            List<User> employees = userService.getEmployeesWithTask(task.getTaskId());
+            if (employees.contains(user)) {
+
+            } else {
+                taskListItemService.addNewTaskListItem(new TaskListItem(false), employeeId, task.getTaskId());
+            }
+        }
+
     }
 
 }

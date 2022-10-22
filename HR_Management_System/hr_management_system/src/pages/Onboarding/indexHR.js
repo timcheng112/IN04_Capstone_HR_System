@@ -62,6 +62,10 @@ export default function OnboardingHR() {
         </div>
       </div>
       <main className="flex-1">
+        <div className="py-5"> </div>
+        <div className="sm:flex-auto">
+          <h1 className="text-xl font-semibold text-gray-900">Onboarding</h1>
+        </div>
         <div className="py-4 px-6">
           <div className="flex items-center">
             <div className="mt-4 ml-auto mr-6">
