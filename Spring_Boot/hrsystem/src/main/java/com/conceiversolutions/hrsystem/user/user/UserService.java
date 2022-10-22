@@ -3,8 +3,11 @@ package com.conceiversolutions.hrsystem.user.user;
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.engagement.leave.Leave;
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuotaRepository;
 import com.conceiversolutions.hrsystem.engagement.leave.LeaveRepository;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
+import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
@@ -53,6 +56,7 @@ public class UserService implements UserDetailsService {
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
     private final PositionRepository positionRepository;
+    private final LeaveQuotaRepository leaveQuotaRepository;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -124,7 +128,11 @@ public class UserService implements UserDetailsService {
             u.setJobRequests(new ArrayList<>());
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
-            u.setCurrentLeaveQuota(null);
+            if (u.getCurrentLeaveQuota() != null ) { // first layer
+                if (u.getCurrentLeaveQuota().getPreviousLeaveQuota() != null) { // second layer
+                    u.getCurrentLeaveQuota().getPreviousLeaveQuota().setPreviousLeaveQuota(null); // third layer don't need
+                }
+            }
         }
 
         return users;
@@ -344,8 +352,22 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(encodedPassword);
 
-        List<Position> newPositions = user.getPositions();
-        positionRepository.saveAll(newPositions);
+        // Add Leave Quota for staff
+        if (!user.getUserRole().equals(RoleEnum.APPLICANT)) {
+            // fulltime gets all
+            if (user.getCurrentPosition().getJobType().equals(JobTypeEnum.FULLTIME)) {
+                LeaveQuota lq = new LeaveQuota();
+                lq = lq.populateFullTime(user.getCurrentPosition().getStartDate());
+                LeaveQuota savedLQ = leaveQuotaRepository.saveAndFlush(lq);
+
+                user.setCurrentLeaveQuota(savedLQ);
+                user.setLeaveQuotas(List.of(savedLQ));
+            }
+            // TODO : deal with contract
+        }
+
+//        List<Position> newPositions = user.getPositions();
+//        positionRepository.saveAll(newPositions);
 
         User newUser = userRepository.saveAndFlush(user);
 
@@ -1133,6 +1155,58 @@ public class UserService implements UserDetailsService {
         return employees;
     }
 
+    public List<User> getAllEmployeesInclLeaveQuotas() {
+        System.out.println("UserService.getAllEmployeesInclLeaveQuotas");
+        List<User> employees = userRepository.findAllByRole(RoleEnum.EMPLOYEE);
+        employees.addAll(userRepository.findAllByRole(RoleEnum.MANAGER));
+        System.out.println("size of employees list is " + employees.size());
+        for (User u : employees) {
+            List<Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+            u.setQualificationInformation(null);
+            u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            // u.setModules(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            for (LeaveQuota lq : u.getLeaveQuotas()) {
+                u.getCurrentLeaveQuota().setPreviousLeaveQuota(null);
+            }
+            if (u.getCurrentLeaveQuota() != null) {
+                if (u.getCurrentLeaveQuota().getPreviousLeaveQuota() != null) {
+                    u.getCurrentLeaveQuota().getPreviousLeaveQuota().setPreviousLeaveQuota(null);
+                }
+            }
+
+        }
+        return employees;
+    }
+
     public List<User> getAllStaff() {
         List<User> employees = userRepository.findAllStaff(RoleEnum.MANAGER, RoleEnum.EMPLOYEE);
         System.out.println("size of employee list is " + employees.size());
@@ -1195,8 +1269,22 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("User's emails are already in use");
         }
 
+        // Add Leave Quota for staff
+        if (!user.getUserRole().equals(RoleEnum.APPLICANT)) {
+            // fulltime gets all
+            if (!user.getIsPartTimer()) {
+                LeaveQuota lq = new LeaveQuota();
+                lq = lq.populateFullTime(LocalDate.now());
+                LeaveQuota savedLQ = leaveQuotaRepository.saveAndFlush(lq);
+
+                user.setCurrentLeaveQuota(savedLQ);
+                user.setLeaveQuotas(List.of(savedLQ));
+            }
+        }
+
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        positionRepository.save(user.getCurrentPosition());
         User newUser = userRepository.saveAndFlush(user);
         return newUser.getUserId();
     }
@@ -1323,7 +1411,8 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public String setFirstPassword(String workEmail, String password) {
-        User user = getEmployee(workEmail);
+//        User user = getEmployee(workEmail);
+        User user = userRepository.findUserByWorkEmail(workEmail).get();
         String encodedPassword = bCryptPasswordEncoder.encode(password);
         user.setPassword(encodedPassword);
         enableUser(user.getEmail());
@@ -1734,6 +1823,99 @@ public class UserService implements UserDetailsService {
         return attendance;
     }
 
+    public User getEmployeeInclLeaveQuotas(Long employeeId) {
+        System.out.println("UserService.getEmployeeInclLeaveQuotas");
+        System.out.println("employeeId = " + employeeId);
+
+        User u = userRepository.findById(employeeId).get();
+        List<Team> teams = u.getTeams();
+        for (Team t : teams) {
+            t.setTeamHead(null);
+            t.setUsers(new ArrayList<>());
+            t.setDepartment(null);
+            t.setRoster(null);
+            t.setTeamHead(null);
+        }
+        // u.setTaskListItems(null);
+        for (TaskListItem taskListItem : u.getTaskListItems()) {
+            taskListItem.setUser(null);
+            taskListItem.getTask().setTaskListItems(new ArrayList<>());
+            taskListItem.getTask().setCategory(null);
+        }
+        u.setQualificationInformation(null);
+        u.setBlocks(new ArrayList<>());
+        u.setShiftListItems(new ArrayList<>());
+        u.setSwapRequestsReceived(new ArrayList<>());
+        u.setSwapRequestsRequested(new ArrayList<>());
+        u.setReactivationRequest(null);
+        u.setAttendances(new ArrayList<>());
+        u.setCurrentPayInformation(null);
+        u.setEmployeeAppraisals(new ArrayList<>());
+        u.setManagerAppraisals(new ArrayList<>());
+        u.setManagerReviews(new ArrayList<>());
+        u.setEmployeeReviews(new ArrayList<>());
+        // u.setModules(new ArrayList<>());
+        u.setApplications(new ArrayList<>());
+        u.setGoals(new ArrayList<>());
+        u.setPositions(new ArrayList<>());
+        u.setJobRequests(new ArrayList<>());
+        u.setLeaves(new ArrayList<>());
+        u.setLeaveQuotas(new ArrayList<>());
+        for (LeaveQuota lq : u.getLeaveQuotas()) {
+            u.getCurrentLeaveQuota().setPreviousLeaveQuota(null);
+        }
+        if (u.getCurrentLeaveQuota() != null) {
+            if (u.getCurrentLeaveQuota().getPreviousLeaveQuota() != null) {
+                u.getCurrentLeaveQuota().getPreviousLeaveQuota().setPreviousLeaveQuota(null);
+            }
+        }
+
+        return u;
+    }
+
+    // contract
+    // public void countAttendanceForToday(Long userId){
+    //
+    //// User u1 = userRepository.findById(attendance.getUser().getUserId()).get();
+    // User u1 = getUser(attendance.getUser().getUserId());
+    // //will have user
+    //
+    // //Check time for today
+    // //find
+    // LocalDateTime dt1 = attendance.getPeriodStart();
+    // LocalDateTime dt2 = attendance.getPeriodEnd();
+    // //https://stackoverflow.com/questions/25747499/java-8-difference-between-two-localdatetime-in-multiple-units
+    // //https://docs.oracle.com/javase/tutorial/datetime/iso/period.html
+    // //dont use minus(). gives u back 1 LDT and u have to translate again BOO
+    //
+    //// test -ve for between
+    //// LocalDateTime localDT1 = LocalDateTime.parse("1979-12-09T09:00:25");
+    //// LocalDateTime localDT2 = LocalDateTime.parse("1979-12-09T18:00:24");
+    //// Long hours = ChronoUnit.HOURS.between(localDT1,localDT2);
+    //// System.out.println(hours);
+    // if(dt2.isAfter(dt1)){
+    //// LocalDateTime timeWorked = dt2. dt1;
+    // //Chronos hours return Long
+    // //minus 1 cos lunch break
+    // Long hours = ChronoUnit.HOURS.between(dt1,dt2);
+    // Integer clocked = hours.intValue() - 1;
+    //
+    // //need to check with shift which kind of shift is it. event or normal for
+    // payroll
+    // if(clocked > 8){
+    // Integer ot = clocked -8;
+    // attendance.setPhEventHoursWorked(ot.longValue());
+    // attendance.setTotalCount(attendance.getTotalCount() + clocked + ot);
+    // }else{
+    // attendance.setTotalCount(attendance.getTotalCount() + clocked);
+    // }
+    //
+    // }
+    // //they need to pass this info to payroll. need to check if today is weekday,
+    // weekend or event for pay
+    // attendanceRepository.saveAndFlush(attendance);
+    //
+    // }
     //intern
 
     //contract

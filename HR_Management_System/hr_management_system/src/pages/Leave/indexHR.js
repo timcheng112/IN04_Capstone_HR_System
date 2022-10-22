@@ -7,22 +7,23 @@ import {
 } from "@heroicons/react/20/solid";
 import { useHistory } from 'react-router-dom';
 import Tabs from '../../features/leave/Tab'
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getUserId} from "../../utils/Common";
 import AdminSidebar from "../../components/Sidebar/Admin";
-import ApprovalModal from "../../features/leave/ApproveModal";
-import RejectModal from "../../features/leave/RejectModal";
-import ViewModal from "../../features/leave/ViewModal";
+import api from "../../utils/api";
+import LeaveOptions from "../../features/leave/LeaveOptions";
 
-const leaves = [
-  { id: 1, applicant: 'Xinyue', appliedDate: '2022-08-15', type: 'ANL', status: 'Created' },
-  { id: 2, applicant: 'Matthew', appliedDate: '2022-08-17', type: 'MCL', status: 'Created' },
-]
+// const leaves = [
+//   { id: 1, applicant: 'Xinyue', appliedDate: '2022-08-15', type: 'ANL', status: 'Created' },
+//   { id: 2, applicant: 'Matthew', appliedDate: '2022-08-17', type: 'MCL', status: 'Created' },
+// ]
 
 export default function Leave() {
   const history = useHistory();
-  const [approve, setApprove] = useState(false);
-  const [reject, setReject] = useState(false);
-  const [view, setView] = useState(false);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [leaves, setLeaves] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const [filteredLeaves, setFilteredLeaves] =
     useState(leaves);
@@ -30,20 +31,63 @@ export default function Leave() {
     "applicant"
   ]);
 
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  useEffect(() => {
+    api
+      .getAllLeaves()
+      .then((response) => {
+        setLeaves(response.data);
+        setFilteredLeaves(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, [refreshKey]);
+
   function search(e, items) {
     const value = e.target.value;
-    setFilteredLeaves(
-      items.filter((item) => {
-        return searchParam.some((newItem) => {
-          return (
-            item[newItem]
-              .toString()
-              .toLowerCase()
-              .indexOf(value.toLowerCase()) > -1
-          );
-        });
-      })
-    );
+//    console.log("value");
+//    console.log(value);
+//
+//    console.log("items");
+//    console.log(items);
+
+    let finding = Array.of(value.toLowerCase());
+    let filtered = new Set();
+
+    // employee Name
+    var nameFilter = items.filter(x => finding.some(y => x.employee.firstName.toLowerCase().indexOf(y) != -1))
+    nameFilter.forEach(item => filtered.add(item))
+
+    // leave type Name
+    var leaveTypeFilter = items.filter(x => finding.some(y => x.leaveType.toLowerCase().indexOf(y) != -1))
+    leaveTypeFilter.forEach(item => filtered.add(item))
+
+    // status
+    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
+    statusFilter.forEach(item => filtered.add(item))
+
+    setFilteredLeaves(Array.from(filtered));
+
+//    setFilteredLeaves(
+//      items.filter((item) => {
+//        return searchParam.some((newItem) => {
+//          return (
+//            item[newItem]
+//              .toString()
+//              .toLowerCase()
+//              .indexOf(value.toLowerCase()) > -1
+//          );
+//        });
+//      })
+//    );
   }
 
   return (
@@ -108,63 +152,15 @@ export default function Leave() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {filteredLeaves.map((leave) => (
-                      <tr key={leave.id}>
+                      <tr key={leave.leaveId}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {leave.applicant}
+                          {leave.employee.firstName}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{leave.appliedDate}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{leave.type}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{leave.applicationDate}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{leave.leaveType}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{leave.status}</td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <div className="space-x-4">
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                              onClick={() => setView(true)}
-                            >
-                              <EyeIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">view</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                              onClick={() => setApprove(true)}
-                            >
-                              <CheckIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Approve</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                              onClick={() => setReject(true)}
-                            >
-                              <XMarkIcon
-                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                                aria-hidden="true"
-                              />
-                              <span className="hidden md:block">Reject</span>
-                            </button>
-                          </div>
-                          <ApprovalModal
-                            open={approve}
-                            setOpen={() => setApprove(false)}
-                            leave={leave}/>
-                          <RejectModal
-                            open={reject}
-                            setOpen={() => setReject(false)}
-                            leave={leave}/>
-                          <ViewModal
-                            open={view}
-                            setOpen={() => setView(false)}
-                            leave={leave}/>
+                          <LeaveOptions leave = {leave} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                         </td>
                       </tr>
                     ))}

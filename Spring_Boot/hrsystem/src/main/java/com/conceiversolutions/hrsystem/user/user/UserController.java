@@ -99,7 +99,7 @@ public class UserController {
             @RequestParam("positionName") String positionName,
             @RequestParam("positionDescription") String positionDescription,
             @RequestParam("jobType") String jobType) {
-        System.out.println("UserController.registerNewAccountJMP");
+        System.out.println("UserController.registerNewAccountHRMS");
 
         Position position = new Position(positionName, positionDescription, LocalDate.parse(dateJoined),
                 JobTypeEnum.valueOf(jobType), PositionTypeEnum.valueOf(positionType));
@@ -284,6 +284,16 @@ public class UserController {
     @GetMapping(path = "/getAllEmployees")
     public List<User> getAllEmployees() {
         return userService.getAllEmployees();
+    }
+
+    @GetMapping(path = "/getAllEmployeesInclLeaveQuotas")
+    public List<User> getAllEmployeesInclLeaveQuotas() {
+        return userService.getAllEmployeesInclLeaveQuotas();
+    }
+
+    @GetMapping(path = "/getEmployeeInclLeaveQuotas")
+    public User getEmployeeInclLeaveQuotas(@RequestParam("employeeId") Long employeeId) {
+        return userService.getEmployeeInclLeaveQuotas(employeeId);
     }
 
     @GetMapping(path = "/getAllStaff")

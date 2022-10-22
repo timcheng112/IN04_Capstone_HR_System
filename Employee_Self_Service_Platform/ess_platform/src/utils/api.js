@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const URL = "192.168.50.165";
-
+// const URL = "192.168.10.128"; // MATT
+// const URL = "172.31.52.96"; // XINYUE
+//const URL = "192.168.1.35"; //XUEQI
+const URL = "172.25.97.26"
 
 const api = {
   login(workEmail, password) {
@@ -43,6 +45,31 @@ const api = {
     return axios.put(`http://${URL}:9191/api/task_list_item/${taskListItemId}`);
   },
 
+  // Leaves
+  getAllPendingLeaves() {
+    return axios.get(`http://${URL}:9191/api/leaves/getAllPendingLeaves`);
+  },
+  getLeaveById(leaveId) {
+    return axios.get(`http://${URL}:9191/api/leaves/getLeaveById?leaveId=${leaveId}`);
+  },
+  createLeave(formDataPayload) {
+    return axios.post(`http://${URL}:9191/api/leaves/createLeave`, formDataPayload, {headers: {'Content-Type': 'multipart/form-data'}});
+  },
+  getEmployeeLeaves(employeeId) {
+    return axios.get(`http://${URL}:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`);
+  },
+  approveLeave(leaveId, approverRemarks) {
+    return axios.put(`http://${URL}:9191/api/leaves/approveLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
+  rejectLeave(leaveId, approverRemarks) {
+    return axios.put(`http://${URL}:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
+  cancelLeave(leaveId) {
+    return axios.put(`http://${URL}:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+  },
+  getEmployeeInclLeaveQuotas(employeeId) {
+    return axios.get(`http://${URL}:9191/api/user/getEmployeeInclLeaveQuotas?employeeId=${employeeId}`);
+  },
   //training
   getAllModules(){
     return axios.get(`http://${URL}:9191/api/module`);

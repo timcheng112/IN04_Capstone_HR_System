@@ -59,7 +59,7 @@ const AdminNavigator = () => {
         }}
       />
       <AdminStack.Screen
-        name="Leave"
+        name="LeaveApplication"
         component={LeaveApplicationScreen}
         options={{
           title: "Apply for leaves",

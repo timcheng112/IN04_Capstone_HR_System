@@ -9,7 +9,8 @@ import {
 import api from "../utils/api";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
-import LeaveApplicationScreen from "./LeaveApplicationScreen";
+import LeaveList from "../components/leave/LeaveList";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -25,25 +26,54 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     lineHeight: 50,
     color: "#000000",
-  }
+  },
+  inline: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 80,
+  },
 });
 
-const LeaveScreen = () => {
+
+
+const LeaveScreen = ({navigation}) => {
+
+  const [userId, setUserId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    const setId = async () => {
+      try {
+        const response = await AsyncStorage.getItem("userId");
+        setUserId(response);
+        //console.log(response);
+      } catch (err) {
+        console.warn(err);
+      };
+    }
+    setId();
+   }, []);
+    
   return (
+    userId  &&
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <View style={styles.inline}>
         <Text style={styles.headlines}>Application History</Text>
         <Button
           icon="plus"
           mode="contained"
           color="#ffd700"
-          onPress={() => Alert.alert('Right button pressed')}>
-          Apply for Leave
+          onPress={() => navigation.navigate('LeaveApplication',{userId})}>
+          Apply 
         </Button>
-
-      </View>
+        </View>
+        <LeaveList userId = {userId}/>
+      
     </SafeAreaView>
   )
 };
+
 
 export default LeaveScreen;

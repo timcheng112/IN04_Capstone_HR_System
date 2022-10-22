@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.engagement.leavequota;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "leave_quotas")
@@ -28,10 +29,10 @@ public class LeaveQuota {
     @Column(name = "anl_allocated", nullable = false)
     private Integer ANLAllocated;
 
-    @Column(name = "mdl", nullable = false)
-    private Integer MDL; // medical leave
-    @Column(name = "mdl_allocated", nullable = false)
-    private Integer MDLAllocated;
+    @Column(name = "mcl", nullable = false)
+    private Integer MCL; // medical leave
+    @Column(name = "mcl_allocated", nullable = false)
+    private Integer MCLAllocated;
 
     @Column(name = "hpl", nullable = false)
     private Integer HPL; // hospital leave
@@ -73,13 +74,13 @@ public class LeaveQuota {
     @Column(name = "npl_allocated", nullable = false)
     private Integer NPLAllocated;
 
-    public LeaveQuota(Integer year, LeaveQuota previousLeaveQuota, Integer ANLAllocated, Integer MDLAllocated, Integer HPLAllocated, Integer CCLAllocated, Integer MPLAllocated, Integer BDLAllocated, Integer CPLAllocated, Integer ECLAllocated, Integer MALAllocated, Integer NPLAllocated) {
+    public LeaveQuota(Integer year, LeaveQuota previousLeaveQuota, Integer ANLAllocated, Integer MCLAllocated, Integer HPLAllocated, Integer CCLAllocated, Integer MPLAllocated, Integer BDLAllocated, Integer CPLAllocated, Integer ECLAllocated, Integer MALAllocated, Integer NPLAllocated) {
         this.year = year;
         this.previousLeaveQuota = previousLeaveQuota;
         this.ANL = ANLAllocated;
         this.ANLAllocated = ANLAllocated;
-        this.MDL = MDLAllocated;
-        this.MDLAllocated = MDLAllocated;
+        this.MCL = MCLAllocated;
+        this.MCLAllocated = MCLAllocated;
         this.HPL = HPLAllocated;
         this.HPLAllocated = HPLAllocated;
         this.CCL = CCLAllocated;
@@ -96,5 +97,60 @@ public class LeaveQuota {
         this.MALAllocated = MALAllocated;
         this.NPL = NPLAllocated;
         this.NPLAllocated = NPLAllocated;
+    }
+
+    public int getAvailableANL() {
+        if (this.previousLeaveQuota == null) {
+            return this.ANL;
+        } else {
+            return this.ANL + this.previousLeaveQuota.getANL();
+        }
+    }
+
+    public LeaveQuota populateFullTime(LocalDate startDate) {
+        System.out.println("LeaveQuota.populateFullTime");
+        int month = LocalDate.now().getMonthValue();
+        this.year = LocalDate.now().getYear();
+        this.previousLeaveQuota = null;
+
+        // Annual Leave, Medical Leave, Hospitalization Leave and No-Pay Leaves are allowed to be prorated based
+        // on number of months expected to be completed in the eyar.
+        this.ANL = proRation(month, 14);
+        this.ANLAllocated = proRation(month, 14);
+        System.out.println("ANL given is " + this.getANLAllocated());
+        this.MCL = proRation(month, 14);
+        this.MCLAllocated = proRation(month, 14);
+        System.out.println("MCL given is " + this.getMCLAllocated());
+        this.HPL = proRation(month, 60);
+        this.HPLAllocated = proRation(month, 60);
+        this.CCL = 6;
+        this.CCLAllocated = 6;
+        this.MPL = 0;
+        this.MPLAllocated = 0;
+        this.BDL = 1;
+        this.BDLAllocated = 1;
+        this.CPL = 5;
+        this.CPLAllocated = 5;
+        this.ECL = 5;
+        this.ECLAllocated = 5;
+        this.MAL = 5;
+        this.MALAllocated = 5;
+        this.NPL = proRation(month, 180);
+        this.NPLAllocated = proRation(month, 180);
+
+        return this;
+    }
+
+    public int proRation(int month, int total) {
+        System.out.println("LeaveQuota.proRation");
+        int completedMonths = 12 - month;
+        double proRated = (double) completedMonths/12 * 14;
+
+//        System.out.println("prorated is " + proRated);
+        // according to MOM law, if proRated amount fractice is < 0.5, round down. else round up
+        if (proRated % 1 < 0.5) {
+            return (int) Math.floor(proRated);
+        }
+        return (int) Math.ceil(proRated);
     }
 }

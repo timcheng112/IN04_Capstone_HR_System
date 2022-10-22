@@ -44,9 +44,10 @@ export default function Training({ navigation }) {
     api.getUserModules(userId).then((response) => {
       //console.log(userId);
       setProgress(response.data, userId);
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setTraining(response.data);
       }, 1000);
+      return () => clearTimeout(timer);
       //console.log(response.data);
       setRefreshing(false);
     });
@@ -83,6 +84,7 @@ export default function Training({ navigation }) {
 
   const renderModule = ({ item }) => {
     const image = item.thumbnail;
+    //console.log('item.id ' + item.moduleId)
     return (
       <TouchableOpacity
         onPress={() =>

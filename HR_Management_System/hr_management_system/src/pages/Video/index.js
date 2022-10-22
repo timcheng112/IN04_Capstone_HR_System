@@ -43,12 +43,43 @@ export default function Video() {
     initialPageName = "All Modules";
   } else if (initialPage === "/video") {
     initialPageName = "All Videos";
-  } else if (initialPage === '/mytraining/completed') {
+  } else if (initialPage === "/mytraining/completed") {
     initialPageName = "Completed Training";
   }
+  const [showDelete, setShowDelete] = useState(false);
 
   useEffect(() => {
-    console.log("initial page " + initialPage);
+    api
+      .getVideosInModule(moduleId)
+      .then((response) => setVideos(response.data));
+    api.getModule(moduleId).then((response) => {
+      setModule(response.data);
+    });
+    api.getVideo(videoId).then((response) => {
+      setVideo(response.data);
+      setWatchedBy(response.data.watchedBy);
+    });
+    api.getUser(getUserId()).then((response) => setUser(response.data));
+    setVideoSession(`secondsWatched${videoId}`);
+    api
+      .getEmployeesAssignedToModule(moduleId)
+      .then((response) => {
+        setAllWatched(response.data);
+        console.log(response.data);
+      })
+      .then(() => {
+        console.log(assignedTo);
+      });
+    api
+      .getIsVideoWatchedByEmployee(videoId, getUserId())
+      .then((response) => setWatched(response.data));
+    api
+      .getIsUserAssignedToModule(moduleId, getUserId())
+      .then((response) => setShowDelete(!response.data));
+  }, []);
+
+  useEffect(() => {
+    console.log("vid " + videoId);
     api
       .getVideosInModule(moduleId)
       .then((response) => setVideos(response.data));
@@ -71,14 +102,43 @@ export default function Video() {
     api
       .getIsVideoWatchedByEmployee(videoId, getUserId())
       .then((response) => setWatched(response.data));
-  }, []);
+  }, [videoId]);
 
   useEffect(() => {
-    api.getVideo(videoId).then((response) => setVideo(response.data));
-    api
-      .getVideosInModule(moduleId)
-      .then((response) => setVideos(response.data));
-  }, []);
+    console.log("watch");
+    const timer = setTimeout(() => {
+      api.getVideo(videoId).then((response) => {
+        setVideo(response.data);
+        setWatchedBy(response.data.watchedBy);
+      });
+      api.getVideosInModule(moduleId).then((response) => {
+        setVideos(response.data);
+      });
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [videos, video]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      api
+        .getIsVideoWatchedByEmployee(videoId, getUserId())
+        .then((response) => setWatched(response.data));
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [watchedBy, videoId]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      api
+        .getEmployeesAssignedToModule(moduleId)
+        .then((response) => {
+          setAllWatched(response.data);
+          console.log(response.data);
+        })
+        .then(() => console.log(assignedTo));
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [watched, videoId]);
 
   function deleteVideo() {
     api.deleteVideo(videoId).then(() => {
@@ -88,12 +148,13 @@ export default function Video() {
   }
 
   function markAsWatched() {
-    api.markVideoAsWatched(videoId, getUserId());
+    api.markVideoAsWatched(videoId, getUserId()).then((response) => {
+      api.getVideo(videoId).then((response) => setVideo(response.data));
+    });
   }
 
   function setAllWatched(assigned) {
     assigned.forEach((e) => {
-      //e.watched = false;
       api
         .getIsVideoWatchedByEmployee(videoId, e.userId)
         .then((response) => (e.watched = response.data));
@@ -238,22 +299,26 @@ export default function Video() {
                         <PencilIcon className="-ml-1 mr-2 h-5 w-5 text-white" />
                         Edit Video
                       </button>
-                      <button
-                        type="button"
-                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 sm:w-auto"
-                        onClick={() => setOpenDelete(true)}
-                      >
-                        <TrashIcon className="-ml-1 mr-2 h-5 w-5 text-white" />
-                        Delete Video
-                      </button>
-                      <ConfirmDialog
-                        title={video.title}
-                        item="video"
-                        open={openDelete}
-                        onClose={() => setOpenDelete(false)}
-                        setOpen={() => setOpenDelete(false)}
-                        onConfirm={deleteVideo}
-                      />
+                      {showDelete && (
+                        <>
+                          <button
+                            type="button"
+                            className="inline-flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 sm:w-auto"
+                            onClick={() => setOpenDelete(true)}
+                          >
+                            <TrashIcon className="-ml-1 mr-2 h-5 w-5 text-white" />
+                            Delete Video
+                          </button>
+                          <ConfirmDialog
+                            title={video.title}
+                            item="video"
+                            open={openDelete}
+                            onClose={() => setOpenDelete(false)}
+                            setOpen={() => setOpenDelete(false)}
+                            onConfirm={deleteVideo}
+                          />
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -302,7 +367,7 @@ export default function Video() {
                                   {video.videoId + "" !== videoId + "" && (
                                     <button
                                       onClick={() => {
-                                        console.log('push ' + initialPage)
+                                        console.log("push " + initialPage);
                                         history.push(
                                           `/module/${moduleId}/video/${video.videoId}`,
                                           { params: initialPage }

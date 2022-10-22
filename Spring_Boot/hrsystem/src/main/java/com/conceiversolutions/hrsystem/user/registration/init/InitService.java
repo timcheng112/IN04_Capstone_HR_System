@@ -8,6 +8,8 @@ import com.conceiversolutions.hrsystem.organizationstructure.outlet.OutletServic
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamService;
 import com.conceiversolutions.hrsystem.skillset.skillset.SkillsetService;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillsetService;
+import com.conceiversolutions.hrsystem.user.position.Position;
+import com.conceiversolutions.hrsystem.user.position.PositionRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserService;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ public class InitService {
     private final SkillsetService skillsetService;
     private final UserSkillsetService userSkillsetService;
     private final UserService userService;
+    private final PositionRepository positionRepository;
 
     public String mattInit() {
         System.out.println("InitService.mattInit");
@@ -65,6 +68,9 @@ public class InitService {
                 null);
         staffManager.setWorkEmail("yapa@libro.com");
         staffManager.setEnabled(true);
+
+        Position managerPosition = positionRepository.findById(3L).get();
+        staffManager.setCurrentPosition(managerPosition);
         userService.initAdmin(staffManager);
 
         return "Successful";
