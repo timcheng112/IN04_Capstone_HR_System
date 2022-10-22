@@ -335,12 +335,12 @@ public class UserService implements UserDetailsService {
     public List<User> getEmployeesWithTask(Long taskId) {
         List<User> employees = userRepository.findEmployeesWithTask(taskId, RoleEnum.ADMINISTRATOR, RoleEnum.APPLICANT);
         for (User employee : employees) {
-            employee.setTaskListItems(new ArrayList<>());
-            // for (TaskListItem taskListItem : employee.getTaskListItems()) {
-            // taskListItem.setUser(null);
-            // taskListItem.getTask().setTaskListItems(new ArrayList<>());
-            // taskListItem.getTask().setCategory(null);
-            // }
+            // employee.setTaskListItems(new ArrayList<>());
+            for (TaskListItem taskListItem : employee.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
             employee.setBlocks(new ArrayList<>());
             employee.setShiftListItems(new ArrayList<>());
             employee.setSwapRequestsReceived(new ArrayList<>());

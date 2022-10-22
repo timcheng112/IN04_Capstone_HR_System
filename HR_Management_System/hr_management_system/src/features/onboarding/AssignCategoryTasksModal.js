@@ -3,7 +3,12 @@ import React, { Fragment, useEffect, useState } from "react";
 import api from "../../utils/api";
 import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
 
-const AssignCategoryTasksModal = ({ open, onClose, category, refreshKeyHandler }) => {
+const AssignCategoryTasksModal = ({
+  open,
+  onClose,
+  category,
+  refreshKeyHandler,
+}) => {
   const [searchParam] = useState([
     "userId",
     "firstName",
@@ -36,11 +41,38 @@ const AssignCategoryTasksModal = ({ open, onClose, category, refreshKeyHandler }
   };
 
   function createTaskListItem(categoryId) {
-    assignedEmployees.forEach((employee) => {
+    const successUsers = [];
+    const failureUsers = [];
+    assignedEmployees.forEach((employee, index, assignedEmployees) => {
       api
-        .assignTaskToEmployeeByCategory(Number(employee.userId), Number(categoryId))
-        .then(() => alert("Successfully assigned task."))
-        .catch((error) => console.log(error.response.data.message));
+        .assignTaskToEmployeeByCategory(
+          Number(employee.userId),
+          Number(categoryId)
+        )
+        .then(() => {
+          successUsers.push(" " + employee.firstName + " " + employee.lastName);
+          if (!assignedEmployees[index + 1]) {
+            alert(
+              "Successfully assigned to: " +
+                successUsers +
+                "\nUnsuccessfully assigned to (due to users being previously assigned all tasks under " +
+                category.name +
+                " category): " +
+                failureUsers
+            );
+          }
+        })
+        .catch((error) => {
+          failureUsers.push(" " + employee.firstName + " " + employee.lastName);
+          if (!assignedEmployees[index + 1]) {
+            alert(
+              "Successfully assigned to:" +
+                successUsers +
+                "\nUnsuccessfully assigned to:" +
+                failureUsers
+            );
+          }
+        });
     });
   }
 

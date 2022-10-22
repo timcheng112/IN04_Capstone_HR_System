@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.conceiversolutions.hrsystem.administration.task.Task;
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItemService;
+import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import com.conceiversolutions.hrsystem.user.user.UserService;
@@ -78,30 +79,31 @@ public class CategoryService {
         }
     }
 
+    @Transactional
     public void assignTaskToEmployeeByCategory(Long employeeId, Long categoryId) {
+        System.out.println("EMPLOYEE ID " + employeeId + " CATEGORY ID " + categoryId);
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalStateException("Category with ID: " + categoryId + " does not exist!"));
         User user = userRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId + " does not exist!"));
-
-        for (Task task : category.getTasks()) {
-            // Boolean hasTask = false;
-            // List<User> employees = userService.getEmployeesWithTask(task.getTaskId());
-            // for (User employee : employees) {
-            // if (employee.getUserId() == employeeId) {
-            // hasTask = true;
-            // }
-            // }
-            // if (!hasTask) {
-            // taskListItemService.addNewTaskListItem(new TaskListItem(false), employeeId,
-            // task.getTaskId());
-            // }
-            List<User> employees = userService.getEmployeesWithTask(task.getTaskId());
-            if (employees.contains(user)) {
-
-            } else {
-                taskListItemService.addNewTaskListItem(new TaskListItem(false), employeeId, task.getTaskId());
+        List<Task> tasks = category.getTasks();
+        List<Long> taskIds = new ArrayList<>();
+        for (Task task : tasks) {
+            List<User> employees = userRepository.findEmployeesWithTask(task.getTaskId(), RoleEnum.ADMINISTRATOR,
+                    RoleEnum.APPLICANT);
+            if (!employees.contains(user)) {
+                taskIds.add(task.getTaskId());
             }
+        }
+
+        if (taskIds.size() == 0) {
+            throw new IllegalStateException(
+                    "User " + user.getFirstName() + " has already been assigned all " + category.getName() + " tasks!");
+        }
+
+        for (int i = 0; i < taskIds.size(); i++) {
+            taskListItemService.addNewTaskListItem(new TaskListItem(false), employeeId,
+                    taskIds.get(i));
         }
 
     }
