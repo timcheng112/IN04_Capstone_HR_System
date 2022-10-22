@@ -51,8 +51,7 @@ export default function Example() {
         })
         .then(() => {
           console.log("are you here");
-        //   history.push("/AllNotifications");
-            
+          // history.push("/home");
         })
         .catch((error) => {
           console.log(error);
@@ -131,7 +130,7 @@ export default function Example() {
         <button
           type="button"
           className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-          onClick={()=> {deleteAllNotifications()}}
+          onClick={() => {deleteAllNotifications()}}
         >
           <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
           Delete All Notifications
@@ -151,7 +150,8 @@ export default function Example() {
             className="relative bg-white py-5 px-4 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 hover:bg-gray-50"
           >
             <div className="flex justify-between space-x-3">
-              <button
+
+            <button
                 type="button"
                 className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
                 // value={message.id}
@@ -180,7 +180,6 @@ export default function Example() {
                 {/* </a> */}
               </div>
               <time
-                
                 dateTime={message.notifTime}
                 className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
               >

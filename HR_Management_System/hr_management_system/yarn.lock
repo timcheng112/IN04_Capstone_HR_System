@@ -3796,7 +3796,7 @@
   "resolved" "https://registry.npmjs.org/deep-is/-/deep-is-0.1.4.tgz"
   "version" "0.1.4"
 
-"deepmerge@^4.2.2":
+"deepmerge@^4.0.0", "deepmerge@^4.2.2":
   "integrity" "sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg=="
   "resolved" "https://registry.npmjs.org/deepmerge/-/deepmerge-4.2.2.tgz"
   "version" "4.2.2"
@@ -6097,6 +6097,11 @@
     "import-local" "^3.0.2"
     "jest-cli" "^27.5.1"
 
+"js-file-download@^0.4.12":
+  "integrity" "sha512-rML+NkoD08p5Dllpjo0ffy4jRHeY6Zsapvr/W86N7E0yuzAO6qa5X9+xog6zQNlH102J7IXljNY2FtS6Lj3ucg=="
+  "resolved" "https://registry.npmjs.org/js-file-download/-/js-file-download-0.4.12.tgz"
+  "version" "0.4.12"
+
 "js-sdsl@^4.1.4":
   "integrity" "sha512-Y2/yD55y5jteOAmY50JbUZYwk3CP3wnLPEZnlR1w9oKhITrBEtAxwuWKebFf8hMrPMgbYwFoWK/lH2sBkErELw=="
   "resolved" "https://registry.npmjs.org/js-sdsl/-/js-sdsl-4.1.4.tgz"
@@ -6281,6 +6286,11 @@
   "integrity" "sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg=="
   "resolved" "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   "version" "1.2.4"
+
+"load-script@^1.0.0":
+  "integrity" "sha512-kPEjMFtZvwL9TaZo0uZ2ml+Ye9HUMmPwbYRJ324qF9tqMejwykJ5ggTyvzmrbBeapCAbk98BSbTeovHEEP1uCA=="
+  "resolved" "https://registry.npmjs.org/load-script/-/load-script-1.0.0.tgz"
+  "version" "1.0.0"
 
 "loader-runner@^4.2.0":
   "integrity" "sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg=="
@@ -7837,6 +7847,17 @@
   "integrity" "sha512-NMXGa223OnsrGVp5dJHkuKxQ4czdLmXSp5jSV9OqiCky9LOpPATn3vLldc+q5fK3gKbEHvr7J1u0yhBh/xYkpA=="
   "resolved" "https://registry.npmjs.org/react-onclickoutside/-/react-onclickoutside-6.12.2.tgz"
   "version" "6.12.2"
+
+"react-player@^2.11.0":
+  "integrity" "sha512-fIrwpuXOBXdEg1FiyV9isKevZOaaIsAAtZy5fcjkQK9Nhmk1I2NXzY/hkPos8V0zb/ZX416LFy8gv7l/1k3a5w=="
+  "resolved" "https://registry.npmjs.org/react-player/-/react-player-2.11.0.tgz"
+  "version" "2.11.0"
+  dependencies:
+    "deepmerge" "^4.0.0"
+    "load-script" "^1.0.0"
+    "memoize-one" "^5.1.1"
+    "prop-types" "^15.7.2"
+    "react-fast-compare" "^3.0.1"
 
 "react-popper@^2.2.5":
   "integrity" "sha512-e1hj8lL3uM+sgSR4Lxzn5h1GxBlpa4CQz0XLF8kx4MDrDRWY0Ena4c97PUeSX9i5W3UAfDP0z0FXCTQkoXUl3Q=="

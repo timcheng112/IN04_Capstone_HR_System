@@ -188,6 +188,7 @@ export default function Home() {
                           onClick={() => {
                             setShowNotification(true);
                             console.log("bell pressed");
+                            history.push("/AllNotifications")
                           }}
                         >
                           <span className="sr-only">View notifications</span>
@@ -201,7 +202,7 @@ export default function Home() {
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-8 w-8 rounded-full"
-                                src={user.imageUrl}
+                                src={user.profilePic}
                                 alt=""
                               />
                             </Menu.Button>
@@ -272,12 +273,21 @@ export default function Home() {
                               </a>
                               <a
                                 key="Career"
-                                href="/home"
+                                href="/career"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
                                 Career
+                              </a>
+                              <a
+                                key="Training"
+                                href="/mytraining"
+                                className={classNames(
+                                  "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
+                                )}
+                              >
+                                Training
                               </a>
                               <a
                                 key="Welfare"
@@ -469,7 +479,7 @@ export default function Home() {
                                 <div className="flex-shrink-0">
                                   <img
                                     className="h-10 w-10 rounded-full"
-                                    src={user.imageUrl}
+                                    src={user.profilePic}
                                     alt=""
                                   />
                                 </div>
@@ -492,12 +502,11 @@ export default function Home() {
                                   <span className="sr-only">
                                     View notifications
                                   </span>
-                                  <Link to="/AllNotifications">
                                   <BellIcon
                                     className="h-6 w-6"
                                     aria-hidden="true"
                                     href=""
-                                  /></Link>
+                                  />
                                 </button>
                               </div>
                               <div className="mt-3 space-y-1 px-2">
@@ -520,9 +529,7 @@ export default function Home() {
                 </>
               )}
             </Popover>
-            {showNotification && (
-              <Notification showNotification={true} />
-            )}
+            {showNotification && (<Notification showNotification={true} />)}
             <main className="-mt-24 pb-8">
               <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                 <h1 className="sr-only">Profile</h1>

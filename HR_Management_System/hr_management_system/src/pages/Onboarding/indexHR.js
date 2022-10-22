@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import TasklistTable from "../../features/onboarding/TasklistTable";
-import AddCategoryModal from "../../features/onboarding/AddCategoryModal";
+import AddCategoryModal from "../../features/offboarding/AddCategoryModal";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import api from "../../utils/api";

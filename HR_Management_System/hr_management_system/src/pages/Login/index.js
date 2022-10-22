@@ -21,6 +21,7 @@ export default function Login() {
         console.log(response.data.enabled);
         console.log(response.data);
         setUserSession(response.data, getWorkEmail());
+        sessionStorage.clear();
       })
       .then(() => {
         history.push("/home");

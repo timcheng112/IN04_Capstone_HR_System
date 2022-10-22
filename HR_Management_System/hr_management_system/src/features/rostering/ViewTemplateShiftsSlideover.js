@@ -1,39 +1,98 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import ShiftBlock from "./ShiftBlock";
 import AddTemplateShiftModal from "./AddTemplateShiftModal";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import EmptyStateTemplateShifts from "./EmptyStateTemplateShifts";
+import api from "../../utils/api";
+import { parseISO } from "date-fns";
+import DeleteShiftModal from "./DeleteShiftModal";
+import SuccessfullyAddedTemplateModal from "./SuccessfullyAddedTemplateModal";
 
-const shifts = [
-  {
-    id: "1",
-    shiftTitle: "Morning Shift",
-    startTime: "08:00",
-    endTime: "14:00",
-  },
-  {
-    id: "2",
-    shiftTitle: "Afternoon Shift",
-    startTime: "14:00",
-    endTime: "20:00",
-  },
-  {
-    id: "3",
-    shiftTitle: "Morning Shift",
-    startTime: "06:00",
-    endTime: "14:00",
-  },
-  {
-    id: "4",
-    shiftTitle: "Afternoon Shift",
-    startTime: "14:00",
-    endTime: "22:00",
-  },
-];
-
-export default function ViewTemplateShiftsSlideover({ open, onClose }) {
+export default function ViewTemplateShiftsSlideover({
+  open,
+  onClose,
+  rosterId,
+}) {
   const [openAddTemplateShift, setOpenAddTemplateShift] = useState(false);
+  // const [templateShifts, setTemplateShifts] = useState([
+  //   {
+  //     id: "1",
+  //     shiftTitle: "6H Morning Shift",
+  //     startDate: new Date(2022, 9, 16, 8, 0, 0, 0),
+  //     endDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+  //     minQuota: [2, 2, 1, 0],
+  //     remarks:
+  //       "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
+  //   },
+  //   {
+  //     id: "2",
+  //     shiftTitle: "6H Afternoon Shift",
+  //     startDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+  //     endDate: new Date(2022, 9, 16, 20, 0, 0, 0),
+  //     minQuota: [3, 3, 0, 1],
+  //     remarks:
+  //       "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
+  //   },
+  //   {
+  //     id: "3",
+  //     shiftTitle: "8H Morning Shift",
+  //     startDate: new Date(2022, 9, 16, 6, 0, 0, 0),
+  //     endDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+  //     minQuota: [2, 2, 0, 0],
+  //     remarks:
+  //       "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
+  //   },
+  //   {
+  //     id: "4",
+  //     shiftTitle: "8H Afternoon Shift",
+  //     startDate: new Date(2022, 9, 16, 14, 0, 0, 0),
+  //     endDate: new Date(2022, 9, 16, 22, 0, 0, 0),
+  //     minQuota: [1, 3, 1, 0],
+  //     remarks:
+  //       "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.",
+  //   },
+  // ]);
+  const [templateShifts, setTemplateShifts] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [openDeleteShift, setOpenDeleteShift] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [shiftToBeDeletedId, setShiftToBeDeletedId] = useState();
+
+  useEffect(() => {
+    api
+      .getTemplateShiftsByRoster(rosterId)
+      .then((response) => {
+        // let dummyArr = response.data;
+        // for (let i = 0; i < dummyArr.length; i++) {
+        //   dummyArr.startTime
+        // }
+        let tempData = response.data;
+        for (let i = 0; i < response.data.length; i++) {
+          tempData[i].startTime = parseISO(response.data[i].startTime);
+          tempData[i].endTime = parseISO(response.data[i].endTime);
+        }
+        setTemplateShifts(tempData);
+      })
+      .catch((error) => console.log(error.response.data.message));
+  }, [
+    open,
+    refreshKey,
+    openAddTemplateShift,
+    openDeleteShift,
+    rosterId,
+    openSuccess,
+  ]);
+
+  function deleteTemplateShiftHandler(shiftId) {
+    api
+      .deleteShift(shiftId)
+      .then(() => {
+        alert("Shift has been successfully deleted!");
+        setOpenDeleteShift(false);
+      })
+      .catch((error) => console.log(error.response.data.message));
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -50,10 +109,34 @@ export default function ViewTemplateShiftsSlideover({ open, onClose }) {
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
+        <SuccessfullyAddedTemplateModal
+          open={openSuccess}
+          onClose={() => setOpenSuccess(false)}
+        />
         {/* MODAL FOR ADDING A TEMPLATE SHIFT */}
         <AddTemplateShiftModal
           open={openAddTemplateShift}
           onClose={() => setOpenAddTemplateShift(false)}
+          // addTemplateShiftHandler={(templateShiftToBeAdded) => {
+          //   setTemplateShifts((oldTemplateShifts) => [
+          //     ...oldTemplateShifts,
+          //     templateShiftToBeAdded,
+          //   ]);
+          // }}
+          refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
+          rosterId={rosterId}
+          openSuccess={() => setOpenSuccess(true)}
+        />
+        <DeleteShiftModal
+          open={openDeleteShift}
+          onClose={() => setOpenDeleteShift(false)}
+          deleteShiftHandler={() =>
+            deleteTemplateShiftHandler(shiftToBeDeletedId)
+          }
+          refreshKeyHandler={() => {
+            setRefreshKey((oldKey) => oldKey + 1);
+            console.log(refreshKey);
+          }}
         />
 
         <div className="fixed inset-0 overflow-hidden">
@@ -86,34 +169,56 @@ export default function ViewTemplateShiftsSlideover({ open, onClose }) {
                           </button>
                         </div>
                       </div>
-                      {/* BUTTON FOR ADDING TEMPLATE SHIFT */}
-                      <button
-                        type="button"
-                        className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-3 py-2 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        onClick={() => setOpenAddTemplateShift(true)}
-                      >
-                        Add Template Shift
-                      </button>
-                    </div>
-                    <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                      <div className="absolute inset-0 px-4 sm:px-6">
-                        <div
-                          className="h-full border-2 border-dashed border-gray-200"
-                          aria-hidden="true"
+                      {templateShifts.length !== 0 && (
+                        <button
+                          type="button"
+                          className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-3 py-2 text-sm font-medium leading-4 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          onClick={() => {
+                            setOpenAddTemplateShift(true);
+                          }}
                         >
-                          <ul>
-                            {shifts.map((shift, index) => {
-                              return (
-                                <li className="pb-2">
-                                  {/* RENDERING EACH TEMPLATE SHIFT */}
-                                  <ShiftBlock shift={shift} />
-                                </li>
-                              );
-                            })}
-                          </ul>
+                          Add Template Shift
+                        </button>
+                      )}
+                    </div>
+                    {templateShifts.length !== 0 ? (
+                      <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                        <div className="absolute inset-0 px-4 sm:px-6">
+                          <div
+                            className="h-full border-2 border-dashed border-gray-200 p-2"
+                            aria-hidden="true"
+                          >
+                            <ul>
+                              {templateShifts.map((shift, index) => {
+                                return (
+                                  <li key={shift.shiftId} className="pb-2">
+                                    {/* RENDERING EACH TEMPLATE SHIFT */}
+                                    <ShiftBlock
+                                      shift={shift}
+                                      removeShiftHandler={() => {
+                                        setShiftToBeDeletedId(shift.shiftId);
+                                        setOpenDeleteShift(true);
+                                      }}
+                                      refreshKeyHandler={() =>
+                                        setRefreshKey((oldKey) => oldKey + 1)
+                                      }
+                                      willBePersisted
+                                      openSuccess={() => setOpenSuccess(true)}
+                                    />
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="flex justify-center">
+                        <EmptyStateTemplateShifts
+                          openModal={() => setOpenAddTemplateShift(true)}
+                        />
+                      </div>
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

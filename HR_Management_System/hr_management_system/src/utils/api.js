@@ -19,6 +19,7 @@ const api = {
     isPartTimer,
     isHrEmployee,
     dateJoined,
+    positionType,
     positionName,
     positionDescription,
     jobType
@@ -164,6 +165,9 @@ const api = {
   getAllEmployees() {
     return axios.get(`http://localhost:9191/api/user/getAllEmployees`);
   },
+  getAllEmployeesInclLeaveQuotas() {
+    return axios.get(`http://localhost:9191/api/user/getAllEmployeesInclLeaveQuotas`);
+  },
   getEmployeesWithTask(taskId) {
     return axios.get(
       `http://localhost:9191/api/user/getAssignedEmployees?taskId=${taskId}`
@@ -275,6 +279,82 @@ const api = {
       `http://localhost:9191/api/team/getAllTeamsInDept/${deptId}`
     );
   },
+  getAllModules() {
+    return axios.get(`http://localhost:9191/api/module`);
+  },
+  getModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}`);
+  },
+  addModule(module) {
+    return axios.post(`http://localhost:9191/api/module`, module);
+  },
+  assignModule(moduleId, employees, userId) {
+    return axios.post(
+      `http://localhost:9191/api/module/${moduleId}/user/${userId}`,
+      employees
+    );
+  },
+  deleteModule(moduleId) {
+    return axios.delete(`http://localhost:9191/api/module/${moduleId}`);
+  },
+  editModule(moduleId, module) {
+    return axios.put(`http://localhost:9191/api/module/${moduleId}`, module);
+  },
+  getUserModules(userId) {
+    return axios.get(`http://localhost:9191/api/module/user/${userId}`);
+  },
+  getModuleFromVideo(videoId) {
+    return axios.get(`http://localhost:9191/api/module/video/${videoId}`);
+  },
+  getEmployeesAssignedToModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/user`);
+  },
+  getEmployeesUnassignedToModule(moduleId) {
+    return axios.get(
+      `http://localhost:9191/api/module/${moduleId}/unAssignedUser`
+    );
+  },
+  getIsUserAssignedToModule(moduleId, userId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/user/${userId}/assigned`)
+  },
+  getVideosInModule(moduleId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/videos`);
+  },
+  addVideo(moduleId, video) {
+    return axios.post(`http://localhost:9191/api/module/${moduleId}`, video);
+  },
+  getVideo(videoId) {
+    return axios.get(`http://localhost:9191/api/video/${videoId}`);
+  },
+  getVideos() {
+    return axios.get(`http://localhost:9191/api/video`);
+  },
+  editVideo(videoId, video) {
+    return axios.put(`http://localhost:9191/api/video/${videoId}`, video);
+  },
+  deleteVideo(videoId) {
+    return axios.delete(`http://localhost:9191/api/video/${videoId}`);
+  },
+  markVideoAsWatched(videoId, userId) {
+    return axios.post(
+      `http://localhost:9191/api/video/${videoId}/user/${userId}`
+    );
+  },
+  getIsVideoWatchedByEmployee(videoId, userId) {
+    return axios.get(
+      `http://localhost:9191/api/video/${videoId}/user/${userId}`
+    );
+  },
+  getUserProgress(moduleId, userId) {
+    return axios.get(
+      `http://localhost:9191/api/module/${moduleId}/user/${userId}`
+    );
+  },
+  getUserCompletedModules(userId) {
+    return axios.get(
+      `http://localhost:9191/api/module/user/${userId}/completed`
+    );
+  },
   // JOB REQUEST
   getAllJobRequests() {
     return axios.get(`http://localhost:9191/api/jobrequest/getAllJobRequests`);
@@ -373,25 +453,109 @@ const api = {
     return axios.get(`http://localhost:9191/api/jobposting/getAllJobPosts`);
   },
   closeJobPost(jobPostingId) {
-    return axios.put(
-      `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
-    );
+      return axios.put(
+          `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
+      );
+    },
+  editJobPost(jobPostId, jobTitle, jobDescription, preferredStartDate, jobType, jobRole, salary, jobRequirements) {
+      return axios.put(
+          `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
+      );
+    },
+
+  // Leaves
+  getAllPendingLeaves() {
+    return axios.get(`http://localhost:9191/api/leaves/getAllPendingLeaves`);
   },
-  editJobPost(
-    jobPostId,
-    jobTitle,
-    jobDescription,
-    preferredStartDate,
-    jobType,
-    jobRole,
-    salary,
-    jobRequirements
-  ) {
-    return axios.put(
-      `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
-    );
+  getAllLeaves() {
+    return axios.get(`http://localhost:9191/api/leaves/getAllLeaves`);
+  },
+  getLeaveById(leaveId) {
+    return axios.get(`http://localhost:9191/api/leaves/getLeaveById?leaveId=${leaveId}`);
+  },
+  createLeave(employeeId, leaveType, startDate, endDate, remark, document) {
+    return axios.post(`http://localhost:9191/api/leaves/createLeave?employeeId=${employeeId}&leaveType=${leaveType}&startDate=${startDate}&endDate=${endDate}&remark=${remark}&document=${document}&`);
+  },
+  getEmployeeLeaves(employeeId) {
+    return axios.get(`http://localhost:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`);
+  },
+  approveLeave(leaveId, approverRemarks) {
+    return axios.put(`http://localhost:9191/api/leaves/approveLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
+  rejectLeave(leaveId, approverRemarks) {
+    return axios.put(`http://localhost:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
+  cancelLeave(leaveId) {
+    return axios.put(`http://localhost:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+  },
+  getDocByteArray(docId) {
+    return axios.get(`http://localhost:9191/api/docData/getDocByteArray?id=${docId}`)
+  },
+  getDocById(docId) {
+    return axios.get(`http://localhost:9191/api/docData/getDocById?id=${docId}`, {responseType : 'blob'})
+  },
+  downloadDocument(docId) {
+    return axios.get(`http://localhost:9191/api/docData/downloadDocument?id=${docId}`, {responseType: 'blob'})
   },
 
+  //not tested
+  getShiftListItemByShiftId(shiftId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByShiftId?shiftId=${shiftId}`
+    );
+  },
+  getShiftListItemByPosition(shiftId, posType) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByPosition?shiftId=${shiftId}&posType=${posType}`
+    );
+  },
+  addNewShift(shift, rosterId) {
+    return axios.post(
+      `http://localhost:9191/api/shift?rosterId=${rosterId}`,
+      shift
+    );
+  },
+  addNewShiftListItem(shiftListItem, shiftId, userId) {
+    return axios.post(
+      `http://localhost:9191/api/shift_list_item?shiftId=${shiftId}&userId=${userId}`,
+      shiftListItem
+    );
+  },
+  getTemplateShiftsByRoster(rosterId) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getTemplateShiftsByRoster?rosterId=${rosterId}`
+    );
+  },
+  getShiftListItemByDateAndUserId(date, userId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndUserId?date=${date}&userId=${userId}`
+    );
+  },
+  deleteShift(shiftId) {
+    return axios.delete(`http://localhost:9191/api/shift/${shiftId}`);
+  },
+  editShift(shiftId, shift) {
+    return axios.put(
+      `http://localhost:9191/api/shift/editShift/${shiftId}`,
+      shift
+    );
+  },
+  getShiftsByTeam(teamId) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getShiftsByTeam?teamId=${teamId}`
+    );
+  },
+  getShiftListItemByDateAndUserId(date, userId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndUserId?date=${date}&userId=${userId}`
+    );
+  },
+  deleteShiftListItem(shiftListItemId) {
+    return axios.delete(
+      `http://localhost:9191/api/shift_list_item/${shiftListItemId}`
+    );
+  },
+    
   getAllNotifications() {
     return axios.get(
       `http://localhost:9191/api/notification/getAllNotifications`

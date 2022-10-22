@@ -51,7 +51,6 @@ export default function AdminPage(userId) {
       .then((response) => {
         console.log(response.data);
         setEmployees(response.data);
-
       })
       .catch((error) => {
         history.push("/");

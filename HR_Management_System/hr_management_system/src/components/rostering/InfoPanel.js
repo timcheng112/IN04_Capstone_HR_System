@@ -1,6 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import api from "../../utils/api.js";
+import {
+  format,
+  formatISO,
+  getDate,
+  getDay,
+  getMonth,
+  getYear,
+} from "date-fns";
+import Tabs from "./Tabs.js";
+import "./InfoPanel.css";
+import TabDisplay from "./TabDisplay.js";
 
-const dateTemp = new Date("May 15, 2022 23:15:30");
+// const dateTemp = new Date("May 15, 2022 23:15:30");
 const dayArray = [
   "Sunday",
   "Monday",
@@ -35,21 +47,48 @@ const publicHolidays = [
   "12 November 2023",
   "25 December 2023",
 ];
-const day = dayArray[dateTemp.getDay()];
-const dateStringArr = dateTemp.toDateString().split(" ");
-const dateString =
-  dateStringArr[2] + " " + dateStringArr[1] + " " + dateStringArr[3];
 
-console.log("day of datetemp = " + dateTemp.getDay());
+//dont instantiate date here later.
+const InfoPanel = ({ teamId, selectedDate, addShiftHandler }) => {
+  const [shift, setShift] = useState(null);
 
-const isPH = publicHolidays.includes(dateString);
-const isWeekend = day == "Sunday" || day == "Saturday";
+  let day = format(selectedDate, "iiii");
+  let dateString = format(selectedDate, "dd MMMM yyyy");
+  let apiDateString = formatISO(selectedDate);
+  const shiftFound = false;
 
-//replace dateTemp with date to get this to work
-const InfoPanel = (teamId, date) => {
+  console.log("DATESTRING|||" + dateString + "||");
+  console.log("IS IT A PH? " + publicHolidays.includes(dateString));
+
+  useEffect(() => {
+    const temp = async () => {
+      if (shift != null) {
+        shiftFound = true;
+      }
+      await api
+        .getShiftByTeamAndTime(teamId, apiDateString)
+        .then((res) => {
+          console.log("get shift by team and time: " + res);
+          setShift(res.data);
+
+          // updateDateInfo(teamId, selectedDate);
+        })
+        .catch((error) => {
+          var message = error.request.response;
+          console.log(message);
+          if (message.includes("Shift with teamId:")) {
+            alert(
+              "No Shift was found for team " + teamId + " at specified time."
+            );
+          } else if (message.includes("More than 1 Shifts were found")) {
+            alert("More than 1 shifts were found?!");
+          }
+        });
+    };
+  }, [shift]);
+
   return (
     //find shift information with cooresponding team & date.
-
     <div className=" overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg my-3">
       <table className="min-w-full divide-y divide-gray-300 my-4">
         <tbody>
@@ -58,19 +97,20 @@ const InfoPanel = (teamId, date) => {
               <span className="float-left align-start inline-flex ml-10 mr-3 text-xl">
                 {day}, {dateString}
               </span>
-              {isWeekend && (
+              {(day === "Sunday" || day === "Saturday") && (
                 <span className="float-right mr-20 mt-1 inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                   Weekend
                 </span>
               )}
-              {isPH && (
+              {publicHolidays.includes(dateString) && (
                 <span className="float-right mr-5 mt-1 inline-flex rounded-full bg-yellow-100 px-2 text-xs font-semibold leading-5 text-yellow-800">
                   Public Holiday
                 </span>
               )}
             </th>
           </tr>
-          <tr>
+
+          {/* <tr>
             <td colSpan={2} className="border-r">
               <div className="px-3 py-3.5 font-semibold text-gray-900">
                 Day Shift
@@ -81,9 +121,9 @@ const InfoPanel = (teamId, date) => {
                 Evening Shift
               </div>
             </td>
-          </tr>
+          </tr> */}
 
-          <tr>
+          {/* <tr>
             <td>
               #Cashiers <br />
               {0}/{4}
@@ -103,9 +143,56 @@ const InfoPanel = (teamId, date) => {
               <br />
               {0}/{4}
             </td>
-          </tr>
+          </tr> */}
         </tbody>
       </table>
+
+      <div>
+        {shiftFound ? (
+          <Tabs>
+            <div label="All">
+              <TabDisplay shiftId={shift.shiftId} idx="-1" />
+            </div>
+            <div label="Salesmen">
+              <TabDisplay shiftId={shift.shiftId} idx="0" />
+            </div>
+            <div label="Cashiers">
+              <TabDisplay shiftId={shift.shiftId} idx="1" />
+            </div>
+            <div label="Managers">
+              <TabDisplay shiftId={shift.shiftId} idx="2" />
+            </div>
+          </Tabs>
+        ) : (
+          <></>
+          // <div>
+          //   <div>No Shifts Assigned To This Date.</div>
+          // </div>
+        )}
+      </div>
+      {/* <Tabs>
+        <div label="All">
+          Deez nuts on yo chin, <em>All</em>!
+        </div>
+        <div label="Gator">
+          See ya later, <em>Alligator</em>!
+        </div>
+        <div label="Croc">
+          After 'while, <em>Crocodile</em>!
+        </div>
+        <div label="All">
+          <TabDisplay shiftId={shift.shiftId} idx="-1" />
+        </div>
+        <div label="Salesmen">
+          <TabDisplay shiftId={shift.shiftId} idx="0" />
+        </div>
+        <div label="Cashiers">
+          <TabDisplay shiftId={shift.shiftId} idx="1" />
+        </div>
+        <div label="Managers">
+          <TabDisplay shiftId={shift.shiftId} idx="2" />
+        </div>
+      </Tabs> */}
     </div>
   );
 };

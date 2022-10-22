@@ -19,15 +19,16 @@ import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
-import com.conceiversolutions.hrsystem.training.module.Module;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -119,9 +120,6 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "employeeReviewing")
     @Column(name = "reviewed_by")
     private List<ManagerReview> employeeReviews;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Module.class, mappedBy = "employee")
-    @Column(name = "modules")
-    private List<Module> modules;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
@@ -179,7 +177,6 @@ public class User implements UserDetails {
         this.managerAppraisals = new ArrayList<>();
         this.managerReviews = new ArrayList<>();
         this.employeeReviews = new ArrayList<>();
-        this.modules = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.taskListItems = new ArrayList<>();
         this.teams = new ArrayList<>();
@@ -216,6 +213,17 @@ public class User implements UserDetails {
         this.profilePic = null;
         this.currentPosition = null;
         this.qualificationInformation = null;
+        this.applications = new ArrayList<>();
+        this.jobRequests = new ArrayList<>();
+        this.payslips = new ArrayList<>();
+        this.attendances = new ArrayList<>();
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
     }
 
@@ -273,6 +281,13 @@ public class User implements UserDetails {
         this.jobRequests = jobRequests;
         this.payslips = payslips;
         this.attendances = attendances;
+        this.employeeAppraisals = new ArrayList<>();
+        this.managerAppraisals = new ArrayList<>();
+        this.managerReviews = new ArrayList<>();
+        this.employeeReviews = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.taskListItems = new ArrayList<>();
         this.currentPayInformation = currentPayInformation;
     }
 
@@ -329,7 +344,6 @@ public class User implements UserDetails {
         this.managerAppraisals = managerAppraisals;
         this.managerReviews = managerReviews;
         this.employeeReviews = employeeReviews;
-        this.modules = modules;
         this.goals = goals;
         this.taskListItems = taskListItems;
         this.teams = teams;
@@ -470,6 +484,34 @@ public class User implements UserDetails {
         isPartTimer = partTimer;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
+    public PayInformation getCurrentPayInformation() {
+        return currentPayInformation;
+    }
+
+    public void setCurrentPayInformation(PayInformation currentPayInformation) {
+        this.currentPayInformation = currentPayInformation;
+    }
+
+    public ReactivationRequest getReactivationRequest() {
+        return reactivationRequest;
+    }
+
+    public void setReactivationRequest(ReactivationRequest reactivationRequest) {
+        this.reactivationRequest = reactivationRequest;
+    }
+
+    public List<TaskListItem> getTaskListItems() {
+        return taskListItems;
+    }
+
+    public void setTaskListItems(List<TaskListItem> taskListItems) {
+        this.taskListItems = taskListItems;
+    }
+    
     public Boolean getHrEmployee() {
         return isHrEmployee;
     }

@@ -15,6 +15,7 @@ import ViewOrganisation from "./pages/OrgChart/ViewOrganisation/viewOrganisation
 import ProfilePage from "./pages/ProfilePage";
 import UpdateProfile from "./pages/UpdateProfile";
 import HomePage from "./pages/Home";
+import TrainingPage from "./pages/Training/index"
 
 import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
@@ -22,6 +23,7 @@ import OnboardingHrPage from "./pages/Onboarding/indexHR";
 import OnboardingPage from "./pages/Onboarding/index";
 import OffboardingHrPage from "./pages/Offboarding/indexHr";
 import OffboardingPage from "./pages/Offboarding/index";
+import ModulePage from "./pages/Module";
 import AdminPage from "./pages/AdminPage";
 
 import JobRequestPage from "./pages/JobRequest/index";
@@ -29,6 +31,12 @@ import JobRequestDetailPage from "./pages/JobRequest/RequestDetail";
 import NewJobRequestPage from "./pages/JobRequest/NewRequest";
 import JobRequestHrPage from "./pages/JobRequest/indexHR";
 import JobPostPage from "./pages/JobPost/indexHR";
+
+import VideoPage from "./pages/Video";
+import AllTrainingPage from "./pages/Training/indexAll";
+import AllVideosPage from "./pages/Video/indexAll";
+import TrainingCompletedPage from "./pages/Training/indexCompleted";
+
 import Roster from "./pages/Rostering/roster";
 import JobPostDetailPage from "./pages/JobPost/PostDetail";
 import LeavePage from "./pages/Leave/indexHR";
@@ -37,6 +45,8 @@ import Notification from "./components/Notification";
 import AllNotificationPage from "./pages/NotificationPage/AllNotificationPage";
 import NotificationExpandPage from "./pages/NotificationPage/NotificationExpandPage"
 import AddNotification from "./pages/NotificationPage/AddNotification";
+import Attendance from "./pages/Attendance";
+
 
 function App() {
   return (
@@ -66,8 +76,10 @@ function App() {
           {/* //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/> */}
           {/* //          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart} /> */}
           <PrivateRoute exact path="/home" component={HomePage} />
-          <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart} />
-          <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam} />
+          <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
+          <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam}/>
+          <PrivateRoute exact path="/mytraining" component={TrainingPage} />
+
           <PrivateRoute
             exact
             path="/viewDept/:deptId"
@@ -137,7 +149,12 @@ function App() {
           <PublicRoute exact path="/NotificationExpandPage" component={NotificationExpandPage}/>
           <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
 
-          
+          <PrivateRoute exact path="/mytraining/completed" component={TrainingCompletedPage} />
+          <PrivateRoute exact path="/training" component={AllTrainingPage} />  
+          <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />     
+          <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
+          <PrivateRoute exact path="/video" component={AllVideosPage} />  
+
         </Switch>
       </div>
     </BrowserRouter>

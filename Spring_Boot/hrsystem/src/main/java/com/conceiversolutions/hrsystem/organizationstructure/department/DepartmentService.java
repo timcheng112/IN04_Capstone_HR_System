@@ -8,6 +8,7 @@ import com.conceiversolutions.hrsystem.organizationstructure.organization.Organi
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
+import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import com.conceiversolutions.hrsystem.user.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class DepartmentService {
     private final OrganizationRepository organizationRepository;
     private final UserService userService;
     private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
 
 //    @Autowired
 //    public DepartmentService(DepartmentRepository departmentRepository, OrganizationRepository organizationRepository) {
@@ -103,7 +105,7 @@ public class DepartmentService {
         }
         Organization org = orgOptional.get();
 
-        User deptHead = userService.getUser(Long.valueOf(deptHeadId));
+        User deptHead = userRepository.findById(Long.valueOf(deptHeadId)).get();
         if (!deptHead.getUserRole().equals(RoleEnum.MANAGER)) {
             throw new IllegalStateException("User selected is not a Manager, please appoint a manager instead");
         } else if (!deptHead.isEnabled()) {
@@ -115,7 +117,9 @@ public class DepartmentService {
 
         Department savedDept = departmentRepository.saveAndFlush(newDept);
 
-        org.setDepartments(org.addDepartment(savedDept));
+        List<Department> orgDepts = org.getDepartments();
+        orgDepts.add(savedDept);
+        org.setDepartments(orgDepts);
         organizationRepository.save(org);
 
         return savedDept.getDepartmentId();

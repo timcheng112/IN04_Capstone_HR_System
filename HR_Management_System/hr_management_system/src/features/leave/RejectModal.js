@@ -1,12 +1,27 @@
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import api from '../../utils/api';
 
-export default function RejectlModal({ open, setOpen, leave }) {
+export default function RejectlModal({ open, setOpen, leave, refreshKeyHandler }) {
   // const [open, setOpen] = useState(true)
 
   const cancelButtonRef = useRef(null)
   const [remarks, setRemarks] = useState("");
+  const [error, setError] = useState(null);
+
+  function reject(){
+    api.rejectLeave(leave.leaveId, remarks)
+    .then(() => alert("Successfully rejected."))
+    .catch((error) => setError(error));
+  }
+
+  const handleSubmit = (evt) => { //maybe add form
+    evt.preventDefault();
+    reject();
+    refreshKeyHandler();
+    setOpen(false);
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -66,7 +81,7 @@ export default function RejectlModal({ open, setOpen, leave }) {
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                    onClick={() => setOpen(false)}
+                    onClick={handleSubmit}
                   >
                     Reject
                   </button>
