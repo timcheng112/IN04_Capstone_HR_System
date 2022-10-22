@@ -78,7 +78,6 @@ function App() {
           <PrivateRoute exact path="/home" component={HomePage} />
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
           <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam}/>
-          <PrivateRoute exact path="/mytraining" component={TrainingPage} />
 
           <PrivateRoute
             exact
@@ -154,6 +153,7 @@ function App() {
           <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />     
           <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
           <PrivateRoute exact path="/video" component={AllVideosPage} />  
+          <PrivateRoute exact path="/mytraining" component={TrainingPage} />
 
         </Switch>
       </div>
