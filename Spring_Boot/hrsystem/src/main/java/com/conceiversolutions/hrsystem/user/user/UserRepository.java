@@ -26,6 +26,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "SET u.isEnabled = TRUE WHERE u.email = ?1")
     int enableUser(String email);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u " +
+            "SET u.isEnabled = FALSE WHERE u.email = ?1")
+    int disableUser(String email);
+
     @Query("SELECT c.user FROM ConfirmationToken c WHERE c.token = ?1")
     Optional<User> findUserByToken(String token);
 

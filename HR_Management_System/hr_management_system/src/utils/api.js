@@ -555,7 +555,6 @@ const api = {
       `http://localhost:9191/api/shift_list_item/${shiftListItemId}`
     );
   },
-    
   getAllNotifications() {
     return axios.get(
       `http://localhost:9191/api/notification/getAllNotifications`
@@ -571,11 +570,29 @@ const api = {
     return axios.delete(`http://localhost:9191/api/notification/deleteNotifications?userId=${userId}`);
     //http://localhost:9191/api/notification/deleteNotifications?userId=5
   },
+  markNotificationAsRead(notificationId, userId) {
+    return axios.post(`http://localhost:9191/api/notification/${notificationId}/user/${userId}`)
+  },
   deleteANotification(notificationId, userId){
     return axios.delete(`http://localhost:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`)
   },
+  getUserReadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/read/${userId}`)
+  },
+  getUserUnreadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/unread/${userId}`)
+  },
   getAllStaff(){
     return axios.get(`http://localhost:9191/api/user/getAllStaff`);
+  },
+  // activateUser(email){
+  //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
+  // },
+  // deactivateUser(email){
+  //   return axios.get(`http://localhost:9191/api/user/deactivate/?workEmail=${email}`);
+  // },
+  setUserStatus(email){
+    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
   },
   
 
