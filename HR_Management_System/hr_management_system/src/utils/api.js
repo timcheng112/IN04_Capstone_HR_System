@@ -577,6 +577,15 @@ const api = {
   getAllStaff(){
     return axios.get(`http://localhost:9191/api/user/getAllStaff`);
   },
+  // activateUser(email){
+  //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
+  // },
+  // deactivateUser(email){
+  //   return axios.get(`http://localhost:9191/api/user/deactivate/?workEmail=${email}`);
+  // },
+  setUserStatus(email){
+    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
+  },
   
 
 };

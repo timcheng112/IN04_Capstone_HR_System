@@ -502,6 +502,12 @@ public class UserService implements UserDetailsService {
         return userRepository.enableUser(email);
     }
 
+    public int disableUser(String email){
+        System.out.println("UserService.disableUser");
+        System.out.println("email = " + email);
+        return userRepository.disableUser(email);
+    }
+
     public String getUserFromToken(String token) {
         System.out.println("UserService.getUserFromToken");
         Optional<User> user = userRepository.findUserByToken(token);
@@ -1418,6 +1424,18 @@ public class UserService implements UserDetailsService {
         enableUser(user.getEmail());
         userRepository.saveAndFlush(user);
         return "Successfully set password";
+    }
+    @Transactional
+    public String setUserStatus(String email){
+        User user = userRepository.findUserByWorkEmail(email).get();
+        if(user.getIsEnabled()){
+            disableUser(user.getEmail());
+        }else{
+            enableUser(user.getEmail());
+        }
+
+        userRepository.saveAndFlush(user);
+        return "Successfully disabled/enabled ";
     }
 
     // need to figure out how it looks on front end first

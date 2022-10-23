@@ -2,7 +2,7 @@
 
 import Navbar from "../../../components/Navbar.js";
 import { useState } from "react";
-import DeactivateAccountModal from "./deactivateAccountModal.js";
+// import DeactivateAccountModal from "../../AdminPage/deactivateAccountModal.js";
 import ViewEmployeeModal from "./viewEmployeeModal.js";
 
 //idea: we make a simple table but u can hover for tooltip!
@@ -27,15 +27,15 @@ export default function EmployeeList() {
   return (
     <>
       <Navbar />
-      <DeactivateAccountModal
+      {/* <DeactivateAccountModal
         open={openDeactivate}
         onClose={() => setOpenDeactivate(false)}
-      />
-      <ViewEmployeeModal
+      /> */}
+      {/* <ViewEmployeeModal
         open={openView}
         onClose={() => setOpenView(false)}
         employee={employee}
-      />
+      /> */}
 
       <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
         <div className="px-4 sm:px-6 lg:px-8">
@@ -89,6 +89,12 @@ export default function EmployeeList() {
                         </th>
                         <th
                           scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        >
+                          Status
+                        </th>
+                        <th
+                          scope="col"
                           className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                         >
                           <span className="sr-only">View</span>
@@ -120,6 +126,9 @@ export default function EmployeeList() {
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {person.role}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            {person.isBlackListed}
                           </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button

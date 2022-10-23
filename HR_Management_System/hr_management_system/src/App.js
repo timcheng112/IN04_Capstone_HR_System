@@ -46,6 +46,7 @@ import AllNotificationPage from "./pages/NotificationPage/AllNotificationPage";
 import NotificationExpandPage from "./pages/NotificationPage/NotificationExpandPage"
 import AddNotification from "./pages/NotificationPage/AddNotification";
 import Attendance from "./pages/Attendance";
+// import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 
 
 function App() {
@@ -154,6 +155,8 @@ function App() {
           <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
           <PrivateRoute exact path="/video" component={AllVideosPage} />  
           <PrivateRoute exact path="/mytraining" component={TrainingPage} />
+          <PrivateRoute exact path="/test" component={EmployeeList} />
+          
 
         </Switch>
       </div>
