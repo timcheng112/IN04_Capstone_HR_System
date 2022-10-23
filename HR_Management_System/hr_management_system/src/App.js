@@ -87,7 +87,7 @@ function App() {
           />
           <PrivateRoute exact path="/offboarding" component={OffboardingPage} />
           {/* <ViewTeam/> */}
-          <PrivateRoute exact path="/admin" component={AdminPage} />
+          <PrivateRoute exact path="/admin/users" component={AdminPage} />
           <PrivateRoute
             exact
             path="/admin/onboarding"
@@ -155,7 +155,7 @@ function App() {
           <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
           <PrivateRoute exact path="/video" component={AllVideosPage} />  
           <PrivateRoute exact path="/mytraining" component={TrainingPage} />
-          <PrivateRoute exact path="/test" component={EmployeeList} />
+          {/* <PrivateRoute exact path="/test" component={EmployeeList} /> */}
           
 
         </Switch>

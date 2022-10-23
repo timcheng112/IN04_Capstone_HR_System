@@ -4,6 +4,7 @@ import api from "../../utils/api";
 import { deleteUser, getUserId } from "../../utils/Common";
 import { useHistory } from "react-router";
 import DeactivateAccountModal from "./deactivateAccountModal.js";
+import AdminSidebar from "../../components/Sidebar/Admin";
 
 // const people = [
 //   {
@@ -63,7 +64,9 @@ export default function AdminPage(userId) {
   }, [userId]);
 
   function Activate(email) {
-    api
+    const yes = window.confirm("Are you sure you want to activate user?");
+    if(yes){
+      api
       .setUserStatus(email)
       .then((response) => {
         console.log(response.data);
@@ -71,9 +74,12 @@ export default function AdminPage(userId) {
       })
       .then((response) => window.location.reload())
       .catch((error) => console.log(error));
+    }
   }
 
   function Deactivate(email) {
+    const yes = window.confirm("Are you sure you want to deactivate user?");
+    if(yes){
     api
       .setUserStatus(email)
       .then((response) => {
@@ -83,6 +89,7 @@ export default function AdminPage(userId) {
       })
       .then((response) => window.location.reload())
       .catch((error) => console.log(error));
+    }
   }
 
   return (
@@ -92,7 +99,12 @@ export default function AdminPage(userId) {
         open={openDeactivate}
         onClose={() => setOpenDeactivate(false)}
       /> */}
-      <div className="px-4 sm:px-6 lg:px-8 m-24">
+      <div className="flex">
+        <div className="flex-1">
+          <AdminSidebar pageTitle="Leaves" />
+        </div>
+      </div>
+      <div className="px-2 sm:px-6 lg:px-8 m-24">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-xl font-semibold text-gray-900">Users</h1>
@@ -100,14 +112,14 @@ export default function AdminPage(userId) {
               A list of all the users
             </p>
           </div>
-          <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+          {/* <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <button
               type="button"
               className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
             >
               Add user
             </button>
-          </div>
+          </div> */}
         </div>
         <div className="mt-8 flex flex-col">
           <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
