@@ -1,5 +1,9 @@
 import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon, PlusIcon, UserPlusIcon } from "@heroicons/react/20/solid";
+import {
+  ChevronDownIcon,
+  PlusIcon,
+  UserPlusIcon,
+} from "@heroicons/react/20/solid";
 import { Fragment, useState } from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import AddTaskModal from "../../features/onboarding/AddTaskModal";
@@ -26,10 +30,12 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
   const history = useHistory();
 
   function deleteCategory() {
-    api.deleteCategory(category.categoryId).then(() => {
-      alert("Successfully deleted!");
-      refreshKeyHandler();
-    })
+    api
+      .deleteCategory(category.categoryId)
+      .then(() => {
+        alert("Successfully deleted!");
+        refreshKeyHandler();
+      })
       .catch((error) => alert("Unable to delete as category contains tasks"));
   }
 
@@ -87,7 +93,13 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
         category={category}
         refreshKeyHandler={refreshKeyHandler}
       />
-      <AssignCategoryTasksModal open={openAssign} onClose={() => setOpenAssign(false)} category={category} refreshKeyHandler={refreshKeyHandler} />
+      <AssignCategoryTasksModal
+        open={openAssign}
+        onClose={() => setOpenAssign(false)}
+        category={category}
+        refreshKeyHandler={refreshKeyHandler}
+        isOnboarding={true}
+      />
       <ConfirmDialog
         title="category"
         item="category"

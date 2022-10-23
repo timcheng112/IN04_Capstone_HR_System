@@ -8,6 +8,7 @@ const AssignCategoryTasksModal = ({
   onClose,
   category,
   refreshKeyHandler,
+  isOnboarding,
 }) => {
   const [searchParam] = useState([
     "userId",
@@ -47,7 +48,8 @@ const AssignCategoryTasksModal = ({
       api
         .assignTaskToEmployeeByCategory(
           Number(employee.userId),
-          Number(categoryId)
+          Number(categoryId),
+          isOnboarding
         )
         .then(() => {
           successUsers.push(" " + employee.firstName + " " + employee.lastName);
@@ -55,9 +57,7 @@ const AssignCategoryTasksModal = ({
             alert(
               "Successfully assigned to: " +
                 successUsers +
-                "\nUnsuccessfully assigned to (due to users being previously assigned all tasks under " +
-                category.name +
-                " category): " +
+                "\nUnsuccessfully assigned to: " +
                 failureUsers
             );
           }
