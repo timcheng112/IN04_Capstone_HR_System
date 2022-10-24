@@ -11,6 +11,9 @@ import ResetPassword from "./pages/ResetPassword";
 import BlacklistPage from "./pages/Blacklisted";
 import ProfilePage from "./pages/ProfilePage";
 import UpdateProfile from "./pages/UpdatePage";
+import JobPostingPage from "./pages/JobPosting";
+import JobApplicationPage from "./pages/JobPosting/apply";
+import FavouriteJobPage from "./pages/JobPosting/favourite";
 import Home from "./pages/Home";
 
 function App() {
@@ -31,6 +34,10 @@ function App() {
           <PrivateRoute exact path="/profile" component={ProfilePage} />
           <PrivateRoute exact path="/updateProfile" component={UpdateProfile} />
           <PrivateRoute exact path="/home" component={Home} />
+          
+          <PublicRoute exact path="/jobposting" component={JobPostingPage} />
+          <PublicRoute exact path="/myapplication" component={JobApplicationPage} />
+          <PublicRoute exact path="/myfavourite" component={FavouriteJobPage} />
         </Switch>
       </div>
     </BrowserRouter>
