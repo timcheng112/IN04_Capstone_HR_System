@@ -24,7 +24,6 @@ import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -344,7 +343,6 @@ public class User implements UserDetails {
         this.managerAppraisals = managerAppraisals;
         this.managerReviews = managerReviews;
         this.employeeReviews = employeeReviews;
-//        this.modules = modules;
         this.goals = goals;
         this.taskListItems = taskListItems;
         this.teams = teams;
