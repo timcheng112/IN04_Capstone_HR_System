@@ -15,9 +15,7 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [workEmail, setWorkEmail] = useState("");
-  const [dobDay, setDobDay] = useState("");
-  const [dobMonth, setDobMonth] = useState("");
-  const [dobYear, setDobYear] = useState("");
+  const [dob, setDob] = useState("");
   const [gender, setGender] = useState("Male");
   const [role, setRole] = useState("Employee");
   const [positionName, setPositionName] = useState("");
@@ -25,9 +23,7 @@ export default function Register() {
   const [jobType, setJobType] = useState("Full-Time");
   const [isPartTimer, setIsPartTime] = useState(false);
   const [isHrEmployee, setIsHrEmployee] = useState(false);
-  const [joinedDay, setJoinedDay] = useState("");
-  const [joinedMonth, setJoinedMonth] = useState("");
-  const [joinedYear, setJoinedYear] = useState("");
+  const [dateJoined, setDateJoined] = useState("");
   const [isHr, setIsHr] = useState(true);
   const [position, setPosition] = useState("SALESMAN");
 
@@ -51,29 +47,26 @@ export default function Register() {
   };
 
   function validateDates() {
-    if (dobDay.length < 2 || dobMonth.length < 2 || dobYear.length < 4) {
-      alert(
-        "Please ensure the date of birth dates are in the format of DD MM YYYY"
-      );
-    } else if (
-      joinedDay.length < 2 ||
-      joinedMonth.length < 2 ||
-      joinedYear.length < 4
-    ) {
-      alert("Please ensure the joined dates are in the format of DD MM YYYY");
-    } else if (dobDay > 31 || dobMonth > 12 || dobYear > 2023) {
-      alert("Invalid birthday");
-    } else if (joinedDay > 31 || joinedMonth > 12 || joinedYear > 2023) {
-      alert("Invalid date joined");
-    } else {
-      register();
-    }
+    register();
+    // if (dobDay.length < 2 || dobMonth.length < 2 || dobYear.length < 4) {
+    //   alert(
+    //     "Please ensure the date of birth dates are in the format of DD MM YYYY"
+    //   );
+    // } else if (
+    //   joinedDay.length < 2 ||
+    //   joinedMonth.length < 2 ||
+    //   joinedYear.length < 4
+    // ) {
+    //   alert("Please ensure the joined dates are in the format of DD MM YYYY");
+    // } else if (joinedDay > 31 || joinedMonth > 12 || joinedYear > 2023) {
+    //   alert("Invalid date joined");
+    // } else {
+    //   register();
+    // }
   }
 
   function register() {
-    var dob = dobYear + "-" + dobMonth + "-" + dobDay;
     console.log("dob = " + dob);
-    var dateJoined = joinedYear + "-" + joinedMonth + "-" + joinedDay;
     console.log("joined = " + dateJoined);
     var isPartTime = jobType === "Part-Time" ? true : false;
     console.log("isPartTime" + isPartTime);
@@ -255,6 +248,19 @@ export default function Register() {
 
                 <div className="flex flex-direction:row">
                   <input
+                    id="birthday"
+                    name="birthday"
+                    type="date"
+                    autoComplete="birthday"
+                    required
+                    className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    onChange={(e) => {
+                      setDob(e.target.value);
+                      console.log(typeof e.target.value);
+                    }}
+                  ></input>
+
+                  {/* <input
                     id="birthday-day"
                     name="birthday-day"
                     type="text"
@@ -288,7 +294,7 @@ export default function Register() {
                     placeholder="YYYY"
                     value={dobYear}
                     onChange={(d) => setDobYear(d.target.value)}
-                  />
+                  /> */}
                 </div>
               </div>
               {/* <div>
@@ -335,18 +341,17 @@ export default function Register() {
                 </label>
                 <div className="flex flex-direction:row">
                   <input
-                    id="date-joined-day"
-                    name="date-joined-day"
-                    type="text"
-                    autoComplete="date-joined-day"
+                    id="date-joined"
+                    name="date-joined"
+                    type="date"
+                    autoComplete="date-joined"
                     required
-                    className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm mr-5"
-                    placeholder="DD"
-                    value={joinedDay}
-                    onChange={(d) => setJoinedDay(d.target.value)}
+                    className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    value={dateJoined}
+                    onChange={(d) => setDateJoined(d.target.value)}
                   />
 
-                  <input
+                  {/* <input
                     id="date-joined-month"
                     name="date-joined-month"
                     type="text"
@@ -368,7 +373,7 @@ export default function Register() {
                     placeholder="YYYY"
                     value={joinedYear}
                     onChange={(d) => setJoinedYear(d.target.value)}
-                  />
+                  /> */}
                 </div>
               </div>
               <div>
