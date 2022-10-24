@@ -144,7 +144,7 @@ export default function Home() {
   const [userId, setUserId] = useState(getUserId());
   const history = useHistory();
   const [show, setShow] = useState(true);
-  const [showNotification, setShowNotification] = useState(true);
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
     api
@@ -186,9 +186,9 @@ export default function Home() {
                           type="button"
                           className="flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                           onClick={() => {
-                            setShowNotification(true);
+                            setShowNotification(!showNotification);
                             console.log("bell pressed");
-                            history.push("/AllNotifications")
+                            //history.push("/AllNotifications")
                           }}
                         >
                           <span className="sr-only">View notifications</span>

@@ -98,6 +98,21 @@ const api = {
   getUserCompletedModules(userId) {
     return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`)
   },
+  getUserReadNotifications(userId) {
+    return axios.get(`http://${URL}:9191/api/notification/read/${userId}`)
+  },
+  getUserUnreadNotifications(userId) {
+    return axios.get(`http://${URL}:9191/api/notification/unread/${userId}`)
+  },
+  markNotificationAsRead(notificationId, userId) {
+    return axios.post(`http://${URL}:9191/api/notification/${notificationId}/user/${userId}`)
+  },
+  deleteANotification(notificationId, userId){
+    return axios.delete(`http://${URL}:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`)
+  },
+  deleteAllNotifications(userId){
+    return axios.delete(`http://${URL}:9191/api/notification/deleteNotifications?userId=${userId}`);
+  },
 };
 
 export default api;
