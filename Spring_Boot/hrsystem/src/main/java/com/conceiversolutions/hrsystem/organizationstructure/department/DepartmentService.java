@@ -113,10 +113,10 @@ public class DepartmentService {
         }
 
 //        Department newDept = new Department(Long.valueOf(4), deptName, org, new ArrayList<>(), deptHead);
-        Department newDept = new Department(deptName, org, new ArrayList<>(), deptHead);
-
+        Department newDept = new Department(deptName, org, new ArrayList<>(), deptHead, false);
+//        System.out.println(newDept.getDepartmentName());
         Department savedDept = departmentRepository.saveAndFlush(newDept);
-
+//        System.out.println(savedDept.getDepartmentId());
         List<Department> orgDepts = org.getDepartments();
         orgDepts.add(savedDept);
         org.setDepartments(orgDepts);
