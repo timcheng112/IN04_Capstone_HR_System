@@ -595,7 +595,13 @@ const api = {
   deleteCV(docId){
     return axios.delete(`http://localhost:9191/api/docData/${docId}`);
   },
-  
+  createGoalPeriod(goalPeriod) {
+    return axios.post(`http://localhost:9191/api/goalPeriod`, goalPeriod);
+  },
+  getGoalPeriodByYear(year) {
+    return axios.get(`http://localhost:9191/api/goalPeriod/${year}`)
+  },
+
 
 };
 

@@ -18,25 +18,25 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const navigation = [
-    { name: "Dashboard", path: "/" },
-    { name: "Admin", path: "/admin/onboarding" },
-    { name: "Company", path: "/vieworg" },
-    { name: "Career", path: "/mytraining" },
-    { name: "Welfare", path: "/welfare" },
-    { name: "Hiring", path: "/hiring/jobrequest" },
-    { name: "Reports", path: "/reports" },
-  ];
+    { name: 'Dashboard', path: '/'},
+    { name: 'Admin', path: '/admin/onboarding'},
+    { name: 'Company', path: '/vieworg'},
+    { name: 'Career', path: '/career/promotion'},
+    { name: 'Welfare', path: '/welfare'},
+    { name: 'Hiring', path: '/hiring/jobrequest'},
+    { name: 'Reports', path: '/reports'},
+  ] 
   const navigationHR = [
-    { name: "Dashboard", path: "/" },
-    { name: "Admin", path: "/admin/onboarding" },
-    { name: "Company", path: "/vieworg" },
-    { name: "Career", path: "/career" },
-    { name: "Training", path: "/mytraining" },
-    { name: "Welfare", path: "/welfare" },
-    { name: "Hiring", path: "/hiring/jobrequesthr" },
-    { name: "Reports", path: "/reports" },
-  ];
-  const { url } = useRouteMatch();
+    { name: 'Dashboard', path: '/'},
+    { name: 'Admin', path: '/admin/onboarding'},
+    { name: 'Company', path: '/vieworg'},
+    { name: 'Career', path: '/career/promotion'},
+    { name: 'Training', path: '/mytraining'},
+    { name: 'Welfare', path: '/welfare'},
+    { name: 'Hiring', path: '/hiring/jobrequesthr'},
+    { name: 'Reports', path: '/reports'},
+  ] 
+  const { url } = useRouteMatch()
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const history = useHistory();

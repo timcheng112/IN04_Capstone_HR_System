@@ -48,6 +48,12 @@ import AddNotification from "./pages/NotificationPage/AddNotification";
 import Attendance from "./pages/Attendance";
 // import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 
+import PromotionPage from "./pages/Progression";
+import TransferPage from "./pages/Progression/indexTransfer";
+import GoalsPage from "./pages/Performance/indexGoals";
+import AppraisalsPage from "./pages/Performance/indexAppraisals";
+import PerformancePage from "./pages/Performance";
+
 
 function App() {
   return (
@@ -158,6 +164,11 @@ function App() {
           {/* <PrivateRoute exact path="/test" component={EmployeeList} /> */}
           
 
+          <PrivateRoute exact path="/career/promotion" component={PromotionPage} />
+          <PrivateRoute exact path="/career/transfer" component={TransferPage} />
+          <PrivateRoute exact path="/performance" component={PerformancePage} />
+          <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
+          <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
         </Switch>
       </div>
     </BrowserRouter>
