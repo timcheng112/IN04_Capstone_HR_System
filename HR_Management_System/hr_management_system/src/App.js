@@ -146,7 +146,7 @@ function App() {
           <PublicRoute exact path="/notification" component={Notification}/>
           <PrivateRoute exact path="/AllNotifications" component={AllNotificationPage}/>
           {/* <PublicRoute exact path="/AllNotifications/:notificationId" component={NotificationExpandPage}/> */}
-          <PublicRoute exact path="/NotificationExpandPage" component={NotificationExpandPage}/>
+          {/* <PrivateRoute exact path="/NotificationExpandPage" component={NotificationExpandPage}/> */}
           <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
 
           <PrivateRoute exact path="/mytraining/completed" component={TrainingCompletedPage} />

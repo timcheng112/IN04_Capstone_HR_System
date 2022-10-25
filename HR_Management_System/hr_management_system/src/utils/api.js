@@ -594,7 +594,7 @@ const api = {
   },
   deleteCV(docId){
     return axios.delete(`http://localhost:9191/api/docData/${docId}`);
-  }
+  },
   
 
 };

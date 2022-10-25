@@ -1255,6 +1255,48 @@ public class UserService implements UserDetailsService {
         return employees;
     }
 
+    public List<User> getAllApplicants(){
+        List<User> applicants = userRepository.findAllApplicants(RoleEnum.APPLICANT);
+        System.out.println("size of applicant " + applicants.size());
+        for (User u : applicants) {
+            List<Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+            u.setQualificationInformation(null);
+            u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
+        }
+
+        return applicants;
+    }
+
     public Long initAdmin(User user) {
         System.out.println("UserService.initAdmin");
         boolean isValidEmail = emailValidator.test(user.getEmail());

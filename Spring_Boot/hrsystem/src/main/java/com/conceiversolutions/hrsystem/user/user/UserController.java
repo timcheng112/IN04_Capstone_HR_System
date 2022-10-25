@@ -336,4 +336,9 @@ public class UserController {
     public String setUserStatus(@RequestParam("workEmail") String workEmail){
         return userService.setUserStatus(workEmail);
     }
+
+    @GetMapping(path = "/getAllApplicants")
+    public List<User> getAllApplicants() {
+        return userService.getAllApplicants();
+    }
 }

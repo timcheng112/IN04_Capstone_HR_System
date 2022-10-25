@@ -144,7 +144,7 @@ export default function Home() {
   const [userId, setUserId] = useState(getUserId());
   const history = useHistory();
   const [show, setShow] = useState(true);
-  const [showNotification, setShowNotification] = useState(false);
+  const [showNotification, setShowNotification] = useState(true);
 
   useEffect(() => {
     api
@@ -163,7 +163,7 @@ export default function Home() {
     <>
       {user ? (
         <>
-          {/* {user.notifications ? setShow(true) : setShow(false)} */}
+
           <div className="min-h-full">
             <Popover
               as="header"
@@ -188,7 +188,7 @@ export default function Home() {
                           onClick={() => {
                             setShowNotification(!showNotification);
                             console.log("bell pressed");
-                            //history.push("/AllNotifications")
+                            history.push("/AllNotifications")
                           }}
                         >
                           <span className="sr-only">View notifications</span>
@@ -494,8 +494,10 @@ export default function Home() {
                                 <button
                                   type="button"
                                   className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+                                  href="/AllNotifications"
                                   onClick={() => {
                                     setShowNotification(true);
+                                    history.push("/AllNotifications")
                                     console.log("bell pressed 1");
                                   }}
                                 >
@@ -505,7 +507,7 @@ export default function Home() {
                                   <BellIcon
                                     className="h-6 w-6"
                                     aria-hidden="true"
-                                    href=""
+                                    href="/AllNotifications"
                                   />
                                 </button>
                               </div>
@@ -529,7 +531,7 @@ export default function Home() {
                 </>
               )}
             </Popover>
-            {showNotification && (<Notification showNotification={true} />)}
+            {(user.notificationsUnread).length > 0 ? (<Notification showNotification={true} />) : ""}
             <main className="-mt-24 pb-8">
               <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                 <h1 className="sr-only">Profile</h1>
