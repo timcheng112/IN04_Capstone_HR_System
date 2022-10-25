@@ -360,6 +360,18 @@ public class UserConfig {
                 skillsetService.addSkillset("Microsoft Word");
                 skillsetService.addSkillset("Microsoft Excel");
                 skillsetService.addSkillset("Microsoft Powerpoint");
+
+                // Create Applicant
+                User spongebobApplicant = new User("Spongebob", "Squarepants", "password", 81231234, "sponge@bob.com", LocalDate.of(1999,5,1),
+                        GenderEnum.MALE, RoleEnum.APPLICANT, false, false, null);
+                spongebobApplicant.setEnabled(true);
+                userService.initApplicant(spongebobApplicant);
+
+                User sandyApplicant = new User("Sandy", "Cheeks", "password", 81231235, "sandy@cheeks.com", LocalDate.of(1999,5,1),
+                        GenderEnum.FEMALE, RoleEnum.APPLICANT, false, false, null);
+                sandyApplicant.setEnabled(true);
+                userService.initApplicant(sandyApplicant);
+//                firstName, lastName, password, phone, email, dob, gender.toUpperCase()
             } else {
                 // if any user exists already, don't run
                 System.out.println("Administrators already exist, do not init");

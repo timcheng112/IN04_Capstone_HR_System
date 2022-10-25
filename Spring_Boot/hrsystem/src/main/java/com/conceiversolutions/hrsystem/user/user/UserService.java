@@ -1295,6 +1295,26 @@ public class UserService implements UserDetailsService {
         return newUser.getUserId();
     }
 
+    public Long initApplicant(User user) {
+        System.out.println("UserService.initAdmin");
+        boolean isValidEmail = emailValidator.test(user.getEmail());
+        if (!isValidEmail) {
+            throw new IllegalStateException("Email address is not valid");
+        }
+
+        Optional<User> employeeByEmail = userRepository.findUserByEmail(user.getEmail());
+
+        if (employeeByEmail.isPresent()) {
+            System.out.println("Email already in use.");
+            throw new IllegalStateException("User's email is already in use");
+        }
+
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        User newUser = userRepository.saveAndFlush(user);
+        return newUser.getUserId();
+    }
+
     public List<User> getAllAvailManagers() {
         List<Department> departments = departmentRepository.findAll();
         List<Long> deptHeadIds = new ArrayList<>();
