@@ -1,9 +1,5 @@
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../screens/HomeScreen";
-import { AntDesign } from "@expo/vector-icons";
-import { Button } from "react-native-paper";
 import ModuleScreen from "../screens/ModuleScreen";
 import VideoScreen from "../screens/VideoScreen";
 import TrainingScreen from "../screens/TrainingScreen";

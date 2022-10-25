@@ -1,9 +1,8 @@
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
-import { AntDesign } from "@expo/vector-icons";
-import { Button } from "react-native-paper";
+import { IconButton } from "react-native-paper";
+import NotificationScreen from "../screens/NotificationScreen";
 
 const HomeStack = createNativeStackNavigator();
 
@@ -15,9 +14,22 @@ const HomeNavigator = () => {
         component={HomeScreen}
         options={{
           tabBarLabel: "Home",
+          headerRight: () => {
+            <IconButton icon="bell" size={25} />;
+          },
         }}
       />
       {/* <HomeStack.Screen name="Profile" component={ProfileScreen} /> */}
+      <HomeStack.Screen
+        name="Notifications"
+        component={NotificationScreen}
+        options={{
+          tabBarLabel: "Notifications",
+          headerRight: () => {
+            <IconButton icon="bell" size={25} />;
+          },
+        }}
+      />
     </HomeStack.Navigator>
   );
 };

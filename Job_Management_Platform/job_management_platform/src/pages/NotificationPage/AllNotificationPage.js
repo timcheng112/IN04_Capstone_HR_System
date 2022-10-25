@@ -20,7 +20,7 @@ export default function Notifications() {
       console.log(response.data);
       setUser(response.data);
     });
-}, []);
+  }, []);
 
   useEffect(() => {
     api
@@ -92,12 +92,12 @@ export default function Notifications() {
         .deleteAllNotifications(getUserId())
         .then((response) => {
           console.log(response.data);
+          window.location.reload();
           //   setNotification(response.data);
         })
         .then(() => {
           console.log("are you here");
           setRefresh(refresh + 1);
-          window.location.reload();
           //   history.push("/AllNotifications");
         })
         .catch((error) => {
@@ -113,22 +113,22 @@ export default function Notifications() {
       window.location.reload();
       setRefresh(refresh + 1);
       console.log("set refresh");
-      
     });
   }
 
-  function time(datetime) {
-    let dt = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-    }).format(datetime);
-    return dt;
-  }
+  // enum Role {
+  //   APPLICANT,
+  //   MANAGER,
+  //   EMPLOYEE,
+  //   ADMINISTRATOR
+  // }
+
+  // const Admin = Symbol("ADMINISTRATOR")
 
   return (
     read &&
-    unread && user && (
+    unread &&
+    user && (
       <>
         <Navbar />
         <div className="relative bg-indigo-800">
@@ -152,30 +152,36 @@ export default function Notifications() {
 
         {/* start of lists */}
         <ul role="list" className="p-40">
-          {(user.notificationsRead).length > 0 ? <button
-            type="button"
-            className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-            onClick={() => {
-              deleteAllNotifications();
-            }}
-          >
-            <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-            Delete All
-          </button> : ""}
+          {user.notificationsRead.length > 0 ? (
+            <button
+              type="button"
+              className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
+              onClick={() => {
+                deleteAllNotifications();
+              }}
+            >
+              <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+              Delete All
+            </button>
+          ) : (
+            ""
+          )}
 
-          {user.userRole === "ADMINISTRATOR" ?
-          <button
-            type="button"
-            className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-            onClick={() => history.push("/AddNotification")}
-          >
-            <PlusCircleIcon
-              className="-ml-0.5 mr-2 h-4 w-4"
-              aria-hidden="true"
-            />
-            Add
-          </button> 
-          : ""} 
+          {user.userRole === "ADMINISTRATOR" ? (
+            <button
+              type="button"
+              className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
+              onClick={() => history.push("/AddNotification")}
+            >
+              <PlusCircleIcon
+                className="-ml-0.5 mr-2 h-4 w-4"
+                aria-hidden="true"
+              />
+              Add
+            </button>
+          ) : (
+            ""
+          )}
 
           {unread.map((message) => (
             <div
@@ -222,7 +228,6 @@ export default function Notifications() {
                     >
                       {message.notifTime}
                     </Moment>
-                   
                   </div>
                 </li>
               </button>
@@ -230,49 +235,49 @@ export default function Notifications() {
           ))}
 
           {read.map((message) => (
-            <><li
-              key={message.notificationId}
-              className="relative bg-white py-5 px-4 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 "
-            >
-              <div className="flex justify-between space-x-3">
-                <button
-                  type="button"
-                  className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
-                  onClick={() => {
-                    // console.log("clicked");
-                    console.log(message.notificationId);
-                    deleteANotification(message.notificationId);
-                  }}
-                >
-                  <TrashIcon
-                    className="-ml-0.5 mr-2 h-4 w-4"
-                    aria-hidden="true"
-                  />
-                  Delete
-                </button>
-                <div className="min-w-0 flex-1">
-                  <span className="" aria-hidden="true" />
+            <>
+              <li
+                key={message.notificationId}
+                className="relative bg-white py-5 px-4 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 "
+              >
+                <div className="flex justify-between space-x-3">
+                  <button
+                    type="button"
+                    className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
+                    onClick={() => {
+                      // console.log("clicked");
+                      console.log(message.notificationId);
+                      deleteANotification(message.notificationId);
+                    }}
+                  >
+                    <TrashIcon
+                      className="-ml-0.5 mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    Delete
+                  </button>
+                  <div className="min-w-0 flex-1">
+                    <span className="" aria-hidden="true" />
 
-                  <p className="truncate text-sm text-black-1500 font-bold">
-                    {message.title}
-                  </p>
-                  <p className="mt-5 text-sm text-gray-600 line-clamp-1">
-                    {message.description}
-                  </p>
+                    <p className="truncate text-sm text-black-1500 font-bold">
+                      {message.title}
+                    </p>
+                    <p className="mt-5 text-sm text-gray-600 line-clamp-1">
+                      {message.description}
+                    </p>
+                  </div>
+                  <Moment
+                    parse="YYYY-MM-DD HH:mm"
+                    className=" text-sm text-gray-500"
+                    locale="Asia/Singapore"
+                    format="DD/MM/YYYY H:mm"
+                  >
+                    {message.notifTime}
+                  </Moment>
                 </div>
-                <Moment
-                  parse="YYYY-MM-DD HH:mm"
-                  className=" text-sm text-gray-500"
-                  locale="Asia/Singapore"
-                  format="DD/MM/YYYY H:mm"
-                >
-                  {message.notifTime}
-                </Moment>
-
-                
-              </div>
-              <div className="mt-1"></div>
-            </li> </>
+                <div className="mt-1"></div>
+              </li>{" "}
+            </>
           ))}
         </ul>
       </>

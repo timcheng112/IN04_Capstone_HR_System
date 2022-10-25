@@ -585,21 +585,23 @@ const api = {
   getAllStaff(){
     return axios.get(`http://localhost:9191/api/user/getAllStaff`);
   },
+  setUserStatus(email){
+    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
+  },
+  addCV(file, userId){
+    // http://localhost:9191/api/qualification/addCv?file=${file}&userId=${userId}
+    return axios.post(`http://localhost:9191/api/qualification/addCv?file=&userId=${userId}`, file);
+  },
+  deleteCV(docId){
+    return axios.delete(`http://localhost:9191/api/docData/${docId}`);
+  },
   createGoalPeriod(goalPeriod) {
     return axios.post(`http://localhost:9191/api/goalPeriod`, goalPeriod);
   },
   getGoalPeriodByYear(year) {
     return axios.get(`http://localhost:9191/api/goalPeriod/${year}`)
   },
-  // activateUser(email){
-  //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
-  // },
-  // deactivateUser(email){
-  //   return axios.get(`http://localhost:9191/api/user/deactivate/?workEmail=${email}`);
-  // },
-  setUserStatus(email){
-    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
-  },
+
 
 };
 

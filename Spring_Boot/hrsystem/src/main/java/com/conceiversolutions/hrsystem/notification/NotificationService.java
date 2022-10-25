@@ -108,7 +108,7 @@ public class NotificationService {
                 u1.getNotificationsRead().remove(notification);
 
                 notificationRepository.deleteById(notificationId);
-                return "notification with id" + userId + "is deleted";
+                return "Notification has been deleted";
         }
 
         public String deleteAllNotification(Long userId) {
@@ -117,11 +117,13 @@ public class NotificationService {
                                 .orElseThrow(() -> new IllegalStateException(
                                                 "User with ID: " + userId + " does not exist!"));
 
-                List<Notification> unreadLst = u1.getNotificationsUnread();
-                List<Notification> readLst = u1.getNotificationsRead();
+                List<Notification> unreadList = u1.getNotificationsUnread();
+                List<Notification> readList = u1.getNotificationsRead();
 
-                unreadLst.clear();
-                readLst.clear();
+                Integer count = unreadList.size() + readList.size();
+
+                unreadList.clear();
+                readList.clear();
                 System.out.println("cleared unreadlist ");
                 System.out.println("cleared readLst ");
 
@@ -136,7 +138,7 @@ public class NotificationService {
 
                 userRepository.saveAndFlush(u1);
 
-                return "delete all function successful";
+                return count + " notifications deleted";
         }
 
         @Transactional
