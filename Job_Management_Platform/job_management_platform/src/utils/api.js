@@ -65,6 +65,35 @@ const api = {
   addDepartment(deptName, deptHeadId){
     return axios.post(`http://localhost:9191/api/department/addDepartment?deptName=${deptName}&deptHeadId=${deptHeadId}`);
   },
+  addNotification(notificationTitle, notificationDescription, userId){
+    return axios.post(`http://localhost:9191/api/notification/?notificationTitle=${notificationTitle}&notificationDescription=${notificationDescription}&userId=${userId}`)
+  },
+  getAllNotificationsForUser(userId){
+    return axios.get(`http://localhost:9191/api/notification/getAllNotificationsForUser/${userId}`);
+  },
+  deleteAllNotifications(userId){
+    return axios.delete(`http://localhost:9191/api/notification/deleteNotifications?userId=${userId}`);
+    //http://localhost:9191/api/notification/deleteNotifications?userId=5
+  },
+  markNotificationAsRead(notificationId, userId) {
+    return axios.post(`http://localhost:9191/api/notification/${notificationId}/user/${userId}`)
+  },
+  deleteANotification(notificationId, userId){
+    return axios.delete(`http://localhost:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`)
+  },
+  getUserUnreadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/unread/${userId}`)
+  },
+  getUserReadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/read/${userId}`)
+  },
+  getAllStaff(){
+    return axios.get(`http://localhost:9191/api/user/getAllStaff`);
+  },
+  getAllApplicants(){
+    return axios.get(`http://localhost:9191/api/user/getAllApplicants`);
+  },
+
 };
 
 export default api;

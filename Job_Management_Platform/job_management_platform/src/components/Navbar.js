@@ -61,7 +61,8 @@ export default function Navbar() {
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
                 <button
                   type="button"
-                  className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+                  onClick={() => history.push("/AllNotifications")}
                 >
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" href="/AllNotifications" />

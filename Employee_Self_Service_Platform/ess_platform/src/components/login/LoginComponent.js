@@ -71,6 +71,7 @@ function LoginComponent() {
             </Text>
           </View>
           <TextInput
+            secureTextEntry={true}
             style={{
               width: "90%",
               marginTop: 15,
@@ -81,7 +82,6 @@ function LoginComponent() {
             }}
             label="Password"
             value={password}
-            keyboardType={"visible-password"}
             onChangeText={(password) => setPassword(password)}
           />
           <Button

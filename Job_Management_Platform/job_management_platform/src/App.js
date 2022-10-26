@@ -15,6 +15,9 @@ import JobPostingPage from "./pages/JobPosting";
 import JobApplicationPage from "./pages/JobPosting/apply";
 import FavouriteJobPage from "./pages/JobPosting/favourite";
 import Home from "./pages/Home";
+import AllNotificationPage from "./pages/NotificationPage/AllNotificationPage";
+import AddNotification from "./pages/NotificationPage/AddNotification";
+
 
 function App() {
   return (
@@ -38,6 +41,8 @@ function App() {
           <PublicRoute exact path="/jobposting" component={JobPostingPage} />
           <PublicRoute exact path="/myapplication" component={JobApplicationPage} />
           <PublicRoute exact path="/myfavourite" component={FavouriteJobPage} />
+          <PrivateRoute exact path="/AllNotifications" component={AllNotificationPage}/>
+          <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
         </Switch>
       </div>
     </BrowserRouter>

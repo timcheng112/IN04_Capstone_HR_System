@@ -564,6 +564,12 @@ public class UserService implements UserDetailsService {
         return userRepository.enableUser(email);
     }
 
+    public int disableUser(String email){
+        System.out.println("UserService.disableUser");
+        System.out.println("email = " + email);
+        return userRepository.disableUser(email);
+    }
+
     public String getUserFromToken(String token) {
         System.out.println("UserService.getUserFromToken");
         Optional<User> user = userRepository.findUserByToken(token);
@@ -1311,6 +1317,48 @@ public class UserService implements UserDetailsService {
         return employees;
     }
 
+    public List<User> getAllApplicants(){
+        List<User> applicants = userRepository.findAllApplicants(RoleEnum.APPLICANT);
+        System.out.println("size of applicant " + applicants.size());
+        for (User u : applicants) {
+            List<Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+            }
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : u.getTaskListItems()) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+            u.setQualificationInformation(null);
+            u.setBlocks(new ArrayList<>());
+            u.setShiftListItems(new ArrayList<>());
+            u.setSwapRequestsReceived(new ArrayList<>());
+            u.setSwapRequestsRequested(new ArrayList<>());
+            u.setReactivationRequest(null);
+            u.setAttendances(new ArrayList<>());
+            u.setCurrentPayInformation(null);
+            u.setEmployeeAppraisals(new ArrayList<>());
+            u.setManagerAppraisals(new ArrayList<>());
+            u.setManagerReviews(new ArrayList<>());
+            u.setEmployeeReviews(new ArrayList<>());
+            u.setApplications(new ArrayList<>());
+            u.setGoals(new ArrayList<>());
+            u.setPositions(new ArrayList<>());
+            u.setJobRequests(new ArrayList<>());
+            u.setLeaves(new ArrayList<>());
+            u.setLeaveQuotas(new ArrayList<>());
+            u.setCurrentLeaveQuota(null);
+        }
+
+        return applicants;
+    }
+
     public Long initAdmin(User user) {
         System.out.println("UserService.initAdmin");
         boolean isValidEmail = emailValidator.test(user.getEmail());
@@ -1347,6 +1395,26 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         positionRepository.save(user.getCurrentPosition());
+        User newUser = userRepository.saveAndFlush(user);
+        return newUser.getUserId();
+    }
+
+    public Long initApplicant(User user) {
+        System.out.println("UserService.initAdmin");
+        boolean isValidEmail = emailValidator.test(user.getEmail());
+        if (!isValidEmail) {
+            throw new IllegalStateException("Email address is not valid");
+        }
+
+        Optional<User> employeeByEmail = userRepository.findUserByEmail(user.getEmail());
+
+        if (employeeByEmail.isPresent()) {
+            System.out.println("Email already in use.");
+            throw new IllegalStateException("User's email is already in use");
+        }
+
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         User newUser = userRepository.saveAndFlush(user);
         return newUser.getUserId();
     }
@@ -1480,6 +1548,18 @@ public class UserService implements UserDetailsService {
         enableUser(user.getEmail());
         userRepository.saveAndFlush(user);
         return "Successfully set password";
+    }
+    @Transactional
+    public String setUserStatus(String email){
+        User user = userRepository.findUserByWorkEmail(email).get();
+        if(user.getIsEnabled()){
+            disableUser(user.getEmail());
+        }else{
+            enableUser(user.getEmail());
+        }
+
+        userRepository.saveAndFlush(user);
+        return "Successfully disabled/enabled ";
     }
 
     // need to figure out how it looks on front end first
