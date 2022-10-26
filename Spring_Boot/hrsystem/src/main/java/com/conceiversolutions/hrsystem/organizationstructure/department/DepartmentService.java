@@ -50,7 +50,29 @@ public class DepartmentService {
             org.setDepartments(new ArrayList<>());
             org.setOrganizationHead(null);
             User deptHead = d.getDepartmentHead();
+
             deptHead.setTeams(new ArrayList<>());
+            deptHead.setQualificationInformation(null);
+            deptHead.setBlocks(new ArrayList<>());
+            deptHead.setShiftListItems(new ArrayList<>());
+            deptHead.setSwapRequestsReceived(new ArrayList<>());
+            deptHead.setSwapRequestsRequested(new ArrayList<>());
+            deptHead.setReactivationRequest(null);
+            deptHead.setAttendances(new ArrayList<>());
+            deptHead.setCurrentPayInformation(null);
+            deptHead.setEmployeeAppraisals(new ArrayList<>());
+            deptHead.setManagerAppraisals(new ArrayList<>());
+            deptHead.setManagerReviews(new ArrayList<>());
+            deptHead.setEmployeeReviews(new ArrayList<>());
+            deptHead.setApplications(new ArrayList<>());
+            deptHead.setGoals(new ArrayList<>());
+            deptHead.setPositions(new ArrayList<>());
+            deptHead.setJobRequests(new ArrayList<>());
+            deptHead.setLeaves(new ArrayList<>());
+            deptHead.setLeaveQuotas(new ArrayList<>());
+            deptHead.setCurrentLeaveQuota(null);
+            deptHead.setTaskListItems(new ArrayList<>());
+
             List<Team> deptTeams = d.getTeams();
 
 //            d.getOrganization().getOrganizationHead();
@@ -77,8 +99,31 @@ public class DepartmentService {
             org.setDepartments(new ArrayList<>());
             org.setOrganizationHead(null);
             User deptHead = d.getDepartmentHead();
+
             deptHead.setTeams(new ArrayList<>());
+            deptHead.setQualificationInformation(null);
+            deptHead.setBlocks(new ArrayList<>());
+            deptHead.setShiftListItems(new ArrayList<>());
+            deptHead.setSwapRequestsReceived(new ArrayList<>());
+            deptHead.setSwapRequestsRequested(new ArrayList<>());
+            deptHead.setReactivationRequest(null);
+            deptHead.setAttendances(new ArrayList<>());
+            deptHead.setCurrentPayInformation(null);
+            deptHead.setEmployeeAppraisals(new ArrayList<>());
+            deptHead.setManagerAppraisals(new ArrayList<>());
+            deptHead.setManagerReviews(new ArrayList<>());
+            deptHead.setEmployeeReviews(new ArrayList<>());
+            deptHead.setApplications(new ArrayList<>());
+            deptHead.setGoals(new ArrayList<>());
+            deptHead.setPositions(new ArrayList<>());
+            deptHead.setJobRequests(new ArrayList<>());
+            deptHead.setLeaves(new ArrayList<>());
+            deptHead.setLeaveQuotas(new ArrayList<>());
+            deptHead.setCurrentLeaveQuota(null);
+            deptHead.setTaskListItems(new ArrayList<>());
+
             List<Team> deptTeams = d.getTeams();
+
 
 //            d.getOrganization().getOrganizationHead();
             for(Team t : deptTeams){
@@ -197,6 +242,8 @@ public class DepartmentService {
             org.setDepartments(new ArrayList<>());
             org.setOrganizationHead(null);
             d.setDepartmentHead(null);
+
+
 
             List<Team> deptTeams = d.getTeams();
 

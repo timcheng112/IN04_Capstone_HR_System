@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.rostering.shift;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -48,9 +49,11 @@ public class ShiftController {
     @GetMapping(path = "/getShiftByTeamAndTime")
     public Shift getShiftByTeamAndTime(@RequestParam("teamId") Long teamId, @RequestParam("dateString") String date) {
 
-        LocalDateTime dateTime = LocalDateTime.parse(date);
+        LocalDate localDate = LocalDate.parse(date);
+        
+        System.out.println("date for getShiftByTeamAndTime: " + date);
 
-        return shiftService.getShiftByTeamAndTime(teamId, dateTime);
+        return shiftService.getShiftByTeamAndTime(teamId, localDate);
     }
 
     @GetMapping(path = "/getShiftsByTeam")
