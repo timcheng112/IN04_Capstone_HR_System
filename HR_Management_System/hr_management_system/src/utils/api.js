@@ -601,6 +601,31 @@ const api = {
       `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
     );
   },
+  setUserStatus(email){
+    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
+  },
+  addCV(file, userId){
+    // http://localhost:9191/api/qualification/addCv?file=${file}&userId=${userId}
+    return axios.post(`http://localhost:9191/api/qualification/addCv?file=&userId=${userId}`, file);
+  },
+  deleteCV(docId){
+    return axios.delete(`http://localhost:9191/api/docData/${docId}`);
+  },
+  createGoalPeriod(goalPeriod) {
+    return axios.post(`http://localhost:9191/api/goalPeriod`, goalPeriod);
+  },
+  getGoalPeriodByYear(year) {
+    return axios.get(`http://localhost:9191/api/goalPeriod/${year}`)
+  },
+  getUserReadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/read/${userId}`)
+  },
+  getUserUnreadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/unread/${userId}`)
+  },
+  markNotificationAsRead(notificationId, userId) {
+    return axios.post(`http://localhost:9191/api/notification/${notificationId}/user/${userId}`)
+  },
 }
 
 export default api;
