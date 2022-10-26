@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.conceiversolutions.hrsystem.administration.task.Task;
-import com.conceiversolutions.hrsystem.user.user.User;
 
 import lombok.AllArgsConstructor;
 
@@ -40,8 +39,7 @@ public class ChecklistService {
   }
 
   @Transactional
-  public void editChecklist(Long checklistId, String checklistTitle, String checklistDescription, List<Task> tasks,
-      List<User> users) {
+  public void editChecklist(Long checklistId, String checklistTitle, String checklistDescription, List<Task> tasks) {
     Checklist checklist = checklistRepository.findById(checklistId)
         .orElseThrow(() -> new IllegalStateException("Checklist with ID: " + checklistId + " does not exist!"));
     if (checklistTitle != null && checklistTitle.length() > 0
@@ -55,18 +53,12 @@ public class ChecklistService {
     if (tasks != null){
       checklist.setTasks(tasks);
     }
-    if (users != null){
-      checklist.setUsers(users);
-    }
   
   }
 
   public void deleteChecklist(Long checklistId) {
     Checklist checklist = checklistRepository.findById(checklistId)
         .orElseThrow(() -> new IllegalStateException("Checklist with ID: " + checklistId + " does not exist!"));
-    if (!checklist.getUsers().isEmpty()) {
-      throw new IllegalStateException("Unable to delete as checklist has assigned to emloyees");
-    }
     checklistRepository.deleteById(checklistId);
   }
 }

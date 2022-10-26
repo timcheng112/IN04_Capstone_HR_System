@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.conceiversolutions.hrsystem.administration.task.Task;
-import com.conceiversolutions.hrsystem.user.user.User;
 
 import lombok.AllArgsConstructor;
 
@@ -45,9 +44,8 @@ public class ChecklistController {
   public void editChecklist(@PathVariable("checklistId") Long checklistId,
       @RequestParam(name = "checklistTitle", required = false) String checklistTitle,
       @RequestParam(name = "checklistDescription", required = false) String checklistDescription,
-      @RequestParam(name = "tasks", required = false) List<Task> tasks,
-      @RequestParam(name = "users", required = false) List<User> users) {
-    checklistService.editChecklist(checklistId, checklistTitle,checklistDescription,tasks,users);
+      @RequestParam(name = "tasks", required = false) List<Task> tasks) {
+    checklistService.editChecklist(checklistId, checklistTitle,checklistDescription,tasks);
   }
 
   @DeleteMapping(path = "{checklistId}")

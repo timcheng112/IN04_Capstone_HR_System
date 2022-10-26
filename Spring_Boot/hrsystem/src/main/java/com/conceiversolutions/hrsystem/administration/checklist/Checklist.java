@@ -30,9 +30,6 @@ public class Checklist {
   @Column(name = "task_id")
   private List<Task> tasks;
 
-  @OneToMany(fetch = FetchType.LAZY, targetEntity = User.class)
-  @Column(name = "user_id")
-  private List<User> users;
 
   public Checklist() {
 
@@ -42,21 +39,12 @@ public class Checklist {
     this.title = title;
     this.description = description;
     this.tasks = new ArrayList<>();
-    this.users = new ArrayList<>();
   }
 
   public Checklist(String title, String description, List<Task> tasks) {
     this.title = title;
     this.description = description;
     this.tasks = tasks;
-    this.users = new ArrayList<>();
-  }
-
-  public Checklist(String title, String description, List<Task> tasks, List<User> users) {
-    this.title = title;
-    this.description = description;
-    this.tasks = tasks;
-    this.users = users;
   }
 
   public String getTitle() {
@@ -83,13 +71,6 @@ public class Checklist {
     this.tasks = tasks;
   }
 
-  public List<User> getUsers() {
-    return users;
-  }
-
-  public void setUsers(List<User> users) {
-    this.users = users;
-  }
 
   public List<Task> addTask(Task task) {
     this.tasks.add(task);
@@ -101,15 +82,7 @@ public class Checklist {
     return this.tasks;
   }
 
-  public List<User> addUser(User user) {
-    this.users.add(user);
-    return this.users;
-  }
 
-  public List<User> removeUser(User user) {
-    this.users.remove(user);
-    return this.users;
-  }
 
   @Override
   public String toString() {
@@ -117,8 +90,7 @@ public class Checklist {
               "checklistId=" + checklistId +
               ", title='" + title + '\'' +
               ", description='" + description + '\'' +
-              ", tasks=" + tasks + '\'' +
-              ", users=" + users + 
+              ", tasks=" + tasks + 
               '}';
   }
 
