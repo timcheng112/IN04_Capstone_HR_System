@@ -595,5 +595,6 @@ const api = {
       `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
     );
   },
+}
 
 export default api;
