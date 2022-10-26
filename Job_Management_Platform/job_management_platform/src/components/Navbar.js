@@ -4,7 +4,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BriefcaseIcon, UserIcon, StarIcon, BellIcon } from '@heroicons/react/24/outline'
 import logo from '../assets/libro-transparent-logo.png'
 import { NavLink, useRouteMatch  } from 'react-router-dom'
-
+import { useHistory } from "react-router";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -19,6 +19,7 @@ export default function Navbar() {
   ]
   
   const { url } = useRouteMatch();
+  const history = useHistory();
   
 
   return (
