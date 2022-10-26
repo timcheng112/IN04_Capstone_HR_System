@@ -53,9 +53,14 @@ public class QualificationInformation {
     private DocData transcript;
 
     public QualificationInformation() {
+        this.languagesSpoken = new ArrayList<>();
+        this.recommendations = new ArrayList<>();
+        this.workExperiences = new ArrayList<>();
+        this.userSkills = new ArrayList<>();
     }
 
     public QualificationInformation(User user) {
+        this();
         this.user = user;
         this.languagesSpoken = new ArrayList<>();
         this.workExperiences = new ArrayList<>();
