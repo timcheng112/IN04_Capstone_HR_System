@@ -154,7 +154,8 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "employee")
     private List<Leave> leaves;
-
+    @Column(name = "bank_acc_no", nullable = true, length = 32)
+    private String bankAccNo;
 
     @OneToMany
     @JoinColumn(name ="unread_notifications")

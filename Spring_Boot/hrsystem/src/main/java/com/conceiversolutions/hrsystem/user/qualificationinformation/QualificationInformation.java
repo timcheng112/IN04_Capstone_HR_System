@@ -24,25 +24,33 @@ public class QualificationInformation {
     @Column(name = "highest_education",nullable = true)
     @Enumerated(EnumType.STRING)
     private EducationEnum highestEducation;
+    @Column(name = "school_name", nullable = true, length = 100)
+    private String schoolName;
+    @Column(name = "school_grad_year", nullable = true)
+    private Integer schoolGradYear;
     @Column(name = "personal_statement",nullable = true)
     private String personalStatement;
     @Column(name = "languages_spoken", nullable = false)
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     private List<String> languagesSpoken;
-    @Column(name = "bank_acc_no", nullable = true, length = 32)
-    private String bankAccNo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "qualificationInformation", targetEntity = WorkExperience.class)
-    @Column(name = "work_experiences")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = WorkExperience.class)
+    @JoinColumn(name = "work_experience_id")
     private List<WorkExperience> workExperiences;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "qualificationInformation", targetEntity = Recommendation.class)
-    @Column(name = "recommendations")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Recommendation.class)
+    @JoinColumn(name = "recommendation_id")
     private List<Recommendation> recommendations;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "qualificationInformation")
     private User user;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserSkillset.class)
     @JoinColumn(name = "info_id")
     private List<UserSkillset> userSkills;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
+    @JoinColumn(name = "cover_letter")
+    private DocData coverLetter;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
+    @JoinColumn(name = "transcript")
+    private DocData transcript;
 
     public QualificationInformation() {
     }
@@ -95,14 +103,6 @@ public class QualificationInformation {
         this.languagesSpoken = languagesSpoken;
     }
 
-    public String getBankAccNo() {
-        return bankAccNo;
-    }
-
-    public void setBankAccNo(String bankAccNo) {
-        this.bankAccNo = bankAccNo;
-    }
-
     public List<WorkExperience> getWorkExperiences() {
         return workExperiences;
     }
@@ -133,6 +133,38 @@ public class QualificationInformation {
 
     public void setUserSkills(List<UserSkillset> userSkills) {
         this.userSkills = userSkills;
+    }
+
+    public DocData getCoverLetter() {
+        return coverLetter;
+    }
+
+    public void setCoverLetter(DocData coverLetter) {
+        this.coverLetter = coverLetter;
+    }
+
+    public DocData getTranscript() {
+        return transcript;
+    }
+
+    public void setTranscript(DocData transcript) {
+        this.transcript = transcript;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public Integer getSchoolGradYear() {
+        return schoolGradYear;
+    }
+
+    public void setSchoolGradYear(Integer schoolGradYear) {
+        this.schoolGradYear = schoolGradYear;
     }
 
     @Override
