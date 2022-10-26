@@ -142,7 +142,7 @@ public class LeaveQuota {
     }
 
     public int proRation(int month, int total) {
-        System.out.println("LeaveQuota.proRation");
+//        System.out.println("LeaveQuota.proRation");
         int completedMonths = 12 - month;
         double proRated = (double) completedMonths/12 * 14;
 

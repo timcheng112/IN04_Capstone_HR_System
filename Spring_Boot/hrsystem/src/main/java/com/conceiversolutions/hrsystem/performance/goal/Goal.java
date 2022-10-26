@@ -1,9 +1,21 @@
 package com.conceiversolutions.hrsystem.performance.goal;
 
 import java.time.LocalDate;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+import com.conceiversolutions.hrsystem.performance.achievement.Achievement;
 import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
@@ -14,27 +26,30 @@ public class Goal {
     @Column(name = "goal_id")
     private Long goalId;
     private String type;
-    private String year;
-    private String achievements;
     @Column(name = "last_modified")
     private LocalDate lastModified;
     private LocalDate created;
+    private String description;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "employee")
     private User employee;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Achievement> achievements;
+
     public Goal() {
 
     }
 
-    public Goal(String type, String year, String achievements, LocalDate lastModified, LocalDate created, User employee) {
+    public Goal(Long goalId, String type, LocalDate lastModified, LocalDate created, String description, User employee, List<Achievement> achievements) {
+        this.goalId = goalId;
         this.type = type;
-        this.year = year;
-        this.achievements = achievements;
         this.lastModified = lastModified;
         this.created = created;
+        this.description = description;
         this.employee = employee;
+        this.achievements = achievements;
     }
 
     public Long getGoalId() {
@@ -51,22 +66,6 @@ public class Goal {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public String getAchievements() {
-        return achievements;
-    }
-
-    public void setAchievements(String achievements) {
-        this.achievements = achievements;
     }
 
     public LocalDate getLastModified() {
@@ -93,16 +92,32 @@ public class Goal {
         this.employee = employee;
     }
 
-    @Override
-    public String toString() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Achievement> getAchievements() {
+        return achievements;
+    }
+
+    public void setAchievements(List<Achievement> achievements) {
+        this.achievements = achievements;
+    }
+
+    @java.lang.Override
+    public java.lang.String toString() {
         return "Goal{" +
                 "goalId=" + goalId +
                 ", type='" + type + '\'' +
-                ", year='" + year + '\'' +
-                ", achievements='" + achievements + '\'' +
                 ", lastModified=" + lastModified +
                 ", created=" + created +
+                ", description='" + description + '\'' +
                 ", employee=" + employee +
+                ", achievements=" + achievements +
                 '}';
     }
 }

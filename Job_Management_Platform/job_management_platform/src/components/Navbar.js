@@ -5,6 +5,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../assets/libro-transparent-logo.png";
 import { NavLink, useRouteMatch } from "react-router-dom";
 import { deleteUser } from "../utils/Common";
+import { useHistory } from "react-router";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -20,9 +21,10 @@ export default function Navbar() {
     { name: "Welfare", path: "/welfare" },
     { name: "Hiring", path: "/hiring" },
     { name: "Reports", path: "/reports" },
+   
   ];
   const { url } = useRouteMatch();
-
+  const history = useHistory();
   return (
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
@@ -65,6 +67,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+                  onClick={() => history.push("/AllNotifications")}
                 >
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />

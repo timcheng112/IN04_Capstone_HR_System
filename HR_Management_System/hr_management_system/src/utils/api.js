@@ -165,6 +165,9 @@ const api = {
   getAllEmployees() {
     return axios.get(`http://localhost:9191/api/user/getAllEmployees`);
   },
+  getAllEmployeesInclLeaveQuotas() {
+    return axios.get(`http://localhost:9191/api/user/getAllEmployeesInclLeaveQuotas`);
+  },
   getEmployeesWithTask(taskId) {
     return axios.get(
       `http://localhost:9191/api/user/getAssignedEmployees?taskId=${taskId}`
@@ -285,9 +288,9 @@ const api = {
   addModule(module) {
     return axios.post(`http://localhost:9191/api/module`, module);
   },
-  assignModule(moduleId, employees) {
+  assignModule(moduleId, employees, userId) {
     return axios.post(
-      `http://localhost:9191/api/module/user/${moduleId}`,
+      `http://localhost:9191/api/module/${moduleId}/user/${userId}`,
       employees
     );
   },
@@ -310,6 +313,9 @@ const api = {
     return axios.get(
       `http://localhost:9191/api/module/${moduleId}/unAssignedUser`
     );
+  },
+  getIsUserAssignedToModule(moduleId, userId) {
+    return axios.get(`http://localhost:9191/api/module/${moduleId}/user/${userId}/assigned`)
   },
   getVideosInModule(moduleId) {
     return axios.get(`http://localhost:9191/api/module/${moduleId}/videos`);
@@ -465,6 +471,41 @@ const api = {
       `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
     );
   },
+  // Leaves
+  getAllPendingLeaves() {
+    return axios.get(`http://localhost:9191/api/leaves/getAllPendingLeaves`);
+  },
+  getAllLeaves() {
+    return axios.get(`http://localhost:9191/api/leaves/getAllLeaves`);
+  },
+  getLeaveById(leaveId) {
+    return axios.get(`http://localhost:9191/api/leaves/getLeaveById?leaveId=${leaveId}`);
+  },
+  createLeave(employeeId, leaveType, startDate, endDate, remark, document) {
+    return axios.post(`http://localhost:9191/api/leaves/createLeave?employeeId=${employeeId}&leaveType=${leaveType}&startDate=${startDate}&endDate=${endDate}&remark=${remark}&document=${document}&`);
+  },
+  getEmployeeLeaves(employeeId) {
+    return axios.get(`http://localhost:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`);
+  },
+  approveLeave(leaveId, approverRemarks) {
+    return axios.put(`http://localhost:9191/api/leaves/approveLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
+  rejectLeave(leaveId, approverRemarks) {
+    return axios.put(`http://localhost:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+  },
+  cancelLeave(leaveId) {
+    return axios.put(`http://localhost:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+  },
+  getDocByteArray(docId) {
+    return axios.get(`http://localhost:9191/api/docData/getDocByteArray?id=${docId}`)
+  },
+  getDocById(docId) {
+    return axios.get(`http://localhost:9191/api/docData/getDocById?id=${docId}`, {responseType : 'blob'})
+  },
+  downloadDocument(docId) {
+    return axios.get(`http://localhost:9191/api/docData/downloadDocument?id=${docId}`, {responseType: 'blob'})
+  },
+  
   //not tested
   getShiftListItemByShiftId(shiftId) {
     return axios.get(
@@ -522,18 +563,37 @@ const api = {
       `http://localhost:9191/api/shift_list_item/${shiftListItemId}`
     );
   },
-
+  
+  getAllNotifications() {
+    return axios.get(
+      `http://localhost:9191/api/notification/getAllNotifications`
+    );
+  },
+  addNotification(notificationTitle, notificationDescription, userId){
+    return axios.post(`http://localhost:9191/api/notification/?notificationTitle=${notificationTitle}&notificationDescription=${notificationDescription}&userId=${userId}`)
+  },
+  getAllNotificationsForUser(userId){
+    return axios.get(`http://localhost:9191/api/notification/getAllNotificationsForUser/${userId}`);
+  },
+  deleteAllNotifications(userId){
+    return axios.delete(`http://localhost:9191/api/notification/deleteNotifications?userId=${userId}`);
+    //http://localhost:9191/api/notification/deleteNotifications?userId=5
+  },
+  deleteANotification(notificationId, userId){
+    return axios.delete(`http://localhost:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`)
+  },
+  getAllStaff(){
+    return axios.get(`http://localhost:9191/api/user/getAllStaff`);
+  },
   getShiftByTeamAndTime(teamId, dateString) {
     return axios.get(
       `http://localhost:9191/api/shift/getShiftByTeamAndTime?teamId=${teamId}&dateString=${dateString}`
     );
   },
-
   getShiftListItemByDateAndTeam(date, teamId) {
     return axios.get(
       `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
     );
   },
-};
 
 export default api;

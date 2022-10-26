@@ -17,7 +17,6 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-
     @GetMapping(path = "/getAllNotifications")
     public List<Notification> getAllNotifications() {
         return notificationService.getAllNotifications();
@@ -27,9 +26,10 @@ public class NotificationController {
     public List<Notification> getAllNotificationsForUser(@PathVariable("userId") Long userId){
         return notificationService.getAllNotificationsForUser(userId);
     }
-    @GetMapping(path = "/{notificationId}")
-    public Notification getANotification(@PathVariable("notificationId") Long notificationId, @PathVariable("userId") Long userId){
-        return notificationService.getANotification(notificationId, userId);
+
+    @PostMapping(path = "/{notificationId}/user/{userId}")
+    public Notification markNotificationAsRead(@PathVariable("notificationId") Long notificationId, @PathVariable("userId") Long userId){
+        return notificationService.markAsRead(notificationId, userId);
     }
 
     @PostMapping
@@ -45,7 +45,6 @@ public class NotificationController {
     public void editNotification(@PathVariable("notificationId") Long notificationId, @RequestParam(name = "notificationTitle", required = false) String notificationTitle,
                                  @RequestParam(name = "notificationDescription", required = false) String notificationDesc) {
         notificationService.editNotification(notificationId, notificationTitle, notificationDesc);
-
     }
 
     @DeleteMapping(path = "/deleteOneNotif")
@@ -54,7 +53,17 @@ public class NotificationController {
     }
 
     @DeleteMapping(path = "/deleteNotifications")
-        public String deleteAllNotifications(@RequestParam("userId") Long userId ) throws IllegalStateException{
+        public String deleteAllNotifications(@RequestParam("userId") Long userId) throws IllegalStateException{
         return notificationService.deleteAllNotification(userId);
+    }
+
+    @GetMapping(path = "/unread/{userId}")
+    public List<Notification> getUnreadNotifications(@PathVariable("userId") Long userId) {
+        return notificationService.getUserUnreadNotifications(userId);
+    }
+
+    @GetMapping(path = "/read/{userId}")
+    public List<Notification> getReadNotifications(@PathVariable("userId") Long userId) {
+        return notificationService.getUserReadNotifications(userId);
     }
 }

@@ -321,10 +321,24 @@ public class UserController {
     // return getMyAttendanceToday(sliId, userId);
     // }
 
-    @GetMapping(path = "/getAttendanceToday")
-    public List<Integer> getAttendanceToday(Long sliId, Long userId) {
-        // return getMyAttendanceToday();
-        return getAttendanceToday(sliId, userId);
+//    @GetMapping(path = "/getAttendanceToday")
+//    public List<Integer> getAttendanceToday(Long sliId, Long userId) {
+//        // return getMyAttendanceToday();
+//        return getAttendanceToday(sliId, userId);
+//    }
+//
+//    @GetMapping(path ="/activateUser/{}")
+//    public String disableUser(String email){
+//        return disableUser(email);
+//    }
+
+    @GetMapping(path= "/setUserStatus")
+    public String setUserStatus(@RequestParam("workEmail") String workEmail){
+        return userService.setUserStatus(workEmail);
     }
 
+    @GetMapping(path = "/getAllApplicants")
+    public List<User> getAllApplicants() {
+        return userService.getAllApplicants();
+    }
 }
