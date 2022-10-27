@@ -94,8 +94,7 @@ public class User implements UserDetails {
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
     private QualificationInformation qualificationInformation;
 
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicant")
-    @Column(name = "applications")
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicants")
     private List<JobApplication> applications;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobRequest.class, mappedBy = "requestedBy")
     @Column(name = "job_requests")
@@ -103,7 +102,7 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "payslipId")
     private List<Payslip> payslips;
-
+//
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "attendanceId")
     private List<Attendance> attendances;
 
