@@ -46,9 +46,9 @@ public class TeamController {
     }
 
     @DeleteMapping (path = "/removeMemberFromTeam")
-    public boolean removeMemberFromTeam(@RequestParam("teamId") Integer teamId,
-                                   @RequestParam("userId") Integer userId) {
-        return teamService.removeMemberFromTeam(teamId, userId);
+    public boolean removeMemberFromTeam(@RequestParam("userId") Integer userId,
+                                        @RequestParam("teamId") Integer teamId) {
+        return teamService.removeMemberFromTeam(userId, teamId);
     }
 
     @PutMapping(path = "/assignTeamToDept")
@@ -63,9 +63,19 @@ public class TeamController {
         return teamService.changeTeamHead(teamId, newHeadId);
     }
 
-    @DeleteMapping(path="/deleteTeam")
+    @DeleteMapping(path="/deleteTeam/{teamId}")
     public String deleteTeam(@PathVariable("teamId") Long teamId){
         return teamService.deleteTeam(teamId);
     }
+
+    @PutMapping(path= "/moveEmpToTeam")
+    public String moveEmpToTeam(@RequestParam("userId") Integer userId,
+                                @RequestParam("teamId") Integer teamId,
+                                @RequestParam("newTeamId") Integer newTeamId) throws Exception {
+        return teamService.moveEmployeeToTeam(userId, teamId, newTeamId);
+
+    }
+
+
 
 }

@@ -1,67 +1,85 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
+import { getUserId } from "../../../utils/Common";
 
-export default function MoveUserModal({ open, onClose, user,  params=[], ...props }) {
-  //the dept name is passed from prev page?
-  const [newTeam, setNewTeam] = useState(-1);
+export default function ChangeTeamHeadModal({ open, onClose, teamId }) {
+  //the team name is passed from prev page?
+  const userId = getUserId();
+  const [teamTeamId, setTeamHeadId] = useState(-1);
   const [options, setOptions] = useState(null);
 
-
-  //MIGHT HAVE ERRORS.
-  //we should do 2 methods, 1 to remove, 1 to add. the add method will be called if we detect another team being selected.
-  // function removeFromTeam() {}
-
-  // function addToTeam() {}
-  // console.log(props)
-  // console.log(params)
+  function changeTeamHead() {
+    if (teamTeamId === -1) {
+      alert("Please select a Manager!");
+    } else {
+      console.log("changeTeamHead id:" + teamTeamId + " team id:" + teamId);
+      api
+        .changeTeamHead(teamId, parseInt(teamTeamId))
+        .then((response) => {
+          if (response.status == 200) {
+            console.log("successfully changed team head!");
+            alert("sucessfully changed team head!");
+            onClose();
+            window.location.reload();
+          } else {
+            console.error("failed to change team head...");
+          }
+        })
+        .catch((error) => {
+          var message = error.request.response;
+          console.log(message);
+          if (
+            message.includes("Team entity does not exist, cannot proceed")
+          ) {
+            alert("Error! Team Does not exist???? Whaaaa");
+          } else if (
+            message.includes(
+              "User selected is not a Manager, please appoint a manager instead"
+            )
+          ) {
+            alert(
+              "The selected employee is not a manager! Only employees with manager priviledges can be team heads."
+            );
+          } else if (
+            message.includes(
+              "Manager selected is not an active employee, please appoint an active employee instead"
+            )
+          ) {
+            alert(
+              "The selected Manager is not an active employee. Please activate your account or seek help from an administrator."
+            );
+          }
+        });
+    }
+  }
 
   useEffect(() => {
-    const otherTeams = async () => {
+    const availManagers = async () => {
       const arr = [];
-      await api.getAllTeams().then((res) => {
+      await api.getAvailManagers().then((res) => {
         let result = res.data;
-        result.map((team) => {
-          // console.log(...params)
-          // console.log(props.teamId + "please")
-          if(team.teamId !== props.teamId){
-            return arr.push({
-            value: team.teamId,
-            label: team.teamName,
+        result.map((manager) => {
+          return arr.push({
+            value: manager.userId,
+            label: manager.firstName + " " + manager.lastName,
           });
-          }
-          
         });
         setOptions(arr);
-        // console.log("fetching options...");
-        // console.log(options);
+        console.log("fetching options...");
+        console.log(options);
+        // console.log("HELLO!");
+        // console.log(res);
+        // console.log(res.data);
+        // console.log(typeof res.data.items);
       });
     };
-    otherTeams();
-  });
-  // console.log(newTeam) 
-  function moveEmpToTeam(){
-    // console.log(newTeam)
-    // console.log(typeof(newTeam))
-    // console.log(props.empInQuestion)
-    api.moveEmpToTeam(parseInt(props.empInQuestion), parseInt(props.teamId), parseInt(newTeam) ).
-    then((response) => {
-      console.log(response.data);
-      // props.setOpenMove(false);
-      props.empInQuestion = "";
-      alert("Successfully moved employee.");
-      window.location.reload();
-      props.setOpen(false);
-    } ).catch(err => console.log(err)) 
-
-  }
+    availManagers();
+  }, [userId]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    //removeFromTeam()
-    //some logic to check
-    //addToTeam()
-    moveEmpToTeam();
+    changeTeamHead();
   };
 
   const cancelButtonRef = useRef(null);
@@ -108,11 +126,11 @@ export default function MoveUserModal({ open, onClose, user,  params=[], ...prop
                         <div className="space-y-6 pt-8 sm:space-y-5 sm:pt-10">
                           <div>
                             <h3 className="text-lg font-medium leading-6 text-gray-900">
-                              Move an employee to another team
+                              Change Team Head
                             </h3>
                             <p className="mt-1 max-w-2xl text-sm text-gray-500">
                               Please select another manager to be the new
-                              Organisation Head.
+                              Team Head.
                             </p>
                           </div>
                           <div className="space-y-6 sm:space-y-5">
@@ -121,18 +139,19 @@ export default function MoveUserModal({ open, onClose, user,  params=[], ...prop
                                 htmlFor="country"
                                 className="block text-sm font-medium text-gray-700 sm:pt-2"
                               >
-                                Choose Team to Move Employee to...
+                                New Team Head
                               </label>
                               <div className="mt-2 sm:col-span-2 ">
                                 <select
-                                  onChange={(e) => setNewTeam(e.target.value)}
-                                  
+                                  onChange={(e) =>
+                                    setTeamHeadId(e.target.value)
+                                  }
                                   // placeholder="Select a Manager (might take a while...)"
-                                  id="orgHead"
-                                  name="orgHead"
+                                  id="teamHead"
+                                  name="teamHead"
                                   className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                                > 
-                                  <option>Select a team...</option>
+                                >
+                                  <option>Select a Manager...</option>
                                   {/*<option>1</option>*/}
                                   {options !== null &&
                                     options.map((option, index) => {
@@ -161,15 +180,9 @@ export default function MoveUserModal({ open, onClose, user,  params=[], ...prop
                           >
                             Cancel
                           </button>
-                          {/* {console.log(props.empInQuestion + "?") } */}
                           <button
                             type="submit"
                             className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            // onClick={() => {
-                            //   props.onConfirm(...params);
-                            //   props.setOpen(false)
-                            //   console.log(...params);
-                            // }}
                           >
                             Change
                           </button>

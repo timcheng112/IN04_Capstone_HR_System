@@ -611,9 +611,9 @@ const api = {
       `http://localhost:9191/api/team/moveEmpToTeam?userId=${userId}&teamId=${teamId}&newTeamId=${newTeamId}`
     );
   },
-  removeMemberFromTeam(userId){
-    return axios.delete(`http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}`);
-  }
+  removeMemberFromTeam(userId, teamId){
+    return axios.delete(`http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`);
+  },
 
 
 };
