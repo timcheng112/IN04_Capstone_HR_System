@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.conceiversolutions.hrsystem.administration.task.Task;
 import com.conceiversolutions.hrsystem.administration.task.TaskRepository;
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
 
 import lombok.AllArgsConstructor;
 
@@ -23,6 +24,15 @@ public class ChecklistService {
 
   public List<Checklist> getChecklists() {
     List<Checklist> checklists = checklistRepository.findAll();
+    for (Checklist checklist : checklists) {
+      for (Task task : checklist.getTasks()) {
+        task.getCategory().setTasks(new ArrayList<>());
+        for (TaskListItem taskListItem : task.getTaskListItems()) {
+          taskListItem.setTask(null);
+          taskListItem.setUser(null);
+        }
+      }
+    }
     return checklists;
   }
 

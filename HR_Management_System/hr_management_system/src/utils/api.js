@@ -193,7 +193,7 @@ const api = {
   },
   addNewChecklist(checklist, taskIds) {
     return axios.post(
-      `http://localhost:9191/api/checklist&taskIds=${taskIds}`,
+      `http://localhost:9191/api/checklist?taskIds=${taskIds}`,
       checklist
     );
   },

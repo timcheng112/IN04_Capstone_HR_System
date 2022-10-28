@@ -40,7 +40,10 @@ const ViewTemplateChecklists = () => {
   useEffect(() => {
     api
       .getChecklists()
-      .then((response) => setChecklists(response.data))
+      .then((response) => {
+        setChecklists(response.data);
+        console.log(response.data);
+      })
       .catch((error) => console.log(error.response.data.message));
   }, []);
 
@@ -98,12 +101,14 @@ const ViewTemplateChecklists = () => {
                   {checklists.length > 0 && (
                     <table className="min-w-full">
                       <thead className="bg-white">
-                        <tr className="">
+                        <tr>
                           <th
                             scope="col"
-                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 "
                             colSpan={2}
-                          ></th>
+                          >
+                            Title
+                          </th>
                           <th
                             scope="col"
                             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
@@ -111,10 +116,11 @@ const ViewTemplateChecklists = () => {
                           >
                             Description
                           </th>
+                          <th />
                         </tr>
                       </thead>
                       <tbody className="border-t border-gray-200 bg-gray-50">
-                        {checklists.map((checklist, checklistIdx) => {
+                        {checklists.map((checklist, checklistIdx) => (
                           <tr
                             key={checklist.title}
                             className={classNames(
@@ -131,7 +137,7 @@ const ViewTemplateChecklists = () => {
                               {checklist.title}
                             </td>
                             <td
-                              colSpan={2}
+                              colSpan={4}
                               className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500"
                             >
                               {checklist.description}
@@ -139,8 +145,8 @@ const ViewTemplateChecklists = () => {
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <ChecklistOptions />
                             </td>
-                          </tr>;
-                        })}
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   )}

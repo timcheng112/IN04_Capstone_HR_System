@@ -96,6 +96,7 @@ const AddTemplateChecklist = () => {
       const checklist = {
         title: checklistTitle,
         description: checklistDescription,
+        tasks: [],
       };
       const taskIds = [];
       for (let i = 0; i < selectedTasks.length; i++) {
@@ -104,9 +105,11 @@ const AddTemplateChecklist = () => {
       for (let i = 0; i < selectedTasks.length; i++) {
         api
           .addNewChecklist(checklist, taskIds)
-          .then((response) =>
-            taskIds.forEach((taskId) => createTaskListItem(taskId))
-          )
+          .then((response) => {
+            taskIds.forEach((taskId) => createTaskListItem(taskId));
+            history.push("/admin/viewtemplatechecklists");
+            alert("Successfully created!");
+          })
           .catch((error) => console.log(error.response.data.message));
       }
     } else {
