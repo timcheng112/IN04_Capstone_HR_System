@@ -26,6 +26,7 @@ const ViewTemplateChecklists = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [checklists, setChecklists] = useState([]);
   const history = useHistory();
+  
 
   useEffect(() => {
     api
@@ -143,7 +144,7 @@ const ViewTemplateChecklists = () => {
                               {checklist.description}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <ChecklistOptions />
+                              <ChecklistOptions checklist ={checklist}/>
                             </td>
                           </tr>
                         ))}

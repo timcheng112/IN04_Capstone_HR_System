@@ -48,6 +48,7 @@ import AddNotification from "./pages/NotificationPage/AddNotification";
 import Attendance from "./pages/Attendance";
 import ViewTemplateChecklists from "./pages/Onboarding/ViewTemplateChecklists";
 import AddTemplateChecklist from "./pages/Onboarding/AddTemplateChecklist";
+import ChecklistDetail from "./pages/Onboarding/ChecklistDetail";
 
 function App() {
   return (
@@ -108,6 +109,11 @@ function App() {
             exact
             path="/admin/addtemplatechecklist"
             component={AddTemplateChecklist}
+          />
+          <PrivateRoute
+            exact
+            path="/admin/checklistdetail"
+            component={ChecklistDetail}
           />
           <PrivateRoute
             exact
