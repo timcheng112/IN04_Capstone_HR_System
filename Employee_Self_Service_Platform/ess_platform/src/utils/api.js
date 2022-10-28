@@ -3,6 +3,10 @@ import axios from "axios";
 // const URL = "192.168.10.128"; // MATT
 const URL = "172.31.55.143"; // XINYUE
 //const URL = "192.168.1.35"; //XUEQI
+// const URL = "192.168.1.102"; //ALI
+// const URL = "172.31.54.163"
+
+
 
 const api = {
   login(workEmail, password) {
@@ -96,6 +100,21 @@ const api = {
   },
   getUserCompletedModules(userId) {
     return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`)
+  },
+  getUserReadNotifications(userId) {
+    return axios.get(`http://${URL}:9191/api/notification/read/${userId}`)
+  },
+  getUserUnreadNotifications(userId) {
+    return axios.get(`http://${URL}:9191/api/notification/unread/${userId}`)
+  },
+  markNotificationAsRead(notificationId, userId) {
+    return axios.post(`http://${URL}:9191/api/notification/${notificationId}/user/${userId}`)
+  },
+  deleteANotification(notificationId, userId){
+    return axios.delete(`http://${URL}:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`)
+  },
+  deleteAllNotifications(userId){
+    return axios.delete(`http://${URL}:9191/api/notification/deleteNotifications?userId=${userId}`);
   },
 };
 

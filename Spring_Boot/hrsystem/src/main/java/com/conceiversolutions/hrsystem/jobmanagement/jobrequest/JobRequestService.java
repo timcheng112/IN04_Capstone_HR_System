@@ -536,12 +536,18 @@ public class JobRequestService {
         System.out.println("Getting submitted job requests");
         List<JobRequest> submittedJobRequests = jobRequestRepository.findJobRequestsByStatus(JobStatusEnum.CREATED);
         System.out.println("size of submitted job request list is " + submittedJobRequests.size());
+        List<JobRequest> rejectedJobRequests = jobRequestRepository.findJobRequestsByStatus(JobStatusEnum.REJECTED);
+        System.out.println("size of rejected job request list is " + rejectedJobRequests.size());
+        List<JobRequest> approvedJobRequests = jobRequestRepository.findJobRequestsByStatus(JobStatusEnum.APPROVED);
+        System.out.println("size of approved job request list is " + approvedJobRequests.size());
 
         List<JobRequest> hrJobRequests = jobRequestRepository.findJobRequestsByRequestorId(hrId);
 
         // Use set to prevent duplicates
         Set<JobRequest> set = new LinkedHashSet<>(submittedJobRequests);
         set.addAll(hrJobRequests);
+        set.addAll(rejectedJobRequests);
+        set.addAll(approvedJobRequests);
 
         // Convert back to Arraylist
         List<JobRequest> jobRequests = new ArrayList<>(set);

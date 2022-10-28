@@ -25,7 +25,7 @@ const api = {
     jobType
   ) {
     return axios.post(
-      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}&positionName=${positionName}&positionDescription=${positionDescription}&jobType=${jobType}`
+      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}&positionType=${positionType}&positionName=${positionName}&positionDescription=${positionDescription}&jobType=${jobType}`
     );
   },
   confirmToken(token) {
@@ -238,7 +238,7 @@ const api = {
     return axios.delete(`http://localhost:9191/api/department/${deptId}`);
   },
   deleteTeam(teamId) {
-    return axios.delete(`http://localhost:9191/api/team/${teamId}`);
+    return axios.delete(`http://localhost:9191/api/team/deleteTeam/${teamId}`);
   },
   uploadFile(file) {
     return axios.post(
@@ -645,13 +645,70 @@ const api = {
     );
     //http://localhost:9191/api/notification/deleteNotifications?userId=5
   },
+  markNotificationAsRead(notificationId, userId) {
+    return axios.post(
+      `http://localhost:9191/api/notification/${notificationId}/user/${userId}`
+    );
+  },
   deleteANotification(notificationId, userId) {
     return axios.delete(
       `http://localhost:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`
     );
   },
+  getUserReadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/read/${userId}`);
+  },
+  getUserUnreadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/unread/${userId}`);
+  },
   getAllStaff() {
     return axios.get(`http://localhost:9191/api/user/getAllStaff`);
+  },
+  getShiftByTeamAndTime(teamId, dateString) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getShiftByTeamAndTime?teamId=${teamId}&dateString=${dateString}`
+    );
+  },
+  getShiftListItemByDateAndTeam(date, teamId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
+    );
+  },
+  setUserStatus(email) {
+    return axios.get(
+      `http://localhost:9191/api/user/setUserStatus?workEmail=${email}`
+    );
+  },
+  addCV(file, userId) {
+    // http://localhost:9191/api/qualification/addCv?file=${file}&userId=${userId}
+    return axios.post(
+      `http://localhost:9191/api/qualification/addCv?file=&userId=${userId}`,
+      file
+    );
+  },
+  deleteCV(docId) {
+    return axios.delete(`http://localhost:9191/api/docData/${docId}`);
+  },
+  createGoalPeriod(goalPeriod) {
+    return axios.post(`http://localhost:9191/api/goalPeriod`, goalPeriod);
+  },
+  getGoalPeriodByYear(year) {
+    return axios.get(`http://localhost:9191/api/goalPeriod/${year}`);
+  },
+  changeTeamHead(teamId, newHeadId) {
+    return axios.put(
+      `http://localhost:9191/api/team/changeTeamHead?teamId=${teamId}&newHeadId=${newHeadId}`
+    );
+  },
+  moveEmpToTeam(userId, teamId, newTeamId) {
+    return axios.put(
+      `http://localhost:9191/api/team/moveEmpToTeam?userId=${userId}&teamId=${teamId}&newTeamId=${newTeamId}`
+    );
+  },
+  removeMemberFromTeam(userId, teamId) {
+    return axios.delete(
+      `http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`
+    );
   },
 };
 

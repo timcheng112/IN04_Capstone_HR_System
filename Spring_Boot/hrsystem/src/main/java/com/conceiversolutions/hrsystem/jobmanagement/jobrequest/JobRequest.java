@@ -54,7 +54,7 @@ public class JobRequest {
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
     @JoinTable(
             name = "job_request_requirements",
-            joinColumns = @JoinColumn(name = "job_requeest_id"),
+            joinColumns = @JoinColumn(name = "job_request_id"),
             inverseJoinColumns = @JoinColumn(name = "requirement_id")
     )
     private List<Skillset> jobRequirements;

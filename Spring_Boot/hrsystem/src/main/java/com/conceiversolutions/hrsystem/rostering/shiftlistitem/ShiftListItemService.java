@@ -138,4 +138,26 @@ public class ShiftListItemService {
 
         return shiftListItem;
     }
+
+    public List<ShiftListItem> getShiftListItemByDateAndTeam(LocalDate date, Long teamId) {
+        LocalDateTime start = LocalDateTime.of(date, LocalTime.of(0, 0, 0));
+        LocalDateTime end = LocalDateTime.of(date, LocalTime.of(23, 59, 59));
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemsByDateAndTeam(start, end,
+                teamId);
+        
+        for (ShiftListItem shiftListItem : shiftListItems) {
+            if (shiftListItem != null) {
+                shiftListItem.getShift().setRoster(null);
+                shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+                shiftListItem.getUser().setTeams(new ArrayList<>());
+                shiftListItem.getUser().setQualificationInformation(null);
+                shiftListItem.getUser().setPositions(new ArrayList<>());
+                shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+                shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+            }
+        }
+
+        return shiftListItems;
+    }
 }
