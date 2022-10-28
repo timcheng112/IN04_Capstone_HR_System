@@ -9,6 +9,7 @@ import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +21,20 @@ public class UserSkillsetService {
     private final QualificationRepository qualificationRepository;
     private final SkillsetRepository skillsetRepository;
 
-    public List<UserSkillset> getUserSkillset(Long userId) {
+    public List<UserSkillset> getUserSkillsets(Long userId) {
         System.out.println("UserSkillsetService.getUserSkillset");
         System.out.println("userId = " + userId);
 
-        return userSkillsetRepositoy.findSkillsetByUserId(userId);
+        List<UserSkillset> userSkills = userSkillsetRepositoy.findSkillsetByUserId(userId);
+        System.out.println("User has " + userSkills.size() + " user skills");
 
+        for (UserSkillset skill : userSkills) {
+            Skillset s = skill.getSkillset();
+            s.setJobPostings(new ArrayList<>());
+            s.setJobRequests(new ArrayList<>());
+        }
+
+        return userSkills;
     }
 
     public Long addUserSkillset(Long userId, Long skillsetId, Integer skillLevel) {
@@ -40,7 +49,8 @@ public class UserSkillsetService {
         // check if user has an QI entity
         if (user.getQualificationInformation() != null) { // QI exist, use existing
 //            System.out.println("qi is not null");
-            qi = user.getQualificationInformation();
+//            qi = user.getQualificationInformation();
+            qi = qualificationRepository.findById(user.getQualificationInformation().getInfoId()).get();
 //            System.out.println("qi id is " + qi.getInfoId());
         } else { // QI not existing, create new QI
 //            System.out.println("qi is null");
@@ -67,6 +77,52 @@ public class UserSkillsetService {
         userSkillsets.add(savedUSS);
         qi.setUserSkills(userSkillsets);
         qualificationRepository.save(qi);
-        return qi.getInfoId();
+        return savedUSS.getUserSkillsetId();
+    }
+
+    public Long updateUserSkillset(Long userSkillsetId, Integer skillLevel) {
+        System.out.println("UserSkillsetService.updateUserSkillset");
+        System.out.println("userSkillsetId = " + userSkillsetId + ", skillLevel = " + skillLevel);
+
+        Optional<UserSkillset> s = userSkillsetRepositoy.findById(userSkillsetId);
+        if (s.isEmpty()) {
+            throw new IllegalStateException("User skillset does not exist");
+        }
+
+        UserSkillset skill = s.get();
+        skill.setSkillLevel(skillLevel);
+        userSkillsetRepositoy.save(skill);
+
+        return userSkillsetId;
+    }
+
+    public String removeUserSkillset(Long userId, Long userSkillsetId) {
+        System.out.println("UserSkillsetService.removeUserSkillset");
+        System.out.println("userId = " + userId + ", userSkillsetId = " + userSkillsetId);
+
+        List<UserSkillset> userSkills = userSkillsetRepositoy.findSkillsetByUserId(userId);
+
+        Optional<UserSkillset> toRemoveOpt = userSkillsetRepositoy.findById(userSkillsetId);
+        if (toRemoveOpt.isEmpty()) {
+            throw new IllegalStateException("User skill does not exist");
+        }
+        UserSkillset toRemove = toRemoveOpt.get();
+
+        if (userSkills.isEmpty()) {
+            throw new IllegalStateException("User has no skillsets");
+        }
+
+        User user = userRepository.findById(userId).get();
+        QualificationInformation qi = qualificationRepository.findById(user.getQualificationInformation().getInfoId()).get();
+        List<UserSkillset> userSkillsets = qi.getUserSkills();
+
+        if (!userSkillsets.contains(toRemove)) {
+            throw new IllegalStateException("User skill is not linked to user");
+        }
+
+        userSkillsets.remove(toRemove);
+        qi.setUserSkills(userSkills);
+        qualificationRepository.save(qi);
+        return "User skillset unlinked";
     }
 }
