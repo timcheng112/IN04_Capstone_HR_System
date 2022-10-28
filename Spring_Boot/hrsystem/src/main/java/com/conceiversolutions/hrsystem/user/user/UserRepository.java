@@ -26,6 +26,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "SET u.isEnabled = TRUE WHERE u.email = ?1")
     int enableUser(String email);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u " +
+            "SET u.isEnabled = FALSE WHERE u.email = ?1")
+    int disableUser(String email);
+
     @Query("SELECT c.user FROM ConfirmationToken c WHERE c.token = ?1")
     Optional<User> findUserByToken(String token);
 
@@ -76,4 +82,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // u.userRole = ?2)")
     // List<User> getEmployeesInGivenTeam( RoleEnum role, RoleEnum role2, Long
     // teamId);
+//    @Query("SELECT u from USER u WHERE u.team.teamId = ?1 AND (u.userRole= ?1 OR u.userRole = ?2)")
+//    List<User> getEmployeesInGivenTeam( RoleEnum role, RoleEnum role2, Long teamId);
+
+    @Query("SELECT u FROM User u WHERE u.userRole = ?1")
+    List<User> findAllApplicants(RoleEnum role);
 }

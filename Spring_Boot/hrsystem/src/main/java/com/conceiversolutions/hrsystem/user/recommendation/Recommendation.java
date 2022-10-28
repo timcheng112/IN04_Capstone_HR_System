@@ -1,10 +1,15 @@
 package com.conceiversolutions.hrsystem.user.recommendation;
 
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "recommendations")
 public class Recommendation {
     @Id
@@ -19,10 +24,6 @@ public class Recommendation {
     private String email;
     @Column(name = "relationship", nullable = false, length = 64)
     private String relationship;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "info_id")
-    private QualificationInformation qualificationInformation;
-
     public Recommendation() {
     }
 
@@ -31,62 +32,6 @@ public class Recommendation {
         this.phone = phone;
         this.email = email;
         this.relationship = relationship;
-    }
-
-    public Recommendation(String name, Integer phone, String email, String relationship, QualificationInformation qualificationInformation) {
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.relationship = relationship;
-        this.qualificationInformation = qualificationInformation;
-    }
-
-    public Long getRecommendationId() {
-        return recommendationId;
-    }
-
-    public void setRecommendationId(Long recommendationId) {
-        this.recommendationId = recommendationId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getPhone() {
-        return phone;
-    }
-
-    public void setPhone(Integer phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRelationship() {
-        return relationship;
-    }
-
-    public void setRelationship(String relationship) {
-        this.relationship = relationship;
-    }
-
-    public QualificationInformation getQualificationInformation() {
-        return qualificationInformation;
-    }
-
-    public void setQualificationInformation(QualificationInformation qualificationInformation) {
-        this.qualificationInformation = qualificationInformation;
     }
 
     @Override

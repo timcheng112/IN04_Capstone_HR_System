@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.rostering.shift;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,14 +122,26 @@ public class ShiftService {
         shiftRepository.deleteById(shiftId);
     }
 
-    public Shift getShiftByTeamAndTime(Long teamId, LocalDateTime date) {
-        List<Shift> shiftList = shiftRepository.findShiftByTeamTime(teamId, date);
+    public Shift getShiftByTeamAndTime(Long teamId, LocalDate localDate) {
+        LocalDateTime start = LocalDateTime.of(localDate, LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(localDate, LocalTime.of(23, 59, 59));
+        List<Shift> shiftList = shiftRepository.findShiftByTeamTime(teamId, start, end);
         if (shiftList.isEmpty()) {
-            throw new IllegalStateException("Shift with teamId: " + teamId + " date: " + date + "does not exist!");
+            throw new IllegalStateException("Shift with teamId: " + teamId + " date: " + localDate + "does not exist!");
         } else if (shiftList.size() > 1) {
             throw new IllegalStateException("More than 1 Shifts were found at this time!");
         } else {
-            return shiftList.get(0);
+
+            Shift shift = shiftList.get(0);
+            shift.getRoster().setShifts(new ArrayList<>());
+            shift.getRoster().setBlocks(new ArrayList<>());
+            shift.getRoster().setTeam(null);
+            for (ShiftListItem shiftListItem : shift.getShiftListItems()) {
+                shiftListItem.setShift(null);
+                shiftListItem.setUser(null);
+            }
+
+            return shift;
         }
     }
 

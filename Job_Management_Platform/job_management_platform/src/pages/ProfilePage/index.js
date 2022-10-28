@@ -61,6 +61,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+
+
 export default function ProfilePage(props) {
   const [user, setUser] = useState(getUserId()); //logged in user
   const history = useHistory();
@@ -68,6 +70,10 @@ export default function ProfilePage(props) {
   let [userInfo, setUserInfo] = useState([]);
   const userId = getUserId();
   // const email = result[1]
+  const [file, setFileState] = useState("");
+  const [fileName, setfileName] = useState("");
+  const [docId, setDocId] = useState(null);
+  const [error, setError] = useState(null);
 
   console.log(userId);
   // console.log(email)
@@ -89,6 +95,97 @@ export default function ProfilePage(props) {
     //   }getUserInfo()}
     [userId, userInfo]
   );
+
+  function handleFile(e) {
+    console.log(e.target.files, "--");
+    console.log(e.target.files[0], "$SSSSS$");
+    // let f = e.target.files[0]
+    setFileState(e.target.files[0]);
+    setfileName(e.target.files[0].name);
+    // console.log(file + "what now")
+    // console.log(fileName + "printing fileName")
+  }
+  
+  function uploadFile(e) {
+    e.preventDefault();
+    // console.log(file[0])
+    // console.log("printing file contents above")
+    let formData = new FormData();
+    if(file){
+      formData.append("document", file);
+    }
+  
+    try {
+      api
+        .addCV(formData, user)
+        .then((response) => {
+          // console.log(response.data)
+          if (response.status === 200) {
+            //should return a long id
+            setDocId(response.data);
+            // setDocId(response.data)
+            console.log(userInfo);
+            alert("Resume added to user succesfully");
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    } catch (err) {
+      console.log("There was a problem with upload..");
+      console.log(err);
+    }
+  }
+  
+  function downloadFile() {
+    api.downloadDocument(docId).then((response) => {
+      console.log(docId);
+      const fileName =
+        response.headers["content-disposition"].split("filename=")[1];
+      console.log(fileName);
+      api.getDocById(docId).then((response) => {
+        //console.log(response.data);
+        const url = window.URL.createObjectURL(response.data);
+  
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      });
+    });
+  }
+  
+  function deleteCV() {
+    const yes = window.confirm(
+      "Are you sure you want to delete your resume? Action is irreversible."
+    );
+    if(yes){
+      if(docId !== null){
+        api
+          .deleteCV(docId)
+          .then((response) => {
+            // console.log(response.data)
+            if (response.status === 200) {
+              //should return a long id
+              if (response.data === true) {
+                alert("CV deleted successfully.");
+                console.log("resume deleted successfully");
+                setDocId(null);
+                window.location.reload();
+              } else {
+                console.log("resume not deleted...");
+              }
+            }
+          })
+          .catch((error) => {
+            alert("No resume to delete");
+            console.log(error.response);
+          });
+      }
+    }
+  }
 
   return (
     <>
@@ -161,50 +258,105 @@ export default function ProfilePage(props) {
                   </button>
                 </div>
 
-                <div class="mt-12 md:col-span-2 h-auto shadow-xl p-4 space-y-2 hidden md:block">
-                  <h3 class="font-bold uppercase"> Profile Document</h3>
-                  <p class="">Your CV</p>
+                <div className=" mt-12 md:col-span-2 h-auto shadow-xl p-4 space-y-2 hidden md:block ">
+                  <form onSubmit={uploadFile} encType="multipart/form">
+                    <dt className="mt-5 my-5 text-lg font-medium leading-6 text-gray-900">
+                      My Documents (CV)
+                    </dt>
 
-                  <div class="mb-8">
-                    <input type="file" name="file" id="file" class="sr-only" />
-                    <label
-                      for="file"
-                      class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
-                    >
-                      <div>
-                        <span class="mb-2 block text-xl font-semibold text-[#07074D]">
-                          Click here to upload
-                        </span>
-                        <span class="mb-2 block text-base font-medium text-[#6B7280]">
-                          Or
-                        </span>
-                        <span class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
-                          Browse
-                        </span>
-                      </div>
-                    </label>
-                  </div>
-                  <ul role="list">
-                    <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
-                      <div className="flex w-0 flex-1 items-center">
-                        <PaperClipIcon
-                          className="h-5 w-5 flex-shrink-0 text-gray-400"
-                          aria-hidden="true"
-                        />
-                        <span className="ml-2 w-0 flex-1 truncate">
-                          resume_back_end_developer.pdf
-                        </span>
-                      </div>
-                      <div className="ml-4 flex flex-shrink-0 space-x-4">
-                        <button
-                          type="button"
-                          className="rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                          Update
-                        </button>
-                      </div>
-                    </li>
-                  </ul>
+                    <div className="mb-8 break-word">
+                      {/* <input id="file" type="file" name="file" onChange ={(e) => handleFile(e)} /> */}
+
+                      <label
+                        // for not ok anymore for react, use htmlFor. same with class - classNames  stroke-width - strokeWidth  stroke-linejoin - strokeLinejoin
+                        htmlFor="file"
+                        className=" break-word relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+                      >
+                        <div>
+                          {file ? (
+                            ""
+                          ) : (
+                            <span className=" break-word mb-2 block text-xl font-semibold text-[#07074D]">
+                              You have no CV uploaded.
+                            </span>
+                          )}
+                          {/* <span className="mb-2 block text-base font-medium text-[#6B7280]">
+                        Or
+                      </span> */}
+                          <span className="block ml-20 mb-2 block text-md text-[#07074D]">
+                            {/* <button id="file"
+                          type="file"
+                          multiple
+                          onChange={(e) => handleFile(e)}>Select a file to upload</button> */}
+                            <input
+                              id="file"
+                              type="file"
+                              multiple
+                              name="file"
+                              onChange={(e) => handleFile(e)}
+                            />
+                          </span>
+                        </div>
+                      </label>
+                    </div>
+
+                    <dd className="m-1 sm:mt-0">
+                      {file ? (
+                        <ul role="list">
+                          <li className=" py-3 pl-3 pr-4 text-sm">
+                            <div className="flex w-0 flex-1 ">
+                              {/* where the fetching for download should be */}
+                            </div>
+                            <div className="flex-1 ml-at mt-4  space-x-4 ">
+                              <PaperClipIcon
+                                className="inline-block h-6 w-6 flex-shrink-0 text-gray-400"
+                                aria-hidden="true"
+                              >
+                                {" "}
+                              </PaperClipIcon>
+
+                              {fileName}
+                              <input
+                                type="submit"
+                                value="Submit"
+                                className=" vertical-center px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
+                              ></input>
+                            </div>
+                          </li>
+                        </ul>
+                      ) : (
+                        ""
+                      )}
+                      {/* Uncaught TypeError: Cannot read properties of null (reading 'cv') when i use userInfo.qualificationInformation.cv dk why updated in db but not on front end. qi is null on frontend */}
+                      {docId ? (
+                        <>
+                          <button
+                            type="button"
+                            className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                            onClick={() => downloadFile()}
+                          >
+                            Download Your CV
+                          </button>{" "}
+                          <button
+                            type="button"
+                            className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                            onClick={() => deleteCV()}
+                          >
+                            Delete CV
+                          </button>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                      {/* <button
+                  type="button"
+                  className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                  onClick={() => downloadFile()}
+                >
+                  Download Your CV
+                </button> */}
+                    </dd>
+                  </form>
                 </div>
                 <div class="flex items-center mt-12 md:col-span-2 h-auto shadow-xl p-4 space-y-2 hidden md:block">
                   <h3 class="font-bold uppercase"> Coming soon in SR2...</h3>

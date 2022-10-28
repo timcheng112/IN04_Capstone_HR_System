@@ -288,7 +288,10 @@ export default function Roster() {
         {/*The table and stuff below it*/}
         {selectedTeam !== null ? (
           <>
-            <InfoPanel selectedDate={infoPanelDate} />
+            <InfoPanel
+              selectedDate={infoPanelDate}
+              teamId={selectedTeam.teamId}
+            />
             <Calendar
               people={selectedTeam !== null && selectedTeam.users}
               addShiftHandler={(shiftToBeAdded) =>

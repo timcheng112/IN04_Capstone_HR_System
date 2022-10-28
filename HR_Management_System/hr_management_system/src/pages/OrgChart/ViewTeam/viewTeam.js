@@ -3,6 +3,11 @@ import Navbar from "../../../components/Navbar.js";
 import { useState, useEffect, useRef } from "react";
 import api from "../../../utils/api.js";
 import AddUserModal from "./addUserModal.js";
+import ChangeTeamHeadModal from "./changeTeamHeadModal.js";
+import MoveUserModal from "./moveUserModal.js";
+import { getUserId } from "../../../utils/Common.js";
+import DeleteTeamModal from "../ViewDepartment/deleteTeamModal.js";
+import RemoveMemberFromTeamModal from "./removeMemberFromTeam.js";
 
 //import axios from 'axios';
 
@@ -26,20 +31,27 @@ export default function ViewTeam() {
   //             fetch()
   //
   //         }
-
+// ali 27/10/22 ask sh why viewteams keep refreshing
   //shihan 3/10/2022
   // const [teamId, setTeamId] = useState(1);
   const teamId = useRef(-1);
+  // const [teamId, setTeamId] = useState(null);
   const [team, setTeam] = useState(null);
-
+  const [openChange, setOpenChange] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [openMove, setOpenMove] = useState(false);
+  const [oldTeam, setOldteam] = useState(false);
+  const [empInQuestion, setEmpInQuestion] = useState(-1);
+  const [openRemove, setOpenRemove] = useState(false);
+  // const [newTeam, setNewTeam] = useState(-1);
+  const [toRemove, setToRemove] =useState(0);
 
   useEffect(() => {
     console.log("use effect!");
     const url = window.location.href;
     const tempTeamId = url.substring(31);
-    console.log("urlSubstring:" + tempTeamId);
+    // console.log("urlSubstring:" + tempTeamId);
     // setTeamId(tempTeamId);
     teamId.current = tempTeamId;
 
@@ -48,6 +60,48 @@ export default function ViewTeam() {
       console.log(team);
     });
   }, [teamId, refreshKey]);
+
+  // useEffect(() => {
+
+  //   // const url = window.location.href;
+  //   // const tempTeamId = url.substring(31);
+  //   // // console.log("urlSubstring:" + tempTeamId);
+  //   // // setTeamId(tempTeamId);
+  //   // teamId.current = tempTeamId;
+  //   const url = window.location.href;
+  //   const tempDeptId = url.substring(31);
+
+  //   setTeamId(url.substring(31));
+  //   api.getTeam(teamId).then((response) => {
+  //     setTeam(response.data);
+
+  //     // console.log(response.data);
+  //   });
+
+
+  // }, [refreshKey, teamId]);
+
+  function removeMemberFromTeam(){
+    console.log("remove member " + empInQuestion);
+    api.removeMemberFromTeam(empInQuestion, oldTeam).then((response) => {
+      console.log("removed? " + response.data);
+
+      setEmpInQuestion("")
+      window.location.reload();
+    })
+    .then(() => {
+      alert("Team member is successfully removed.");
+    })
+    .catch((error) => {
+
+      var message = error.request.response;
+      if (message.includes("Cannot remove team member"))
+        console.log(message);
+      alert("Member cannot be removed. check console for error.");
+    });
+  }
+
+
 
   return (
     <>
@@ -60,6 +114,18 @@ export default function ViewTeam() {
             teamId={teamId.current}
             refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
           />
+          <ChangeTeamHeadModal
+            teamId={team.teamId}
+            open={openChange}
+            onClose={() => setOpenChange(false)}
+          />
+
+          {/* <MoveUserModal
+            teamId={team.teamId}
+            empInQuestion={person.userId}
+            open={openMove}
+            onClose={() => setOpenMove(false)}
+          /> */}
           <div className="bg-[#13AEBD] rounded-xl p-10 m-10">
             <div className="px-4 sm:px-6 lg:px-8">
               <a href="/viewOrg">
@@ -88,6 +154,7 @@ export default function ViewTeam() {
                     their name, title, email and role.
                   </p>
                 </div>
+                {}
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                   <button
                     type="button"
@@ -169,7 +236,7 @@ export default function ViewTeam() {
                               </span>
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <a
+                              {/* <a
                                 href="https://www.google.com"
                                 className="text-indigo-600 hover:text-indigo-900"
                               >
@@ -177,7 +244,18 @@ export default function ViewTeam() {
                                 <span className="sr-only">
                                   , {team.teamHead.firstName}
                                 </span>
-                              </a>
+                              </a> */}
+                              <button
+                                onClick={() => {
+                                  setOpenChange(true);
+                                }}
+                                className="text-indigo-600 hover:text-indigo-900"
+                              >
+                                Change
+                                <span className="sr-only">
+                                  , {team.teamHead.firstName}
+                                </span>
+                              </button>
                             </td>
                           </tr>
                         </tbody>
@@ -259,22 +337,96 @@ export default function ViewTeam() {
                                   {/* {person.department} */}
                                 </div>
                               </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                                  {/* Active */}
+                              {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                <span className="inline-flex rounded-full bg-delete-100 px-2 text-xs font-semibold leading-5 text-green-800">
+                                  Active
                                 </span>
+                              </td> */}
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {/* <span className="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">
+                                  Delete
+                                </span> */}
+                                {(person.userRole === "ADMINISTRATOR" | person.userRole === "MANAGER") && team.teamHead.userId !== person.userId ?
+                                <button
+                                  onClick={() => {
+                                    setOpenRemove(true);
+                                    console.log(team.teamId);
+                                    setOldteam(team.teamId);
+                                    setToRemove(person.userId);
+                                    
+                                    setEmpInQuestion(person.userId);
+                                  }}
+                                  className="text-indigo-600 hover:text-indigo-900"
+                                >
+                                  Delete
+                                  <span className="sr-only">
+                                    , {team.teamId}
+                                  </span>
+                                </button>
+                                : ""}
+                              {console.log(person.userId  + " " + person.firstName)}
+                                <RemoveMemberFromTeamModal
+                                  teamId={team.teamId}
+                                  empInQuestion={empInQuestion}
+                                  open={openRemove}
+                                  setOpen={setOpenRemove}
+                                  onClose={() => setOpenRemove(false)}
+                                  onConfirm={removeMemberFromTeam}
+                                />
+
                               </td>
 
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                <a
+                                {/* <a
                                   href="https://www.change.org/p/allow-andrew-tate-on-the-internet"
+                                  className="text-indigo-600 hover:text-indigo-900"
+                                >
+                                Move An Employee
+                                  <span className="sr-only">
+                                    , {person.name}
+                                  </span> </a> */}
+                                {/* <a
+                                onClick={() => {
+                                 
+                                  setOpenMove(true);
+                                  console.log(team.teamId)
+                                  setOldteam(team.teamId);
+                                  setEmpInQuestion(person.userId)
+                                }}
+                                className="text-indigo-600 hover:text-indigo-900"
+                              >
+                                Move An Employee
+                                <span className="sr-only">, {team.name}</span>
+                              </a> */}
+
+
+
+                                {/* should not be able move team head */}
+                                {team.teamHead.userId !== person.userId ?
+                                <button
+                                  onClick={() => {
+                                    setOpenMove(true);
+                                    console.log(team.teamId);
+                                    setOldteam(team.teamId);
+                                    setEmpInQuestion(person.userId);
+                                  }}
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
                                   Move An Employee
                                   <span className="sr-only">
-                                    , {person.name}
+                                    , {team.teamId}
                                   </span>
-                                </a>
+                                </button>
+                                : ""}
+                              {console.log(person.userId  + " " + person.firstName)}
+                                <MoveUserModal
+                                  teamId={team.teamId}
+                                
+                                  empInQuestion={empInQuestion}
+                                  open={openMove}
+                                  onClose={() => setOpenMove(false)}
+                                />
+                                
                               </td>
                             </tr>
                           ))}

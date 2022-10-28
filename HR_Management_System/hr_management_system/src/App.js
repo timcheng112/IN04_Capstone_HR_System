@@ -49,6 +49,14 @@ import Attendance from "./pages/Attendance";
 import ViewTemplateChecklists from "./pages/Onboarding/ViewTemplateChecklists";
 import AddTemplateChecklist from "./pages/Onboarding/AddTemplateChecklist";
 import ChecklistDetail from "./pages/Onboarding/ChecklistDetail";
+// import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
+
+import PromotionPage from "./pages/Progression";
+import TransferPage from "./pages/Progression/indexTransfer";
+import GoalsPage from "./pages/Performance/indexGoals";
+import AppraisalsPage from "./pages/Performance/indexAppraisals";
+import PerformancePage from "./pages/Performance";
+
 
 function App() {
   return (
@@ -89,7 +97,7 @@ function App() {
           />
           <PrivateRoute exact path="/offboarding" component={OffboardingPage} />
           {/* <ViewTeam/> */}
-          <PrivateRoute exact path="/admin" component={AdminPage} />
+          <PrivateRoute exact path="/admin/users" component={AdminPage} />
           <PrivateRoute
             exact
             path="/admin/onboarding"
@@ -172,11 +180,23 @@ function App() {
             path="/NotificationExpandPage"
             component={NotificationExpandPage}
           />
-          <PrivateRoute
-            exact
-            path="/AddNotification"
-            component={AddNotification}
-          />
+          {/* <PrivateRoute exact path="/NotificationExpandPage" component={NotificationExpandPage}/> */}
+          <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
+
+          <PrivateRoute exact path="/mytraining/completed" component={TrainingCompletedPage} />
+          <PrivateRoute exact path="/training" component={AllTrainingPage} />  
+          <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />     
+          <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
+          <PrivateRoute exact path="/video" component={AllVideosPage} />  
+          <PrivateRoute exact path="/mytraining" component={TrainingPage} />
+          {/* <PrivateRoute exact path="/test" component={EmployeeList} /> */}
+          
+
+          <PrivateRoute exact path="/career/promotion" component={PromotionPage} />
+          <PrivateRoute exact path="/career/transfer" component={TransferPage} />
+          <PrivateRoute exact path="/performance" component={PerformancePage} />
+          <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
+          <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
         </Switch>
       </div>
     </BrowserRouter>

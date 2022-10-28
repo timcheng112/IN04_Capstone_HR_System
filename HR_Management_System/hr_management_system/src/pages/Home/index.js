@@ -163,7 +163,7 @@ export default function Home() {
     <>
       {user ? (
         <>
-          {/* {user.notifications ? setShow(true) : setShow(false)} */}
+
           <div className="min-h-full">
             <Popover
               as="header"
@@ -186,8 +186,9 @@ export default function Home() {
                           type="button"
                           className="flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                           onClick={() => {
-                            setShowNotification(true);
+                            setShowNotification(!showNotification);
                             console.log("bell pressed");
+                            history.push("/AllNotifications")
                           }}
                         >
                           <span className="sr-only">View notifications</span>
@@ -201,7 +202,7 @@ export default function Home() {
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-8 w-8 rounded-full"
-                                src={user.imageUrl}
+                                src={user.profilePic}
                                 alt=""
                               />
                             </Menu.Button>
@@ -272,7 +273,7 @@ export default function Home() {
                               </a>
                               <a
                                 key="Career"
-                                href="/career"
+                                href="/career/promotion"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
@@ -339,28 +340,6 @@ export default function Home() {
                               </a>
                             </nav>
                           </div>
-                          {/* <div className="px-12 lg:px-0">
-                      <div className="mx-auto w-full max-w-xs lg:max-w-md">
-                        <label htmlFor="search" className="sr-only">
-                          Search
-                        </label>
-                        <div className="relative text-white focus-within:text-gray-600">
-                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                            <MagnifyingGlassIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </div>
-                          <input
-                            id="search"
-                            className="block w-full rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
-                            placeholder="Search"
-                            type="search"
-                            name="search"
-                          />
-                        </div>
-                      </div>
-                    </div> */}
                         </div>
                       </div>
 
@@ -478,7 +457,7 @@ export default function Home() {
                                 <div className="flex-shrink-0">
                                   <img
                                     className="h-10 w-10 rounded-full"
-                                    src={user.imageUrl}
+                                    src={user.profilePic}
                                     alt=""
                                   />
                                 </div>
@@ -493,20 +472,21 @@ export default function Home() {
                                 <button
                                   type="button"
                                   className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+                                  href="/AllNotifications"
                                   onClick={() => {
                                     setShowNotification(true);
+                                    history.push("/AllNotifications")
                                     console.log("bell pressed 1");
                                   }}
                                 >
                                   <span className="sr-only">
                                     View notifications
                                   </span>
-                                  <Link to="/AllNotifications">
                                   <BellIcon
                                     className="h-6 w-6"
                                     aria-hidden="true"
-                                    href=""
-                                  /></Link>
+                                    href="/AllNotifications"
+                                  />
                                 </button>
                               </div>
                               <div className="mt-3 space-y-1 px-2">
@@ -529,9 +509,7 @@ export default function Home() {
                 </>
               )}
             </Popover>
-            {showNotification && (
-              <Notification showNotification={true} />
-            )}
+            {(user.notificationsUnread).length > 0 ? (<Notification showNotification={true} />) : ""}
             <main className="-mt-24 pb-8">
               <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                 <h1 className="sr-only">Profile</h1>
@@ -820,7 +798,7 @@ export default function Home() {
                         <div
                           key="leaves"
                           className={classNames(
-                            "rounded-tr-lg rounded-bl-lg sm:rounded-tr-none relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500"
+                            "sm:rounded-tr-none relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500"
                           )}
                         >
                           <div>
@@ -839,13 +817,177 @@ export default function Home() {
                           </div>
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
-                              <a href="/home" className="focus:outline-none">
+                              <a
+                                href="/admin/leaves"
+                                className="focus:outline-none"
+                              >
                                 {/* Extend touch target to entire panel */}
                                 <span
                                   className="absolute inset-0"
                                   aria-hidden="true"
                                 />
                                 Leaves
+                              </a>
+                            </h3>
+                            <p className="mt-2 text-sm text-gray-500">
+                              Doloribus dolores nostrum quia qui natus officia
+                              quod et dolorem. Sit repellendus qui ut at
+                              blanditiis et quo et molestiae.
+                            </p>
+                          </div>
+                          <span
+                            className="pointer-events-none absolute top-6 right-6 text-gray-300 group-hover:text-gray-400"
+                            aria-hidden="true"
+                          >
+                            <svg
+                              className="h-6 w-6"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z" />
+                            </svg>
+                          </span>
+                        </div>
+                        <div
+                          key="training"
+                          className={classNames(
+                            "sm:rounded-tr-none relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500"
+                          )}
+                        >
+                          <div>
+                            <span
+                              className={classNames(
+                                "bg-orange-50",
+                                "text-orange-700",
+                                "rounded-lg inline-flex p-3 ring-4 ring-white"
+                              )}
+                            >
+                              <AcademicCapIcon
+                                className="h-6 w-6"
+                                aria-hidden="true"
+                              />
+                            </span>
+                          </div>
+                          <div className="mt-8">
+                            <h3 className="text-lg font-medium">
+                              <a
+                                href="/mytraining"
+                                className="focus:outline-none"
+                              >
+                                {/* Extend touch target to entire panel */}
+                                <span
+                                  className="absolute inset-0"
+                                  aria-hidden="true"
+                                />
+                                Training
+                              </a>
+                            </h3>
+                            <p className="mt-2 text-sm text-gray-500">
+                              Doloribus dolores nostrum quia qui natus officia
+                              quod et dolorem. Sit repellendus qui ut at
+                              blanditiis et quo et molestiae.
+                            </p>
+                          </div>
+                          <span
+                            className="pointer-events-none absolute top-6 right-6 text-gray-300 group-hover:text-gray-400"
+                            aria-hidden="true"
+                          >
+                            <svg
+                              className="h-6 w-6"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z" />
+                            </svg>
+                          </span>
+                        </div>
+                        <div
+                          key="career-progression"
+                          className={classNames(
+                            "sm:rounded-tr-none relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500"
+                          )}
+                        >
+                          <div>
+                            <span
+                              className={classNames(
+                                "bg-red-50",
+                                "text-red-700",
+                                "rounded-lg inline-flex p-3 ring-4 ring-white"
+                              )}
+                            >
+                              <ClockIcon
+                                className="h-6 w-6"
+                                aria-hidden="true"
+                              />
+                            </span>
+                          </div>
+                          <div className="mt-8">
+                            <h3 className="text-lg font-medium">
+                              <a
+                                href="/career/promotion"
+                                className="focus:outline-none"
+                              >
+                                <span
+                                  className="absolute inset-0"
+                                  aria-hidden="true"
+                                />
+                                Career Progression
+                              </a>
+                            </h3>
+                            <p className="mt-2 text-sm text-gray-500">
+                              Doloribus dolores nostrum quia qui natus officia
+                              quod et dolorem. Sit repellendus qui ut at
+                              blanditiis et quo et molestiae.
+                            </p>
+                          </div>
+                          <span
+                            className="pointer-events-none absolute top-6 right-6 text-gray-300 group-hover:text-gray-400"
+                            aria-hidden="true"
+                          >
+                            <svg
+                              className="h-6 w-6"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z" />
+                            </svg>
+                          </span>
+                        </div>
+                        <div
+                          key="performance"
+                          className={classNames(
+                            "sm:rounded-tr-none relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500"
+                          )}
+                        >
+                          <div>
+                            <span
+                              className={classNames(
+                                "bg-lime-50",
+                                "text-lime-700",
+                                "rounded-lg inline-flex p-3 ring-4 ring-white"
+                              )}
+                            >
+                              <AcademicCapIcon
+                                className="h-6 w-6"
+                                aria-hidden="true"
+                              />
+                            </span>
+                          </div>
+                          <div className="mt-8">
+                            <h3 className="text-lg font-medium">
+                              <a
+                                href="/performance"
+                                className="focus:outline-none"
+                              >
+                                {/* Extend touch target to entire panel */}
+                                <span
+                                  className="absolute inset-0"
+                                  aria-hidden="true"
+                                />
+                                Performance Management
                               </a>
                             </h3>
                             <p className="mt-2 text-sm text-gray-500">

@@ -5,7 +5,7 @@ import api from "../../../utils/api";
 import AddOutletModal from "./addOutletModal.js";
 import AddTeamModal from "./addTeamModal.js";
 import ChangeDeptHeadModal from "./changeDeptHeadModal.js";
-// import DeleteTeamModal from "./deleteTeamModal.js";
+import DeleteTeamModal from "./deleteTeamModal.js";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
 /* This example requires Tailwind CSS v2.0+ */
@@ -67,27 +67,31 @@ export default function ViewDepartment() {
     // console.log(dept);
   }, [refreshKey, deptId]);
 
-  // function deleteTeam() {
-  //   console.log("delete department " + toDelete);
-  //   api
-  //     .deleteTeam(toDelete)
-  //     .then((response) => {
-  //       console.log("deleted? " + response.data);
-  //       // api.getOrganization().then((response) => {
-  //       //   setOrg(response.data);
-  //       // });
-  //       setToDelete("");
-  //     })
-  //     .then(() => {
-  //       alert("Team is successfully deleted.");
-  //     })
-  //     .catch((error) => {
-  //       var message = error.request.response;
-  //       if (message.includes("Team still consists of people so system is unable to delete"))
-  //         console.log(message);
-  //       alert("Teams still has team members");
-  //     });
-  // }
+  function deleteTeam() {
+    console.log("delete team " + toDelete);
+    api
+      .deleteTeam(toDelete)
+      .then((response) => {
+        console.log("deleted? " + response.data);
+        // api.getOrganization().then((response) => {
+        //   setOrg(response.data);
+        // });
+        setToDelete("");
+      })
+      .then(() => {
+        alert("Team is successfully deleted.");
+      })
+      .catch((error) => {
+        //team will always have members cos of teamHead. just delete unlike department 
+        var message = error.request.response;
+        if (message.includes("Cannot delete team"))
+          console.log(message);
+        alert("Teams cannot be deleted");
+      });
+  }
+
+
+
 
   return (
     dept &&
@@ -215,7 +219,7 @@ export default function ViewDepartment() {
                               </div>
                               <div className="">
                                 <div className="font-medium text-gray-900">
-                                  {deptHead.firstName} {deptHead.lastName}
+                                  {deptHead.firstName}{" "} {deptHead.lastName}
                                 </div>
                                 <div className="text-gray-500">
                                   {deptHead.email}
@@ -311,7 +315,7 @@ export default function ViewDepartment() {
                               {team.outlet.outletName}
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {team.teamHead.firstName + team.teamHead.lastName}
+                              {team.teamHead.firstName + " " + team.teamHead.lastName}
                             </td>
 
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
@@ -327,22 +331,24 @@ export default function ViewDepartment() {
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <a
-                                // onClick={() => {
-                                //   setOpenDelete(true);
-                                //   setToDelete(team.teamIdx);
-                                // }}
+                                onClick={() => {
+                                 
+                                  setOpenDelete(true);
+                                  // console.log(team.teamId)
+                                  setToDelete(team.teamId);
+                                }}
                                 className="text-indigo-600 hover:text-indigo-900"
                               >
                                 Delete
                                 <span className="sr-only">, {team.name}</span>
                               </a>
 
-                              {/* <DeleteTeamModal
+                              <DeleteTeamModal
                                   open={openDelete}
                                   onConfirm={deleteTeam}
                                   setOpen={setOpenDelete}
-                                  deptId={team.teamIdx}
-                                /> */}
+                                  deptId={team.teamId}
+                                />
                             </td>
                           </tr>
                         ))}

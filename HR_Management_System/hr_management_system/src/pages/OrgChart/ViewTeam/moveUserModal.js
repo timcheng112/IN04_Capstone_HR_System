@@ -2,16 +2,19 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
 
-export default function MoveUserModal({ open, onClose, user, currTeam }) {
+export default function MoveUserModal({ open, onClose, user,  params=[], ...props }) {
   //the dept name is passed from prev page?
   const [newTeam, setNewTeam] = useState(-1);
   const [options, setOptions] = useState(null);
 
+
   //MIGHT HAVE ERRORS.
   //we should do 2 methods, 1 to remove, 1 to add. the add method will be called if we detect another team being selected.
-  function removeFromTeam() {}
+  // function removeFromTeam() {}
 
-  function addToTeam() {}
+  // function addToTeam() {}
+  // console.log(props)
+  // console.log(params)
 
   useEffect(() => {
     const otherTeams = async () => {
@@ -19,24 +22,46 @@ export default function MoveUserModal({ open, onClose, user, currTeam }) {
       await api.getAllTeams().then((res) => {
         let result = res.data;
         result.map((team) => {
-          return arr.push({
+          // console.log(...params)
+          // console.log(props.teamId + "please")
+          if(team.teamId !== props.teamId){
+            return arr.push({
             value: team.teamId,
             label: team.teamName,
           });
+          }
+          
         });
         setOptions(arr);
-        console.log("fetching options...");
-        console.log(options);
+        // console.log("fetching options...");
+        // console.log(options);
       });
     };
     otherTeams();
   });
+  // console.log(newTeam) 
+  function moveEmpToTeam(){
+    // console.log(newTeam)
+    // console.log(typeof(newTeam))
+    // console.log(props.empInQuestion)
+    api.moveEmpToTeam(parseInt(props.empInQuestion), parseInt(props.teamId), parseInt(newTeam) ).
+    then((response) => {
+      console.log(response.data);
+      // props.setOpenMove(false);
+      props.empInQuestion = "";
+      alert("Successfully moved employee.");
+      window.location.reload();
+      props.setOpen(false);
+    } ).catch(err => console.log(err)) 
+
+  }
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     //removeFromTeam()
     //some logic to check
     //addToTeam()
+    moveEmpToTeam();
   };
 
   const cancelButtonRef = useRef(null);
@@ -83,7 +108,7 @@ export default function MoveUserModal({ open, onClose, user, currTeam }) {
                         <div className="space-y-6 pt-8 sm:space-y-5 sm:pt-10">
                           <div>
                             <h3 className="text-lg font-medium leading-6 text-gray-900">
-                              Change Organisation Head
+                              Move an employee to another team
                             </h3>
                             <p className="mt-1 max-w-2xl text-sm text-gray-500">
                               Please select another manager to be the new
@@ -96,17 +121,18 @@ export default function MoveUserModal({ open, onClose, user, currTeam }) {
                                 htmlFor="country"
                                 className="block text-sm font-medium text-gray-700 sm:pt-2"
                               >
-                                New Department Head
+                                Choose Team to Move Employee to...
                               </label>
                               <div className="mt-2 sm:col-span-2 ">
                                 <select
                                   onChange={(e) => setNewTeam(e.target.value)}
+                                  
                                   // placeholder="Select a Manager (might take a while...)"
                                   id="orgHead"
                                   name="orgHead"
                                   className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                                >
-                                  <option>Select a Manager...</option>
+                                > 
+                                  <option>Select a team...</option>
                                   {/*<option>1</option>*/}
                                   {options !== null &&
                                     options.map((option, index) => {
@@ -135,9 +161,15 @@ export default function MoveUserModal({ open, onClose, user, currTeam }) {
                           >
                             Cancel
                           </button>
+                          {/* {console.log(props.empInQuestion + "?") } */}
                           <button
                             type="submit"
                             className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            // onClick={() => {
+                            //   props.onConfirm(...params);
+                            //   props.setOpen(false)
+                            //   console.log(...params);
+                            // }}
                           >
                             Change
                           </button>
