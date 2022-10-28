@@ -9,23 +9,18 @@ import api from "../../utils/api";
 
 export default function ChecklistDetail() {
   const [open, setOpen] = useState(false);
-  const [openUsers, setOpenUsers] = useState(false);
   const [categories, setCategories] = useState();
-  const [users, setUsers] = useState();
-  const [departments, setDepartments] = useState();
-  const [teams, setTeams] = useState();
   const [selectedTasks, setSelectedTasks] = useState([]);
-  const [selectedUsers, setSelectedUsers] = useState([]);
 
   const [name, setName] = useState();
   const [description, setDescription] = useState();
-
+  const [id, setId] = useState();
   const history = useHistory();
   const location = useLocation();
 
-  console.log("SELECTED USERS: " + selectedUsers);
 
   useEffect(() => {
+    console.log(location.state.isOnboarding)
     api
       .getCategories()
       .then((response) => {
@@ -37,8 +32,8 @@ export default function ChecklistDetail() {
             tempArr[i].tasks = tempTasks.filter((task) =>
               selectedTasks.length > 0
                 ? selectedTasks.every(
-                    (selectedTask) => selectedTask.taskId !== task.taskId
-                  ) && task.isOnboarding === true
+                  (selectedTask) => selectedTask.taskId !== task.taskId
+                ) && task.isOnboarding === true
                 : task.isOnboarding === true
             );
           }
@@ -50,8 +45,8 @@ export default function ChecklistDetail() {
             tempArr[i].tasks = tempTasks.filter((task) =>
               selectedTasks.length > 0
                 ? selectedTasks.every(
-                    (selectedTask) => selectedTask.taskId !== task.taskId
-                  ) && task.isOnboarding === false
+                  (selectedTask) => selectedTask.taskId !== task.taskId
+                ) && task.isOnboarding === false
                 : task.isOnboarding === false
             );
           }
@@ -63,42 +58,24 @@ export default function ChecklistDetail() {
 
   useEffect(() => {
     setName(location.state.checklist.title)
+    setId(location.state.checklist.checklistId)
     setDescription(location.state.checklist.description)
     setSelectedTasks(location.state.checklist.tasks)
   }, []);
 
-  useEffect(() => {
-    api
-      .getAllEmployees()
-      .then((response) => setUsers(response.data))
-      .catch((error) => console.log(error.response.data.message));
-  }, []);
-
-  useEffect(() => {
-    api
-      .getAllDepartments()
-      .then((response) => setDepartments(response.data))
-      .catch((error) => console.log(error.response.data.message));
-  }, []);
-
-  useEffect(() => {
-    api
-      .getAllTeams()
-      .then((response) => setTeams(response.data))
-      .catch((error) => console.log(error.response.data.message));
-  }, []);
-
   const submitHandler = () => {
     if (name !== "" && selectedTasks.length > 0) {
-      const checklist = {
-        title: name,
-        description: description,
-        tasks: [],
-      };
       const taskIds = [];
       for (let i = 0; i < selectedTasks.length; i++) {
         taskIds.push(selectedTasks[i].taskId);
       }
+      api
+        .editChecklist(id, name, description, taskIds)
+        .then(() => {
+          history.push({ pathname: "/admin/viewtemplatechecklists" });
+          alert("Successfully edited!");
+        })
+        .catch((error) => alert(error.message));
     } else {
       alert("Invalid fields!");
     }
@@ -117,29 +94,15 @@ export default function ChecklistDetail() {
           }
         />
       )}
-      {users !== undefined &&
-        teams !== undefined &&
-        departments !== undefined && (
-          <AddTemplateChecklistUsersModal
-            open={openUsers}
-            onClose={() => setOpenUsers(false)}
-            users={users}
-            teams={teams}
-            departments={departments}
-            selectedUsers={selectedUsers}
-            setSelectedUsers={setSelectedUsers}
-          />
-        )}
       <div className="py-5"></div>
       <form
         className="space-y-8 divide-y divide-gray-200"
-        onSubmit={console.log()}
       >
         <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
           <div className="space-y-6 sm:space-y-5">
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900">
-                New {location.state.isOnboarding && "Onboarding"} Template
+                {location.state.isOnboarding && "Onboarding"} Template
                 Checklist
               </h3>
             </div>
@@ -191,7 +154,7 @@ export default function ChecklistDetail() {
                   htmlFor="add-task"
                   className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                 >
-                  {location.state.isOnboarding && "Onboarding"} Tasks
+                  Tasks
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
                   <TaskGridList
@@ -221,7 +184,7 @@ export default function ChecklistDetail() {
               Cancel
             </button>
             <button
-              type="submit"
+              type="button"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               onClick={submitHandler}
             >

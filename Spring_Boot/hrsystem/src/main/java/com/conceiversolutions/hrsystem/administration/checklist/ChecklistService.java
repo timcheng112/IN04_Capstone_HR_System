@@ -73,7 +73,9 @@ public class ChecklistService {
       for (Long taskId : taskIds) {
         Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
-        checklist.addTask(task);
+        if(!checklist.getTasks().contains(task)){
+          checklist.addTask(task);
+        }
       }
     }
     checklistRepository.save(checklist);

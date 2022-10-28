@@ -26,7 +26,7 @@ const ViewTemplateChecklists = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [checklists, setChecklists] = useState([]);
   const history = useHistory();
-  
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     api
@@ -46,7 +46,7 @@ const ViewTemplateChecklists = () => {
         console.log(response.data);
       })
       .catch((error) => console.log(error.response.data.message));
-  }, []);
+  }, [refreshKey]);
 
   return (
     <div>
@@ -144,7 +144,7 @@ const ViewTemplateChecklists = () => {
                               {checklist.description}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <ChecklistOptions checklist ={checklist}/>
+                              <ChecklistOptions checklist ={checklist} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                             </td>
                           </tr>
                         ))}

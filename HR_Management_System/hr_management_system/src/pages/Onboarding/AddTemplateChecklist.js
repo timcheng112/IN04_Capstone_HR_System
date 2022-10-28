@@ -105,12 +105,12 @@ const AddTemplateChecklist = () => {
       for (let i = 0; i < selectedTasks.length; i++) {
         api
           .addNewChecklist(checklist, taskIds)
-          .then((response) => {
+          .then(() => {
             taskIds.forEach((taskId) => createTaskListItem(taskId));
             history.push("/admin/viewtemplatechecklists");
             alert("Successfully created!");
           })
-          .catch((error) => console.log(error.response.data.message));
+          .catch((error) => alert(error.message));
       }
     } else {
       alert("Invalid fields!");
