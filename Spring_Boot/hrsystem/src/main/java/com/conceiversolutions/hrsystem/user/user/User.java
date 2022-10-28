@@ -79,6 +79,8 @@ public class User implements UserDetails {
     private Boolean isBlackListed;
     @Column(name = "is_enabled", nullable = false)
     private Boolean isEnabled;
+    @Column(name = "is_disabled", nullable = false)
+    private Boolean isDisabled;
     @Column(name = "date_joined", nullable = false)
     private LocalDate dateJoined;
 
@@ -94,8 +96,7 @@ public class User implements UserDetails {
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
     private QualificationInformation qualificationInformation;
 
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicant")
-    @Column(name = "applications")
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicants")
     private List<JobApplication> applications;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobRequest.class, mappedBy = "requestedBy")
     @Column(name = "job_requests")
@@ -103,7 +104,7 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "payslipId")
     private List<Payslip> payslips;
-
+//
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "attendanceId")
     private List<Attendance> attendances;
 
@@ -122,6 +123,7 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
+    //
     @OneToMany(fetch = FetchType.LAZY, targetEntity = TaskListItem.class, mappedBy = "user")
     @Column(name = "task_list_items")
     private List<TaskListItem> taskListItems;
@@ -154,7 +156,8 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "employee")
     private List<Leave> leaves;
-
+    @Column(name = "bank_acc_no", nullable = true, length = 32)
+    private String bankAccNo;
 
     @OneToMany
     @JoinColumn(name ="unread_notifications")
@@ -188,6 +191,7 @@ public class User implements UserDetails {
         this.preferredDates = null;
         this.notificationsRead = new ArrayList<>();
         this.notificationsUnread = new ArrayList<>();
+        this.isDisabled = false;
     }
 
     // this should be for making a new applicant's account
@@ -533,5 +537,13 @@ public class User implements UserDetails {
 
     public void setEnabled(Boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public Boolean getDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        isDisabled = disabled;
     }
 }

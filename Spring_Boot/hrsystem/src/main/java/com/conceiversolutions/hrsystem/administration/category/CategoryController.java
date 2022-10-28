@@ -39,7 +39,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(path = "{categoryId}")
-    public void deleteCategory(@PathVariable("categoryId") Long categoryId) throws IllegalStateException{
+    public void deleteCategory(@PathVariable("categoryId") Long categoryId) throws IllegalStateException {
         categoryService.deleteCategory(categoryId);
     }
 
@@ -47,6 +47,12 @@ public class CategoryController {
     public void editCategory(@PathVariable("categoryId") Long categoryId,
             @RequestParam(name = "categoryName", required = false) String categoryName) {
         categoryService.editCategory(categoryId, categoryName);
+    }
+
+    @PostMapping(path = "/assignCategoryTasks")
+    public void assignTaskToEmployeeByCategory(@RequestParam(name = "userId", required = true) Long userId,
+            @RequestParam(name = "categoryId", required = true) Long categoryId) {
+        categoryService.assignTaskToEmployeeByCategory(userId, categoryId);
     }
 
 }

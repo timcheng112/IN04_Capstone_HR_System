@@ -25,7 +25,8 @@ public class TaskListItemService {
         List<TaskListItem> taskListItems = taskListItemRepository.findAll();
         for (TaskListItem taskListItem : taskListItems) {
             taskListItem.getTask().setTaskListItems(new ArrayList<>());
-            taskListItem.getTask().setCategory(null);
+            // taskListItem.getTask().setCategory(null);
+            taskListItem.getTask().getCategory().setTasks(new ArrayList<>());
             taskListItem.getUser().setTaskListItems(new ArrayList<>());
         }
         return taskListItems;
@@ -36,14 +37,17 @@ public class TaskListItemService {
                 .orElseThrow(() -> new IllegalStateException(
                         "TaskListItem with ID: " + taskListItemId + " does not exist!"));
         taskListItem.getTask().setTaskListItems(new ArrayList<>());
-        taskListItem.getTask().setCategory(null);
+        // taskListItem.getTask().setCategory(null);
+        taskListItem.getTask().getCategory().setTasks(new ArrayList<>());
         taskListItem.getUser().setTaskListItems(new ArrayList<>());
         return taskListItem;
     }
 
     public void addNewTaskListItem(TaskListItem taskListItem, Long employeeId, Long taskId) {
-        User assignedEmployee = userRepository.findById(employeeId).get();
-        Task task = taskRepository.findById(taskId).get();
+        User assignedEmployee = userRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId + " does not exist!"));
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
         taskListItem.setUser(assignedEmployee);
         taskListItem.setTask(task);
         TaskListItem savedTaskListItem = taskListItemRepository.saveAndFlush(taskListItem);
