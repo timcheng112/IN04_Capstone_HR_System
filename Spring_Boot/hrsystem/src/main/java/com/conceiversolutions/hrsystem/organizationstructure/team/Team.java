@@ -37,7 +37,7 @@ public class Team {
         joinColumns = @JoinColumn(name = "team_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
-    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY, optional = false)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY, optional = true)
     private User teamHead;
 
     public Team() {

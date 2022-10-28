@@ -216,7 +216,7 @@ const api = {
     return axios.delete(`http://localhost:9191/api/department/${deptId}`);
   },
   deleteTeam(teamId) {
-    return axios.delete(`http://localhost:9191/api/team/${teamId}`);
+    return axios.delete(`http://localhost:9191/api/team/deleteTeam/${teamId}`);
   },
   uploadFile(file) {
     return axios.post(
@@ -617,6 +617,20 @@ const api = {
   getGoalPeriodByYear(year) {
     return axios.get(`http://localhost:9191/api/goalPeriod/${year}`)
   },
+  changeTeamHead(teamId, newHeadId) {
+    return axios.put(
+      `http://localhost:9191/api/team/changeTeamHead?teamId=${teamId}&newHeadId=${newHeadId}`
+    );
+  },
+  moveEmpToTeam(userId, teamId, newTeamId){
+    return axios.put(
+      `http://localhost:9191/api/team/moveEmpToTeam?userId=${userId}&teamId=${teamId}&newTeamId=${newTeamId}`
+    );
+  },
+  removeMemberFromTeam(userId, teamId){
+    return axios.delete(`http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`);
+  },
+
   getUserReadNotifications(userId) {
     return axios.get(`http://localhost:9191/api/notification/read/${userId}`)
   },
