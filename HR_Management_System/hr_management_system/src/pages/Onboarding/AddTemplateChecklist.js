@@ -8,6 +8,8 @@ import UserGridList from "../../features/onboarding/UserGridList";
 import api from "../../utils/api";
 
 const AddTemplateChecklist = () => {
+  const [checklistTitle, setChecklistTitle] = useState("");
+  const [checklistDescription, setChecklistDescription] = useState("");
   const [open, setOpen] = useState(false);
   const [openUsers, setOpenUsers] = useState(false);
   const [categories, setCategories] = useState();
@@ -19,8 +21,6 @@ const AddTemplateChecklist = () => {
 
   const history = useHistory();
   const location = useLocation();
-
-  console.log("SELECTED USERS: " + selectedUsers);
 
   useEffect(() => {
     api
@@ -79,6 +79,41 @@ const AddTemplateChecklist = () => {
       .catch((error) => console.log(error.response.data.message));
   }, []);
 
+  function createTaskListItem(taskId) {
+    const taskListItem = { isDone: false };
+    selectedUsers
+      .forEach((employee) => {
+        api
+          .addNewTaskListItem(employee.userId, taskId, taskListItem)
+          .then(() => console.log("Task List Item created"))
+          .catch((error) => console.log(error.response.data.message));
+      })
+      .then(() => console.log("Finished assigning all task list items."));
+  }
+
+  const submitHandler = () => {
+    if (checklistTitle !== "" && selectedTasks.length > 0) {
+      const checklist = {
+        title: checklistTitle,
+        description: checklistDescription,
+      };
+      const taskIds = [];
+      for (let i = 0; i < selectedTasks.length; i++) {
+        taskIds.push(selectedTasks[i].taskId);
+      }
+      for (let i = 0; i < selectedTasks.length; i++) {
+        api
+          .addNewChecklist(checklist, taskIds)
+          .then((response) =>
+            taskIds.forEach((taskId) => createTaskListItem(taskId))
+          )
+          .catch((error) => console.log(error.response.data.message));
+      }
+    } else {
+      alert("Invalid fields!");
+    }
+  };
+
   return (
     <div className="">
       <Navbar />
@@ -108,7 +143,7 @@ const AddTemplateChecklist = () => {
       <div className="py-5"></div>
       <form
         className="space-y-8 divide-y divide-gray-200"
-        onSubmit={console.log()}
+        // onSubmit={submitHandler}
       >
         <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
           <div className="space-y-6 sm:space-y-5">
@@ -121,21 +156,21 @@ const AddTemplateChecklist = () => {
             <div className="space-y-6 sm:space-y-5">
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
-                  htmlFor="name"
+                  htmlFor="title"
                   className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                 >
-                  Name
+                  Title
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
                   <div className="flex max-w-lg rounded-md shadow-sm">
                     <input
                       type="text"
-                      name="name"
-                      id="name"
+                      name="title"
+                      id="title"
                       required
-                      //   value={title}
+                      value={checklistTitle}
                       className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      //   onChange={(e) => setTitle(e.target.value)}
+                      onChange={(e) => setChecklistTitle(e.target.value)}
                     />
                   </div>
                 </div>
@@ -153,10 +188,9 @@ const AddTemplateChecklist = () => {
                     id="description"
                     name="description"
                     rows={5}
-                    required
-                    // value={description}
+                    value={checklistDescription}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    // onChange={(e) => setDescription(e.target.value)}
+                    onChange={(e) => setChecklistDescription(e.target.value)}
                   />
                 </div>
               </div>
@@ -218,9 +252,9 @@ const AddTemplateChecklist = () => {
               Cancel
             </button>
             <button
-              type="submit"
+              type="button"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              //   onClick={() => (useState.button = 2)}
+              onClick={submitHandler}
             >
               Submit
             </button>

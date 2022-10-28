@@ -30,7 +30,6 @@ public class Checklist {
   @Column(name = "task_id")
   private List<Task> tasks;
 
-
   public Checklist() {
 
   }
@@ -45,6 +44,10 @@ public class Checklist {
     this.title = title;
     this.description = description;
     this.tasks = tasks;
+  }
+
+  public Long getChecklistId() {
+    return checklistId;
   }
 
   public String getTitle() {
@@ -71,7 +74,6 @@ public class Checklist {
     this.tasks = tasks;
   }
 
-
   public List<Task> addTask(Task task) {
     this.tasks.add(task);
     return this.tasks;
@@ -82,16 +84,14 @@ public class Checklist {
     return this.tasks;
   }
 
-
-
   @Override
   public String toString() {
-      return "Checklist{" +
-              "checklistId=" + checklistId +
-              ", title='" + title + '\'' +
-              ", description='" + description + '\'' +
-              ", tasks=" + tasks + 
-              '}';
+    return "Checklist{" +
+        "checklistId=" + checklistId +
+        ", title='" + title + '\'' +
+        ", description='" + description + '\'' +
+        ", tasks=" + tasks +
+        '}';
   }
 
 }

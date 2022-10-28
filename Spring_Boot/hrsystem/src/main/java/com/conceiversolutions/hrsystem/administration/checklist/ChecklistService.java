@@ -43,8 +43,8 @@ public class ChecklistService {
             .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
         checklist.addTask(task);
       }
-      checklistRepository.saveAndFlush(checklist);
     }
+    checklistRepository.saveAndFlush(checklist);
   }
 
   @Transactional
