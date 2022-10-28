@@ -21,10 +21,10 @@ public class Department {
     @Column(name = "department_name", nullable = false, length = 64)
     private String departmentName;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Organization.class)
     @JoinColumn(name = "organization_id")
     private Organization organization;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", targetEntity = Team.class)
     private List<Team> teams;
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY, optional = false)
     private User departmentHead;
@@ -40,8 +40,7 @@ public class Department {
         this.departmentHead = departmentHead;
     }
 
-    public Department(Long departmentId, String departmentName, Organization organization, List<Team> teams, User departmentHead) {
-        this.departmentId = departmentId;
+    public Department(String departmentName, Organization organization, List<Team> teams, User departmentHead, boolean bo) {
         this.departmentName = departmentName;
         this.organization = organization;
         this.teams = teams;
@@ -101,7 +100,7 @@ public class Department {
     @Override
     public String toString() {
         return "Department [departmentHead=" + departmentHead + ", departmentId=" + departmentId + ", departmentName="
-                + departmentName + ", organization=" + organization + ", teams=" + teams + "]";
+                + departmentName + ", organization=" + organization + "]";
     }
 
 }

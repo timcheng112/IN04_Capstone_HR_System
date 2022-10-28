@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import api from "../../utils/api";
-import ConfirmDialog from "../../components/ConfirmDialog";
+import CheckDialog from "./CheckDialog";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -11,31 +11,38 @@ function SelfTasklistTable({
   setTaskListItems,
   refreshKeyHandler,
 }) {
-  function onClickHandler(taskListItem) {
-    api
-      .markTaskListItemAsComplete(taskListItem.taskListItemId)
-      .then(() => {
-        console.log("Successfully checked!");
-        refreshKeyHandler();
-      })
-      .catch((error) => {
-        alert(error.response.data.message);
-      });
+
+  const [selectedTask, setSelectedTask] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  function onClickHandler() {
+    console.log(selectedTask)
+    selectedTask.map((taskListItem) => (
+      api
+        .markTaskListItemAsComplete(taskListItem.taskListItemId)
+        .then(() => {
+          alert("Successfully checked!");
+          refreshKeyHandler();
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+        })));
   }
-  function deleteTaskListItem(taskListItemId) {
-    api
-      .deleteTaskListItem(taskListItemId)
-      .then(() => {
-        alert("Successfully deleted!");
-        refreshKeyHandler();
-      })
-      .catch((error) => {
-        alert(error.response.data.message);
-      });
-  }
+  // function deleteTaskListItem(taskListItemId) {
+  //   api
+  //     .deleteTaskListItem(taskListItemId)
+  //     .then(() => {
+  //       alert("Successfully deleted!");
+  //       refreshKeyHandler();
+  //     })
+  //     .catch((error) => {
+  //       alert(error.response.data.message);
+  //     });
+  // }
 
   return (
-    <div className="mt-8 flex flex-col">
+    
+    <div className="mt-8 flex flex-col"> 
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle px-6 lg:px-8">
           <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
@@ -83,28 +90,43 @@ function SelfTasklistTable({
                   {taskListItems.map((taskListItem) => (
                     <tr
                       key={taskListItem.taskListItemId}
-                      className={taskListItem.isDone && "bg-gray-50"}
+                      className={taskListItem.isDone && selectedTask.includes(taskListItem) && "bg-gray-50"}
+                    // className={
+                    //   selectedTask.includes(taskListItem) ? "bg-gray-50" : undefined
+                    // }
                     >
                       <td className="relative w-12 px-6 sm:w-16 sm:px-8">
-                        {taskListItem.isDone && (
+                        {/* {taskListItem.isDone && (
                           <div className="absolute inset-y-0 left-0 w-0.5 bg-gray-600" />
+                        )} */}
+                        {taskListItem.isDone && (
+                          <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />
                         )}
                         <input
                           type="checkbox"
                           className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
                           value={taskListItem.taskListItemId}
-                          checked={taskListItem.isDone}
-                          onChange={(e) => {
-                            e.target.checked && !taskListItem.isDone
-                              ? onClickHandler(taskListItem)
-                              : console.log("Task already checked");
-                          }}
+                          // checked={taskListItem.isDone}
+                          // onChange={(e) => {
+                          //   e.target.checked && !taskListItem.isDone
+                          //     ? onClickHandler(taskListItem)
+                          //     : console.log("Task already checked");
+                          // }}
+                          checked={selectedTask.includes(taskListItem) || taskListItem.isDone}
+                          onChange={(e) =>
+                            setSelectedTask(
+                              e.target.checked && !taskListItem.isDone
+                                ? [...selectedTask, taskListItem]
+                                : selectedTask.filter((p) => p !== taskListItem)
+                            )
+                          }
                         />
                       </td>
                       <td
                         className={classNames(
                           "whitespace-nowrap py-4 pr-3 text-sm font-medium text-left",
                           taskListItem.isDone
+                            //selectedTask.includes(taskListItem)
                             ? "text-gray-900 line-through"
                             : "text-gray-900"
                         )}
@@ -120,7 +142,7 @@ function SelfTasklistTable({
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
                         {taskListItem.task.category.name}
                       </td>
-                      <td className="whitespace-nowrap px-3 text-sm text-gray-500 text-left">
+                      {/* <td className="whitespace-nowrap px-3 text-sm text-gray-500 text-left">
                         {taskListItem.isDone && (
                           // <button
                           //   type="button"
@@ -139,14 +161,32 @@ function SelfTasklistTable({
                             Clear
                           </button>
                         )}
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
+
               </table>
+
             )}
           </div>
+          <div className="py-5"></div>
+          <button
+            type="button"
+            className="inline-flex float-left rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            onClick={() => setOpen(true)}
+          >
+            Check selected tasks
+          </button>
         </div>
+        <CheckDialog 
+          title="tasks"
+          item="tasks"
+          open={open}
+          onClose={() => setOpen(false)}
+          setOpen={() => setOpen(false)}
+          onConfirm={onClickHandler}
+        />
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import TaskList from "./TaskList";
 import ViewTaskModal from "./ViewTaskModal";
 import axios from "axios";
 
-function BoardingComponent({userId}) {
+function OffboardingComponent({userId}) {
   const [taskListItem, setTaskListItem] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
@@ -17,9 +17,9 @@ function BoardingComponent({userId}) {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const getOnboardingTasks = () =>{
+  const getOffboardingTasks = () =>{
     api
-      .getOnboardingTaskListItemsByEmployee(userId)
+      .getOffboardingTaskListItemsByEmployee(userId)
       .then((response) => {
         setRefreshing(false);
         setTaskListItems(response.data);
@@ -29,7 +29,7 @@ function BoardingComponent({userId}) {
   }
 
   useEffect(() => {
-    getOnboardingTasks();
+    getOffboardingTasks();
   }, []);
 
   return (
@@ -38,7 +38,7 @@ function BoardingComponent({userId}) {
         taskListItems={taskListItems}
         showModal={showModal}
         setTaskListItem={setTaskListItem}
-        onRefresh={getOnboardingTasks}
+        onRefresh={getOffboardingTasks}
         refreshing={refreshing}
       />
       <ViewTaskModal
@@ -50,4 +50,4 @@ function BoardingComponent({userId}) {
   );
 }
 
-export default BoardingComponent;
+export default OffboardingComponent;

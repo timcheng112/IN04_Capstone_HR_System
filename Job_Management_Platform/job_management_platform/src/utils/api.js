@@ -93,7 +93,39 @@ const api = {
   getAllApplicants(){
     return axios.get(`http://localhost:9191/api/user/getAllApplicants`);
   },
+  // Profile Documents
+  getUserQualificationInformation(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserQualificationInformation?userId=${userId}`);
+  },
+  addDocument(file, userId, document){
+    return axios.post(`http://localhost:9191/api/qualification/addDocument?file=&userId=${userId}&document=${document}`, file);
+  },
+  deleteUserDocument(userId, docId){
+    return axios.delete(`http://localhost:9191/api/qualification/deleteUserDocument?userId=${userId}&document=${docId}`);
+  },
 
+  // Profile Information
+  addRecommendation(userId, name, phone, email, relationship) {
+    return axios.post(`http://localhost:9191/api/qualification/addRecommendation?userId=${userId}&name=${name}&phone=${phone}&email=${email}&relationship=${relationship}`);
+  },
+  getUserRecommendations(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserRecommendations?userId=${userId}`);
+  },
+  removeUserRecommendation(userId, recoId) {
+    return axios.delete(`http://localhost:9191/api/qualification/getUserRecommendations?userId=${userId}&recoId=${recoId}`);
+  },
+  addWorkExperience(userId, positionName, companyName, startDate, endDate, currentlyWorking, description) {
+    return axios.post(`http://localhost:9191/api/qualification/addWorkExperience?userId=${userId}&positionName=${positionName}&companyName=${companyName}&startDate=${startDate}&endDate=${endDate}&currentlyWorking=${currentlyWorking}&description=${description}`);
+  },
+  getUserExperiences(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserExperiences?userId=${userId}`);
+  },
+  removeUserExperience(userId, expId) {
+    return axios.delete(`http://localhost:9191/api/qualification/removeUserExperience?userId=${userId}&expId=${expId}`);
+  },
+  updateUserEducation(userId, highestEducation, schoolName, schoolGradYear) {
+    return axios.post(`http://localhost:9191/api/qualification/updateUserEducation?userId=${userId}&highestEducation=${highestEducation}&schoolName=${schoolName}&schoolGradYear=${schoolGradYear}`);
+  },
 };
 
 export default api;

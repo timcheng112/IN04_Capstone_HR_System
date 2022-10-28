@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View } from "react-native";
+import { RefreshControl, ScrollView, View, Alert} from "react-native";
 import {
   Badge,
   Button,
@@ -9,42 +9,51 @@ import {
   Title,
 } from "react-native-paper";
 import api from "../../utils/api";
+import CheckDialog from "./CheckDialog";
 
 function TaskList({
   taskListItems,
   showModal,
   setTaskListItem,
-  refreshKeyHandler,
-  refreshing,
+  onRefresh,
+  refreshing
 }) {
-  function onClickHandler(taskListItem) {
-    api
-      .markTaskListItemAsComplete(taskListItem.taskListItemId)
-      .then(() => {
-        console.log("Successfully checked!");
-        refreshKeyHandler();
-      })
-      .catch((error) => {
-        alert(error.response.data.message);
-      });
-  }
+  const [selectedTask, setSelectedTask] = useState([]);
+  const [open, setOpen] = useState(false);
 
-  function deleteTaskListItem(taskListItemId) {
-    api
-      .deleteTaskListItem(taskListItemId)
-      .then(() => {
-        alert("Successfully deleted!");
-        refreshKeyHandler();
-      })
-      .catch((error) => {
-        alert(error.response.data.message);
-      });
+  function onClickHandler() {
+    console.log(selectedTask)
+    selectedTask.map((taskListItem) => (
+      api
+        .markTaskListItemAsComplete(taskListItem.taskListItemId)
+        .then(() => {
+          alert("Successfully checked!");
+          //refreshKeyHandler();
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+        })));
   }
+  const showAlert = () =>
+    Alert.alert(
+      "Check Tasks",
+      "Are you sure you have finished all the selected tasks?",
+    [
+      {
+        text: "Cancel"
+      },
+      {
+        text: "Yes",
+        onPress: () => onClickHandler(),
+      },
+    ]
+    );
+
 
   return (
     <ScrollView
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refreshKeyHandler} />
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
       {/* Render List Items of Task */}
@@ -65,12 +74,12 @@ function TaskList({
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Checkbox
-                status={taskListItem.isDone ? "checked" : "unchecked"}
-                value={taskListItem.task.taskName}
-                onPress={() => {
-                  !taskListItem.isDone
-                    ? onClickHandler(taskListItem)
-                    : console.log("Task List Item already checked");
+                status={(selectedTask.includes(taskListItem) || taskListItem.isDone) ? "checked" : "unchecked"}
+                value={taskListItem.taskListItemId}
+                onPress={(e) => {
+                  if(e.target.status === "checked" && !taskListItem.isDone)
+                  {setSelectedTask([...selectedTask, taskListItem]); e.target.status = "unchecked"}
+                  else{setSelectedTask(selectedTask.filter((p) => p !== taskListItem)); e.target.status = "checked"}
                 }}
                 disabled={taskListItem.isDone}
               />
@@ -92,19 +101,17 @@ function TaskList({
                 </Badge>
               </View>
             </View>
-            {taskListItem.isDone && (
-              <Button
-                mode="contained"
-                style={{ margin: 10 }}
-                onPress={() => {
-                  deleteTaskListItem(taskListItem.taskListItemId);
-                }}
-              >
-                Clear
-              </Button>
-            )}
           </Card>
         ))}
+        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+        <Button
+          mode="contained"
+          color="#ffd700"
+          onPress={() => showAlert()}
+        >
+          Check selected tasks
+        </Button>
+        </View>
     </ScrollView>
   );
 }

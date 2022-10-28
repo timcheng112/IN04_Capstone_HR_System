@@ -178,6 +178,11 @@ const api = {
       `http://localhost:9191/api/user/getUnassignedEmployees?taskId=${taskId}`
     );
   },
+  assignTaskToEmployeeByCategory(userId, categoryId) {
+    return axios.post(
+      `http://localhost:9191/api/category/assignCategoryTasks?userId=${userId}&categoryId=${categoryId}`
+    )
+  },
 
   getOrganization() {
     return axios.get(`http://localhost:9191/api/organization/1`);
@@ -236,7 +241,7 @@ const api = {
     return axios.get(`http://localhost:9191/api/team/${teamId}`);
   },
   getAllDepartments() {
-    return axios.get("http://localhost:9191/api/department/getAllDepartments");
+    return axios.get('http://localhost:9191/api/department/getAllDepartments')
   },
   getAllTeams() {
     return axios.get(`http://localhost:9191/api/team/getAllTeams`);
@@ -453,16 +458,25 @@ const api = {
     return axios.get(`http://localhost:9191/api/jobposting/getAllJobPosts`);
   },
   closeJobPost(jobPostingId) {
-      return axios.put(
-          `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
-      );
-    },
-  editJobPost(jobPostId, jobTitle, jobDescription, preferredStartDate, jobType, jobRole, salary, jobRequirements) {
-      return axios.put(
-          `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
-      );
-    },
-
+    return axios.put(
+      `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
+    );
+  },
+  editJobPost(
+    jobPostId,
+    jobTitle,
+    jobDescription,
+    preferredStartDate,
+    jobType,
+    jobRole,
+    salary,
+    jobRequirements
+  ) {
+    return axios.put(
+      `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
+    );
+  },
+  
   // Leaves
   getAllPendingLeaves() {
     return axios.get(`http://localhost:9191/api/leaves/getAllPendingLeaves`);
@@ -492,12 +506,12 @@ const api = {
     return axios.get(`http://localhost:9191/api/docData/getDocByteArray?id=${docId}`)
   },
   getDocById(docId) {
-    return axios.get(`http://localhost:9191/api/docData/getDocById?id=${docId}`, {responseType : 'blob'})
+    return axios.get(`http://localhost:9191/api/docData/getDocById?id=${docId}`, { responseType: 'blob' })
   },
   downloadDocument(docId) {
-    return axios.get(`http://localhost:9191/api/docData/downloadDocument?id=${docId}`, {responseType: 'blob'})
+    return axios.get(`http://localhost:9191/api/docData/downloadDocument?id=${docId}`, { responseType: 'blob' })
   },
-
+  
   //not tested
   getShiftListItemByShiftId(shiftId) {
     return axios.get(
@@ -555,35 +569,37 @@ const api = {
       `http://localhost:9191/api/shift_list_item/${shiftListItemId}`
     );
   },
+  
   getAllNotifications() {
     return axios.get(
       `http://localhost:9191/api/notification/getAllNotifications`
     );
   },
-  addNotification(notificationTitle, notificationDescription, userId){
+  addNotification(notificationTitle, notificationDescription, userId) {
     return axios.post(`http://localhost:9191/api/notification/?notificationTitle=${notificationTitle}&notificationDescription=${notificationDescription}&userId=${userId}`)
   },
-  getAllNotificationsForUser(userId){
+  getAllNotificationsForUser(userId) {
     return axios.get(`http://localhost:9191/api/notification/getAllNotificationsForUser/${userId}`);
   },
-  deleteAllNotifications(userId){
+  deleteAllNotifications(userId) {
     return axios.delete(`http://localhost:9191/api/notification/deleteNotifications?userId=${userId}`);
     //http://localhost:9191/api/notification/deleteNotifications?userId=5
   },
-  markNotificationAsRead(notificationId, userId) {
-    return axios.post(`http://localhost:9191/api/notification/${notificationId}/user/${userId}`)
-  },
-  deleteANotification(notificationId, userId){
+  deleteANotification(notificationId, userId) {
     return axios.delete(`http://localhost:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`)
   },
-  getUserReadNotifications(userId) {
-    return axios.get(`http://localhost:9191/api/notification/read/${userId}`)
-  },
-  getUserUnreadNotifications(userId) {
-    return axios.get(`http://localhost:9191/api/notification/unread/${userId}`)
-  },
-  getAllStaff(){
+  getAllStaff() {
     return axios.get(`http://localhost:9191/api/user/getAllStaff`);
+  },
+  getShiftByTeamAndTime(teamId, dateString) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getShiftByTeamAndTime?teamId=${teamId}&dateString=${dateString}`
+    );
+  },
+  getShiftListItemByDateAndTeam(date, teamId) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
+    );
   },
   setUserStatus(email){
     return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
@@ -615,7 +631,15 @@ const api = {
     return axios.delete(`http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`);
   },
 
-
-};
+  getUserReadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/read/${userId}`)
+  },
+  getUserUnreadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/unread/${userId}`)
+  },
+  markNotificationAsRead(notificationId, userId) {
+    return axios.post(`http://localhost:9191/api/notification/${notificationId}/user/${userId}`)
+  },
+}
 
 export default api;

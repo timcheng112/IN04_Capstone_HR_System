@@ -1,10 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import logo from "../assets/libro-transparent-logo.png";
-import { NavLink, useRouteMatch } from "react-router-dom";
-import { deleteUser } from "../utils/Common";
+import { Fragment } from 'react'
+import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { BriefcaseIcon, UserIcon, StarIcon, BellIcon } from '@heroicons/react/24/outline'
+import logo from '../assets/libro-transparent-logo.png'
+import { NavLink, useRouteMatch  } from 'react-router-dom'
 import { useHistory } from "react-router";
 
 function classNames(...classes) {
@@ -13,18 +12,16 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const navigation = [
-    { name: "Dashboard", path: "/" },
-    { name: "Admin", path: "/admin" },
-    { name: "Company", path: "/company" },
-    { name: "Career", path: "/career" },
-    { name: "Training", path: "/mytraining"},
-    { name: "Welfare", path: "/welfare" },
-    { name: "Hiring", path: "/hiring" },
-    { name: "Reports", path: "/reports" },
-   
-  ];
+    { name: 'Jobs', path: '/jobposting' },
+    { name: 'My Application', path: '#'},
+    { name: 'My Favourite', path: '#'},
+    
+  ]
+  
   const { url } = useRouteMatch();
   const history = useHistory();
+  
+
   return (
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
@@ -38,29 +35,28 @@ export default function Navbar() {
                     src={logo}
                     alt="Libro"
                   />
-                  <a href="/home">
-                    <img
-                      className="hidden h-8 w-auto lg:block"
-                      src={logo}
-                      alt="Libro"
-                    />
-                  </a>
+                  <img
+                    className="hidden h-8 w-auto lg:block"
+                    src={logo}
+                    alt="Libro"
+                  />
                 </div>
-                <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                  {/* Current: "border-teal-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-                  {/* {navigation.map((item) => (
+                <div className="hidden sm:ml-6 sm:flex sm:space-x-8 items-center">
+                  {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
+                  
+                  {navigation.map((item) => (
                     <NavLink
                       key={item.name}
                       to={item.path}
                       aria-current={item.path === url ? 'page' : undefined}
                       className={classNames(
-                        item.path === url ? 'bg-gray-100 text-gray-900 items-center' : 'hover:bg-gray-50',
+                        item.path === url ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-50',
                         'block rounded-md py-2 px-3 text-base font-medium'
                       )}
                     >
                       {item.name}
                     </NavLink>
-                  ))} */}
+                  ))}
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
@@ -70,13 +66,13 @@ export default function Navbar() {
                   onClick={() => history.push("/AllNotifications")}
                 >
                   <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <BellIcon className="h-6 w-6" aria-hidden="true" href="/AllNotifications" />
                 </button>
 
                 {/* Profile dropdown */}
-                <Menu as="div" className="relative ml-3">
+                {/* <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+                    <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
@@ -124,7 +120,7 @@ export default function Navbar() {
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
-                </Menu>
+                </Menu> */}
               </div>
             </div>
           </div>
@@ -147,6 +143,7 @@ export default function Navbar() {
             </div>
           </Disclosure.Panel> */}
         </>
+          
       )}
     </Disclosure>
   );

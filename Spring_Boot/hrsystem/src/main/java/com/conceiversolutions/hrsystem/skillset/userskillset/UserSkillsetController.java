@@ -12,9 +12,9 @@ import java.util.List;
 public class UserSkillsetController {
     private final UserSkillsetService userSkillsetService;
 
-    @GetMapping(path = "/getUserSkillset")
-    public List<UserSkillset> getUserSkillset(@RequestParam("userId") Long userId) {
-        return userSkillsetService.getUserSkillset(userId);
+    @GetMapping(path = "/getUserSkillsets")
+    public List<UserSkillset> getUserSkillsets(@RequestParam("userId") Long userId) {
+        return userSkillsetService.getUserSkillsets(userId);
     }
 
     @PostMapping(path = "/addUserSkillset")
@@ -23,4 +23,18 @@ public class UserSkillsetController {
                                 @RequestParam("skillLevel") Integer skillLevel) {
         return userSkillsetService.addUserSkillset(userId, skillsetId, skillLevel);
     }
+
+    @PutMapping(path = "/updateUserSkillset")
+    public Long updateUserSkillset(@RequestParam("userSkillsetId") Long userSkillsetId,
+                                   @RequestParam("skillLevel") Integer skillLevel) {
+        return userSkillsetService.updateUserSkillset(userSkillsetId, skillLevel);
+    }
+
+    @DeleteMapping(path = "/removeUserSkillset")
+    public String updateUserSkillset(@RequestParam("userId") Long userId,
+                                   @RequestParam("userSkillsetId") Long userSkillsetId) {
+        return userSkillsetService.removeUserSkillset(userId, userSkillsetId);
+    }
+
+
 }

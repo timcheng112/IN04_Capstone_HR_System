@@ -21,24 +21,26 @@ const OnboardingScreen = () => {
     setId();
    }, []);
 
-  useEffect(() => {
-    setRefreshing(true);
-    api
-      .getOnboardingTaskListItemsByEmployee(7)
-      .then((response) => {
-        setTaskListItems(response.data);
-        setRefreshing(false);
-        console.log("Successfully fetched task list items");
-      })
-      .catch(() => console.log("Error trying to fetch task list items"));
-  }, [refreshKey]);
+  // useEffect(() => {
+  //   setRefreshing(true);
+  //   api
+  //     .getOnboardingTaskListItemsByEmployee(7)
+  //     .then((response) => {
+  //       setTaskListItems(response.data);
+  //       setRefreshing(false);
+  //       console.log("Successfully fetched task list items");
+  //     })
+  //     .catch(() => console.log("Error trying to fetch task list items"));
+  // }, [refreshKey]);
 
   return (
+    userId  &&
     <BoardingComponent
-      taskListItems={taskListItems}
-      setTaskListItems={setTaskListItems}
-      refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
-      refreshing={refreshing}
+      // taskListItems={taskListItems}
+      // setTaskListItems={setTaskListItems}
+      //refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}
+      // refreshing={refreshing}
+      userId = {userId}
     />
   );
 };
