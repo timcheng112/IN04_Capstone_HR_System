@@ -1,11 +1,11 @@
 package com.conceiversolutions.hrsystem.pay.payslip;
 
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.user.User;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.time.LocalDate;
 
 @Entity
@@ -26,8 +26,9 @@ public class Payslip {
     @Column(name="date_generated", nullable = false)
     private LocalDate dateGenerated;
     //we cant handle blob yet, null - true
-    @Column(name="payslip_pdf", nullable = true)
-    private Blob payslipPDF;
+    @OneToOne(targetEntity = DocData.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "payslip_pdf", nullable = true)
+    private DocData payslipPDF;
     @OneToOne(cascade = CascadeType.ALL, targetEntity = PayInformation.class)
     //@JoinColumn(name="payInformationId")
     private PayInformation payInformation;
@@ -49,7 +50,7 @@ public class Payslip {
     }
 
     //without id to test db identity id generation #1
-    public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary, LocalDate dateGenerated, Blob payslipPDF, PayInformation payInformation, User employee) {
+    public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary, LocalDate dateGenerated, DocData payslipPDF, PayInformation payInformation, User employee) {
         this.monthOfPayment = monthOfPayment;
         this.yearOfPayslip = yearOfPayslip;
         this.dateOfPayment = dateOfPayment;
@@ -61,7 +62,7 @@ public class Payslip {
     }
 
     //with id, static offline testing
-    public Payslip(Long payslipId, Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary, LocalDate dateGenerated, Blob payslipPDF, PayInformation payInformation, User employee) {
+    public Payslip(Long payslipId, Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary, LocalDate dateGenerated, DocData payslipPDF, PayInformation payInformation, User employee) {
         this.payslipId = payslipId;
         this.monthOfPayment = monthOfPayment;
         this.yearOfPayslip = yearOfPayslip;
@@ -74,7 +75,7 @@ public class Payslip {
     }
     //test payslip -> payInfo ->  Allowance // payslip -> payInfo -> Deduction #3
     public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary,
-                   LocalDate dateGenerated, Blob payslipPDF, PayInformation payInformation) {
+                   LocalDate dateGenerated, DocData payslipPDF, PayInformation payInformation) {
         this.monthOfPayment = monthOfPayment;
         this.yearOfPayslip = yearOfPayslip;
         this.dateOfPayment = dateOfPayment;
@@ -143,11 +144,11 @@ public class Payslip {
         this.dateGenerated = dateGenerated;
     }
 
-    public Blob getPayslipPDF() {
+    public DocData getPayslipPDF() {
         return payslipPDF;
     }
 
-    public void setPayslipPDF(Blob payslipPDF) {
+    public void setPayslipPDF(DocData payslipPDF) {
         this.payslipPDF = payslipPDF;
     }
 
@@ -176,7 +177,6 @@ public class Payslip {
                 ", dateOfPayment=" + dateOfPayment +
                 ", grossSalary=" + grossSalary +
                 ", dateGenerated=" + dateGenerated +
-                ", payslipPDF=" + payslipPDF +
                 '}';
     }
 }

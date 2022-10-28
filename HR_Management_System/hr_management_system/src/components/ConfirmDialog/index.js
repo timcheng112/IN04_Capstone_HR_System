@@ -72,6 +72,7 @@ export default function ConfirmDialog({
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
+                      {props.hasTaskListItems && "There are employees assigned to this task! "}
                       Are you sure you want to {action} {props.title}?
                     </p>
                   </div>

@@ -58,7 +58,7 @@ public class Category {
     }
 
     public List<Task> getTasks() {
-        return tasks;
+        return this.tasks;
     }
 
     public List<Task> addTask(Task task) {
