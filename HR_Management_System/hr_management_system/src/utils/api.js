@@ -245,6 +245,16 @@ const api = {
   getAllDepartments() {
     return axios.get("http://localhost:9191/api/department/getAllDepartments");
   },
+  getEmployeesByDepartment(departmentId) {
+    return axios.get(
+      `http://localhost:9191/api/user/getEmployeesByDepartment?departmentId=${departmentId}`
+    );
+  },
+  getEmployeesByTeam(teamId) {
+    return axios.get(
+      `http://localhost:9191/api/user/getEmployeesByTeam?teamId=${teamId}`
+    );
+  },
   getAllTeams() {
     return axios.get(`http://localhost:9191/api/team/getAllTeams`);
   },

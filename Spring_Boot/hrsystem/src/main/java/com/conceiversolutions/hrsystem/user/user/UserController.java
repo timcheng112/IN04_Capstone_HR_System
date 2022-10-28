@@ -327,4 +327,13 @@ public class UserController {
         return getAttendanceToday(sliId, userId);
     }
 
+    @GetMapping(path = "/getEmployeesByDepartment")
+    public List<User> getEmployeesByDepartment(@RequestParam("departmentId") Long departmentId) {
+        return userService.getEmployeesByDepartment(departmentId);
+    }
+
+    @GetMapping(path = "/getEmployeesByTeam")
+    public List<User> getEmployeesByTeam(@RequestParam("teamId") Long teamId) {
+        return userService.getEmployeesByTeam(teamId);
+    }
 }

@@ -1,28 +1,110 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import Navbar from "../../components/Navbar";
 import AddTemplateChecklistTasksModal from "../../features/onboarding/AddTemplateChecklistTasksModal";
 import AddTemplateChecklistUsersModal from "../../features/onboarding/AddTemplateChecklistUsersModal";
 import TaskGridList from "../../features/onboarding/TaskGridList";
 import UserGridList from "../../features/onboarding/UserGridList";
+import api from "../../utils/api";
 
 const AddTemplateChecklist = () => {
   const [open, setOpen] = useState(false);
   const [openUsers, setOpenUsers] = useState(false);
+  const [categories, setCategories] = useState();
+  const [users, setUsers] = useState();
+  const [departments, setDepartments] = useState();
+  const [teams, setTeams] = useState();
+  const [selectedTasks, setSelectedTasks] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
   const history = useHistory();
   const location = useLocation();
+
+  console.log("SELECTED USERS: " + selectedUsers);
+
+  useEffect(() => {
+    api
+      .getCategories()
+      .then((response) => {
+        console.log(response.data);
+        if (location.state.isOnboarding) {
+          let tempArr = response.data;
+          for (let i = 0; i < tempArr.length; i++) {
+            let tempTasks = tempArr[i].tasks;
+            tempArr[i].tasks = tempTasks.filter((task) =>
+              selectedTasks.length > 0
+                ? selectedTasks.every(
+                    (selectedTask) => selectedTask.taskId !== task.taskId
+                  ) && task.isOnboarding === true
+                : task.isOnboarding === true
+            );
+          }
+          setCategories(tempArr);
+        } else {
+          let tempArr = response.data;
+          for (let i = 0; i < tempArr.length; i++) {
+            let tempTasks = tempArr[i].tasks;
+            tempArr[i].tasks = tempTasks.filter((task) =>
+              selectedTasks.length > 0
+                ? selectedTasks.every(
+                    (selectedTask) => selectedTask.taskId !== task.taskId
+                  ) && task.isOnboarding === false
+                : task.isOnboarding === false
+            );
+          }
+          setCategories(tempArr);
+        }
+      })
+      .catch((error) => console.log(error.response.data.message));
+  }, [open]);
+
+  useEffect(() => {
+    api
+      .getAllEmployees()
+      .then((response) => setUsers(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
+
+  useEffect(() => {
+    api
+      .getAllDepartments()
+      .then((response) => setDepartments(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
+
+  useEffect(() => {
+    api
+      .getAllTeams()
+      .then((response) => setTeams(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
 
   return (
     <div className="">
       <Navbar />
-      <AddTemplateChecklistTasksModal
-        open={open}
-        onClose={() => setOpen(false)}
-      />
-      <AddTemplateChecklistUsersModal
-        open={openUsers}
-        onClose={() => setOpenUsers(false)}
-      />
+      {categories !== undefined && (
+        <AddTemplateChecklistTasksModal
+          open={open}
+          onClose={() => setOpen(false)}
+          categories={categories}
+          setSelectedTasks={(tasks) =>
+            setSelectedTasks([...selectedTasks, ...tasks])
+          }
+        />
+      )}
+      {users !== undefined &&
+        teams !== undefined &&
+        departments !== undefined && (
+          <AddTemplateChecklistUsersModal
+            open={openUsers}
+            onClose={() => setOpenUsers(false)}
+            users={users}
+            teams={teams}
+            departments={departments}
+            selectedUsers={selectedUsers}
+            setSelectedUsers={setSelectedUsers}
+          />
+        )}
       <div className="py-5"></div>
       <form
         className="space-y-8 divide-y divide-gray-200"
@@ -87,7 +169,17 @@ const AddTemplateChecklist = () => {
                   {location.state.isOnboarding && "Onboarding"} Tasks
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <TaskGridList onOpen={() => setOpen(true)} />
+                  <TaskGridList
+                    onOpen={() => setOpen(true)}
+                    templateTasks={selectedTasks}
+                    removeTaskHandler={(task) =>
+                      setSelectedTasks(
+                        selectedTasks.filter(
+                          (selectedTask) => task.taskId !== selectedTask.taskId
+                        )
+                      )
+                    }
+                  />
                 </div>
               </div>
 
@@ -99,7 +191,17 @@ const AddTemplateChecklist = () => {
                   Assigned Users
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <UserGridList onOpen={() => setOpenUsers(true)} />
+                  <UserGridList
+                    onOpen={() => setOpenUsers(true)}
+                    selectedUsers={selectedUsers}
+                    removeUserHandler={(user) =>
+                      setSelectedUsers(
+                        selectedUsers.filter(
+                          (selectedUser) => selectedUser.userId !== user.userId
+                        )
+                      )
+                    }
+                  />
                 </div>
               </div>
             </div>

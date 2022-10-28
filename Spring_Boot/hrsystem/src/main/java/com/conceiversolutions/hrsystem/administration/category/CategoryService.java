@@ -33,6 +33,7 @@ public class CategoryService {
         for (Category category : categories) {
             for (Task task : category.getTasks()) {
                 task.setCategory(null);
+                // task.getCategory().setTasks(new ArrayList<>());
                 // task.setTaskListItems(new ArrayList<>());
                 for (TaskListItem taskListItem : task.getTaskListItems()) {
                     taskListItem.setUser(null);

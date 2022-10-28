@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT c.user FROM ConfirmationToken c WHERE c.token = ?1")
     Optional<User> findUserByToken(String token);
 
-//    @Query("SELECT ")
+    // @Query("SELECT ")
 
     // @Query("SELECT u FROM User u WHERE u.userRole = ?1")
     // List<User> findAllEmployees(RoleEnum userRole);
@@ -59,11 +59,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.userRole = ?1 OR u.userRole = ?2")
     List<User> findAllStaff(RoleEnum role, RoleEnum role2);
 
-//    @Query("SELECT u FROM User u, Team t, IN (t.users) tu WHERE t.teamId = ?3 AND NOT tu.userId = u.userId AND (u.userRole = ?1 OR u.userRole = ?2)")
-//    List<User> getEmployeesNotInGivenTeam(RoleEnum role, RoleEnum role2, Long teamId);
+    // @Query("SELECT u FROM User u, Team t, IN (t.users) tu WHERE t.teamId = ?3 AND
+    // NOT tu.userId = u.userId AND (u.userRole = ?1 OR u.userRole = ?2)")
+    // List<User> getEmployeesNotInGivenTeam(RoleEnum role, RoleEnum role2, Long
+    // teamId);
     @Query("SELECT u FROM User u WHERE u NOT IN (SELECT user FROM User user JOIN user.teams team WHERE team.teamId = ?3) AND (u.userRole = ?1 OR u.userRole = ?2)")
     List<User> getEmployeesNotInGivenTeam(RoleEnum role, RoleEnum role2, Long teamId);
 
-//    @Query("SELECT u from USER u WHERE u.team.teamId = ?1 AND (u.userRole= ?1 OR u.userRole = ?2)")
-//    List<User> getEmployeesInGivenTeam( RoleEnum role, RoleEnum role2, Long teamId);
+    @Query("SELECT u FROM User u JOIN u.teams team WHERE team.department.departmentId = ?1")
+    List<User> getEmployeesByDepartment(Long departmentId);
+
+    @Query("SELECT u FROM User u JOIN u.teams team WHERE team.teamId = ?1")
+    List<User> getEmployeesByTeam(Long teamId);
+
+    // @Query("SELECT u from USER u WHERE u.team.teamId = ?1 AND (u.userRole= ?1 OR
+    // u.userRole = ?2)")
+    // List<User> getEmployeesInGivenTeam( RoleEnum role, RoleEnum role2, Long
+    // teamId);
 }
