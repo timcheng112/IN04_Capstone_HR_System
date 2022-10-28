@@ -103,6 +103,28 @@ const api = {
   deleteUserDocument(userId, docId){
     return axios.delete(`http://localhost:9191/api/qualification/deleteUserDocument?userId=${userId}&document=${docId}`);
   },
+  addCV(file, userId) {
+    // http://localhost:9191/api/qualification/addCv?file=${file}&userId=${userId}
+    return axios.post(
+      `http://localhost:9191/api/qualification/addCv?file=&userId=${userId}`,
+      file
+    );
+  },
+  deleteCV(docId) {
+    return axios.delete(`http://localhost:9191/api/docData/${docId}`);
+  },
+  getDocById(docId) {
+    return axios.get(
+      `http://localhost:9191/api/docData/getDocById?id=${docId}`,
+      { responseType: "blob" }
+    );
+  },
+  downloadDocument(docId) {
+    return axios.get(
+      `http://localhost:9191/api/docData/downloadDocument?id=${docId}`,
+      { responseType: "blob" }
+    );
+  },
 
   // Profile Information
   addRecommendation(userId, name, phone, email, relationship) {
