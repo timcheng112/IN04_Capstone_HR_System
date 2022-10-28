@@ -36,16 +36,17 @@ public class ChecklistController {
   }
 
   @PostMapping
-  public void addNewChecklist(@RequestBody Checklist checklist) {
-    checklistService.addNewChecklist(checklist);
+  public void addNewChecklist(@RequestBody Checklist checklist,
+      @RequestParam(name = "taskIds", required = false) List<Long> taskIds) {
+    checklistService.addNewChecklist(checklist, taskIds);
   }
 
   @PutMapping(path = "{checklistId}")
   public void editChecklist(@PathVariable("checklistId") Long checklistId,
       @RequestParam(name = "checklistTitle", required = false) String checklistTitle,
       @RequestParam(name = "checklistDescription", required = false) String checklistDescription,
-      @RequestParam(name = "tasks", required = false) List<Task> tasks) {
-    checklistService.editChecklist(checklistId, checklistTitle,checklistDescription,tasks);
+      @RequestParam(name = "taskIds", required = false) List<Long> taskIds) {
+    checklistService.editChecklist(checklistId, checklistTitle, checklistDescription, taskIds);
   }
 
   @DeleteMapping(path = "{checklistId}")

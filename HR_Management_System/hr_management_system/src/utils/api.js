@@ -185,6 +185,26 @@ const api = {
       `http://localhost:9191/api/category/assignCategoryTasks?userId=${userId}&categoryId=${categoryId}&isOnboarding=${isOnboarding}`
     );
   },
+  getChecklists() {
+    return axios.get(`http://localhost:9191/api/checklist`);
+  },
+  getChecklistById(checklistId) {
+    return axios.get(`http://localhost:9191/api/checklist/${checklistId}`);
+  },
+  addNewChecklist(checklist, taskIds) {
+    return axios.post(
+      `http://localhost:9191/api/checklist&taskIds=${taskIds}`,
+      checklist
+    );
+  },
+  editChecklist(checklistId, checklistTitle, checklistDescription, taskIds) {
+    return axios.put(
+      `http://localhost:9191/api/checklist/${checklistId}?checklistTitle=${checklistTitle}&checklistDescription=${checklistDescription}&taskIds=${taskIds}`
+    );
+  },
+  deleteChecklist(checklistId) {
+    return axios.delete(`http://localhost:9191/api/checklist/${checklistId}`);
+  },
 
   getOrganization() {
     return axios.get(`http://localhost:9191/api/organization/1`);

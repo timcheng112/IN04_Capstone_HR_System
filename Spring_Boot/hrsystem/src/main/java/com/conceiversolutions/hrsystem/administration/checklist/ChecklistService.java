@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.conceiversolutions.hrsystem.administration.task.Task;
+import com.conceiversolutions.hrsystem.administration.task.TaskRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 public class ChecklistService {
 
   private final ChecklistRepository checklistRepository;
+  private final TaskRepository taskRepository;
 
   public List<Checklist> getChecklists() {
     List<Checklist> checklists = checklistRepository.findAll();
@@ -30,16 +32,23 @@ public class ChecklistService {
     return checklist;
   }
 
-  public void addNewChecklist(Checklist checklist) {
+  public void addNewChecklist(Checklist checklist, List<Long> taskIds) {
     Optional<Checklist> checklistOptional = checklistRepository.findChecklistByTitle(checklist.getTitle());
     if (checklistOptional.isPresent()) {
       throw new IllegalStateException("Checklist title already exists!");
     }
-    checklistRepository.saveAndFlush(checklist);
+    if (taskIds != null) {
+      for (Long taskId : taskIds) {
+        Task task = taskRepository.findById(taskId)
+            .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
+        checklist.addTask(task);
+      }
+      checklistRepository.saveAndFlush(checklist);
+    }
   }
 
   @Transactional
-  public void editChecklist(Long checklistId, String checklistTitle, String checklistDescription, List<Task> tasks) {
+  public void editChecklist(Long checklistId, String checklistTitle, String checklistDescription, List<Long> taskIds) {
     Checklist checklist = checklistRepository.findById(checklistId)
         .orElseThrow(() -> new IllegalStateException("Checklist with ID: " + checklistId + " does not exist!"));
     if (checklistTitle != null && checklistTitle.length() > 0
@@ -50,10 +59,14 @@ public class ChecklistService {
         && !Objects.equals(checklist.getDescription(), checklistDescription)) {
       checklist.setDescription(checklistDescription);
     }
-    if (tasks != null){
-      checklist.setTasks(tasks);
+    if (taskIds != null) {
+      for (Long taskId : taskIds) {
+        Task task = taskRepository.findById(taskId)
+            .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
+        checklist.addTask(task);
+      }
     }
-  
+    checklistRepository.save(checklist);
   }
 
   public void deleteChecklist(Long checklistId) {
