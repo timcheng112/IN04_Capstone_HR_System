@@ -38,9 +38,9 @@ function App() {
           <PrivateRoute exact path="/updateProfile" component={UpdateProfile} />
           <PrivateRoute exact path="/home" component={Home} />
           
-          <PublicRoute exact path="/jobposting" component={JobPostingPage} />
-          <PublicRoute exact path="/myapplication" component={JobApplicationPage} />
-          <PublicRoute exact path="/myfavourite" component={FavouriteJobPage} />
+          <PrivateRoute exact path="/jobposting" component={JobPostingPage} />
+          <PrivateRoute exact path="/myapplication" component={JobApplicationPage} />
+          <PrivateRoute exact path="/myfavourite" component={FavouriteJobPage} />
           <PrivateRoute exact path="/AllNotifications" component={AllNotificationPage}/>
           <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
         </Switch>

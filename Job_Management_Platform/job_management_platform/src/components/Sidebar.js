@@ -1,11 +1,9 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
-  Bars3BottomLeftIcon,
-  BellIcon,
+  AcademicCapIcon,
   BriefcaseIcon, UserIcon, StarIcon,
-  UsersIcon,
-  XMarkIcon,
+  
 } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import logo from '..//assets/libro-transparent-logo.png'
@@ -13,8 +11,9 @@ import logo from '..//assets/libro-transparent-logo.png'
 
 const navigation = [
   { name: 'Jobs', href: '/jobposting', icon: BriefcaseIcon, current: false },
-  { name: 'My Application', href: '/myapplication', icon: UserIcon, current: false },
+  { name: 'My Application', href: '/myapplication', icon: AcademicCapIcon, current: false },
   { name: 'My Favourite', href: '/myfavourite', icon: StarIcon, current: false },
+  { name: 'My profile', href: '/profile', icon: UserIcon, current: false },
 ]
 // const userNavigation = [
 //   { name: 'Your Profile', href: '#' },

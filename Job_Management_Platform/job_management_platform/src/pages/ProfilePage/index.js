@@ -1,223 +1,195 @@
-import { Suspense, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-// import Navbar from "../../components/Navbar.js";
-//import SideProfile from './sideprofile.js'
-import { PaperClipIcon } from "@heroicons/react/20/solid";
-import loading from "../../assets/Spinner.svg";
-import { getUserId } from "../../utils/Common.js";
-import api from "../../utils/api.js";
-import axios from "axios";
-import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
+import Education from "../../features/Profile/Education";
 
-import {
-  CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
-  HomeIcon,
-  InboxIcon,
-  AcademicCapIcon,
-  BanknotesIcon,
-  CheckBadgeIcon,
-  ClockIcon,
-  ReceiptRefundIcon,
-  UsersIcon,
-} from "@heroicons/react/24/outline";
-
-const actions1 = [
-  {
-    title: "Benefits",
-    href: "#",
-    icon: CheckBadgeIcon,
-    iconForeground: "text-purple-700",
-    iconBackground: "bg-purple-50",
-  },
-  {
-    title: "Schedule",
-    href: "#",
-    icon: UsersIcon,
-    iconForeground: "text-sky-700",
-    iconBackground: "bg-sky-50",
-  },
-];
-
-const actions2 = [
-  {
-    title: "Current Pay Info",
-    href: "#",
-    icon: BanknotesIcon,
-    iconForeground: "text-yellow-700",
-    iconBackground: "bg-yellow-50",
-  },
-  {
-    title: "Training",
-    href: "#",
-    icon: AcademicCapIcon,
-    iconForeground: "text-indigo-700",
-    iconBackground: "bg-indigo-50",
-  },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function ProfilePage(props) {
-  const [user, setUser] = useState(getUserId()); //logged in user
-  const history = useHistory();
-  // const email = result[2]
-  let [userInfo, setUserInfo] = useState([]);
-  const userId = getUserId();
-  // const email = result[1]
-
-  console.log(userId);
-  // console.log(email)
-
-  // useEffect to get the user details
-  useEffect(
-    () => {
-      //   async function getUserInfo(){
-      //   await api.getUserInfo(userId).then(response => {
-      //   setUserInfo(response.data);
-      //   console.log(userInfo);
-      //       })
-      axios.get(`http://localhost:9191/api/user/${userId}`).then((response) => {
-        setUserInfo(response.data);
-        console.log(userInfo);
-      });
-    },
-
-    //   }getUserInfo()}
-    [userId, userInfo]
-  );
-
+export default function Profile() {
   return (
-    <>
-      {userInfo.firstName ? (
-        <>
-          <div>
-            <Navbar />
-            <div>
-              {/* picture */}
-              <div class="md:grid grid-cols-4 grid-rows-1  bg-white gap-2 p-24 rounded-xl">
-                <div class="md:col-span-1 h-auto shadow-xl box border border-2 rounded bg-rose-50/75 ">
-                  <div class="flex rounded-full w-full h-full relative  ">
-                    <img
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      class="w-44 h-44 m-auto rounded-full border-2"
-                      alt=""
-                    ></img>
-                  </div>
+    <div>
+      <Sidebar />
+      <div className="flex flex-1 flex-col md:pl-64">
+        <div className='py-6' />
+        <form className="space-y-8 divide-y divide-gray-200">
+          <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
+            <div className="space-y-6 sm:space-y-5">
+              <div>
+                <h3 className="text-lg font-medium  leading-6 text-gray-900">Profile</h3>
+              </div>
+
+            </div>
+            <div className="space-y-6 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  First name
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="first-name"
+                    id="first-name"
+                    autoComplete="given-name"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
                 </div>
 
-                {/* this is personal info */}
-                <div class="md:col-span-3 h-auto w-auto shadow-xl p-4 space-y-2 p-3 rounded box-border border-2 items-justify">
-                  <div class="flex mt-4 ">
-                    <span class="text-sm  font-bold uppercase rounded-l px-4 py-2 bg-gray-50 whitespace-no-wrap w-2/6">
-                      Name:
-                    </span>
-                    <div class="mt-1  px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6">
-                      {userInfo.firstName + " " + userInfo.lastName}
-                    </div>
-                  </div>
-                  <div class="flex ">
-                    <span class="text-sm  font-bold uppercase rounded-l px-4 py-2 bg-gray-50 whitespace-no-wrap w-2/6">
-                      Email:
-                    </span>
-                    <div class="mt-1  px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6">
-                      {userInfo.email}
-                    </div>
-                  </div>
-                  <div class="flex ">
-                    <span class="text-sm  font-bold uppercase rounded-l px-4 py-2 bg-gray-50 whitespace-no-wrap w-2/6">
-                      D.O.B:
-                    </span>
-                    <div class=" px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6">
-                      {userInfo.dob}
-                    </div>
-                  </div>
-                  <div class="flex ">
-                    <span class="text-sm  font-bold uppercase rounded-l px-4 py-2 bg-gray-50 whitespace-no-wrap w-2/6">
-                      Role:
-                    </span>
-                    <div class=" px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6">
-                      {userInfo.userRole}
-                    </div>
-                    {/* class="px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6" */}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => history.push("/updateProfile")}
-                    className="mt-4 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    Update Info
-                  </button>
-                  <span> | </span>
-                  <button
-                    type="button"
-                    onClick={() => history.push("/reset")}
-                    className="mt-4 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    Change Password
-                  </button>
+                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Last name
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="last-name"
+                    id="last-name"
+                    autoComplete="family-name"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  About me
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <textarea
+                    id="about"
+                    name="about"
+                    rows={3}
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="country" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Education
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  
+                  <Education />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="street-address" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Work experience
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="street-address"
+                    id="street-address"
+                    autoComplete="street-address"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Skills
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    autoComplete="address-level2"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="region" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Language
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="region"
+                    id="region"
+                    autoComplete="address-level1"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Recommendations
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="postal-code"
+                    id="postal-code"
+                    autoComplete="postal-code"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
+                </div>
+              </div>
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  CV
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="first-name"
+                    id="first-name"
+                    autoComplete="given-name"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
                 </div>
 
-                <div class="mt-12 md:col-span-2 h-auto shadow-xl p-4 space-y-2 hidden md:block">
-                  <h3 class="font-bold uppercase"> Profile Document</h3>
-                  <p class="">Your CV</p>
-
-                  <div class="mb-8">
-                    <input type="file" name="file" id="file" class="sr-only" />
-                    <label
-                      for="file"
-                      class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
-                    >
-                      <div>
-                        <span class="mb-2 block text-xl font-semibold text-[#07074D]">
-                          Click here to upload
-                        </span>
-                        <span class="mb-2 block text-base font-medium text-[#6B7280]">
-                          Or
-                        </span>
-                        <span class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
-                          Browse
-                        </span>
-                      </div>
-                    </label>
-                  </div>
-                  <ul role="list">
-                    <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
-                      <div className="flex w-0 flex-1 items-center">
-                        <PaperClipIcon
-                          className="h-5 w-5 flex-shrink-0 text-gray-400"
-                          aria-hidden="true"
-                        />
-                        <span className="ml-2 w-0 flex-1 truncate">
-                          resume_back_end_developer.pdf
-                        </span>
-                      </div>
-                      <div className="ml-4 flex flex-shrink-0 space-x-4">
-                        <button
-                          type="button"
-                          className="rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                          Update
-                        </button>
-                      </div>
-                    </li>
-                  </ul>
+                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Transcript
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="last-name"
+                    id="last-name"
+                    autoComplete="family-name"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
                 </div>
-                <div class="flex items-center mt-12 md:col-span-2 h-auto shadow-xl p-4 space-y-2 hidden md:block">
-                  <h3 class="font-bold uppercase"> Coming soon in SR2...</h3>
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Cover Letter
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="first-name"
+                    id="first-name"
+                    autoComplete="given-name"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
                 </div>
               </div>
             </div>
           </div>
-        </>
-      ) : (
-        <div className="min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
-          <img className="h-full w-auto" src={loading} alt="" />
-        </div>
-      )}
-    </>
-  );
+
+
+
+          <div className="pt-5">
+            <div className="flex justify-end">
+              <button
+                type="button"
+                className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  )
 }
