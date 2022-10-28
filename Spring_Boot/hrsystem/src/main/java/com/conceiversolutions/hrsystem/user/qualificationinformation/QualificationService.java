@@ -37,7 +37,7 @@ public class QualificationService {
             DocData doc = docDataService.uploadDoc(file);
             User u1 = userRepository.findById(userId).get();
             if(u1.getQualificationInformation() == null){
-                QualificationInformation qi = new QualificationInformation();
+                QualificationInformation qi = new QualificationInformation(u1);
                 qi.setCv(doc);
                 qi.setLanguagesSpoken(new ArrayList<>());
                 QualificationInformation q1 =qualificationRepository.saveAndFlush(qi);
@@ -76,7 +76,7 @@ public class QualificationService {
                 .orElseThrow(() -> new IllegalStateException(
                         "User with ID: " + userId + " does not exist!"));
         if(u1.getQualificationInformation() == null){
-            QualificationInformation newqi = new QualificationInformation();
+            QualificationInformation newqi = new QualificationInformation(u1);
             newqi.setLanguagesSpoken(new ArrayList<>());
             QualificationInformation q1 =qualificationRepository.saveAndFlush(newqi);
             u1.setQualificationInformation(newqi);
@@ -172,7 +172,7 @@ public class QualificationService {
             DocData doc = docDataService.uploadDoc(file);
             User u1 = userRepository.findById(userId).get();
             if (u1.getQualificationInformation() == null){
-                QualificationInformation qi = new QualificationInformation();
+                QualificationInformation qi = new QualificationInformation(u1);
                 qi.setCoverLetter(doc);
                 qi.setLanguagesSpoken(new ArrayList<>());
                 QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
@@ -203,7 +203,7 @@ public class QualificationService {
             DocData doc = docDataService.uploadDoc(file);
             User u1 = userRepository.findById(userId).get();
             if (u1.getQualificationInformation() == null){
-                QualificationInformation qi = new QualificationInformation();
+                QualificationInformation qi = new QualificationInformation(u1);
                 qi.setTranscript(doc);
                 qi.setLanguagesSpoken(new ArrayList<>());
                 QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
@@ -234,7 +234,7 @@ public class QualificationService {
         User u1 = userRepository.findById(userId).get();
 
         if (u1.getQualificationInformation() == null){
-            QualificationInformation qi = new QualificationInformation();
+            QualificationInformation qi = new QualificationInformation(u1);
 
             QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
             u1.setQualificationInformation(q1);
@@ -297,7 +297,7 @@ public class QualificationService {
         User u1 = userRepository.findById(userId).get();
 
         if (u1.getQualificationInformation() == null){
-            QualificationInformation qi = new QualificationInformation();
+            QualificationInformation qi = new QualificationInformation(u1);
 
             QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
             u1.setQualificationInformation(q1);

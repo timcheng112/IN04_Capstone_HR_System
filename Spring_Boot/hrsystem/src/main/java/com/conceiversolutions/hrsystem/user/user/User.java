@@ -79,6 +79,8 @@ public class User implements UserDetails {
     private Boolean isBlackListed;
     @Column(name = "is_enabled", nullable = false)
     private Boolean isEnabled;
+    @Column(name = "is_disabled", nullable = false)
+    private Boolean isDisabled;
     @Column(name = "date_joined", nullable = false)
     private LocalDate dateJoined;
 
@@ -121,6 +123,7 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
+    //
     @OneToMany(fetch = FetchType.LAZY, targetEntity = TaskListItem.class, mappedBy = "user")
     @Column(name = "task_list_items")
     private List<TaskListItem> taskListItems;
@@ -188,6 +191,7 @@ public class User implements UserDetails {
         this.preferredDates = null;
         this.notificationsRead = new ArrayList<>();
         this.notificationsUnread = new ArrayList<>();
+        this.isDisabled = false;
     }
 
     // this should be for making a new applicant's account
@@ -533,5 +537,13 @@ public class User implements UserDetails {
 
     public void setEnabled(Boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public Boolean getDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        isDisabled = disabled;
     }
 }
