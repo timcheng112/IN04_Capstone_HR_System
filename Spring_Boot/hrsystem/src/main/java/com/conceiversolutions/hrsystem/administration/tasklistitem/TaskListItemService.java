@@ -53,6 +53,7 @@ public class TaskListItemService {
                 throw new IllegalStateException("User with ID: " + employeeId + " already has this task!");
             }
         }
+
         taskListItem.setUser(assignedEmployee);
         taskListItem.setTask(task);
         TaskListItem savedTaskListItem = taskListItemRepository.saveAndFlush(taskListItem);

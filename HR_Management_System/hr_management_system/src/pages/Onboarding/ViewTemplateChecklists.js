@@ -91,9 +91,11 @@ const ViewTemplateChecklists = () => {
               </button>
             )}
           </div>
-          <EmptyStateChecklist
-            onOpen={() => history.push("/admin/addtemplatechecklist")}
-          />
+          {checklists.length === 0 && (
+            <EmptyStateChecklist
+              onOpen={() => history.push("/admin/addtemplatechecklist")}
+            />
+          )}
           <div className="mt-8 flex flex-col">
             <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle px-6 lg:px-8">

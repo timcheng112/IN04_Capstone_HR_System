@@ -3,12 +3,16 @@ package com.conceiversolutions.hrsystem.administration.checklist;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -26,9 +30,13 @@ public class Checklist {
 
   private String description;
 
-  @OneToMany(fetch = FetchType.LAZY, targetEntity = Task.class)
-  @Column(name = "task_id")
-  private List<Task> tasks;
+  // @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval =
+  // true)
+  // private List<Task> tasks = new ArrayList<>();
+
+  @ManyToMany(cascade = CascadeType.ALL)
+  @JoinTable(name = "checklist_task", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "checklist_id"))
+  public List<Task> tasks = new ArrayList<>();
 
   public Checklist() {
 

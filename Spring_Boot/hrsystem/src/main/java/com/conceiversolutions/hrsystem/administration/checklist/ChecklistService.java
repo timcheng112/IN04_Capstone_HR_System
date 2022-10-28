@@ -54,6 +54,7 @@ public class ChecklistService {
         checklist.addTask(task);
       }
     }
+    System.out.println("TESTING======================================");
     checklistRepository.saveAndFlush(checklist);
   }
 

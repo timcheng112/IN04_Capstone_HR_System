@@ -80,15 +80,33 @@ const AddTemplateChecklist = () => {
   }, []);
 
   function createTaskListItem(taskId) {
+    console.log("Creating TaskListItem");
     const taskListItem = { isDone: false };
-    selectedUsers
-      .forEach((employee) => {
+    if (selectedUsers.length > 0) {
+      console.log("Selected");
+      selectedUsers.forEach((employee, index) => {
         api
           .addNewTaskListItem(employee.userId, taskId, taskListItem)
-          .then(() => console.log("Task List Item created"))
-          .catch((error) => console.log(error.response.data.message));
-      })
-      .then(() => console.log("Finished assigning all task list items."));
+          .then(() => {
+            console.log("Task List Item created");
+            if (index === selectedUsers.length - 1) {
+              history.push("/admin/viewtemplatechecklists");
+              alert("Successfully created!");
+            }
+          })
+          .catch((error) => {
+            console.log(error.response.data.message);
+            if (index === selectedUsers.length - 1) {
+              history.push("/admin/viewtemplatechecklists");
+              alert("Successfully created!");
+            }
+          });
+      });
+    } else {
+      console.log("No selected users.");
+      history.push("/admin/viewtemplatechecklists");
+      alert("Successfully created!");
+    }
   }
 
   const submitHandler = () => {
@@ -102,16 +120,15 @@ const AddTemplateChecklist = () => {
       for (let i = 0; i < selectedTasks.length; i++) {
         taskIds.push(selectedTasks[i].taskId);
       }
-      for (let i = 0; i < selectedTasks.length; i++) {
-        api
-          .addNewChecklist(checklist, taskIds)
-          .then((response) => {
-            taskIds.forEach((taskId) => createTaskListItem(taskId));
-            history.push("/admin/viewtemplatechecklists");
-            alert("Successfully created!");
-          })
-          .catch((error) => console.log(error.response.data.message));
-      }
+      api.addNewChecklist(checklist, taskIds).then((response) => {
+        taskIds.forEach((taskId) => createTaskListItem(taskId));
+        // .then((response) => {
+        //   history.push("/admin/viewtemplatechecklists");
+        //   alert("Successfully created!");
+        // })
+        // .catch((error) => console.log("Error assigning task list items"));
+      });
+      // .catch((error) => console.log("Error creating checklist!"));
     } else {
       alert("Invalid fields!");
     }
