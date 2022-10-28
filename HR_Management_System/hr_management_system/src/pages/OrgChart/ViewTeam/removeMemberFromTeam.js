@@ -3,12 +3,13 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import api from "../../../utils/api";
 
-export default function DeleteTeamModal({
+export default function RemoveMemberFromTeamModal({
   open,
   params = [],
   ...props
 }) {
   const cancelButtonRef = useRef(null);
+  console.log(props)
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -48,11 +49,11 @@ export default function DeleteTeamModal({
                       <form>
                         <div className="p-4 overflow-hidden shadow sm:rounded-md">
                           <h3 className="text-lg font-medium leading-6 text-gray-900 ">
-                            Delete Team
+                            Remove Member from Team
                           </h3>
 
                           <p className=" flex items-center text-sm text-gray-600">
-                            Are you sure you want to delete this team?
+                            Are you sure you want to remove member this team?
                           </p>
                           {/*this button will need the function to delete the employee*/}
                           <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
@@ -74,7 +75,7 @@ export default function DeleteTeamModal({
                                 console.log(...params);
                               }}
                             >
-                              Delete
+                              Remove
                             </button>
                           </div>
                         </div>

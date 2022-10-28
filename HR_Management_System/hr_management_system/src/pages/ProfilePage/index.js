@@ -404,31 +404,33 @@ export default function ProfilePage(props) {
                 </dl>
               </div>
             </div>
-            <div className="row-span-1 col-span-1 col-start-3 box border border-2 rounded rounded-lg shadow-lg ">
+            <div className=" word-wrap row-span-1 col-span-1 col-start-3 box border border-2 rounded rounded-lg shadow-lg ">
               <form onSubmit={uploadFile} encType="multipart/form">
                 <dt className="mt-5 my-5 text-lg font-medium leading-6 text-gray-900">
-                  Qualifications & Documents
-                  <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    Your CV.
-                  </p>
+                  My Documents (CV)
                 </dt>
 
-                <div className="mb-8">
+                <div className="mb-8 break-word">
                   {/* <input id="file" type="file" name="file" onChange ={(e) => handleFile(e)} /> */}
 
                   <label
                     // for not ok anymore for react, use htmlFor. same with class - classNames  stroke-width - strokeWidth  stroke-linejoin - strokeLinejoin
                     htmlFor="file"
-                    className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+                    
+                    className=" break-word relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
                   >
                     <div>
-                      <span className="mb-2 block text-xl font-semibold text-[#07074D]">
-                        Click here to upload
-                      </span>
-                      <span className="mb-2 block text-base font-medium text-[#6B7280]">
+                      {file ? "" : <span className=" break-word mb-2 block text-xl font-semibold text-[#07074D]">
+                        You have no CV uploaded.
+                      </span>}
+                      {/* <span className="mb-2 block text-base font-medium text-[#6B7280]">
                         Or
-                      </span>
-                      <span className="flex ml-10 mb-2 block text-md text-[#07074D]">
+                      </span> */}
+                      <span className="block ml-20 mb-2 block text-md text-[#07074D]">
+                        {/* <button id="file"
+                          type="file"
+                          multiple
+                          onChange={(e) => handleFile(e)}>Select a file to upload</button> */}
                         <input
                           id="file"
                           type="file"
@@ -438,39 +440,32 @@ export default function ProfilePage(props) {
                         />
                       </span>
                     </div>
-                  </label>
+                  </label>  
                 </div>
 
-                <dd className="m-1 sm:col-span-2 sm:mt-0">
-                  <ul role="list">
-                    <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
-                      <div className="flex w-0 flex-1 items-center">
+                <dd className="m-1 sm:mt-0">
+                  {file ? <ul role="list">
+                    <li className=" py-3 pl-3 pr-4 text-sm">
+                      <div className="flex w-0 flex-1 ">
                         {/* where the fetching for download should be */}
                       </div>
-                      <div className="ml-4 flex flex-shrink-0 space-x-4">
+                      <div className="flex-1 ml-at mt-4  space-x-4 ">
                         <PaperClipIcon
                           className="inline-block h-6 w-6 flex-shrink-0 text-gray-400"
                           aria-hidden="true"
                         >
                           {" "}
                         </PaperClipIcon>
-                        {/* <input id="file" type="file" name="file" onChange ={(e) => handleFile(e)} /> */}
-                        {/* <button
-                        type="button"
-                        className="rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        onClick={(e) => uploadFile(e)}
-                      >
-                        Upload
-                      </button> */}
+
                         {fileName}
-                        <input
+                        <input 
                           type="submit"
-                          value="Upload"
-                          className="inline-block px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
+                          value="Submit"
+                          className=" vertical-center px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
                         ></input>
                       </div>
                     </li>
-                  </ul>
+                  </ul> : ""}
                   {/* Uncaught TypeError: Cannot read properties of null (reading 'cv') when i use userInfo.qualificationInformation.cv dk why updated in db but not on front end. qi is null on frontend */}
                   {docId ? (
                     <>
@@ -490,7 +485,7 @@ export default function ProfilePage(props) {
                       </button>
                     </>
                   ) : (
-                    <div>You currently have no CV uploaded.</div>
+                    ""
                   )}
                   {/* <button
                   type="button"
