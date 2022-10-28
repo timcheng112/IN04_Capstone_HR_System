@@ -34,7 +34,7 @@ public class JobApplication {
             joinColumns = @JoinColumn(name = "job_application_id"),
             inverseJoinColumns = @JoinColumn(name = "applicant_id")
     )
-    private User applicants;
+    private List<User> applicants;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserSkillset.class)
     @JoinColumn(name = "application_id")
     private List<UserSkillset> userSkills;
@@ -44,12 +44,12 @@ public class JobApplication {
     private LocalDate availableStartDate;
 
     public JobApplication() {
+        this.applicants = new ArrayList<>();
     }
 
-    public JobApplication(LocalDate applyDate, JobStatusEnum status, User applicants, List<UserSkillset> userSkills, JobPosting jobPosting, LocalDate availableStartDate) {
+    public JobApplication(LocalDate applyDate, JobStatusEnum status, List<UserSkillset> userSkills, JobPosting jobPosting, LocalDate availableStartDate) {
         this.applyDate = applyDate;
         this.status = status;
-        this.applicants = applicants;
         this.userSkills = userSkills;
         this.jobPosting = jobPosting;
         this.availableStartDate = availableStartDate;
