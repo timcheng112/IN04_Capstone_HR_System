@@ -682,7 +682,7 @@ const api = {
   },
   updateGoalPeriod(startDate, endDate) {
     return axios.put(`http://localhost:9191/api/goalPeriod/start/${startDate}/end/${endDate}`)
-  }
+  },
   changeTeamHead(teamId, newHeadId) {
     return axios.put(
       `http://localhost:9191/api/team/changeTeamHead?teamId=${teamId}&newHeadId=${newHeadId}`
