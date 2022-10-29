@@ -30,6 +30,7 @@ public class Goal {
     private LocalDate lastModified;
     private LocalDate created;
     private String description;
+    private String year;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "employee")
@@ -42,12 +43,12 @@ public class Goal {
 
     }
 
-    public Goal(Long goalId, String type, LocalDate lastModified, LocalDate created, String description, User employee, List<Achievement> achievements) {
-        this.goalId = goalId;
+    public Goal(String type, LocalDate lastModified, LocalDate created, String description, String year, User employee, List<Achievement> achievements) {
         this.type = type;
         this.lastModified = lastModified;
         this.created = created;
         this.description = description;
+        this.year = year;
         this.employee = employee;
         this.achievements = achievements;
     }
@@ -82,6 +83,14 @@ public class Goal {
 
     public void setCreated(LocalDate created) {
         this.created = created;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public User getEmployee() {

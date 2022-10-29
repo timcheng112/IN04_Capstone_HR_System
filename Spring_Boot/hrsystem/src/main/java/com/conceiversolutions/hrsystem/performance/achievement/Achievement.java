@@ -35,9 +35,7 @@ public class Achievement {
 
     }
 
-    public Achievement(Long achievementId, LocalDate created, LocalDate lastModified, String description,
-            Goal employeeGoal) {
-        this.achievementId = achievementId;
+    public Achievement(LocalDate created, LocalDate lastModified, String description, Goal employeeGoal) {
         this.created = created;
         this.lastModified = lastModified;
         this.description = description;

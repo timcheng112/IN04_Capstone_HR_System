@@ -8,9 +8,12 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.conceiversolutions.hrsystem.training.video.Video;
 import com.conceiversolutions.hrsystem.training.video.VideoRepository;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.docdata.DocDataService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
@@ -23,12 +26,15 @@ public class ModuleService {
     private final UserRepository userRepository;
     @Autowired
     private final VideoRepository videoRepository;
+    
+    private final DocDataService docDataService; 
 
     public ModuleService(ModuleRepository moduleRepository, UserRepository userRepository,
-            VideoRepository videoRepository) {
+            VideoRepository videoRepository, DocDataService docDataService) {
         this.moduleRepository = moduleRepository;
         this.userRepository = userRepository;
         this.videoRepository = videoRepository;
+        this.docDataService = docDataService;
     }
 
     public List<Module> getModules() {
@@ -126,15 +132,21 @@ public class ModuleService {
     }
 
     @Transactional
-    public String addVideoToModule(Long moduleId, Video video) throws Exception {
-        videoRepository.save(video);
+    public String addVideoToModule(Long moduleId, String title, String description) throws Exception {
+
+        Video newVideo = new Video();
+
+        newVideo.setTitle(title);
+        newVideo.setDescription(description);
+        newVideo.setPosition(1);
+        videoRepository.save(newVideo);
 
         Optional<Module> m = moduleRepository.findById(moduleId);
         if (m.isPresent()) {
             Module module = m.get();
-            module.getVideoList().add(video);
+            module.getVideoList().add(newVideo);
             System.out.println("module " + module.getModuleId() + "; videos = " + module.getVideoList());
-            return video.getTitle() + " has been added to " + module.getTitle();
+            return newVideo.getTitle() + " has been added to " + module.getTitle();
         } else {
             throw new IllegalStateException("Module does not exist");
         }

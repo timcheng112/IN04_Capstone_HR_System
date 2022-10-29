@@ -26,8 +26,7 @@ public class GoalPeriod {
 
     }
 
-    public GoalPeriod(Long goalPeriodId, String year, LocalDate startDate, LocalDate endDate) {
-        this.goalPeriodId = goalPeriodId;
+    public GoalPeriod(String year, LocalDate startDate, LocalDate endDate) {
         this.year = year;
         this.startDate = startDate;
         this.endDate = endDate;
