@@ -65,8 +65,8 @@ export default function JobRequest() {
     var deptFilter = items.filter(x => finding.some(y => x.department.departmentName.toLowerCase().indexOf(y) != -1))
     deptFilter.forEach(item => filtered.add(item))
 
-    var requestorFilter = items.filter(x => finding.some(y => x.requestedBy.firstName.toLowerCase().indexOf(y) != -1))
-    requestorFilter.forEach(item => filtered.add(item))
+//    var requestorFilter = items.filter(x => finding.some(y => x.requestedBy.firstName.toLowerCase().indexOf(y) != -1))
+//    requestorFilter.forEach(item => filtered.add(item))
 
     setFilteredRequests(Array.from(filtered))
 

@@ -72,4 +72,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 //    @Query("SELECT u from USER u WHERE u.team.teamId = ?1 AND (u.userRole= ?1 OR u.userRole = ?2)")
 //    List<User> getEmployeesInGivenTeam( RoleEnum role, RoleEnum role2, Long teamId);
+
+    @Query("SELECT u FROM User u WHERE u.userRole = ?1")
+    List<User> findAllApplicants(RoleEnum role);
 }

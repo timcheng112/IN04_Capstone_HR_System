@@ -7,6 +7,7 @@ import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.position.Position;
 
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
+import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +66,7 @@ public class UserController {
         System.out.println("UserController.registerNewAccountJMP");
         User newApplicant = new User(firstName, lastName, password, phone, email, LocalDate.parse(dob),
                 GenderEnum.valueOf(gender), RoleEnum.APPLICANT, false, false, null);
-        System.out.println("newApplicant = " + newApplicant.toString());
+//        System.out.println("newApplicant = " + newApplicant.toString());
         try {
             Long applicantId = userService.addNewUser(newApplicant);
             System.out.println("UserController.registerNewAccountJMP");
@@ -335,5 +336,10 @@ public class UserController {
     @GetMapping(path= "/setUserStatus")
     public String setUserStatus(@RequestParam("workEmail") String workEmail){
         return userService.setUserStatus(workEmail);
+    }
+
+    @GetMapping(path = "/getAllApplicants")
+    public List<User> getAllApplicants() {
+        return userService.getAllApplicants();
     }
 }

@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
-export default function ConfirmDialog({
+export default function CloseDialog({
   open,
   action = "close",
   params = [],

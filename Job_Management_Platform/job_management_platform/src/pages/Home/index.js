@@ -7,11 +7,13 @@ import { deleteUser, getUserId } from "../../utils/Common";
 import logo from "../../assets/libro-transparent-logo.png";
 import { useHistory } from "react-router-dom";
 import Navbar from "../../components/Navbar";
+import Notification from "../../components/Notification/index.js";
 
 export default function Home() {
   const [userId, setUserId] = useState(getUserId());
   const [user, setUser] = useState(null);
   const history = useHistory();
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
       api.getUser(userId).then((response) => {
@@ -34,9 +36,23 @@ export default function Home() {
     history.push("/")
   }
 
-  return (
+  useEffect(() => {
+    api
+      .getUser(userId)
+      .then((response) => {
+        console.log(response.data);
+        setUser(response.data);
+      })
+      .catch((error) => {
+        history.push("/");
+        deleteUser();
+      });
+  }, [userId]);
+
+  return user && (
     <>
       <Navbar />
+      {(user.notificationsUnread).length > 0 ? (<Notification showNotification={true}/>) : ""}
       <main className="mx-auto mt-16 max-w-7xl px-4 sm:mt-24">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">

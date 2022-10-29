@@ -7,19 +7,30 @@ import TaskList from "./TaskList";
 import ViewTaskModal from "./ViewTaskModal";
 import axios from "axios";
 
-function BoardingComponent({
-  taskListItems,
-  setTaskListItems,
-  refreshKeyHandler,
-  refreshing,
-}) {
+function BoardingComponent({userId}) {
   const [taskListItem, setTaskListItem] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshing, setRefreshing] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [taskListItems, setTaskListItems] = useState([]);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  // function getOnboardingTaskListItemsByEmployee() {}
+  const getOnboardingTasks = () =>{
+    api
+      .getOnboardingTaskListItemsByEmployee(userId)
+      .then((response) => {
+        setRefreshing(false);
+        setTaskListItems(response.data);
+        console.log("Successfully fetched task list items");
+      })
+      .catch(() => console.log("Error trying to fetch task list items"));
+  }
+
+  useEffect(() => {
+    getOnboardingTasks();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -27,7 +38,7 @@ function BoardingComponent({
         taskListItems={taskListItems}
         showModal={showModal}
         setTaskListItem={setTaskListItem}
-        refreshKeyHandler={refreshKeyHandler}
+        onRefresh={getOnboardingTasks}
         refreshing={refreshing}
       />
       <ViewTaskModal

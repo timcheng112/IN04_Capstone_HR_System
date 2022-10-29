@@ -64,6 +64,7 @@ export default function AddTaskModal({
     if (name !== "" && description !== "") {
       evt.preventDefault();
       createTask();
+      alert("Successfully created task.");
       onClose();
       //createTaskListItem()
       refreshKeyHandler();
@@ -81,6 +82,7 @@ export default function AddTaskModal({
       .addNewTask(task, category.categoryId)
       .then((result) => {
         createTaskListItem(result.data);
+        alert("Successfully created task.");
       })
       .catch((error) => setError(error));
   }

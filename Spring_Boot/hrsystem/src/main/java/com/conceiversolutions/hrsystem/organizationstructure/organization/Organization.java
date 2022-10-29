@@ -19,7 +19,7 @@ public class Organization {
     @Column(name = "organization_name", nullable = false, length = 64)
     private String organizationName;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization", targetEntity = Department.class)
     private List<Department> departments;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY, optional = false)
@@ -81,8 +81,7 @@ public class Organization {
 
     @Override
     public String toString() {
-        return "Organization [departments=" + departments + ", organizationHead=" + organizationHead
-                + ", organizationId=" + organizationId + ", organizationName=" + organizationName + "]";
+        return "Organization organizationId=" + organizationId + ", organizationName=" + organizationName + "]";
     }
 
 }

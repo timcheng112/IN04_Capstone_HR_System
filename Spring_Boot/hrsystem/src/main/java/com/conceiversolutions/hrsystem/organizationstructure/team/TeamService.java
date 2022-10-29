@@ -3,14 +3,18 @@ package com.conceiversolutions.hrsystem.organizationstructure.team;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
+import com.conceiversolutions.hrsystem.organizationstructure.organization.Organization;
+import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.outlet.Outlet;
 import com.conceiversolutions.hrsystem.organizationstructure.outlet.OutletService;
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
 import com.conceiversolutions.hrsystem.rostering.roster.RosterRepository;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import com.conceiversolutions.hrsystem.user.user.UserService;
 import lombok.AllArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,8 @@ public class TeamService {
     private final UserRepository userRepository;
     private final RosterRepository rosterRepository;
     private final OutletService outletService;
+
+    private final OrganizationRepository organizationRepository;
 
     // @Autowired
     // public TeamService(TeamRepository teamRepository) {
@@ -51,17 +57,55 @@ public class TeamService {
             List<User> teamMembers = t.getUsers();
             for (User member : teamMembers) {
                 member.setTeams(new ArrayList<>());
+                member.setQualificationInformation(null);
+                member.setBlocks(new ArrayList<>());
+                member.setShiftListItems(new ArrayList<>());
+                member.setSwapRequestsReceived(new ArrayList<>());
+
+                member.setSwapRequestsRequested(new ArrayList<>());
+                member.setReactivationRequest(null);
+                member.setAttendances(new ArrayList<>());
+                member.setCurrentPayInformation(null);
+                member.setEmployeeAppraisals(new ArrayList<>());
+
+                member.setManagerAppraisals(new ArrayList<>());
+                member.setManagerReviews(new ArrayList<>());
+                member.setEmployeeReviews(new ArrayList<>());
+                member.setApplications(new ArrayList<>());
+                member.setPositions(new ArrayList<>());
+
+                member.setJobRequests(new ArrayList<>());
+                member.setLeaves(new ArrayList<>());
+                member.setLeaveQuotas(new ArrayList<>());
+                member.setCurrentLeaveQuota(null);
+                member.setTaskListItems(new ArrayList<>());
             }
 
             t.getRoster().setTeam(null);
             t.getRoster().setBlocks(new ArrayList<>());
             t.getRoster().setShifts(new ArrayList<>());
 
+            t.getTeamHead().setReactivationRequest(null);
             t.getTeamHead().setTeams(new ArrayList<>());
             t.getTeamHead().setQualificationInformation(null);
             t.getTeamHead().setPositions(new ArrayList<>());
             t.getTeamHead().setTaskListItems(new ArrayList<>());
             t.getTeamHead().setShiftListItems(new ArrayList<>());
+            t.getTeamHead().setBlocks(new ArrayList<>());
+            t.getTeamHead().setSwapRequestsReceived(new ArrayList<>());
+            t.getTeamHead().setSwapRequestsRequested(new ArrayList<>());
+            t.getTeamHead().setAttendances(new ArrayList<>());
+            t.getTeamHead().setCurrentPayInformation(null);
+            t.getTeamHead().setEmployeeAppraisals(new ArrayList<>());
+            t.getTeamHead().setManagerAppraisals(new ArrayList<>());
+            t.getTeamHead().setManagerReviews(new ArrayList<>());
+            t.getTeamHead().setEmployeeReviews(new ArrayList<>());
+            t.getTeamHead().setApplications(new ArrayList<>());
+            t.getTeamHead().setGoals(new ArrayList<>());
+            t.getTeamHead().setJobRequests(new ArrayList<>());
+            t.getTeamHead().setLeaves(new ArrayList<>());
+            t.getTeamHead().setLeaveQuotas(new ArrayList<>());
+            t.getTeamHead().setCurrentLeaveQuota(null);
         }
 
         return teams;
@@ -98,15 +142,28 @@ public class TeamService {
             List<User> teamMembers = t.getUsers();
             for (User member : teamMembers) {
                 member.setTeams(new ArrayList<>());
-                member.setJobRequests(new ArrayList<>());
-                member.setApplications(new ArrayList<>());
-                member.setGoals(new ArrayList<>());
-                member.setPositions(new ArrayList<>());
+                member.setQualificationInformation(null);
+                member.setBlocks(new ArrayList<>());
                 member.setShiftListItems(new ArrayList<>());
-                member.setTaskListItems(new ArrayList<>());
-                member.setEmployeeReviews(new ArrayList<>());
+                member.setSwapRequestsReceived(new ArrayList<>());
+
+                member.setSwapRequestsRequested(new ArrayList<>());
+                member.setReactivationRequest(null);
                 member.setAttendances(new ArrayList<>());
+                member.setCurrentPayInformation(null);
                 member.setEmployeeAppraisals(new ArrayList<>());
+
+                member.setManagerAppraisals(new ArrayList<>());
+                member.setManagerReviews(new ArrayList<>());
+                member.setEmployeeReviews(new ArrayList<>());
+                member.setApplications(new ArrayList<>());
+                member.setPositions(new ArrayList<>());
+
+                member.setJobRequests(new ArrayList<>());
+                member.setLeaves(new ArrayList<>());
+                member.setLeaveQuotas(new ArrayList<>());
+                member.setCurrentLeaveQuota(null);
+                member.setTaskListItems(new ArrayList<>());
             }
 
             t.getRoster().setTeam(null);
@@ -118,6 +175,22 @@ public class TeamService {
             t.getTeamHead().setPositions(new ArrayList<>());
             t.getTeamHead().setTaskListItems(new ArrayList<>());
             t.getTeamHead().setShiftListItems(new ArrayList<>());
+            t.getTeamHead().setBlocks(new ArrayList<>());
+            t.getTeamHead().setSwapRequestsReceived(new ArrayList<>());
+            t.getTeamHead().setSwapRequestsRequested(new ArrayList<>());
+            t.getTeamHead().setReactivationRequest(null);
+            t.getTeamHead().setAttendances(new ArrayList<>());
+            t.getTeamHead().setCurrentPayInformation(null);
+            t.getTeamHead().setEmployeeAppraisals(new ArrayList<>());
+            t.getTeamHead().setManagerAppraisals(new ArrayList<>());
+            t.getTeamHead().setManagerReviews(new ArrayList<>());
+            t.getTeamHead().setEmployeeReviews(new ArrayList<>());
+            t.getTeamHead().setApplications(new ArrayList<>());
+            t.getTeamHead().setGoals(new ArrayList<>());
+            t.getTeamHead().setJobRequests(new ArrayList<>());
+            t.getTeamHead().setLeaves(new ArrayList<>());
+            t.getTeamHead().setLeaveQuotas(new ArrayList<>());
+            t.getTeamHead().setCurrentLeaveQuota(null);
         }
 
         return teamsInDept;
@@ -137,6 +210,28 @@ public class TeamService {
             List<User> teamMembers = t.getUsers();
             for (User member : teamMembers) {
                 member.setTeams(new ArrayList<>());
+                member.setQualificationInformation(null);
+                member.setBlocks(new ArrayList<>());
+                member.setShiftListItems(new ArrayList<>());
+                member.setSwapRequestsReceived(new ArrayList<>());
+
+                member.setSwapRequestsRequested(new ArrayList<>());
+                member.setReactivationRequest(null);
+                member.setAttendances(new ArrayList<>());
+                member.setCurrentPayInformation(null);
+                member.setEmployeeAppraisals(new ArrayList<>());
+
+                member.setManagerAppraisals(new ArrayList<>());
+                member.setManagerReviews(new ArrayList<>());
+                member.setEmployeeReviews(new ArrayList<>());
+                member.setApplications(new ArrayList<>());
+                member.setPositions(new ArrayList<>());
+
+                member.setJobRequests(new ArrayList<>());
+                member.setLeaves(new ArrayList<>());
+                member.setLeaveQuotas(new ArrayList<>());
+                member.setCurrentLeaveQuota(null);
+                member.setTaskListItems(new ArrayList<>());
             }
 
             t.getRoster().setTeam(null);
@@ -148,11 +243,27 @@ public class TeamService {
             t.getOutlet().getAddress();
             t.getDepartment().setTeams(new ArrayList<>());
 
+            t.getTeamHead().setReactivationRequest(null);
             t.getTeamHead().setTeams(new ArrayList<>());
             t.getTeamHead().setQualificationInformation(null);
             t.getTeamHead().setPositions(new ArrayList<>());
             t.getTeamHead().setTaskListItems(new ArrayList<>());
             t.getTeamHead().setShiftListItems(new ArrayList<>());
+            t.getTeamHead().setBlocks(new ArrayList<>());
+            t.getTeamHead().setSwapRequestsReceived(new ArrayList<>());
+            t.getTeamHead().setSwapRequestsRequested(new ArrayList<>());
+            t.getTeamHead().setAttendances(new ArrayList<>());
+            t.getTeamHead().setCurrentPayInformation(null);
+            t.getTeamHead().setEmployeeAppraisals(new ArrayList<>());
+            t.getTeamHead().setManagerAppraisals(new ArrayList<>());
+            t.getTeamHead().setManagerReviews(new ArrayList<>());
+            t.getTeamHead().setEmployeeReviews(new ArrayList<>());
+            t.getTeamHead().setApplications(new ArrayList<>());
+            t.getTeamHead().setGoals(new ArrayList<>());
+            t.getTeamHead().setJobRequests(new ArrayList<>());
+            t.getTeamHead().setLeaves(new ArrayList<>());
+            t.getTeamHead().setLeaveQuotas(new ArrayList<>());
+            t.getTeamHead().setCurrentLeaveQuota(null);
 
             return t;
         } else {
@@ -176,18 +287,62 @@ public class TeamService {
     }
 
     public String deleteTeam(Long teamId) {
-        Team t = getTeam(teamId);
-        Long deptId = t.getDepartment().getDepartmentId();
+        Optional<Team> t = teamRepository.findById(Long.valueOf(teamId));
+        if (t.isEmpty()) {
+            throw new IllegalStateException("Team does not exist");
+        }
+        Team team = t.get();
+        Long deptId = team.getDepartment().getDepartmentId();
 
         Optional<Department> d = departmentRepository.findById(Long.valueOf(deptId));
         Department dept = d.get();
 
+        System.out.println("are you here");
         // remove team members & team head
-        List<User> teamMembers = t.getUsers();
-        for (User u : teamMembers) {
-            removeMemberFromTeam(teamId.intValue(), u.getUserId().intValue());
+        List<User> teamMembers = team.getUsers();
+
+        //for loop index will be not be correct if not persisted proper
+        //so need to remove user inside, persist user. then clear teamMember list
+        System.out.println("!!!");
+        if(!teamMembers.isEmpty()){
+            for (User u : teamMembers) {
+                System.out.println(u);
+    //            removeMemberFromTeam(teamId.intValue(), u.getUserId().intValue());
+
+                boolean checker = false;
+                for (Team t1 : u.getTeams()) {
+                    if (t1.getTeamId().equals(team.getTeamId())) {
+//                        System.out.println("!!!2");
+                        checker = true;
+                        break;
+                    }
+                }
+                if (!checker) {
+                    throw new IllegalStateException("Employee is not in the team");
+                }
+
+                List<Team> tempTeams = u.getTeams();
+                tempTeams.remove(team);
+
+                u.setTeams(tempTeams);
+                userRepository.save(u);
+//                System.out.println("!!!3");
+
+                }
         }
-        t.setTeamHead(null);
+//        System.out.println("!!!4");
+        team.setUsers(null);
+//        System.out.println("!!!5");
+        team.setTeamHead(null);
+
+//        System.out.println("!!!6");
+//        System.out.println(team.getTeamHead() + "excuse me where are you");
+        team.getDepartment().removeTeam(team);
+//        System.out.println("!!!7");
+//        System.out.println();
+        teamRepository.save(team);
+
+
         // delete from user team head
         // User th1 = t.getTeamHead();
         // List<Team> tempTeams = th1.getTeams();
@@ -195,14 +350,14 @@ public class TeamService {
         // th1.setTeams(tempTeams);
         // userRepository.saveAndFlush(th1);
 
-        t.getDepartment().removeTeam(t);
+//        System.out.println("!!!8");
         // delete from team
-        dept.removeTeam(t);
+        dept.removeTeam(team);
         departmentRepository.saveAndFlush(dept);
 
-        t.getRoster().setTeam(null);
+        team.getRoster().setTeam(null);
         // delete from roster
-        Long r = t.getRoster().getRosterId();
+        Long r = team.getRoster().getRosterId();
         Optional<Roster> roster = rosterRepository.findById(r);
         if (roster.isEmpty()) {
             throw new IllegalStateException("Roster does not exist.");
@@ -212,8 +367,19 @@ public class TeamService {
         rosterRepository.saveAndFlush(ros);
         // rosterRepository.findAll().remove(ros);
 
-        teamRepository.delete(t);
-        return teamId + "is deleted successfully";
+//        int o = organizationRepository.findAll().size();
+//        System.out.println(o);
+//        List<Organization> temp = organizationRepository.findAll();
+//        if(!temp.isEmpty()){
+//            for(Organization org: temp){
+//                System.out.println(org);
+////                org.getDepartments()
+//            }
+//            System.out.println();
+//        }
+
+        teamRepository.delete(team);
+        return teamId + " is deleted successfully";
     }
 
     public Long addNewTeam(String teamName, Integer teamHeadId, Integer outletId, Boolean isOffice, Integer deptId) {
@@ -257,6 +423,8 @@ public class TeamService {
 
         emptyRoster.setTeam(savedTeam);
         rosterRepository.saveAndFlush(emptyRoster);
+
+
 
         return savedTeam.getTeamId();
     }
@@ -302,7 +470,7 @@ public class TeamService {
         return true;
     }
 
-    public boolean removeMemberFromTeam(Integer teamId, Integer userId) {
+    public boolean removeMemberFromTeam(Integer userId, Integer teamId ) {
         Optional<Team> t = teamRepository.findById(Long.valueOf(teamId));
         if (t.isEmpty()) {
             throw new IllegalStateException("Team does not exist");
@@ -324,6 +492,10 @@ public class TeamService {
         }
         if (!checker) {
             throw new IllegalStateException("Employee is not in the team");
+        }
+
+        for(ShiftListItem sli : user.getShiftListItems()){
+
         }
 
         List<Team> tempTeams = user.getTeams();
@@ -396,5 +568,40 @@ public class TeamService {
 
         return "Team " + team.getTeamName() + " head has been successfully updated to be " + newTeamHead.getFirstName()
                 + " " + newTeamHead.getLastName();
+    }
+
+    public String moveEmployeeToTeam(Integer userId, Integer teamId, Integer newTeamId ) throws Exception {
+        System.out.println("TeamService.moveEmployeeToTeam");
+        Optional<Team> t = teamRepository.findById(Long.valueOf(teamId));
+        if (t.isEmpty()) {
+            throw new IllegalStateException("Team does not exist");
+        }
+        Team team = t.get();
+        Long deptId = team.getDepartment().getDepartmentId();
+
+        Optional<Department> d = departmentRepository.findById(Long.valueOf(deptId));
+        Department dept = d.get();
+
+//        Optional<User> u = userRepository.findById(Long.valueOf(userId));
+//        if (u.isEmpty()) {
+//            throw new IllegalStateException("User does not exist");
+//        }
+//        User user = u.get();
+
+        // remove team members & team head
+//        List<User> teamMembers = team.getUsers();
+        if(team.getTeamHead().getUserId() == Long.valueOf(userId)){
+            throw new Exception("User is team head. Unable to change teams for user until team head is changed.");
+        }
+
+        //remove from team and relationships regarding user
+        boolean isRemoved = removeMemberFromTeam(teamId, userId);
+        //add to team and relating to user
+        boolean isAdded = addMemberToTeam(newTeamId, userId);
+
+        //need to come back to this and check shifts and drop upcoming roster &/ shifts for user
+
+        System.out.println("isRemoved: " + isRemoved + "& isAdded:" + isAdded);
+        return "Member successfully moved to " + newTeamId ;
     }
 }

@@ -9,11 +9,18 @@ import Moment from "react-moment";
 
 export default function Notifications() {
   const history = useHistory();
-
+  const [user, setUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [unread, setUnread] = useState([]);
   const [read, setRead] = useState([]);
   const [refresh, setRefresh] = useState(0);
+
+  useEffect(() => {
+    api.getUser(getUserId()).then((response) => {
+      console.log(response.data);
+      setUser(response.data);
+    });
+}, []);
 
   useEffect(() => {
     api
@@ -60,7 +67,7 @@ export default function Notifications() {
           console.log(response.data);
           //   setNotification(response.data);
           //   history.push("/AllNotifications");
-          setRefresh(refresh + 1)
+          setRefresh(refresh + 1);
         })
         .then(() => {
           console.log("are you here");
@@ -89,7 +96,8 @@ export default function Notifications() {
         })
         .then(() => {
           console.log("are you here");
-          setRefresh(refresh + 1)
+          setRefresh(refresh + 1);
+          window.location.reload();
           //   history.push("/AllNotifications");
         })
         .catch((error) => {
@@ -102,14 +110,25 @@ export default function Notifications() {
   function markAsRead(notificationId) {
     console.log("to read");
     api.markNotificationAsRead(notificationId, getUserId()).then((response) => {
+      window.location.reload();
       setRefresh(refresh + 1);
       console.log("set refresh");
+      
     });
+  }
+
+  function time(datetime) {
+    let dt = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    }).format(datetime);
+    return dt;
   }
 
   return (
     read &&
-    unread && (
+    unread && user && (
       <>
         <Navbar />
         <div className="relative bg-indigo-800">
@@ -133,7 +152,7 @@ export default function Notifications() {
 
         {/* start of lists */}
         <ul role="list" className="p-40">
-          <button
+          {(user.notificationsRead).length > 0 ? <button
             type="button"
             className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
             onClick={() => {
@@ -142,7 +161,9 @@ export default function Notifications() {
           >
             <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
             Delete All
-          </button>
+          </button> : ""}
+
+          {user.userRole === "ADMINISTRATOR" ?
           <button
             type="button"
             className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
@@ -153,7 +174,8 @@ export default function Notifications() {
               aria-hidden="true"
             />
             Add
-          </button>
+          </button> 
+          : ""} 
 
           {unread.map((message) => (
             <div
@@ -195,9 +217,12 @@ export default function Notifications() {
                     <Moment
                       parse="YYYY-MM-DD HH:mm"
                       className=" text-sm text-gray-500"
+                      locale="Asia/Singapore"
+                      format="DD/MM/YYYY H:mm"
                     >
                       {message.notifTime}
                     </Moment>
+                   
                   </div>
                 </li>
               </button>
@@ -205,7 +230,7 @@ export default function Notifications() {
           ))}
 
           {read.map((message) => (
-            <li
+            <><li
               key={message.notificationId}
               className="relative bg-white py-5 px-4 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 "
             >
@@ -238,12 +263,16 @@ export default function Notifications() {
                 <Moment
                   parse="YYYY-MM-DD HH:mm"
                   className=" text-sm text-gray-500"
+                  locale="Asia/Singapore"
+                  format="DD/MM/YYYY H:mm"
                 >
                   {message.notifTime}
                 </Moment>
+
+                
               </div>
               <div className="mt-1"></div>
-            </li>
+            </li> </>
           ))}
         </ul>
       </>
