@@ -86,7 +86,6 @@ const AssignTaskModal = ({
     if (selected === options[0]) {
       setSelectedUsers(unassignedEmployees);
     } else if (selected === options[1]) {
-      // const tempSelectedUsers = [];
       for (let i = 0; i < checkedState[1].indexChecked.length; i++) {
         if (checkedState[1].indexChecked[i]) {
           selectedUsers.push(
@@ -98,7 +97,6 @@ const AssignTaskModal = ({
             )
           );
         }
-        // setSelectedUsers(tempSelectedUsers);
       }
       if (
         !checkedState[1].indexChecked.some((isChecked) => isChecked === true)
@@ -106,7 +104,6 @@ const AssignTaskModal = ({
         error = true;
       }
     } else if (selected === options[2]) {
-      // const tempSelectedUsers = [];
       for (let i = 0; i < checkedState[2].indexChecked.length; i++) {
         if (checkedState[2].indexChecked[i]) {
           selectedUsers.push(
@@ -116,27 +113,19 @@ const AssignTaskModal = ({
           );
         }
       }
-      // setSelectedUsers(tempSelectedUsers);
       if (
         !checkedState[2].indexChecked.some((isChecked) => isChecked === true)
       ) {
         error = true;
       }
     } else if (selected === options[3]) {
-      let tempArr = [];
       if (checkedState[3].indexChecked[0] && checkedState[3].indexChecked[1]) {
         selectedUsers.push(...unassignedEmployees);
       } else if (checkedState[3].indexChecked[0]) {
-        // setSelectedUsers(
-        //   unassignedEmployees.filter((user) => user.userRole === "MANAGER")
-        // );
         selectedUsers.push(
           ...unassignedEmployees.filter((user) => user.userRole === "MANAGER")
         );
       } else if (checkedState[3].indexChecked[1]) {
-        // setSelectedUsers(
-        //   unassignedEmployees.filter((user) => user.userRole === "EMPLOYEE")
-        // );
         selectedUsers.push(
           ...unassignedEmployees.filter((user) => user.userRole === "EMPLOYEE")
         );

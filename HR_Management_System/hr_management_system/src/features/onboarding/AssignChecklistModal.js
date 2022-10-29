@@ -316,7 +316,7 @@ const AssignChecklistModal = ({
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900 mb-2"
                     >
-                      Assign Task to Employees
+                      Assign Checklist to Employees
                     </Dialog.Title>
                     <AddUserByGroupingsRadioGroup
                       users={users}
