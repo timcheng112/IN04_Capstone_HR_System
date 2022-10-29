@@ -57,7 +57,7 @@ const AssignCategoryTasksModal = ({
             alert(
               "Successfully assigned to: " +
                 successUsers +
-                "\nUnsuccessfully assigned to: " +
+                "Failed to assign to: " +
                 failureUsers
             );
           }
@@ -68,7 +68,7 @@ const AssignCategoryTasksModal = ({
             alert(
               "Successfully assigned to:" +
                 successUsers +
-                "\nUnsuccessfully assigned to:" +
+                "Failed to assign to:" +
                 failureUsers
             );
           }

@@ -298,6 +298,17 @@ public class UserService implements UserDetailsService {
             // taskListItem.getTask().setTaskListItems(new ArrayList<>());
             // taskListItem.getTask().setCategory(null);
             // }
+            List<Team> teams = employee.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                // t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+                t.getDepartment().setTeams(new ArrayList<>());
+                t.getDepartment().setOrganization(null);
+                t.getDepartment().setDepartmentHead(null);
+            }
             employee.setBlocks(new ArrayList<>());
             employee.setShiftListItems(new ArrayList<>());
             employee.setSwapRequestsReceived(new ArrayList<>());
@@ -318,7 +329,7 @@ public class UserService implements UserDetailsService {
             employee.setCurrentLeaveQuota(null);
             employee.setQualificationInformation(null);
 
-            employee.setTeams(new ArrayList<>());
+            // employee.setTeams(new ArrayList<>());
 
             // List<Team> teams = employee.getTeams();
             // for (Team t : teams) {
@@ -361,7 +372,18 @@ public class UserService implements UserDetailsService {
             employee.setCurrentLeaveQuota(null);
             employee.setQualificationInformation(null);
             // List<Team> teams = employee.getTeams();
-            employee.setTeams(new ArrayList<>());
+            // employee.setTeams(new ArrayList<>());
+            List<Team> teams = employee.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                // t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+                t.getDepartment().setTeams(new ArrayList<>());
+                t.getDepartment().setOrganization(null);
+                t.getDepartment().setDepartmentHead(null);
+            }
             // for (Team t : teams) {
             // t.setTeamHead(null);
             // t.setUsers(new ArrayList<>());
@@ -564,7 +586,7 @@ public class UserService implements UserDetailsService {
         return userRepository.enableUser(email);
     }
 
-    public int disableUser(String email){
+    public int disableUser(String email) {
         System.out.println("UserService.disableUser");
         System.out.println("email = " + email);
         return userRepository.disableUser(email);
@@ -1320,7 +1342,7 @@ public class UserService implements UserDetailsService {
         return employees;
     }
 
-    public List<User> getAllApplicants(){
+    public List<User> getAllApplicants() {
         List<User> applicants = userRepository.findAllApplicants(RoleEnum.APPLICANT);
         System.out.println("size of applicant " + applicants.size());
         for (User u : applicants) {
@@ -1552,12 +1574,13 @@ public class UserService implements UserDetailsService {
         userRepository.saveAndFlush(user);
         return "Successfully set password";
     }
+
     @Transactional
-    public String setUserStatus(String email){
+    public String setUserStatus(String email) {
         User user = userRepository.findUserByWorkEmail(email).get();
-        if(user.getIsEnabled()){
+        if (user.getIsEnabled()) {
             disableUser(user.getEmail());
-        }else{
+        } else {
             enableUser(user.getEmail());
         }
 

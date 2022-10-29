@@ -5,13 +5,13 @@ import ByDepartmentCheckbox from "./ByDepartmentCheckbox";
 import ByTeamsCheckbox from "./ByTeamsCheckbox";
 import ByRolesCheckbox from "./ByRolesCheckbox";
 import api from "../../utils/api";
+import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function AddUserByGroupingsRadioGroup({
-  users,
+export default function AssignTaskToEmployeeRadioGroup({
   teams,
   departments,
   options,
@@ -20,30 +20,41 @@ export default function AddUserByGroupingsRadioGroup({
   checkedState,
   setCheckedState,
   roles,
+  filteredUnassignedEmployees,
+  assignEmployeeToTask,
+  setAssignedEmployees,
+  resetInitialState,
+  search,
+  unassignedEmployees,
+  assignedEmployees,
+  filteredAssignedEmployees,
+  removeEmployeeFromTask,
 }) {
-  const resetInitialState = () => {
-    console.log("resetting");
-    let tempCheckedState = checkedState;
-    for (let i = 0; i < options.length; i++) {
-      if (i === 1) {
-        tempCheckedState[i] = {
-          indexChecked: new Array(departments.length).fill(false),
-        };
-      } else if (i === 2) {
-        tempCheckedState[i] = {
-          indexChecked: new Array(teams.length).fill(false),
-        };
-      } else if (i === 3) {
-        tempCheckedState[i] = {
-          indexChecked: new Array(roles.length).fill(false),
-        };
-      } else if (i === 4) {
-        tempCheckedState[i] = {
-          indexChecked: new Array(users.length).fill(false),
-        };
-      }
-    }
-  };
+  //   const resetInitialState = () => {
+  //     console.log("resetting");
+  //     let tempCheckedState = checkedState;
+  //     for (let i = 0; i < options.length; i++) {
+  //       if (i === 1) {
+  //         tempCheckedState[i] = {
+  //           indexChecked: new Array(departments.length).fill(false),
+  //         };
+  //       } else if (i === 2) {
+  //         tempCheckedState[i] = {
+  //           indexChecked: new Array(teams.length).fill(false),
+  //         };
+  //       } else if (i === 3) {
+  //         tempCheckedState[i] = {
+  //           indexChecked: new Array(roles.length).fill(false),
+  //         };
+  //       }
+  //       }
+  //       setUnassignedEmployees(
+  //         [...unassignedEmployees, ...assignedEmployees].sort(
+  //           (a, b) => a.userId - b.userId
+  //         )
+  //       );
+  //       setAssignedEmployees([]);
+  //   };
 
   const handleOnChange = (position) => {
     console.log(checkedState);
@@ -81,6 +92,7 @@ export default function AddUserByGroupingsRadioGroup({
   };
 
   const handleSelectedOnChange = (e) => {
+    console.log(e);
     setSelected(e);
     resetInitialState();
   };
@@ -167,16 +179,67 @@ export default function AddUserByGroupingsRadioGroup({
                   checked={checkedState[3].indexChecked[position]}
                 />
               ))}
-            {index === 4 &&
-              selected === options[4] &&
-              users.map((user, position) => (
-                <AddTemplateChecklistUsersCheckbox
-                  key={user.userId}
-                  user={user}
-                  handleOnChange={() => handleOnChange(position)}
-                  checked={checkedState[4].indexChecked[position]}
-                />
-              ))}
+            {index === 4 && selected === options[4] && (
+              <div className="flex space-x-4 w-full justify-between mt-6">
+                <div className="overflow-y-scroll w-full h-96 border-2 rounded-md">
+                  <label className="block text-sm text-gray-700 mt-2 ml-2 font-bold underline-offset-2 underline">
+                    Unassigned:
+                  </label>
+                  <div>
+                    <div className="relative mt-1 flex items-center px-2">
+                      <input
+                        type="text"
+                        name="search"
+                        id="search"
+                        placeholder="Search..."
+                        onChange={(e) => {
+                          search(e, unassignedEmployees, true);
+                        }}
+                        className="p-2 block border-2 w-full rounded-md border-gray-300 pr-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      />
+                      <div className="absolute inset-y-0 right-0 flex py-1.5 pr-3">
+                        <kbd className="inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400">
+                          ⌘K
+                        </kbd>
+                      </div>
+                    </div>
+                  </div>
+                  <AssignTaskToEmployeeList
+                    isAssigning={true}
+                    people={filteredUnassignedEmployees}
+                    onClick={assignEmployeeToTask}
+                  />
+                </div>
+                <div className="overflow-y-scroll w-full border-2 rounded-md">
+                  <label className="block text-sm text-gray-700 mt-2 ml-2 font-bold underline-offset-2 underline">
+                    Assigned:
+                  </label>
+                  <div>
+                    <div className="relative mt-1 flex items-center px-2">
+                      <input
+                        type="text"
+                        name="search"
+                        id="search"
+                        placeholder="Search..."
+                        onChange={(e) => {
+                          search(e, assignedEmployees, false);
+                        }}
+                        className="p-2 block border-2 w-full rounded-md border-gray-300 pr-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      />
+                      <div className="absolute inset-y-0 right-0 flex py-1.5 pr-3">
+                        <kbd className="inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400">
+                          ⌘K
+                        </kbd>
+                      </div>
+                    </div>
+                  </div>
+                  <AssignTaskToEmployeeList
+                    people={filteredAssignedEmployees}
+                    onClick={removeEmployeeFromTask}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>

@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useEffect, useState } from "react";
 import api from "../../utils/api";
+import AddUserByGroupingsRadioGroup from "./AddUserByGroupingsRadioGroup";
 import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
 import AssignTaskToEmployeeRadioGroup from "./AssignTaskToEmployeeRadioGroup";
 
@@ -36,13 +37,14 @@ const roles = [
   },
 ];
 
-const AssignTaskModal = ({
+const AssignChecklistModal = ({
   open,
   onClose,
-  task,
+  //   task,
   refreshKeyHandler,
   departments,
   teams,
+  checklist,
 }) => {
   const [searchParam] = useState([
     "userId",
@@ -50,13 +52,14 @@ const AssignTaskModal = ({
     "lastName",
     "workEmail",
   ]);
+  const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [unassignedEmployees, setUnassignedEmployees] = useState();
-  const [assignedEmployees, setAssignedEmployees] = useState([]);
-  const [filteredUnassignedEmployees, setFilteredUnassignedEmployees] =
-    useState(unassignedEmployees);
-  const [filteredAssignedEmployees, setFilteredAssignedEmployees] =
-    useState(assignedEmployees);
+  //   const [unassignedEmployees, setUnassignedEmployees] = useState();
+  //   const [assignedEmployees, setAssignedEmployees] = useState([]);
+  //   const [filteredUnassignedEmployees, setFilteredUnassignedEmployees] =
+  //     useState(unassignedEmployees);
+  //   const [filteredAssignedEmployees, setFilteredAssignedEmployees] =
+  //     useState(assignedEmployees);
   const [selected, setSelected] = useState(options[0]);
   const [checkedState, setCheckedState] = useState(() => {
     let tempCheckedState = new Array(options.length).fill({
@@ -81,16 +84,26 @@ const AssignTaskModal = ({
     return tempCheckedState;
   });
 
+  useEffect(() => {
+    api
+      .getAllEmployees()
+      .then((response) => setUsers(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
+
   const submitHandler = () => {
     let error = false;
+    while (selectedUsers.length > 0) {
+      selectedUsers.pop();
+    }
     if (selected === options[0]) {
-      setSelectedUsers(unassignedEmployees);
+      selectedUsers.push(...users);
     } else if (selected === options[1]) {
-      // const tempSelectedUsers = [];
+      const tempSelectedUsers = [];
       for (let i = 0; i < checkedState[1].indexChecked.length; i++) {
         if (checkedState[1].indexChecked[i]) {
           selectedUsers.push(
-            ...unassignedEmployees.filter((user) =>
+            ...users.filter((user) =>
               user.teams.some(
                 (team) =>
                   team.department.departmentId === departments[i].departmentId
@@ -106,39 +119,33 @@ const AssignTaskModal = ({
         error = true;
       }
     } else if (selected === options[2]) {
-      // const tempSelectedUsers = [];
+      const tempSelectedUsers = [];
       for (let i = 0; i < checkedState[2].indexChecked.length; i++) {
         if (checkedState[2].indexChecked[i]) {
           selectedUsers.push(
-            ...unassignedEmployees.filter((user) =>
+            ...users.filter((user) =>
               user.teams.some((team) => team.teamId === teams[i].teamId)
             )
           );
         }
       }
-      // setSelectedUsers(tempSelectedUsers);
+      //   setSelectedUsers(tempSelectedUsers);
       if (
         !checkedState[2].indexChecked.some((isChecked) => isChecked === true)
       ) {
         error = true;
       }
     } else if (selected === options[3]) {
-      let tempArr = [];
       if (checkedState[3].indexChecked[0] && checkedState[3].indexChecked[1]) {
-        selectedUsers.push(...unassignedEmployees);
+        // setSelectedUsers(users);
+        selectedUsers.push(...users);
       } else if (checkedState[3].indexChecked[0]) {
-        // setSelectedUsers(
-        //   unassignedEmployees.filter((user) => user.userRole === "MANAGER")
-        // );
         selectedUsers.push(
-          ...unassignedEmployees.filter((user) => user.userRole === "MANAGER")
+          ...users.filter((user) => user.userRole === "MANAGER")
         );
       } else if (checkedState[3].indexChecked[1]) {
-        // setSelectedUsers(
-        //   unassignedEmployees.filter((user) => user.userRole === "EMPLOYEE")
-        // );
         selectedUsers.push(
-          ...unassignedEmployees.filter((user) => user.userRole === "EMPLOYEE")
+          ...users.filter((user) => user.userRole === "EMPLOYEE")
         );
       }
       if (
@@ -147,12 +154,25 @@ const AssignTaskModal = ({
         error = true;
       }
     } else if (selected === options[4]) {
-      handleSubmit(true);
+      const tempSelectedUsers = [];
+      for (let i = 0; i < checkedState[4].indexChecked.length; i++) {
+        if (checkedState[4].indexChecked[i]) {
+          selectedUsers.push(users[i]);
+        }
+      }
+      //   setSelectedUsers(tempSelectedUsers);
+      if (
+        !checkedState[4].indexChecked.some((isChecked) => isChecked === true)
+      ) {
+        error = true;
+      }
     }
     if (error) {
       alert("Invalid inputs!");
     } else {
-      handleSubmit(false);
+      handleSubmit();
+      resetInitialState();
+      onClose();
     }
   };
 
@@ -173,184 +193,86 @@ const AssignTaskModal = ({
         tempCheckedState[i] = {
           indexChecked: new Array(roles.length).fill(false),
         };
+      } else if (i === 4) {
+        tempCheckedState[i] = {
+          indexChecked: new Array(users.length).fill(false),
+        };
       }
     }
-    setUnassignedEmployees(
-      [...unassignedEmployees, ...assignedEmployees].sort(
-        (a, b) => a.userId - b.userId
-      )
-    );
-    setAssignedEmployees([]);
     setCheckedState(tempCheckedState);
-    // setSelected(options[0]);
-  };
-
-  useEffect(() => {
-    api
-      .getEmployeesWithoutTask(task.taskId)
-      .then((response) => {
-        setUnassignedEmployees(response.data);
-        setFilteredUnassignedEmployees(response.data);
-        setAssignedEmployees([]);
-        setFilteredAssignedEmployees([]);
-      })
-      .catch((error) => console.log(error.response.data.message));
-  }, [open]);
-
-  const handleSubmit = (isByIndividual) => {
-    if (isByIndividual) {
-      createTaskListItemByIndividual(task.taskId);
-    } else {
-      createTaskListItemByGroupings(task.taskId);
-    }
-    onClose();
-    // refreshKeyHandler();
-    resetInitialState();
     setSelected(options[0]);
   };
 
-  function createTaskListItemByGroupings(taskId) {
+  function createTaskListItem(taskId, alertMsg, isLastLoop) {
     let successUsers = "";
     let failureUsers = "";
+    console.log("Creating TaskListItem");
     const taskListItem = { isDone: false };
+    console.log("Selected");
+    selectedUsers.forEach((employee, index) => {
+      api
+        .addNewTaskListItem(employee.userId, taskId, taskListItem)
+        .then(() => {
+          console.log("Task List Item created");
+          if (successUsers === "") {
+            successUsers += employee.firstName + " " + employee.lastName;
+          } else {
+            successUsers += ", " + employee.firstName + " " + employee.lastName;
+          }
+          if (index === selectedUsers.length - 1) {
+            alertMsg.push(
+              "\nTask " + taskId + "\nSuccessfully assigned to: " + successUsers
+            );
+            if (isLastLoop) {
+              //   alert(alertMsg);
+              alert("Assigned Checklist Completed");
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+          if (failureUsers === "") {
+            failureUsers += employee.firstName + " " + employee.lastName;
+          } else {
+            failureUsers += ", " + employee.firstName + " " + employee.lastName;
+          }
+          console.log(error.response.data.message);
+          if (index === selectedUsers.length - 1) {
+            alertMsg.push(
+              "\nTask " +
+                taskId +
+                "\nSuccessfully assigned to: " +
+                successUsers +
+                "\nFailed to assign to: " +
+                failureUsers
+            );
+            if (isLastLoop) {
+              //   alert(alertMsg);
+              alert("Assigned Checklist Completed");
+            }
+          }
+        });
+    });
+  }
+
+  const handleSubmit = () => {
     if (selectedUsers.length > 0) {
-      selectedUsers.forEach((employee, index) => {
-        api
-          .addNewTaskListItem(employee.userId, taskId, taskListItem)
-          .then(() => {
-            if (successUsers === "") {
-              successUsers += employee.firstName + " " + employee.lastName;
-            } else {
-              successUsers +=
-                ", " + employee.firstName + " " + employee.lastName;
-            }
-            if (index === selectedUsers.length - 1) {
-              alert("Successfully assigned to: " + successUsers);
-            }
-          })
-          .catch((error) => {
-            if (failureUsers === "") {
-              failureUsers += employee.firstName + " " + employee.lastName;
-            } else {
-              failureUsers +=
-                ", " + employee.firstName + " " + employee.lastName;
-            }
-            console.log(error.response.data.message);
-            if (index === selectedUsers.length - 1) {
-              alert(
-                "Successfully assigned to: " +
-                  successUsers +
-                  "\nFailed to assign to: " +
-                  failureUsers
-              );
-            }
-          });
+      const alertMsg = [];
+      const taskIds = [];
+      for (let i = 0; i < checklist.tasks.length; i++) {
+        taskIds.push(checklist.tasks[i].taskId);
+      }
+      taskIds.forEach((taskId, index) => {
+        if (index === taskIds.length - 1) {
+          createTaskListItem(taskId, alertMsg, true);
+        } else {
+          createTaskListItem(taskId, alertMsg, false);
+        }
       });
     } else {
       alert("Unable to assign as selected grouping has 0 users!");
     }
-  }
-
-  function createTaskListItemByIndividual(taskId) {
-    let successUsers = "";
-    let failureUsers = "";
-    const taskListItem = { isDone: false };
-    if (assignedEmployees.length > 0) {
-      assignedEmployees.forEach((employee, index) => {
-        api
-          .addNewTaskListItem(employee.userId, taskId, taskListItem)
-          .then(() => {
-            if (successUsers === "") {
-              successUsers += employee.firstName + " " + employee.lastName;
-            } else {
-              successUsers +=
-                ", " + employee.firstName + " " + employee.lastName;
-            }
-            if (index === selectedUsers.length - 1) {
-              alert("Successfully assigned to: " + successUsers);
-            }
-          })
-          .catch((error) => {
-            if (failureUsers === "") {
-              failureUsers += employee.firstName + " " + employee.lastName;
-            } else {
-              failureUsers +=
-                ", " + employee.firstName + " " + employee.lastName;
-            }
-            console.log(error.response.data.message);
-            if (index === selectedUsers.length - 1) {
-              alert(
-                "Successfully assigned to: " +
-                  successUsers +
-                  "\nFailed to assign to: " +
-                  failureUsers
-              );
-            }
-          });
-      });
-    } else {
-      alert("Unable to assign as selected grouping has 0 users!");
-    }
-  }
-
-  function search(e, items, isUnassigned) {
-    const value = e.target.value;
-    isUnassigned
-      ? setFilteredUnassignedEmployees(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        )
-      : setFilteredAssignedEmployees(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        );
-  }
-
-  function assignEmployeeToTask(employee) {
-    setUnassignedEmployees(
-      unassignedEmployees.filter(
-        (unassignedEmployee) => unassignedEmployee.userId !== employee.userId
-      )
-    );
-    setFilteredUnassignedEmployees(
-      unassignedEmployees.filter(
-        (unassignedEmployee) => unassignedEmployee.userId !== employee.userId
-      )
-    );
-    setAssignedEmployees([...assignedEmployees, employee]);
-    setFilteredAssignedEmployees([...assignedEmployees, employee]);
-  }
-
-  function removeEmployeeFromTask(employee) {
-    setAssignedEmployees(
-      assignedEmployees.filter(
-        (assignedEmployee) => assignedEmployee.userId !== employee.userId
-      )
-    );
-    setFilteredAssignedEmployees(
-      assignedEmployees.filter(
-        (assignedEmployee) => assignedEmployee.userId !== employee.userId
-      )
-    );
-    setUnassignedEmployees([...unassignedEmployees, employee]);
-    setFilteredUnassignedEmployees([...unassignedEmployees, employee]);
-  }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -396,23 +318,19 @@ const AssignTaskModal = ({
                     >
                       Assign Task to Employees
                     </Dialog.Title>
-                    <AssignTaskToEmployeeRadioGroup
+                    <AddUserByGroupingsRadioGroup
+                      users={users}
                       teams={teams}
                       departments={departments}
+                      // setTempSelectedUsers={(checkedUsers) =>
+                      //   setTempSelectedUsers(checkedUsers)
+                      // }
                       options={options}
                       selected={selected}
                       setSelected={setSelected}
                       checkedState={checkedState}
                       setCheckedState={setCheckedState}
                       roles={roles}
-                      filteredUnassignedEmployees={filteredUnassignedEmployees}
-                      assignEmployeeToTask={assignEmployeeToTask}
-                      resetInitialState={resetInitialState}
-                      search={search}
-                      unassignedEmployees={unassignedEmployees}
-                      assignedEmployees={assignedEmployees}
-                      filteredAssignedEmployees={filteredAssignedEmployees}
-                      removeEmployeeFromTask={removeEmployeeFromTask}
                     />
                     {/* <div className="flex space-x-4 w-full justify-between ">
                       <div className="overflow-y-scroll w-full h-96 border-2 rounded-md">
@@ -505,4 +423,4 @@ const AssignTaskModal = ({
   );
 };
 
-export default AssignTaskModal;
+export default AssignChecklistModal;

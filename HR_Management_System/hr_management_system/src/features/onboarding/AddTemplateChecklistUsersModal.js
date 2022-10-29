@@ -49,7 +49,6 @@ const AddTemplateChecklistUsersModal = ({
   setSelectedUsers,
 }) => {
   const [selected, setSelected] = useState(options[0]);
-  // const [tempSelectedUsers, setTempSelectedUsers] = useState([]);
   const [checkedState, setCheckedState] = useState(() => {
     let tempCheckedState = new Array(options.length).fill({
       indexChecked: [],
@@ -85,19 +84,6 @@ const AddTemplateChecklistUsersModal = ({
       const tempSelectedUsers = [];
       for (let i = 0; i < checkedState[1].indexChecked.length; i++) {
         if (checkedState[1].indexChecked[i]) {
-          // api
-          //   .getEmployeesByDepartment(departments[i].departmentId)
-          //   .then((response) => {
-          //     const result = response.data.filter((user) =>
-          //       selectedUsers.every(
-          //         (selectedUser) => selectedUser.userId !== user.userId
-          //       )
-          //     );
-          //     setSelectedUsers([...selectedUsers, ...result]);
-          //   })
-          //   .catch((error) =>
-          //     console.log("Cannot get employees by department")
-          //   );
           tempSelectedUsers.push(
             ...users.filter((user) =>
               user.teams.some(
@@ -192,37 +178,6 @@ const AddTemplateChecklistUsersModal = ({
     setCheckedState(tempCheckedState);
     setSelected(options[0]);
   };
-
-  // useEffect(() => {
-  //   // setCheckedState(
-  //   //   new Array(options.length).fill({
-  //   //     indexChecked: [],
-  //   //   })
-  //   // );
-  //   let tempCheckedState = checkedState;
-  //   for (let i = 0; i < options.length; i++) {
-  //     if (i === 1) {
-  //       tempCheckedState[i] = {
-  //         indexChecked: new Array(departments.length).fill(false),
-  //       };
-  //     } else if (i === 2) {
-  //       tempCheckedState[i] = {
-  //         indexChecked: new Array(teams.length).fill(false),
-  //       };
-  //     } else if (i === 3) {
-  //       tempCheckedState[i] = {
-  //         indexChecked: new Array(roles.length).fill(false),
-  //       };
-  //     } else if (i === 4) {
-  //       tempCheckedState[i] = {
-  //         indexChecked: new Array(users.length).fill(false),
-  //       };
-  //     }
-  //   }
-  //   // resetInitialState();
-  //   setCheckedState(tempCheckedState);
-  //   console.log(checkedState);
-  // }, []);
 
   return (
     <Transition.Root show={open} as={Fragment}>
