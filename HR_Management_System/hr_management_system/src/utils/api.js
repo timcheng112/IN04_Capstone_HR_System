@@ -665,6 +665,24 @@ const api = {
   getGoalPeriodByYear(year) {
     return axios.get(`http://localhost:9191/api/goalPeriod/${year}`);
   },
+  deleteGoalPeriod(year) {
+    return axios.delete(`http://localhost:9191/api/goalPeriod/${year}`)
+  },
+  getAllGoalsByYear(year) {
+    return axios.get(`http://localhost:9191/api/goal/all/${year}`)
+  },
+  // activateUser(email){
+  //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
+  // },
+  // deactivateUser(email){
+  //   return axios.get(`http://localhost:9191/api/user/deactivate/?workEmail=${email}`);
+  // },
+  setUserStatus(email){
+    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
+  },
+  updateGoalPeriod(startDate, endDate) {
+    return axios.put(`http://localhost:9191/api/goalPeriod/start/${startDate}/end/${endDate}`)
+  }
   changeTeamHead(teamId, newHeadId) {
     return axios.put(
       `http://localhost:9191/api/team/changeTeamHead?teamId=${teamId}&newHeadId=${newHeadId}`

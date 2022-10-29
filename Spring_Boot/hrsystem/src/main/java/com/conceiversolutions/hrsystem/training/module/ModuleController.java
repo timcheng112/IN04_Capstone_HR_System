@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.conceiversolutions.hrsystem.training.video.Video;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -54,7 +56,8 @@ public class ModuleController {
     }
 
     @PostMapping(path = "{moduleId}/user/{userId}")
-    public String assignModulesToEmployees(@PathVariable("moduleId") Long moduleId, @PathVariable("userId") Long userId, @RequestBody List<Long> employees)
+    public String assignModulesToEmployees(@PathVariable("moduleId") Long moduleId, @PathVariable("userId") Long userId,
+            @RequestBody List<Long> employees)
             throws Exception {
         return moduleService.assignModulesToEmployees(moduleId, userId, employees);
     }
@@ -82,8 +85,9 @@ public class ModuleController {
     }
 
     @PostMapping(path = "{moduleId}")
-    public String addVideoToModule(@PathVariable("moduleId") Long moduleId, @RequestBody Video video) throws Exception {
-        return moduleService.addVideoToModule(moduleId, video);
+    public String addVideoToModule(@PathVariable("moduleId") Long moduleId, @RequestParam("title") String title,
+            @RequestParam("description") String description) throws Exception {
+        return moduleService.addVideoToModule(moduleId, title, description);
     }
 
     @GetMapping(path = "video/{videoId}")
@@ -92,7 +96,8 @@ public class ModuleController {
     }
 
     @GetMapping(path = "{moduleId}/user/{userId}")
-    public String getUserProgress(@PathVariable("moduleId") Long moduleId, @PathVariable("userId") Long userId) throws Exception {
+    public String getUserProgress(@PathVariable("moduleId") Long moduleId, @PathVariable("userId") Long userId)
+            throws Exception {
         return moduleService.getUserProgress(moduleId, userId);
     }
 
@@ -102,7 +107,8 @@ public class ModuleController {
     }
 
     @GetMapping(path = "{moduleId}/user/{userId}/assigned")
-    public Boolean getIsUserAssigned(@PathVariable("moduleId") Long moduleId, @PathVariable("userId") Long userId) throws Exception {
+    public Boolean getIsUserAssigned(@PathVariable("moduleId") Long moduleId, @PathVariable("userId") Long userId)
+            throws Exception {
         return moduleService.getIsUserAssigned(moduleId, userId);
     }
 }
