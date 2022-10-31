@@ -90,21 +90,36 @@ const AddTemplateChecklist = () => {
           .then(() => {
             console.log("Task List Item created");
             if (index === selectedUsers.length - 1) {
-              history.push("/admin/viewtemplatechecklists");
+              if(location.state.isOnboarding){
+                history.push("/admin/onboardingtemplatechecklists");
+              }
+              else{
+                history.push("/admin/offboardingtemplatechecklists");
+              }
               alert("Successfully created!");
             }
           })
           .catch((error) => {
             console.log(error.response.data.message);
             if (index === selectedUsers.length - 1) {
-              history.push("/admin/viewtemplatechecklists");
+              if(location.state.isOnboarding){
+                history.push("/admin/onboardingtemplatechecklists");
+              }
+              else{
+                history.push("/admin/offboardingtemplatechecklists");
+              }
               alert("Successfully created!");
             }
           });
       });
     } else {
       console.log("No selected users.");
-      history.push("/admin/viewtemplatechecklists");
+      if(location.state.isOnboarding){
+        history.push("/admin/onboardingtemplatechecklists");
+      }
+      else{
+        history.push("/admin/offboardingtemplatechecklists");
+      }
       alert("Successfully created!");
     }
   }
@@ -169,7 +184,7 @@ const AddTemplateChecklist = () => {
           <div className="space-y-6 sm:space-y-5">
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900">
-                New {location.state.isOnboarding && "Onboarding"} Template
+                New {location.state.isOnboarding ? "Onboarding" : "Offboarding"} Template
                 Checklist
               </h3>
             </div>
@@ -267,7 +282,7 @@ const AddTemplateChecklist = () => {
             <button
               type="button"
               className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => history.push("/admin/viewtemplatechecklists")}
+              onClick={() => location.state.isOnboarding ? history.push("/admin/onboardingtemplatechecklists") : history.push("/admin/offboardingtemplatechecklists") }
             >
               Cancel
             </button>

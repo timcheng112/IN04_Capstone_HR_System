@@ -36,6 +36,42 @@ public class ChecklistService {
     return checklists;
   }
 
+  public List<Checklist> getOnboardingChecklists() {
+    List<Checklist> checklists = checklistRepository.findAll();
+    List<Checklist> result = new ArrayList<>();
+    for (Checklist checklist : checklists) {
+      for (Task task : checklist.getTasks()) {
+        if(task.getIsOnboarding()){
+          result.add(checklist);
+        }
+        task.getCategory().setTasks(new ArrayList<>());
+        for (TaskListItem taskListItem : task.getTaskListItems()) {
+          taskListItem.setTask(null);
+          taskListItem.setUser(null);
+        }
+      }
+    }
+    return result;
+  }
+
+  public List<Checklist> getOffboardingChecklists() {
+    List<Checklist> checklists = checklistRepository.findAll();
+    List<Checklist> result = new ArrayList<>();
+    for (Checklist checklist : checklists) {
+      for (Task task : checklist.getTasks()) {
+        if(!task.getIsOnboarding()){
+          result.add(checklist);
+        }
+        task.getCategory().setTasks(new ArrayList<>());
+        for (TaskListItem taskListItem : task.getTaskListItems()) {
+          taskListItem.setTask(null);
+          taskListItem.setUser(null);
+        }
+      }
+    }
+    return result;
+  }
+
   public Checklist getChecklistById(Long checklistId) {
     Checklist checklist = checklistRepository.findById(checklistId)
         .orElseThrow(() -> new IllegalStateException("Checklist with ID: " + checklistId + " does not exist!"));

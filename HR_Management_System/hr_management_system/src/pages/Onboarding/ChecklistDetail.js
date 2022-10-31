@@ -73,7 +73,12 @@ export default function ChecklistDetail() {
       api
         .editChecklist(id, name, description, taskIds)
         .then(() => {
-          history.push({ pathname: "/admin/viewtemplatechecklists" });
+          if(location.state.isOnboarding){
+            history.push("/admin/onboardingtemplatechecklists");
+          }
+          else{
+            history.push("/admin/offboardingtemplatechecklists");
+          }
           alert("Successfully edited!");
         })
         .catch((error) => alert(error.message));
@@ -180,7 +185,7 @@ export default function ChecklistDetail() {
             <button
               type="button"
               className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => history.push("/admin/viewtemplatechecklists")}
+              onClick={() => location.state.isOnboarding ? history.push("/admin/onboardingtemplatechecklists") : history.push("/admin/offboardingtemplatechecklists") }
             >
               Cancel
             </button>

@@ -40,7 +40,7 @@ const ViewTemplateChecklists = () => {
 
   useEffect(() => {
     api
-      .getChecklists()
+      .getOnboardingChecklists()
       .then((response) => {
         setChecklists(response.data);
         console.log(response.data);
@@ -146,7 +146,7 @@ const ViewTemplateChecklists = () => {
                               {checklist.description}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <ChecklistOptions checklist ={checklist} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
+                              <ChecklistOptions checklist ={checklist} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} isOnboarding={true}/>
                             </td>
                           </tr>
                         ))}

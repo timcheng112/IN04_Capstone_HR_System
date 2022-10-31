@@ -188,6 +188,12 @@ const api = {
   getChecklists() {
     return axios.get(`http://localhost:9191/api/checklist`);
   },
+  getOnboardingChecklists(){
+    return axios.get("http://localhost:9191/api/checklist/onboardingchecklist")
+  },
+  getOffboardingChecklists(){
+    return axios.get("http://localhost:9191/api/checklist/offboardingchecklist")
+  },
   getChecklistById(checklistId) {
     return axios.get(`http://localhost:9191/api/checklist/${checklistId}`);
   },

@@ -30,6 +30,16 @@ public class ChecklistController {
     return checklistService.getChecklists();
   }
 
+  @GetMapping(path = "/onboardingchecklist")
+  public List<Checklist> getOnboardingChecklists() {
+    return checklistService.getOnboardingChecklists();
+  }
+
+  @GetMapping(path = "/offboardingchecklist")
+  public List<Checklist> getOffboardingChecklists() {
+    return checklistService.getOffboardingChecklists();
+  }
+
   @GetMapping(path = "{checklistId}")
   public Checklist getChecklistById(@PathVariable Long checklistId) {
     return checklistService.getChecklistById(checklistId);
