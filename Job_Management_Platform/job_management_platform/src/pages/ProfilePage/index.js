@@ -1,7 +1,17 @@
 import Sidebar from "../../components/Sidebar";
 import Education from "../../features/Profile/Education";
+import {
+  PlusIcon
+} from "@heroicons/react/20/solid";
+import { Fragment, useState } from 'react'
+import AddWork from "../../features/Profile/AddWork";
+import AddSkill from "../../features/Profile/AddSkill";
 
 export default function Profile() {
+
+  const [addwork, setAddwork] = useState(false)
+  const [addskil, setAddskill] = useState(false)
+
   return (
     <div>
       <Sidebar />
@@ -63,7 +73,7 @@ export default function Profile() {
                   Education
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  
+
                   <Education />
                 </div>
               </div>
@@ -73,13 +83,17 @@ export default function Profile() {
                   Work experience
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <input
-                    type="text"
-                    name="street-address"
-                    id="street-address"
-                    autoComplete="street-address"
-                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  />
+                  <button
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddwork(true)}
+                  >
+                    <PlusIcon
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Add work experience</span>
+                  </button>
                 </div>
               </div>
 
@@ -88,13 +102,17 @@ export default function Profile() {
                   Skills
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <input
-                    type="text"
-                    name="city"
-                    id="city"
-                    autoComplete="address-level2"
-                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                  />
+                <button
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddskill(true)}
+                  >
+                    <PlusIcon
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Add skill</span>
+                  </button>
                 </div>
               </div>
 
@@ -189,6 +207,8 @@ export default function Profile() {
           </div>
 
         </form>
+        <AddWork open ={addwork} setOpen={() => setAddwork(false)} />
+        <AddSkill open ={addskil} setOpen={() => setAddskill(false)} />
       </div>
     </div>
   )
