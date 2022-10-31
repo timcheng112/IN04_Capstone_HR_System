@@ -1,10 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BriefcaseIcon, UserIcon, StarIcon, BellIcon } from '@heroicons/react/24/outline'
 import logo from '../assets/libro-transparent-logo.png'
 import { NavLink, useRouteMatch  } from 'react-router-dom'
 import { useHistory } from "react-router";
+import { deleteUser, getUserId } from "../utils/Common";
+import api from '../utils/api'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -20,7 +22,22 @@ export default function Navbar() {
   
   const { url } = useRouteMatch();
   const history = useHistory();
+
+  const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(getUserId());
   
+  useEffect(() => {
+    api
+      .getUser(userId)
+      .then((response) => {
+        //console.log(response.data);
+        setUser(response.data);
+      })
+      .catch((error) => {
+        history.push("/");
+        deleteUser();
+      });
+  }, [userId]);
 
   return (
     <Disclosure as="nav" className="bg-white shadow">
@@ -70,7 +87,7 @@ export default function Navbar() {
                 </button>
 
                 {/* Profile dropdown */}
-                {/* <Menu as="div" className="relative ml-3">
+                <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
@@ -120,7 +137,7 @@ export default function Navbar() {
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
-                </Menu> */}
+                </Menu>
               </div>
             </div>
           </div>

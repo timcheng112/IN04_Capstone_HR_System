@@ -8,10 +8,10 @@ function classNames(...classes) {
 }
 
 const jobs = [
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
+  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', isBookMarked: true },
+  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', isBookMarked: true },
+  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', isBookMarked: false },
+  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', isBookMarked: false },
 ]
 
 export default function JobPosting() {
@@ -105,7 +105,7 @@ export default function JobPosting() {
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobType}</td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <JobPostingOption />
+                              <JobPostingOption job = {job}/>
                             </td>
                           </tr>
                         ))}
