@@ -148,6 +148,31 @@ const api = {
   updateUserEducation(userId, highestEducation, schoolName, schoolGradYear) {
     return axios.post(`http://localhost:9191/api/qualification/updateUserEducation?userId=${userId}&highestEducation=${highestEducation}&schoolName=${schoolName}&schoolGradYear=${schoolGradYear}`);
   },
+
+  // Job Posting
+  getAllJobPosts() {
+    return axios.get(`http://localhost:9191/api/jobposting/getAllJobPosts`);
+  },
+  getAllOpenPosts() {
+    return axios.get(`http://localhost:9191/api/jobposting/getAllOpenPosts`);
+  },
+
+  // Job Application
+  findApplicationsByPostingId(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/findApplicationsByPostingId?postingId=${postingId}`);
+  },
+  getApplicantApplications(applicantId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/getApplicantApplications?applicantId=${applicantId}`);
+  },
+  createJobApplication(postingId, applicantId, userSkillIds, availableStartDate) {
+    return axios.post(`http://localhost:9191/api/jobapplications/createJobApplication?postingId=${postingId}&applicantId=${applicantId}&userSkillIds=${userSkillIds}&availableStartDate=${availableStartDate}`);
+  },
+  cancelJobApplication(applicationId, applicantId) {
+    return axios.delete(`http://localhost:9191/api/jobapplications/cancelJobApplication?applicationId=${applicationId}&applicantId=${applicantId}`);
+  },
+  editJobApplication(postingId, userSkillIds, availableStartDate) {
+    return axios.put(`http://localhost:9191/api/jobapplications/editJobApplication?postingId=${postingId}&userSkillIds=${userSkillIds}&availableStartDate=${availableStartDate}`);
+  },
 };
 
 export default api;

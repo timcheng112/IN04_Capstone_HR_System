@@ -45,6 +45,10 @@ public class JobPosting {
     private JobStatusEnum status;
     @Column(name = "salary", nullable = false, length = 64)
     private BigDecimal salary;
+    @Column(name = "salary_min", nullable = true)
+    private BigDecimal salaryMin;
+    @Column(name = "salary_max", nullable = true)
+    private BigDecimal salaryMax;
     @Column(name = "post_date", nullable = false)
     private LocalDate postDate;
     @Column(name = "is_active", nullable = false)

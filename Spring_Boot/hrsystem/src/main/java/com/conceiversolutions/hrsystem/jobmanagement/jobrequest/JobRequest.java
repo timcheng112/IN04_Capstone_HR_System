@@ -51,6 +51,10 @@ public class JobRequest {
     private JobStatusEnum status;
     @Column(name = "salary", nullable = false)
     private BigDecimal salary;
+    @Column(name = "salary_min", nullable = true)
+    private BigDecimal salaryMin;
+    @Column(name = "salary_max", nullable = true)
+    private BigDecimal salaryMax;
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
     @JoinTable(
             name = "job_request_requirements",

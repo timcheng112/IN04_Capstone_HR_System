@@ -31,18 +31,24 @@ public class JobPostingService {
         for (JobPosting jp : jobPosts) {
             User poster = jp.getPostedBy();
             if (poster != null){
+                poster.setProfilePic(null);
+                poster.setPositions(new ArrayList<>());
+                poster.setCurrentPosition(null);
                 poster.setQualificationInformation(null);
-                poster.setReactivationRequest(null);
+                poster.setApplications(new ArrayList<>());
+                poster.setJobRequests(new ArrayList<>());
+                poster.setPayslips(new ArrayList<>());
                 poster.setAttendances(new ArrayList<>());
-                poster.setCurrentPayInformation(null);
                 poster.setEmployeeAppraisals(new ArrayList<>());
                 poster.setManagerAppraisals(new ArrayList<>());
                 poster.setManagerReviews(new ArrayList<>());
                 poster.setEmployeeReviews(new ArrayList<>());
-                poster.setApplications(new ArrayList<>());
                 poster.setGoals(new ArrayList<>());
-                poster.setPositions(new ArrayList<>());
-                poster.setJobRequests(new ArrayList<>());
+                poster.setTaskListItems(new ArrayList<>());
+                poster.setTeams(new ArrayList<>());
+                poster.setCurrentPayInformation(null);
+                poster.setReactivationRequest(null);
+                poster.setPreferredDates(null);
                 poster.setBlocks(new ArrayList<>());
                 poster.setShiftListItems(new ArrayList<>());
                 poster.setSwapRequestsReceived(new ArrayList<>());
@@ -50,10 +56,6 @@ public class JobPostingService {
                 poster.setLeaves(new ArrayList<>());
                 poster.setLeaveQuotas(new ArrayList<>());
                 poster.setCurrentLeaveQuota(null);
-                poster.setTaskListItems(null);
-                poster.setCurrentPosition(null);
-                poster.setTeams(null);
-                poster.setPayslips(new ArrayList<>());
             }
 
             if (jp.getJobPostRequirements().size() != 0) {
@@ -149,5 +151,62 @@ public class JobPostingService {
         } else if (salary.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalStateException("salary is invalid");
         }
+    }
+
+    public List<JobPosting> getAllOpenPosts() {
+        System.out.println("JobPostingService.getAllOpenPosts");
+
+        List<JobPosting> jobPosts = jobPostingRepository.findOpenPostings(JobStatusEnum.CREATED);
+        System.out.println("size of open job post list is " + jobPosts.size());
+
+        for (JobPosting jp : jobPosts) {
+            User poster = jp.getPostedBy();
+            if (poster != null){
+                poster.setProfilePic(null);
+                poster.setPositions(new ArrayList<>());
+                poster.setCurrentPosition(null);
+                poster.setQualificationInformation(null);
+                poster.setApplications(new ArrayList<>());
+                poster.setJobRequests(new ArrayList<>());
+                poster.setPayslips(new ArrayList<>());
+                poster.setAttendances(new ArrayList<>());
+                poster.setEmployeeAppraisals(new ArrayList<>());
+                poster.setManagerAppraisals(new ArrayList<>());
+                poster.setManagerReviews(new ArrayList<>());
+                poster.setEmployeeReviews(new ArrayList<>());
+                poster.setGoals(new ArrayList<>());
+                poster.setTaskListItems(new ArrayList<>());
+                poster.setTeams(new ArrayList<>());
+                poster.setCurrentPayInformation(null);
+                poster.setReactivationRequest(null);
+                poster.setPreferredDates(null);
+                poster.setBlocks(new ArrayList<>());
+                poster.setShiftListItems(new ArrayList<>());
+                poster.setSwapRequestsReceived(new ArrayList<>());
+                poster.setSwapRequestsRequested(new ArrayList<>());
+                poster.setLeaves(new ArrayList<>());
+                poster.setLeaveQuotas(new ArrayList<>());
+                poster.setCurrentLeaveQuota(null);
+            }
+
+            if (jp.getJobPostRequirements().size() != 0) {
+                for (Skillset sk : jp.getJobPostRequirements()) {
+                    sk.setJobRequests(new ArrayList<>());
+                    sk.setJobPostings(new ArrayList<>());
+                }
+            }
+
+            if (jp.getJobRequest() != null) {
+                JobRequest jr = jp.getJobRequest();
+                jr.setJobRequirements(new ArrayList<>());
+                jr.setDepartment(null);
+                jr.setTeam(null);
+                jr.setRequestedBy(null);
+                jr.setApprover(null);
+                jr.setJobPosting(null);
+            }
+        }
+
+        return jobPosts;
     }
 }

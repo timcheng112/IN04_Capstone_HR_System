@@ -96,7 +96,7 @@ public class User implements UserDetails {
     @OneToOne(targetEntity = QualificationInformation.class, fetch = FetchType.LAZY)
     private QualificationInformation qualificationInformation;
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicants")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = JobApplication.class, mappedBy = "applicant")
     private List<JobApplication> applications;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = JobRequest.class, mappedBy = "requestedBy")
     @Column(name = "job_requests")
