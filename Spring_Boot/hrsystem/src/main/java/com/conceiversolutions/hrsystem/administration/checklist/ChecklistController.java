@@ -50,7 +50,7 @@ public class ChecklistController {
   }
 
   @DeleteMapping(path = "{checklistId}")
-  public void deleteChecklist(@PathVariable("checklistyId") Long checklistId) throws IllegalStateException {
+  public void deleteChecklist(@PathVariable("checklistId") Long checklistId) throws IllegalStateException {
     checklistService.deleteChecklist(checklistId);
   }
 }

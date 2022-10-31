@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import TasklistTable from "../../features/onboarding/TasklistTable";
-import AddCategoryModal from "../../features/offboarding/AddCategoryModal";
+import AddCategoryModal from "../../features/onboarding/AddCategoryModal";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import api from "../../utils/api";
@@ -16,7 +16,7 @@ const tabs = [
   { name: "Tasks", href: "#", current: true },
   {
     name: "Template Checklists",
-    href: "/admin/viewtemplatechecklists",
+    href: "/admin/onboardingtemplatechecklists",
     current: false,
   },
 ];

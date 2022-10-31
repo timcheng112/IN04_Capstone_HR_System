@@ -2,7 +2,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useEffect, useState } from "react";
 import api from "../../utils/api";
 import AddUserByGroupingsRadioGroup from "./AddUserByGroupingsRadioGroup";
-import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
 
 const options = [
   {

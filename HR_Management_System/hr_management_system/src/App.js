@@ -21,7 +21,7 @@ import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 import OnboardingHrPage from "./pages/Onboarding/indexHR";
 import OnboardingPage from "./pages/Onboarding/index";
-import OffboardingHrPage from "./pages/Offboarding/indexHr";
+import OffboardingHrPage from "./pages/Offboarding/indexHR";
 import OffboardingPage from "./pages/Offboarding/index";
 import ModulePage from "./pages/Module";
 import AdminPage from "./pages/AdminPage";
@@ -46,7 +46,8 @@ import AllNotificationPage from "./pages/NotificationPage/AllNotificationPage";
 import NotificationExpandPage from "./pages/NotificationPage/NotificationExpandPage";
 import AddNotification from "./pages/NotificationPage/AddNotification";
 import Attendance from "./pages/Attendance";
-import ViewTemplateChecklists from "./pages/Onboarding/ViewTemplateChecklists";
+import OnboardingTemplateChecklists from "./pages/Onboarding/ViewTemplateChecklists";
+import OffboardingTemplateChecklists from "./pages/Offboarding/ViewTemplateChecklists";
 import AddTemplateChecklist from "./pages/Onboarding/AddTemplateChecklist";
 import ChecklistDetail from "./pages/Onboarding/ChecklistDetail";
 // import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
@@ -110,8 +111,13 @@ function App() {
           />
           <PrivateRoute
             exact
-            path="/admin/viewtemplatechecklists"
-            component={ViewTemplateChecklists}
+            path="/admin/onboardingtemplatechecklists"
+            component={OnboardingTemplateChecklists}
+          />
+          <PrivateRoute
+            exact
+            path="/admin/offboardingtemplatechecklists"
+            component={OffboardingTemplateChecklists}
           />
           <PrivateRoute
             exact

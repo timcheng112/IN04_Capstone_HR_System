@@ -24,7 +24,7 @@ const ChecklistOptions = ({ checklist, refreshKeyHandler }) => {
         alert("Successfully deleted!");
         refreshKeyHandler();
       })
-      .catch((error) => alert("Unable to delete"));
+      .catch((error) => alert("Unable to delete as checklist contains tasks"));
   }
 
   useEffect(() => {
