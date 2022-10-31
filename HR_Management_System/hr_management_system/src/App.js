@@ -21,7 +21,7 @@ import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 import OnboardingHrPage from "./pages/Onboarding/indexHR";
 import OnboardingPage from "./pages/Onboarding/index";
-import OffboardingHrPage from "./pages/Offboarding/indexHR";
+import OffboardingHrPage from "./pages/Offboarding/indexHr";
 import OffboardingPage from "./pages/Offboarding/index";
 import ModulePage from "./pages/Module";
 import AdminPage from "./pages/AdminPage";

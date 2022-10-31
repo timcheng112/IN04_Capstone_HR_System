@@ -75,6 +75,7 @@ public class ChecklistService {
       checklist.setDescription(checklistDescription);
     }
     if (taskIds != null) {
+      checklist.setTasks(new ArrayList<>());
       for (Long taskId : taskIds) {
         Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
@@ -89,9 +90,6 @@ public class ChecklistService {
   public void deleteChecklist(Long checklistId) {
     Checklist checklist = checklistRepository.findById(checklistId)
         .orElseThrow(() -> new IllegalStateException("Checklist with ID: " + checklistId + " does not exist!"));
-    if (!checklist.getTasks().isEmpty()) {
-      throw new IllegalStateException("Unable to delete as checklist contains tasks");
-  }
     //checklist.setTasks(new ArrayList<>());
     checklistRepository.deleteById(checklistId);
   }

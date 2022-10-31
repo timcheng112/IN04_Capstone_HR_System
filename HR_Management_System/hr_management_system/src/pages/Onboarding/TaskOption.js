@@ -99,6 +99,7 @@ export default function TaskOptions({ task, refreshKeyHandler }) {
         open={openView}
         onClose={() => setOpenView(false)}
         task={task}
+        refreshKeyHandler={refreshKeyHandler}
       />
       <EditTaskModal
         open={openEdit}

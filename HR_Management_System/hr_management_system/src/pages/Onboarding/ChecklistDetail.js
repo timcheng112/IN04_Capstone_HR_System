@@ -67,6 +67,7 @@ export default function ChecklistDetail() {
     if (name !== "" && selectedTasks.length > 0) {
       const taskIds = [];
       for (let i = 0; i < selectedTasks.length; i++) {
+        console.log("hello")
         taskIds.push(selectedTasks[i].taskId);
       }
       api
