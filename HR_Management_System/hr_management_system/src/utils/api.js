@@ -166,7 +166,9 @@ const api = {
     return axios.get(`http://localhost:9191/api/user/getAllEmployees`);
   },
   getAllEmployeesInclLeaveQuotas() {
-    return axios.get(`http://localhost:9191/api/user/getAllEmployeesInclLeaveQuotas`);
+    return axios.get(
+      `http://localhost:9191/api/user/getAllEmployeesInclLeaveQuotas`
+    );
   },
   getEmployeesWithTask(taskId) {
     return axios.get(
@@ -181,7 +183,7 @@ const api = {
   assignTaskToEmployeeByCategory(userId, categoryId) {
     return axios.post(
       `http://localhost:9191/api/category/assignCategoryTasks?userId=${userId}&categoryId=${categoryId}`
-    )
+    );
   },
 
   getOrganization() {
@@ -241,7 +243,7 @@ const api = {
     return axios.get(`http://localhost:9191/api/team/${teamId}`);
   },
   getAllDepartments() {
-    return axios.get('http://localhost:9191/api/department/getAllDepartments')
+    return axios.get("http://localhost:9191/api/department/getAllDepartments");
   },
   getAllTeams() {
     return axios.get(`http://localhost:9191/api/team/getAllTeams`);
@@ -320,7 +322,9 @@ const api = {
     );
   },
   getIsUserAssignedToModule(moduleId, userId) {
-    return axios.get(`http://localhost:9191/api/module/${moduleId}/user/${userId}/assigned`)
+    return axios.get(
+      `http://localhost:9191/api/module/${moduleId}/user/${userId}/assigned`
+    );
   },
   getVideosInModule(moduleId) {
     return axios.get(`http://localhost:9191/api/module/${moduleId}/videos`);
@@ -476,7 +480,7 @@ const api = {
       `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
     );
   },
-  
+
   // Leaves
   getAllPendingLeaves() {
     return axios.get(`http://localhost:9191/api/leaves/getAllPendingLeaves`);
@@ -485,33 +489,53 @@ const api = {
     return axios.get(`http://localhost:9191/api/leaves/getAllLeaves`);
   },
   getLeaveById(leaveId) {
-    return axios.get(`http://localhost:9191/api/leaves/getLeaveById?leaveId=${leaveId}`);
+    return axios.get(
+      `http://localhost:9191/api/leaves/getLeaveById?leaveId=${leaveId}`
+    );
   },
   createLeave(employeeId, leaveType, startDate, endDate, remark, document) {
-    return axios.post(`http://localhost:9191/api/leaves/createLeave?employeeId=${employeeId}&leaveType=${leaveType}&startDate=${startDate}&endDate=${endDate}&remark=${remark}&document=${document}&`);
+    return axios.post(
+      `http://localhost:9191/api/leaves/createLeave?employeeId=${employeeId}&leaveType=${leaveType}&startDate=${startDate}&endDate=${endDate}&remark=${remark}&document=${document}&`
+    );
   },
   getEmployeeLeaves(employeeId) {
-    return axios.get(`http://localhost:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`);
+    return axios.get(
+      `http://localhost:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`
+    );
   },
   approveLeave(leaveId, approverRemarks) {
-    return axios.put(`http://localhost:9191/api/leaves/approveLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+    return axios.put(
+      `http://localhost:9191/api/leaves/approveLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`
+    );
   },
   rejectLeave(leaveId, approverRemarks) {
-    return axios.put(`http://localhost:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+    return axios.put(
+      `http://localhost:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`
+    );
   },
   cancelLeave(leaveId) {
-    return axios.put(`http://localhost:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+    return axios.put(
+      `http://localhost:9191/api/leaves/cancelLeave?leaveId=${leaveId}`
+    );
   },
   getDocByteArray(docId) {
-    return axios.get(`http://localhost:9191/api/docData/getDocByteArray?id=${docId}`)
+    return axios.get(
+      `http://localhost:9191/api/docData/getDocByteArray?id=${docId}`
+    );
   },
   getDocById(docId) {
-    return axios.get(`http://localhost:9191/api/docData/getDocById?id=${docId}`, { responseType: 'blob' })
+    return axios.get(
+      `http://localhost:9191/api/docData/getDocById?id=${docId}`,
+      { responseType: "blob" }
+    );
   },
   downloadDocument(docId) {
-    return axios.get(`http://localhost:9191/api/docData/downloadDocument?id=${docId}`, { responseType: 'blob' })
+    return axios.get(
+      `http://localhost:9191/api/docData/downloadDocument?id=${docId}`,
+      { responseType: "blob" }
+    );
   },
-  
+
   //not tested
   getShiftListItemByShiftId(shiftId) {
     return axios.get(
@@ -569,24 +593,43 @@ const api = {
       `http://localhost:9191/api/shift_list_item/${shiftListItemId}`
     );
   },
-  
+
   getAllNotifications() {
     return axios.get(
       `http://localhost:9191/api/notification/getAllNotifications`
     );
   },
   addNotification(notificationTitle, notificationDescription, userId) {
-    return axios.post(`http://localhost:9191/api/notification/?notificationTitle=${notificationTitle}&notificationDescription=${notificationDescription}&userId=${userId}`)
+    return axios.post(
+      `http://localhost:9191/api/notification/?notificationTitle=${notificationTitle}&notificationDescription=${notificationDescription}&userId=${userId}`
+    );
   },
   getAllNotificationsForUser(userId) {
-    return axios.get(`http://localhost:9191/api/notification/getAllNotificationsForUser/${userId}`);
+    return axios.get(
+      `http://localhost:9191/api/notification/getAllNotificationsForUser/${userId}`
+    );
   },
   deleteAllNotifications(userId) {
-    return axios.delete(`http://localhost:9191/api/notification/deleteNotifications?userId=${userId}`);
+    return axios.delete(
+      `http://localhost:9191/api/notification/deleteNotifications?userId=${userId}`
+    );
     //http://localhost:9191/api/notification/deleteNotifications?userId=5
   },
+  markNotificationAsRead(notificationId, userId) {
+    return axios.post(
+      `http://localhost:9191/api/notification/${notificationId}/user/${userId}`
+    );
+  },
   deleteANotification(notificationId, userId) {
-    return axios.delete(`http://localhost:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`)
+    return axios.delete(
+      `http://localhost:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`
+    );
+  },
+  getUserReadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/read/${userId}`);
+  },
+  getUserUnreadNotifications(userId) {
+    return axios.get(`http://localhost:9191/api/notification/unread/${userId}`);
   },
   getAllStaff() {
     return axios.get(`http://localhost:9191/api/user/getAllStaff`);
@@ -601,45 +644,60 @@ const api = {
       `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
     );
   },
-  setUserStatus(email){
-    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
+  setUserStatus(email) {
+    return axios.get(
+      `http://localhost:9191/api/user/setUserStatus?workEmail=${email}`
+    );
   },
-  addCV(file, userId){
+  addCV(file, userId) {
     // http://localhost:9191/api/qualification/addCv?file=${file}&userId=${userId}
-    return axios.post(`http://localhost:9191/api/qualification/addCv?file=&userId=${userId}`, file);
+    return axios.post(
+      `http://localhost:9191/api/qualification/addCv?file=&userId=${userId}`,
+      file
+    );
   },
-  deleteCV(docId){
+  deleteCV(docId) {
     return axios.delete(`http://localhost:9191/api/docData/${docId}`);
   },
   createGoalPeriod(goalPeriod) {
     return axios.post(`http://localhost:9191/api/goalPeriod`, goalPeriod);
   },
   getGoalPeriodByYear(year) {
-    return axios.get(`http://localhost:9191/api/goalPeriod/${year}`)
+    return axios.get(`http://localhost:9191/api/goalPeriod/${year}`);
+  },
+  deleteGoalPeriod(year) {
+    return axios.delete(`http://localhost:9191/api/goalPeriod/${year}`)
+  },
+  getAllGoalsByYear(year) {
+    return axios.get(`http://localhost:9191/api/goal/all/${year}`)
+  },
+  // activateUser(email){
+  //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
+  // },
+  // deactivateUser(email){
+  //   return axios.get(`http://localhost:9191/api/user/deactivate/?workEmail=${email}`);
+  // },
+  setUserStatus(email){
+    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
+  },
+  updateGoalPeriod(startDate, endDate) {
+    return axios.put(`http://localhost:9191/api/goalPeriod/start/${startDate}/end/${endDate}`)
   },
   changeTeamHead(teamId, newHeadId) {
     return axios.put(
       `http://localhost:9191/api/team/changeTeamHead?teamId=${teamId}&newHeadId=${newHeadId}`
     );
   },
-  moveEmpToTeam(userId, teamId, newTeamId){
+  moveEmpToTeam(userId, teamId, newTeamId) {
     return axios.put(
       `http://localhost:9191/api/team/moveEmpToTeam?userId=${userId}&teamId=${teamId}&newTeamId=${newTeamId}`
     );
   },
-  removeMemberFromTeam(userId, teamId){
-    return axios.delete(`http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`);
+  removeMemberFromTeam(userId, teamId) {
+    return axios.delete(
+      `http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`
+    );
   },
-
-  getUserReadNotifications(userId) {
-    return axios.get(`http://localhost:9191/api/notification/read/${userId}`)
-  },
-  getUserUnreadNotifications(userId) {
-    return axios.get(`http://localhost:9191/api/notification/unread/${userId}`)
-  },
-  markNotificationAsRead(notificationId, userId) {
-    return axios.post(`http://localhost:9191/api/notification/${notificationId}/user/${userId}`)
-  },
-}
+};
 
 export default api;

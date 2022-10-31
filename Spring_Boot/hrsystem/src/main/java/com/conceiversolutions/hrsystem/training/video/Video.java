@@ -12,8 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
@@ -25,7 +27,9 @@ public class Video {
     private Long videoId;
     private String title;
     private String description;
-    private String video;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
+    @JoinColumn(name = "video")
+    private DocData video;
     private Integer position; //position of video in the module
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Video.class)
@@ -40,7 +44,7 @@ public class Video {
 
     }
 
-    public Video(String title, String description, String video, Integer position, List<User> watchedBy) {
+    public Video(String title, String description, DocData video, Integer position, List<User> watchedBy) {
         this.title = title;
         this.description = description;
         this.video = video;
@@ -72,14 +76,6 @@ public class Video {
         this.description = description;
     }
 
-    public String getVideo() {
-        return video;
-    }
-
-    public void setVideo(String video) {
-        this.video = video;
-    }
-
     public List<User> getWatchedBy() {
         return watchedBy;
     }
@@ -96,6 +92,22 @@ public class Video {
         this.position = position;
     }
 
+    public DocData getVideo() {
+        return video;
+    }
+
+    public void setVideo(DocData video) {
+        this.video = video;
+    }
+
+    public com.conceiversolutions.hrsystem.training.video.Video getModuleVideo() {
+        return moduleVideo;
+    }
+
+    public void setModuleVideo(com.conceiversolutions.hrsystem.training.video.Video moduleVideo) {
+        this.moduleVideo = moduleVideo;
+    }
+
     @java.lang.Override
     public java.lang.String toString() {
         return "Video{" +
@@ -104,6 +116,7 @@ public class Video {
                 ", description='" + description + '\'' +
                 ", video=" + video +
                 ", position=" + position +
+                ", moduleVideo=" + moduleVideo +
                 ", watchedBy=" + watchedBy +
                 '}';
     }

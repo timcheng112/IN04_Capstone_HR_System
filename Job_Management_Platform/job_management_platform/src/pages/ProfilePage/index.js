@@ -8,9 +8,100 @@ import AddWork from "../../features/Profile/AddWork";
 import AddSkill from "../../features/Profile/AddSkill";
 
 export default function Profile() {
-
   const [addwork, setAddwork] = useState(false)
   const [addskil, setAddskill] = useState(false)
+
+
+  function handleFile(e) {
+    console.log(e.target.files, "--");
+    console.log(e.target.files[0], "$SSSSS$");
+    // let f = e.target.files[0]
+    setFileState(e.target.files[0]);
+    setfileName(e.target.files[0].name);
+    // console.log(file + "what now")
+    // console.log(fileName + "printing fileName")
+  }
+  
+  function uploadFile(e) {
+    e.preventDefault();
+    // console.log(file[0])
+    // console.log("printing file contents above")
+    let formData = new FormData();
+    if(file){
+      formData.append("document", file);
+    }
+  
+    try {
+      api
+        .addCV(formData, user)
+        .then((response) => {
+          // console.log(response.data)
+          if (response.status === 200) {
+            //should return a long id
+            setDocId(response.data);
+            // setDocId(response.data)
+            console.log(userInfo);
+            alert("Resume added to user succesfully");
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    } catch (err) {
+      console.log("There was a problem with upload..");
+      console.log(err);
+    }
+  }
+  
+  function downloadFile() {
+    api.downloadDocument(docId).then((response) => {
+      console.log(docId);
+      const fileName =
+        response.headers["content-disposition"].split("filename=")[1];
+      console.log(fileName);
+      api.getDocById(docId).then((response) => {
+        //console.log(response.data);
+        const url = window.URL.createObjectURL(response.data);
+  
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      });
+    });
+  }
+  
+  function deleteCV() {
+    const yes = window.confirm(
+      "Are you sure you want to delete your resume? Action is irreversible."
+    );
+    if(yes){
+      if(docId !== null){
+        api
+          .deleteCV(docId)
+          .then((response) => {
+            // console.log(response.data)
+            if (response.status === 200) {
+              //should return a long id
+              if (response.data === true) {
+                alert("CV deleted successfully.");
+                console.log("resume deleted successfully");
+                setDocId(null);
+                window.location.reload();
+              } else {
+                console.log("resume not deleted...");
+              }
+            }
+          })
+          .catch((error) => {
+            alert("No resume to delete");
+            console.log(error.response);
+          });
+      }
+    }
+  }
 
   return (
     <div>
@@ -115,7 +206,6 @@ export default function Profile() {
                   </button>
                 </div>
               </div>
-
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="region" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Language
