@@ -6,10 +6,24 @@ import {
 import { Fragment, useState } from 'react'
 import AddWork from "../../features/Profile/AddWork";
 import AddSkill from "../../features/Profile/AddSkill";
+import api from "../../utils/api.js";
+import { getUserId } from "../../utils/Common.js";
+import { useHistory } from "react-router-dom";
+
 
 export default function Profile() {
   const [addwork, setAddwork] = useState(false)
   const [addskil, setAddskill] = useState(false)
+  const [user, setUser] = useState(getUserId()); //logged in user
+  const history = useHistory();
+  // const email = result[2]
+  let [userInfo, setUserInfo] = useState([]);
+  const userId = getUserId();
+  // const email = result[1]
+  const [file, setFileState] = useState("");
+  const [fileName, setfileName] = useState("");
+  const [docId, setDocId] = useState(null);
+  const [error, setError] = useState(null);
 
 
   function handleFile(e) {

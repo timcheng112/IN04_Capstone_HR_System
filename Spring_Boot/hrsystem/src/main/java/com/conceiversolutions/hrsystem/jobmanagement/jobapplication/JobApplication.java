@@ -4,6 +4,7 @@ import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +41,13 @@ public class JobApplication {
     private LocalDate availableStartDate;
     @Column(name = "last_update_at", nullable = false)
     private LocalDateTime lastUpdatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DocData.class, optional = true)
+    private DocData CV;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DocData.class, optional = true)
+    private DocData coverLetter;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DocData.class, optional = true)
+    private DocData transcript;
 
     public JobApplication() {
     }

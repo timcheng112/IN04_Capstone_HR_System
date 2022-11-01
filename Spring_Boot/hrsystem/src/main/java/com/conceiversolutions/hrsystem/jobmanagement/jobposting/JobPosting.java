@@ -84,4 +84,20 @@ public class JobPosting {
         this.jobRequest = jobRequest;
         this.jobPostRequirements = jobRequirements;
     }
+
+    public JobPosting(String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobType, RoleEnum jobRole, JobStatusEnum status, LocalDate postDate, Boolean isActive, User postedBy, JobRequest jobRequest, List<Skillset> jobRequirements, BigDecimal salaryMin, BigDecimal salaryMax) {
+        this.jobTitle = jobTitle;
+        this.jobDescription = jobDescription;
+        this.preferredStartDate = preferredStartDate;
+        this.jobType = jobType;
+        this.jobRole = jobRole;
+        this.status = status;
+        this.postDate = postDate;
+        this.isActive = isActive;
+        this.postedBy = postedBy;
+        this.jobRequest = jobRequest;
+        this.jobPostRequirements = jobRequirements;
+        this.salaryMin = salaryMin;
+        this.salaryMax = salaryMax;
+    }
 }
