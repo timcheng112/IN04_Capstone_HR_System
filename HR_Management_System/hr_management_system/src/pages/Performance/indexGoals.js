@@ -166,9 +166,9 @@ export default function Goals() {
     });
   };
 
-  function handleDeleteGoal(goalId) {
-    console.log(goalId);
-    api.deleteGoal(goalId).then((response) => {
+  function handleDeleteGoal() {
+    console.log(selectedItem);
+    api.deleteGoal(selectedItem).then((response) => {
       alert(response.data);
     });
   }
@@ -203,7 +203,7 @@ export default function Goals() {
 
   function submitEditGoal(goalDescription) {
     console.log("goal desc " + goalDescription);
-    console.log('id ' + selectedItem.goalId)
+    console.log("id " + selectedItem.goalId);
     api.updateGoal(selectedItem.goalId, goalDescription).then((response) => {
       alert(response.data);
     });
@@ -608,9 +608,7 @@ export default function Goals() {
                                                   type="button"
                                                   className="inline-flex items-center ml-5 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                   onClick={() => {
-                                                    handleUpdateGoal(
-                                                      goal
-                                                    );
+                                                    handleUpdateGoal(goal);
                                                     //console.log('gid ' + goal.goalId)
                                                   }}
                                                 >
@@ -621,22 +619,27 @@ export default function Goals() {
                                                   Edit Goal
                                                 </button>
                                                 <EditGoalModal
-                                                description={selectedItem.description}
-                                                open={openEditGoal}
-                                                onOpen={() =>
-                                                  setOpenEditGoal(false)
-                                                }
-                                                onClose={() =>
-                                                  setOpenEditGoal(false)
-                                                }
-                                                onConfirm={(desc) => {
-                                                  submitEditGoal(desc);
-                                                }}
-                                              />
+                                                  description={
+                                                    selectedItem.description
+                                                  }
+                                                  open={openEditGoal}
+                                                  onOpen={() =>
+                                                    setOpenEditGoal(false)
+                                                  }
+                                                  onClose={() =>
+                                                    setOpenEditGoal(false)
+                                                  }
+                                                  onConfirm={(desc) => {
+                                                    submitEditGoal(desc);
+                                                  }}
+                                                />
                                                 <button
                                                   type="button"
                                                   className="inline-flex items-center ml-3 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                   onClick={() => {
+                                                    setSelectedItem(
+                                                      goal.goalId
+                                                    );
                                                     setOpenDeleteGoal(true);
                                                   }}
                                                 >
@@ -658,7 +661,7 @@ export default function Goals() {
                                                   }
                                                   onConfirm={() =>
                                                     handleDeleteGoal(
-                                                      goal.goalId
+                                                      
                                                     )
                                                   }
                                                 />
@@ -737,13 +740,11 @@ export default function Goals() {
                                                 </Moment>
                                               </td>
                                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                              <button
+                                                <button
                                                   type="button"
                                                   className="inline-flex items-center ml-5 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                   onClick={() => {
-                                                    handleUpdateGoal(
-                                                      goal
-                                                    );
+                                                    handleUpdateGoal(goal);
                                                     //console.log('gid ' + goal.goalId)
                                                   }}
                                                 >
@@ -754,23 +755,28 @@ export default function Goals() {
                                                   Edit Goal
                                                 </button>
                                                 <EditGoalModal
-                                                description={selectedItem.description}
-                                                open={openEditGoal}
-                                                onOpen={() =>
-                                                  setOpenEditGoal(false)
-                                                }
-                                                onClose={() =>
-                                                  setOpenEditGoal(false)
-                                                }
-                                                onConfirm={(desc) => {
-                                                  submitEditGoal(desc);
-                                                }}
-                                              />
+                                                  description={
+                                                    selectedItem.description
+                                                  }
+                                                  open={openEditGoal}
+                                                  onOpen={() =>
+                                                    setOpenEditGoal(false)
+                                                  }
+                                                  onClose={() =>
+                                                    setOpenEditGoal(false)
+                                                  }
+                                                  onConfirm={(desc) => {
+                                                    submitEditGoal(desc);
+                                                  }}
+                                                />
 
                                                 <button
                                                   type="button"
                                                   className="inline-flex items-center ml-3 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                   onClick={() => {
+                                                    setSelectedItem(
+                                                      goal.goalId
+                                                    );
                                                     setOpenDeleteGoal(true);
                                                   }}
                                                 >
@@ -791,9 +797,7 @@ export default function Goals() {
                                                     setOpenDeleteGoal(false)
                                                   }
                                                   onConfirm={() =>
-                                                    handleDeleteGoal(
-                                                      goal.goalId
-                                                    )
+                                                    handleDeleteGoal()
                                                   }
                                                 />
                                               </td>
