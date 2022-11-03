@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.conceiversolutions.hrsystem.performance.achievement.Achievement;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 @CrossOrigin("*")
 @RestController
@@ -52,17 +51,23 @@ public class GoalController {
     }
 
     @DeleteMapping(path = "{goalId}")
-    public String deleteUserGoal(@PathVariable("goalId") long goalId) throws Exception {
+    public String deleteUserGoal(@PathVariable("goalId") Long goalId) throws Exception {
         return goalService.deleteUserGoal(goalId);
     }
 
     @PutMapping(path = "{goalId}")
-    public String updateUserGoal(@PathVariable("goalId") long goalId, @RequestParam("description") String description) throws Exception {
+    public String updateUserGoal(@PathVariable("goalId") Long goalId, @RequestParam("description") String description) throws Exception {
         return goalService.updateUserGoal(goalId, description);
     }
 
     @PostMapping(path = "/{goalId}/achievement")
-    public String addAchievement(@PathVariable("goalId") long goalId, @RequestParam("description") String achievement) {
+    public String addAchievement(@PathVariable("goalId") Long goalId, @RequestParam("description") String achievement) {
         return goalService.addAchievement(goalId, achievement);
     }
+
+    @GetMapping(path = "/users/{year}")
+    public List<User> getAllUserGoals(@PathVariable("year") String year) {
+        return goalService.getAllUserGoals(year);
+    }
+
 }

@@ -146,4 +146,47 @@ public class GoalService {
         }
     }
 
+    public List<User> getAllUserGoals(String year) {
+
+        List<Goal> allGoals = goalRepository.findAllGoalsByYear(year);
+
+        List<User> users = new ArrayList<>();
+
+        List<User> allUsers = userRepository.findAll();
+
+        for (User u : allUsers) {
+
+            if (!u.getWorkEmail().isEmpty()) {
+                User user = new User();
+
+                user.setUserId(u.getUserId());
+                user.setFirstName(u.getFirstName());
+                user.setLastName(u.getLastName());
+                user.setWorkEmail(u.getWorkEmail());
+                user.setUserRole(u.getUserRole());
+                user.setIsBlackListed(u.getBlackListed());
+
+                List<Goal> userGoals = new ArrayList<>();
+
+                for (Goal g : allGoals) {
+                    if (g.getEmployee() != null && g.getEmployee().getUserId() == u.getUserId() && g.getYear().equals(year)) {
+                        for (Achievement a : g.getAchievements()) {
+                            a.setEmployeeGoal(null);
+                        }
+                        userGoals.add(g);
+                        g.setEmployee(null);
+                        // System.out.println(g.getAchievements());
+                    }
+                }
+
+                user.setGoals(userGoals);
+
+                System.out.println(user);
+                users.add(user);
+            }
+        }
+
+        return users;
+    }
+
 }
