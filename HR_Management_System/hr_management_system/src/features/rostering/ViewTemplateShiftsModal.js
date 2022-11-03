@@ -80,7 +80,7 @@ const ViewTemplateShiftsModal = ({
       let shiftToBeAdded = {
         userId: person.userId,
         isPhEvent: isPhEvent,
-        positionType: posType,
+        positionType: posType.name,
         shift: {
           shiftTitle: selectedShift.shiftTitle,
           startTime: new Date(

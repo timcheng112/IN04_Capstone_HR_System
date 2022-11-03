@@ -175,7 +175,7 @@ const ViewShiftModal = ({ open, onClose, shift, shiftListItem }) => {
                                 name="pos-type"
                                 className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               >
-                                {shiftListItem.positionType.name}
+                                {shiftListItem.positionType}
                               </p>
                             </div>
                           </div>

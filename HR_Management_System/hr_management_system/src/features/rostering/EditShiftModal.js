@@ -75,6 +75,13 @@ const EditShiftModal = ({
         api
           .editShift(shift.shiftId, editedShift)
           .then(() => {
+            console.log(
+              salesmanQuotaValue +
+                " " +
+                cashierQuotaValue +
+                " " +
+                storemanagerQuotaValue
+            );
             alert("Edit was successful!");
             openSuccess();
             onClose();

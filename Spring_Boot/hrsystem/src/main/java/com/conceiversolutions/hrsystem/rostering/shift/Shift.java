@@ -32,6 +32,7 @@ public class Shift {
     private String remarks;
     @Column(name = "min_quota", nullable = false)
     @ElementCollection(targetClass = Long.class)
+    @OrderColumn
     private List<Long> minQuota;
     @Column(name = "is_template_shift", nullable = false)
     private Boolean isTemplateShift;
@@ -121,6 +122,11 @@ public class Shift {
 
     public void setMinQuota(List<Long> minQuota) {
         this.minQuota = minQuota;
+    }
+
+    public List<Long> addMinQuota(Long quota) {
+        this.minQuota.add(quota);
+        return this.minQuota;
     }
 
     public Roster getRoster() {

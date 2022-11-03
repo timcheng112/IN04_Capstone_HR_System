@@ -33,7 +33,7 @@ export default function AddShiftModal({
   const [storemanagerQuotaValue, setStoremanagerQuotaValue] = useState("");
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
   const [isPhEvent, setIsPhEvent] = useState(false);
-  const [posType, setPosType] = useState({ id: 1, name: "SALESMAN" });
+  const [posType, setPosType] = useState("SALESMAN");
 
   useEffect(() => {
     setDuplicateEndDateValue(null);
@@ -79,7 +79,7 @@ export default function AddShiftModal({
           let shiftToBeAdded = {
             userId: person.userId,
             isPhEvent: isPhEvent,
-            positionType: posType,
+            positionType: posType.name,
             shift: {
               shiftTitle: shiftTitleValue,
               startTime: new Date(
