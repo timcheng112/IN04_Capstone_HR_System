@@ -6,7 +6,7 @@ import {
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { Fragment, useState } from 'react'
 import WorkList from "../../features/Profile/WorkList";
-import AddSkill from "../../features/Profile/AddSkill";
+
 import Language from "../../features/Profile/Language";
 import RecommendationList from "../../features/Profile/RecommendationList";
 import api from "../../utils/api.js";
@@ -310,7 +310,7 @@ export default function Profile() {
           </div>
 
         </form>
-        <AddSkill open ={addskil} setOpen={() => setAddskill(false)} />
+
       </div>
     </div>
   )

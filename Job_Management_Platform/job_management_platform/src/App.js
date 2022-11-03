@@ -42,7 +42,7 @@ function App() {
           <PrivateRoute exact path="/jobposting" component={JobPostingPage} />
           <PrivateRoute exact path="/myapplication" component={JobApplicationPage} />
           <PrivateRoute exact path="/myfavourite" component={FavouriteJobPage} />
-          <PrivateRoute exact path="/jobDetail" component={JobDetailPage} />
+          <PrivateRoute exact path="/jobdetail" component={JobDetailPage} />
 
           <PrivateRoute exact path="/AllNotifications" component={AllNotificationPage}/>
           <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
