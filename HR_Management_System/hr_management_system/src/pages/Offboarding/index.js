@@ -1,11 +1,11 @@
 import { React, useRef } from "react";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
+import SelfTasklistTable from "../../features/onboarding/SelfTasklistTable";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { getUserId, setUserSession } from "../../utils/Common";
 import { useHistory } from "react-router-dom";
-import SelfTasklistTable from "../../features/offboarding/SelfTaskListTable";
 
 export default function Offboarding() {
   const checkbox = useRef();
@@ -20,7 +20,7 @@ export default function Offboarding() {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        console.log(response.data);
+        console.log(user);
       })
       .catch((error) => setError(error));
   }, []);

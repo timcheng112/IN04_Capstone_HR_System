@@ -48,6 +48,12 @@ public class TaskListItemService {
                 .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId + " does not exist!"));
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
+        for (TaskListItem t : assignedEmployee.getTaskListItems()) {
+            if (t.getTask().getTaskId() == taskId) {
+                throw new IllegalStateException("User with ID: " + employeeId + " already has this task!");
+            }
+        }
+
         taskListItem.setUser(assignedEmployee);
         taskListItem.setTask(task);
         TaskListItem savedTaskListItem = taskListItemRepository.saveAndFlush(taskListItem);

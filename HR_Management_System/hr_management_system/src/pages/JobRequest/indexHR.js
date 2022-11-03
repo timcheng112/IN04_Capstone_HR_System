@@ -3,27 +3,30 @@ import {
   EyeIcon,
   CheckIcon,
   XMarkIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-import Tabs from '../../features/jobrequest/Tab'
-import { useHistory } from 'react-router-dom';
+import Tabs from "../../features/jobrequest/Tab";
+import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../../utils/api";
-import { getUserId} from "../../utils/Common";
+import { getUserId } from "../../utils/Common";
 import RequestOption from "../../features/jobrequest/RequestOption";
 
+const tabs = [
+  { name: "Job Request", href: "/hiring/jobrequesthr", current: true },
+  { name: "Job Post", href: "/hiring/jobpost", current: false },
+];
 
 export default function JobRequestHR() {
   const history = useHistory();
-  const [requests,setRequests] = useState([]);
+  const [requests, setRequests] = useState([]);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const [filteredRequests, setFilteredRequests] =
-    useState(requests);
-//  const [searchParam] = useState([
-//    "jobTitle", "status",
-//    "requestedBy"
-//  ]);
+  const [filteredRequests, setFilteredRequests] = useState(requests);
+  //  const [searchParam] = useState([
+  //    "jobTitle", "status",
+  //    "requestedBy"
+  //  ]);
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
@@ -31,72 +34,84 @@ export default function JobRequestHR() {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-//        console.log(response.data);
+        //        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, []);
-  
+
   useEffect(() => {
     api
       .getAllSubmittedJobRequests(getUserId())
       .then((response) => {
         setRequests(response.data);
         setFilteredRequests(response.data);
-//        console.log(response.data);
+        //        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, [refreshKey]);
 
   function search(e, items) {
-//    console.log("e");
-//    console.log(e);
-//    console.log("items");
-//    console.log(items);
+    //    console.log("e");
+    //    console.log(e);
+    //    console.log("items");
+    //    console.log(items);
 
     const value = e.target.value;
-//    console.log("looking for this value");
-//    console.log(value);
+    //    console.log("looking for this value");
+    //    console.log(value);
     let finding = Array.of(value.toLowerCase());
-//    console.log(finding);
+    //    console.log(finding);
 
     let filtered = new Set();
-    var titleFilter = items.filter(x => finding.some(y => x.jobTitle.toLowerCase().indexOf(y) != -1))
-//    console.log("titleFilter")
-//    console.log(titleFilter)
-    titleFilter.forEach(item => filtered.add(item))
+    var titleFilter = items.filter((x) =>
+      finding.some((y) => x.jobTitle.toLowerCase().indexOf(y) != -1)
+    );
+    //    console.log("titleFilter")
+    //    console.log(titleFilter)
+    titleFilter.forEach((item) => filtered.add(item));
 
-    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
-//    console.log("statusFilter")
-//    console.log(statusFilter)
-    statusFilter.forEach(item => filtered.add(item))
+    var statusFilter = items.filter((x) =>
+      finding.some((y) => x.status.toLowerCase().indexOf(y) != -1)
+    );
+    //    console.log("statusFilter")
+    //    console.log(statusFilter)
+    statusFilter.forEach((item) => filtered.add(item));
 
-    var deptFilter = items.filter(x => finding.some(y => x.department.departmentName.toLowerCase().indexOf(y) != -1))
-//    console.log("deptFilter")
-//    console.log(deptFilter)
-    deptFilter.forEach(item => filtered.add(item))
+    var deptFilter = items.filter((x) =>
+      finding.some(
+        (y) => x.department.departmentName.toLowerCase().indexOf(y) != -1
+      )
+    );
+    //    console.log("deptFilter")
+    //    console.log(deptFilter)
+    deptFilter.forEach((item) => filtered.add(item));
 
-    var requestorFilter = items.filter(x => finding.some(y => x.requestedBy.firstName.toLowerCase().indexOf(y) != -1))
-//    console.log("requestorFilter")
-//    console.log(requestorFilter)
-    requestorFilter.forEach(item => filtered.add(item))
+    var requestorFilter = items.filter((x) =>
+      finding.some(
+        (y) => x.requestedBy.firstName.toLowerCase().indexOf(y) != -1
+      )
+    );
+    //    console.log("requestorFilter")
+    //    console.log(requestorFilter)
+    requestorFilter.forEach((item) => filtered.add(item));
 
-//    console.log("filtered")
-//    console.log(filtered)
+    //    console.log("filtered")
+    //    console.log(filtered)
 
-    setFilteredRequests(Array.from(filtered))
+    setFilteredRequests(Array.from(filtered));
 
-//    setFilteredRequests(
-//          items.filter((item) => {
-//            return searchParam.some((newItem) => {
-//              return (
-//                item[newItem]
-//                  .toString()
-//                  .toLowerCase()
-//                  .indexOf(value.toLowerCase()) > -1
-//              );
-//            });
-//          })
-//        );
+    //    setFilteredRequests(
+    //          items.filter((item) => {
+    //            return searchParam.some((newItem) => {
+    //              return (
+    //                item[newItem]
+    //                  .toString()
+    //                  .toLowerCase()
+    //                  .indexOf(value.toLowerCase()) > -1
+    //              );
+    //            });
+    //          })
+    //        );
   }
 
   return (
@@ -107,7 +122,7 @@ export default function JobRequestHR() {
         <div className="sm:flex sm:items-center space-x-4">
           <div className="sm:flex-auto">
             {/* <h1 className="text-xl font-semibold text-gray-900">Job Requests</h1> */}
-            <Tabs />
+            <Tabs tabs={tabs} />
           </div>
           <div className="w-full max-w-lg lg:max-w-xs">
             <label htmlFor="search" className="sr-only">
@@ -115,7 +130,10 @@ export default function JobRequestHR() {
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                <MagnifyingGlassIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
               </div>
               <input
                 id="search"
@@ -133,7 +151,7 @@ export default function JobRequestHR() {
             <button
               type="button"
               className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-              onClick={()=> history.push("/hiring/newjobrequest")}
+              onClick={() => history.push("/hiring/newjobrequest")}
             >
               New Job Request
             </button>
@@ -146,22 +164,40 @@ export default function JobRequestHR() {
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
                         Title
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Department
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Request Date
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Last Edited Date
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Requestor
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Status
                       </th>
                       {/* <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -175,13 +211,28 @@ export default function JobRequestHR() {
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
                           {request.jobTitle}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.department.departmentName}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.requestDate}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.lastEditedDate}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.requestedBy.firstName}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{request.status}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          {request.department.departmentName}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          {request.requestDate}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          {request.lastEditedDate}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          {request.requestedBy.firstName}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          {request.status}
+                        </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <RequestOption request = {request} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
+                          <RequestOption
+                            request={request}
+                            refreshKeyHandler={() =>
+                              setRefreshKey((oldKey) => oldKey + 1)
+                            }
+                          />
                         </td>
                       </tr>
                     ))}
@@ -193,5 +244,5 @@ export default function JobRequestHR() {
         </div>
       </div>
     </div>
-  )
+  );
 }

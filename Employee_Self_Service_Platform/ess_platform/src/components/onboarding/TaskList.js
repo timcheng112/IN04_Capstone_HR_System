@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View, Alert} from "react-native";
+import { RefreshControl, ScrollView, View, Alert, Image,Text } from "react-native";
 import {
   Badge,
   Button,
@@ -9,7 +9,7 @@ import {
   Title,
 } from "react-native-paper";
 import api from "../../utils/api";
-import CheckDialog from "./CheckDialog";
+
 
 function TaskList({
   taskListItems,
@@ -38,15 +38,15 @@ function TaskList({
     Alert.alert(
       "Check Tasks",
       "Are you sure you have finished all the selected tasks?",
-    [
-      {
-        text: "Cancel"
-      },
-      {
-        text: "Yes",
-        onPress: () => onClickHandler(),
-      },
-    ]
+      [
+        {
+          text: "Cancel"
+        },
+        {
+          text: "Yes",
+          onPress: () => onClickHandler(),
+        },
+      ]
     );
 
 
@@ -56,8 +56,16 @@ function TaskList({
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {/* Render List Items of Task */}
-      {taskListItems !== undefined &&
+      {(taskListItems !== undefined && taskListItems.length === 0) ? (
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Image
+            source={require("../../../assets/puddingdog.png")}
+          />
+          <Text style={{fontSize: 20}}>
+            No remaining tasks
+          </Text>
+        </View>
+      ) : (
         taskListItems.map((taskListItem, index) => (
           <Card
             style={{
@@ -77,9 +85,8 @@ function TaskList({
                 status={(selectedTask.includes(taskListItem) || taskListItem.isDone) ? "checked" : "unchecked"}
                 value={taskListItem.taskListItemId}
                 onPress={(e) => {
-                  if(e.target.status === "checked" && !taskListItem.isDone)
-                  {setSelectedTask([...selectedTask, taskListItem]); e.target.status = "unchecked"}
-                  else{setSelectedTask(selectedTask.filter((p) => p !== taskListItem)); e.target.status = "checked"}
+                  if (e.target.status === "checked" && !taskListItem.isDone) { setSelectedTask([...selectedTask, taskListItem]); e.target.status = "unchecked" }
+                  else { setSelectedTask(selectedTask.filter((p) => p !== taskListItem)); e.target.status = "checked" }
                 }}
                 disabled={taskListItem.isDone}
               />
@@ -102,16 +109,17 @@ function TaskList({
               </View>
             </View>
           </Card>
-        ))}
+        )))}
+      {taskListItems !== undefined && taskListItems.length !== 0 &&
         <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-        <Button
-          mode="contained"
-          color="#ffd700"
-          onPress={() => showAlert()}
-        >
-          Check selected tasks
-        </Button>
-        </View>
+          <Button
+            mode="contained"
+            color="#ffd700"
+            onPress={() => showAlert()}
+          >
+            Check selected tasks
+          </Button>
+        </View>}
     </ScrollView>
   );
 }
