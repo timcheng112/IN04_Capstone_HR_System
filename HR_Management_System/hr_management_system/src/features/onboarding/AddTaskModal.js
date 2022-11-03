@@ -72,6 +72,7 @@ export default function AddTaskModal({
       alert("Name/Description inputs must be filled!");
     }
   };
+
   function createTask() {
     const task = {
       name: name,

@@ -51,8 +51,9 @@ public class CategoryController {
 
     @PostMapping(path = "/assignCategoryTasks")
     public void assignTaskToEmployeeByCategory(@RequestParam(name = "userId", required = true) Long userId,
-            @RequestParam(name = "categoryId", required = true) Long categoryId) {
-        categoryService.assignTaskToEmployeeByCategory(userId, categoryId);
+            @RequestParam(name = "categoryId", required = true) Long categoryId,
+            @RequestParam(name = "isOnboarding", required = true) Boolean isOnboarding) {
+        categoryService.assignTaskToEmployeeByCategory(userId, categoryId, isOnboarding);
     }
 
 }

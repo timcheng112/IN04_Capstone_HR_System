@@ -1,9 +1,13 @@
 import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon, PlusIcon } from "@heroicons/react/20/solid";
-import { Fragment, useState } from "react";
+import {
+  ChevronDownIcon,
+  PlusIcon,
+  UserPlusIcon,
+} from "@heroicons/react/20/solid";
+import { Fragment, useEffect, useState } from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import AddTaskModal from "../../features/offboarding/AddTaskModal";
-import EditCategoryModal from "../../features/offboarding/EditCategoryModal";
+import EditCategoryModal from "../../features/onboarding/EditCategoryModal";
 import api from "../../utils/api";
 import { useHistory } from "react-router";
 import {
@@ -11,6 +15,7 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
+import AssignCategoryTasksModal from "../../features/onboarding/AssignCategoryTasksModal";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -19,105 +24,43 @@ function classNames(...classes) {
 export default function CategoryOptions({ category, refreshKeyHandler }) {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openAssign, setOpenAssign] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [departments, setDepartments] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [error, setError] = useState(null);
   const history = useHistory();
 
   function deleteCategory() {
-    api.deleteCategory(category.categoryId).then(() => {
-      alert("Successfully deleted!");
-      refreshKeyHandler();
-    })
-    .catch((error) => alert("Unable to delete as category contains tasks"));
+    api
+      .deleteCategory(category.categoryId)
+      .then(() => {
+        alert("Successfully deleted!");
+        refreshKeyHandler();
+      })
+      .catch((error) => alert("Unable to delete as category contains tasks"));
   }
 
-  return (
-    // <Menu as="div" className="relative inline-block text-left">
-    //   <div>
-    //     <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-    //       Options
-    //       <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
-    //     </Menu.Button>
-    //   </div>
+  useEffect(() => {
+    api
+      .getAllDepartments()
+      .then((response) => setDepartments(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
 
-    //   <Transition
-    //     as={Fragment}
-    //     enter="transition ease-out duration-100"
-    //     enterFrom="transform opacity-0 scale-95"
-    //     enterTo="transform opacity-100 scale-100"
-    //     leave="transition ease-in duration-75"
-    //     leaveFrom="transform opacity-100 scale-100"
-    //     leaveTo="transform opacity-0 scale-95"
-    //   >
-    //     <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-    //       <div className="py-1">
-    //         <Menu.Item>
-    //           {({ active }) => (
-    //             <button
-    //               className={classNames(
-    //                 active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-    //                 "block px-4 py-2 text-sm w-full text-left"
-    //               )}
-    //               onClick={() => setOpenAdd(true)}
-    //             >
-    //               Add Task
-    //             </button>
-    //           )}
-    //         </Menu.Item>
-    //         <Menu.Item>
-    //           {({ active }) => (
-    //             <button
-    //               className={classNames(
-    //                 active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-    //                 "block px-4 py-2 text-sm w-full text-left"
-    //               )}
-    //               onClick={() => setOpenEdit(true)}
-    //             >
-    //               Edit Category
-    //             </button>
-    //           )}
-    //         </Menu.Item>
-    //         <Menu.Item>
-    //           {({ active }) => (
-    //             <button
-    //               className={classNames(
-    //                 active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-    //                 "block px-4 py-2 text-sm w-full text-left"
-    //               )}
-    //               onClick={() => setOpenDelete(true)}
-    //             >
-    //               Delete Category
-    //             </button>
-    //           )}
-    //         </Menu.Item>
-    //       </div>
-    //     </Menu.Items>
-    //   </Transition>
-    // <AddTaskModal
-    //   open={openAdd}
-    //   onClose={() => {
-    //     setOpenAdd(false);
-    //   }}
-    //   category={category}
-    // />
-    // <EditCategoryModal
-    //   open={openEdit}
-    //   onClose={() => setOpenEdit(false)}
-    //   category={category}
-    // />
-    // <ConfirmDialog
-    //   title="category"
-    //   item="category"
-    //   open={openDelete}
-    //   onClose={() => setOpenDelete(false)}
-    //   onConfirm={deleteCategory}
-    // />
-    // </Menu>
+  useEffect(() => {
+    api
+      .getAllTeams()
+      .then((response) => setTeams(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
+
+  return (
     <div className="space-x-2">
       <button
         type="button"
         onClick={() => setOpenAdd(true)}
-        className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
       >
         <PlusIcon className="md:-ml-0.5 md:mr-2 h-4 w-4" aria-hidden="true" />
         <span className="hidden md:block">Add Task</span>
@@ -135,7 +78,19 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
       </button>
       <button
         type="button"
-        className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        onClick={() => setOpenAssign(true)}
+        className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-70 disabled:hover:bg-indigo-600"
+        disabled={category.tasks.length === 0 ? true : false}
+      >
+        <UserPlusIcon
+          className="md:-ml-0.5 md:mr-2 h-4 w-4"
+          aria-hidden="true"
+        />
+        <span className="hidden md:block">Assign</span>
+      </button>
+      <button
+        type="button"
+        className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
         onClick={() => setOpenDelete(true)}
       >
         <TrashIcon className="md:-ml-0.5 md:mr-2 h-4 w-4" aria-hidden="true" />
@@ -144,9 +99,7 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
 
       <AddTaskModal
         open={openAdd}
-        onClose={() => {
-          setOpenAdd(false);
-        }}
+        onClose={() => setOpenAdd(false)}
         category={category}
         refreshKeyHandler={refreshKeyHandler}
       />
@@ -155,6 +108,15 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
         onClose={() => setOpenEdit(false)}
         category={category}
         refreshKeyHandler={refreshKeyHandler}
+      />
+      <AssignCategoryTasksModal
+        open={openAssign}
+        onClose={() => setOpenAssign(false)}
+        category={category}
+        // refreshKeyHandler={refreshKeyHandler}
+        isOnboarding={false}
+        departments={departments}
+        teams={teams}
       />
       <ConfirmDialog
         title="category"

@@ -3,15 +3,19 @@ import {
   EyeIcon,
   CheckIcon,
   XMarkIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-import { useHistory } from 'react-router-dom';
-import { useState, useEffect  } from "react";
-import Tabs from '../../features/jobrequest/Tab'
+import { useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Tabs from "../../features/jobrequest/Tab";
 import api from "../../utils/api";
-import { getUserId} from "../../utils/Common";
+import { getUserId } from "../../utils/Common";
 import PostOption from "../../features/jobrequest/PostOption";
 
+const tabs = [
+  { name: "Job Request", href: "/hiring/jobrequesthr", current: false },
+  { name: "Job Post", href: "/hiring/jobpost", current: true },
+];
 
 export default function JobPost() {
   const history = useHistory();
@@ -19,11 +23,10 @@ export default function JobPost() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [filteredPosts, setFilteredPosts] =
-    useState(posts);
-//  const [searchParam] = useState([
-//    "jobTitle"
-//  ]);
+  const [filteredPosts, setFilteredPosts] = useState(posts);
+  //  const [searchParam] = useState([
+  //    "jobTitle"
+  //  ]);
 
   useEffect(() => {
     api
@@ -34,7 +37,7 @@ export default function JobPost() {
       })
       .catch((error) => setError(error));
   }, []);
-  
+
   useEffect(() => {
     api
       .getAllJobPosts()
@@ -52,28 +55,34 @@ export default function JobPost() {
     let finding = Array.of(value.toLowerCase());
 
     let filtered = new Set();
-    var titleFilter = items.filter(x => finding.some(y => x.jobTitle.toLowerCase().indexOf(y) != -1))
-    titleFilter.forEach(item => filtered.add(item))
+    var titleFilter = items.filter((x) =>
+      finding.some((y) => x.jobTitle.toLowerCase().indexOf(y) != -1)
+    );
+    titleFilter.forEach((item) => filtered.add(item));
 
-    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
-    statusFilter.forEach(item => filtered.add(item))
+    var statusFilter = items.filter((x) =>
+      finding.some((y) => x.status.toLowerCase().indexOf(y) != -1)
+    );
+    statusFilter.forEach((item) => filtered.add(item));
 
-    var posterFilter = items.filter(x => finding.some(y => x.postedBy.firstName.toLowerCase().indexOf(y) != -1))
-    posterFilter.forEach(item => filtered.add(item))
+    var posterFilter = items.filter((x) =>
+      finding.some((y) => x.postedBy.firstName.toLowerCase().indexOf(y) != -1)
+    );
+    posterFilter.forEach((item) => filtered.add(item));
 
-    setFilteredPosts(Array.from(filtered))
-//    setFilteredPosts(
-//          items.filter((item) => {
-//            return searchParam.some((newItem) => {
-//              return (
-//                item[newItem]
-//                  .toString()
-//                  .toLowerCase()
-//                  .indexOf(value.toLowerCase()) > -1
-//              );
-//            });
-//          })
-//        );
+    setFilteredPosts(Array.from(filtered));
+    //    setFilteredPosts(
+    //          items.filter((item) => {
+    //            return searchParam.some((newItem) => {
+    //              return (
+    //                item[newItem]
+    //                  .toString()
+    //                  .toLowerCase()
+    //                  .indexOf(value.toLowerCase()) > -1
+    //              );
+    //            });
+    //          })
+    //        );
   }
 
   return (
@@ -83,7 +92,7 @@ export default function JobPost() {
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center space-x-4">
           <div className="sm:flex-auto">
-            <Tabs />
+            <Tabs tabs={tabs} />
             {/* <h1 className="text-xl font-semibold text-gray-900">Job Requests</h1> */}
           </div>
           <div className="w-full max-w-lg lg:max-w-xs">
@@ -92,7 +101,10 @@ export default function JobPost() {
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                <MagnifyingGlassIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
               </div>
               <input
                 id="search"
@@ -115,19 +127,31 @@ export default function JobPost() {
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
                         Title
                       </th>
                       {/* <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         Department
                       </th> */}
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Post Date
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Posted By
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Status
                       </th>
                       {/* <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -142,11 +166,22 @@ export default function JobPost() {
                           {post.jobTitle}
                         </td>
                         {/* <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.department.departmentName}</td> */}
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.postDate}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.postedBy.firstName}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{post.status}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          {post.postDate}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          {post.postedBy.firstName}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          {post.status}
+                        </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <PostOption post={post} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
+                          <PostOption
+                            post={post}
+                            refreshKeyHandler={() =>
+                              setRefreshKey((oldKey) => oldKey + 1)
+                            }
+                          />
                         </td>
                       </tr>
                     ))}
@@ -158,5 +193,5 @@ export default function JobPost() {
         </div>
       </div>
     </div>
-  )
+  );
 }

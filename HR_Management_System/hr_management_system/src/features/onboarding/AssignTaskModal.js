@@ -2,20 +2,177 @@ import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useEffect, useState } from "react";
 import api from "../../utils/api";
 import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
+import AssignTaskToEmployeeRadioGroup from "./AssignTaskToEmployeeRadioGroup";
 
-const AssignTaskModal = ({ open, onClose, task, refreshKeyHandler }) => {
+const options = [
+  {
+    id: 0,
+    name: "Assign To Everyone",
+  },
+  {
+    id: 1,
+    name: "Assign By Departments",
+  },
+  {
+    id: 2,
+    name: "Assign By Teams",
+  },
+  {
+    id: 3,
+    name: "Assign By Roles",
+  },
+  {
+    id: 4,
+    name: "Assign Individually",
+  },
+];
+
+const roles = [
+  {
+    roleName: "All Managers",
+  },
+  {
+    roleName: "All Employees (Excluding Managers)",
+  },
+];
+
+const AssignTaskModal = ({
+  open,
+  onClose,
+  task,
+  refreshKeyHandler,
+  departments,
+  teams,
+}) => {
   const [searchParam] = useState([
     "userId",
     "firstName",
     "lastName",
     "workEmail",
   ]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [unassignedEmployees, setUnassignedEmployees] = useState();
   const [assignedEmployees, setAssignedEmployees] = useState([]);
   const [filteredUnassignedEmployees, setFilteredUnassignedEmployees] =
     useState(unassignedEmployees);
   const [filteredAssignedEmployees, setFilteredAssignedEmployees] =
     useState(assignedEmployees);
+  const [selected, setSelected] = useState(options[0]);
+  const [checkedState, setCheckedState] = useState(() => {
+    let tempCheckedState = new Array(options.length).fill({
+      indexChecked: [],
+    });
+    for (let i = 0; i < options.length; i++) {
+      if (i === 1) {
+        tempCheckedState[i] = {
+          indexChecked: new Array(departments.length).fill(false),
+        };
+      } else if (i === 2) {
+        tempCheckedState[i] = {
+          indexChecked: new Array(teams.length).fill(false),
+        };
+      } else if (i === 3) {
+        tempCheckedState[i] = {
+          indexChecked: new Array(roles.length).fill(false),
+        };
+      }
+    }
+    console.log(tempCheckedState);
+    return tempCheckedState;
+  });
+
+  const submitHandler = () => {
+    let error = false;
+    if (selected === options[0]) {
+      setSelectedUsers(unassignedEmployees);
+    } else if (selected === options[1]) {
+      for (let i = 0; i < checkedState[1].indexChecked.length; i++) {
+        if (checkedState[1].indexChecked[i]) {
+          selectedUsers.push(
+            ...unassignedEmployees.filter((user) =>
+              user.teams.some(
+                (team) =>
+                  team.department.departmentId === departments[i].departmentId
+              )
+            )
+          );
+        }
+      }
+      if (
+        !checkedState[1].indexChecked.some((isChecked) => isChecked === true)
+      ) {
+        error = true;
+      }
+    } else if (selected === options[2]) {
+      for (let i = 0; i < checkedState[2].indexChecked.length; i++) {
+        if (checkedState[2].indexChecked[i]) {
+          selectedUsers.push(
+            ...unassignedEmployees.filter((user) =>
+              user.teams.some((team) => team.teamId === teams[i].teamId)
+            )
+          );
+        }
+      }
+      if (
+        !checkedState[2].indexChecked.some((isChecked) => isChecked === true)
+      ) {
+        error = true;
+      }
+    } else if (selected === options[3]) {
+      if (checkedState[3].indexChecked[0] && checkedState[3].indexChecked[1]) {
+        selectedUsers.push(...unassignedEmployees);
+      } else if (checkedState[3].indexChecked[0]) {
+        selectedUsers.push(
+          ...unassignedEmployees.filter((user) => user.userRole === "MANAGER")
+        );
+      } else if (checkedState[3].indexChecked[1]) {
+        selectedUsers.push(
+          ...unassignedEmployees.filter((user) => user.userRole === "EMPLOYEE")
+        );
+      }
+      if (
+        !checkedState[3].indexChecked.some((isChecked) => isChecked === true)
+      ) {
+        error = true;
+      }
+    } else if (selected === options[4]) {
+      handleSubmit(true);
+    }
+    if (error) {
+      alert("Invalid inputs!");
+    } else {
+      handleSubmit(false);
+    }
+  };
+
+  const resetInitialState = () => {
+    let tempCheckedState = new Array(options.length).fill({
+      indexChecked: [],
+    });
+    for (let i = 0; i < options.length; i++) {
+      if (i === 1) {
+        tempCheckedState[i] = {
+          indexChecked: new Array(departments.length).fill(false),
+        };
+      } else if (i === 2) {
+        tempCheckedState[i] = {
+          indexChecked: new Array(teams.length).fill(false),
+        };
+      } else if (i === 3) {
+        tempCheckedState[i] = {
+          indexChecked: new Array(roles.length).fill(false),
+        };
+      }
+    }
+    setUnassignedEmployees(
+      [...unassignedEmployees, ...assignedEmployees].sort(
+        (a, b) => a.userId - b.userId
+      )
+    );
+    setAssignedEmployees([]);
+    setCheckedState(tempCheckedState);
+    // setSelected(options[0]);
+  };
 
   useEffect(() => {
     api
@@ -29,20 +186,100 @@ const AssignTaskModal = ({ open, onClose, task, refreshKeyHandler }) => {
       .catch((error) => console.log(error.response.data.message));
   }, [open]);
 
-  const handleSubmit = () => {
-    createTaskListItem(task.taskId);
+  const handleSubmit = (isByIndividual) => {
+    if (isByIndividual) {
+      createTaskListItemByIndividual(task.taskId);
+    } else {
+      createTaskListItemByGroupings(task.taskId);
+    }
     onClose();
-    refreshKeyHandler();
+    // refreshKeyHandler();
+    resetInitialState();
+    setSelected(options[0]);
   };
 
-  function createTaskListItem(taskId) {
+  function createTaskListItemByGroupings(taskId) {
+    let successUsers = "";
+    let failureUsers = "";
     const taskListItem = { isDone: false };
-    assignedEmployees.forEach((employee) => {
-      api
-        .addNewTaskListItem(employee.userId, taskId, taskListItem)
-        .then(() => alert("Successfully assigned task."))
-        .catch((error) => console.log(error.response.data.message));
-    });
+    if (selectedUsers.length > 0) {
+      selectedUsers.forEach((employee, index) => {
+        api
+          .addNewTaskListItem(employee.userId, taskId, taskListItem)
+          .then(() => {
+            if (successUsers === "") {
+              successUsers += employee.firstName + " " + employee.lastName;
+            } else {
+              successUsers +=
+                ", " + employee.firstName + " " + employee.lastName;
+            }
+            if (index === selectedUsers.length - 1) {
+              alert("Successfully assigned to: " + successUsers);
+            }
+          })
+          .catch((error) => {
+            if (failureUsers === "") {
+              failureUsers += employee.firstName + " " + employee.lastName;
+            } else {
+              failureUsers +=
+                ", " + employee.firstName + " " + employee.lastName;
+            }
+            console.log(error.response.data.message);
+            if (index === selectedUsers.length - 1) {
+              alert(
+                "Successfully assigned to: " +
+                  successUsers +
+                  "\nFailed to assign to: " +
+                  failureUsers
+              );
+            }
+          });
+      });
+    } else {
+      alert("Unable to assign as selected grouping has 0 users!");
+    }
+  }
+
+  function createTaskListItemByIndividual(taskId) {
+    let successUsers = "";
+    let failureUsers = "";
+    const taskListItem = { isDone: false };
+    if (assignedEmployees.length > 0) {
+      assignedEmployees.forEach((employee, index) => {
+        api
+          .addNewTaskListItem(employee.userId, taskId, taskListItem)
+          .then(() => {
+            if (successUsers === "") {
+              successUsers += employee.firstName + " " + employee.lastName;
+            } else {
+              successUsers +=
+                ", " + employee.firstName + " " + employee.lastName;
+            }
+            if (index === selectedUsers.length - 1) {
+              alert("Successfully assigned to: " + successUsers);
+            }
+          })
+          .catch((error) => {
+            if (failureUsers === "") {
+              failureUsers += employee.firstName + " " + employee.lastName;
+            } else {
+              failureUsers +=
+                ", " + employee.firstName + " " + employee.lastName;
+            }
+            console.log(error.response.data.message);
+            if (index === selectedUsers.length - 1) {
+              alert(
+                "Successfully assigned to: " +
+                  successUsers +
+                  "\nFailed to assign to: " +
+                  failureUsers
+              );
+            }
+          });
+      });
+    } else {
+      alert("Unable to assign as selected grouping has 0 users!");
+    }
   }
 
   function search(e, items, isUnassigned) {
@@ -111,6 +348,8 @@ const AssignTaskModal = ({ open, onClose, task, refreshKeyHandler }) => {
         className="relative z-10"
         onClose={() => {
           onClose();
+          resetInitialState();
+          setSelected(options[0]);
           // setRefreshKeyModal((oldKey) => oldKey + 1);
         }}
       >
@@ -146,8 +385,25 @@ const AssignTaskModal = ({ open, onClose, task, refreshKeyHandler }) => {
                     >
                       Assign Task to Employees
                     </Dialog.Title>
-
-                    <div className="flex space-x-4 w-full justify-between ">
+                    <AssignTaskToEmployeeRadioGroup
+                      teams={teams}
+                      departments={departments}
+                      options={options}
+                      selected={selected}
+                      setSelected={setSelected}
+                      checkedState={checkedState}
+                      setCheckedState={setCheckedState}
+                      roles={roles}
+                      filteredUnassignedEmployees={filteredUnassignedEmployees}
+                      assignEmployeeToTask={assignEmployeeToTask}
+                      resetInitialState={resetInitialState}
+                      search={search}
+                      unassignedEmployees={unassignedEmployees}
+                      assignedEmployees={assignedEmployees}
+                      filteredAssignedEmployees={filteredAssignedEmployees}
+                      removeEmployeeFromTask={removeEmployeeFromTask}
+                    />
+                    {/* <div className="flex space-x-4 w-full justify-between ">
                       <div className="overflow-y-scroll w-full h-96 border-2 rounded-md">
                         <label className="block text-sm text-gray-700 mt-2 ml-2 font-bold underline-offset-2 underline">
                           Unassigned:
@@ -171,6 +427,7 @@ const AssignTaskModal = ({ open, onClose, task, refreshKeyHandler }) => {
                             </div>
                           </div>
                         </div>
+
                         <AssignTaskToEmployeeList
                           isAssigning={true}
                           people={filteredUnassignedEmployees}
@@ -205,14 +462,14 @@ const AssignTaskModal = ({ open, onClose, task, refreshKeyHandler }) => {
                           onClick={removeEmployeeFromTask}
                         />
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={handleSubmit}
+                    onClick={submitHandler}
                   >
                     Submit
                   </button>
@@ -221,6 +478,8 @@ const AssignTaskModal = ({ open, onClose, task, refreshKeyHandler }) => {
                     className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={() => {
                       onClose();
+                      resetInitialState();
+                      setSelected(options[0]);
                     }}
                   >
                     Cancel

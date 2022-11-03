@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { DotsVerticalIcon, PencilIcon } from "@heroicons/react/solid";
 import EditTaskModal from "../../features/onboarding/EditTaskModal";
@@ -27,6 +27,8 @@ export default function TaskOptions({ task, refreshKeyHandler }) {
   const [openAssign, setOpenAssign] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [error, setError] = useState(null);
+  const [departments, setDepartments] = useState([]);
+  const [teams, setTeams] = useState([]);
 
   function deleteTask() {
     api
@@ -37,6 +39,20 @@ export default function TaskOptions({ task, refreshKeyHandler }) {
       })
       .catch((error) => setError(error));
   }
+
+  useEffect(() => {
+    api
+      .getAllDepartments()
+      .then((response) => setDepartments(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
+
+  useEffect(() => {
+    api
+      .getAllTeams()
+      .then((response) => setTeams(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
 
   return (
     <div className="space-x-2">
@@ -83,6 +99,7 @@ export default function TaskOptions({ task, refreshKeyHandler }) {
         open={openView}
         onClose={() => setOpenView(false)}
         task={task}
+        refreshKeyHandler={refreshKeyHandler}
       />
       <EditTaskModal
         open={openEdit}
@@ -90,11 +107,15 @@ export default function TaskOptions({ task, refreshKeyHandler }) {
         task={task}
         refreshKeyHandler={refreshKeyHandler}
       />
-      <AssignTaskModal
-        open={openAssign}
-        onClose={() => setOpenAssign(false)}
-        task={task}
-      />
+      {departments.length > 0 && teams.length > 0 && (
+        <AssignTaskModal
+          open={openAssign}
+          onClose={() => setOpenAssign(false)}
+          task={task}
+          departments={departments}
+          teams={teams}
+        />
+      )}
       <ConfirmDialog
         title="task"
         item="task"

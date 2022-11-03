@@ -338,6 +338,15 @@ public class UserController {
         return userService.setUserStatus(workEmail);
     }
 
+    @GetMapping(path = "/getEmployeesByDepartment")
+    public List<User> getEmployeesByDepartment(@RequestParam("departmentId") Long departmentId) {
+        return userService.getEmployeesByDepartment(departmentId);
+    }
+
+    @GetMapping(path = "/getEmployeesByTeam")
+    public List<User> getEmployeesByTeam(@RequestParam("teamId") Long teamId) {
+        return userService.getEmployeesByTeam(teamId);
+    }
     @GetMapping(path = "/getAllApplicants")
     public List<User> getAllApplicants() {
         return userService.getAllApplicants();

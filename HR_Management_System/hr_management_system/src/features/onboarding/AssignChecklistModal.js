@@ -2,6 +2,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useEffect, useState } from "react";
 import api from "../../utils/api";
 import AddUserByGroupingsRadioGroup from "./AddUserByGroupingsRadioGroup";
+import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
+import AssignTaskToEmployeeRadioGroup from "./AssignTaskToEmployeeRadioGroup";
 
 const options = [
   {
@@ -35,16 +37,29 @@ const roles = [
   },
 ];
 
-const AssignCategoryTasksModal = ({
+const AssignChecklistModal = ({
   open,
   onClose,
-  category,
+  //   task,
+  refreshKeyHandler,
   departments,
   teams,
-  isOnboarding,
+  checklist,
 }) => {
+  const [searchParam] = useState([
+    "userId",
+    "firstName",
+    "lastName",
+    "workEmail",
+  ]);
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  //   const [unassignedEmployees, setUnassignedEmployees] = useState();
+  //   const [assignedEmployees, setAssignedEmployees] = useState([]);
+  //   const [filteredUnassignedEmployees, setFilteredUnassignedEmployees] =
+  //     useState(unassignedEmployees);
+  //   const [filteredAssignedEmployees, setFilteredAssignedEmployees] =
+  //     useState(assignedEmployees);
   const [selected, setSelected] = useState(options[0]);
   const [checkedState, setCheckedState] = useState(() => {
     let tempCheckedState = new Array(options.length).fill({
@@ -84,6 +99,7 @@ const AssignCategoryTasksModal = ({
     if (selected === options[0]) {
       selectedUsers.push(...users);
     } else if (selected === options[1]) {
+      const tempSelectedUsers = [];
       for (let i = 0; i < checkedState[1].indexChecked.length; i++) {
         if (checkedState[1].indexChecked[i]) {
           selectedUsers.push(
@@ -103,6 +119,7 @@ const AssignCategoryTasksModal = ({
         error = true;
       }
     } else if (selected === options[2]) {
+      const tempSelectedUsers = [];
       for (let i = 0; i < checkedState[2].indexChecked.length; i++) {
         if (checkedState[2].indexChecked[i]) {
           selectedUsers.push(
@@ -231,7 +248,7 @@ const AssignCategoryTasksModal = ({
             );
             if (isLastLoop) {
               //   alert(alertMsg);
-              alert("Assigned Category Tasks Completed");
+              alert("Assigned Checklist Completed");
             }
           }
         });
@@ -242,11 +259,8 @@ const AssignCategoryTasksModal = ({
     if (selectedUsers.length > 0) {
       const alertMsg = [];
       const taskIds = [];
-      const tasks = category.tasks.filter(
-        (task) => task.isOnboarding === isOnboarding
-      );
-      for (let i = 0; i < tasks.length; i++) {
-        taskIds.push(tasks[i].taskId);
+      for (let i = 0; i < checklist.tasks.length; i++) {
+        taskIds.push(checklist.tasks[i].taskId);
       }
       taskIds.forEach((taskId, index) => {
         if (index === taskIds.length - 1) {
@@ -267,6 +281,8 @@ const AssignCategoryTasksModal = ({
         className="relative z-10"
         onClose={() => {
           onClose();
+          resetInitialState();
+          setSelected(options[0]);
           // setRefreshKeyModal((oldKey) => oldKey + 1);
         }}
       >
@@ -300,12 +316,15 @@ const AssignCategoryTasksModal = ({
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900 mb-2"
                     >
-                      Assign Task to Employees
+                      Assign Checklist to Employees
                     </Dialog.Title>
                     <AddUserByGroupingsRadioGroup
                       users={users}
                       teams={teams}
                       departments={departments}
+                      // setTempSelectedUsers={(checkedUsers) =>
+                      //   setTempSelectedUsers(checkedUsers)
+                      // }
                       options={options}
                       selected={selected}
                       setSelected={setSelected}
@@ -313,6 +332,66 @@ const AssignCategoryTasksModal = ({
                       setCheckedState={setCheckedState}
                       roles={roles}
                     />
+                    {/* <div className="flex space-x-4 w-full justify-between ">
+                      <div className="overflow-y-scroll w-full h-96 border-2 rounded-md">
+                        <label className="block text-sm text-gray-700 mt-2 ml-2 font-bold underline-offset-2 underline">
+                          Unassigned:
+                        </label>
+                        <div>
+                          <div className="relative mt-1 flex items-center px-2">
+                            <input
+                              type="text"
+                              name="search"
+                              id="search"
+                              placeholder="Search..."
+                              onChange={(e) => {
+                                search(e, unassignedEmployees, true);
+                              }}
+                              className="p-2 block border-2 w-full rounded-md border-gray-300 pr-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            />
+                            <div className="absolute inset-y-0 right-0 flex py-1.5 pr-3">
+                              <kbd className="inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400">
+                                ⌘K
+                              </kbd>
+                            </div>
+                          </div>
+                        </div>
+
+                        <AssignTaskToEmployeeList
+                          isAssigning={true}
+                          people={filteredUnassignedEmployees}
+                          onClick={assignEmployeeToTask}
+                        />
+                      </div>
+                      <div className="overflow-y-scroll w-full border-2 rounded-md">
+                        <label className="block text-sm text-gray-700 mt-2 ml-2 font-bold underline-offset-2 underline">
+                          Assigned:
+                        </label>
+                        <div>
+                          <div className="relative mt-1 flex items-center px-2">
+                            <input
+                              type="text"
+                              name="search"
+                              id="search"
+                              placeholder="Search..."
+                              onChange={(e) => {
+                                search(e, assignedEmployees, false);
+                              }}
+                              className="p-2 block border-2 w-full rounded-md border-gray-300 pr-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            />
+                            <div className="absolute inset-y-0 right-0 flex py-1.5 pr-3">
+                              <kbd className="inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400">
+                                ⌘K
+                              </kbd>
+                            </div>
+                          </div>
+                        </div>
+                        <AssignTaskToEmployeeList
+                          people={filteredAssignedEmployees}
+                          onClick={removeEmployeeFromTask}
+                        />
+                      </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
@@ -328,6 +407,8 @@ const AssignCategoryTasksModal = ({
                     className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={() => {
                       onClose();
+                      resetInitialState();
+                      setSelected(options[0]);
                     }}
                   >
                     Cancel
@@ -342,4 +423,4 @@ const AssignCategoryTasksModal = ({
   );
 };
 
-export default AssignCategoryTasksModal;
+export default AssignChecklistModal;

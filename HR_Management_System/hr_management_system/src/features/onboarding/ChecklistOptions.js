@@ -1,44 +1,30 @@
-import { Menu, Transition } from "@headlessui/react";
 import {
-  ChevronDownIcon,
+  PencilSquareIcon,
   PlusIcon,
+  TrashIcon,
   UserPlusIcon,
 } from "@heroicons/react/20/solid";
-import { Fragment, useEffect, useState } from "react";
-import ConfirmDialog from "../../components/ConfirmDialog";
-import AddTaskModal from "../../features/onboarding/AddTaskModal";
-import EditCategoryModal from "../../features/onboarding/EditCategoryModal";
-import api from "../../utils/api";
+import { React, useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import {
-  EyeIcon,
-  PencilSquareIcon,
-  TrashIcon,
-} from "@heroicons/react/20/solid";
-import AssignCategoryTasksModal from "../../features/onboarding/AssignCategoryTasksModal";
+import ConfirmDialog from "../../components/ConfirmDialog";
+import api from "../../utils/api";
+import AssignChecklistModal from "./AssignChecklistModal";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function CategoryOptions({ category, refreshKeyHandler }) {
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+const ChecklistOptions = ({ checklist, refreshKeyHandler, isOnboarding }) => {
+  const history = useHistory();
   const [openAssign, setOpenAssign] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [departments, setDepartments] = useState([]);
   const [teams, setTeams] = useState([]);
-  const [error, setError] = useState(null);
-  const history = useHistory();
 
-  function deleteCategory() {
+  function deleteChecklist() {
     api
-      .deleteCategory(category.categoryId)
+      .deleteChecklist(checklist.checklistId)
       .then(() => {
         alert("Successfully deleted!");
         refreshKeyHandler();
       })
-      .catch((error) => alert("Unable to delete as category contains tasks"));
+      .catch((error) => alert("Unable to delete as checklist contains tasks"));
   }
 
   useEffect(() => {
@@ -59,28 +45,25 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
     <div className="space-x-2">
       <button
         type="button"
-        onClick={() => setOpenAdd(true)}
-        className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-      >
-        <PlusIcon className="md:-ml-0.5 md:mr-2 h-4 w-4" aria-hidden="true" />
-        <span className="hidden md:block">Add Task</span>
-      </button>
-      <button
-        type="button"
-        onClick={() => setOpenEdit(true)}
+        onClick={() =>
+          history.push({
+            pathname: "/admin/checklistdetail",
+            state: { checklist: checklist, isOnboarding: isOnboarding },
+          })
+        }
         className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         <PencilSquareIcon
           className="md:-ml-0.5 md:mr-2 h-4 w-4"
           aria-hidden="true"
         />
-        <span className="hidden md:block">Edit</span>
+        <span className="hidden md:block">Details</span>
       </button>
       <button
         type="button"
         onClick={() => setOpenAssign(true)}
         className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-70 disabled:hover:bg-indigo-600"
-        disabled={category.tasks.length === 0 ? true : false}
+        // disabled={category.tasks.length === 0 ? true : false}
       >
         <UserPlusIcon
           className="md:-ml-0.5 md:mr-2 h-4 w-4"
@@ -97,35 +80,23 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
         <span className="hidden md:block">Delete</span>
       </button>
 
-      <AddTaskModal
-        open={openAdd}
-        onClose={() => setOpenAdd(false)}
-        category={category}
-        refreshKeyHandler={refreshKeyHandler}
-      />
-      <EditCategoryModal
-        open={openEdit}
-        onClose={() => setOpenEdit(false)}
-        category={category}
-        refreshKeyHandler={refreshKeyHandler}
-      />
-      <AssignCategoryTasksModal
+      <AssignChecklistModal
         open={openAssign}
         onClose={() => setOpenAssign(false)}
-        category={category}
-        // refreshKeyHandler={refreshKeyHandler}
-        isOnboarding={true}
         departments={departments}
         teams={teams}
+        checklist={checklist}
       />
       <ConfirmDialog
-        title="category"
-        item="category"
+        title="checklist"
+        item="checklist"
         open={openDelete}
         setOpen={() => setOpenDelete(false)}
         onClose={() => setOpenDelete(false)}
-        onConfirm={deleteCategory}
+        onConfirm={deleteChecklist}
       />
     </div>
   );
-}
+};
+
+export default ChecklistOptions;
