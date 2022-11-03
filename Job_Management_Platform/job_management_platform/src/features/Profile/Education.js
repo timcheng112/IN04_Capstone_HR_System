@@ -88,7 +88,7 @@ export default function Education() {
             type="text"
             name="name"
             id="name"
-            className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
+            className="block w-60 border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
             placeholder="Jane Smith"
           />
         </div>

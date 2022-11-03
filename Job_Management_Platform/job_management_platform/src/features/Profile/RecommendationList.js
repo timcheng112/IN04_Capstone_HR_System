@@ -1,26 +1,28 @@
 import { ArchiveBoxXMarkIcon, PencilIcon } from "@heroicons/react/20/solid";
 import EmptyStateAdd from "./EmptyStateAdd";
-import ViewWork from "./ViewWork";
-import AddWork from "./AddWork";
+import ViewRecommendation from "./ViewRecommendation";
+import AddRecommendation from "./AddRecommendation";
 import { Fragment, useState } from 'react'
 
-export default function WorkList({
-  templateWorks
+export default function RecommendationList({
+  templateRecommendations
 }) {
   const [openView, setOpenView] = useState(false)
-  const [addwork, setAddwork] = useState(false)
+  const [addRecommendation, setAddRecommendation] = useState(false)
+
   return (
+    
     <ul role="list" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 w-3/4">
-      {templateWorks.map((work) => (
+      {templateRecommendations.map((r) => (
         <li
-          key={work.workId}
+          key={r.recommendationId}
           className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
         >
           <div className="flex-col w-full p-6">
             <div className="truncate">
               <div className="flex space-x-3">
                 <h3 className="truncate text-sm font-bold text-gray-900">
-                  {work.companyName}
+                  {r.name}
                 </h3>
                 {/* <span className="inline-block flex-shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
                   {work.positionName}
@@ -30,7 +32,7 @@ export default function WorkList({
             <div className="truncate">
               <div className="flex space-x-3">
                 <p className="mt-1 truncate text-sm text-gray-900">
-                  {work.positionName}
+                  {r.email}
                 </p>
               </div>
             </div>
@@ -39,7 +41,6 @@ export default function WorkList({
             <div className="-mt-px py-6 flex divide-x divide-gray-200">
               <div className="flex w-0 flex-1">
                 <button
-                  onClick = {()=> setOpenView(true)}
                   className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
                 >
                   <PencilIcon className="h-5 w-5  text-indigo-400" />
@@ -54,14 +55,13 @@ export default function WorkList({
               </div>
             </div>
           </div>
-          <ViewWork open ={openView} setOpen={() => setOpenView(false)} work = {work}/>
+          <ViewRecommendation open ={openView} setOpen={() => setOpenView(false)} recommendation = {r}/>
         </li>
       ))}
       <li className="col-span-1 divide-y divide-gray-200 rounded-lg shadow">
-        <EmptyStateAdd onOpen={()=>setAddwork(true)} itemName="Work Experience" />
+        <EmptyStateAdd onOpen={()=>setAddRecommendation(true)} itemName="Recommendation" />
       </li>
-      <AddWork open ={addwork} setOpen={() => setAddwork(false)} />
+      <AddRecommendation open ={addRecommendation} setOpen={() => setAddRecommendation(false)} />
     </ul>
-    
   );
 }

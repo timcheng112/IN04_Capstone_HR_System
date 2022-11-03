@@ -5,20 +5,20 @@ import {
 } from "@heroicons/react/20/solid";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { Fragment, useState } from 'react'
-import AddWork from "../../features/Profile/AddWork";
+import WorkList from "../../features/Profile/WorkList";
 import AddSkill from "../../features/Profile/AddSkill";
 import Language from "../../features/Profile/Language";
-import Recommendation from "../../features/Profile/Recommendation";
+import RecommendationList from "../../features/Profile/RecommendationList";
 import api from "../../utils/api.js";
 import { getUserId } from "../../utils/Common.js";
 import { useHistory } from "react-router-dom";
 
 import AddSkillset from "../../features/Profile/AddSkillset";
 
+const works = [{workId:1, positionName: 'UI designer', companyName:"GIC"},{workId:2, positionName: 'Product Manager', companyName:"DBS"}]
+const recommendations = [{recommendationId:1, name: 'Kong Xinyue', email:"12345@gmail.com"}, {recommendationId:2, name: 'Matthew', email:"12345@gmail.com"}]
 export default function Profile() {
-  const [addwork, setAddwork] = useState(false)
   const [addskil, setAddskill] = useState(false)
-  const [addRecommendation, setAddRecommendation] = useState(false)
   const [addCV, setAddCV] = useState(false)
   const [addTranscript, setAddTranscript] = useState(false)
   const [addCoverletter, setAddCoverletter] = useState(false)
@@ -196,17 +196,7 @@ export default function Profile() {
                   Work experience
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <button
-                    type="button"
-                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick = {()=> setAddwork(true)}
-                  >
-                    <PlusIcon
-                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                      aria-hidden="true"
-                    />
-                    <span className="hidden md:block">Add work experience</span>
-                  </button>
+                  <WorkList  templateWorks={works}/>
                 </div>
               </div>
 
@@ -243,17 +233,7 @@ export default function Profile() {
                   Recommendations
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <button
-                    type="button"
-                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick = {()=> setAddRecommendation(true)}
-                  >
-                    <PlusIcon
-                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                      aria-hidden="true"
-                    />
-                    <span className="hidden md:block">Add recommendation</span>
-                  </button>
+                  <RecommendationList templateRecommendations={recommendations}/>
                 </div>
               </div>
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -296,7 +276,7 @@ export default function Profile() {
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
                   <button
                     type="button"
-                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     onClick = {()=> setAddCoverletter(true)}
                   >
                     <ArrowUpTrayIcon 
@@ -330,9 +310,7 @@ export default function Profile() {
           </div>
 
         </form>
-        <AddWork open ={addwork} setOpen={() => setAddwork(false)} />
         <AddSkill open ={addskil} setOpen={() => setAddskill(false)} />
-        <Recommendation open ={addRecommendation} setOpen={() => setAddRecommendation(false)} />
       </div>
     </div>
   )
