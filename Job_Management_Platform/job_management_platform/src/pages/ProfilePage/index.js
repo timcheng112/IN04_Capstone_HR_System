@@ -3,17 +3,25 @@ import Education from "../../features/Profile/Education";
 import {
   PlusIcon
 } from "@heroicons/react/20/solid";
+import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { Fragment, useState } from 'react'
 import AddWork from "../../features/Profile/AddWork";
 import AddSkill from "../../features/Profile/AddSkill";
+import Language from "../../features/Profile/Language";
+import Recommendation from "../../features/Profile/Recommendation";
 import api from "../../utils/api.js";
 import { getUserId } from "../../utils/Common.js";
 import { useHistory } from "react-router-dom";
 
+import AddSkillset from "../../features/Profile/AddSkillset";
 
 export default function Profile() {
   const [addwork, setAddwork] = useState(false)
   const [addskil, setAddskill] = useState(false)
+  const [addRecommendation, setAddRecommendation] = useState(false)
+  const [addCV, setAddCV] = useState(false)
+  const [addTranscript, setAddTranscript] = useState(false)
+  const [addCoverletter, setAddCoverletter] = useState(false)
   const [user, setUser] = useState(getUserId()); //logged in user
   const history = useHistory();
   // const email = result[2]
@@ -26,96 +34,96 @@ export default function Profile() {
   const [error, setError] = useState(null);
 
 
-  function handleFile(e) {
-    console.log(e.target.files, "--");
-    console.log(e.target.files[0], "$SSSSS$");
-    // let f = e.target.files[0]
-    setFileState(e.target.files[0]);
-    setfileName(e.target.files[0].name);
-    // console.log(file + "what now")
-    // console.log(fileName + "printing fileName")
-  }
+  // function handleFile(e) {
+  //   console.log(e.target.files, "--");
+  //   console.log(e.target.files[0], "$SSSSS$");
+  //   // let f = e.target.files[0]
+  //   setFileState(e.target.files[0]);
+  //   setfileName(e.target.files[0].name);
+  //   // console.log(file + "what now")
+  //   // console.log(fileName + "printing fileName")
+  // }
   
-  function uploadFile(e) {
-    e.preventDefault();
-    // console.log(file[0])
-    // console.log("printing file contents above")
-    let formData = new FormData();
-    if(file){
-      formData.append("document", file);
-    }
+  // function uploadFile(e) {
+  //   e.preventDefault();
+  //   // console.log(file[0])
+  //   // console.log("printing file contents above")
+  //   let formData = new FormData();
+  //   if(file){
+  //     formData.append("document", file);
+  //   }
   
-    try {
-      api
-        .addCV(formData, user)
-        .then((response) => {
-          // console.log(response.data)
-          if (response.status === 200) {
-            //should return a long id
-            setDocId(response.data);
-            // setDocId(response.data)
-            console.log(userInfo);
-            alert("Resume added to user succesfully");
-          }
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
-    } catch (err) {
-      console.log("There was a problem with upload..");
-      console.log(err);
-    }
-  }
+  //   try {
+  //     api
+  //       .addCV(formData, user)
+  //       .then((response) => {
+  //         // console.log(response.data)
+  //         if (response.status === 200) {
+  //           //should return a long id
+  //           setDocId(response.data);
+  //           // setDocId(response.data)
+  //           console.log(userInfo);
+  //           alert("Resume added to user succesfully");
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log(error.response);
+  //       });
+  //   } catch (err) {
+  //     console.log("There was a problem with upload..");
+  //     console.log(err);
+  //   }
+  // }
   
-  function downloadFile() {
-    api.downloadDocument(docId).then((response) => {
-      console.log(docId);
-      const fileName =
-        response.headers["content-disposition"].split("filename=")[1];
-      console.log(fileName);
-      api.getDocById(docId).then((response) => {
-        //console.log(response.data);
-        const url = window.URL.createObjectURL(response.data);
+  // function downloadFile() {
+  //   api.downloadDocument(docId).then((response) => {
+  //     console.log(docId);
+  //     const fileName =
+  //       response.headers["content-disposition"].split("filename=")[1];
+  //     console.log(fileName);
+  //     api.getDocById(docId).then((response) => {
+  //       //console.log(response.data);
+  //       const url = window.URL.createObjectURL(response.data);
   
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", fileName);
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
-      });
-    });
-  }
+  //       const link = document.createElement("a");
+  //       link.href = url;
+  //       link.setAttribute("download", fileName);
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       link.parentNode.removeChild(link);
+  //     });
+  //   });
+  // }
   
-  function deleteCV() {
-    const yes = window.confirm(
-      "Are you sure you want to delete your resume? Action is irreversible."
-    );
-    if(yes){
-      if(docId !== null){
-        api
-          .deleteCV(docId)
-          .then((response) => {
-            // console.log(response.data)
-            if (response.status === 200) {
-              //should return a long id
-              if (response.data === true) {
-                alert("CV deleted successfully.");
-                console.log("resume deleted successfully");
-                setDocId(null);
-                window.location.reload();
-              } else {
-                console.log("resume not deleted...");
-              }
-            }
-          })
-          .catch((error) => {
-            alert("No resume to delete");
-            console.log(error.response);
-          });
-      }
-    }
-  }
+  // function deleteCV() {
+  //   const yes = window.confirm(
+  //     "Are you sure you want to delete your resume? Action is irreversible."
+  //   );
+  //   if(yes){
+  //     if(docId !== null){
+  //       api
+  //         .deleteCV(docId)
+  //         .then((response) => {
+  //           // console.log(response.data)
+  //           if (response.status === 200) {
+  //             //should return a long id
+  //             if (response.data === true) {
+  //               alert("CV deleted successfully.");
+  //               console.log("resume deleted successfully");
+  //               setDocId(null);
+  //               window.location.reload();
+  //             } else {
+  //               console.log("resume not deleted...");
+  //             }
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           alert("No resume to delete");
+  //           console.log(error.response);
+  //         });
+  //     }
+  //   }
+  // }
 
   return (
     <div>
@@ -207,7 +215,7 @@ export default function Profile() {
                   Skills
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                <button
+                {/* <button
                     type="button"
                     className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     onClick = {()=> setAddskill(true)}
@@ -217,7 +225,8 @@ export default function Profile() {
                       aria-hidden="true"
                     />
                     <span className="hidden md:block">Add skill</span>
-                  </button>
+                  </button> */}
+                  <AddSkillset />
                 </div>
               </div>
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -225,13 +234,7 @@ export default function Profile() {
                   Language
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <input
-                    type="text"
-                    name="region"
-                    id="region"
-                    autoComplete="address-level1"
-                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                  />
+                  <Language />
                 </div>
               </div>
 
@@ -240,13 +243,17 @@ export default function Profile() {
                   Recommendations
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <input
-                    type="text"
-                    name="postal-code"
-                    id="postal-code"
-                    autoComplete="postal-code"
-                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                  />
+                  <button
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddRecommendation(true)}
+                  >
+                    <PlusIcon
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Add recommendation</span>
+                  </button>
                 </div>
               </div>
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -254,38 +261,50 @@ export default function Profile() {
                   CV
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <input
-                    type="text"
-                    name="first-name"
-                    id="first-name"
-                    autoComplete="given-name"
-                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                  />
+                  <button
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddCV(true)}
+                  >
+                    <ArrowUpTrayIcon 
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Upload CV</span>
+                  </button>
                 </div>
 
                 <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Transcript
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <input
-                    type="text"
-                    name="last-name"
-                    id="last-name"
-                    autoComplete="family-name"
-                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                  />
+                  <button
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddTranscript(true)}
+                  >
+                    <ArrowUpTrayIcon 
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Upload Transcript</span>
+                  </button>
                 </div>
                 <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Cover Letter
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <input
-                    type="text"
-                    name="first-name"
-                    id="first-name"
-                    autoComplete="given-name"
-                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                  />
+                  <button
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddCoverletter(true)}
+                  >
+                    <ArrowUpTrayIcon 
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Upload Cover Letter</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -313,6 +332,7 @@ export default function Profile() {
         </form>
         <AddWork open ={addwork} setOpen={() => setAddwork(false)} />
         <AddSkill open ={addskil} setOpen={() => setAddskill(false)} />
+        <Recommendation open ={addRecommendation} setOpen={() => setAddRecommendation(false)} />
       </div>
     </div>
   )
