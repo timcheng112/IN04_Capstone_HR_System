@@ -688,8 +688,26 @@ const api = {
   getUserGoals(year, type, userId) {
     return axios.get(`http://localhost:9191/api/goal/${year}/type/${type}/user/${userId}`)
   },
+  getAllUserGoals(year) {
+    return axios.get(`http://localhost:9191/api/goal/users/${year}`);
+  },
   addAchievement(goalId, description) {
-    return axios.post(`http://localhost:9191/api/goal/${goalId}/achievement?description=${description}`);
+    return axios.post(`http://localhost:9191/api/goal/${goalId}/achievement?description=${description}`)
+  },
+  addAppraisalPeriod(appraisalPeriod) {
+    return axios.post(`http://localhost:9191/api/appraisalPeriod`, appraisalPeriod)
+  },
+  getAppraisalPeriodByYear(year) {
+    return axios.get(`http://localhost:9191/api/appraisalPeriod/${year}`)
+  },
+  getAllAppraisalPeriods() {
+    return axios.get(`http://localhost:9191/api/appraisalPeriod`)
+  },
+  deleteAppraisalPeriod(year) {
+    return axios.delete(`http://localhost:9191/api/appraisalPeriod/${year}`)
+  },
+  updateAppraisalPeriod(startDate, endDate) {
+    return axios.put(`http://localhost:9191/api/appraisalPeriod?startDate=${startDate}&endDate=${endDate}`)
   },
   // activateUser(email){
   //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
@@ -697,11 +715,15 @@ const api = {
   // deactivateUser(email){
   //   return axios.get(`http://localhost:9191/api/user/deactivate/?workEmail=${email}`);
   // },
-  setUserStatus(email){
-    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
+  setUserStatus(email) {
+    return axios.get(
+      `http://localhost:9191/api/user/setUserStatus?workEmail=${email}`
+    );
   },
   updateGoalPeriod(startDate, endDate) {
-    return axios.put(`http://localhost:9191/api/goalPeriod/start/${startDate}/end/${endDate}`)
+    return axios.put(
+      `http://localhost:9191/api/goalPeriod/start/${startDate}/end/${endDate}`
+    );
   },
   changeTeamHead(teamId, newHeadId) {
     return axios.put(

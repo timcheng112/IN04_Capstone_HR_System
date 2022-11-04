@@ -5,8 +5,8 @@ import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 import { useHistory } from "react-router-dom";
 import PerformanceSidebar from "../../components/Sidebar/Performance";
-import Moment from "react-moment";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import Moment from "react-moment";
 import AddAppraisalModal from "../../features/performance/AddAppraisalModal";
 
 
@@ -47,15 +47,16 @@ const people = [
 export default function Appraisals() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
-  const history = useHistory();
   const [hrMode, setHrMode] = useState(false);
+  const [appraisalPeriods, setAppraisalPeriods] = useState([]);
   const [selectedPeriod, setSelectedPeriod] = useState(null);
   const [currentPeriod, setCurrentPeriod] = useState(null);
+  const [editMode, setEditMode] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [newStart, setNewStart] = useState("");
   const [newEnd, setNewEnd] = useState("");
-  const [editMode, setEditMode] = useState(false);
+  const history = useHistory();
   const [addAppraisalOpen, setAddAppraisalOpen] = useState(false);
 
 
@@ -64,9 +65,22 @@ export default function Appraisals() {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        console.log(user);
+        //console.log(user);
       })
       .catch((error) => setError(error));
+
+    api.getAllAppraisalPeriods().then((response) => {
+      setAppraisalPeriods(response.data);
+      setSelectedPeriod(response.data[0]);
+      //console.log(response.data[0]);
+    });
+
+    api.getAppraisalPeriodByYear(new Date().getFullYear()).then((response) => {
+      setCurrentPeriod(response.data);
+      setStartDate(response.data.startDate);
+      setEndDate(response.data.endDate);
+      console.log(response.data);
+    });
   }, []);
 
   if (error) return `Error`;

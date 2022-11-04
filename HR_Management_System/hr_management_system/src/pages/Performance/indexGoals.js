@@ -11,25 +11,7 @@ import Moment from "react-moment";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import AddAchievementModal from "../../features/performance/AddAchievementModal";
 import EditGoalModal from "../../features/performance/EditGoalModal";
-
-const people = [
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-  },
-  {
-    name: "Walton Lsdfsfs",
-    title: "Front-end Developer",
-    email: "lindsay.walto@example.com",
-    role: "Member",
-  },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import ViewEmployeeGoals from "../../features/performance/ViewEmployeeGoals";
 
 export default function Goals() {
   const [error, setError] = useState(null);
@@ -50,9 +32,11 @@ export default function Goals() {
   const [openDeleteGoal, setOpenDeleteGoal] = useState(false);
   const [openEditGoal, setOpenEditGoal] = useState(false);
   const [openAddAchievement, setOpenAddAchievement] = useState(false);
+  const [openView, setOpenView] = useState(false);
   const [financial, setFinancial] = useState([]);
   const [business, setBusiness] = useState([]);
   const [selectedItem, setSelectedItem] = useState(0);
+  const [userGoals, setUserGoals] = useState([]);
 
   useEffect(() => {
     api
@@ -80,7 +64,7 @@ export default function Goals() {
     api
       .getUserGoals(goalPeriodYear, "financial", getUserId())
       .then((response) => {
-        console.log(response.data);
+        //console.log(response.data);
         setFinancial(response.data);
       });
 
@@ -90,6 +74,22 @@ export default function Goals() {
         //console.log(response.data);
         setBusiness(response.data);
       });
+
+    api.getAllUserGoals(new Date().getFullYear()).then((response) => {
+      console.log("all goals");
+      console.log(response.data);
+      setUserGoals(response.data);
+      response.data.forEach((employee) => {
+        employee.financialGoals = employee.goals.filter(
+          (g) => g.type === "financial"
+        );
+        employee.businessGoals = employee.goals.filter(
+          (g) => g.type === "business"
+        );
+        //console.log(employee.goals.filter(g => g.type === "business"))
+        //console.log(employee.firstName + " " + employee.businessGoals.length)
+      });
+    });
   }, []);
 
   useEffect(() => {
@@ -232,13 +232,29 @@ export default function Goals() {
             <div className="flex items-center">
               <div className="mt-4 ml-auto mr-6">
                 {user !== null && user.hrEmployee && (
-                  <button
-                    type="button"
-                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                    onClick={() => setHrMode(!hrMode)}
-                  >
-                    HR Mode
-                  </button>
+                  <>
+                    {hrMode ? (
+                      <>
+                        <button
+                          type="button"
+                          className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                          onClick={() => setHrMode(!hrMode)}
+                        >
+                          Non-HR Mode
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                          onClick={() => setHrMode(!hrMode)}
+                        >
+                          HR Mode
+                        </button>
+                      </>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -396,30 +412,38 @@ export default function Goals() {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {people.map((person) => (
-                                  <tr key={person.email}>
+                                {userGoals.map((employee) => (
+                                  <tr key={employee.userId}>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-left text-gray-900 sm:pl-6">
-                                      {person.name}
+                                      {employee.firstName} {employee.lastName}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left ">
-                                      {person.title}
+                                      {employee.workEmail}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left ">
-                                      {person.email}
+                                      {employee.financialGoals.length}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left ">
-                                      {person.role}
+                                      {employee.businessGoals.length}
                                     </td>
                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm text-left font-medium sm:pr-6">
-                                      <a
-                                        href="/home"
+                                      <button
                                         className="text-indigo-600 hover:text-indigo-900"
+                                        onClick={() => {
+                                          setOpenView(true);
+                                          setSelectedItem(employee.userId);
+                                        }}
                                       >
                                         View
                                         <span className="sr-only">
-                                          , {person.name}
+                                          , {employee.name}
                                         </span>
-                                      </a>
+                                      </button>
+                                      <ViewEmployeeGoals
+                                        uId={selectedItem}
+                                        open={openView}
+                                        onClose={() => setOpenView(false)}
+                                      />
                                     </td>
                                   </tr>
                                 ))}
@@ -660,9 +684,7 @@ export default function Goals() {
                                                     setOpenDeleteGoal(false)
                                                   }
                                                   onConfirm={() =>
-                                                    handleDeleteGoal(
-                                                      
-                                                    )
+                                                    handleDeleteGoal()
                                                   }
                                                 />
                                               </td>
