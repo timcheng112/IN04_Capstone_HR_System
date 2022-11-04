@@ -36,7 +36,7 @@ public class Appraisal {
     private String promotionJustification;
     private Boolean submitted;
 
-    //i think we need to store it either in teams or user. 
+    //i think we need to store it either in teams or user.
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "employee")
