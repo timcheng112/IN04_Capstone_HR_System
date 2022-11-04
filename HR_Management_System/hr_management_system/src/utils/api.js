@@ -718,6 +718,27 @@ const api = {
       `http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`
     );
   },
+  getAllAppraisals(){
+    return axios.get(`http://localhost:9191/api/appraisal)`);
+  },
+  getAnAppraisal(appraisalId){
+    return axios.get(`http://localhost:9191/api/appraisal/get/${appraisalId}`);
+  },
+  addAppraisal(appraisal){
+    return axios.post(`http://localhost:9191/api/appraisal/addAppraisal/${appraisal}`)
+  },
+  editAppraisal(appraisal){
+    return axios.put(`http://localhost:9191/api/appraisal/editAppraisal/${appraisal}`)
+  },
+  deleteAppraisal(appraisalId){
+    return axios.delete(`http://localhost:9191/api/appraisal/${appraisalId}`);
+  },
+  getAnAppraisalByDate(date){
+    return axios.get(`http://localhost:9191/api/appraisal/${date}`)
+  },
+  createAppraisalTemplate(appraisal){
+    return axios.post(`http://localhost:9191/api/appraisal/createAppraisalTemplate/${appraisal}`);
+  },
 };
 
 export default api;

@@ -121,6 +121,7 @@ public class OrganizationService {
         org.getOrganizationHead().setCurrentLeaveQuota(null);
 
 
+        //come back and add relationship - S&A
         for (Department d : departments) {
             d.setOrganization(null);
             d.setTeams(new ArrayList<>());
@@ -149,6 +150,7 @@ public class OrganizationService {
 
         return org;
     }
+
 
     public Long addNewOrganization(String name, Long userId) {
         Optional<User> orgHead = userRepository.findById(userId);

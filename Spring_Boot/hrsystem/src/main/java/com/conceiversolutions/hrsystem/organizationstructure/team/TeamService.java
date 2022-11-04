@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+//come back and add relationship - S&A
 @Service
 @AllArgsConstructor
 public class TeamService {
@@ -494,15 +496,16 @@ public class TeamService {
             throw new IllegalStateException("Employee is not in the team");
         }
 
-        for(ShiftListItem sli : user.getShiftListItems()){
-
-        }
+//        for(ShiftListItem sli : user.getShiftListItems()){
+//
+//        }
 
         List<Team> tempTeams = user.getTeams();
         tempTeams.remove(team);
 
         user.setTeams(tempTeams);
         team.removeUser(user);
+
 
         userRepository.save(user);
         teamRepository.save(team);
