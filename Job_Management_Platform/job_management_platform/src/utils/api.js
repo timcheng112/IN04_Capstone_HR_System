@@ -53,8 +53,8 @@ const api = {
   getUserInfo(userId){
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
-  editUserInfo(userId, gender, email, phone){
-    return axios.get(`http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`);
+  updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear, languages){
+    return axios.put(`http://localhost:9191/api/user/updateUserDetails?userId=${userId}&firstName=${firstName}&lastName=${lastName}&aboutMe=${aboutMe}&educationLevel=${educationLevel}&schoolName=${schoolName}&gradYear=${gradYear}&languages=${languages}`);
   },
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
@@ -110,6 +110,12 @@ const api = {
       file
     );
   },
+  uploadDocument(file, userId, documentType) {
+      return axios.post(
+        `http://localhost:9191/api/qualification/addDocument?file=&userId=${userId}&documentType={documentType}`,
+        file
+      );
+    },
   deleteCV(docId) {
     return axios.delete(`http://localhost:9191/api/docData/${docId}`);
   },
@@ -136,6 +142,10 @@ const api = {
   removeUserRecommendation(userId, recoId) {
     return axios.delete(`http://localhost:9191/api/qualification/getUserRecommendations?userId=${userId}&recoId=${recoId}`);
   },
+  saveUserRecommendations(userId, recos) {
+    return axios.put(`http://localhost:9191/api/qualification/saveUserRecommendations?userId=${userId}`
+    ,recos);
+  },
   addWorkExperience(userId, positionName, companyName, startDate, endDate, currentlyWorking, description) {
     return axios.post(`http://localhost:9191/api/qualification/addWorkExperience?userId=${userId}&positionName=${positionName}&companyName=${companyName}&startDate=${startDate}&endDate=${endDate}&currentlyWorking=${currentlyWorking}&description=${description}`);
   },
@@ -145,8 +155,16 @@ const api = {
   removeUserExperience(userId, expId) {
     return axios.delete(`http://localhost:9191/api/qualification/removeUserExperience?userId=${userId}&expId=${expId}`);
   },
+  saveWorkExperiences(userId, experiences) {
+    return axios.put(`http://localhost:9191/api/qualification/saveWorkExperiences?userId=${userId}`
+    ,experiences);
+  },
   updateUserEducation(userId, highestEducation, schoolName, schoolGradYear) {
     return axios.post(`http://localhost:9191/api/qualification/updateUserEducation?userId=${userId}&highestEducation=${highestEducation}&schoolName=${schoolName}&schoolGradYear=${schoolGradYear}`);
+  },
+  saveUserSkillsets(userId, userskills) {
+    return axios.put(`http://localhost:9191/api/qualification/saveUserSkillsets?userId=${userId}`
+    ,userskills);
   },
 
   // Job Posting

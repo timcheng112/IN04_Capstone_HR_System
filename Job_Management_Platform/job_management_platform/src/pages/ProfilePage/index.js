@@ -33,6 +33,59 @@ export default function Profile() {
   const [docId, setDocId] = useState(null);
   const [error, setError] = useState(null);
 
+//  function testMatt() {
+//      sample API calls for backend
+//    let exp = [{"experienceId": 1,
+//                    "positionName": "Bababa",
+//                    "companyName": "BAaaaaa",
+//                    "startDate": "2019-01-05",
+//                    "endDate": "2020-02-10",
+//                    "currentlyWorking": false,
+//                    "description": "Teach kiddos how wto kick butt"},
+//                {"experienceId": -1,
+//                    "positionName": "dddd",
+//                    "companyName": "dddd",
+//                    "startDate": "2021-02-25",
+//                    "endDate": null,
+//                    "currentlyWorking": true,
+//                    "description": "dddd"
+//                }]
+//    let exp = []
+//    console.log(exp);
+//    api.saveWorkExperiences(16, exp);
+
+//    let rec = [{"recommendationId": -1,
+//                    "name": "Daren",
+//                    "phone": "91919191",
+//                    "email": "asdasdas@asdsad.com",
+//                    "relationship": "friend1"},
+//                {"recommendationId": -1,
+//                    "name": "Jonathan",
+//                    "phone": "92929292",
+//                    "email": "jony@jony.com",
+//                    "relationship": "friend2"}]
+//    console.log(rec);
+//    api.saveUserRecommendations(16, rec);
+//
+//    let userskills = [{"userSkillsetId": 1,
+//                    "skillLevel": "1",
+//                    "skillset": {
+//                                "skillsetId": 1,
+//                                "skillsetName": "Java",
+//                                "jobRequests": [],
+//                                "jobPostings": []
+//                                    }},
+//                    {"userSkillsetId": -1,
+//                    "skillLevel": "3",
+//                    "skillset": {
+//                                "skillsetId": 3,
+//                                "skillsetName": "MySQL",
+//                                "jobRequests": [],
+//                                "jobPostings": []
+//                                    }}]
+//    console.log(userskills);
+//    api.saveUserSkillsets(16, userskills);
+//  }
 
   // function handleFile(e) {
   //   console.log(e.target.files, "--");
@@ -310,7 +363,14 @@ export default function Profile() {
           </div>
 
         </form>
-
+//        testing code
+//        <button
+//            type="submit"
+//            onClick= {()=>testMatt()}
+//            className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+//          >
+//            butt
+//          </button>
       </div>
     </div>
   )

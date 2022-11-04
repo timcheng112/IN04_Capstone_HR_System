@@ -546,4 +546,35 @@ public class User implements UserDetails {
     public void setDisabled(Boolean disabled) {
         isDisabled = disabled;
     }
+
+    public User nullify() {
+        System.out.println("Nullifying user relationships");
+        this.setProfilePic(null);
+        this.setPositions(new ArrayList<>());
+        this.setCurrentPosition(null);
+        this.setQualificationInformation(null);
+        this.setApplications(new ArrayList<>());
+        this.setJobRequests(new ArrayList<>());
+        this.setPayslips(new ArrayList<>());
+        this.setAttendances(new ArrayList<>());
+        this.setEmployeeAppraisals(new ArrayList<>());
+        this.setManagerAppraisals(new ArrayList<>());
+        this.setManagerReviews(new ArrayList<>());
+        this.setEmployeeReviews(new ArrayList<>());
+        this.setGoals(new ArrayList<>());
+        this.setTaskListItems(new ArrayList<>());
+        this.setTeams(new ArrayList<>());
+        this.setCurrentPayInformation(null);
+        this.setReactivationRequest(null);
+        this.setPreferredDates(null);
+        this.setBlocks(new ArrayList<>());
+        this.setShiftListItems(new ArrayList<>());
+        this.setSwapRequestsReceived(new ArrayList<>());
+        this.setSwapRequestsRequested(new ArrayList<>());
+        this.setLeaves(new ArrayList<>());
+        this.setLeaveQuotas(new ArrayList<>());
+        this.setCurrentLeaveQuota(null);
+
+        return this;
+    }
 }
