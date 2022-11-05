@@ -500,7 +500,7 @@ public class JobRequestService {
         List<Skillset> skillsets = List.copyOf(jr.getJobRequirements());
         // create job posting
         JobPosting newJP = new JobPosting(jr.getJobTitle(), jr.getJobDescription(), jr.getPreferredStartDate()
-                , jr.getJobType(), jr.getJobRole(), jr.getStatus(), jr.getSalary(), LocalDate.now(), true, approver, jr, skillsets);
+                , jr.getJobType(), jr.getJobRole(), JobStatusEnum.CREATED, jr.getSalary(), LocalDate.now(), true, approver, jr, skillsets);
 
         JobPosting savedJP = jobPostingRepository.saveAndFlush(newJP);
         System.out.println("Job Posting Id " + savedJP.getPostingId() + " is created");

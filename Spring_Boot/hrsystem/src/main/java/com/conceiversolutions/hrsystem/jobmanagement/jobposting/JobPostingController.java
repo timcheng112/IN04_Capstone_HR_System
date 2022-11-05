@@ -21,6 +21,11 @@ public class JobPostingController {
         return jobPostingService.getAllJobPosts();
     }
 
+    @GetMapping(path = "/getAllOpenPosts")
+    public List<JobPosting> getAllOpenPosts() {
+        return jobPostingService.getAllOpenPosts();
+    }
+
     @PutMapping(path = "/closeJobPost")
     public boolean closeJobPost(@RequestParam("jobPostingId") Long jobPostingId) {
         return jobPostingService.closeJobPost(jobPostingId);
