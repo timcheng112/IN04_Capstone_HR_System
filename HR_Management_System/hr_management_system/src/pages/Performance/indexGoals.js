@@ -37,6 +37,9 @@ export default function Goals() {
   const [business, setBusiness] = useState([]);
   const [selectedItem, setSelectedItem] = useState(0);
   const [userGoals, setUserGoals] = useState([]);
+  const [manager, setManager] = useState(false);
+  const [managerMode, setManagerMode] = useState(false);
+  const [team, setTeam] = useState([]);
 
   useEffect(() => {
     api
@@ -89,6 +92,24 @@ export default function Goals() {
         //console.log(employee.goals.filter(g => g.type === "business"))
         //console.log(employee.firstName + " " + employee.businessGoals.length)
       });
+    });
+
+    api.getIsTeamHead(getUserId()).then((response) => {
+      if (response.data >= -1) {
+        setManager(true);
+        //setTeam
+        api.getTeamGoals(response.data, goalPeriodYear).then((response) => {
+          setTeam(response.data);
+          response.data.forEach((employee) => {
+            employee.financialGoals = employee.goals.filter(
+              (g) => g.type === "financial"
+            );
+            employee.businessGoals = employee.goals.filter(
+              (g) => g.type === "business"
+            );
+          });
+        });
+      }
     });
   }, []);
 
@@ -515,327 +536,463 @@ export default function Goals() {
                     <h1 className="text-xl font-semibold text-gray-900">
                       Goals
                     </h1>
+                    {manager ? (
+                      <>
+                        {managerMode ? (
+                          <>
+                            <div className="flex justify-end mt-4 ml-auto mr-6">
+                              <div>
+                                <>
+                                  <button
+                                    type="button"
+                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                    onClick={() => setManagerMode(!managerMode)}
+                                  >
+                                    Non-Manager Mode
+                                  </button>
+                                </>
+                              </div>
+                            </div>
+                            <h2 className="font-semibold text-lg">Team Goals</h2>
+                            <div className="mt-8 flex flex-col mx-20">
+                              <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                  <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                    <table className="min-w-full divide-y divide-gray-300">
+                                      <thead className="bg-gray-50">
+                                        <tr>
+                                          <th
+                                            scope="col"
+                                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                          >
+                                            Name
+                                          </th>
+                                          <th
+                                            scope="col"
+                                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                          >
+                                            Work Email
+                                          </th>
+                                          <th
+                                            scope="col"
+                                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                          >
+                                            Financial
+                                          </th>
+                                          <th
+                                            scope="col"
+                                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                          >
+                                            Business
+                                          </th>
+                                          <th
+                                            scope="col"
+                                            className="relative py-3.5 pl-3 pr-4 sm:pr-6"
+                                          >
+                                            <span className="sr-only">
+                                              View
+                                            </span>
+                                          </th>
+                                        </tr>
+                                      </thead>
+                                      <tbody className="divide-y divide-gray-200 bg-white">
+                                        {team.map((employee) => (
+                                          <tr key={employee.userId}>
+                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-left text-gray-900 sm:pl-6">
+                                              {employee.firstName}{" "}
+                                              {employee.lastName}
+                                            </td>
+                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left ">
+                                              {employee.workEmail}
+                                            </td>
+                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left ">
+                                              {employee.financialGoals.length}
+                                            </td>
+                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left ">
+                                              {employee.businessGoals.length}
+                                            </td>
+                                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm text-left font-medium sm:pr-6">
+                                              <button
+                                                className="text-indigo-600 hover:text-indigo-900"
+                                                onClick={() => {
+                                                  setOpenView(true);
+                                                  setSelectedItem(
+                                                    employee.userId
+                                                  );
+                                                }}
+                                              >
+                                                View
+                                                <span className="sr-only">
+                                                  , {employee.name}
+                                                </span>
+                                              </button>
+                                              <ViewEmployeeGoals
+                                                uId={selectedItem}
+                                                open={openView}
+                                                onClose={() =>
+                                                  setOpenView(false)
+                                                }
+                                              />
+                                            </td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex justify-end mt-4 ml-auto mr-6">
+                              <div>
+                                <>
+                                  <button
+                                    type="button"
+                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                    onClick={() => setManagerMode(!managerMode)}
+                                  >
+                                    Manager Mode
+                                  </button>
+                                </>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <></>
+                    )}
                     <div className="mb-10 mx-32">
                       <div>
                         {withinCurrentPeriod() ? (
                           <>
-                            <label
-                              htmlFor="period"
-                              className="block text-lg mt-5 mb-5 font-semibold text-gray-700"
-                            >
-                              Period
-                            </label>
-                            <select
-                              id="period"
-                              name="period"
-                              className="mt-1 mr-5 block font-semibold text-lg w-full rounded-md border border-gray-300 px-3 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 bg-white"
-                              defaultValue={new Date().getFullYear().toString()}
-                              onChange={(e) =>
-                                setGoalPeriodYear(e.target.value)
-                              }
-                            >
-                              {goalPeriods.map((goalPeriod) => (
-                                <option
-                                  key={goalPeriod.goalPeriodId}
-                                  className="text-center text-lg"
+                            {managerMode ? (
+                              <></>
+                            ) : (
+                              <>
+                                <label
+                                  htmlFor="period"
+                                  className="block text-lg mt-5 mb-5 font-semibold text-gray-700"
                                 >
-                                  {goalPeriod.year}
-                                </option>
-                              ))}
-                            </select>
-                            <span className="inline-flex items-center mt-2 mb-5 rounded-full bg-green-100 px-5 py-2 text-md font-medium text-green-800">
-                              Goal-setting period
-                              <Moment
-                                parse="YYYY-MM-DD"
-                                className="mx-2 text-md text-gray-800"
-                                locale="Asia/Singapore"
-                                format="DD/MM/YYYY"
-                              >
-                                {startDate}
-                              </Moment>
-                              {" - "}
-                              <Moment
-                                parse="YYYY-MM-DD"
-                                className="mx-2 text-md text-gray-800"
-                                locale="Asia/Singapore"
-                                format="DD/MM/YYYY"
-                              >
-                                {endDate}
-                              </Moment>
-                            </span>
-                            <div className="px-4 sm:px-6 lg:px-8">
-                              <div className="sm:flex sm:items-center">
-                                <div className="sm:flex-auto"></div>
-                              </div>
-                              <div className="sm:flex sm:items-center">
-                                <h2 className="text-lg font-semibold text-left ml-5">
-                                  Financial ({financial.length})
-                                </h2>
-                                <div className="sm:flex-auto"></div>
-                                <div className="sm:mt-0 sm:ml-16 sm:flex-none">
-                                  <button
-                                    type="button"
-                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                                    onClick={() => setOpenAddGoal(true)}
+                                  Period
+                                </label>
+                                <select
+                                  id="period"
+                                  name="period"
+                                  className="mt-1 mr-5 block font-semibold text-lg w-full rounded-md border border-gray-300 px-3 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 bg-white"
+                                  defaultValue={new Date()
+                                    .getFullYear()
+                                    .toString()}
+                                  onChange={(e) =>
+                                    setGoalPeriodYear(e.target.value)
+                                  }
+                                >
+                                  {goalPeriods.map((goalPeriod) => (
+                                    <option
+                                      key={goalPeriod.goalPeriodId}
+                                      className="text-center text-lg"
+                                    >
+                                      {goalPeriod.year}
+                                    </option>
+                                  ))}
+                                </select>
+                                <span className="inline-flex items-center mt-2 mb-5 rounded-full bg-green-100 px-5 py-2 text-md font-medium text-green-800">
+                                  Goal-setting period
+                                  <Moment
+                                    parse="YYYY-MM-DD"
+                                    className="mx-2 text-md text-gray-800"
+                                    locale="Asia/Singapore"
+                                    format="DD/MM/YYYY"
                                   >
-                                    Add Financial Goal
-                                  </button>
-                                </div>
-                              </div>
-                              <div className="mt-8 flex flex-col">
-                                <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                  <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                      <table className="min-w-full divide-y divide-gray-300">
-                                        <thead className="bg-gray-50">
-                                          <tr>
-                                            <th
-                                              scope="col"
-                                              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                            >
-                                              Description
-                                            </th>
-                                            <th
-                                              scope="col"
-                                              className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                            >
-                                              Created
-                                            </th>
-                                            <th
-                                              scope="col"
-                                              className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                                            >
-                                              <span className="sr-only">
-                                                Edit
-                                              </span>
-                                            </th>
-                                          </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-200 bg-white">
-                                          {financial.map((goal) => (
-                                            <tr key={goal.goalId}>
-                                              <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {goal.description}
-                                              </td>
-                                              <td className="whitespace-nowrap text-left py-4 text-sm text-gray-900">
-                                                <Moment
-                                                  parse="YYYY-MM-DD"
-                                                  className="mx-2 font-sans"
-                                                  locale="Asia/Singapore"
-                                                  format="DD/MM/YYYY"
+                                    {startDate}
+                                  </Moment>
+                                  {" - "}
+                                  <Moment
+                                    parse="YYYY-MM-DD"
+                                    className="mx-2 text-md text-gray-800"
+                                    locale="Asia/Singapore"
+                                    format="DD/MM/YYYY"
+                                  >
+                                    {endDate}
+                                  </Moment>
+                                </span>
+                                <div className="px-4 sm:px-6 lg:px-8">
+                                  <div className="sm:flex sm:items-center">
+                                    <div className="sm:flex-auto"></div>
+                                  </div>
+                                  <div className="sm:flex sm:items-center">
+                                    <h2 className="text-lg font-semibold text-left ml-5">
+                                      Financial ({financial.length})
+                                    </h2>
+                                    <div className="sm:flex-auto"></div>
+                                    <div className="sm:mt-0 sm:ml-16 sm:flex-none">
+                                      <button
+                                        type="button"
+                                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                        onClick={() => setOpenAddGoal(true)}
+                                      >
+                                        Add Financial Goal
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div className="mt-8 flex flex-col">
+                                    <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                      <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                          <table className="min-w-full divide-y divide-gray-300">
+                                            <thead className="bg-gray-50">
+                                              <tr>
+                                                <th
+                                                  scope="col"
+                                                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                                 >
-                                                  {goal.created}
-                                                </Moment>
-                                              </td>
-                                              <td className="relative whitespace-nowrap text-left py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                <button
-                                                  type="button"
-                                                  className="inline-flex items-center ml-5 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                                  onClick={() => {
-                                                    handleUpdateGoal(goal);
-                                                    //console.log('gid ' + goal.goalId)
-                                                  }}
+                                                  Description
+                                                </th>
+                                                <th
+                                                  scope="col"
+                                                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                                 >
-                                                  <PencilIcon
-                                                    className="h-5 w-5 mr-2"
-                                                    aria-hidden="true"
-                                                  />
-                                                  Edit Goal
-                                                </button>
-                                                <EditGoalModal
-                                                  description={
-                                                    selectedItem.description
-                                                  }
-                                                  open={openEditGoal}
-                                                  onOpen={() =>
-                                                    setOpenEditGoal(false)
-                                                  }
-                                                  onClose={() =>
-                                                    setOpenEditGoal(false)
-                                                  }
-                                                  onConfirm={(desc) => {
-                                                    submitEditGoal(desc);
-                                                  }}
-                                                />
-                                                <button
-                                                  type="button"
-                                                  className="inline-flex items-center ml-3 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                                  onClick={() => {
-                                                    setSelectedItem(
-                                                      goal.goalId
-                                                    );
-                                                    setOpenDeleteGoal(true);
-                                                  }}
+                                                  Created
+                                                </th>
+                                                <th
+                                                  scope="col"
+                                                  className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                                                 >
-                                                  <TrashIcon
-                                                    className="h-5 w-5 mr-1"
-                                                    aria-hidden="true"
-                                                  />
-                                                  Delete Goal
-                                                </button>
-                                                <ConfirmDialog
-                                                  title="goal"
-                                                  item="goal"
-                                                  open={openDeleteGoal}
-                                                  onClose={() =>
-                                                    setOpenDeleteGoal(false)
-                                                  }
-                                                  setOpen={() =>
-                                                    setOpenDeleteGoal(false)
-                                                  }
-                                                  onConfirm={() =>
-                                                    handleDeleteGoal()
-                                                  }
-                                                />
-                                              </td>
-                                            </tr>
-                                          ))}
-                                        </tbody>
-                                      </table>
+                                                  <span className="sr-only">
+                                                    Edit
+                                                  </span>
+                                                </th>
+                                              </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-200 bg-white">
+                                              {financial.map((goal) => (
+                                                <tr key={goal.goalId}>
+                                                  <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                    {goal.description}
+                                                  </td>
+                                                  <td className="whitespace-nowrap text-left py-4 text-sm text-gray-900">
+                                                    <Moment
+                                                      parse="YYYY-MM-DD"
+                                                      className="mx-2 font-sans"
+                                                      locale="Asia/Singapore"
+                                                      format="DD/MM/YYYY"
+                                                    >
+                                                      {goal.created}
+                                                    </Moment>
+                                                  </td>
+                                                  <td className="relative whitespace-nowrap text-left py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                    <button
+                                                      type="button"
+                                                      className="inline-flex items-center ml-5 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                      onClick={() => {
+                                                        handleUpdateGoal(goal);
+                                                        //console.log('gid ' + goal.goalId)
+                                                      }}
+                                                    >
+                                                      <PencilIcon
+                                                        className="h-5 w-5 mr-2"
+                                                        aria-hidden="true"
+                                                      />
+                                                      Edit Goal
+                                                    </button>
+                                                    <EditGoalModal
+                                                      description={
+                                                        selectedItem.description
+                                                      }
+                                                      open={openEditGoal}
+                                                      onOpen={() =>
+                                                        setOpenEditGoal(false)
+                                                      }
+                                                      onClose={() =>
+                                                        setOpenEditGoal(false)
+                                                      }
+                                                      onConfirm={(desc) => {
+                                                        submitEditGoal(desc);
+                                                      }}
+                                                    />
+                                                    <button
+                                                      type="button"
+                                                      className="inline-flex items-center ml-3 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                      onClick={() => {
+                                                        setSelectedItem(
+                                                          goal.goalId
+                                                        );
+                                                        setOpenDeleteGoal(true);
+                                                      }}
+                                                    >
+                                                      <TrashIcon
+                                                        className="h-5 w-5 mr-1"
+                                                        aria-hidden="true"
+                                                      />
+                                                      Delete Goal
+                                                    </button>
+                                                    <ConfirmDialog
+                                                      title="goal"
+                                                      item="goal"
+                                                      open={openDeleteGoal}
+                                                      onClose={() =>
+                                                        setOpenDeleteGoal(false)
+                                                      }
+                                                      setOpen={() =>
+                                                        setOpenDeleteGoal(false)
+                                                      }
+                                                      onConfirm={() =>
+                                                        handleDeleteGoal()
+                                                      }
+                                                    />
+                                                  </td>
+                                                </tr>
+                                              ))}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            <div className="px-4 sm:px-6 lg:px-8">
-                              <div className="sm:flex sm:items-center">
-                                <div className="sm:flex-auto"></div>
-                              </div>
-                              <div className="sm:flex sm:items-center mt-5">
-                                <h2 className="text-lg font-semibold text-left ml-5">
-                                  Business ({business.length})
-                                </h2>
-                                <div className="sm:flex-auto"></div>
-                                <div className="sm:mt-0 sm:ml-16 sm:flex-none">
-                                  <button
-                                    type="button"
-                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                                    onClick={() => setOpenAddGoal(true)}
-                                  >
-                                    Add Business Goal
-                                  </button>
-                                </div>
-                              </div>
-                              <div className="mt-8 flex flex-col">
-                                <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                  <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                      <table className="min-w-full divide-y divide-gray-300">
-                                        <thead className="bg-gray-50">
-                                          <tr>
-                                            <th
-                                              scope="col"
-                                              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                            >
-                                              Description
-                                            </th>
-                                            <th
-                                              scope="col"
-                                              className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                            >
-                                              Created
-                                            </th>
-                                            <th
-                                              scope="col"
-                                              className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                                            >
-                                              <span className="sr-only">
-                                                Edit
-                                              </span>
-                                            </th>
-                                          </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-200 bg-white">
-                                          {business.map((goal) => (
-                                            <tr key={goal.goalId}>
-                                              <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                {goal.description}
-                                              </td>
-                                              <td className="whitespace-nowrap text-left px-1 py-4 text-sm text-gray-500">
-                                                <Moment
-                                                  parse="YYYY-MM-DD"
-                                                  className="mx-2 font-sans"
-                                                  locale="Asia/Singapore"
-                                                  format="DD/MM/YYYY"
+                                <div className="px-4 sm:px-6 lg:px-8">
+                                  <div className="sm:flex sm:items-center">
+                                    <div className="sm:flex-auto"></div>
+                                  </div>
+                                  <div className="sm:flex sm:items-center mt-5">
+                                    <h2 className="text-lg font-semibold text-left ml-5">
+                                      Business ({business.length})
+                                    </h2>
+                                    <div className="sm:flex-auto"></div>
+                                    <div className="sm:mt-0 sm:ml-16 sm:flex-none">
+                                      <button
+                                        type="button"
+                                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                        onClick={() => setOpenAddGoal(true)}
+                                      >
+                                        Add Business Goal
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div className="mt-8 flex flex-col">
+                                    <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                      <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                          <table className="min-w-full divide-y divide-gray-300">
+                                            <thead className="bg-gray-50">
+                                              <tr>
+                                                <th
+                                                  scope="col"
+                                                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                                 >
-                                                  {goal.created}
-                                                </Moment>
-                                              </td>
-                                              <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                <button
-                                                  type="button"
-                                                  className="inline-flex items-center ml-5 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                                  onClick={() => {
-                                                    handleUpdateGoal(goal);
-                                                    //console.log('gid ' + goal.goalId)
-                                                  }}
+                                                  Description
+                                                </th>
+                                                <th
+                                                  scope="col"
+                                                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                                 >
-                                                  <PencilIcon
-                                                    className="h-5 w-5 mr-2"
-                                                    aria-hidden="true"
-                                                  />
-                                                  Edit Goal
-                                                </button>
-                                                <EditGoalModal
-                                                  description={
-                                                    selectedItem.description
-                                                  }
-                                                  open={openEditGoal}
-                                                  onOpen={() =>
-                                                    setOpenEditGoal(false)
-                                                  }
-                                                  onClose={() =>
-                                                    setOpenEditGoal(false)
-                                                  }
-                                                  onConfirm={(desc) => {
-                                                    submitEditGoal(desc);
-                                                  }}
-                                                />
+                                                  Created
+                                                </th>
+                                                <th
+                                                  scope="col"
+                                                  className="relative py-3.5 pl-3 pr-4 sm:pr-6"
+                                                >
+                                                  <span className="sr-only">
+                                                    Edit
+                                                  </span>
+                                                </th>
+                                              </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-200 bg-white">
+                                              {business.map((goal) => (
+                                                <tr key={goal.goalId}>
+                                                  <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                    {goal.description}
+                                                  </td>
+                                                  <td className="whitespace-nowrap text-left px-1 py-4 text-sm text-gray-500">
+                                                    <Moment
+                                                      parse="YYYY-MM-DD"
+                                                      className="mx-2 font-sans"
+                                                      locale="Asia/Singapore"
+                                                      format="DD/MM/YYYY"
+                                                    >
+                                                      {goal.created}
+                                                    </Moment>
+                                                  </td>
+                                                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                    <button
+                                                      type="button"
+                                                      className="inline-flex items-center ml-5 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                      onClick={() => {
+                                                        handleUpdateGoal(goal);
+                                                        //console.log('gid ' + goal.goalId)
+                                                      }}
+                                                    >
+                                                      <PencilIcon
+                                                        className="h-5 w-5 mr-2"
+                                                        aria-hidden="true"
+                                                      />
+                                                      Edit Goal
+                                                    </button>
+                                                    <EditGoalModal
+                                                      description={
+                                                        selectedItem.description
+                                                      }
+                                                      open={openEditGoal}
+                                                      onOpen={() =>
+                                                        setOpenEditGoal(false)
+                                                      }
+                                                      onClose={() =>
+                                                        setOpenEditGoal(false)
+                                                      }
+                                                      onConfirm={(desc) => {
+                                                        submitEditGoal(desc);
+                                                      }}
+                                                    />
 
-                                                <button
-                                                  type="button"
-                                                  className="inline-flex items-center ml-3 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                                  onClick={() => {
-                                                    setSelectedItem(
-                                                      goal.goalId
-                                                    );
-                                                    setOpenDeleteGoal(true);
-                                                  }}
-                                                >
-                                                  <TrashIcon
-                                                    className="h-5 w-5 mr-1"
-                                                    aria-hidden="true"
-                                                  />
-                                                  Delete Goal
-                                                </button>
-                                                <ConfirmDialog
-                                                  title="goal"
-                                                  item="goal"
-                                                  open={openDeleteGoal}
-                                                  onClose={() =>
-                                                    setOpenDeleteGoal(false)
-                                                  }
-                                                  setOpen={() =>
-                                                    setOpenDeleteGoal(false)
-                                                  }
-                                                  onConfirm={() =>
-                                                    handleDeleteGoal()
-                                                  }
-                                                />
-                                              </td>
-                                            </tr>
-                                          ))}
-                                        </tbody>
-                                      </table>
+                                                    <button
+                                                      type="button"
+                                                      className="inline-flex items-center ml-3 px-3 rounded-full border border-transparent bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                      onClick={() => {
+                                                        setSelectedItem(
+                                                          goal.goalId
+                                                        );
+                                                        setOpenDeleteGoal(true);
+                                                      }}
+                                                    >
+                                                      <TrashIcon
+                                                        className="h-5 w-5 mr-1"
+                                                        aria-hidden="true"
+                                                      />
+                                                      Delete Goal
+                                                    </button>
+                                                    <ConfirmDialog
+                                                      title="goal"
+                                                      item="goal"
+                                                      open={openDeleteGoal}
+                                                      onClose={() =>
+                                                        setOpenDeleteGoal(false)
+                                                      }
+                                                      setOpen={() =>
+                                                        setOpenDeleteGoal(false)
+                                                      }
+                                                      onConfirm={() =>
+                                                        handleDeleteGoal()
+                                                      }
+                                                    />
+                                                  </td>
+                                                </tr>
+                                              ))}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            <AddGoalModal
-                              open={openAddGoal}
-                              onClose={() => setOpenAddGoal(false)}
-                            />
+                                <AddGoalModal
+                                  open={openAddGoal}
+                                  onClose={() => setOpenAddGoal(false)}
+                                />
+                              </>
+                            )}
                           </>
                         ) : (
                           <>

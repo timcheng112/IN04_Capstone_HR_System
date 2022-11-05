@@ -286,6 +286,9 @@ const api = {
       `http://localhost:9191/api/team/getAllTeamsInDept/${deptId}`
     );
   },
+  getIsTeamHead(userId) {
+    return axios.get(`http://localhost:9191/api/team/${userId}/isHead`);
+  },
   getAllModules() {
     return axios.get(`http://localhost:9191/api/module`);
   },
@@ -329,8 +332,10 @@ const api = {
   getVideosInModule(moduleId) {
     return axios.get(`http://localhost:9191/api/module/${moduleId}/videos`);
   },
-  addVideo(moduleId, video) {
-    return axios.post(`http://localhost:9191/api/module/${moduleId}`, video);
+  addVideo(moduleId, title, description) {
+    return axios.post(
+      `http://localhost:9191/api/module/${moduleId}?title=${title}&description=${description}`
+    );
   },
   getVideo(videoId) {
     return axios.get(`http://localhost:9191/api/video/${videoId}`);
@@ -348,6 +353,9 @@ const api = {
     return axios.post(
       `http://localhost:9191/api/video/${videoId}/user/${userId}`
     );
+  },
+  uploadVideo(video) {
+    return axios.post(`http://localhost:9191/api/video/upload`, video);
   },
   getIsVideoWatchedByEmployee(videoId, userId) {
     return axios.get(
@@ -680,34 +688,79 @@ const api = {
     );
   },
   deleteGoal(goalId) {
-    return axios.delete(`http://localhost:9191/api/goal/${goalId}`)
+    return axios.delete(`http://localhost:9191/api/goal/${goalId}`);
   },
   updateGoal(goalId, description) {
-    return axios.put(`http://localhost:9191/api/goal/${goalId}/?description=${description}`)
+    return axios.put(
+      `http://localhost:9191/api/goal/${goalId}/?description=${description}`
+    );
   },
   getUserGoals(year, type, userId) {
-    return axios.get(`http://localhost:9191/api/goal/${year}/type/${type}/user/${userId}`)
+    return axios.get(
+      `http://localhost:9191/api/goal/${year}/type/${type}/user/${userId}`
+    );
   },
   getAllUserGoals(year) {
     return axios.get(`http://localhost:9191/api/goal/users/${year}`);
   },
+  getTeamGoals(teamId, year) {
+    return axios.get(`http://localhost:9191/api/goal/team/${teamId}/${year}`);
+  },
   addAchievement(goalId, description) {
-    return axios.post(`http://localhost:9191/api/goal/${goalId}/achievement?description=${description}`)
+    return axios.post(
+      `http://localhost:9191/api/goal/${goalId}/achievement?description=${description}`
+    );
   },
   addAppraisalPeriod(appraisalPeriod) {
-    return axios.post(`http://localhost:9191/api/appraisalPeriod`, appraisalPeriod)
+    return axios.post(
+      `http://localhost:9191/api/appraisalPeriod`,
+      appraisalPeriod
+    );
   },
   getAppraisalPeriodByYear(year) {
-    return axios.get(`http://localhost:9191/api/appraisalPeriod/${year}`)
+    return axios.get(`http://localhost:9191/api/appraisalPeriod/${year}`);
   },
   getAllAppraisalPeriods() {
-    return axios.get(`http://localhost:9191/api/appraisalPeriod`)
+    return axios.get(`http://localhost:9191/api/appraisalPeriod`);
   },
   deleteAppraisalPeriod(year) {
-    return axios.delete(`http://localhost:9191/api/appraisalPeriod/${year}`)
+    return axios.delete(`http://localhost:9191/api/appraisalPeriod/${year}`);
   },
   updateAppraisalPeriod(startDate, endDate) {
-    return axios.put(`http://localhost:9191/api/appraisalPeriod?startDate=${startDate}&endDate=${endDate}`)
+    return axios.put(
+      `http://localhost:9191/api/appraisalPeriod?startDate=${startDate}&endDate=${endDate}`
+    );
+  },
+  addAppraisal(
+    appraisalYear,
+    status,
+    strengths,
+    weaknesses,
+    rating,
+    promotion,
+    promotionJustification,
+    submitted,
+    employeeId,
+    managerId
+  ) {
+    return axios.post(
+      `http://localhost:9191/api/appraisal?appraisalYear=${appraisalYear}&status=${status}&strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}&submitted=${submitted}&employeeId=${employeeId}&managerId=${managerId}`
+    );
+  },
+  getAllAppraisalsByYear(year) {
+    return axios.get(`http://localhost:9191/api/appraisal/year/${year}`);
+  },
+  getAppraisalById(appraisalId) {
+    return axios.get(`http://localhost:9191/api/appraisal/${appraisalId}`);
+  },
+  getManagerAppraisals(year, userId) {
+    return axios.get(`http://localhost:9191/api/appraisal/${year}/manager/${userId}`)
+  },
+  saveAppraisal(appraisalId, strengths, weaknesses, rating, promotion, promotionJustification) {
+    return axios.put(`http://localhost:9191/api/appraisal/${appraisalId}?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}`)
+  },
+  submitAppraisal(appraisalId, strengths, weaknesses, rating, promotion, promotionJustification) {
+    return axios.post(`http://localhost:9191/api/appraisal/${appraisalId}?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}`)
   },
   // activateUser(email){
   //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
@@ -740,26 +793,32 @@ const api = {
       `http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`
     );
   },
-  getAllAppraisals(){
+  getAllAppraisals() {
     return axios.get(`http://localhost:9191/api/appraisal)`);
   },
-  getAnAppraisal(appraisalId){
+  getAnAppraisal(appraisalId) {
     return axios.get(`http://localhost:9191/api/appraisal/get/${appraisalId}`);
   },
-  addAppraisal(appraisal){
-    return axios.post(`http://localhost:9191/api/appraisal/addAppraisal/${appraisal}`)
+  addAppraisal(appraisal) {
+    return axios.post(
+      `http://localhost:9191/api/appraisal/addAppraisal/${appraisal}`
+    );
   },
-  editAppraisal(appraisal){
-    return axios.put(`http://localhost:9191/api/appraisal/editAppraisal/${appraisal}`)
+  editAppraisal(appraisal) {
+    return axios.put(
+      `http://localhost:9191/api/appraisal/editAppraisal/${appraisal}`
+    );
   },
-  deleteAppraisal(appraisalId){
+  deleteAppraisal(appraisalId) {
     return axios.delete(`http://localhost:9191/api/appraisal/${appraisalId}`);
   },
-  getAnAppraisalByDate(date){
-    return axios.get(`http://localhost:9191/api/appraisal/${date}`)
+  getAnAppraisalByDate(date) {
+    return axios.get(`http://localhost:9191/api/appraisal/${date}`);
   },
-  createAppraisalTemplate(appraisal){
-    return axios.post(`http://localhost:9191/api/appraisal/createAppraisalTemplate/${appraisal}`);
+  createAppraisalTemplate(appraisal) {
+    return axios.post(
+      `http://localhost:9191/api/appraisal/createAppraisalTemplate/${appraisal}`
+    );
   },
 };
 

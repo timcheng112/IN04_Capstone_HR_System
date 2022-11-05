@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.performance.achievement.Achievement;
 import com.conceiversolutions.hrsystem.performance.achievement.AchievementRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -27,11 +29,15 @@ public class GoalService {
     @Autowired
     private final AchievementRepository achievementRepository;
 
+    @Autowired
+    private final TeamRepository teamRepository;
+
     public GoalService(GoalRepository goalRepository, UserRepository userRepository,
-            AchievementRepository achievementRepository) {
+            AchievementRepository achievementRepository, TeamRepository teamRepository) {
         this.goalRepository = goalRepository;
         this.userRepository = userRepository;
         this.achievementRepository = achievementRepository;
+        this.teamRepository = teamRepository;
     }
 
     public List<Goal> getAllGoalsByYear(String year) {
@@ -66,7 +72,7 @@ public class GoalService {
         List<Goal> userGoals = new ArrayList<>();
 
         for (Goal g : goals) {
-            if (g.getEmployee().getUserId() == userId && g.getType().equals(type)) {
+            if (g.getEmployee() != null && g.getEmployee().getUserId() == userId && g.getType().equals(type)) {
                 for (Achievement a : g.getAchievements()) {
                     a.setEmployeeGoal(null);
                 }
@@ -169,7 +175,8 @@ public class GoalService {
                 List<Goal> userGoals = new ArrayList<>();
 
                 for (Goal g : allGoals) {
-                    if (g.getEmployee() != null && g.getEmployee().getUserId() == u.getUserId() && g.getYear().equals(year)) {
+                    if (g.getEmployee() != null && g.getEmployee().getUserId() == u.getUserId()
+                            && g.getYear().equals(year)) {
                         for (Achievement a : g.getAchievements()) {
                             a.setEmployeeGoal(null);
                         }
@@ -187,6 +194,62 @@ public class GoalService {
         }
 
         return users;
+    }
+
+    public List<User> getTeamGoals(Long teamId, String year) {
+        List<User> users = new ArrayList<>();
+
+        Optional<Team> optionalTeam = teamRepository.findById(teamId);
+
+        if (optionalTeam.isPresent()) {
+            Team t = optionalTeam.get();
+
+            for (User u : t.getUsers()) {
+
+                if (!u.getWorkEmail().isEmpty()) {
+                    User user = new User();
+
+                    user.setUserId(u.getUserId());
+                    user.setFirstName(u.getFirstName());
+                    user.setLastName(u.getLastName());
+                    user.setWorkEmail(u.getWorkEmail());
+                    user.setUserRole(u.getUserRole());
+                    user.setIsBlackListed(u.getBlackListed());
+
+                    List<Goal> userGoals = new ArrayList<>();
+
+                    List<Goal> financial = getUserGoalsForPeriod(year, "financial", user.getUserId());
+
+                    for (Goal g : financial) {
+                        for (Achievement a : g.getAchievements()) {
+                            a.setEmployeeGoal(null);
+                        }
+                        g.setEmployee(null);
+                        userGoals.add(g);
+                    }
+
+                    List<Goal> business = getUserGoalsForPeriod(year, "business", u.getUserId());
+
+                    for (Goal g : business) {
+                        for (Achievement a : g.getAchievements()) {
+                            a.setEmployeeGoal(null);
+                        }
+                        g.setEmployee(null);
+                        userGoals.add(g);
+                    }
+
+                    user.setGoals(userGoals);
+                    users.add(user);
+
+                }
+
+            }
+
+            return users;
+
+        } else {
+            throw new IllegalStateException("Team does not exist");
+        }
     }
 
 }

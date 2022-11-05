@@ -70,4 +70,9 @@ public class GoalController {
         return goalService.getAllUserGoals(year);
     }
 
+    @GetMapping(path = "/team/{teamId}/{year}")
+    public List<User> getTeamGoals(@PathVariable("teamId") Long teamId, @PathVariable("year") String year) {
+        return goalService.getTeamGoals(teamId, year);
+    }
+
 }
