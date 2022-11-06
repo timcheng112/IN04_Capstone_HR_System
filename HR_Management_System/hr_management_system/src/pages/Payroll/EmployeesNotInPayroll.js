@@ -6,12 +6,12 @@ import AdminSidebar from "../../components/Sidebar/Admin";
 import Tab from "../../features/jobrequest/Tab";
 
 const tabs = [
-  { name: "Overview", href: "/payroll", current: true },
+  { name: "Overview", href: "/payroll", current: false },
   { name: "Payroll History", href: "/payrollhistory", current: false },
   {
     name: "Employees Not In Payroll",
     href: "/employeesnotinpayroll",
-    current: false,
+    current: true,
   },
 ];
 
@@ -69,7 +69,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Payroll = () => {
+const EmployeesNotInPayroll = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
@@ -235,4 +235,4 @@ const Payroll = () => {
   );
 };
 
-export default Payroll;
+export default EmployeesNotInPayroll;

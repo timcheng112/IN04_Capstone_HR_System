@@ -1,13 +1,14 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import Tab from "../../features/jobrequest/Tab";
+import PayrollCard from "../../features/payroll/PayrollCard";
 
 const tabs = [
-  { name: "Overview", href: "/payroll", current: true },
-  { name: "Payroll History", href: "/payrollhistory", current: false },
+  { name: "Overview", href: "/payroll", current: false },
+  { name: "Payroll History", href: "/payrollhistory", current: true },
   {
     name: "Employees Not In Payroll",
     href: "/employeesnotinpayroll",
@@ -65,11 +66,44 @@ const employees = [
   },
 ];
 
+const pastPayroll = [
+  {
+    date: "October 2022",
+    submissionDate: "30 October 2022",
+    numOfEmployees: "10",
+    gross: "$130,239.00",
+  },
+  {
+    date: "September 2022",
+    submissionDate: "28 September 2022",
+    numOfEmployees: "9",
+    gross: "$123,239.00",
+  },
+  {
+    date: "August 2022",
+    submissionDate: "31 August 2022",
+    numOfEmployees: "9",
+    gross: "$123,239.00",
+  },
+  {
+    date: "July 2022",
+    submissionDate: "29 July 2022",
+    numOfEmployees: "8",
+    gross: "$110,239.00",
+  },
+  {
+    date: "June 2022",
+    submissionDate: "28 June 2022",
+    numOfEmployees: "8",
+    gross: "$110,239.00",
+  },
+];
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Payroll = () => {
+const PayrollHistory = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
@@ -135,7 +169,7 @@ const Payroll = () => {
             />
           </div>
         </div>
-        <div className="mt-8 flex flex-col">
+        {/* <div className="mt-8 flex flex-col">
           <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -229,10 +263,15 @@ const Payroll = () => {
               </div>
             </div>
           </div>
+        </div> */}
+        <div className="mt-8 grid grid-cols-3 gap-6">
+          {pastPayroll.map((payroll) => (
+            <PayrollCard info={payroll} />
+          ))}
         </div>
       </div>
     </div>
   );
 };
 
-export default Payroll;
+export default PayrollHistory;
