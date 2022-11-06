@@ -4,7 +4,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import { format, parseISO } from "date-fns";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditShiftModal from "./EditShiftModal";
 import ViewShiftModal from "./ViewShiftModal";
 
@@ -20,6 +20,7 @@ const ShiftBlock = ({
   refreshKeyHandler,
   willBePersisted,
   openSuccess,
+  person,
 }) => {
   console.log(shift.startTime);
   const [open, setOpen] = useState(false);
@@ -36,6 +37,7 @@ const ShiftBlock = ({
         onClose={() => setOpen(false)}
         shift={shift}
         shiftListItem={shiftListItem}
+        person={person}
       />
       <EditShiftModal
         open={openEdit}

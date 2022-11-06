@@ -18,14 +18,12 @@ export default function ComboBox({
     query === ""
       ? items
       : items.filter((item) => {
-          return searchParam.some((newItem) => {
-            return (
-              item[newItem]
-                .toString()
-                .toLowerCase()
-                .indexOf(query.toLowerCase()) > -1
-            );
-          });
+          return (
+            item.teamName
+              .toString()
+              .toLowerCase()
+              .indexOf(query.toLowerCase()) > -1
+          );
         });
 
   return (

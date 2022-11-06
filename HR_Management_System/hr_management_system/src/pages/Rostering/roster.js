@@ -98,6 +98,8 @@ export default function Roster() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [openPublish, setOpenPublish] = useState(false);
 
+  console.log(shiftsToBeAdded);
+
   useEffect(() => {
     console.log("SHIFTS TO BE ADDED: " + shiftsToBeAdded);
   }, [shiftsToBeAdded]);
@@ -154,7 +156,7 @@ export default function Roster() {
         })
         .catch((error) => console.log(error.response.data.message));
     }
-  }, [selectedTeam]);
+  }, [openPublish]);
 
   function publishHandler() {
     setRefreshKey((oldKey) => oldKey + 1);
@@ -167,15 +169,23 @@ export default function Roster() {
         shiftsToBeAdded[i].shift.endTime,
         "yyyy-MM-dd HH:mm:ss"
       );
-      api
-        .addNewShift(shiftsToBeAdded[i].shift, selectedTeam.roster.rosterId)
-        .then((response) =>
-          addNewShiftListItemHandler(shiftsToBeAdded[i], response.data)
-        )
-        .catch((error) => {
-          console.log(error.response.data.message);
-          setError(true);
-        });
+      if (shiftsToBeAdded[i].shiftId !== undefined) {
+        addNewShiftListItemHandler(
+          shiftsToBeAdded[i],
+          shiftsToBeAdded[i].shiftId
+        );
+      } else {
+        api
+          .addNewShift(shiftsToBeAdded[i].shift, selectedTeam.roster.rosterId)
+          .then((response) => {
+            addNewShiftListItemHandler(shiftsToBeAdded[i], response.data);
+          })
+          .catch((error) => {
+            console.log("Error creating shift for " + shiftsToBeAdded[i].shift);
+            console.log(error.response.data.message);
+            setError(true);
+          });
+      }
     }
     if (error) {
       alert("Encountered errors during publish!");
@@ -188,20 +198,44 @@ export default function Roster() {
   }
 
   function addNewShiftListItemHandler(shift, shiftId) {
+    console.log("IM HERE");
     const shiftListItem = {
       isWeekend: isWeekend(shift.shift.startDate),
       isPhEvent: shift.isPhEvent,
       positionType: shift.positionType.name,
     };
-    api
-      .addNewShiftListItem(shiftListItem, shiftId, shift.userId)
-      .then(() =>
-        console.log("Shift List Item created for User with ID: " + shift.userId)
-      )
-      .catch((error) => {
-        console.log(error.response.data.message);
-        setError(true);
-      });
+    console.log("IS IT AN ARRAY? " + Array.isArray(shift.userId));
+    if (Array.isArray(shift.userId)) {
+      console.log("im inside");
+      for (let i = 0; i < shift.userId.length; i++) {
+        console.log(shift.userId[i]);
+        api
+          .addNewShiftListItem(shiftListItem, shiftId, shift.userId[i])
+          .then(() =>
+            console.log(
+              "Shift List Item created for User with ID: " + shift.userId[i]
+            )
+          )
+          .catch((error) => {
+            console.log("Error creating shift list item");
+            console.log(error.response.data.message);
+            setError(true);
+          });
+      }
+    } else {
+      console.log("LOOOOOL");
+      api
+        .addNewShiftListItem(shiftListItem, shiftId, shift.userId)
+        .then(() =>
+          console.log(
+            "Shift List Item created for User with ID: " + shift.userId
+          )
+        )
+        .catch((error) => {
+          console.log(error.response.data.message);
+          setError(true);
+        });
+    }
   }
 
   function checkIfThereExistsShiftOnSameDay(shift) {

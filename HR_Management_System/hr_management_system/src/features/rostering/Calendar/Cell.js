@@ -17,6 +17,7 @@ import DeleteShiftModal from "../DeleteShiftModal";
 import PublishSuccessModal from "../PublishSuccessModal";
 import ShiftBlock from "../ShiftBlock";
 import SuccessfullyAddedTemplateModal from "../SuccessfullyAddedTemplateModal";
+import ViewCurrentShiftsModal from "../ViewCurrentShiftsModal";
 import ViewTemplateShiftsModal from "../ViewTemplateShiftsModal";
 
 const shifts = [
@@ -80,6 +81,7 @@ const Cell = ({
   const [open, setOpen] = useState(false);
   const [openChoice, setOpenChoice] = useState(false);
   const [openTemplate, setOpenTemplate] = useState(false);
+  const [openCurrent, setOpenCurrent] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [shiftListItem, setShiftListItem] = useState(null);
@@ -189,6 +191,9 @@ const Cell = ({
         assignTemplateShiftButtonHandler={() => {
           setOpenTemplate(true);
         }}
+        assignCurrentShiftButtonHandler={() => {
+          setOpenCurrent(true);
+        }}
       />
       <AddShiftModal
         open={open}
@@ -200,11 +205,23 @@ const Cell = ({
         date={date}
         addShiftHandler={addShiftHandler}
         checkIfThereExistsShiftOnSameDay={checkIfThereExistsShiftOnSameDay}
+        rosterId={rosterId}
       />
       <ViewTemplateShiftsModal
         open={openTemplate}
         onClose={() => {
           setOpenTemplate(false);
+        }}
+        person={person}
+        date={date}
+        addShiftHandler={addShiftHandler}
+        checkIfThereExistsShiftOnSameDay={checkIfThereExistsShiftOnSameDay}
+        rosterId={rosterId}
+      />
+      <ViewCurrentShiftsModal
+        open={openCurrent}
+        onClose={() => {
+          setOpenCurrent(false);
         }}
         person={person}
         date={date}
@@ -223,6 +240,7 @@ const Cell = ({
               removeShiftHandler={() => setOpenDelete(true)}
               willBePersisted={true}
               openSuccess={() => setOpenSuccess(true)}
+              person={person}
             />
           )}
           {shift && shift !== null && (
@@ -232,6 +250,7 @@ const Cell = ({
               className="m-auto mb-2 border-green-600 border-2"
               removeShiftHandler={removeShiftHandler}
               willBePersisted={false}
+              person={person}
             />
           )}
         </div>

@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { format, parseISO } from "date-fns";
 import React, { Fragment } from "react";
 
-const ViewShiftModal = ({ open, onClose, shift, shiftListItem }) => {
+const ViewShiftModal = ({ open, onClose, shift, shiftListItem, person }) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -41,15 +41,15 @@ const ViewShiftModal = ({ open, onClose, shift, shiftListItem }) => {
                     <div className="space-y-6 sm:space-y-5">
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
-                          htmlFor="employee-name"
+                          htmlFor="shift-title"
                           className="block text-sm font-medium text-gray-700 mt-2"
                         >
                           Shift Title
                         </label>
                         <div className="col-span-2">
                           <p
-                            id="employee-name"
-                            name="employee-name"
+                            id="shift-title"
+                            name="shift-title"
                             className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           >
                             {shift.shiftTitle}
@@ -175,7 +175,14 @@ const ViewShiftModal = ({ open, onClose, shift, shiftListItem }) => {
                                 name="pos-type"
                                 className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               >
-                                {shiftListItem.positionType.name}
+                                {!Array.isArray(shiftListItem.positionType)
+                                  ? shiftListItem.positionType
+                                  : Array.isArray(shiftListItem.userId) &&
+                                    shiftListItem.positionType[
+                                      shiftListItem.userId.indexOf(
+                                        person.userId
+                                      )
+                                    ]}
                               </p>
                             </div>
                           </div>
