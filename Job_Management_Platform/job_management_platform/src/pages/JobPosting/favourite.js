@@ -1,24 +1,33 @@
 import Sidebar from "../../components/Sidebar"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MyFavouriteOption from "../../features/JobApplication/MyFavouriteOption";
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const jobs = [
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-]
-
 export default function JobApplication() {
+  const[jobs, setJobs]=useState([]);
+  const [user, setUser] = useState(getUserId()); 
+  const [error, setError] = useState();
   const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [searchParam] = useState([
-    "jobTitle"
+    "jobTitle", "status"
   ]);
+
+  useEffect(() => {
+    api
+      .getUserBookmarks(user)
+      .then((response) => {
+        setJobs(response.data);
+        setFilteredJobs(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   function search(e, items) {
     const value = e.target.value;
@@ -105,7 +114,7 @@ export default function JobApplication() {
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobType}</td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <MyFavouriteOption/>
+                              <MyFavouriteOption job={job}/>
                             </td>
                           </tr>
                         ))}

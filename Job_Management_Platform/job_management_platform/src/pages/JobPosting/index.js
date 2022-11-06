@@ -14,7 +14,7 @@ export default function JobPosting() {
   const skills = [{ id: 1, name: 'java' }, { id: 2, name: 'python' }, { id: 3, name: 'matlab' }]
 
   const[jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([jobs]);
+  const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [searchParam] = useState([
     "jobTitle","status"
   ]);

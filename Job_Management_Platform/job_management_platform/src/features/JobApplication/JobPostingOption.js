@@ -5,11 +5,19 @@ import {
 } from "@heroicons/react/20/solid";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router";
+import { getUserId } from "../../utils/Common.js";
+import api from "../../utils/api";
 
 export default function JobPostingOption({job}) {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+  const [user, setUser] = useState(getUserId()); 
+  const [error, setError] = useState();
   const history = useHistory();
+
+  function bookmark(){
+    api.addUserBookmark(user, job.postingId)
+    .then(() => alert("Successfully bookmark."))
+    .catch((error) => setError(error));
+  }
   
   return (
     <div>
@@ -25,8 +33,9 @@ export default function JobPostingOption({job}) {
           />
           <span className="hidden md:block">Detail</span>
         </button>
-         {!job.isBookMarked && <button
+         <button
           type="button"
+          onClick={()=>bookmark()}
           className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
         >
           <BookmarkIcon
@@ -34,7 +43,7 @@ export default function JobPostingOption({job}) {
             aria-hidden="true"
           />
           <span className="hidden md:block">Bookmark</span>
-        </button>}
+        </button>
       </div>
     </div>
   )
