@@ -191,9 +191,10 @@ export default function Roster() {
           <div className="isolate inline-flex -space-x-px rounded-md shadow-sm mx-4">
             <ComboBox
               items={teams}
-              searchParam={["name"]}
+              searchParam={"teamName"}
               selectedItem={selectedTeam}
               setSelectedItem={setSelectedTeam}
+              placeholder="Search for Team"
             />
           </div>
 
