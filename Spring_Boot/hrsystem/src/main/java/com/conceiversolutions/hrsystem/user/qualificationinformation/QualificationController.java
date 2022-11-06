@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.user.qualificationinformation;
 
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
+import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
 import com.conceiversolutions.hrsystem.user.recommendation.Recommendation;
 import com.conceiversolutions.hrsystem.user.workexperience.WorkExperience;
 import lombok.AllArgsConstructor;
@@ -29,10 +30,10 @@ public class QualificationController{
     @PostMapping(path = "/addDocument")
     public Long addDocument(@RequestParam("file") MultipartFile file,
                             @RequestParam("userId") Long userId,
-                            @RequestParam("document") String document) throws Exception {
-        if (document.equals("CV")) {
+                            @RequestParam("documentType") String documentType) throws Exception {
+        if (documentType.equals("CV")) {
             return qualificationService.addCVtoUser(file, userId);
-        } else if (document.equals("Cover Letter")) {
+        } else if (documentType.equals("Cover Letter")) {
             return qualificationService.addCLtoUser(file, userId);
         }
         return qualificationService.addTranscripttoUser(file, userId);
@@ -77,13 +78,16 @@ public class QualificationController{
 
     // Work Experiences
     @PostMapping(path = "/addWorkExperience")
-    public Long addRecommendation(@RequestParam("userId") Long userId,
+    public Long addWorkExperience(@RequestParam("userId") Long userId,
                                   @RequestParam("positionName") String positionName,
                                   @RequestParam("companyName") String companyName,
                                   @RequestParam("startDate") String startDate,
-                                  @RequestParam(value = "endDate", required = false) String endDate,
+                                  @RequestParam(value = "endDate", required = false, defaultValue = "null") String endDate,
                                   @RequestParam("currentlyWorking") Boolean currentlyWorking,
                                   @RequestParam("description") String description) {
+        if (endDate.equals("null")) {
+            return qualificationService.addWorkExperience(userId, positionName, companyName, LocalDate.parse(startDate), null, currentlyWorking, description);
+        }
         return qualificationService.addWorkExperience(userId, positionName, companyName, LocalDate.parse(startDate), LocalDate.parse(endDate), currentlyWorking, description);
     }
 
@@ -98,12 +102,23 @@ public class QualificationController{
         return qualificationService.removeUserExperience(userId, expId);
     }
 
-    // Education
-    @PostMapping(path = "/updateUserEducation")
-    public Long updateUserEducation(@RequestParam("userId") Long userId,
-                                    @RequestParam("highestEducation") String highestEducation,
-                                    @RequestParam("schoolName") String schoolName,
-                                    @RequestParam("schoolGradYear") Integer schoolGradYear) {
-        return qualificationService.updateUserEducation(userId, EducationEnum.valueOf(highestEducation), schoolName, schoolGradYear);
+    @PutMapping(path = "/saveWorkExperiences")
+    public String saveWorkExperiences(@RequestParam("userId") Long userId,
+                                                    @RequestBody List<WorkExperience> experiences) {
+        return qualificationService.saveWorkExperiences(userId, experiences);
     }
+
+    @PutMapping(path = "/saveUserRecommendations")
+    public String saveUserRecommendations(@RequestParam("userId") Long userId,
+                                      @RequestBody List<Recommendation> recos) {
+        return qualificationService.saveUserRecommendations(userId, recos);
+    }
+
+    @PutMapping(path = "/saveUserSkillsets")
+    public String saveUserSkillsets(@RequestParam("userId") Long userId,
+                                          @RequestBody List<UserSkillset> userSkills) {
+        return qualificationService.saveUserSkillsets(userId, userSkills);
+    }
+
+
 }

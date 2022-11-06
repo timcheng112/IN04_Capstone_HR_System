@@ -6,6 +6,7 @@ import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuotaRepository;
 import com.conceiversolutions.hrsystem.engagement.leave.LeaveRepository;
+import com.conceiversolutions.hrsystem.enums.EducationEnum;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
@@ -22,6 +23,7 @@ import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepo
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemService;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
+import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationService;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
 import com.conceiversolutions.hrsystem.user.registration.EmailValidator;
@@ -62,6 +64,7 @@ public class UserService implements UserDetailsService {
     private final LeaveQuotaRepository leaveQuotaRepository;
     private final ShiftListItemService shiftListItemService;
     private final RosterRepository rosterRepository;
+    private final QualificationService qualificationService;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -2421,4 +2424,36 @@ public class UserService implements UserDetailsService {
         return filteredEmployees;
     }
 
+    public String updateUserDetails(Long userId, String firstName, String lastName, String aboutMe,
+            String educationLevel, String schoolName, Integer gradYear, List<String> languages) {
+        System.out.println("UserService.updateUserDetails");
+        System.out.println("userId = " + userId + ", firstName = " + firstName + ", lastName = " + lastName
+                + ", aboutMe = " + aboutMe + ", educationLevel = " + educationLevel + ", schoolName = " + schoolName
+                + ", gradYear = " + gradYear + ", languages = " + languages);
+
+        User user = userRepository.findById(userId).get();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+
+        EducationEnum education = getEduEnum(educationLevel.toUpperCase());
+
+        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education, schoolName,
+                gradYear, languages);
+
+        return "User details updated successfully";
+    }
+
+    private EducationEnum getEduEnum(String educationLevel) {
+        System.out.println("UserService.getEduEnum");
+        System.out.println("educationLevel = " + educationLevel);
+        EducationEnum edu = switch (educationLevel) {
+            case "O LEVEL" -> EducationEnum.O;
+            case "N LEVEL" -> EducationEnum.N;
+            case "A LEVEL" -> EducationEnum.A;
+            default -> EducationEnum.valueOf(educationLevel);
+        };
+
+        System.out.println("education level is " + edu);
+        return edu;
+    }
 }

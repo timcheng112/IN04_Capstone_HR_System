@@ -7,19 +7,22 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const jobs = [
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', isBookMarked: true },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', isBookMarked: true },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', isBookMarked: false },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', isBookMarked: false },
-]
 
 export default function JobPosting() {
+
+  const skills = [{ id: 1, name: 'java' }, { id: 2, name: 'python' }, { id: 3, name: 'matlab' }]
+  
+  const jobs = [
+    { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', postDate:'2022-11-2', salaryMin: '100', salaryMax: '500', jobRequirements: [skills[0],skills[1]],isBookMarked: true },
+    { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', postDate:'2022-11-2', salaryMin: '100', salaryMax: '500',jobRequirements: [skills[0],skills[1]] ,isBookMarked: true },
+    { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', postDate:'2022-11-2', salaryMin: '100', salaryMax: '500',jobRequirements: [skills[0],skills[1]] ,isBookMarked: false },
+    { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', postDate:'2022-11-2', salaryMin: '100', salaryMax: '500',jobRequirements: [skills[0],skills[1]] ,isBookMarked: false },
+  ]
+  
   const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [searchParam] = useState([
     "jobTitle"
   ]);
-
   function search(e, items) {
     const value = e.target.value;
     setFilteredJobs(

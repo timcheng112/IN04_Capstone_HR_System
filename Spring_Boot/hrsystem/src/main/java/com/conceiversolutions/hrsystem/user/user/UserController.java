@@ -359,4 +359,17 @@ public class UserController {
         LocalDate localDate = LocalDate.parse(date);
         return userService.getEmployeesByRosterAndDate(rosterId, localDate);
     }
+
+    @PutMapping(path = "/updateUserDetails")
+    public String updateUserDetails(@RequestParam("userId") Long userId,
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName,
+            @RequestParam("aboutMe") String aboutMe,
+            @RequestParam("educationLevel") String educationLevel,
+            @RequestParam("schoolName") String schoolName,
+            @RequestParam("gradYear") Integer gradYear,
+            @RequestParam("languages") List<String> languages) {
+        return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear,
+                languages);
+    }
 }

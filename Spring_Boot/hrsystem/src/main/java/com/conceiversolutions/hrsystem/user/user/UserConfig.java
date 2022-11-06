@@ -372,9 +372,11 @@ public class UserConfig {
                 sandyApplicant.setEnabled(true);
                 userService.initApplicant(sandyApplicant);
 //                firstName, lastName, password, phone, email, dob, gender.toUpperCase()
+
+                System.out.println("************* Init Completed *************");
             } else {
                 // if any user exists already, don't run
-                System.out.println("Administrators already exist, do not init");
+                System.out.println("************* Administrators already exist, do not init *************");
             }
 
         };

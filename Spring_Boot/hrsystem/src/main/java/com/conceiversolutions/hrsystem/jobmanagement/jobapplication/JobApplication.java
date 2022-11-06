@@ -4,12 +4,14 @@ import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +30,8 @@ public class JobApplication {
     @Enumerated(EnumType.STRING)
     private JobStatusEnum status;
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = User.class)
-    @JoinTable(
-            name = "job_applicants",
-            joinColumns = @JoinColumn(name = "job_application_id"),
-            inverseJoinColumns = @JoinColumn(name = "applicant_id")
-    )
-    private List<User> applicants;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class, optional = false)
+    private User applicant;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserSkillset.class)
     @JoinColumn(name = "application_id")
     private List<UserSkillset> userSkills;
@@ -42,17 +39,27 @@ public class JobApplication {
     private JobPosting jobPosting;
     @Column(name = "available_start_date", nullable = false)
     private LocalDate availableStartDate;
+    @Column(name = "last_update_at", nullable = false)
+    private LocalDateTime lastUpdatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DocData.class, optional = true)
+    private DocData CV;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DocData.class, optional = true)
+    private DocData coverLetter;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DocData.class, optional = true)
+    private DocData transcript;
 
     public JobApplication() {
-        this.applicants = new ArrayList<>();
     }
 
-    public JobApplication(LocalDate applyDate, JobStatusEnum status, List<UserSkillset> userSkills, JobPosting jobPosting, LocalDate availableStartDate) {
+    public JobApplication(JobPosting jobPosting, LocalDate applyDate, JobStatusEnum status, User applicant, List<UserSkillset> userSkills, LocalDate availableStartDate) {
         this.applyDate = applyDate;
         this.status = status;
         this.userSkills = userSkills;
         this.jobPosting = jobPosting;
         this.availableStartDate = availableStartDate;
+        this.applicant = applicant;
+        this.lastUpdatedAt = LocalDateTime.now();
     }
 
     @Override
