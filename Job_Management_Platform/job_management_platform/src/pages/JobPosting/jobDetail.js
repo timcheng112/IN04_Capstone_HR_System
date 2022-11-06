@@ -25,6 +25,7 @@ export default function JobDetail() {
   const [salaryMin, setSalaryMin] = useState("");
   const [salaryMax, setSalaryMax] = useState("");
   const [postDate, setPostDate] = useState("")
+  const [startDate, setStartDate] = useState("")
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
   const [requirements, setRequirements] = useState([]);
@@ -32,15 +33,16 @@ export default function JobDetail() {
   const [open,setOpen] = useState(false);
 
   useEffect(() => {
-    console.log(location.state)
+    console.log(location.state.job)
     setTitle(location.state.job.jobTitle)
     setJobType(location.state.job.jobType)
     setSalaryMin(location.state.job.salaryMin)
     setSalaryMax(location.state.job.salaryMax)
     setPostDate(location.state.job.postDate)
+    setStartDate(location.state.job.preferredStartDate)
     setDescription(location.state.job.jobDescription)
     setStatus(location.state.job.status)
-    setRequirements(location.state.job.jobRequirements)
+    setRequirements(location.state.job.jobPostRequirements)
     setJob(location.state.job)
   }, [location]);
 
@@ -144,7 +146,7 @@ export default function JobDetail() {
               name="description"
               rows={2}
               disabled
-              defaultValue={description}
+              defaultValue={startDate}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
           </div>
@@ -158,12 +160,12 @@ export default function JobDetail() {
               <svg className="-ml-0.5 mr-1.5 h-2 w-2 text-indigo-400" fill="currentColor" viewBox="0 0 8 8">
                 <circle cx={4} cy={4} r={3} />
               </svg>
-              {skill.name}
+              {skill.skillsetName}
             </span>
             ))}
           </div>
         </main>
-      <ApplyJob open={open} setOpen={()=>setOpen(false)} job ={job}/>
+      {job !== null && <ApplyJob open={open} setOpen={()=>setOpen(false)} job ={job}/>}
       </div>
     </>
   )
