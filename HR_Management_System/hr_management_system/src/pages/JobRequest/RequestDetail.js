@@ -27,7 +27,8 @@ export default function RequestDetail() {
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
   const [justification, setJustification] = useState();
-  const [salary, setSalary] = useState();
+  const [salaryMin, setSalaryMin] = useState(0);
+  const [salaryMax, setSalaryMax] = useState(0);
   const [jobType, setJobType] = useState();
   const [jobRole, setJobRole] = useState();
   const [requirements, setRequirements] = useState();
@@ -54,7 +55,8 @@ export default function RequestDetail() {
     setTitle(location.state.request.jobTitle)
     setDescription(location.state.request.jobDescription)
     setJustification(location.state.request.justification)
-    setSalary(location.state.request.salary)
+    setSalaryMin(location.state.request.salaryMin)
+    setSalaryMax(location.state.request.salaryMax)
     setStatus(location.state.request.status)
     // reset JobType into JSON Object from String
     var jobT;
@@ -149,7 +151,7 @@ export default function RequestDetail() {
 
     //    console.log(title);
     api
-      .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(), request.requestId)
+      .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr, 0, teamId, getUserId(), request.requestId)
       .then(() => alert("Successfully saved Job Request."))
       .catch((error) => {
         var message = error.request.response;
@@ -196,7 +198,7 @@ export default function RequestDetail() {
     }
 
     api
-      .submitJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(), request.requestId)
+      .submitJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr, 0, teamId, getUserId(), request.requestId)
       .then(() => alert("Successfully submitted Job Request."))
       .catch((error) => {
         var message = error.request.response;
@@ -375,8 +377,8 @@ export default function RequestDetail() {
                       placeholder="min"
                       aria-describedby="salary-currency"
                       required
-                      value={salary}
-                      onChange={(e) => setSalary(e.target.value)}
+                      value={salaryMin}
+                      onChange={(e) => setSalaryMin(e.target.value)}
                     />
                     
                   </div>
@@ -390,8 +392,8 @@ export default function RequestDetail() {
                       placeholder="max"
                       aria-describedby="salary-currency"
                       required
-                      value={salary}
-                      onChange={(e) => setSalary(e.target.value)}
+                      value={salaryMax}
+                      onChange={(e) => setSalaryMax(e.target.value)}
                     />
                     
                   </div>

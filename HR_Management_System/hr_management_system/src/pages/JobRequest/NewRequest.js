@@ -24,7 +24,8 @@ export default function NewRequest() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [justification, setJustification] = useState("");
-  const [salary, setSalary] = useState(0);
+  const [salaryMin, setSalaryMin] = useState(0);
+  const [salaryMax, setSalaryMax] = useState(0);
   const [jobType, setJobType] = useState();
   const [jobRole, setJobRole] = useState();
   const [requirements, setRequirements] = useState([]);
@@ -91,7 +92,7 @@ export default function NewRequest() {
     }
 
     api
-      .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(), 0)
+      .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr, 0, teamId, getUserId(), 0)
       .then(() => alert("Successfully saved Job Request."))
       .catch((error) => {
         var message = error.request.response;
@@ -138,7 +139,7 @@ export default function NewRequest() {
     }
 
     api
-      .submitJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr, 0, teamId, getUserId(), 0)
+      .submitJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr, 0, teamId, getUserId(), 0)
       .then(() => alert("Successfully submitted Job Request."))
       .catch((error) => {
         var message = error.request.response;
@@ -277,8 +278,8 @@ export default function NewRequest() {
                       placeholder="min"
                       aria-describedby="salary-currency"
                       required
-                      value={salary}
-                      onChange={(e) => setSalary(e.target.value)}
+                      value={salaryMin}
+                      onChange={(e) => setSalaryMin(e.target.value)}
                     />
                     
                   </div>
@@ -292,8 +293,8 @@ export default function NewRequest() {
                       placeholder="max"
                       aria-describedby="salary-currency"
                       required
-                      value={salary}
-                      onChange={(e) => setSalary(e.target.value)}
+                      value={salaryMax}
+                      onChange={(e) => setSalaryMax(e.target.value)}
                     />
                     
                   </div>

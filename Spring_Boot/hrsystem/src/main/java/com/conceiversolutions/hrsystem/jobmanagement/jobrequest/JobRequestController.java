@@ -34,7 +34,8 @@ public class JobRequestController {
                                @RequestParam("preferredStartDate") String preferredStartDate,
                                @RequestParam("jobType") String jobType,
                                @RequestParam("jobRole") String jobRole,
-                               @RequestParam("salary") Float salary,
+                               @RequestParam("salaryMin") Float salaryMin,
+                               @RequestParam("salaryMax") Float salaryMax,
                                @RequestParam("jobRequirements") List<Long> jobRequirements,
                                @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamId") Long teamId,
@@ -50,7 +51,7 @@ public class JobRequestController {
         }
 
         return jobRequestService.saveJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
     }
 
     @PutMapping(path = "/submitJobRequest")
@@ -60,7 +61,8 @@ public class JobRequestController {
                                @RequestParam("preferredStartDate") String preferredStartDate,
                                @RequestParam("jobType") String jobType,
                                @RequestParam("jobRole") String jobRole,
-                               @RequestParam("salary") Float salary,
+                               @RequestParam("salaryMin") Float salaryMin,
+                               @RequestParam("salaryMax") Float salaryMax,
                                @RequestParam("jobRequirements") List<Long> jobRequirements,
                                @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamId") Long teamId,
@@ -76,7 +78,7 @@ public class JobRequestController {
         }
 
         return jobRequestService.submitJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
     }
 
     @GetMapping(path = "/getJobRequestById")

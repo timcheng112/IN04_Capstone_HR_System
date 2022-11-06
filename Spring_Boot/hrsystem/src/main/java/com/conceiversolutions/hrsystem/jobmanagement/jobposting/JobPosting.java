@@ -43,7 +43,7 @@ public class JobPosting {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private JobStatusEnum status;
-    @Column(name = "salary", nullable = false, length = 64)
+    @Column(name = "salary", nullable = true, length = 64)
     private BigDecimal salary;
     @Column(name = "salary_min", nullable = true)
     private BigDecimal salaryMin;

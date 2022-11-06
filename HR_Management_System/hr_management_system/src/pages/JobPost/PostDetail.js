@@ -24,7 +24,8 @@ export default function PostDetail() {
   const [user, setUser] = useState(null);
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
-  const [salary, setSalary] = useState();
+  const [salaryMin, setSalaryMin] = useState(0);
+  const [salaryMax, setSalaryMax] = useState(0);
   const [jobType, setJobType] = useState();
   const [jobRole, setJobRole] = useState();
   const [requirements, setRequirements] = useState();
@@ -49,7 +50,8 @@ export default function PostDetail() {
     console.log(location.state.post)
     setTitle(location.state.post.jobTitle)
     setDescription(location.state.post.jobDescription)
-    setSalary(location.state.post.salary)
+    setSalaryMin(location.state.post.salaryMin)
+    setSalaryMax(location.state.post.salaryMax)
     setStatus(location.state.post.status)
     setPostId(location.state.post.postingId)
     // reset JobType into JSON Object from String
@@ -136,7 +138,7 @@ export default function PostDetail() {
     }
 
     api
-      .editJobPost(postId, title, description, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr)
+      .editJobPost(postId, title, description, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr)
       .then(() => alert("Successfully editted Job Post."))
       .catch((error) => {
         var message = error.request.response;
@@ -269,8 +271,8 @@ export default function PostDetail() {
                       placeholder="min"
                       aria-describedby="salary-currency"
                       required
-                      value={salary}
-                      onChange={(e) => setSalary(e.target.value)}
+                      value={salaryMin}
+                      onChange={(e) => setSalaryMin(e.target.value)}
                     />
                     
                   </div>
@@ -284,8 +286,8 @@ export default function PostDetail() {
                       placeholder="max"
                       aria-describedby="salary-currency"
                       required
-                      value={salary}
-                      onChange={(e) => setSalary(e.target.value)}
+                      value={salaryMax}
+                      onChange={(e) => setSalaryMax(e.target.value)}
                     />
                     
                   </div>
