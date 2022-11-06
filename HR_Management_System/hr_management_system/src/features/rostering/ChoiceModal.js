@@ -1,5 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { PlusIcon, SquaresPlusIcon } from "@heroicons/react/24/outline";
+import {
+  ArchiveBoxIcon,
+  PlusIcon,
+  SquaresPlusIcon,
+} from "@heroicons/react/24/outline";
 import React, { Fragment } from "react";
 
 const ChoiceModal = ({
@@ -8,6 +12,7 @@ const ChoiceModal = ({
   closeButtonHandler,
   assignNewShiftButtonHandler,
   assignTemplateShiftButtonHandler,
+  assignCurrentShiftButtonHandler,
 }) => {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -76,6 +81,21 @@ const ChoiceModal = ({
                     <div className="flex flex-col items-center">
                       <SquaresPlusIcon className="h-10" />
                       Assign a template shift
+                    </div>
+                  </button>
+                </div>
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    className="mt-3 inline-flex w-full justify-center rounded-md border-2 border-dashed border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:mt-0 sm:text-sm"
+                    onClick={() => {
+                      onClose();
+                      assignCurrentShiftButtonHandler();
+                    }}
+                  >
+                    <div className="flex flex-col items-center">
+                      <ArchiveBoxIcon className="h-10" />
+                      Assign a shift from the current date
                     </div>
                   </button>
                 </div>
