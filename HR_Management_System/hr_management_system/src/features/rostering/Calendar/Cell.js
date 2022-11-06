@@ -20,6 +20,7 @@ import SuccessfullyAddedTemplateModal from "../SuccessfullyAddedTemplateModal";
 import ViewCurrentShiftsModal from "../ViewCurrentShiftsModal";
 import ViewTemplateShiftsModal from "../ViewTemplateShiftsModal";
 import { Blocks } from "react-loader-spinner";
+import { getUserId } from "../../../utils/Common";
 
 const Cell = ({
   className,
@@ -48,6 +49,16 @@ const Cell = ({
   const [openSuccess, setOpenSuccess] = useState(false);
   const [shiftListItem, setShiftListItem] = useState(null);
   const [isLoading, setIsLoading] = useState(shift ? false : true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => console.log("Error retrieving user"));
+  }, []);
 
   const handleMouseOver = () => {
     setIsHovering(true);
@@ -209,6 +220,9 @@ const Cell = ({
               willBePersisted={true}
               openSuccess={() => setOpenSuccess(true)}
               person={person}
+              isUserHrOrManager={
+                user && (user.isHrEmployee || user.userRole === "MANAGER")
+              }
             />
           )}
           {shift && shift !== null && (
@@ -222,7 +236,12 @@ const Cell = ({
             />
           )}
         </div>
-      ) : !isLoading && date && isHovering && isAfter(date, startOfToday()) ? (
+      ) : !isLoading &&
+        date &&
+        isHovering &&
+        isAfter(date, startOfToday()) &&
+        user &&
+        (user.isHrEmployee || user.userRole === "MANAGER") ? (
         <div className="text-center">
           <p className="mt-1 text-sm text-gray-500">
             Get started by assigning a shift.

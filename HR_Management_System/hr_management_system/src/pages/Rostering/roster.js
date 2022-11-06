@@ -11,80 +11,6 @@ import { format, isSameDay, isWeekend, parseISO } from "date-fns";
 import { getUserId } from "../../utils/Common.js";
 import EmptyStateRostering from "../../features/rostering/EmptyStateRostering.js";
 
-const people = [
-  {
-    userId: 1,
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-  },
-  {
-    userId: 2,
-    name: "James Walton",
-    title: "Front-end Developer",
-    email: "James.walton@example.com",
-    role: "Member",
-  },
-  {
-    userId: 3,
-    name: "Mo Salah",
-    title: "Back-end Developer",
-    email: "mo.salah@example.com",
-    role: "Member",
-  },
-  {
-    userId: 4,
-    name: "Jurgen Klopp",
-    title: "Full-stack Developer",
-    email: "kloppo@example.com",
-    role: "Member",
-  },
-  // More people...
-];
-
-const outlets = [
-  {
-    id: 1,
-    name: "Bishan Outlet",
-  },
-  {
-    id: 2,
-    name: "Marymount Outlet",
-  },
-  {
-    id: 3,
-    name: "Lentor Outlet",
-  },
-];
-
-const shifts = [
-  {
-    id: "1",
-    shiftTitle: "Morning Shift",
-    startTime: "08:00",
-    endTime: "14:00",
-  },
-  {
-    id: "2",
-    shiftTitle: "Afternoon Shift",
-    startTime: "14:00",
-    endTime: "20:00",
-  },
-  {
-    id: "3",
-    shiftTitle: "Morning Shift",
-    startTime: "06:00",
-    endTime: "14:00",
-  },
-  {
-    id: "4",
-    shiftTitle: "Afternoon Shift",
-    startTime: "14:00",
-    endTime: "22:00",
-  },
-];
-
 export default function Roster() {
   const [open, setOpen] = useState(false);
   const [openSlideover, setOpenSlideover] = useState(false);
@@ -112,7 +38,7 @@ export default function Roster() {
   }, [selectedTeam]);
 
   // SHOW WARNING PROMPT ON REFRESH IF EDITS EXIST
-  if (shiftsToBeAdded.length !== 0) {
+  if (shiftsToBeAdded.length > 0) {
     window.onbeforeunload = function () {
       return "Changes made will be lost if you leave the page, are you sure?";
     };
@@ -135,11 +61,19 @@ export default function Roster() {
   }, []);
 
   useEffect(() => {
-    if (user !== null && !user.hrEmployee) {
-      setSelectedTeam(user.teams[0]);
+    if (user && !user.isHrEmployee && teams) {
+      let tempTeam = user.teams[0];
+      for (let i = 0; i < teams.length; i++) {
+        if (teams[i].teamId === tempTeam.teamId) {
+          tempTeam = teams[i];
+          break;
+        }
+      }
+      console.log("TEMPTEAM: " + tempTeam);
+      setSelectedTeam(tempTeam);
       console.log("SELECTED TEAM: " + selectedTeam);
     }
-  }, [teams, user]);
+  }, [teams, user, selectedTeam]);
 
   useEffect(() => {
     if (selectedTeam !== null) {
@@ -198,16 +132,14 @@ export default function Roster() {
   }
 
   function addNewShiftListItemHandler(shift, shiftId) {
-    console.log("IM HERE");
     const shiftListItem = {
       isWeekend: isWeekend(shift.shift.startDate),
       isPhEvent: shift.isPhEvent,
-      positionType: shift.positionType.name,
+      positionType: shift.positionType[0],
     };
-    console.log("IS IT AN ARRAY? " + Array.isArray(shift.userId));
     if (Array.isArray(shift.userId)) {
-      console.log("im inside");
       for (let i = 0; i < shift.userId.length; i++) {
+        shiftListItem.positionType = shift.positionType[i];
         console.log(shift.userId[i]);
         api
           .addNewShiftListItem(shiftListItem, shiftId, shift.userId[i])
@@ -223,7 +155,6 @@ export default function Roster() {
           });
       }
     } else {
-      console.log("LOOOOOL");
       api
         .addNewShiftListItem(shiftListItem, shiftId, shift.userId)
         .then(() =>
@@ -294,28 +225,32 @@ export default function Roster() {
             </p> */}
           </div>
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-            >
-              Add user
-            </button>
-            <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
-              onClick={() => setOpenSlideover(true)}
-              disabled={selectedTeam === null}
-            >
-              View Template Shifts
-            </button>
-            <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
-              onClick={() => publishHandler()}
-              disabled={shiftsToBeAdded.length === 0}
-            >
-              Publish
-            </button>
+            {user && (user.isHrEmployee || user.userRole === "MANAGER") && (
+              <>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                >
+                  Add user
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
+                  onClick={() => setOpenSlideover(true)}
+                  disabled={selectedTeam === null}
+                >
+                  View Template Shifts
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
+                  onClick={() => publishHandler()}
+                  disabled={shiftsToBeAdded.length === 0}
+                >
+                  Publish
+                </button>
+              </>
+            )}
           </div>
         </div>
 

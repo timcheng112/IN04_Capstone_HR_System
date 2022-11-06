@@ -21,6 +21,7 @@ const ShiftBlock = ({
   willBePersisted,
   openSuccess,
   person,
+  isUserHrOrManager,
 }) => {
   console.log(shift.startTime);
   const [open, setOpen] = useState(false);
@@ -64,22 +65,24 @@ const ShiftBlock = ({
             {format(shift.endTime, "h:mmaa")}
           </p>
         </div>
-        <div className="flex flex-col">
-          <button
-            type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none"
-            onClick={() => setOpenEdit(true)}
-          >
-            <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none"
-            onClick={() => deleteShiftHandler()}
-          >
-            <TrashIcon className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
+        {isUserHrOrManager && (
+          <div className="flex flex-col">
+            <button
+              type="button"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none"
+              onClick={() => setOpenEdit(true)}
+            >
+              <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none"
+              onClick={() => deleteShiftHandler()}
+            >
+              <TrashIcon className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
