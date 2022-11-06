@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.user.qualificationinformation;
 
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
+import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
 import com.conceiversolutions.hrsystem.user.recommendation.Recommendation;
 import com.conceiversolutions.hrsystem.user.workexperience.WorkExperience;
@@ -120,5 +121,20 @@ public class QualificationController{
         return qualificationService.saveUserSkillsets(userId, userSkills);
     }
 
+    @GetMapping(path = "/getUserBookmarks")
+    public List<JobPosting> getUserBookmarks(@RequestParam("userId") Long userId) {
+        return qualificationService.getUserBookmarks(userId);
+    }
 
+    @PostMapping(path = "/addUserBookmark")
+    public boolean addUserBookmark(@RequestParam("userId") Long userId,
+                                   @RequestParam("jobPostId") Long jobPostId) {
+        return qualificationService.addUserBookmark(userId, jobPostId);
+    }
+
+    @DeleteMapping(path = "/removeUserBookmark")
+    public boolean removeUserBookmark(@RequestParam("userId") Long userId,
+                                   @RequestParam("jobPostId") Long jobPostId) {
+        return qualificationService.removeUserBookmark(userId, jobPostId);
+    }
 }

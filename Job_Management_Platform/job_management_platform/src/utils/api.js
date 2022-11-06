@@ -191,6 +191,15 @@ const api = {
   editJobApplication(postingId, userSkillIds, availableStartDate) {
     return axios.put(`http://localhost:9191/api/jobapplications/editJobApplication?postingId=${postingId}&userSkillIds=${userSkillIds}&availableStartDate=${availableStartDate}`);
   },
+  getUserBookmarks(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserBookmarks?userId=${userId}`);
+  },
+  addUserBookmark(userId, jobPostId) {
+    return axios.post(`http://localhost:9191/api/qualification/addUserBookmark?userId=${userId}&jobPostId=${jobPostId}`);
+  },
+  removeUserBookmark(userId, jobPostId) {
+    return axios.delete(`http://localhost:9191/api/qualification/removeUserBookmark?userId=${userId}&jobPostId=${jobPostId}`);
+  },
 };
 
 export default api;

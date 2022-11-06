@@ -1,6 +1,10 @@
 package com.conceiversolutions.hrsystem.user.qualificationinformation;
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
+import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
+import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
+import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPostingRepository;
+import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillsetRepositoy;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillsetService;
@@ -34,6 +38,7 @@ public class QualificationService {
     private final WorkExperienceRepository workExperienceRepository;
     private final UserSkillsetService userSkillsetService;
     private final UserSkillsetRepositoy userSkillsetRepositoy;
+    private final JobPostingRepository jobPostingRepository;
 
     public Long addCVtoUser(MultipartFile file, Long userId) throws Exception {
         System.out.println("QualificationService.addCVtoUser");
@@ -89,6 +94,22 @@ public class QualificationService {
             return qi;
         }else {
             QualificationInformation qi = u1.getQualificationInformation();
+            qi.setUser(null);
+            for (JobPosting jp : qi.getBookmarks()) {
+                jp.setJobRequest(null);
+                jp.setPostedBy(null);
+                jp.setJobPostRequirements(new ArrayList<>());
+            }
+
+            for (UserSkillset skill : qi.getUserSkills()) {
+                Skillset s = skill.getSkillset();
+                s.setJobPostings(new ArrayList<>());
+                s.setJobRequests(new ArrayList<>());
+            }
+            qi.getCv().setDocData(null);
+            qi.getCoverLetter().setDocData(null);
+            qi.getTranscript().setDocData(null);
+
             return qi;
         }
 
@@ -135,6 +156,16 @@ public class QualificationService {
 //            System.out.println(skill.getUserSkillsetId());
             skill.getSkillset().setJobRequests(new ArrayList<>());
             skill.getSkillset().setJobPostings(new ArrayList<>());
+        }
+
+        info.getCv().setDocData(null);
+        info.getCoverLetter().setDocData(null);
+        info.getTranscript().setDocData(null);
+
+        for (JobPosting jp : info.getBookmarks()) {
+            jp.setJobRequest(null);
+            jp.setPostedBy(null);
+            jp.setJobPostRequirements(new ArrayList<>());
         }
 
         return info;
@@ -590,4 +621,76 @@ public class QualificationService {
     }
 
 
+    public List<JobPosting> getUserBookmarks(Long userId) {
+        System.out.println("QualificationService.getUserBookmarks");
+        System.out.println("userId = " + userId);
+
+        User a = userRepository.findById(userId).get();
+        User applicant = checkQIExists(a);
+        QualificationInformation qi = applicant.getQualificationInformation();
+
+        for (JobPosting jp : qi.getBookmarks()) {
+            jp.setJobRequest(null);
+            jp.getPostedBy().nullify();
+            for (Skillset ss : jp.getJobPostRequirements()) {
+                ss.setJobRequests(new ArrayList<>());
+                ss.setJobPostings(new ArrayList<>());
+            }
+        }
+        return qi.getBookmarks();
+    }
+
+    public boolean addUserBookmark(Long userId, Long jobPostId) {
+        System.out.println("QualificationService.addUserBookmark");
+        System.out.println("userId = " + userId + ", jobPostId = " + jobPostId);
+
+        User a = userRepository.findById(userId).get();
+        User applicant = checkQIExists(a);
+        QualificationInformation qi = applicant.getQualificationInformation();
+
+        Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(jobPostId);
+        if (jobPostingOptional.isEmpty()) {
+            throw new IllegalStateException("Job Posting does not exist");
+        }
+
+        JobPosting jp = jobPostingOptional.get();
+
+        if (!jp.getIsActive()) {
+            throw new IllegalStateException("Job Posting is not active anymore");
+        }
+
+        if (jp.getStatus().equals(JobStatusEnum.CLOSED)) {
+            throw new IllegalStateException("Job Posting is not open for application anymore");
+        }
+
+        qi.addBookmark(jp);
+        qualificationRepository.save(qi);
+
+        return true;
+    }
+
+    public boolean removeUserBookmark(Long userId, Long jobPostId) {
+        System.out.println("QualificationService.removeUserBookmark");
+        System.out.println("userId = " + userId + ", jobPostId = " + jobPostId);
+
+        User a = userRepository.findById(userId).get();
+        User applicant = checkQIExists(a);
+        QualificationInformation qi = applicant.getQualificationInformation();
+
+        Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(jobPostId);
+        if (jobPostingOptional.isEmpty()) {
+            throw new IllegalStateException("Job Posting does not exist");
+        }
+
+        JobPosting jp = jobPostingOptional.get();
+
+        if (!qi.getBookmarks().contains(jp)) {
+            throw new IllegalStateException("User does not have this bookmark in his list");
+        }
+
+        qi.removeBookmark(jp);
+        qualificationRepository.save(qi);
+
+        return true;
+    }
 }
