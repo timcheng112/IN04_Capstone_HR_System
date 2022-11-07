@@ -12,6 +12,7 @@ import ConfirmDialog from "../../components/ConfirmDialog";
 import AddAchievementModal from "../../features/performance/AddAchievementModal";
 import EditGoalModal from "../../features/performance/EditGoalModal";
 import ViewEmployeeGoals from "../../features/performance/ViewEmployeeGoals";
+import { format, getDay, nextDay } from "date-fns";
 
 export default function Goals() {
   const [error, setError] = useState(null);
@@ -24,6 +25,7 @@ export default function Goals() {
   const [currentPeriod, setCurrentPeriod] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [currentDate, setCurrentDate] = useState(null);
   const [newStart, setNewStart] = useState("");
   const [newEnd, setNewEnd] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -35,6 +37,8 @@ export default function Goals() {
   const [openView, setOpenView] = useState(false);
   const [financial, setFinancial] = useState([]);
   const [business, setBusiness] = useState([]);
+  const [overdueFinancial, setOverdueFinancial] = useState(false);
+  const [overdueBusiness, setOverdueBusiness] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
   const [userGoals, setUserGoals] = useState([]);
   const [manager, setManager] = useState(false);
@@ -43,7 +47,7 @@ export default function Goals() {
 
   useEffect(() => {
     const now = new Date();
-    console.log(now)
+    setCurrentDate(now);
 
     api
       .getUser(getUserId())
@@ -72,6 +76,9 @@ export default function Goals() {
       .then((response) => {
         //console.log(response.data);
         setFinancial(response.data);
+        if (response.data.length <= 0 && !withinCurrentPeriod()) {
+          setOverdueFinancial(true);
+        }
       });
 
     api
@@ -79,6 +86,9 @@ export default function Goals() {
       .then((response) => {
         //console.log(response.data);
         setBusiness(response.data);
+        if (response.data.length <= 0 && !withinCurrentPeriod()) {
+          setOverdueBusiness(true);
+        }
       });
 
     api.getAllUserGoals(new Date().getFullYear()).then((response) => {
@@ -165,9 +175,11 @@ export default function Goals() {
 
   const handleEdit = (evt) => {
     evt.preventDefault();
+
     api
       .updateGoalPeriod(startDate, endDate)
       .then((response) => alert(response.data));
+
     setEditMode(false);
   };
 
@@ -234,11 +246,30 @@ export default function Goals() {
     });
   }
 
+  function editGoalPeriod() {
+    console.log("handle edit " + goalPeriodYear);
+    api.getAllGoalsByYear(goalPeriodYear).then((response) => {
+      
+      if (response.data.length) {
+        alert(
+          "Cannot change goal period. There have been " +
+            response.data.length +
+            " goal(s) added."
+        );
+      } else {
+        setEditMode(!editMode);
+        setStartDate(currentPeriod.startDate);
+        setEndDate(currentPeriod.endDate);
+      }
+    });
+  }
+
   if (error) return `Error`;
 
   return (
     financial &&
-    goalPeriods && (
+    goalPeriods &&
+    currentDate && (
       <div className="">
         <Navbar />
         <div className="flex">
@@ -295,10 +326,13 @@ export default function Goals() {
                     <h1 className="mx-2 font-sans font-semibold text-xl mb-5">
                       Current Goal Period
                     </h1>
-                    {/* TODO: check if current year is  */}
                     {editMode ? (
                       <>
                         <form onSubmit={handleEdit}>
+                          <p className="mt-2 text-md text-gray-800 mb-5">
+                            A goal period has to be at least 14 days (inclusive
+                            of working days).
+                          </p>
                           <div className="flex flex-row justify-center">
                             <div>
                               <label
@@ -377,11 +411,7 @@ export default function Goals() {
                         <button
                           type="button"
                           className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 mt-5 px-4 py-2 text-md font-sans font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                          onClick={() => {
-                            setEditMode(!editMode);
-                            setStartDate(currentPeriod.startDate);
-                            setEndDate(currentPeriod.endDate);
-                          }}
+                          onClick={() => editGoalPeriod()}
                         >
                           <PencilIcon className="h-5 w-5 mr-2" />
                           Edit
@@ -482,15 +512,19 @@ export default function Goals() {
                 ) : (
                   <>
                     <form onSubmit={handleSubmit}>
-                      <p className="mt-2 text-sm text-gray-800 mb-5">
+                      <p className="mt-2 text-md text-gray-800 mb-5">
                         The period for goal submission has not been created for
                         this year. Please add one.
+                      </p>
+                      <p className="mt-2 text-md text-gray-800 mb-5">
+                        A goal period has to be at least 14 days (inclusive of
+                        working days).
                       </p>
                       <div className="flex flex-row justify-center">
                         <div>
                           <label
                             htmlFor="start-date"
-                            className="block text-sm font-sans font-medium text-gray-700"
+                            className="block text-md font-sans font-medium text-gray-700"
                           >
                             Start Date
                           </label>
@@ -499,6 +533,18 @@ export default function Goals() {
                               type="date"
                               name="start-date"
                               id="start-date"
+                              min={format(
+                                new Date(
+                                  new Date().getFullYear(),
+                                  new Date().getMonth(),
+                                  new Date().getDate()
+                                ),
+                                "yyyy-MM-dd"
+                              )}
+                              max={format(
+                                new Date(new Date().getFullYear(), 12, 31),
+                                "yyyy-MM-dd"
+                              )}
                               className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               onChange={(s) => setNewStart(s.target.value)}
                             />
@@ -508,7 +554,7 @@ export default function Goals() {
                         <div>
                           <label
                             htmlFor="end-date"
-                            className="block text-sm font-sans font-medium text-gray-700"
+                            className="block text-md font-sans font-medium text-gray-700"
                           >
                             End Date
                           </label>
@@ -517,6 +563,27 @@ export default function Goals() {
                               type="date"
                               name="end-date"
                               id="end-date"
+                              min={format(
+                                nextDay(
+                                  new Date(
+                                    new Date().getFullYear(),
+                                    new Date().getMonth(),
+                                    new Date().getDate()
+                                  ),
+                                  getDay(
+                                    new Date(
+                                      new Date().getFullYear(),
+                                      new Date().getMonth(),
+                                      new Date().getDate()
+                                    )
+                                  ) + 14
+                                ),
+                                "yyyy-MM-dd"
+                              )}
+                              max={format(
+                                new Date(new Date().getFullYear(), 12, 31),
+                                "yyyy-MM-dd"
+                              )}
                               className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               onChange={(e) => setNewEnd(e.target.value)}
                             />
@@ -525,7 +592,7 @@ export default function Goals() {
                       </div>
                       <button
                         type="submit"
-                        className="inline-flex items-center mt-5 px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="inline-flex items-center mt-5 px-4 py-2 border border-transparent text-md font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       >
                         Create
                       </button>
@@ -993,10 +1060,6 @@ export default function Goals() {
                                     </div>
                                   </div>
                                 </div>
-                                <AddGoalModal
-                                  open={openAddGoal}
-                                  onClose={() => setOpenAddGoal(false)}
-                                />
                               </>
                             )}
                           </>
@@ -1034,9 +1097,39 @@ export default function Goals() {
                                     </div>
                                     <div className="sm:px-6 lg:px-8">
                                       <div className="sm:flex sm:items-center mt-5">
-                                        <h2 className="text-lg font-semibold text-left ml-5">
-                                          Financial ({financial.length})
-                                        </h2>
+                                        {overdueFinancial ? (
+                                          <>
+                                            <div className="sm:flex sm:items-center">
+                                              <h2 className="text-lg font-semibold text-left text-red-600 ml-5">
+                                                Financial
+                                                <span className="inline-flex items-center ml-1 rounded-full bg-red-100 px-2.5 py-0.5 text-md font-medium font-semibold text-red-800">
+                                                  {financial.length}
+                                                </span>
+                                              </h2>
+                                              <div className="sm:flex-auto"></div>
+                                              <div className="sm:mt-0 sm:ml-16 sm:flex-none">
+                                                <button
+                                                  type="button"
+                                                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                                  onClick={() =>
+                                                    setOpenAddGoal(true)
+                                                  }
+                                                >
+                                                  Add Financial Goal
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <h2 className="text-lg font-semibold text-left ml-5">
+                                              Financial
+                                              <span className="inline-flex items-center ml-1 rounded-full bg-indigo-100 px-2.5 py-0.5 text-md font-medium font-semibold text-indigo-800">
+                                                {financial.length}
+                                              </span>
+                                            </h2>
+                                          </>
+                                        )}
                                         <div className="sm:flex-auto"></div>
                                       </div>
                                       <div className="mt-8 flex flex-col">
@@ -1192,9 +1285,40 @@ export default function Goals() {
                                     </div>
                                     <div className="sm:px-6 lg:px-8">
                                       <div className="sm:flex sm:items-center">
-                                        <h2 className="text-lg font-semibold text-left ml-5">
-                                          Business ({business.length})
-                                        </h2>
+                                        {overdueBusiness ? (
+                                          <>
+                                            <div className="sm:flex sm:items-center">
+                                              <h2 className="text-lg font-semibold text-left text-red-600 ml-5">
+                                                Business
+                                                <span className="inline-flex items-center ml-1 rounded-full bg-red-100 px-2.5 py-0.5 text-md font-medium font-semibold text-red-800">
+                                                  {business.length}
+                                                </span>
+                                              </h2>
+                                              <div className="sm:flex-auto"></div>
+                                              <div className="sm:mt-0 sm:ml-16 sm:flex-none">
+                                                <button
+                                                  type="button"
+                                                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                                  onClick={() => {
+                                                    setOpenAddGoal(true);
+                                                  }}
+                                                >
+                                                  Add Business Goal
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <h2 className="text-lg font-semibold text-left ml-5">
+                                              Business
+                                              <span className="inline-flex items-center ml-1 rounded-full bg-indigo-100 px-2.5 py-0.5 text-md font-medium font-semibold text-indigo-800">
+                                                {business.length}
+                                              </span>
+                                            </h2>
+                                          </>
+                                        )}
+
                                         <div className="sm:flex-auto"></div>
                                         <div className="sm:mt-0 sm:ml-16 sm:flex-none">
                                           {/* {withinCurrentPeriod() ? (
@@ -1362,6 +1486,10 @@ export default function Goals() {
                                     </div>
                                   </div>
                                 </div>
+                                <AddGoalModal
+                                  open={openAddGoal}
+                                  onClose={() => setOpenAddGoal(false)}
+                                />
                               </>
                             ) : (
                               <>No action required</>

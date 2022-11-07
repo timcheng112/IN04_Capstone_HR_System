@@ -117,8 +117,11 @@ public class AppraisalService {
     public List<Appraisal> getAllAppraisalsByYear(String year) {
         List<Appraisal> appraisals = appraisalRepository.findAllAppraisalsByYear(year);
         for (Appraisal a : appraisals) {
-            a.setManagerAppraising(null);
-            a.setEmployee(null);
+            User manager = breakRelationships(a.getManagerAppraising());
+            User employee = breakRelationships(a.getEmployee());
+
+            a.setManagerAppraising(manager);
+            a.setEmployee(employee);
         }
         return appraisals;
     }
