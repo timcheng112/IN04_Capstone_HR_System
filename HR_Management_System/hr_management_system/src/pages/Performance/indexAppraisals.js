@@ -17,6 +17,16 @@ import {
 } from "@heroicons/react/24/outline";
 import Moment from "react-moment";
 
+const people = [
+  {
+    name: "Lindsay Walton",
+    title: "Front-end Developer",
+    email: "lindsay.walton@example.com",
+    role: "Member",
+  },
+  // More people...
+];
+
 export default function Appraisals() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
@@ -33,6 +43,7 @@ export default function Appraisals() {
   const [appraisals, setAppraisals] = useState([]);
   const [myAppraisals, setMyAppraisals] = useState([]);
   const [organizationHead, setOrganizationHead] = useState(false);
+  const [allAppraisals, setAllAppraisals] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -58,9 +69,9 @@ export default function Appraisals() {
     });
 
     api.getIsTeamHead(getUserId()).then((response) => {
+      //console.log(response.data);
       if (response.data > -1) {
         setIsManager(true);
-        console.log(response.data);
         api
           .getManagerAppraisals(new Date().getFullYear(), getUserId())
           .then((response) => {
@@ -73,7 +84,7 @@ export default function Appraisals() {
     api.getIsDepartmentHead(getUserId()).then((response) => {
       if (response.data > -1) {
         setIsManager(true);
-        console.log("department head");
+        //console.log("department head");
         api
           .getDepartmentAppraisals(new Date().getFullYear(), getUserId())
           .then((response) => setAppraisals(response.data));
@@ -97,6 +108,13 @@ export default function Appraisals() {
         console.log(response.data.length);
         setMyAppraisals(response.data);
       });
+
+    api.getAllAppraisalsByYear(new Date().getFullYear()).then((response) => {
+      console.log(response.data);
+      const a = response.data.filter((a) => a.employee.userId + "" !== getUserId() + "");
+      console.log(a);
+      setAllAppraisals(a);
+    });
   }, []);
 
   if (error) return `Error`;
@@ -158,43 +176,43 @@ export default function Appraisals() {
   function renderAppraisalStatus(item) {
     if (item.status === "Incomplete") {
       return (
-        <>
+        <div className="flex row">
           <XCircleIcon
             className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
             aria-hidden="true"
           />
           Incomplete
-        </>
+        </div>
       );
     } else if (item.status === "In Progress") {
       return (
-        <>
+        <div className="flex row">
           <PlayCircleIcon
             className="mr-1.5 h-5 w-5 flex-shrink-0 text-amber-400"
             aria-hidden="true"
           />
           In Progress
-        </>
+        </div>
       );
     } else if (item.status === "Completed") {
       return (
-        <>
+        <div className="flex row">
           <CheckCircleIcon
             className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
             aria-hidden="true"
           />
           Completed
-        </>
+        </div>
       );
     } else {
       return (
-        <>
+        <div className="flex row">
           <XCircleIcon
             className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
             aria-hidden="true"
           />
           Overdue
-        </>
+        </div>
       );
     }
   }
@@ -226,7 +244,7 @@ export default function Appraisals() {
                       {appraisal.managerAppraising.lastName}
                     </span>
                   </div>
-                  <p className="mt-2 flex items-center text-sm text-gray-500">
+                  <div className="mt-2 flex items-center text-sm text-gray-500">
                     <EnvelopeIcon
                       className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                       aria-hidden="true"
@@ -234,14 +252,13 @@ export default function Appraisals() {
                     <span className="truncate">
                       {appraisal.managerAppraising.workEmail}
                     </span>
-                  </p>
+                  </div>
                 </div>
                 <div className="hidden md:block">
                   <div>
-                    <p className="text-sm text-gray-900 text-left"></p>
-                    <p className="mt-2 flex items-center text-sm text-gray-500">
-                      {renderAppraisalStatus(appraisal)}
-                    </p>
+                    {renderAppraisalStatus(appraisal)}
+                    {/* <p className="text-sm text-gray-900 text-left"></p>
+                    <p className="mt-2 flex items-center text-sm text-gray-500"></p> */}
                   </div>
                 </div>
               </div>
@@ -277,7 +294,7 @@ export default function Appraisals() {
                     {appraisal.managerAppraising.lastName}
                   </span>
                 </div>
-                <p className="mt-2 flex items-center text-sm text-gray-500">
+                <span className="mt-2 flex items-center text-sm text-gray-500">
                   <EnvelopeIcon
                     className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                     aria-hidden="true"
@@ -285,7 +302,7 @@ export default function Appraisals() {
                   <span className="truncate">
                     {appraisal.managerAppraising.workEmail}
                   </span>
-                </p>
+                </span>
               </div>
               <div className="hidden md:block">
                 <div>
@@ -333,10 +350,29 @@ export default function Appraisals() {
     }
   }
 
+  function handleEdit() {
+    const incomplete = allAppraisals.filter((a) => a.status === "Incomplete");
+    console.log(parseInt(allAppraisals.length) - parseInt(incomplete.length));
+
+    if (incomplete.length === allAppraisals.length) {
+      setEditMode(!editMode);
+      setStartDate(currentPeriod.startDate);
+      setEndDate(currentPeriod.endDate);
+    } else {
+      alert(
+        "There are " +
+          (parseInt(allAppraisals.length) - parseInt(incomplete.length)) +
+          " appraisals that have been started, in progress or completed. Cannot change appraisal period."
+      );
+      setEditMode(false);
+    }
+  }
+
   return (
     user &&
     appraisalPeriods &&
-    appraisals && (
+    appraisals &&
+    allAppraisals && (
       <div className="">
         <Navbar />
         <div className="flex">
@@ -483,9 +519,7 @@ export default function Appraisals() {
                               type="button"
                               className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 mt-5 px-4 py-2 text-md font-sans font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                               onClick={() => {
-                                setEditMode(!editMode);
-                                setStartDate(currentPeriod.startDate);
-                                setEndDate(currentPeriod.endDate);
+                                handleEdit();
                               }}
                             >
                               <PencilIcon className="h-5 w-5 mr-2" />
@@ -501,6 +535,93 @@ export default function Appraisals() {
                             </button>
                           </>
                         )}
+                        <div className="mt-8 mx-20 flex flex-col">
+                          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                <table className="min-w-full divide-y divide-gray-300">
+                                  <thead className="bg-gray-50">
+                                    <tr>
+                                      <th
+                                        scope="col"
+                                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                      >
+                                        Manager / Appraised By
+                                      </th>
+                                      <th
+                                        scope="col"
+                                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                      >
+                                        Employee
+                                      </th>
+                                      <th
+                                        scope="col"
+                                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                      >
+                                        Status
+                                      </th>
+                                      <th
+                                        scope="col"
+                                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                      >
+                                        Promotion Request
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody className="divide-y divide-gray-200 bg-white">
+                                    {allAppraisals.map((appraisal) => (
+                                      <tr key={appraisal.appraisalId}>
+                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-left font-medium text-gray-900 sm:pl-6">
+                                          {
+                                            appraisal.managerAppraising
+                                              .firstName
+                                          }{" "}
+                                          {appraisal.managerAppraising.lastName}
+                                          <span className="mt-2 flex items-center text-sm text-gray-500">
+                                            <EnvelopeIcon
+                                              className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                              aria-hidden="true"
+                                            />
+                                            <span className="truncate">
+                                              {
+                                                appraisal.managerAppraising
+                                                  .workEmail
+                                              }
+                                            </span>
+                                          </span>
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-left text-gray-900">
+                                          {appraisal.employee.firstName}{" "}
+                                          {appraisal.employee.lastName}
+                                          <span className="mt-2 flex items-center text-sm text-gray-500">
+                                            <EnvelopeIcon
+                                              className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                              aria-hidden="true"
+                                            />
+                                            <span className="truncate">
+                                              {appraisal.employee.workEmail}
+                                            </span>
+                                          </span>
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-left text-gray-500">
+                                          {renderAppraisalStatus(appraisal)}
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-left text-gray-500">
+                                          <a
+                                            href="#"
+                                            className="text-indigo-600"
+                                          >
+                                            View
+                                          </a>
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </>
                     ) : (
                       <>
@@ -665,7 +786,7 @@ export default function Appraisals() {
                                                   {appraisal.employee.firstName}{" "}
                                                   {appraisal.employee.lastName}
                                                 </p>
-                                                <p className="mt-2 flex items-center text-sm text-gray-500">
+                                                <span className="mt-2 flex items-center text-sm text-gray-500">
                                                   <EnvelopeIcon
                                                     className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                     aria-hidden="true"
@@ -676,16 +797,16 @@ export default function Appraisals() {
                                                         .workEmail
                                                     }
                                                   </span>
-                                                </p>
+                                                </span>
                                               </div>
                                               <div className="hidden md:block">
                                                 <div>
                                                   <p className="text-sm text-gray-900 text-left"></p>
-                                                  <p className="mt-2 flex items-center text-sm text-gray-500">
+                                                  <div className="mt-2 flex items-center text-sm text-gray-500">
                                                     {renderAppraisalStatus(
                                                       appraisal
                                                     )}
-                                                  </p>
+                                                  </div>
                                                 </div>
                                               </div>
                                             </div>
