@@ -61,6 +61,7 @@ import PayrollPage from "./pages/Payroll/payroll";
 import PayrollHistoryPage from "./pages/Payroll/PayrollHistory";
 import EmployeesNotInPayrollPage from "./pages/Payroll/EmployeesNotInPayroll";
 import AddToPayrollFormPage from "./pages/Payroll/AddToPayrollForm";
+import EmployeePayrollHistory from "./pages/Payroll/ViewEmployeesPayHistory";
 
 function App() {
   return (
@@ -246,6 +247,11 @@ function App() {
             path="/employees-not-in-payroll/add-to-payroll"
             component={AddToPayrollFormPage}
           />
+          <PrivateRoute
+              exact
+              path="/employee-payroll-history"
+              component={EmployeePayrollHistory}
+            />
         </Switch>
       </div>
     </BrowserRouter>

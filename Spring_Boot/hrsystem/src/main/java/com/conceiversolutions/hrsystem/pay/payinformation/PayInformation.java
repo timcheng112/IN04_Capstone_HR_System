@@ -1,4 +1,5 @@
 package com.conceiversolutions.hrsystem.pay.payinformation;
+import com.conceiversolutions.hrsystem.enums.SelfHelpGroupEnum;
 import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
 import com.conceiversolutions.hrsystem.pay.deduction.Deduction;
@@ -31,11 +32,16 @@ public class PayInformation {
     private BigDecimal overtimeHourlyPay;
     @Column(name="pay_method", nullable = false)
     private String paymentMethod;
-    @Column(name="self_help_group_contribution_type", nullable = false)
-    private String selfHelpGroupContributionType;
 //    @OneToOne(mappedBy = "payInformation")
     //@JoinColumn(name = "payslip_id")
 //    private Payslip payslip;
+
+    @Column(name="has_commission" , nullable = false)
+    private Boolean hasCommission;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name="self_help_group")
+    private SelfHelpGroupEnum selfHelpGroup;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "allowanceId")
     //@JoinColumn(name="allowanceId") mappedBy ^ over here suffice for linkage
     private List<Allowance> allowance;
@@ -51,7 +57,9 @@ public class PayInformation {
         this.deduction = new ArrayList<>();
     }
 
-    public PayInformation(Long payInformationId, String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, List<Allowance> allowance, List<Deduction> deduction, User employee) {
+
+
+    public PayInformation(Long payInformationId, String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, List<Allowance> allowance, List<Deduction> deduction, User employee) {
         this.payInformationId = payInformationId;
         this.payType = payType;
         this.basicHourlyPay = basicHourlyPay;
@@ -59,25 +67,62 @@ public class PayInformation {
         this.eventPhHourlyPay = eventPhHourlyPay;
         this.overtimeHourlyPay = overtimeHourlyPay;
         this.paymentMethod = paymentMethod;
-        this.selfHelpGroupContributionType = selfHelpGroupContributionType;
         this.allowance = allowance;
         this.deduction = deduction;
         this.user = employee;
     }
 
-    public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, String selfHelpGroupContributionType, Payslip payslip, List<Allowance> allowance, List<Deduction> deduction, User employee) {
+    public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, Payslip payslip, List<Allowance> allowance, List<Deduction> deduction, User employee) {
         this.payType = payType;
         this.basicHourlyPay = basicHourlyPay;
         this.weekendHourlyPay = weekendHourlyPay;
         this.eventPhHourlyPay = eventPhHourlyPay;
         this.overtimeHourlyPay = overtimeHourlyPay;
         this.paymentMethod = paymentMethod;
-        this.selfHelpGroupContributionType = selfHelpGroupContributionType;
         this.allowance = allowance;
         this.deduction = deduction;
         this.user = employee;
     }
 
+    public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, Boolean hasCommission, SelfHelpGroupEnum selfHelpGroup, List<Allowance> allowance, List<Deduction> deduction, User user) {
+        this.payType = payType;
+        this.basicHourlyPay = basicHourlyPay;
+        this.weekendHourlyPay = weekendHourlyPay;
+        this.eventPhHourlyPay = eventPhHourlyPay;
+        this.overtimeHourlyPay = overtimeHourlyPay;
+        this.paymentMethod = paymentMethod;
+        this.hasCommission = hasCommission;
+        this.selfHelpGroup = selfHelpGroup;
+        this.allowance = allowance;
+        this.deduction = deduction;
+        this.user = user;
+    }
+
+    public Boolean getHasCommission() {
+        return hasCommission;
+    }
+
+    public void setHasCommission(Boolean hasCommission) {
+        this.hasCommission = hasCommission;
+    }
+
+    public SelfHelpGroupEnum getSelfHelpGroup() {
+        return this.selfHelpGroup;
+    }
+
+    public void setSelfHelpGroup(SelfHelpGroupEnum selfHelpGroup){
+        this.selfHelpGroup = selfHelpGroup;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    //SHG changed
     public PayInformation(String monthly, BigDecimal bigDecimal, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, String giro, String cpf, Object selfHelpGroupContributionType, Object allowance, Object deduction) {
     }
 
@@ -137,14 +182,6 @@ public class PayInformation {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getSelfHelpGroupContributionType() {
-        return selfHelpGroupContributionType;
-    }
-
-    public void setSelfHelpGroupContributionType(String selfHelpGroupContributionType) {
-        this.selfHelpGroupContributionType = selfHelpGroupContributionType;
-    }
-
 //    public Payslip getPayslip() {
 //        return payslip;
 //    }
@@ -179,9 +216,11 @@ public class PayInformation {
                 ", eventPhHourlyPay=" + eventPhHourlyPay +
                 ", overtimeHourlyPay=" + overtimeHourlyPay +
                 ", paymentMethod='" + paymentMethod + '\'' +
-                ", selfHelpGroupContributionType='" + selfHelpGroupContributionType + '\'' +
+                ", hasCommission=" + hasCommission +
+                ", selfHelpGroup=" + selfHelpGroup +
                 ", allowance=" + allowance +
                 ", deduction=" + deduction +
+                ", user=" + user +
                 '}';
     }
 }
