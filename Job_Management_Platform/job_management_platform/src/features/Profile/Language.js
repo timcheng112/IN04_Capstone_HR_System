@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   PlusIcon, XMarkIcon
 } from "@heroicons/react/20/solid";
 
-const Language = () => {
-
+const Language = (languages, setLanguages) => {
+//  const oldList = ["English", "Chinese"]
   const [formValues, setFormValues] = useState([{ name: "" }])
+
 
   let handleChange = (i, e) => {
     let newFormValues = [...formValues];
@@ -23,6 +24,30 @@ const Language = () => {
     setFormValues(newFormValues)
   }
 
+  useEffect(()=>{
+    console.log("BBBBBB")
+    console.log(formValues)
+
+    let finalList = []
+    formValues.forEach(x => finalList.push(x.name))
+    console.log(finalList)
+//    languages = finalList
+//    setLanguages(finalList)
+// TODO: set language
+    console.log(languages)
+  },[formValues])
+
+  useEffect(()=>{
+      console.log("AAAAAAA")
+      console.log(languages)
+      console.log(languages.languages)
+
+      let newList = []
+      languages.languages.forEach((x) => newList.push({name: x}))
+      console.log(newList)
+      console.log(formValues)
+      setFormValues(newList)
+    },[])
 
   return (
     <form  >
