@@ -4,72 +4,12 @@ import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import Tab from "../../features/jobrequest/Tab";
+import PayrollTabs from "../../features/payroll/PayrollTabs";
 import api from "../../utils/api";
-
-const tabs = [
-  { name: "Overview", href: "/payroll", current: true },
-  { name: "Payroll History", href: "/payroll-history", current: false },
-  {
-    name: "Employees Not In Payroll",
-    href: "/employees-not-in-payroll",
-    current: false,
-  },
-  {
-    name: "Personal Payroll",
-    href: "/employee-payroll-history",
-    current: false,
-  },
-];
-
-// const departments = [
-//   {
-//     name: "Sales Department",
-//     teams: [{ name: "Sales Team A" }, { name: "Sales Team B" }],
-//   },
-//   {
-//     name: "Finance Department",
-//     teams: [{ name: "Finance Team A" }, { name: "Finance Team B" }],
-//   },
-// ];
-
-// const employees = [
-//   {
-//     name: "Jenny Wilson",
-//     email: "jennyw@libro.com",
-//     gross: "$10,310.00",
-//     allowances: "+$0",
-//     deductions: "-$100.31",
-//     net: "$10,209.69",
-//     status: "PAID",
-//   },
-//   {
-//     name: "Jane Cooper",
-//     email: "janec@libro.com",
-//     gross: "$5,210.00",
-//     allowances: "+$0",
-//     deductions: "-$521.00",
-//     net: "$4,689.99",
-//     status: "PENDING",
-//   },
-//   {
-//     name: "Guy Hawkins",
-//     email: "guyhawkins@libro.com",
-//     gross: "$3,120.00",
-//     allowances: "+$0",
-//     deductions: "-$936.00",
-//     net: "$2,184.00",
-//     status: "PAID",
-//   },
-//   {
-//     name: "Cody Fisher",
-//     email: "codyfisher@libro.com",
-//     gross: "$7,500.00",
-//     allowances: "+$0",
-//     deductions: "-$2,250.00",
-//     net: "$5250.00",
-//     status: "UNPAID",
-//   },
-// ];
+import EmployeesNotInPayroll from "./EmployeesNotInPayroll";
+import Overview from "./Overview";
+import PayrollHistory from "./PayrollHistory";
+import EmployeePayrollHistory from "./ViewEmployeesPayHistory";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -80,31 +20,57 @@ const Payroll = () => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [teams, setTeams] = useState([]);
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const searchParams = ["firstName", "lastName", "email"];
   const [query, setQuery] = useState("");
   const [searchFilteredEmployees, setSearchFilteredEmployees] = useState([]);
+  const [isOverviewOpen, setIsOverviewOpen] = useState(true);
+  const [isPayrollHistoryOpen, setIsPayrollHistoryOpen] = useState(false);
+  const [isEmployeesNotInPayrollOpen, setIsEmployeesNotInPayrollOpen] =
+    useState(false);
+  const [isPersonalPayrollOpen, setIsPersonalPayrollOpen] = useState(false);
+
+  const tabs = [
+    { name: "Overview", current: isOverviewOpen },
+    {
+      name: "Payroll History",
+      current: isPayrollHistoryOpen,
+    },
+    {
+      name: "Employees Not In Payroll",
+      current: isEmployeesNotInPayrollOpen,
+    },
+    {
+      name: "Personal Payroll",
+      current: isPersonalPayrollOpen,
+    },
+  ];
+
+  const onChangeHandler = (tabName) => {
+    if (tabName === "Overview") {
+      setIsOverviewOpen(true);
+      setIsPayrollHistoryOpen(false);
+      setIsEmployeesNotInPayrollOpen(false);
+      setIsPersonalPayrollOpen(false);
+    } else if (tabName === "Payroll History") {
+      setIsOverviewOpen(false);
+      setIsPayrollHistoryOpen(true);
+      setIsEmployeesNotInPayrollOpen(false);
+      setIsPersonalPayrollOpen(false);
+    } else if (tabName === "Employees Not In Payroll") {
+      setIsOverviewOpen(false);
+      setIsPayrollHistoryOpen(false);
+      setIsEmployeesNotInPayrollOpen(true);
+      setIsPersonalPayrollOpen(false);
+    } else {
+      setIsOverviewOpen(false);
+      setIsPayrollHistoryOpen(false);
+      setIsEmployeesNotInPayrollOpen(false);
+      setIsPersonalPayrollOpen(true);
+    }
+  };
 
   useEffect(() => {
-    console.log(filteredEmployees);
-    console.log(
-      filteredEmployees.filter(
-        (employee) =>
-          employee[searchParams[0]]
-            .toString()
-            .toLowerCase()
-            .indexOf(query.toLowerCase()) > -1 ||
-          employee[searchParams[1]]
-            .toString()
-            .toLowerCase()
-            .indexOf(query.toLowerCase()) > -1 ||
-          employee[searchParams[2]]
-            .toString()
-            .toLowerCase()
-            .indexOf(query.toLowerCase()) > -1
-      )
-    );
     setSearchFilteredEmployees(
       query === ""
         ? filteredEmployees
@@ -124,7 +90,7 @@ const Payroll = () => {
                 .indexOf(query.toLowerCase()) > -1
           )
     );
-  }, [filteredEmployees, query, searchParams]);
+  }, [filteredEmployees, query]);
 
   useEffect(() => {
     api
@@ -185,8 +151,7 @@ const Payroll = () => {
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center space-x-4">
           <div className="sm:flex-auto">
-            {/* <h1 className="text-xl font-semibold text-gray-900">Job Requests</h1> */}
-            <Tab tabs={tabs} />
+            <PayrollTabs tabs={tabs} onChangeHandler={onChangeHandler} />
           </div>
           <div className="w-full max-w-lg lg:max-w-xs">
             <label htmlFor="search" className="sr-only">
@@ -214,13 +179,6 @@ const Payroll = () => {
             </div>
           </div>
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex">
-            {/* <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-              // onClick={() => history.push("/hiring/newjobrequest")}
-            >
-              New Job Request
-            </button> */}
             <ComboBox
               items={departments}
               searchParam={"departmentName"}
@@ -230,6 +188,7 @@ const Payroll = () => {
                 setSelectedTeam(null);
               }}
               placeholder="Search for Department"
+              disabled={isPayrollHistoryOpen || isPersonalPayrollOpen}
             />
             <div className="mx-1" />
             <ComboBox
@@ -238,114 +197,21 @@ const Payroll = () => {
               selectedItem={selectedTeam}
               setSelectedItem={setSelectedTeam}
               placeholder="Search for Team"
-              disabled={selectedDepartment === null}
+              disabled={selectedDepartment === null || isPayrollHistoryOpen || isPersonalPayrollOpen}
             />
           </div>
         </div>
-        <div className="mt-8 flex flex-col">
-          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-300">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        Employee Name
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Email Address
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Gross
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Allowances
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Deductions
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Net Salary
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 bg-white">
-                    {searchFilteredEmployees.map((employee) => (
-                      <tr>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {employee.firstName} {employee.lastName}
-                          <p className="whitespace-nowrap py-2 text-left text-sm text-gray-500">
-                            {employee.currentPosition.positionName}
-                          </p>
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          {employee.email}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          $10,310.00
-                          {/* {employee.gross} */}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
-                          +$0
-                          {/* {employee.allowances} */}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
-                          -$100.31
-                          {/* {employee.deductions} */}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          $10,209.69
-                          {/* {employee.net} */}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          <div
-                            className={classNames(
-                              "rounded-xl w-1/2 text-center font-bold bg-green-200 text-green-700",
-                              employee.status === "PAID" &&
-                                "bg-green-200 text-green-700",
-                              employee.status === "PENDING" &&
-                                "bg-yellow-200 text-yellow-700",
-                              employee.status === "UNPAID" &&
-                                "bg-red-200 text-red-700"
-                            )}
-                          >
-                            PAID
-                            {/* {employee.status} */}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
+      {isOverviewOpen && (
+        <Overview searchFilteredEmployees={searchFilteredEmployees} />
+      )}
+      {isPayrollHistoryOpen && <PayrollHistory />}
+      {isEmployeesNotInPayrollOpen && (
+        <EmployeesNotInPayroll
+          searchFilteredEmployees={searchFilteredEmployees}
+        />
+      )}
+      {isPersonalPayrollOpen && <EmployeePayrollHistory />}
     </div>
   );
 };

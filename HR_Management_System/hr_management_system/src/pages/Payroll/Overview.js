@@ -1,19 +1,10 @@
-import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import ComboBox from "../../components/ComboBox/ComboBox";
-import Navbar from "../../components/Navbar";
-import AdminSidebar from "../../components/Sidebar/Admin";
-import Tab from "../../features/jobrequest/Tab";
-import api from "../../utils/api";
+import React from "react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const EmployeesNotInPayroll = ({ searchFilteredEmployees }) => {
-  const history = useHistory();
-
+const Overview = ({ searchFilteredEmployees }) => {
   return (
     <div>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -40,13 +31,31 @@ const EmployeesNotInPayroll = ({ searchFilteredEmployees }) => {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Position
+                        Gross
                       </th>
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Options
+                        Allowances
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Deductions
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Net Salary
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Status
                       </th>
                     </tr>
                   </thead>
@@ -55,31 +64,44 @@ const EmployeesNotInPayroll = ({ searchFilteredEmployees }) => {
                       <tr>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
                           {employee.firstName} {employee.lastName}
+                          <p className="whitespace-nowrap py-2 text-left text-sm text-gray-500">
+                            {employee.currentPosition.positionName}
+                          </p>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
                           {employee.email}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          {employee.currentPosition.positionName}
+                          $10,310.00
+                          {/* {employee.gross} */}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
+                          +$0
+                          {/* {employee.allowances} */}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
+                          -$100.31
+                          {/* {employee.deductions} */}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          <button
-                            type="button"
-                            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            onClick={() =>
-                              history.push({
-                                pathname:
-                                  "/employees-not-in-payroll/add-to-payroll",
-                                state: {},
-                              })
-                            }
+                          $10,209.69
+                          {/* {employee.net} */}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          <div
+                            className={classNames(
+                              "rounded-xl w-1/2 text-center font-bold bg-green-200 text-green-700",
+                              employee.status === "PAID" &&
+                                "bg-green-200 text-green-700",
+                              employee.status === "PENDING" &&
+                                "bg-yellow-200 text-yellow-700",
+                              employee.status === "UNPAID" &&
+                                "bg-red-200 text-red-700"
+                            )}
                           >
-                            <PlusIcon
-                              className="-ml-1 mr-2 h-5 w-5"
-                              aria-hidden="true"
-                            />
-                            Add to Payroll
-                          </button>
+                            PAID
+                            {/* {employee.status} */}
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -94,4 +116,4 @@ const EmployeesNotInPayroll = ({ searchFilteredEmployees }) => {
   );
 };
 
-export default EmployeesNotInPayroll;
+export default Overview;
