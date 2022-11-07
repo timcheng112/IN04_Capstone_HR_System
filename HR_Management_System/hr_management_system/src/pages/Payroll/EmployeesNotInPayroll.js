@@ -1,5 +1,6 @@
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
@@ -7,10 +8,10 @@ import Tab from "../../features/jobrequest/Tab";
 
 const tabs = [
   { name: "Overview", href: "/payroll", current: false },
-  { name: "Payroll History", href: "/payrollhistory", current: false },
+  { name: "Payroll History", href: "/payroll-history", current: false },
   {
     name: "Employees Not In Payroll",
-    href: "/employeesnotinpayroll",
+    href: "/employees-not-in-payroll",
     current: true,
   },
 ];
@@ -76,6 +77,7 @@ function classNames(...classes) {
 const EmployeesNotInPayroll = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const history = useHistory();
 
   return (
     <div>
@@ -188,6 +190,12 @@ const EmployeesNotInPayroll = () => {
                           <button
                             type="button"
                             className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            onClick={() =>
+                              history.push({
+                                pathname: "/employees-not-in-payroll/add-to-payroll",
+                                state: {  },
+                              })
+                            }
                           >
                             <PlusIcon
                               className="-ml-1 mr-2 h-5 w-5"

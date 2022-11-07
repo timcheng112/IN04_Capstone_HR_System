@@ -7,10 +7,10 @@ import Tab from "../../features/jobrequest/Tab";
 
 const tabs = [
   { name: "Overview", href: "/payroll", current: true },
-  { name: "Payroll History", href: "/payrollhistory", current: false },
+  { name: "Payroll History", href: "/payroll-history", current: false },
   {
     name: "Employees Not In Payroll",
-    href: "/employeesnotinpayroll",
+    href: "/employees-not-in-payroll",
     current: false,
   },
 ];

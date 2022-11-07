@@ -8,10 +8,10 @@ import PayrollCard from "../../features/payroll/PayrollCard";
 
 const tabs = [
   { name: "Overview", href: "/payroll", current: false },
-  { name: "Payroll History", href: "/payrollhistory", current: true },
+  { name: "Payroll History", href: "/payroll-history", current: true },
   {
     name: "Employees Not In Payroll",
-    href: "/employeesnotinpayroll",
+    href: "/employees-not-in-payroll",
     current: false,
   },
 ];
