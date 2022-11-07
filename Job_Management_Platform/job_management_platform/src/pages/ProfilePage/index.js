@@ -334,7 +334,7 @@ export default function Profile() {
                 <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   CV
                 </label>
-                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                <div className="flex mt-1 sm:col-span-2 sm:mt-0">
                   <button
                     type="button"
                     className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -351,7 +351,7 @@ export default function Profile() {
                 <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Transcript
                 </label>
-                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                <div className="flex mt-1 sm:col-span-2 sm:mt-0">
                   <button
                     type="button"
                     className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -367,7 +367,7 @@ export default function Profile() {
                 <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Cover Letter
                 </label>
-                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                <div className="flex mt-1 sm:col-span-2 sm:mt-0">
                   <button
                     type="button"
                     className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
