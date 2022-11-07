@@ -14,6 +14,9 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
+import com.conceiversolutions.hrsystem.pay.deduction.Deduction;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
 import com.conceiversolutions.hrsystem.rostering.roster.RosterRepository;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
@@ -1232,25 +1235,18 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setTaskListItems(new ArrayList<>());
                 taskListItem.getTask().setCategory(null);
             }
-            u.setQualificationInformation(null);
-            u.setBlocks(new ArrayList<>());
-            u.setShiftListItems(new ArrayList<>());
-            u.setSwapRequestsReceived(new ArrayList<>());
-            u.setSwapRequestsRequested(new ArrayList<>());
-            u.setReactivationRequest(null);
-            u.setAttendances(new ArrayList<>());
-            u.setCurrentPayInformation(null);
-            u.setEmployeeAppraisals(new ArrayList<>());
-            u.setManagerAppraisals(new ArrayList<>());
-            u.setManagerReviews(new ArrayList<>());
-            u.setEmployeeReviews(new ArrayList<>());
-            u.setApplications(new ArrayList<>());
-            u.setGoals(new ArrayList<>());
-            u.setPositions(new ArrayList<>());
-            u.setJobRequests(new ArrayList<>());
-            u.setLeaves(new ArrayList<>());
-            u.setLeaveQuotas(new ArrayList<>());
-            u.setCurrentLeaveQuota(null);
+
+            //nullify other side for pay information, allowance & deduction
+            PayInformation tempPayInformation = u.getCurrentPayInformation();
+            tempPayInformation.setUser(null);
+            for (Allowance allowance: tempPayInformation.getAllowance()) {
+                allowance.setPayInfo(null);
+            }
+            for (Deduction deduction : tempPayInformation.getDeduction()) {
+                deduction.setPayInfo(null);
+            }
+            u.nullify();
+            u.setCurrentPayInformation(tempPayInformation);
 
         }
         return employees;
