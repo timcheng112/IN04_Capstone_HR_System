@@ -695,4 +695,82 @@ public class QualificationService {
 
         return true;
     }
+
+    public Recommendation editRecommendation(Long userId, Recommendation toEdit) {
+        System.out.println("QualificationService.editRecommendation");
+        System.out.println("userId = " + userId + ", toEdit = " + toEdit);
+
+        User a = userRepository.findById(userId).get();
+        User applicant = checkQIExists(a);
+        List<Recommendation> recos = applicant.getQualificationInformation().getRecommendations();
+
+
+        if (recos.isEmpty()) {
+            throw new IllegalStateException("No Recommendations to save. List has been cleared");
+        } else {
+            // persist new one, remove old ones and update existing one
+            List<Long> existingRecoIds = recos.stream().map(x -> x.getRecommendationId()).toList();
+            if (existingRecoIds.contains(toEdit.getRecommendationId())) {
+                // if dont include, error
+                throw new IllegalStateException("Recommendation not found");
+            }
+
+            // update
+            for (Recommendation r : recos) {
+                if (r.getRecommendationId().equals(toEdit.getRecommendationId())) {
+                    r.setName(toEdit.getName());
+                    r.setPhone(toEdit.getPhone());
+                    r.setEmail(toEdit.getEmail());
+                    r.setRelationship(toEdit.getRelationship());
+                    recommendationRepository.saveAndFlush(r);
+                    break;
+                }
+            }
+
+            applicant = userRepository.findById(userId).get();
+            qualificationRepository.saveAndFlush(applicant.getQualificationInformation());
+            Recommendation rec = recommendationRepository.findById(toEdit.getRecommendationId()).get();
+            return rec;
+        }
+    }
+
+    public WorkExperience editUserExperience(Long userId, WorkExperience exp) {
+        System.out.println("QualificationService.editUserExperience");
+        System.out.println("userId = " + userId + ", exp = " + exp);
+
+        User a = userRepository.findById(userId).get();
+        User applicant = checkQIExists(a);
+        List<WorkExperience> exps = applicant.getQualificationInformation().getWorkExperiences();
+
+
+        if (exps.isEmpty()) {
+            throw new IllegalStateException("No Experiences to save. List has been cleared");
+        } else {
+            // persist new one, remove old ones and update existing one
+            List<Long> existingExpIds = exps.stream().map(x -> x.getExperienceId()).toList();
+            if (existingExpIds.contains(exp.getExperienceId())) {
+                // if dont include, error
+                throw new IllegalStateException("Recommendation not found");
+            }
+
+            // update
+            for (WorkExperience we : exps) {
+                if (we.getExperienceId().equals(exp.getExperienceId())) {
+                    we.setDescription(exp.getDescription());
+                    we.setEndDate(exp.getEndDate());
+                    we.setStartDate(exp.getStartDate());
+                    we.setPositionName(exp.getPositionName());
+                    we.setCompanyName(exp.getCompanyName());
+                    we.setCurrentlyWorking(exp.getCurrentlyWorking());
+                    workExperienceRepository.saveAndFlush(we);
+                    break;
+                }
+            }
+
+            applicant = userRepository.findById(userId).get();
+            qualificationRepository.saveAndFlush(applicant.getQualificationInformation());
+            WorkExperience we = workExperienceRepository.findById(exp.getExperienceId()).get();
+            return we;
+        }
+    }
 }

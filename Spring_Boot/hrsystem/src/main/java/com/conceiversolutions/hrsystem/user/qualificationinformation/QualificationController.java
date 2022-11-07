@@ -77,6 +77,12 @@ public class QualificationController{
         return qualificationService.removeUserRecommendation(userId, recoId);
     }
 
+    @PutMapping(path = "/editRecommendation")
+    public Recommendation editRecommendation(@RequestParam("userId") Long userId,
+                                   @RequestBody Recommendation recommendation) {
+        return qualificationService.editRecommendation(userId, recommendation);
+    }
+
     // Work Experiences
     @PostMapping(path = "/addWorkExperience")
     public Long addWorkExperience(@RequestParam("userId") Long userId,
@@ -101,6 +107,12 @@ public class QualificationController{
     public String removeUserExperience(@RequestParam("userId") Long userId,
                                            @RequestParam("expId") Long expId) {
         return qualificationService.removeUserExperience(userId, expId);
+    }
+
+    @PutMapping(path = "/editUserExperience")
+    public WorkExperience editUserExperience(@RequestParam("userId") Long userId,
+                                             @RequestBody WorkExperience exp) {
+        return qualificationService.editUserExperience(userId, exp);
     }
 
     @PutMapping(path = "/saveWorkExperiences")

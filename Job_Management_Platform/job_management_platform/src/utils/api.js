@@ -140,7 +140,7 @@ const api = {
     return axios.get(`http://localhost:9191/api/qualification/getUserRecommendations?userId=${userId}`);
   },
   removeUserRecommendation(userId, recoId) {
-    return axios.delete(`http://localhost:9191/api/qualification/getUserRecommendations?userId=${userId}&recoId=${recoId}`);
+    return axios.delete(`http://localhost:9191/api/qualification/removeUserRecommendation?userId=${userId}&recoId=${recoId}`);
   },
   saveUserRecommendations(userId, recos) {
     return axios.put(`http://localhost:9191/api/qualification/saveUserRecommendations?userId=${userId}`
