@@ -142,6 +142,9 @@ const api = {
   removeUserRecommendation(userId, recoId) {
     return axios.delete(`http://localhost:9191/api/qualification/removeUserRecommendation?userId=${userId}&recoId=${recoId}`);
   },
+  editUserRecommendation(userId, recommendation) {
+    return axios.put(`http://localhost:9191/api/qualification/editRecommendation?userId=${userId}`, recommendation);
+  },
   saveUserRecommendations(userId, recos) {
     return axios.put(`http://localhost:9191/api/qualification/saveUserRecommendations?userId=${userId}`
     ,recos);
@@ -154,6 +157,9 @@ const api = {
   },
   removeUserExperience(userId, expId) {
     return axios.delete(`http://localhost:9191/api/qualification/removeUserExperience?userId=${userId}&expId=${expId}`);
+  },
+  editUserExperience(userId, workExp) {
+    return axios.put(`http://localhost:9191/api/qualification/editUserExperience?userId=${userId}`, workExp);
   },
   saveWorkExperiences(userId, experiences) {
     return axios.put(`http://localhost:9191/api/qualification/saveWorkExperiences?userId=${userId}`
