@@ -233,6 +233,9 @@ const Cell = ({
               removeShiftHandler={removeShiftHandler}
               willBePersisted={false}
               person={person}
+              isUserHrOrManager={
+                user && (user.isHrEmployee || user.userRole === "MANAGER")
+              }
             />
           )}
         </div>
