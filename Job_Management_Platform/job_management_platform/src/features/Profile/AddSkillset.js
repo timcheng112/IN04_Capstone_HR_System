@@ -7,51 +7,57 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const AddSkillset = ({ userSkills, setUserSkills, skills }) => {
+const AddSkillset = ({ userSkills, setUserSkills, skills, uss, setUSS}) => {
 
   // const userSkills = [{ skill: skills[0], level: 1 }, { skill: skills[1], level: 3 }]
 
   useEffect(() => {
+    console.log("CCCC");
+    console.log(userSkills);
     userSkills.map((element) => (
-      console.log(element.skill)
+      console.log(element.skillset)
     ))
+    console.log(skills);
+    console.log(uss);
+    console.log(typeof uss[0].level);
   }, []);
 
   const options = skills.map(skill => ({
-    "value": skill,
+    "value": skill.skillsetName,
     "label": skill.skillsetName
   }))
 
   let handleChange = (i, e) => {
-    let newFormValues = [...userSkills];
+    console.log(e.target.value);
+    let newFormValues = [...uss];
     newFormValues[i][e.target.name] = e.target.value;
-    setUserSkills(newFormValues);
+    setUSS(newFormValues);
   }
   let handleSelect = (i, e) => {
-    let newFormValues = [...userSkills];
+    let newFormValues = [...uss];
     newFormValues[i]['skill'] = e.value;
     console.log(newFormValues[i]['skill'])
-    setUserSkills(newFormValues);
+    setUSS(newFormValues);
   }
 
   let addFormFields = () => {
-    setUserSkills([...userSkills, { skill: "", level: "" }])
+    setUSS([...uss, { skill: "", level: "" }])
   }
 
   let removeFormFields = (i) => {
-    let newFormValues = [...userSkills];
+    let newFormValues = [...uss];
     newFormValues.splice(i, 1);
-    setUserSkills(newFormValues)
+    setUSS(newFormValues)
   }
 
   return (
     <form  >
-      {userSkills.map((element, index) => (
+      {uss.map((element, index) => (
 
         <div className="display: flex flex-flow: row wrap align-items: center" key={index}>
           <div className="flex space-x-4 py-2">
             <Select
-              value={element.skill}
+              value={{label:element.skill}}
               options={options}
               className="w-64"
               onChange={e => handleSelect(index, e)}

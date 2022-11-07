@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin("*")
 @AllArgsConstructor
@@ -142,6 +145,14 @@ public class QualificationController{
     public String saveUserSkillsets(@RequestParam("userId") Long userId,
                                           @RequestBody List<UserSkillset> userSkills) {
         return qualificationService.saveUserSkillsets(userId, userSkills);
+    }
+
+    @PostMapping(path = "/setSkillsets")
+    public String setSkillsets(@RequestParam("userId") Long userId,
+                                   @RequestBody Map<Integer, Integer> skillMaps) {
+        System.out.println("QualificationController.setSkillsets");
+        System.out.println(skillMaps);
+        return qualificationService.setUserSkillsets(userId, skillMaps);
     }
 
     @GetMapping(path = "/getUserBookmarks")

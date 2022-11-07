@@ -7,6 +7,7 @@ import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPostingRepository;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
+import com.conceiversolutions.hrsystem.skillset.skillset.SkillsetRepository;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillsetRepositoy;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillsetService;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -41,6 +43,7 @@ public class QualificationService {
     private final UserSkillsetService userSkillsetService;
     private final UserSkillsetRepositoy userSkillsetRepositoy;
     private final JobPostingRepository jobPostingRepository;
+    private final SkillsetRepository skillsetRepository;
 
     public Long addCVtoUser(MultipartFile file, Long userId) throws Exception {
         System.out.println("QualificationService.addCVtoUser");
@@ -160,9 +163,15 @@ public class QualificationService {
             skill.getSkillset().setJobPostings(new ArrayList<>());
         }
 
-        info.getCv().setDocData(null);
-        info.getCoverLetter().setDocData(null);
-        info.getTranscript().setDocData(null);
+        if (info.getCv() != null) {
+            info.getCv().setDocData(null);
+        }
+        if (info.getCoverLetter() != null) {
+            info.getCoverLetter().setDocData(null);
+        }
+        if (info.getTranscript() != null) {
+            info.getTranscript().setDocData(null);
+        }
 
         for (JobPosting jp : info.getBookmarks()) {
             jp.setJobRequest(null);
@@ -770,5 +779,40 @@ public class QualificationService {
             WorkExperience we = workExperienceRepository.findById(workExpId).get();
             return we;
         }
+    }
+
+    public String setUserSkillsets(Long userId, Map<Integer, Integer> skillMaps) {
+        System.out.println("QualificationService.setUserSkillsets");
+
+        User a = userRepository.findById(userId).get();
+        User applicant = checkQIExists(a);
+
+        QualificationInformation qi = applicant.getQualificationInformation();
+        List<UserSkillset> oldList = qi.getUserSkills();
+        System.out.println("old list is " + oldList);
+        qi.setUserSkills(new ArrayList<>());
+        qualificationRepository.save(qi);
+        System.out.println("userSkills is " + qi.getUserSkills());
+
+//        for (UserSkillset uss : oldList) {
+//            userSkillsetRepositoy.deleteById(uss.getUserSkillsetId());
+//        }
+
+        List<UserSkillset> newList = new ArrayList<>();
+        int length = skillMaps.size();
+        System.out.println("skillMaps is ");
+        System.out.println(skillMaps);
+        List<Integer> keys = skillMaps.keySet().stream().toList();
+
+        for (Integer key : keys) {
+            Skillset chosenSS = skillsetRepository.findById(Long.valueOf(key)).get();
+            UserSkillset newUSS = new UserSkillset(skillMaps.get(key), chosenSS);
+            UserSkillset savedUSS = userSkillsetRepositoy.saveAndFlush(newUSS);
+
+            newList.add(savedUSS);
+        }
+        qi.setUserSkills(newList);
+        qualificationRepository.save(qi);
+        return "set successfully";
     }
 }
