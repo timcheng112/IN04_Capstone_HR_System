@@ -82,6 +82,49 @@ const Payroll = () => {
   const [departments, setDepartments] = useState([]);
   const [teams, setTeams] = useState([]);
   const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const searchParams = ["firstName", "lastName", "email"];
+  const [query, setQuery] = useState("");
+  const [searchFilteredEmployees, setSearchFilteredEmployees] = useState([]);
+
+  useEffect(() => {
+    console.log(filteredEmployees);
+    console.log(
+      filteredEmployees.filter(
+        (employee) =>
+          employee[searchParams[0]]
+            .toString()
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) > -1 ||
+          employee[searchParams[1]]
+            .toString()
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) > -1 ||
+          employee[searchParams[2]]
+            .toString()
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) > -1
+      )
+    );
+    setSearchFilteredEmployees(
+      query === ""
+        ? filteredEmployees
+        : filteredEmployees.filter(
+            (employee) =>
+              employee[searchParams[0]]
+                .toString()
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) > -1 ||
+              employee[searchParams[1]]
+                .toString()
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) > -1 ||
+              employee[searchParams[2]]
+                .toString()
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) > -1
+          )
+    );
+  }, [filteredEmployees, query, searchParams]);
 
   useEffect(() => {
     api
@@ -162,9 +205,11 @@ const Payroll = () => {
                 className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:border-indigo-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                 placeholder="Search"
                 type="search"
-                // onChange={(e) => {
-                //   search(e, requests);
-                // }}
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  console.log(e.target.value);
+                }}
               />
             </div>
           </div>
@@ -249,7 +294,7 @@ const Payroll = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {filteredEmployees.map((employee) => (
+                    {searchFilteredEmployees.map((employee) => (
                       <tr>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
                           {employee.firstName} {employee.lastName}
