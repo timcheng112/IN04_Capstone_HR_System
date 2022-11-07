@@ -1,8 +1,9 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, TrashIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router";
 import Navbar from "../../components/Navbar";
 
-const AddToPayrollForm = () => {
+const AddToPayrollForm = ({employee, closePayrollForm}) => {
   const [showAddAllowanceRow, setShowAddAllowanceRow] = useState(false);
   const [allowanceName, setAllowanceName] = useState();
   const [allowanceType, setAllowanceType] = useState("Bonus");
@@ -97,8 +98,16 @@ const AddToPayrollForm = () => {
 
   return (
     <div>
-      <Navbar />
-      <div className="mt-9" />
+      <div className="bg-gray-50 px-4 text-left sm:px-6">
+        <button
+          type="button"
+          className="ml-2 mb-8 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          onClick={closePayrollForm}
+        >
+          <ArrowLeftIcon className="w-5 mr-1" />
+          Go Back
+        </button>
+      </div>
       <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
@@ -129,7 +138,10 @@ const AddToPayrollForm = () => {
                         name="first-name"
                         id="first-name"
                         autoComplete="given-name"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.firstName}
+                        defaultValue={employee.firstName}
+                        disabled
                       />
                     </div>
 
@@ -145,7 +157,10 @@ const AddToPayrollForm = () => {
                         name="last-name"
                         id="last-name"
                         autoComplete="family-name"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.lastName}
+                        defaultValue={employee.lastName}
+                        disabled
                       />
                     </div>
 
@@ -161,7 +176,10 @@ const AddToPayrollForm = () => {
                         name="email-address"
                         id="email-address"
                         autoComplete="email"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.email}
+                        defaultValue={employee.email}
+                        disabled
                       />
                     </div>
 
@@ -176,7 +194,10 @@ const AddToPayrollForm = () => {
                         type="text"
                         name="dob"
                         id="dob"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.dob}
+                        defaultValue={employee.dob}
+                        disabled
                       />
                     </div>
 
@@ -191,7 +212,10 @@ const AddToPayrollForm = () => {
                         type="text"
                         name="race"
                         id="race"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.race}
+                        defaultValue={employee.race}
+                        disabled
                       />
                     </div>
 
@@ -206,14 +230,17 @@ const AddToPayrollForm = () => {
                         type="text"
                         name="citizenship"
                         id="citizenship"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.citizenship}
+                        defaultValue={employee.citizenship}
+                        disabled
                       />
                     </div>
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                   <button
-                    type="submit"
+                    type="button"
                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     Verify
@@ -224,13 +251,11 @@ const AddToPayrollForm = () => {
           </div>
         </div>
       </div>
-
       <div className="hidden sm:block" aria-hidden="true">
         <div className="py-5">
           <div className="border-t border-gray-200" />
         </div>
       </div>
-
       <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
@@ -261,7 +286,9 @@ const AddToPayrollForm = () => {
                         name="salary-frequency"
                         id="salary-frequency"
                         autoComplete="given-name"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.currentPayInformation.basicSalary}
+                        disabled
                       />
                     </div>
 
@@ -277,44 +304,50 @@ const AddToPayrollForm = () => {
                         name="salary-amount"
                         id="salary-amount"
                         autoComplete="family-name"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.currentPayInformation.basicSalary}
+                        disabled
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
                       <label
-                        htmlFor="dob"
+                        htmlFor="weekend-hourly-salary"
                         className="block text-sm font-bold text-gray-700 text-start"
                       >
                         Weekend Hourly Salary
                       </label>
                       <input
                         type="text"
-                        name="dob"
-                        id="dob"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        name="weekend-hourly-salary"
+                        id="weekend-hourly-salary"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.currentPayInformation.weekendHourlyPay}
+                        disabled
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
                       <label
-                        htmlFor="race"
+                        htmlFor="event-ph-hourly-pay"
                         className="block text-sm font-bold text-gray-700 text-start"
                       >
                         Event or Public Holiday Hourly Salary
                       </label>
                       <input
                         type="text"
-                        name="race"
-                        id="race"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        name="event-ph-hourly-pay"
+                        id="event-ph-hourly-pay"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600"
+                        // defaultValue={location.state.employee.currentPayInformation.eventPhHourlyPay}
+                        disabled
                       />
                     </div>
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                   <button
-                    type="submit"
+                    type="button"
                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     Verify
@@ -325,13 +358,11 @@ const AddToPayrollForm = () => {
           </div>
         </div>
       </div>
-
       <div className="hidden sm:block" aria-hidden="true">
         <div className="py-5">
           <div className="border-t border-gray-200" />
         </div>
       </div>
-
       <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
@@ -500,13 +531,11 @@ const AddToPayrollForm = () => {
           </div>
         </div>
       </div>
-
       <div className="hidden sm:block" aria-hidden="true">
         <div className="py-5">
           <div className="border-t border-gray-200" />
         </div>
       </div>
-
       <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
@@ -674,13 +703,11 @@ const AddToPayrollForm = () => {
           </div>
         </div>
       </div>
-
       <div className="hidden sm:block" aria-hidden="true">
         <div className="py-5">
           <div className="border-t border-gray-200" />
         </div>
       </div>
-
       <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
         <button
           type="button"

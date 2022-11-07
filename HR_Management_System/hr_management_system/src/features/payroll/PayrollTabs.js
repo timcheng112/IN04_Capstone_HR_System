@@ -1,8 +1,3 @@
-// const tabs = [
-//   { name: "Job Request", href: "/hiring/jobrequesthr", current: true },
-//   { name: "Job Post", href: "/hiring/jobpost", current: false },
-// ];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }

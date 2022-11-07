@@ -232,26 +232,6 @@ function App() {
           />
 
           <PrivateRoute exact path="/payroll" component={PayrollPage} />
-          <PrivateRoute
-            exact
-            path="/payroll-history"
-            component={PayrollHistoryPage}
-          />
-          <PrivateRoute
-            exact
-            path="/employees-not-in-payroll"
-            component={EmployeesNotInPayrollPage}
-          />
-          <PrivateRoute
-            exact
-            path="/employees-not-in-payroll/add-to-payroll"
-            component={AddToPayrollFormPage}
-          />
-          <PrivateRoute
-              exact
-              path="/employee-payroll-history"
-              component={EmployeePayrollHistory}
-            />
         </Switch>
       </div>
     </BrowserRouter>

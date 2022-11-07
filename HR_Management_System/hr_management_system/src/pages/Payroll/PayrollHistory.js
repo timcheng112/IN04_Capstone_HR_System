@@ -1,9 +1,4 @@
-import React, { useState } from "react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import ComboBox from "../../components/ComboBox/ComboBox";
-import Navbar from "../../components/Navbar";
-import AdminSidebar from "../../components/Sidebar/Admin";
-import Tab from "../../features/jobrequest/Tab";
+import React from "react";
 import PayrollCard from "../../features/payroll/PayrollCard";
 
 const pastPayroll = [
