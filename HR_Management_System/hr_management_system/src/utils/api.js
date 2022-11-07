@@ -838,6 +838,12 @@ const api = {
       `http://localhost:9191/api/appraisal/createAppraisalTemplate/${appraisal}`
     );
   },
+  financeGoalsReminder(userId){
+    return axios.get(`http://localhost:9191/api/goal/financeReminder/${userId}`);
+  },
+  businessGoalsReminder(userId){
+    return axios.get(`http://localhost:9191/api/goal/businessReminder/${userId}`);
+  },
 };
 
 export default api;
