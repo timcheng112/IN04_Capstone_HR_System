@@ -36,7 +36,7 @@ export default function WorkButton({ work, refreshKeyHandler }) {
           </button>
         </div>
       </div>
-      <ViewWork open={openView} setOpen={() => setOpenView(false)} work={work} />
+      <ViewWork open={openView} setOpen={() => setOpenView(false)} work={work} refreshKeyHandler={refreshKeyHandler}/>
     </div>
   );
 }

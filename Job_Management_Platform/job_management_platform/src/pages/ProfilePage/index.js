@@ -23,6 +23,9 @@ export default function Profile() {
   const [aboutMe, setAboutMe] = useState('')
   const [citizenship, setCitizenship] = useState('')
   const [race, setRace] = useState('')
+  const [level, setLevel] = useState("")
+  const [school, setSchool] = useState("")
+  const [year, setYear] = useState()
   const [recommendations, setRecommendations] = useState([])
   const [works, setWorks] = useState([])
   const [languages, setLanguages] = useState(['English', 'Chinese']);
@@ -312,7 +315,7 @@ export default function Profile() {
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
 
-                  <Education />
+                  <Education level={level} setLevel={setLevel} school={school} setSchool={setSchool} year={year} setYear={setYear}/>
                 </div>
               </div>
 

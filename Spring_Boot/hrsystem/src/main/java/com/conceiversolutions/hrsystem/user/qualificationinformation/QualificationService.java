@@ -709,7 +709,7 @@ public class QualificationService {
         } else {
             // persist new one, remove old ones and update existing one
             List<Long> existingRecoIds = recos.stream().map(x -> x.getRecommendationId()).toList();
-            if (existingRecoIds.contains(recoId)) {
+            if (!existingRecoIds.contains(recoId)) {
                 // if dont include, error
                 throw new IllegalStateException("Recommendation not found");
             }
@@ -746,7 +746,7 @@ public class QualificationService {
         } else {
             // persist new one, remove old ones and update existing one
             List<Long> existingExpIds = exps.stream().map(x -> x.getExperienceId()).toList();
-            if (existingExpIds.contains(workExpId)) {
+            if (!existingExpIds.contains(workExpId)) {
                 // if dont include, error
                 throw new IllegalStateException("Recommendation not found");
             }

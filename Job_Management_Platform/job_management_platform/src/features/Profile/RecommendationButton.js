@@ -36,7 +36,7 @@ export default function RecommendationButton({ r, refreshKeyHandler }) {
           </button>
         </div>
       </div>
-      <ViewRecommendation open={openView} setOpen={() => setOpenView(false)} recommendation={r} />
+      <ViewRecommendation open={openView} setOpen={() => setOpenView(false)} recommendation={r} refreshKeyHandler={refreshKeyHandler}/>
     </div>
   );
 }
