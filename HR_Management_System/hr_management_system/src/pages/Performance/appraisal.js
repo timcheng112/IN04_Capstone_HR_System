@@ -227,8 +227,7 @@ export default function Appraisal() {
                             as="span"
                             className="text-sm text-left text-gray-500"
                           >
-                            This employee has achieved the 'Outstanding' rating
-                            for the past {} consecutive years
+                            You will be required to complete a promotion request by recommending this employee for promotion
                           </Switch.Description>
                         </span>
                         <Switch

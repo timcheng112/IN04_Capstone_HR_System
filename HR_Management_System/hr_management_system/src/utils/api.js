@@ -245,6 +245,9 @@ const api = {
   getAllDepartments() {
     return axios.get("http://localhost:9191/api/department/getAllDepartments");
   },
+  getIsDepartmentHead(userId) {
+    return axios.get(`http://localhost:9191/api/department/${userId}/isHead`)
+  },
   getAllTeams() {
     return axios.get(`http://localhost:9191/api/team/getAllTeams`);
   },
@@ -755,6 +758,9 @@ const api = {
   },
   getManagerAppraisals(year, userId) {
     return axios.get(`http://localhost:9191/api/appraisal/${year}/manager/${userId}`)
+  },
+  getDepartmentAppraisals(year, userId) {
+    return axios.get(`http://localhost:9191/api/appraisal/${year}/department/${userId}`)
   },
   getEmployeeAppraisals(year, userId) {
     return axios.get(`http://localhost:9191/api/appraisal/${year}/employee/${userId}`)

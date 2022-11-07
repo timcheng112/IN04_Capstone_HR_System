@@ -47,6 +47,12 @@ public class AppraisalController {
         return appraisalService.getManagerAppraisals(year, userId);
     }
 
+    @GetMapping(path = "{year}/department/{userId}")
+    public List<Appraisal> getDepartmentAppraisals(@PathVariable("year") String year,
+            @PathVariable("userId") Long userId) throws Exception {
+        return appraisalService.getDepartmentAppraisals(year, userId);
+    }
+
     @GetMapping(path = "{year}/employee/{userId}")
     public List<Appraisal> getEmployeeAppraisals(@PathVariable("year") String year,
             @PathVariable("userId") Long userId) {

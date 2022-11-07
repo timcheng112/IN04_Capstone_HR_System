@@ -9,6 +9,7 @@ import {
   CheckCircleIcon,
   ChevronRightIcon,
   EnvelopeIcon,
+  PauseIcon,
   PencilIcon,
   PlayCircleIcon,
   TrashIcon,
@@ -61,6 +62,16 @@ export default function Appraisals() {
         console.log(response.data);
         api
           .getManagerAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => setAppraisals(response.data));
+      }
+    });
+
+    api.getIsDepartmentHead(getUserId()).then((response) => {
+      if (response.data > -1) {
+        setIsManager(true);
+        console.log("department head");
+        api
+          .getDepartmentAppraisals(new Date().getFullYear(), getUserId())
           .then((response) => setAppraisals(response.data));
       }
     });
@@ -637,18 +648,31 @@ export default function Appraisals() {
                             <></>
                           )}
                           <h1 className="mt-5 font-semibold">My Appraisals</h1>
-                          <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 ">
-                            <ul
-                              role="list"
-                              className="divide-y divide-gray-200"
-                            >
-                              {myAppraisals.map((appraisal) => (
-                                <li key={appraisal.appraisalId}>
-                                  {renderMyAppraisalStatus(appraisal)}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+                          {withinCurrentPeriod() ? (
+                            <>
+                              <div className="relative block w-full rounded-lg border-2 border-dashed border-black mt-5 p-12 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                <PauseIcon className="mx-auto w-12 h-12 text-gray-500" />
+                                <span className="mt-2 block text-sm font-medium text-gray-900">
+                                  Appraisal(s) are still in progress
+                                </span>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 ">
+                                <ul
+                                  role="list"
+                                  className="divide-y divide-gray-200"
+                                >
+                                  {myAppraisals.map((appraisal) => (
+                                    <li key={appraisal.appraisalId}>
+                                      {renderMyAppraisalStatus(appraisal)}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </>
                     ) : (
