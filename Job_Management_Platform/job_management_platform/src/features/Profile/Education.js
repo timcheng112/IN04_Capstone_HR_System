@@ -7,10 +7,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Education() {
-  const [level, setLevel] = useState("")
-  const [school, setSchool] = useState("")
-  const [year, setYear] = useState()
+export default function Education({level,setLevel,school, setSchool, year, setYear}) {
   return (
     <div>
 

@@ -91,13 +91,16 @@ export default function JobDetail() {
                   Post on {postDate}
                 </div>
                 <div className="mt-2 flex items-center text-sm text-gray-500">
-                  <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800">
+                {status == 'CREATED' && <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800">
+                    OPEN
+                  </span>}
+                  {status !== 'CREATED' && <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800">
                     {status}
-                  </span>
+                  </span>}
                 </div>
               </div>
             </div>
-            <div className="mt-5 flex xl:mt-0 xl:ml-4">
+            {status !== 'CLOSED' && <div className="mt-5 flex xl:mt-0 xl:ml-4">
               <span className="hidden sm:block">
                 <button
                   type="button"
@@ -119,7 +122,7 @@ export default function JobDetail() {
                 </button>
               </span>
 
-            </div>
+            </div>}
           </div>
         </header>
         <main className="pt-8 pb-16">
