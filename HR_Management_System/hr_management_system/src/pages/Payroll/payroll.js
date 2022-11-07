@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
 import PayrollTabs from "../../features/payroll/PayrollTabs";
@@ -28,6 +28,30 @@ const Payroll = () => {
     useState(false);
   const [isPersonalPayrollOpen, setIsPersonalPayrollOpen] = useState(false);
   const [isPayrollFormOpen, setIsPayrollFormOpen] = useState(false);
+  const ref = document.getElementById("tabs");
+  const [isPayrollTabsGone, setIsPayrollTabsGone] = useState(false);
+  const [sticky, setSticky] = useState();
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const handleScroll = () => {
+    const position = window.pageYOffset;
+    setScrollPosition(position);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    setSticky(document.getElementById("tabs").getBoundingClientRect().bottom);
+    scrollPosition >= sticky
+      ? setIsPayrollTabsGone(true)
+      : setIsPayrollTabsGone(false);
+  }, [ref, sticky, scrollPosition]);
 
   const tabs = [
     { name: "Overview", current: isOverviewOpen },
@@ -149,7 +173,13 @@ const Payroll = () => {
       <div className="py-5"></div>
       <div className="px-4 sm:px-6 lg:px-8">
         {!isPayrollFormOpen && (
-          <div className="sm:flex sm:items-center space-x-4">
+          <div
+            className={classNames(
+              "sm:flex sm:items-center space-x-4",
+              isPayrollTabsGone && "fixed top-0 w-full bg-white pr-20 shadow-xl"
+            )}
+            id="tabs"
+          >
             <div className="sm:flex-auto">
               <PayrollTabs tabs={tabs} onChangeHandler={onChangeHandler} />
             </div>
