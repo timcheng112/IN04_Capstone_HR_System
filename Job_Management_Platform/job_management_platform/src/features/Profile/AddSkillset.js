@@ -1,7 +1,6 @@
 import React from 'react'
 import { Fragment, useEffect, useState } from 'react'
 import Select from 'react-select';
-import { Listbox, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon, PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 
 function classNames(...classes) {

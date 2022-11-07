@@ -1,7 +1,9 @@
 import Sidebar from "../../components/Sidebar"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MyApplicationOption from "../../features/JobApplication/MyApplicationOption";
+import api from "../../utils/api.js";
+import { getUserId } from "../../utils/Common.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -15,10 +17,24 @@ const jobs = [
 ]
 
 export default function JobApplication() {
+  const[jobs, setJobs] = useState([])
+  const [user, setUser] = useState(getUserId()); 
   const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const [error, setError] = useState(null);
   const [searchParam] = useState([
     "jobTitle"
   ]);
+
+  useEffect(() => {
+    api
+      .getApplicantApplications(user)
+      .then((response) => {
+        setJobs(response.data);
+        setFilteredJobs(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   function search(e, items) {
     const value = e.target.value;

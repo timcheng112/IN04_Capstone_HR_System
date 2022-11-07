@@ -12,6 +12,8 @@ import {
 } from '@heroicons/react/20/solid'
 import { useLocation } from 'react-router'
 import ApplyJob from '../../features/JobApplication/ApplyJob'
+import { getUserId } from "../../utils/Common.js";
+import api from "../../utils/api";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -30,7 +32,16 @@ export default function JobDetail() {
   const [status, setStatus] = useState("");
   const [requirements, setRequirements] = useState([]);
 
+  const [user, setUser] = useState(getUserId()); 
+  const [error, setError] = useState();
+
   const [open,setOpen] = useState(false);
+
+  function bookmark(){
+    api.addUserBookmark(user, location.state.job.postingId)
+    .then(() => alert("Successfully bookmark."))
+    .catch((error) => setError(error));
+  }
 
   useEffect(() => {
     console.log(location.state.job)
@@ -115,6 +126,7 @@ export default function JobDetail() {
               <span className="ml-3 hidden sm:block">
                 <button
                   type="button"
+                  onClick={()=>bookmark()}
                   className="inline-flex items-center rounded-md border border-red-500 bg-white px-4 py-2 text-sm font-medium text-red-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
                   <BookmarkIcon className="-ml-1 mr-2 h-5 w-5 text-red-400" aria-hidden="true" />
