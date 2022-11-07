@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { format, getDate, getMonth, getYear } from "date-fns";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import api from "../../utils/api";
 import AddShiftForm from "./AddShiftForm";
 
@@ -75,6 +75,13 @@ const EditShiftModal = ({
         api
           .editShift(shift.shiftId, editedShift)
           .then(() => {
+            console.log(
+              salesmanQuotaValue +
+                " " +
+                cashierQuotaValue +
+                " " +
+                storemanagerQuotaValue
+            );
             alert("Edit was successful!");
             openSuccess();
             onClose();

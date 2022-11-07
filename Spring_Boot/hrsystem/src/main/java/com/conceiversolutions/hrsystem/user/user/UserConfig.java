@@ -1,8 +1,10 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
+import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.address.AddressService;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentService;
@@ -41,6 +43,8 @@ public class UserConfig {
                         "janicesim@gmail.com",
                         LocalDate.of(2000, 2, 28),
                         GenderEnum.FEMALE,
+                        RaceEnum.CHINESE,
+                        CitizenshipEnum.CITIZEN,
                         RoleEnum.ADMINISTRATOR,
                         false,
                         true,
@@ -58,6 +62,8 @@ public class UserConfig {
                         "aloysiusyap@gmail.com",
                         LocalDate.of(1997, 1, 1),
                         GenderEnum.MALE,
+                        RaceEnum.CHINESE,
+                        CitizenshipEnum.CITIZEN,
                         RoleEnum.ADMINISTRATOR,
                         false,
                         true,
@@ -75,6 +81,8 @@ public class UserConfig {
                         "jeremyojf@gmail.com",
                         LocalDate.of(1997, 12, 12),
                         GenderEnum.MALE,
+                        RaceEnum.CHINESE,
+                        CitizenshipEnum.CITIZEN,
                         RoleEnum.MANAGER,
                         false,
                         true,
@@ -96,6 +104,8 @@ public class UserConfig {
                         "matthew@gmail.com",
                         LocalDate.of(1997, 12, 12),
                         GenderEnum.MALE,
+                        RaceEnum.CHINESE,
+                        CitizenshipEnum.CITIZEN,
                         RoleEnum.MANAGER,
                         false,
                         false,
@@ -133,6 +143,8 @@ public class UserConfig {
                         "xueqi@gmail.com",
                         LocalDate.of(1999, 8, 8),
                         GenderEnum.FEMALE,
+                        RaceEnum.CHINESE,
+                        CitizenshipEnum.CITIZEN,
                         RoleEnum.MANAGER,
                         false,
                         false,
@@ -154,6 +166,8 @@ public class UserConfig {
                         "shihan@gmail.com",
                         LocalDate.of(1997, 12, 12),
                         GenderEnum.MALE,
+                        RaceEnum.CHINESE,
+                        CitizenshipEnum.CITIZEN,
                         RoleEnum.MANAGER,
                         false,
                         false,
@@ -178,6 +192,8 @@ public class UserConfig {
                         "xinyue@gmail.com",
                         LocalDate.of(1997, 7, 7),
                         GenderEnum.FEMALE,
+                        RaceEnum.CHINESE,
+                        CitizenshipEnum.FOREIGNER,
                         RoleEnum.MANAGER,
                         false,
                         true,
@@ -211,6 +227,8 @@ public class UserConfig {
                         "alison@gmail.com",
                         LocalDate.of(1997, 4, 4),
                         GenderEnum.FEMALE,
+                        RaceEnum.CHINESE,
+                        CitizenshipEnum.CITIZEN,
                         RoleEnum.MANAGER,
                         false,
                         true,
@@ -235,6 +253,8 @@ public class UserConfig {
                         "tim@gmail.com",
                         LocalDate.of(1999, 2, 25),
                         GenderEnum.MALE,
+                        RaceEnum.CHINESE,
+                        CitizenshipEnum.CITIZEN,
                         RoleEnum.EMPLOYEE,
                         false,
                         true,
@@ -255,6 +275,8 @@ public class UserConfig {
                         "hedgehog@gmail.com",
                         LocalDate.of(2000, 8, 8),
                         GenderEnum.MALE,
+                        RaceEnum.OTHERS,
+                        CitizenshipEnum.FOREIGNER,
                         RoleEnum.EMPLOYEE,
                         false,
                         true,
@@ -277,6 +299,8 @@ public class UserConfig {
                         "bruce@gmail.com",
                         LocalDate.of(1985, 5, 12),
                         GenderEnum.MALE,
+                        RaceEnum.OTHERS,
+                        CitizenshipEnum.FOREIGNER,
                         RoleEnum.EMPLOYEE,
                         false,
                         false,
@@ -297,6 +321,8 @@ public class UserConfig {
                         "barry@gmail.com",
                         LocalDate.of(1988, 7, 30),
                         GenderEnum.MALE,
+                        RaceEnum.OTHERS,
+                        CitizenshipEnum.FOREIGNER,
                         RoleEnum.EMPLOYEE,
                         false,
                         false,
@@ -319,6 +345,8 @@ public class UserConfig {
                         "diana@gmail.com",
                         LocalDate.of(1987, 9, 11),
                         GenderEnum.FEMALE,
+                        RaceEnum.OTHERS,
+                        CitizenshipEnum.FOREIGNER,
                         RoleEnum.EMPLOYEE,
                         false,
                         false,
@@ -339,6 +367,8 @@ public class UserConfig {
                         "clark@gmail.com",
                         LocalDate.of(1978, 11, 27),
                         GenderEnum.MALE,
+                        RaceEnum.OTHERS,
+                        CitizenshipEnum.FOREIGNER,
                         RoleEnum.EMPLOYEE,
                         false,
                         false,
@@ -363,12 +393,12 @@ public class UserConfig {
 
                 // Create Applicant
                 User spongebobApplicant = new User("Spongebob", "Squarepants", "password", 81231234, "sponge@bob.com", LocalDate.of(1999,5,1),
-                        GenderEnum.MALE, RoleEnum.APPLICANT, false, false, null);
+                        GenderEnum.MALE, RaceEnum.OTHERS, CitizenshipEnum.FOREIGNER, RoleEnum.APPLICANT, false, false, null);
                 spongebobApplicant.setEnabled(true);
                 userService.initApplicant(spongebobApplicant);
 
                 User sandyApplicant = new User("Sandy", "Cheeks", "password", 81231235, "sandy@cheeks.com", LocalDate.of(1999,5,1),
-                        GenderEnum.FEMALE, RoleEnum.APPLICANT, false, false, null);
+                        GenderEnum.FEMALE, RaceEnum.EURASIAN, CitizenshipEnum.CITIZEN, RoleEnum.APPLICANT, false, false, null);
                 sandyApplicant.setEnabled(true);
                 userService.initApplicant(sandyApplicant);
 //                firstName, lastName, password, phone, email, dob, gender.toUpperCase()

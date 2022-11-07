@@ -188,11 +188,13 @@ const api = {
   getChecklists() {
     return axios.get(`http://localhost:9191/api/checklist`);
   },
-  getOnboardingChecklists(){
-    return axios.get("http://localhost:9191/api/checklist/onboardingchecklist")
+  getOnboardingChecklists() {
+    return axios.get("http://localhost:9191/api/checklist/onboardingchecklist");
   },
-  getOffboardingChecklists(){
-    return axios.get("http://localhost:9191/api/checklist/offboardingchecklist")
+  getOffboardingChecklists() {
+    return axios.get(
+      "http://localhost:9191/api/checklist/offboardingchecklist"
+    );
   },
   getChecklistById(checklistId) {
     return axios.get(`http://localhost:9191/api/checklist/${checklistId}`);
@@ -279,6 +281,11 @@ const api = {
   getEmployeesByTeam(teamId) {
     return axios.get(
       `http://localhost:9191/api/user/getEmployeesByTeam?teamId=${teamId}`
+    );
+  },
+  getEmployeesByRosterAndDate(rosterId, date) {
+    return axios.get(
+      `http://localhost:9191/api/user/getEmployeesByRosterAndDate?rosterId=${rosterId}&date=${date}`
     );
   },
   getAllTeams() {
@@ -603,6 +610,11 @@ const api = {
       `http://localhost:9191/api/shift/getTemplateShiftsByRoster?rosterId=${rosterId}`
     );
   },
+  getShiftsByRosterAndTime(rosterId, date) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getShiftsByRosterAndTime?rosterId=${rosterId}&dateString=${date}`
+    );
+  },
   getShiftListItemByDateAndUserId(date, userId) {
     return axios.get(
       `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndUserId?date=${date}&userId=${userId}`
@@ -705,10 +717,10 @@ const api = {
     return axios.get(`http://localhost:9191/api/goalPeriod/${year}`);
   },
   deleteGoalPeriod(year) {
-    return axios.delete(`http://localhost:9191/api/goalPeriod/${year}`)
+    return axios.delete(`http://localhost:9191/api/goalPeriod/${year}`);
   },
   getAllGoalsByYear(year) {
-    return axios.get(`http://localhost:9191/api/goal/all/${year}`)
+    return axios.get(`http://localhost:9191/api/goal/all/${year}`);
   },
   // activateUser(email){
   //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
@@ -716,11 +728,15 @@ const api = {
   // deactivateUser(email){
   //   return axios.get(`http://localhost:9191/api/user/deactivate/?workEmail=${email}`);
   // },
-  setUserStatus(email){
-    return axios.get(`http://localhost:9191/api/user/setUserStatus?workEmail=${email}`)
+  setUserStatus(email) {
+    return axios.get(
+      `http://localhost:9191/api/user/setUserStatus?workEmail=${email}`
+    );
   },
   updateGoalPeriod(startDate, endDate) {
-    return axios.put(`http://localhost:9191/api/goalPeriod/start/${startDate}/end/${endDate}`)
+    return axios.put(
+      `http://localhost:9191/api/goalPeriod/start/${startDate}/end/${endDate}`
+    );
   },
   changeTeamHead(teamId, newHeadId) {
     return axios.put(

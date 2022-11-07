@@ -66,7 +66,7 @@ public class UserController {
         System.out.println("UserController.registerNewAccountJMP");
         User newApplicant = new User(firstName, lastName, password, phone, email, LocalDate.parse(dob),
                 GenderEnum.valueOf(gender), RoleEnum.APPLICANT, false, false, null);
-//        System.out.println("newApplicant = " + newApplicant.toString());
+        // System.out.println("newApplicant = " + newApplicant.toString());
         try {
             Long applicantId = userService.addNewUser(newApplicant);
             System.out.println("UserController.registerNewAccountJMP");
@@ -322,19 +322,19 @@ public class UserController {
     // return getMyAttendanceToday(sliId, userId);
     // }
 
-//    @GetMapping(path = "/getAttendanceToday")
-//    public List<Integer> getAttendanceToday(Long sliId, Long userId) {
-//        // return getMyAttendanceToday();
-//        return getAttendanceToday(sliId, userId);
-//    }
-//
-//    @GetMapping(path ="/activateUser/{}")
-//    public String disableUser(String email){
-//        return disableUser(email);
-//    }
+    // @GetMapping(path = "/getAttendanceToday")
+    // public List<Integer> getAttendanceToday(Long sliId, Long userId) {
+    // // return getMyAttendanceToday();
+    // return getAttendanceToday(sliId, userId);
+    // }
+    //
+    // @GetMapping(path ="/activateUser/{}")
+    // public String disableUser(String email){
+    // return disableUser(email);
+    // }
 
-    @GetMapping(path= "/setUserStatus")
-    public String setUserStatus(@RequestParam("workEmail") String workEmail){
+    @GetMapping(path = "/setUserStatus")
+    public String setUserStatus(@RequestParam("workEmail") String workEmail) {
         return userService.setUserStatus(workEmail);
     }
 
@@ -347,20 +347,29 @@ public class UserController {
     public List<User> getEmployeesByTeam(@RequestParam("teamId") Long teamId) {
         return userService.getEmployeesByTeam(teamId);
     }
+
     @GetMapping(path = "/getAllApplicants")
     public List<User> getAllApplicants() {
         return userService.getAllApplicants();
     }
 
+    @GetMapping(path = "/getEmployeesByRosterAndDate")
+    public List<User> getEmployeesByRosterAndDate(@RequestParam("rosterId") Long rosterId,
+            @RequestParam("date") String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        return userService.getEmployeesByRosterAndDate(rosterId, localDate);
+    }
+
     @PutMapping(path = "/updateUserDetails")
     public String updateUserDetails(@RequestParam("userId") Long userId,
-                                @RequestParam("firstName") String firstName,
-                                @RequestParam("lastName") String lastName,
-                                @RequestParam("aboutMe") String aboutMe,
-                                @RequestParam("educationLevel") String educationLevel,
-                                @RequestParam("schoolName") String schoolName,
-                                @RequestParam("gradYear") Integer gradYear,
-                                @RequestParam("languages") List<String> languages) {
-        return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear, languages);
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName,
+            @RequestParam("aboutMe") String aboutMe,
+            @RequestParam("educationLevel") String educationLevel,
+            @RequestParam("schoolName") String schoolName,
+            @RequestParam("gradYear") Integer gradYear,
+            @RequestParam("languages") List<String> languages) {
+        return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear,
+                languages);
     }
 }

@@ -62,7 +62,9 @@ import TransferPage from "./pages/Progression/indexTransfer";
 import GoalsPage from "./pages/Performance/indexGoals";
 import AppraisalsPage from "./pages/Performance/indexAppraisals";
 import PerformancePage from "./pages/Performance";
-
+import PayrollPage from "./pages/Payroll/payroll";
+import PayrollHistoryPage from "./pages/Payroll/PayrollHistory";
+import EmployeesNotInPayrollPage from "./pages/Payroll/EmployeesNotInPayroll";
 
 function App() {
   return (
@@ -217,22 +219,57 @@ function App() {
             component={NotificationExpandPage}
           />
           {/* <PrivateRoute exact path="/NotificationExpandPage" component={NotificationExpandPage}/> */}
-          <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
+          <PrivateRoute
+            exact
+            path="/AddNotification"
+            component={AddNotification}
+          />
 
-          <PrivateRoute exact path="/mytraining/completed" component={TrainingCompletedPage} />
-          <PrivateRoute exact path="/training" component={AllTrainingPage} />  
-          <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />     
-          <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
-          <PrivateRoute exact path="/video" component={AllVideosPage} />  
+          <PrivateRoute
+            exact
+            path="/mytraining/completed"
+            component={TrainingCompletedPage}
+          />
+          <PrivateRoute exact path="/training" component={AllTrainingPage} />
+          <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />
+          <PrivateRoute
+            exact
+            path="/module/:moduleId/video/:videoId"
+            component={VideoPage}
+          />
+          <PrivateRoute exact path="/video" component={AllVideosPage} />
           <PrivateRoute exact path="/mytraining" component={TrainingPage} />
           {/* <PrivateRoute exact path="/test" component={EmployeeList} /> */}
-          
 
-          <PrivateRoute exact path="/career/promotion" component={PromotionPage} />
-          <PrivateRoute exact path="/career/transfer" component={TransferPage} />
+          <PrivateRoute
+            exact
+            path="/career/promotion"
+            component={PromotionPage}
+          />
+          <PrivateRoute
+            exact
+            path="/career/transfer"
+            component={TransferPage}
+          />
           <PrivateRoute exact path="/performance" component={PerformancePage} />
           <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
-          <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
+          <PrivateRoute
+            exact
+            path="/performance/appraisals"
+            component={AppraisalsPage}
+          />
+
+          <PrivateRoute exact path="/payroll" component={PayrollPage} />
+          <PrivateRoute
+            exact
+            path="/payrollhistory"
+            component={PayrollHistoryPage}
+          />
+          <PrivateRoute
+            exact
+            path="/employeesnotinpayroll"
+            component={EmployeesNotInPayrollPage}
+          />
         </Switch>
       </div>
     </BrowserRouter>

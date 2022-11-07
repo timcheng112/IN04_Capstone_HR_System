@@ -14,10 +14,13 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.rostering.roster.Roster;
+import com.conceiversolutions.hrsystem.rostering.roster.RosterRepository;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepository;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemService;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationService;
@@ -59,6 +62,8 @@ public class UserService implements UserDetailsService {
     private final TeamRepository teamRepository;
     private final PositionRepository positionRepository;
     private final LeaveQuotaRepository leaveQuotaRepository;
+    private final ShiftListItemService shiftListItemService;
+    private final RosterRepository rosterRepository;
     private final QualificationService qualificationService;
 
     // @Autowired
@@ -2377,9 +2382,54 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
-    public String updateUserDetails(Long userId, String firstName, String lastName, String aboutMe, String educationLevel, String schoolName, Integer gradYear, List<String> languages) {
+    public List<User> getEmployeesByRosterAndDate(Long rosterId, LocalDate localDate) {
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new IllegalStateException("Roster with ID: " + rosterId + " does not exist!"));
+        List<User> employees = getEmployeesByTeam(roster.getTeam().getTeamId());
+        List<User> filteredEmployees = new ArrayList<>();
+        for (User employee : employees) {
+            try {
+                shiftListItemService.getShiftListItemByDateAndUserId(localDate, employee.getUserId());
+            } catch (Exception e) {
+                filteredEmployees.add(employee);
+            }
+        }
+        for (User employee : filteredEmployees) {
+            employee.setProfilePic(null);
+            employee.setPositions(new ArrayList<>());
+            employee.setCurrentPosition(null);
+            employee.setQualificationInformation(null);
+            employee.setApplications(new ArrayList<>());
+            employee.setJobRequests(new ArrayList<>());
+            employee.setPayslips(new ArrayList<>());
+            employee.setAttendances(new ArrayList<>());
+            employee.setEmployeeAppraisals(new ArrayList<>());
+            employee.setManagerAppraisals(new ArrayList<>());
+            employee.setManagerReviews(new ArrayList<>());
+            employee.setEmployeeReviews(new ArrayList<>());
+            employee.setGoals(new ArrayList<>());
+            employee.setTaskListItems(new ArrayList<>());
+            employee.setTeams(new ArrayList<>());
+            employee.setCurrentPayInformation(null);
+            employee.setReactivationRequest(null);
+            employee.setPreferredDates(null);
+            employee.setBlocks(new ArrayList<>());
+            employee.setShiftListItems(new ArrayList<>());
+            employee.setSwapRequestsReceived(new ArrayList<>());
+            employee.setSwapRequestsRequested(new ArrayList<>());
+            employee.setLeaves(new ArrayList<>());
+            employee.setLeaveQuotas(new ArrayList<>());
+            employee.setCurrentLeaveQuota(null);
+        }
+        return filteredEmployees;
+    }
+
+    public String updateUserDetails(Long userId, String firstName, String lastName, String aboutMe,
+            String educationLevel, String schoolName, Integer gradYear, List<String> languages) {
         System.out.println("UserService.updateUserDetails");
-        System.out.println("userId = " + userId + ", firstName = " + firstName + ", lastName = " + lastName + ", aboutMe = " + aboutMe + ", educationLevel = " + educationLevel + ", schoolName = " + schoolName + ", gradYear = " + gradYear + ", languages = " + languages);
+        System.out.println("userId = " + userId + ", firstName = " + firstName + ", lastName = " + lastName
+                + ", aboutMe = " + aboutMe + ", educationLevel = " + educationLevel + ", schoolName = " + schoolName
+                + ", gradYear = " + gradYear + ", languages = " + languages);
 
         User user = userRepository.findById(userId).get();
         user.setFirstName(firstName);
@@ -2387,7 +2437,8 @@ public class UserService implements UserDetailsService {
 
         EducationEnum education = getEduEnum(educationLevel.toUpperCase());
 
-        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education, schoolName, gradYear, languages);
+        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education, schoolName,
+                gradYear, languages);
 
         return "User details updated successfully";
     }

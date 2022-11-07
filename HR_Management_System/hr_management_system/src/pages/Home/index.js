@@ -163,7 +163,6 @@ export default function Home() {
     <>
       {user ? (
         <>
-
           <div className="min-h-full">
             <Popover
               as="header"
@@ -188,7 +187,7 @@ export default function Home() {
                           onClick={() => {
                             setShowNotification(!showNotification);
                             console.log("bell pressed");
-                            history.push("/AllNotifications")
+                            history.push("/AllNotifications");
                           }}
                         >
                           <span className="sr-only">View notifications</span>
@@ -338,6 +337,15 @@ export default function Home() {
                               >
                                 Rostering
                               </a>
+                              <a
+                                key="Payroll"
+                                href="/payroll"
+                                className={classNames(
+                                  "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
+                                )}
+                              >
+                                Payroll
+                              </a>
                             </nav>
                           </div>
                         </div>
@@ -475,7 +483,7 @@ export default function Home() {
                                   href="/AllNotifications"
                                   onClick={() => {
                                     setShowNotification(true);
-                                    history.push("/AllNotifications")
+                                    history.push("/AllNotifications");
                                     console.log("bell pressed 1");
                                   }}
                                 >
@@ -509,7 +517,11 @@ export default function Home() {
                 </>
               )}
             </Popover>
-            {(user.notificationsUnread).length > 0 ? (<Notification showNotification={true} />) : ""}
+            {user.notificationsUnread.length > 0 ? (
+              <Notification showNotification={true} />
+            ) : (
+              ""
+            )}
             <main className="-mt-24 pb-8">
               <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                 <h1 className="sr-only">Profile</h1>

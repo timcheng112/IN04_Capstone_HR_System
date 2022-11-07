@@ -22,7 +22,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const ViewTemplateShiftsModal = ({
+const ViewCurrentShiftsModal = ({
   open,
   onClose,
   person,
@@ -34,7 +34,7 @@ const ViewTemplateShiftsModal = ({
   const [selectedShift, setSelectedShift] = useState();
   const [duplicateEndDateValue, setDuplicateEndDateValue] = useState(null);
   const [isPhEvent, setIsPhEvent] = useState(false);
-  const [templateShifts, setTemplateShifts] = useState([]);
+  const [currentDateShifts, setCurrentDateShifts] = useState([]);
   const [posType, setPosType] = useState({ id: 1, name: "SALESMAN" });
   const [showEmployees, setShowEmployees] = useState(false);
   const [employees, setEmployees] = useState([]);
@@ -68,21 +68,26 @@ const ViewTemplateShiftsModal = ({
   }, [open]);
 
   useEffect(() => {
-    api
-      .getTemplateShiftsByRoster(rosterId)
-      .then((response) => {
-        // let dummyArr = response.data;
-        // for (let i = 0; i < dummyArr.length; i++) {
-        //   dummyArr.startTime
-        // }
-        let tempData = response.data;
-        for (let i = 0; i < response.data.length; i++) {
-          tempData[i].startTime = parseISO(response.data[i].startTime);
-          tempData[i].endTime = parseISO(response.data[i].endTime);
-        }
-        setTemplateShifts(tempData);
-      })
-      .catch((error) => console.log(error.response.data.message));
+    // console.log(format(date, "yyyy-MM-dd HH:mm:ss"));
+    if (open) {
+      const formattedDate = format(date, "yyyy-MM-dd");
+      api
+        .getShiftsByRosterAndTime(rosterId, formattedDate)
+        .then((response) => {
+          // let dummyArr = response.data;
+          // for (let i = 0; i < dummyArr.length; i++) {
+          //   dummyArr.startTime
+          // }
+          let tempData = response.data;
+          console.log("TEMP DATA: " + tempData);
+          for (let i = 0; i < response.data.length; i++) {
+            tempData[i].startTime = parseISO(response.data[i].startTime);
+            tempData[i].endTime = parseISO(response.data[i].endTime);
+          }
+          setCurrentDateShifts(tempData);
+        })
+        .catch((error) => console.log(error.response.data.message));
+    }
   }, [open]);
 
   const createShiftHandler = () => {
@@ -113,6 +118,7 @@ const ViewTemplateShiftsModal = ({
         ],
         // posType,
         shift: {
+          shiftId: selectedShift.shiftId,
           shiftTitle: selectedShift.shiftTitle,
           startTime: new Date(
             getYear(currDate),
@@ -362,7 +368,7 @@ const ViewTemplateShiftsModal = ({
                       </label>
                     </div>
                     <div className="sm:border-t sm:border-gray-200 sm:pt-5">
-                      <label>Choose from the following template shifts:</label>
+                      <label>Choose from the following day's shifts:</label>
                       <div
                         className="p-2 border-2 border-dashed border-gray-200 my-2 grid grid-flow-col overflow-y-scroll"
                         aria-hidden="true"
@@ -371,7 +377,7 @@ const ViewTemplateShiftsModal = ({
                           <TemplateShiftRadioGroup
                             selected={selectedShift}
                             setSelected={setSelectedShift}
-                            shifts={templateShifts}
+                            shifts={currentDateShifts}
                           />
                         </div>
                         {selectedShift && (
@@ -472,4 +478,4 @@ const ViewTemplateShiftsModal = ({
   );
 };
 
-export default ViewTemplateShiftsModal;
+export default ViewCurrentShiftsModal;
