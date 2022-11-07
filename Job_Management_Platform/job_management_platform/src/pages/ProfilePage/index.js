@@ -39,6 +39,8 @@ export default function Profile() {
   const [fileName, setfileName] = useState("");
   const [docId, setDocId] = useState(null);
   const [error, setError] = useState(null);
+  const [languages, setLanguages] = useState([]);
+  const [userQualificationInfo, setUserQualificationInfo] = useState(null);
 
   useEffect(() => {
     api.getUserRecommendations(user).
@@ -331,14 +333,16 @@ export default function Profile() {
                   <AddSkillset />
                 </div>
               </div>
-              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                <label htmlFor="region" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                  Language
-                </label>
-                <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <Language />
-                </div>
-              </div>
+              {languages.length >0 &&
+                  <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                    <label htmlFor="region" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                      Language
+                    </label>
+                    <div className="mt-1 sm:col-span-2 sm:mt-0">
+                      <Language languages = {languages} setLanguages = {setLanguages} />
+                    </div>
+                  </div>
+              }
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
