@@ -162,6 +162,9 @@ const api = {
   updateUserEducation(userId, highestEducation, schoolName, schoolGradYear) {
     return axios.post(`http://localhost:9191/api/qualification/updateUserEducation?userId=${userId}&highestEducation=${highestEducation}&schoolName=${schoolName}&schoolGradYear=${schoolGradYear}`);
   },
+  getAllSkillsets() {
+    return axios.get(`http://localhost:9191/api/skillset/getAllSkillsets`);
+  },
   saveUserSkillsets(userId, userskills) {
     return axios.put(`http://localhost:9191/api/qualification/saveUserSkillsets?userId=${userId}`
     ,userskills);

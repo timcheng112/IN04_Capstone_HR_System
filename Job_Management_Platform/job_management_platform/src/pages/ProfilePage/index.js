@@ -18,13 +18,16 @@ import AddSkillset from "../../features/Profile/AddSkillset";
 // const works = [{workId:1, positionName: 'UI designer', companyName:"GIC"},{workId:2, positionName: 'Product Manager', companyName:"DBS"}]
 // const recommendations = [{recommendationId:1, name: 'Kong Xinyue', email:"12345@gmail.com"}, {recommendationId:2, name: 'Matthew', email:"12345@gmail.com"}]
 export default function Profile() {
-  const[firstName, setFirstName] = useState('')
-  const[lastName, setLastName] = useState('')
-  const[aboutMe, setAboutMe] = useState('')
-  const[citizenship, setCitizenship] = useState('')
-  const[race, setRace] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [aboutMe, setAboutMe] = useState('')
+  const [citizenship, setCitizenship] = useState('')
+  const [race, setRace] = useState('')
   const [recommendations, setRecommendations] = useState([])
   const [works, setWorks] = useState([])
+  const [languages, setLanguages] = useState(['English', 'Chinese']);
+  const [skills,setSkills] = useState([])
+  const [userSkills, setUserSkills] = useState([])
   const [refreshKey, setRefreshKey] = useState(0);
   const [addskil, setAddskill] = useState(false)
   const [addCV, setAddCV] = useState(false)
@@ -39,77 +42,85 @@ export default function Profile() {
   const [fileName, setfileName] = useState("");
   const [docId, setDocId] = useState(null);
   const [error, setError] = useState(null);
-  const [languages, setLanguages] = useState([]);
   const [userQualificationInfo, setUserQualificationInfo] = useState(null);
 
   useEffect(() => {
     api.getUserRecommendations(user).
-    then((response) => {
-      console.log(response.data);
-      setRecommendations(response.data);
-    });
+      then((response) => {
+        console.log(response.data);
+        setRecommendations(response.data);
+      });
   }, [refreshKey]);
   useEffect(() => {
     api.getUserExperiences(user).
-    then((response) => {
-      console.log(response.data);
-      setWorks(response.data);
-    });
+      then((response) => {
+        console.log(response.data);
+        setWorks(response.data);
+      });
   }, [refreshKey]);
+  useEffect(() => {
+    api.getAllSkillsets().
+      then((response) => {
+        console.log(response.data);
+        setSkills(response.data);
+        console.log(response.data[0]);
+        setUserSkills([{ skill: response.data[0], level: 1 }, { skill: response.data[1], level: 3 }])
+      });
+  }, []);
 
-//  function testMatt() {
-//      sample API calls for backend
-//    let exp = [{"experienceId": 1,
-//                    "positionName": "Bababa",
-//                    "companyName": "BAaaaaa",
-//                    "startDate": "2019-01-05",
-//                    "endDate": "2020-02-10",
-//                    "currentlyWorking": false,
-//                    "description": "Teach kiddos how wto kick butt"},
-//                {"experienceId": -1,
-//                    "positionName": "dddd",
-//                    "companyName": "dddd",
-//                    "startDate": "2021-02-25",
-//                    "endDate": null,
-//                    "currentlyWorking": true,
-//                    "description": "dddd"
-//                }]
-//    let exp = []
-//    console.log(exp);
-//    api.saveWorkExperiences(16, exp);
+  //  function testMatt() {
+  //      sample API calls for backend
+  //    let exp = [{"experienceId": 1,
+  //                    "positionName": "Bababa",
+  //                    "companyName": "BAaaaaa",
+  //                    "startDate": "2019-01-05",
+  //                    "endDate": "2020-02-10",
+  //                    "currentlyWorking": false,
+  //                    "description": "Teach kiddos how wto kick butt"},
+  //                {"experienceId": -1,
+  //                    "positionName": "dddd",
+  //                    "companyName": "dddd",
+  //                    "startDate": "2021-02-25",
+  //                    "endDate": null,
+  //                    "currentlyWorking": true,
+  //                    "description": "dddd"
+  //                }]
+  //    let exp = []
+  //    console.log(exp);
+  //    api.saveWorkExperiences(16, exp);
 
-//    let rec = [{"recommendationId": -1,
-//                    "name": "Daren",
-//                    "phone": "91919191",
-//                    "email": "asdasdas@asdsad.com",
-//                    "relationship": "friend1"},
-//                {"recommendationId": -1,
-//                    "name": "Jonathan",
-//                    "phone": "92929292",
-//                    "email": "jony@jony.com",
-//                    "relationship": "friend2"}]
-//    console.log(rec);
-//    api.saveUserRecommendations(16, rec);
-//
-//    let userskills = [{"userSkillsetId": 1,
-//                    "skillLevel": "1",
-//                    "skillset": {
-//                                "skillsetId": 1,
-//                                "skillsetName": "Java",
-//                                "jobRequests": [],
-//                                "jobPostings": []
-//                                    }},
-//                    {"userSkillsetId": -1,
-//                    "skillLevel": "3",
-//                    "skillset": {
-//                                "skillsetId": 3,
-//                                "skillsetName": "MySQL",
-//                                "jobRequests": [],
-//                                "jobPostings": []
-//                                    }}]
-//    console.log(userskills);
-//    api.saveUserSkillsets(16, userskills);
-//  }
+  //    let rec = [{"recommendationId": -1,
+  //                    "name": "Daren",
+  //                    "phone": "91919191",
+  //                    "email": "asdasdas@asdsad.com",
+  //                    "relationship": "friend1"},
+  //                {"recommendationId": -1,
+  //                    "name": "Jonathan",
+  //                    "phone": "92929292",
+  //                    "email": "jony@jony.com",
+  //                    "relationship": "friend2"}]
+  //    console.log(rec);
+  //    api.saveUserRecommendations(16, rec);
+  //
+  //    let userskills = [{"userSkillsetId": 1,
+  //                    "skillLevel": "1",
+  //                    "skillset": {
+  //                                "skillsetId": 1,
+  //                                "skillsetName": "Java",
+  //                                "jobRequests": [],
+  //                                "jobPostings": []
+  //                                    }},
+  //                    {"userSkillsetId": -1,
+  //                    "skillLevel": "3",
+  //                    "skillset": {
+  //                                "skillsetId": 3,
+  //                                "skillsetName": "MySQL",
+  //                                "jobRequests": [],
+  //                                "jobPostings": []
+  //                                    }}]
+  //    console.log(userskills);
+  //    api.saveUserSkillsets(16, userskills);
+  //  }
 
   // function handleFile(e) {
   //   console.log(e.target.files, "--");
@@ -120,7 +131,7 @@ export default function Profile() {
   //   // console.log(file + "what now")
   //   // console.log(fileName + "printing fileName")
   // }
-  
+
   // function uploadFile(e) {
   //   e.preventDefault();
   //   // console.log(file[0])
@@ -129,7 +140,7 @@ export default function Profile() {
   //   if(file){
   //     formData.append("document", file);
   //   }
-  
+
   //   try {
   //     api
   //       .addCV(formData, user)
@@ -151,7 +162,7 @@ export default function Profile() {
   //     console.log(err);
   //   }
   // }
-  
+
   // function downloadFile() {
   //   api.downloadDocument(docId).then((response) => {
   //     console.log(docId);
@@ -161,7 +172,7 @@ export default function Profile() {
   //     api.getDocById(docId).then((response) => {
   //       //console.log(response.data);
   //       const url = window.URL.createObjectURL(response.data);
-  
+
   //       const link = document.createElement("a");
   //       link.href = url;
   //       link.setAttribute("download", fileName);
@@ -171,7 +182,7 @@ export default function Profile() {
   //     });
   //   });
   // }
-  
+
   // function deleteCV() {
   //   const yes = window.confirm(
   //     "Are you sure you want to delete your resume? Action is irreversible."
@@ -227,7 +238,7 @@ export default function Profile() {
                     id="first-name"
                     autoComplete="given-name"
                     value={firstName}
-                    onChange={(e)=>setFirstName(e.target.value)}
+                    onChange={(e) => setFirstName(e.target.value)}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                   />
                 </div>
@@ -242,7 +253,7 @@ export default function Profile() {
                     id="last-name"
                     autoComplete="family-name"
                     value={lastName}
-                    onChange={(e)=>setLastName(e.target.value)}
+                    onChange={(e) => setLastName(e.target.value)}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                   />
                 </div>
@@ -289,7 +300,7 @@ export default function Profile() {
                     name="about"
                     rows={3}
                     value={aboutMe}
-                    onChange={(e)=>setAboutMe(e.target.value)}
+                    onChange={(e) => setAboutMe(e.target.value)}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>
@@ -310,7 +321,7 @@ export default function Profile() {
                   Work experience
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <WorkList  templateWorks={works} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
+                  <WorkList templateWorks={works} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} />
                 </div>
               </div>
 
@@ -319,37 +330,26 @@ export default function Profile() {
                   Skills
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                {/* <button
-                    type="button"
-                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick = {()=> setAddskill(true)}
-                  >
-                    <PlusIcon
-                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                      aria-hidden="true"
-                    />
-                    <span className="hidden md:block">Add skill</span>
-                  </button> */}
-                  <AddSkillset />
+                  <AddSkillset userSkills={userSkills} setUserSkills={setUserSkills} skills={skills}/>
                 </div>
               </div>
-              {languages.length >0 &&
-                  <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                    <label htmlFor="region" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                      Language
-                    </label>
-                    <div className="mt-1 sm:col-span-2 sm:mt-0">
-                      <Language languages = {languages} setLanguages = {setLanguages} />
-                    </div>
-                  </div>
-              }
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="region" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Language
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <Language languages={languages} setLanguages={setLanguages} />
+                </div>
+              </div>
+
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Recommendations
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <RecommendationList templateRecommendations={recommendations} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
+                  <RecommendationList templateRecommendations={recommendations} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} />
                 </div>
               </div>
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -360,9 +360,9 @@ export default function Profile() {
                   <button
                     type="button"
                     className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick = {()=> setAddCV(true)}
+                    onClick={() => setAddCV(true)}
                   >
-                    <ArrowUpTrayIcon 
+                    <ArrowUpTrayIcon
                       className="md:-ml-0.5 md:mr-2 h-4 w-4"
                       aria-hidden="true"
                     />
@@ -377,9 +377,9 @@ export default function Profile() {
                   <button
                     type="button"
                     className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick = {()=> setAddTranscript(true)}
+                    onClick={() => setAddTranscript(true)}
                   >
-                    <ArrowUpTrayIcon 
+                    <ArrowUpTrayIcon
                       className="md:-ml-0.5 md:mr-2 h-4 w-4"
                       aria-hidden="true"
                     />
@@ -393,9 +393,9 @@ export default function Profile() {
                   <button
                     type="button"
                     className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick = {()=> setAddCoverletter(true)}
+                    onClick={() => setAddCoverletter(true)}
                   >
-                    <ArrowUpTrayIcon 
+                    <ArrowUpTrayIcon
                       className="md:-ml-0.5 md:mr-2 h-4 w-4"
                       aria-hidden="true"
                     />
@@ -411,12 +411,6 @@ export default function Profile() {
           <div className="pt-5">
             <div className="flex justify-end">
               <button
-                type="button"
-                className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                Cancel
-              </button>
-              <button
                 type="submit"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
@@ -426,7 +420,7 @@ export default function Profile() {
           </div>
 
         </form>
-       {/* testing code
+        {/* testing code
         <button
             type="submit"
             onClick= {()=>testMatt()}

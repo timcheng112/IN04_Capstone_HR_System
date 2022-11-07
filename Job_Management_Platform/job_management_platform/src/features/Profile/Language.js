@@ -3,62 +3,36 @@ import {
   PlusIcon, XMarkIcon
 } from "@heroicons/react/20/solid";
 
-const Language = (languages, setLanguages) => {
-//  const oldList = ["English", "Chinese"]
-  const [formValues, setFormValues] = useState([{ name: "" }])
+export default function Language ({languages, setLanguages}){
 
 
   let handleChange = (i, e) => {
-    let newFormValues = [...formValues];
-    newFormValues[i][e.target.name] = e.target.value;
-    setFormValues(newFormValues);
+    let newFormValues = [...languages];
+    newFormValues[i]= e.target.value;
+    setLanguages(newFormValues);
   }
 
   let addFormFields = () => {
-    setFormValues([...formValues, { name: "" }])
+    setLanguages([...languages, "" ])
   }
 
   let removeFormFields = (i) => {
-    let newFormValues = [...formValues];
+    let newFormValues = [...languages];
     newFormValues.splice(i, 1);
-    setFormValues(newFormValues)
+    setLanguages(newFormValues)
   }
 
-  useEffect(()=>{
-    console.log("BBBBBB")
-    console.log(formValues)
-
-    let finalList = []
-    formValues.forEach(x => finalList.push(x.name))
-    console.log(finalList)
-//    languages = finalList
-//    setLanguages(finalList)
-// TODO: set language
-    console.log(languages)
-  },[formValues])
-
-  useEffect(()=>{
-      console.log("AAAAAAA")
-      console.log(languages)
-      console.log(languages.languages)
-
-      let newList = []
-      languages.languages.forEach((x) => newList.push({name: x}))
-      console.log(newList)
-      console.log(formValues)
-      setFormValues(newList)
-    },[])
 
   return (
     <form  >
-      {formValues.map((element, index) => (
+      {languages.map((element, index) => (
         <div className="" key={index}>
           <div className="flex space-x-4">
           <input
             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
             type="text"
-            name="name"
-            value={element.name || ""}
+            name=""
+            value={element || ""}
             onChange={e => handleChange(index, e)} />
 
           {
@@ -98,4 +72,3 @@ const Language = (languages, setLanguages) => {
   )
 }
 
-export default Language

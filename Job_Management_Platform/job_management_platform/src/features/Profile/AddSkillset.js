@@ -1,5 +1,5 @@
 import React from 'react'
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import Select from 'react-select';
 import { Listbox, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon, PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
@@ -8,59 +8,66 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const AddSkillset = () => {
+const AddSkillset = ({ userSkills, setUserSkills, skills }) => {
 
-  const skills = [{ id: 1, name: 'java' }, { id: 2, name: 'python' }, { id: 3, name: 'matlab' }]
-  const userSkills = [{ skill: skills[0], level: 1 }, { skill: skills[1], level: 3 }]
-  const [formValues, setFormValues] = useState(userSkills)
+  // const userSkills = [{ skill: skills[0], level: 1 }, { skill: skills[1], level: 3 }]
+
+  useEffect(() => {
+    userSkills.map((element) => (
+      console.log(element.skill)
+    ))
+  }, []);
+
   const options = skills.map(skill => ({
-    "value" : skill.id,
-    "label" : skill.name
+    "value": skill,
+    "label": skill.skillsetName
   }))
-  const levels = [{"value":1,"label":1},{"value":2,"label":2},{"value":3,"label":3},{"value":4,"label":4},{"value":5,"label":5}]
-  let handleChange = (i, e) => {
-    let newFormValues = [...formValues];
-    newFormValues[i][e.target.name] = e.target.value;
-    setFormValues(newFormValues);
-  }
 
-  let handleSkillChange = (i, e) => {
-    let newFormValues = [...formValues];
-    newFormValues[i][e.target.value] = e.target.value;
-    setFormValues(newFormValues);
+  let handleChange = (i, e) => {
+    let newFormValues = [...userSkills];
+    newFormValues[i][e.target.name] = e.target.value;
+    setUserSkills(newFormValues);
+  }
+  let handleSelect = (i, e) => {
+    let newFormValues = [...userSkills];
+    newFormValues[i]['skill'] = e.value;
+    console.log(newFormValues[i]['skill'])
+    setUserSkills(newFormValues);
   }
 
   let addFormFields = () => {
-    setFormValues([...formValues, { skill: "", level: "" }])
+    setUserSkills([...userSkills, { skill: "", level: "" }])
   }
 
   let removeFormFields = (i) => {
-    let newFormValues = [...formValues];
+    let newFormValues = [...userSkills];
     newFormValues.splice(i, 1);
-    setFormValues(newFormValues)
+    setUserSkills(newFormValues)
   }
 
   return (
     <form  >
-      {formValues.map((element, index) => (
+      {userSkills.map((element, index) => (
 
         <div className="display: flex flex-flow: row wrap align-items: center" key={index}>
           <div className="flex space-x-4 py-2">
             <Select
-              value={element.skill.name}
+              value={element.skill}
               options={options}
               className="w-64"
-              
+              onChange={e => handleSelect(index,e)}
             >
             </Select>
             <input
-            className="block w-30 max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-            type="text"
-            name="level"
-            value={element.level || ""}
-            placeholder='Level 1-5'
-            onChange={e => handleChange(index, e)} />
-            
+              className="block w-30 max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+              type="number"
+              min={1}
+              max={5}
+              name="level"
+              value={element.level || ""}
+              placeholder='Level 1-5'
+              onChange={e => handleChange(index, e)} />
+
             {
               index ?
                 <button
