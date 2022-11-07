@@ -79,8 +79,12 @@ public class QualificationController{
 
     @PutMapping(path = "/editRecommendation")
     public Recommendation editRecommendation(@RequestParam("userId") Long userId,
-                                   @RequestBody Recommendation recommendation) {
-        return qualificationService.editRecommendation(userId, recommendation);
+                                             @RequestParam("recoId") Long recoId,
+                                             @RequestParam("name") String name,
+                                             @RequestParam(value = "phone", required = false) Integer phone,
+                                             @RequestParam("email") String email,
+                                             @RequestParam("relationship") String relationship) {
+        return qualificationService.editRecommendation(userId, recoId, name, phone, email, relationship);
     }
 
     // Work Experiences
@@ -111,8 +115,14 @@ public class QualificationController{
 
     @PutMapping(path = "/editUserExperience")
     public WorkExperience editUserExperience(@RequestParam("userId") Long userId,
-                                             @RequestBody WorkExperience exp) {
-        return qualificationService.editUserExperience(userId, exp);
+                                             @RequestParam("workExpId") Long workExpId,
+                                             @RequestParam("positionName") String positionName,
+                                             @RequestParam("companyName") String companyName,
+                                             @RequestParam("startDate") String startDate,
+                                             @RequestParam(value = "endDate", required = false, defaultValue = "null") String endDate,
+                                             @RequestParam("currentlyWorking") Boolean currentlyWorking,
+                                             @RequestParam("description") String description) {
+        return qualificationService.editUserExperience(userId, workExpId, positionName, companyName, LocalDate.parse(startDate), LocalDate.parse(endDate), currentlyWorking, description);
     }
 
     @PutMapping(path = "/saveWorkExperiences")

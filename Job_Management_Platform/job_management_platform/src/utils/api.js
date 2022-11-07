@@ -142,8 +142,8 @@ const api = {
   removeUserRecommendation(userId, recoId) {
     return axios.delete(`http://localhost:9191/api/qualification/removeUserRecommendation?userId=${userId}&recoId=${recoId}`);
   },
-  editUserRecommendation(userId, recommendation) {
-    return axios.put(`http://localhost:9191/api/qualification/editRecommendation?userId=${userId}`, recommendation);
+  editUserRecommendation(userId,recoId, name, phone, email, relationship) {
+    return axios.put(`http://localhost:9191/api/qualification/editRecommendation?userId=${userId}&recoId=${recoId}&name=${name}&phone=${phone}&email=${email}&relationship=${relationship}`);
   },
   saveUserRecommendations(userId, recos) {
     return axios.put(`http://localhost:9191/api/qualification/saveUserRecommendations?userId=${userId}`
@@ -158,8 +158,8 @@ const api = {
   removeUserExperience(userId, expId) {
     return axios.delete(`http://localhost:9191/api/qualification/removeUserExperience?userId=${userId}&expId=${expId}`);
   },
-  editUserExperience(userId, workExp) {
-    return axios.put(`http://localhost:9191/api/qualification/editUserExperience?userId=${userId}`, workExp);
+  editUserExperience(userId, workExpId, positionName, companyName, startDate, endDate, currentlyWorking, description) {
+    return axios.put(`http://localhost:9191/api/qualification/editUserExperience?userId=${userId}&workExpId=${workExpId}&positionName=${positionName}&companyName=${companyName}&startDate=${startDate}&endDate=${endDate}&currentlyWorking=${currentlyWorking}&description=${description}`);
   },
   saveWorkExperiences(userId, experiences) {
     return axios.put(`http://localhost:9191/api/qualification/saveWorkExperiences?userId=${userId}`

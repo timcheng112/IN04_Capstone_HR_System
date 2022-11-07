@@ -696,9 +696,8 @@ public class QualificationService {
         return true;
     }
 
-    public Recommendation editRecommendation(Long userId, Recommendation toEdit) {
+    public Recommendation editRecommendation(Long userId, Long recoId, String name, Integer phone, String email, String relationship) {
         System.out.println("QualificationService.editRecommendation");
-        System.out.println("userId = " + userId + ", toEdit = " + toEdit);
 
         User a = userRepository.findById(userId).get();
         User applicant = checkQIExists(a);
@@ -710,18 +709,18 @@ public class QualificationService {
         } else {
             // persist new one, remove old ones and update existing one
             List<Long> existingRecoIds = recos.stream().map(x -> x.getRecommendationId()).toList();
-            if (existingRecoIds.contains(toEdit.getRecommendationId())) {
+            if (existingRecoIds.contains(recoId)) {
                 // if dont include, error
                 throw new IllegalStateException("Recommendation not found");
             }
 
             // update
             for (Recommendation r : recos) {
-                if (r.getRecommendationId().equals(toEdit.getRecommendationId())) {
-                    r.setName(toEdit.getName());
-                    r.setPhone(toEdit.getPhone());
-                    r.setEmail(toEdit.getEmail());
-                    r.setRelationship(toEdit.getRelationship());
+                if (r.getRecommendationId().equals(recoId)) {
+                    r.setName(name);
+                    r.setPhone(phone);
+                    r.setEmail(email);
+                    r.setRelationship(relationship);
                     recommendationRepository.saveAndFlush(r);
                     break;
                 }
@@ -729,14 +728,13 @@ public class QualificationService {
 
             applicant = userRepository.findById(userId).get();
             qualificationRepository.saveAndFlush(applicant.getQualificationInformation());
-            Recommendation rec = recommendationRepository.findById(toEdit.getRecommendationId()).get();
+            Recommendation rec = recommendationRepository.findById(recoId).get();
             return rec;
         }
     }
 
-    public WorkExperience editUserExperience(Long userId, WorkExperience exp) {
+    public WorkExperience editUserExperience(Long userId, Long workExpId, String positionName, String companyName, LocalDate startDate, LocalDate endDate, Boolean currentlyWorking, String description) {
         System.out.println("QualificationService.editUserExperience");
-        System.out.println("userId = " + userId + ", exp = " + exp);
 
         User a = userRepository.findById(userId).get();
         User applicant = checkQIExists(a);
@@ -748,20 +746,20 @@ public class QualificationService {
         } else {
             // persist new one, remove old ones and update existing one
             List<Long> existingExpIds = exps.stream().map(x -> x.getExperienceId()).toList();
-            if (existingExpIds.contains(exp.getExperienceId())) {
+            if (existingExpIds.contains(workExpId)) {
                 // if dont include, error
                 throw new IllegalStateException("Recommendation not found");
             }
 
             // update
             for (WorkExperience we : exps) {
-                if (we.getExperienceId().equals(exp.getExperienceId())) {
-                    we.setDescription(exp.getDescription());
-                    we.setEndDate(exp.getEndDate());
-                    we.setStartDate(exp.getStartDate());
-                    we.setPositionName(exp.getPositionName());
-                    we.setCompanyName(exp.getCompanyName());
-                    we.setCurrentlyWorking(exp.getCurrentlyWorking());
+                if (we.getExperienceId().equals(workExpId)) {
+                    we.setDescription(description);
+                    we.setEndDate(endDate);
+                    we.setStartDate(startDate);
+                    we.setPositionName(positionName);
+                    we.setCompanyName(companyName);
+                    we.setCurrentlyWorking(currentlyWorking);
                     workExperienceRepository.saveAndFlush(we);
                     break;
                 }
@@ -769,7 +767,7 @@ public class QualificationService {
 
             applicant = userRepository.findById(userId).get();
             qualificationRepository.saveAndFlush(applicant.getQualificationInformation());
-            WorkExperience we = workExperienceRepository.findById(exp.getExperienceId()).get();
+            WorkExperience we = workExperienceRepository.findById(workExpId).get();
             return we;
         }
     }
