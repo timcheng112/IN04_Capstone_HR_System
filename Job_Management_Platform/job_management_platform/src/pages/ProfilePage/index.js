@@ -21,6 +21,8 @@ export default function Profile() {
   const[firstName, setFirstName] = useState('')
   const[lastName, setLastName] = useState('')
   const[aboutMe, setAboutMe] = useState('')
+  const[citizenship, setCitizenship] = useState('')
+  const[race, setRace] = useState('')
   const [addskil, setAddskill] = useState(false)
   const [addCV, setAddCV] = useState(false)
   const [addTranscript, setAddTranscript] = useState(false)
@@ -224,6 +226,37 @@ export default function Profile() {
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                   />
                 </div>
+                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Citizenship
+                </label>
+                <select
+                  id="citizenship"
+                  name="citizenship"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+                  value={citizenship}
+                  onChange={(e) => setCitizenship(e.target.value)}
+                >
+                  <option value="CITIZEN">Citizen</option>
+                  <option value="PR">PR</option>
+                  <option value="FOREINER">Foreiner</option>
+                </select>
+                <div></div>
+                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Race
+                </label>
+                <select
+                  id="race"
+                  name="race"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+                  value={race}
+                  onChange={(e) => setRace(e.target.value)}
+                >
+                  <option value="CHINESE">Chinese</option>
+                  <option value="MALAY">Malay</option>
+                  <option value="INDIAN">Indian</option>
+                  <option value="EURASIAN">Eurasian</option>
+                  <option value="OTHERS">Others</option>
+                </select>
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
