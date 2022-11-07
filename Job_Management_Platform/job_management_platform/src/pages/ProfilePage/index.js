@@ -18,6 +18,9 @@ import AddSkillset from "../../features/Profile/AddSkillset";
 const works = [{workId:1, positionName: 'UI designer', companyName:"GIC"},{workId:2, positionName: 'Product Manager', companyName:"DBS"}]
 const recommendations = [{recommendationId:1, name: 'Kong Xinyue', email:"12345@gmail.com"}, {recommendationId:2, name: 'Matthew', email:"12345@gmail.com"}]
 export default function Profile() {
+  const[firstName, setFirstName] = useState('')
+  const[lastName, setLastName] = useState('')
+  const[aboutMe, setAboutMe] = useState('')
   const [addskil, setAddskill] = useState(false)
   const [addCV, setAddCV] = useState(false)
   const [addTranscript, setAddTranscript] = useState(false)
@@ -26,7 +29,6 @@ export default function Profile() {
   const history = useHistory();
   // const email = result[2]
   let [userInfo, setUserInfo] = useState([]);
-  const userId = getUserId();
   // const email = result[1]
   const [file, setFileState] = useState("");
   const [fileName, setfileName] = useState("");
@@ -202,6 +204,8 @@ export default function Profile() {
                     name="first-name"
                     id="first-name"
                     autoComplete="given-name"
+                    value={firstName}
+                    onChange={(e)=>setFirstName(e.target.value)}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                   />
                 </div>
@@ -215,6 +219,8 @@ export default function Profile() {
                     name="last-name"
                     id="last-name"
                     autoComplete="family-name"
+                    value={lastName}
+                    onChange={(e)=>setLastName(e.target.value)}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                   />
                 </div>
@@ -229,6 +235,8 @@ export default function Profile() {
                     id="about"
                     name="about"
                     rows={3}
+                    value={aboutMe}
+                    onChange={(e)=>setAboutMe(e.target.value)}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>

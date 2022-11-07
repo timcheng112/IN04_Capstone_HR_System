@@ -9,10 +9,25 @@ function classNames(...classes) {
 
 export default function Education() {
   const people = [
-    { id: 1, name: 'Wade Cooper' },
-    { id: 2, name: 'Arlene Mccoy' },
-    { id: 3, name: 'Devon Webb' },
+    { name: 'O Level' },
+    { name: 'A Level' },
+    { name: 'N Level' },
+    { name: 'Diploma' },
+    { name: 'Bachelor' },
+    { name: 'Master' },
+    { name: 'PHD' }
   ]
+  const [levels, setLevels] = useState([
+    { name: 'O Level' },
+    { name: 'A Level' },
+    { name: 'N Level' },
+    { name: 'Diploma' },
+    { name: 'Bachelor' },
+    { name: 'Master' },
+    { name: 'PHD' }
+  ])
+  const [school, setSchool] = useState("")
+  const [year, setYear] = useState()
   const [selected, setSelected] = useState(people[2])
   return (
     <div>
@@ -39,7 +54,7 @@ export default function Education() {
                   <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                     {people.map((person) => (
                       <Listbox.Option
-                        key={person.id}
+                        key={person.name}
                         className={({ active }) =>
                           classNames(
                             active ? 'text-white bg-indigo-600' : 'text-gray-900',
@@ -89,7 +104,8 @@ export default function Education() {
             name="name"
             id="name"
             className="block w-60 border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
-            placeholder="Jane Smith"
+            value={school}
+            onChange={(e)=>setSchool(e.target.value)}
           />
         </div>
       </div>
@@ -104,11 +120,13 @@ export default function Education() {
             Graduate Year
           </label>
           <input
-            type="text"
+            type="number"
             name="name"
             id="name"
             className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
             placeholder="YYYY"
+            value={year}
+            onChange={(e)=>setYear(e.target.value)}
           />
         </div>
       </div>
