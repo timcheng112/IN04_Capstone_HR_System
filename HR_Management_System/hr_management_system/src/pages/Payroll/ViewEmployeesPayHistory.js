@@ -30,43 +30,42 @@ const departments = [
     teams: [{ name: "Finance Team A" }, { name: "Finance Team B" }],
   },
 ];
-
-const employees = [
+const months = [
   {
-    name: "Jenny Wilson",
-    email: "jennyw@libro.com",
+    month: "January",
     gross: "$10,310.00",
     allowances: "+$0",
     deductions: "-$100.31",
     net: "$10,209.69",
     status: "PAID",
+    payslipAvailable: true,
   },
   {
-    name: "Jane Cooper",
-    email: "janec@libro.com",
+    month: "Febuary",
     gross: "$5,210.00",
     allowances: "+$0",
     deductions: "-$521.00",
     net: "$4,689.99",
     status: "PENDING",
+    payslipAvailable: false,
   },
   {
-    name: "Guy Hawkins",
-    email: "guyhawkins@libro.com",
+    month: "March",
     gross: "$3,120.00",
     allowances: "+$0",
     deductions: "-$936.00",
     net: "$2,184.00",
     status: "PAID",
+    payslipAvailable: true,
   },
   {
-    name: "Cody Fisher",
-    email: "codyfisher@libro.com",
+    month: "April",
     gross: "$7,500.00",
     allowances: "+$0",
     deductions: "-$2,250.00",
     net: "$5250.00",
     status: "UNPAID",
+    payslipAvailable: false,
   },
 ];
 
@@ -151,13 +150,7 @@ const EmployeePayrollHistory = () => {
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Employee Name
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Email Address
+                        Month
                       </th>
                       <th
                         scope="col"
@@ -189,43 +182,58 @@ const EmployeePayrollHistory = () => {
                       >
                         Status
                       </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Payslip
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {employees.map((employee) => (
+                    {months.map((month) => (
                       <tr>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {employee.name}
+                          {month.month}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          {employee.email}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          {employee.gross}
+                          {month.gross}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
-                          {employee.allowances}
+                          {month.allowances}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
-                          {employee.deductions}
+                          {month.deductions}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          {employee.net}
+                          {month.net}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
                           <div
                             className={classNames(
                               "rounded-xl w-1/2 text-center font-bold",
-                              employee.status === "PAID" &&
+                              month.status === "PAID" &&
                                 "bg-green-200 text-green-700",
-                              employee.status === "PENDING" &&
+                              month.status === "PENDING" &&
                                 "bg-yellow-200 text-yellow-700",
-                              employee.status === "UNPAID" &&
+                              month.status === "UNPAID" &&
                                 "bg-red-200 text-red-700"
                             )}
                           >
-                            {employee.status}
+                            {month.status}
                           </div>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          {month.payslipAvailable ? (
+                            <a
+                              className="text-indigo-500"
+                              href="/employee-payslip"
+                            >
+                              View Payslip
+                            </a>
+                          ) : (
+                            <p className="text-gray-400">View Payslip</p>
+                          )}
                         </td>
                       </tr>
                     ))}
