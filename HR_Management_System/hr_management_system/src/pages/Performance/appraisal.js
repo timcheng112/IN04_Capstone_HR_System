@@ -3,6 +3,7 @@ import Navbar from "../../components/Navbar";
 import PerformanceSidebar from "../../components/Sidebar/Performance";
 import api from "../../utils/api";
 import { Switch } from "@headlessui/react";
+import { useHistory } from "react-router";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -19,19 +20,36 @@ export default function Appraisal() {
   const [promote, setPromote] = useState(false);
   const [justification, setJustification] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [overdue, setOverdue] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const history = useHistory();
 
   useEffect(() => {
     //console.log(appraisalId);
     api.getAppraisalById(appraisalId).then((response) => {
+      console.log(response.data);
       setAppraisal(response.data);
       setEmployee(response.data.employee);
-      //console.log(response.data);
       setStrengths(response.data.strengths);
       setWeaknesses(response.data.weaknesses);
       setRatingSelect(response.data.rating);
       setPromote(response.data.promotion);
       setJustification(response.data.promotionJustification);
       setSubmitted(response.data.submitted);
+
+      api
+        .getAppraisalPeriodByYear(response.data.appraisalYear)
+        .then((response) => {
+          setStartDate(response.data.startDate);
+          setEndDate(response.data.endDate);
+
+          const now = new Date().setHours(0, 0, 0, 0);
+          if (now >= new Date(response.data.endDate).setHours(0, 0, 0, 0)) {
+            setOverdue(true);
+            //console.log(response.data.endDate);
+          }
+        });
     });
   }, []);
 
@@ -53,20 +71,35 @@ export default function Appraisal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (strengths && weaknesses && rating && promote && justification) {
-      api
-        .submitAppraisal(
-          appraisalId,
-          strengths,
-          weaknesses,
-          parseInt(rating.substring(0, 1)),
-          promote,
-          justification
-        )
-        .then((response) => {
-          alert(response.data);
-          setSubmitted(true);
-        });
+
+    if (strengths && weaknesses && rating !== "Select") {
+      var confirm;
+      if (overdue) {
+        confirm = window.confirm(
+          "Are you sure you want to submit? You will not be able to update the appraisal after submission."
+        );
+      } else {
+        confirm = window.confirm(
+          "Are you sure you want to submit? You will not be able to update the appraisal without deleting after submission."
+        );
+      }
+
+      if (confirm) {
+        api
+          .submitAppraisal(
+            appraisalId,
+            strengths,
+            weaknesses,
+            parseInt(rating.substring(0, 1)),
+            promote,
+            justification
+          )
+          .then((response) => {
+            alert(response.data);
+            setSubmitted(true);
+            setOverdue(false);
+          });
+      }
     } else {
       alert("Please ensure all fields are not empty before submitting");
     }
@@ -98,9 +131,41 @@ export default function Appraisal() {
       .then((response) => alert(response.data));
   };
 
+  function withinCurrentPeriod() {
+    const now = new Date().setHours(0, 0, 0, 0);
+    console.log("now? " + startDate + " - " + endDate);
+    return (
+      now >= new Date(startDate).setHours(0, 0, 0, 0) &&
+      now <= new Date(endDate).setHours(0, 0, 0, 0)
+    );
+  }
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+
+    const confirm = window.confirm(
+      "Are you sure you want to delete this submitted appraisal? You will have to submit another appraisal for this employee by " +
+        new Date(endDate).getDate() +
+        "/" +
+        new Date(endDate).getMonth() +
+        "/" +
+        new Date(endDate).getFullYear() +
+        "."
+    );
+
+    if (confirm) {
+      api
+        .deleteAppraisal(appraisal.appraisalId)
+        .then((response) => alert(response.data))
+        .finally(() => history.push("/performance/appraisals"));
+    }
+  };
+
   return (
     appraisal &&
-    employee && (
+    employee &&
+    startDate &&
+    endDate && (
       <div className="">
         <Navbar />
         <div className="flex">
@@ -118,15 +183,34 @@ export default function Appraisal() {
           <div className="mt-10 mx-16 md:gap-6">
             <div className="md:col-span-1">
               <div className="mt-2 px-4 sm:px-0">
-                <h2 className="text-lg font-medium leading-6 text-gray-900">
-                  Appraisal for
-                </h2>
-                <h2 className="text-lg font-semibold leading-6 text-gray-900">
-                  {employee.firstName} {employee.lastName}
-                </h2>
-                <h3 className="mt-1 text-md text-gray-600">
-                  Appraisal period {appraisal.appraisalYear}
-                </h3>
+                {overdue && appraisal.status === "Overdue" ? (
+                  <>
+                    <h2 className="text-lg font-medium leading-6 text-red-600">
+                      Appraisal for
+                    </h2>
+                    <h2 className="text-lg font-semibold leading-6 text-red-600">
+                      {employee.firstName} {employee.lastName}
+                    </h2>
+                    <h3 className="mt-1 text-md text-red-600">
+                      Appraisal period {appraisal.appraisalYear}
+                    </h3>
+                    <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-0.5 mt-2 text-sm font-medium text-red-800">
+                      Overdue
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="text-lg font-medium leading-6 text-gray-900">
+                      Appraisal for
+                    </h2>
+                    <h2 className="text-lg font-semibold leading-6 text-gray-900">
+                      {employee.firstName} {employee.lastName}
+                    </h2>
+                    <h3 className="mt-1 text-md text-gray-600">
+                      Appraisal period {appraisal.appraisalYear}
+                    </h3>
+                  </>
+                )}
                 {submitted && (
                   <span className="inline-flex items-center rounded-full bg-green-100 px-3 mt-1 py-0.5 text-sm font-medium text-green-800">
                     Submitted
@@ -227,7 +311,8 @@ export default function Appraisal() {
                             as="span"
                             className="text-sm text-left text-gray-500"
                           >
-                            You will be required to complete a promotion request by recommending this employee for promotion
+                            You will be required to complete a promotion request
+                            by recommending this employee for promotion
                           </Switch.Description>
                         </span>
                         <Switch
@@ -278,12 +363,25 @@ export default function Appraisal() {
                   </div>
                   <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                     {!submitted && (
-                      <button
-                        type="submit"
-                        className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 mx-2 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      >
-                        Submit
-                      </button>
+                      <>
+                        <button
+                          type="submit"
+                          className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 mx-2 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        >
+                          Submit
+                        </button>
+                      </>
+                    )}
+                    {withinCurrentPeriod() && submitted && (
+                      <>
+                        <button
+                          type="button"
+                          className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 mx-2 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          onClick={handleDelete}
+                        >
+                          Delete
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>

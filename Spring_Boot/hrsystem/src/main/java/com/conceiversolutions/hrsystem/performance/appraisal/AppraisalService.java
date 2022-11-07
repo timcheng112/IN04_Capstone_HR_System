@@ -1,6 +1,8 @@
 package com.conceiversolutions.hrsystem.performance.appraisal;
 
+import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
+import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.performance.appraisalPeriod.AppraisalPeriod;
@@ -37,14 +39,18 @@ public class AppraisalService {
     @Autowired
     private final DepartmentRepository departmentRepository;
 
+    @Autowired
+    private final OrganizationRepository organizationRepository;
+
     public AppraisalService(AppraisalRepository appraisalRepository, UserRepository userRepository,
             TeamRepository teamRepository, AppraisalPeriodRepository appraisalPeriodRepository,
-            DepartmentRepository departmentRepository) {
+            DepartmentRepository departmentRepository, OrganizationRepository organizationRepository) {
         this.appraisalRepository = appraisalRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.appraisalPeriodRepository = appraisalPeriodRepository;
         this.departmentRepository = departmentRepository;
+        this.organizationRepository = organizationRepository;
     }
 
     public User breakRelationships(User user) {
@@ -176,9 +182,16 @@ public class AppraisalService {
                         // appraisals not created yet, creates a blank appraisal for each member
                         // of their team
                         Appraisal appraisal = new Appraisal(LocalDate.now().getYear() + "", "Incomplete", "", "", null,
-                                null, "", null, null, null);
+                                false, "", null, null, null);
                         appraisal.setAppraisalYear(LocalDate.now().getYear() + "");
-                        appraisal.setStatus("Incomplete");
+
+                        if (LocalDate.now().isAfter(appraisalPeriod.getEndDate())
+                                && !appraisal.getStatus().equals("Completed")) {
+                            appraisal.setStatus("Overdue");
+                        } else {
+                            appraisal.setStatus("Incomplete");
+                        }
+
                         appraisal.setEmployee(u);
 
                         Optional<User> optionalManager = userRepository.findById(userId);
@@ -264,8 +277,12 @@ public class AppraisalService {
                 appraisal.setStrengths(strengths);
                 appraisal.setWeaknesses(weaknesses);
                 appraisal.setRating(rating);
-                appraisal.setPromotion(promotion);
-                appraisal.setPromotionJustification(promotionJustification);
+                if (promotion) {
+                    appraisal.setPromotion(promotion);
+                    appraisal.setPromotionJustification(promotionJustification);
+                } else {
+                    appraisal.setPromotionJustification("");
+                }
                 appraisal.setSubmitted(true);
                 appraisal.setStatus("Completed");
                 return "Appraisal for " + appraisal.getEmployee().getFirstName() + " "
@@ -315,10 +332,17 @@ public class AppraisalService {
 
                 } else {
                     Appraisal appraisal = new Appraisal(LocalDate.now().getYear() + "", "Incomplete", "", "", null,
-                            null, "", null, null, null);
+                            false, "", null, null, null);
 
                     appraisal.setAppraisalYear(LocalDate.now().getYear() + "");
-                    appraisal.setStatus("Incomplete");
+
+                    if (LocalDate.now().isAfter(appraisalPeriod.getEndDate())
+                            && !appraisal.getStatus().equals("Completed")) {
+                        appraisal.setStatus("Overdue");
+                    } else {
+                        appraisal.setStatus("Incomplete");
+                    }
+
                     User employee = breakRelationships(t.getTeamHead());
                     appraisal.setEmployee(employee);
 
@@ -328,10 +352,10 @@ public class AppraisalService {
                         User manager = breakRelationships(optionalManager.get());
 
                         appraisal.setManagerAppraising(manager);
-                        
+
                         appraisalRepository.save(appraisal);
 
-                        //managerAppraisals.add(appraisal);
+                        // managerAppraisals.add(appraisal);
                     } else {
                         throw new IllegalStateException("Manager not found");
                     }
@@ -343,6 +367,98 @@ public class AppraisalService {
         }
 
         return managerAppraisals;
+    }
+
+    public List<Appraisal> getOrganizationAppraisals(String year, Long userId) {
+
+        List<Appraisal> managerAppraisals = new ArrayList<>();
+
+        List<Department> departments = organizationRepository.findDepartmentsByOrganizationHead(userId);
+
+        Optional<AppraisalPeriod> optionalAppraisalPeriod = appraisalPeriodRepository.findAppraisalPeriodByYear(year);
+
+        if (optionalAppraisalPeriod.isPresent()) {
+
+            AppraisalPeriod appraisalPeriod = optionalAppraisalPeriod.get();
+
+            for (Department d : departments) {
+                Optional<Appraisal> optionalAppraisal = appraisalRepository
+                        .findAppraisalByEmployeeManager(d.getDepartmentHead().getUserId(), userId);
+
+                if (optionalAppraisal.isPresent()) {
+
+                    Appraisal appraisal = optionalAppraisal.get();
+
+                    if (LocalDate.now().isAfter(appraisalPeriod.getEndDate())
+                            && !appraisal.getStatus().equals("Completed")) {
+                        appraisal.setStatus("Overdue");
+                    }
+
+                    User e = breakRelationships(appraisal.getEmployee());
+                    User m = breakRelationships(appraisal.getManagerAppraising());
+
+                    appraisal.setEmployee(e);
+                    appraisal.setManagerAppraising(m);
+
+                    managerAppraisals.add(appraisal);
+
+                } else {
+
+                    Appraisal appraisal = new Appraisal(LocalDate.now().getYear() + "", "Incomplete", "", "", null,
+                            false, " ", null, null, null);
+
+                    appraisal.setAppraisalYear(LocalDate.now().getYear() + "");
+
+                    if (LocalDate.now().isAfter(appraisalPeriod.getEndDate())
+                            && !appraisal.getStatus().equals("Completed")) {
+                        appraisal.setStatus("Overdue");
+                    } else {
+                        appraisal.setStatus("Incomplete");
+                    }
+
+                    User employee = breakRelationships(d.getDepartmentHead());
+                    appraisal.setEmployee(employee);
+
+                    Optional<User> optionalManager = userRepository.findById(userId);
+
+                    if (optionalManager.isPresent()) {
+                        User manager = breakRelationships(optionalManager.get());
+
+                        appraisal.setManagerAppraising(manager);
+
+                        appraisalRepository.save(appraisal);
+
+                    }
+                }
+            }
+
+        } else {
+            throw new IllegalStateException("Appraisal period not found");
+        }
+
+        return managerAppraisals;
+
+    }
+
+    @Transactional
+    public String deleteAppraisal(Long appraisalId) throws Exception {
+        Optional<Appraisal> optionalAppraisal = appraisalRepository.findById(appraisalId);
+
+        if (optionalAppraisal.isPresent()) {
+            Appraisal appraisal = optionalAppraisal.get();
+            appraisal.setStrengths("");
+            appraisal.setWeaknesses("");
+            appraisal.setRating(null);
+            appraisal.setPromotion(false);
+            appraisal.setPromotionJustification("");
+            appraisal.setSubmitted(false);
+            appraisal.setStatus("Incomplete");
+            return "Appraisal for " + appraisal.getEmployee().getFirstName() + " "
+                    + appraisal.getEmployee().getLastName() + " has been deleted";
+        } else {
+            throw new IllegalStateException("Appraisal not found");
+        }
+
     }
 
 }

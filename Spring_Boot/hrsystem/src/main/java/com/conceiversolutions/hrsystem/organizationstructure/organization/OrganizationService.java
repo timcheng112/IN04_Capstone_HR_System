@@ -21,11 +21,10 @@ public class OrganizationService {
     private final UserRepository userRepository;
     private final UserService userService;
 
-
-//    @Autowired
-//    public OrganizationService(OrganizationRepository organizationRepository) {
-//        this.organizationRepository = organizationRepository;
-//    }
+    // @Autowired
+    // public OrganizationService(OrganizationRepository organizationRepository) {
+    // this.organizationRepository = organizationRepository;
+    // }
 
     public List<Organization> getOrganizations() {
         List<Organization> organizations = organizationRepository.findAll();
@@ -120,8 +119,7 @@ public class OrganizationService {
         org.getOrganizationHead().setLeaveQuotas(new ArrayList<>());
         org.getOrganizationHead().setCurrentLeaveQuota(null);
 
-
-        //come back and add relationship - S&A
+        // come back and add relationship - S&A
         for (Department d : departments) {
             d.setOrganization(null);
             d.setTeams(new ArrayList<>());
@@ -151,22 +149,23 @@ public class OrganizationService {
         return org;
     }
 
-
     public Long addNewOrganization(String name, Long userId) {
         Optional<User> orgHead = userRepository.findById(userId);
 
-        if(orgHead.isPresent()){
+        if (orgHead.isPresent()) {
             System.out.println("potato3");
             User us = orgHead.get();
 
             if (!us.getUserRole().equals(RoleEnum.MANAGER)) {
                 throw new IllegalStateException("User selected is not a Manager, please appoint a manager instead");
             } else if (!us.isEnabled()) {
-                throw new IllegalStateException("Manager selected is not an active employee, please appoint an active employee instead");
+                throw new IllegalStateException(
+                        "Manager selected is not an active employee, please appoint an active employee instead");
             }
-//            Organization org = new Organization(Long.valueOf(50), name, new ArrayList<>(), us);
-            Organization org = new Organization(name,new ArrayList<>(), us);
-            //save and flush returns entity
+            // Organization org = new Organization(Long.valueOf(50), name, new
+            // ArrayList<>(), us);
+            Organization org = new Organization(name, new ArrayList<>(), us);
+            // save and flush returns entity
             organizationRepository.saveAndFlush(org);
 
         }
@@ -186,13 +185,26 @@ public class OrganizationService {
         if (!newOrgHead.getUserRole().equals(RoleEnum.MANAGER)) {
             throw new IllegalStateException("User selected is not a Manager, please appoint a manager instead");
         } else if (!newOrgHead.isEnabled()) {
-            throw new IllegalStateException("Manager selected is not an active employee, please appoint an active employee instead");
+            throw new IllegalStateException(
+                    "Manager selected is not an active employee, please appoint an active employee instead");
         }
 
         org.setOrganizationHead(newOrgHead);
 
         organizationRepository.saveAndFlush(org);
 
-        return "Organization " + org.getOrganizationName() + " head has been successfully updated to be " + newOrgHead.getFirstName() + " " + newOrgHead.getLastName();
+        return "Organization " + org.getOrganizationName() + " head has been successfully updated to be "
+                + newOrgHead.getFirstName() + " " + newOrgHead.getLastName();
+    }
+
+    public Long isEmployeeOrganizationHead(Long employeeId) {
+        List<Organization> allOrganizations = getOrganizations();
+
+        for (Organization o : allOrganizations) {
+            if (o.getOrganizationHead().getUserId() == employeeId) {
+                return o.getOrganizationId();
+            }
+        }
+        return Long.valueOf(-1);
     }
 }

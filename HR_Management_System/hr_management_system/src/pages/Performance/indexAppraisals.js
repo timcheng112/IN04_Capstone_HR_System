@@ -32,6 +32,7 @@ export default function Appraisals() {
   const [isManager, setIsManager] = useState(false);
   const [appraisals, setAppraisals] = useState([]);
   const [myAppraisals, setMyAppraisals] = useState([]);
+  const [organizationHead, setOrganizationHead] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -62,7 +63,10 @@ export default function Appraisals() {
         console.log(response.data);
         api
           .getManagerAppraisals(new Date().getFullYear(), getUserId())
-          .then((response) => setAppraisals(response.data));
+          .then((response) => {
+            setAppraisals(response.data);
+            console.log(response.data);
+          });
       }
     });
 
@@ -76,10 +80,21 @@ export default function Appraisals() {
       }
     });
 
+    api.getIsOrganizationHead(getUserId()).then((response) => {
+      if (response.data > -1) {
+        setOrganizationHead(true);
+        setIsManager(true);
+        console.log("organization head");
+        api
+          .getOrganizationAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => setAppraisals(response.data));
+      }
+    });
+
     api
       .getEmployeeAppraisals(new Date().getFullYear(), getUserId())
       .then((response) => {
-        console.log(response.data);
+        console.log(response.data.length);
         setMyAppraisals(response.data);
       });
   }, []);
@@ -113,7 +128,7 @@ export default function Appraisals() {
 
   function afterAppraisalPeriod() {
     const now = new Date().setHours(0, 0, 0, 0);
-    console.log("after? " + startDate + " - " + endDate);
+    //console.log("after? " + startDate + " - " + endDate);
     return (
       now >= new Date(startDate).setHours(0, 0, 0, 0) &&
       now >= new Date(endDate).setHours(0, 0, 0, 0)
@@ -289,6 +304,31 @@ export default function Appraisals() {
             />
           </div>
         </div>
+      );
+    }
+  }
+
+  function renderOverdueHeader(appraisals) {
+    const overdueCount = appraisals.filter(
+      (a) => a.status === "Overdue"
+    ).length;
+    //console.log(overdueCount);
+    if (overdueCount > 0) {
+      return (
+        <>
+          <h1 className="mt-5 font-semibold text-red-600">
+            My Team Appraisals
+            <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-0.5 ml-1 text-sm font-medium font-semibold text-red-800">
+              {overdueCount}
+            </span>
+          </h1>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <h1 className="mt-5 font-semibold">My Team Appraisals</h1>
+        </>
       );
     }
   }
@@ -572,14 +612,33 @@ export default function Appraisals() {
                               </span>
                             </>
                           ) : (
-                            <></>
+                            <>
+                              <span className="inline-flex items-center mt-2 mb-5 rounded-full bg-indigo-100 px-5 py-2 text-md font-medium text-indigo-800">
+                                Appraisal review period
+                                <Moment
+                                  parse="YYYY-MM-DD"
+                                  className="mx-2 text-md text-indigo-800"
+                                  locale="Asia/Singapore"
+                                  format="DD/MM/YYYY"
+                                >
+                                  {startDate}
+                                </Moment>
+                                {" - "}
+                                <Moment
+                                  parse="YYYY-MM-DD"
+                                  className="mx-2 text-md text-indigo-800"
+                                  locale="Asia/Singapore"
+                                  format="DD/MM/YYYY"
+                                >
+                                  {endDate}
+                                </Moment>
+                              </span>
+                            </>
                           )}
 
                           {isManager ? (
                             <>
-                              <h1 className="mt-5 font-semibold">
-                                My Team Appraisals
-                              </h1>
+                              {renderOverdueHeader(appraisals)}
                               <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 ">
                                 <ul
                                   role="list"
@@ -647,9 +706,11 @@ export default function Appraisals() {
                           ) : (
                             <></>
                           )}
-                          <h1 className="mt-5 font-semibold">My Appraisals</h1>
                           {withinCurrentPeriod() ? (
                             <>
+                              <h1 className="mt-5 font-semibold">
+                                My Appraisals
+                              </h1>
                               <div className="relative block w-full rounded-lg border-2 border-dashed border-black mt-5 p-12 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                 <PauseIcon className="mx-auto w-12 h-12 text-gray-500" />
                                 <span className="mt-2 block text-sm font-medium text-gray-900">
@@ -659,17 +720,36 @@ export default function Appraisals() {
                             </>
                           ) : (
                             <>
-                              <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 ">
-                                <ul
-                                  role="list"
-                                  className="divide-y divide-gray-200"
-                                >
-                                  {myAppraisals.map((appraisal) => (
-                                    <li key={appraisal.appraisalId}>
-                                      {renderMyAppraisalStatus(appraisal)}
-                                    </li>
-                                  ))}
-                                </ul>
+                              {!organizationHead && (
+                                <h1 className="mt-5 font-semibold">
+                                  My Appraisals
+                                </h1>
+                              )}
+
+                              <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5">
+                                {myAppraisals.length > 0 ? (
+                                  <>
+                                    <ul
+                                      role="list"
+                                      className="divide-y divide-gray-200"
+                                    >
+                                      {myAppraisals.map((appraisal) => (
+                                        <li key={appraisal.appraisalId}>
+                                          {renderMyAppraisalStatus(appraisal)}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="relative block w-full rounded-lg border-2 border-dashed border-black p-12 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                      <PauseIcon className="mx-auto w-12 h-12 text-gray-500" />
+                                      <span className="mt-2 block text-sm font-medium text-gray-900">
+                                        Appraisal(s) are still in progress
+                                      </span>
+                                    </div>
+                                  </>
+                                )}
                               </div>
                             </>
                           )}

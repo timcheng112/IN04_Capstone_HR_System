@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.performance.appraisal;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +54,12 @@ public class AppraisalController {
         return appraisalService.getDepartmentAppraisals(year, userId);
     }
 
+    @GetMapping(path = "{year}/organization/{userId}")
+    public List<Appraisal> getOrganizationAppraisals(@PathVariable("year") String year,
+            @PathVariable("userId") Long userId) throws Exception {
+        return appraisalService.getOrganizationAppraisals(year, userId);
+    }
+
     @GetMapping(path = "{year}/employee/{userId}")
     public List<Appraisal> getEmployeeAppraisals(@PathVariable("year") String year,
             @PathVariable("userId") Long userId) {
@@ -75,7 +82,7 @@ public class AppraisalController {
             @RequestParam("rating") Integer rating, @RequestParam("promotion") Boolean promotion,
             @RequestParam("promotionJustification") String promotionJustification) throws Exception {
         return appraisalService.saveAppraisal(appraisalId, strengths, weaknesses, rating, promotion,
-        promotionJustification);
+                promotionJustification);
     }
 
     @PostMapping(path = "{appraisalId}")
@@ -86,6 +93,11 @@ public class AppraisalController {
 
         return appraisalService.submitAppraisal(appraisalId, strengths, weaknesses, rating, promotion,
                 promotionJustification);
+    }
+
+    @DeleteMapping(path = "{appraisalId}")
+    public String deleteAppraisal(@PathVariable("appraisalId") Long appraisalId) throws Exception {
+        return appraisalService.deleteAppraisal(appraisalId);
     }
 
 }

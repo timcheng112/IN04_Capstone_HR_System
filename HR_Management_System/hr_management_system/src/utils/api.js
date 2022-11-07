@@ -189,6 +189,9 @@ const api = {
   getOrganization() {
     return axios.get(`http://localhost:9191/api/organization/1`);
   },
+  getIsOrganizationHead(userId) {
+    return axios.get(`http://localhost:9191/api/organization/${userId}/isHead`)
+  },
   getUserInfo(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
@@ -762,6 +765,9 @@ const api = {
   getDepartmentAppraisals(year, userId) {
     return axios.get(`http://localhost:9191/api/appraisal/${year}/department/${userId}`)
   },
+  getOrganizationAppraisals(year, userId) {
+    return axios.get(`http://localhost:9191/api/appraisal/${year}/organization/${userId}`)
+  },
   getEmployeeAppraisals(year, userId) {
     return axios.get(`http://localhost:9191/api/appraisal/${year}/employee/${userId}`)
   },
@@ -770,6 +776,9 @@ const api = {
   },
   submitAppraisal(appraisalId, strengths, weaknesses, rating, promotion, promotionJustification) {
     return axios.post(`http://localhost:9191/api/appraisal/${appraisalId}?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}`)
+  },
+  deleteAppraisal(appraisalId) {
+    return axios.delete(`http://localhost:9191/api/appraisal/${appraisalId}`)
   },
   // activateUser(email){
   //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
