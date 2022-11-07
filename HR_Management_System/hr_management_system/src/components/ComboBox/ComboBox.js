@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -43,6 +44,13 @@ export default function ComboBox({
           placeholder={placeholder}
         />
         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+          {selectedItem && (
+            <XMarkIcon
+              className="h-5 w-5 text-gray-400"
+              aria-hidden="true"
+              onClick={() => setSelectedItem(null)}
+            />
+          )}
           <ChevronUpDownIcon
             className="h-5 w-5 text-gray-400"
             aria-hidden="true"
