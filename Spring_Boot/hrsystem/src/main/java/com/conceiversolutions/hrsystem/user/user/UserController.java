@@ -4,6 +4,8 @@ import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.enums.RaceEnum;
+import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
 import com.conceiversolutions.hrsystem.user.position.Position;
 
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
@@ -62,10 +64,12 @@ public class UserController {
             @RequestParam("phone") Integer phone,
             @RequestParam("email") String email,
             @RequestParam("dob") String dob,
-            @RequestParam("gender") String gender) {
+            @RequestParam("gender") String gender,
+            @RequestParam("race") String race,
+            @RequestParam("citizenship") String citizenship) {
         System.out.println("UserController.registerNewAccountJMP");
         User newApplicant = new User(firstName, lastName, password, phone, email, LocalDate.parse(dob),
-                GenderEnum.valueOf(gender), RoleEnum.APPLICANT, false, false, null);
+                GenderEnum.valueOf(gender), RaceEnum.valueOf(race), CitizenshipEnum.valueOf(citizenship),RoleEnum.APPLICANT, false, false, null);
         // System.out.println("newApplicant = " + newApplicant.toString());
         try {
             Long applicantId = userService.addNewUser(newApplicant);
@@ -92,6 +96,8 @@ public class UserController {
             @RequestParam("workEmail") String workEmail,
             @RequestParam("dob") String dob,
             @RequestParam("gender") String gender,
+            @RequestParam("race") String race,
+            @RequestParam("citizenship") String citizenship,
             @RequestParam("userRole") String userRole,
             @RequestParam("isPartTimer") Boolean isPartTimer,
             @RequestParam("isHrEmployee") Boolean isHrEmployee,
@@ -108,7 +114,7 @@ public class UserController {
         Position newPos = positionRepository.saveAndFlush(position);
 
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
-                GenderEnum.valueOf(gender), RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
+                GenderEnum.valueOf(gender), RaceEnum.valueOf(race), CitizenshipEnum.valueOf(citizenship),RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
                 LocalDate.parse(dateJoined), null, newPos);
         try {
             Long employeeId = userService.addNewUser(newEmployee);

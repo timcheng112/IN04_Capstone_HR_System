@@ -2433,15 +2433,19 @@ public class UserService implements UserDetailsService {
                 + ", aboutMe = " + aboutMe + ", educationLevel = " + educationLevel + ", schoolName = " + schoolName
                 + ", gradYear = " + gradYear + ", languages = " + languages);
 
+        RaceEnum r = RaceEnum.valueOf(race.toUpperCase());
+        CitizenshipEnum c = CitizenshipEnum.valueOf(citizenship.toUpperCase());
+
         User user = userRepository.findById(userId).get();
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setRace(r);
+        user.setCitizenship(c);
 
         EducationEnum education = getEduEnum(educationLevel.toUpperCase());
-        CitizenshipEnum c = CitizenshipEnum.valueOf(citizenship);
-        RaceEnum r = RaceEnum.valueOf(race);
+        
 
-        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education, c, r, schoolName,
+        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education,schoolName,
                 gradYear, languages);
 
         return "User details updated successfully";

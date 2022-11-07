@@ -1,19 +1,23 @@
-import { ArchiveBoxXMarkIcon, PencilIcon } from "@heroicons/react/20/solid";
+
 import EmptyStateAdd from "./EmptyStateAdd";
-import ViewRecommendation from "./ViewRecommendation";
 import AddRecommendation from "./AddRecommendation";
 import { Fragment, useState } from 'react'
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common.js";
+import RecommendationButton from './RecommendationButton';
 
 export default function RecommendationList({
-  templateRecommendations
-}) {
-  const [openView, setOpenView] = useState(false)
+  templateRecommendations, refreshKeyHandler
+}){
   const [addRecommendation, setAddRecommendation] = useState(false)
+  const [user, setUser] = useState(getUserId());
+  const [error, setError] = useState();
 
   return (
     
     <ul role="list" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 w-3/4">
       {templateRecommendations.map((r) => (
+        <div>
         <li
           key={r.recommendationId}
           className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
@@ -37,31 +41,15 @@ export default function RecommendationList({
               </div>
             </div>
           </div>
-          <div >
-            <div className="-mt-px py-6 flex divide-x divide-gray-200">
-              <div className="flex w-0 flex-1">
-                <button
-                  className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
-                >
-                  <PencilIcon className="h-5 w-5  text-indigo-400" />
-                  <span className="ml-3 text-indigo-500">Edit</span>
-                </button>
-                <button
-                  className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
-                >
-                  <ArchiveBoxXMarkIcon className="h-5 w-5 text-red-400" />
-                  <span className="ml-3 text-red-400">Remove</span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <ViewRecommendation open ={openView} setOpen={() => setOpenView(false)} recommendation = {r}/>
+          <RecommendationButton r={r} refreshKeyHandler={refreshKeyHandler}/>
+          
         </li>
+        </div>
       ))}
       <li className="col-span-1 divide-y divide-gray-200 rounded-lg shadow">
         <EmptyStateAdd onOpen={()=>setAddRecommendation(true)} itemName="Recommendation" />
       </li>
-      <AddRecommendation open ={addRecommendation} setOpen={() => setAddRecommendation(false)} />
+      <AddRecommendation open ={addRecommendation} setOpen={() => setAddRecommendation(false)} refreshKeyHandler={refreshKeyHandler}/>
     </ul>
   );
 }

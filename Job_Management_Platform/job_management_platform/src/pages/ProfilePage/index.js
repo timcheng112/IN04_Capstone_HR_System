@@ -4,7 +4,7 @@ import {
   PlusIcon
 } from "@heroicons/react/20/solid";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import WorkList from "../../features/Profile/WorkList";
 
 import Language from "../../features/Profile/Language";
@@ -15,14 +15,17 @@ import { useHistory } from "react-router-dom";
 
 import AddSkillset from "../../features/Profile/AddSkillset";
 
-const works = [{workId:1, positionName: 'UI designer', companyName:"GIC"},{workId:2, positionName: 'Product Manager', companyName:"DBS"}]
-const recommendations = [{recommendationId:1, name: 'Kong Xinyue', email:"12345@gmail.com"}, {recommendationId:2, name: 'Matthew', email:"12345@gmail.com"}]
+// const works = [{workId:1, positionName: 'UI designer', companyName:"GIC"},{workId:2, positionName: 'Product Manager', companyName:"DBS"}]
+// const recommendations = [{recommendationId:1, name: 'Kong Xinyue', email:"12345@gmail.com"}, {recommendationId:2, name: 'Matthew', email:"12345@gmail.com"}]
 export default function Profile() {
   const[firstName, setFirstName] = useState('')
   const[lastName, setLastName] = useState('')
   const[aboutMe, setAboutMe] = useState('')
   const[citizenship, setCitizenship] = useState('')
   const[race, setRace] = useState('')
+  const [recommendations, setRecommendations] = useState([])
+  const [works, setWorks] = useState([])
+  const [refreshKey, setRefreshKey] = useState(0);
   const [addskil, setAddskill] = useState(false)
   const [addCV, setAddCV] = useState(false)
   const [addTranscript, setAddTranscript] = useState(false)
@@ -36,6 +39,21 @@ export default function Profile() {
   const [fileName, setfileName] = useState("");
   const [docId, setDocId] = useState(null);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    api.getUserRecommendations(user).
+    then((response) => {
+      console.log(response.data);
+      setRecommendations(response.data);
+    });
+  }, [refreshKey]);
+  useEffect(() => {
+    api.getUserExperiences(user).
+    then((response) => {
+      console.log(response.data);
+      setWorks(response.data);
+    });
+  }, [refreshKey]);
 
 //  function testMatt() {
 //      sample API calls for backend
@@ -290,7 +308,7 @@ export default function Profile() {
                   Work experience
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <WorkList  templateWorks={works}/>
+                  <WorkList  templateWorks={works} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                 </div>
               </div>
 
@@ -327,7 +345,7 @@ export default function Profile() {
                   Recommendations
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <RecommendationList templateRecommendations={recommendations}/>
+                  <RecommendationList templateRecommendations={recommendations} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                 </div>
               </div>
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">

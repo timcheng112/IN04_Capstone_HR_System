@@ -1,5 +1,5 @@
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import DatePicker from 'react-datepicker';
@@ -15,6 +15,18 @@ export default function ViewWork({ open, setOpen, work }) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [enabled, setEnabled] = useState(work.currentlyWorking)
+
+  useEffect(() => {
+    let yyyy = work.startDate.slice(0, 4)
+    let mm = work.startDate.slice(5, 7)
+    let dd = work.startDate.slice(8, 10)
+    setStartDate(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
+
+    let aaaa = work.endDate.slice(0, 4)
+    let bb = work.endDate.slice(5, 7)
+    let cc = work.endDate.slice(8, 10)
+    setEndDate(new Date(parseInt(aaaa), parseInt(bb), parseInt(cc)))
+  }, []);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -63,7 +75,7 @@ export default function ViewWork({ open, setOpen, work }) {
                                   type="text"
                                   name="company-name"
                                   id="company-name"
-                                  value= {work.companyName}
+                                  value={work.companyName}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -77,7 +89,7 @@ export default function ViewWork({ open, setOpen, work }) {
                                   type="text"
                                   name="project-name"
                                   id="project-name"
-                                  value= {work.positionName}
+                                  value={work.positionName}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -92,7 +104,7 @@ export default function ViewWork({ open, setOpen, work }) {
                                   name="description"
                                   rows={4}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                  value= {work.description}
+                                  value={work.description}
                                 />
                               </div>
                             </div>

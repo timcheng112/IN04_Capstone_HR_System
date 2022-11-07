@@ -5,16 +5,50 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { Switch } from '@headlessui/react'
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AddWork({ open, setOpen }) {
+export default function AddWork({ open, setOpen, refreshKeyHandler }) {
 
+  const [position, setPosition] = useState("")
+  const [company, setCompany] = useState("")
+  const [description, setDescription] = useState("")
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [enabled, setEnabled] = useState(false)
+  const [user, setUser] = useState(getUserId());
+  const [error, setError] = useState();
+  function add(){    
+    var date = startDate.getDate()
+    if (startDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = startDate.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + (month);
+    }
+
+    var helpStartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
+
+    var edate = endDate.getDate()
+    if (endDate.getDate() < 10) {
+      edate = "0" + edate;
+    }
+    var emonth = endDate.getMonth() + 1;
+    if (emonth < 10) {
+      emonth = "0" + (emonth);
+    }
+
+    var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
+
+    api.addWorkExperience(user, position, company, helpStartDate.trim(), helpEndDate.trim(), enabled, description)
+    .then(() => {alert("Successfully added.");refreshKeyHandler();})
+    .catch((error) => setError(error));
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -63,6 +97,8 @@ export default function AddWork({ open, setOpen }) {
                                   type="text"
                                   name="company-name"
                                   id="company-name"
+                                  value={company}
+                                  onChange={(e) => setCompany(e.target.value)}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -76,6 +112,8 @@ export default function AddWork({ open, setOpen }) {
                                   type="text"
                                   name="project-name"
                                   id="project-name"
+                                  value={position}
+                                  onChange={(e) => setPosition(e.target.value)}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -90,7 +128,8 @@ export default function AddWork({ open, setOpen }) {
                                   name="description"
                                   rows={4}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                  defaultValue={''}
+                                  value={description}
+                                  onChange={(e) => setDescription(e.target.value)}
                                 />
                               </div>
                             </div>
@@ -155,7 +194,8 @@ export default function AddWork({ open, setOpen }) {
                         Cancel
                       </button>
                       <button
-                        type="submit"
+                        type="button"
+                        onClick={()=>add()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save

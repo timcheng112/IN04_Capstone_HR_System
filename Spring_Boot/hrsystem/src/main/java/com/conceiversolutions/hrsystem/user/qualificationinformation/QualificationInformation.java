@@ -27,12 +27,7 @@ public class QualificationInformation {
     @Column(name = "highest_education",nullable = true)
     @Enumerated(EnumType.STRING)
     private  EducationEnum highestEducation;
-    @Column(name = "citizenship",nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CitizenshipEnum citizenship;
-    @Column(name = "race",nullable = false)
-    @Enumerated(EnumType.STRING)
-    private RaceEnum race;
+   
     @Column(name = "school_name", nullable = true, length = 100)
     private String schoolName;
     @Column(name = "school_grad_year", nullable = true)
@@ -103,22 +98,6 @@ public class QualificationInformation {
 
     public void setHighestEducation(EducationEnum highestEducation) {
         this.highestEducation = highestEducation;
-    }
-
-    public CitizenshipEnum getCitizenship() {
-        return citizenship;
-    }
-
-    public void setCitizenship(CitizenshipEnum citizenship) {
-        this.citizenship = citizenship;
-    }
-
-    public RaceEnum getRace() {
-        return race;
-    }
-
-    public void setRace(RaceEnum race) {
-        this.race = race;
     }
 
     public String getPersonalStatement() {

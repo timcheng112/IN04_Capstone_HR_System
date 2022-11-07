@@ -540,7 +540,7 @@ public class QualificationService {
         return edu;
     }
 
-    public User updateApplicantProfileDetails(User user, String aboutMe, EducationEnum education, CitizenshipEnum citizenship, RaceEnum race, String schoolName, Integer gradYear, List<String> languages) {
+    public User updateApplicantProfileDetails(User user, String aboutMe, EducationEnum education, String schoolName, Integer gradYear, List<String> languages) {
         System.out.println("QualificationService.updateApplicantProfileDetails");
 
         User applicant = checkQIExists(user);
@@ -551,8 +551,6 @@ public class QualificationService {
         qi.setHighestEducation(education);
         qi.setSchoolName(schoolName);
         qi.setSchoolGradYear(gradYear);
-        qi.setCitizenship(citizenship);
-        qi.setRace(race);
 
         qualificationRepository.saveAndFlush(qi);
         return applicant;
