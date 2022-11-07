@@ -43,6 +43,10 @@ export default function Profile() {
   const [docId, setDocId] = useState(null);
   const [error, setError] = useState(null);
   const [userQualificationInfo, setUserQualificationInfo] = useState(null);
+  const [clfile, setclFileState] = useState("");
+  const [clfileName, setclfileName] = useState("");
+  const [tfile, settFileState] = useState("");
+  const [tfileName, settfileName] = useState("");
 
   useEffect(() => {
     api.getUserRecommendations(user).
@@ -68,100 +72,143 @@ export default function Profile() {
       });
   }, []);
 
-  //  function testMatt() {
-  //      sample API calls for backend
-  //    let exp = [{"experienceId": 1,
-  //                    "positionName": "Bababa",
-  //                    "companyName": "BAaaaaa",
-  //                    "startDate": "2019-01-05",
-  //                    "endDate": "2020-02-10",
-  //                    "currentlyWorking": false,
-  //                    "description": "Teach kiddos how wto kick butt"},
-  //                {"experienceId": -1,
-  //                    "positionName": "dddd",
-  //                    "companyName": "dddd",
-  //                    "startDate": "2021-02-25",
-  //                    "endDate": null,
-  //                    "currentlyWorking": true,
-  //                    "description": "dddd"
-  //                }]
-  //    let exp = []
-  //    console.log(exp);
-  //    api.saveWorkExperiences(16, exp);
+  function handleFile(e) {
+    console.log("handle file")
+    console.log(e.target.files, "--");
+    console.log(e.target.files[0], "$SSSSS$");
+    setFileState(e.target.files[0]);
+    setfileName(e.target.files[0].name);
+  }
 
-  //    let rec = [{"recommendationId": -1,
-  //                    "name": "Daren",
-  //                    "phone": "91919191",
-  //                    "email": "asdasdas@asdsad.com",
-  //                    "relationship": "friend1"},
-  //                {"recommendationId": -1,
-  //                    "name": "Jonathan",
-  //                    "phone": "92929292",
-  //                    "email": "jony@jony.com",
-  //                    "relationship": "friend2"}]
-  //    console.log(rec);
-  //    api.saveUserRecommendations(16, rec);
-  //
-  //    let userskills = [{"userSkillsetId": 1,
-  //                    "skillLevel": "1",
-  //                    "skillset": {
-  //                                "skillsetId": 1,
-  //                                "skillsetName": "Java",
-  //                                "jobRequests": [],
-  //                                "jobPostings": []
-  //                                    }},
-  //                    {"userSkillsetId": -1,
-  //                    "skillLevel": "3",
-  //                    "skillset": {
-  //                                "skillsetId": 3,
-  //                                "skillsetName": "MySQL",
-  //                                "jobRequests": [],
-  //                                "jobPostings": []
-  //                                    }}]
-  //    console.log(userskills);
-  //    api.saveUserSkillsets(16, userskills);
-  //  }
+  function uploadFile(type) {
+//      e.preventDefault();
+      console.log("upload file")
 
-  // function handleFile(e) {
-  //   console.log(e.target.files, "--");
-  //   console.log(e.target.files[0], "$SSSSS$");
-  //   // let f = e.target.files[0]
-  //   setFileState(e.target.files[0]);
-  //   setfileName(e.target.files[0].name);
-  //   // console.log(file + "what now")
-  //   // console.log(fileName + "printing fileName")
-  // }
+//      console.log(file)
 
-  // function uploadFile(e) {
-  //   e.preventDefault();
-  //   // console.log(file[0])
-  //   // console.log("printing file contents above")
-  //   let formData = new FormData();
-  //   if(file){
-  //     formData.append("document", file);
-  //   }
+      let formData = new FormData();
+      if (file) {
+        formData.append("file", file);
 
-  //   try {
-  //     api
-  //       .addCV(formData, user)
-  //       .then((response) => {
-  //         // console.log(response.data)
-  //         if (response.status === 200) {
-  //           //should return a long id
-  //           setDocId(response.data);
-  //           // setDocId(response.data)
-  //           console.log(userInfo);
-  //           alert("Resume added to user succesfully");
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.log(error.response);
-  //       });
-  //   } catch (err) {
-  //     console.log("There was a problem with upload..");
-  //     console.log(err);
-  //   }
-  // }
+        try {
+            api
+              .uploadDocument(formData, user, type)
+              .then((response) => {
+                // console.log(response.data)
+                if (response.status === 200) {
+                  //should return a long id
+                  setDocId(response.data);
+                  // setDocId(response.data)
+                  console.log(userInfo);
+                  alert("CV added to user succesfully");
+                }
+//                setFileState('');
+//                setfileName('');
+              })
+              .catch((error) => {
+                console.log(error.response);
+              });
+          } catch (err) {
+            console.log("There was a problem with upload..");
+            console.log(err);
+          }
+      } else {
+        alert("No file uploaded");
+      }
+
+    }
+
+    function handleclFile(e) {
+        console.log("handle file")
+        console.log(e.target.files, "--");
+        console.log(e.target.files[0], "$SSSSS$");
+        setclFileState(e.target.files[0]);
+        setclfileName(e.target.files[0].name);
+      }
+
+      function uploadclFile(type) {
+//      e.preventDefault();
+      console.log("upload file")
+      console.log(clfile)
+
+      let formData = new FormData();
+      if (clfile) {
+        formData.append("file", clfile);
+
+        try {
+            api
+              .uploadDocument(formData, user, type)
+              .then((response) => {
+                // console.log(response.data)
+                if (response.status === 200) {
+                  //should return a long id
+                  setDocId(response.data);
+                  // setDocId(response.data)
+                  console.log(userInfo);
+                  alert("Cover Letter added to user succesfully");
+                }
+//                setclFileState('');
+//                setclfileName('');
+              })
+              .catch((error) => {
+                console.log(error.response);
+              });
+          } catch (err) {
+            console.log("There was a problem with upload..");
+            console.log(err);
+          }
+      } else {
+        alert("No file uploaded");
+      }
+
+
+    }
+
+    function handletFile(e) {
+        console.log("handle file")
+        console.log(e.target.files, "--");
+        console.log(e.target.files[0], "$SSSSS$");
+        settFileState(e.target.files[0]);
+        settfileName(e.target.files[0].name);
+      }
+
+      function uploadtFile(type) {
+//      e.preventDefault();
+      console.log("upload file")
+      console.log(tfile)
+
+      let formData = new FormData();
+      if (tfile) {
+        formData.append("file", tfile);
+
+        try {
+            api
+              .uploadDocument(formData, user, type)
+              .then((response) => {
+                // console.log(response.data)
+                if (response.status === 200) {
+                  //should return a long id
+                  setDocId(response.data);
+                  // setDocId(response.data)
+                  console.log(userInfo);
+                  alert("Transcript added to user succesfully");
+                }
+//                settFileState('');
+//                settfileName('');
+              })
+              .catch((error) => {
+                console.log(error.response);
+              });
+          } catch (err) {
+            console.log("There was a problem with upload..");
+            console.log(err);
+          }
+      } else {
+       alert("No file uploaded");
+     }
+
+
+    }
 
   // function downloadFile() {
   //   api.downloadDocument(docId).then((response) => {
@@ -357,10 +404,17 @@ export default function Profile() {
                   CV
                 </label>
                 <div className="flex mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    id="file"
+                    type="file"
+                    multiple
+                    name="file"
+                    onChange={(e) => handleFile(e)}
+                  />
                   <button
                     type="button"
                     className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => setAddCV(true)}
+                    onClick={() => uploadFile("CV")}
                   >
                     <ArrowUpTrayIcon
                       className="md:-ml-0.5 md:mr-2 h-4 w-4"
@@ -374,10 +428,17 @@ export default function Profile() {
                   Transcript
                 </label>
                 <div className="flex mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                      id="file"
+                      type="file"
+                      multiple
+                      name="file"
+                      onChange={(e) => handletFile(e)}
+                    />
                   <button
                     type="button"
                     className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => setAddTranscript(true)}
+                    onClick={() => uploadtFile("Transcript")}
                   >
                     <ArrowUpTrayIcon
                       className="md:-ml-0.5 md:mr-2 h-4 w-4"
@@ -390,10 +451,17 @@ export default function Profile() {
                   Cover Letter
                 </label>
                 <div className="flex mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    id="file"
+                    type="file"
+                    multiple
+                    name="file"
+                    onChange={(e) => handletFile(e)}
+                  />
                   <button
                     type="button"
                     className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => setAddCoverletter(true)}
+                    onClick={() => uploadtFile("Cover Letter")}
                   >
                     <ArrowUpTrayIcon
                       className="md:-ml-0.5 md:mr-2 h-4 w-4"

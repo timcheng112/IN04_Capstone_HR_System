@@ -32,6 +32,7 @@ public class QualificationController{
     public Long addDocument(@RequestParam("file") MultipartFile file,
                             @RequestParam("userId") Long userId,
                             @RequestParam("documentType") String documentType) throws Exception {
+        System.out.println("document type is " + documentType);
         if (documentType.equals("CV")) {
             return qualificationService.addCVtoUser(file, userId);
         } else if (documentType.equals("Cover Letter")) {

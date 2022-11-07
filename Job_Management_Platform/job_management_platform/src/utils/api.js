@@ -112,7 +112,7 @@ const api = {
   },
   uploadDocument(file, userId, documentType) {
       return axios.post(
-        `http://localhost:9191/api/qualification/addDocument?file=&userId=${userId}&documentType={documentType}`,
+        `http://localhost:9191/api/qualification/addDocument?file=&userId=${userId}&documentType=${documentType}`,
         file
       );
     },
