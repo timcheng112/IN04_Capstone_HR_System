@@ -8,14 +8,14 @@ import { useHistory } from "react-router";
 import { getUserId } from "../../utils/Common.js";
 import api from "../../utils/api";
 
-export default function MyFavouriteOption({job}) {
+export default function MyFavouriteOption({job, refreshKeyHandler}) {
   const [user, setUser] = useState(getUserId());
   const [error, setError] = useState(null);
   const history = useHistory();
 
   function remove(){
     api.removeUserBookmark(user, job.postingId)
-    .then(() => alert("Successfully removed."))
+    .then(() => {alert("Successfully removed."); refreshKeyHandler();})
     .catch((error) => setError(error));
   }
   

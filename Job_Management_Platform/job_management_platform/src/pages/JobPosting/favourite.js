@@ -14,6 +14,7 @@ export default function JobApplication() {
   const [user, setUser] = useState(getUserId()); 
   const [error, setError] = useState();
   const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [searchParam] = useState([
     "jobTitle", "status"
   ]);
@@ -27,7 +28,7 @@ export default function JobApplication() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
   function search(e, items) {
     const value = e.target.value;
@@ -114,7 +115,7 @@ export default function JobApplication() {
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobType}</td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <MyFavouriteOption job={job}/>
+                              <MyFavouriteOption job={job} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                             </td>
                           </tr>
                         ))}
