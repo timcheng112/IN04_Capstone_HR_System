@@ -1,7 +1,9 @@
 package com.conceiversolutions.hrsystem.user.qualificationinformation;
 
+import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
+import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPostingRepository;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
@@ -538,7 +540,7 @@ public class QualificationService {
         return edu;
     }
 
-    public User updateApplicantProfileDetails(User user, String aboutMe, EducationEnum education, String schoolName, Integer gradYear, List<String> languages) {
+    public User updateApplicantProfileDetails(User user, String aboutMe, EducationEnum education, CitizenshipEnum citizenship, RaceEnum race, String schoolName, Integer gradYear, List<String> languages) {
         System.out.println("QualificationService.updateApplicantProfileDetails");
 
         User applicant = checkQIExists(user);
@@ -549,6 +551,8 @@ public class QualificationService {
         qi.setHighestEducation(education);
         qi.setSchoolName(schoolName);
         qi.setSchoolGradYear(gradYear);
+        qi.setCitizenship(citizenship);
+        qi.setRace(race);
 
         qualificationRepository.saveAndFlush(qi);
         return applicant;

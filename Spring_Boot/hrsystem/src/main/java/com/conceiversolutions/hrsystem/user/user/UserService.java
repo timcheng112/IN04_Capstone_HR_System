@@ -6,9 +6,11 @@ import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuotaRepository;
 import com.conceiversolutions.hrsystem.engagement.leave.LeaveRepository;
+import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
@@ -2425,7 +2427,7 @@ public class UserService implements UserDetailsService {
     }
 
     public String updateUserDetails(Long userId, String firstName, String lastName, String aboutMe,
-            String educationLevel, String schoolName, Integer gradYear, List<String> languages) {
+            String educationLevel, String schoolName, Integer gradYear, String citizenship, String race, List<String> languages) {
         System.out.println("UserService.updateUserDetails");
         System.out.println("userId = " + userId + ", firstName = " + firstName + ", lastName = " + lastName
                 + ", aboutMe = " + aboutMe + ", educationLevel = " + educationLevel + ", schoolName = " + schoolName
@@ -2436,8 +2438,10 @@ public class UserService implements UserDetailsService {
         user.setLastName(lastName);
 
         EducationEnum education = getEduEnum(educationLevel.toUpperCase());
+        CitizenshipEnum c = CitizenshipEnum.valueOf(citizenship);
+        RaceEnum r = RaceEnum.valueOf(race);
 
-        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education, schoolName,
+        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education, c, r, schoolName,
                 gradYear, languages);
 
         return "User details updated successfully";

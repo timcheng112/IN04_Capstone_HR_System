@@ -368,8 +368,10 @@ public class UserController {
             @RequestParam("educationLevel") String educationLevel,
             @RequestParam("schoolName") String schoolName,
             @RequestParam("gradYear") Integer gradYear,
+            @RequestParam("citizenship") String citizenship,
+            @RequestParam("race") String race,
             @RequestParam("languages") List<String> languages) {
-        return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear,
+        return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear,citizenship,race,
                 languages);
     }
 }

@@ -1,6 +1,8 @@
 package com.conceiversolutions.hrsystem.user.qualificationinformation;
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
+import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
+import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
@@ -24,7 +26,13 @@ public class QualificationInformation {
     private DocData cv;
     @Column(name = "highest_education",nullable = true)
     @Enumerated(EnumType.STRING)
-    private EducationEnum highestEducation;
+    private  EducationEnum highestEducation;
+    @Column(name = "citizenship",nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CitizenshipEnum citizenship;
+    @Column(name = "race",nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RaceEnum race;
     @Column(name = "school_name", nullable = true, length = 100)
     private String schoolName;
     @Column(name = "school_grad_year", nullable = true)
@@ -95,6 +103,22 @@ public class QualificationInformation {
 
     public void setHighestEducation(EducationEnum highestEducation) {
         this.highestEducation = highestEducation;
+    }
+
+    public CitizenshipEnum getCitizenship() {
+        return citizenship;
+    }
+
+    public void setCitizenship(CitizenshipEnum citizenship) {
+        this.citizenship = citizenship;
+    }
+
+    public RaceEnum getRace() {
+        return race;
+    }
+
+    public void setRace(RaceEnum race) {
+        this.race = race;
     }
 
     public String getPersonalStatement() {
