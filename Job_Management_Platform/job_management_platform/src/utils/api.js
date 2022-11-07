@@ -53,8 +53,8 @@ const api = {
   getUserInfo(userId){
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
-  updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear, languages){
-    return axios.put(`http://localhost:9191/api/user/updateUserDetails?userId=${userId}&firstName=${firstName}&lastName=${lastName}&aboutMe=${aboutMe}&educationLevel=${educationLevel}&schoolName=${schoolName}&gradYear=${gradYear}&languages=${languages}`);
+  updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear, citizenship, race, languages){
+    return axios.put(`http://localhost:9191/api/user/updateUserDetails?userId=${userId}&firstName=${firstName}&lastName=${lastName}&aboutMe=${aboutMe}&educationLevel=${educationLevel}&schoolName=${schoolName}&gradYear=${gradYear}&citizenship=${citizenship}&race=${race}&languages=${languages}`);
   },
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
