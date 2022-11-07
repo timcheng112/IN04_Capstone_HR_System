@@ -42,6 +42,9 @@ export default function Goals() {
   const [team, setTeam] = useState([]);
 
   useEffect(() => {
+    const now = new Date();
+    console.log(now)
+
     api
       .getUser(getUserId())
       .then((response) => {
@@ -95,9 +98,10 @@ export default function Goals() {
     });
 
     api.getIsTeamHead(getUserId()).then((response) => {
-      if (response.data >= -1) {
+      console.log(response.data);
+      if (response.data > -1) {
         setManager(true);
-        //setTeam
+
         api.getTeamGoals(response.data, goalPeriodYear).then((response) => {
           setTeam(response.data);
           response.data.forEach((employee) => {
@@ -553,7 +557,9 @@ export default function Goals() {
                                 </>
                               </div>
                             </div>
-                            <h2 className="font-semibold text-lg">Team Goals</h2>
+                            <h2 className="font-semibold text-lg">
+                              Team Goals
+                            </h2>
                             <div className="mt-8 flex flex-col mx-20">
                               <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                 <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">

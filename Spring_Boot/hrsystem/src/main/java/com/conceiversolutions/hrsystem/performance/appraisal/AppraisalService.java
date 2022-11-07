@@ -1,6 +1,8 @@
 package com.conceiversolutions.hrsystem.performance.appraisal;
 
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.performance.appraisalPeriod.AppraisalPeriod;
+import com.conceiversolutions.hrsystem.performance.appraisalPeriod.AppraisalPeriodRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -27,11 +29,15 @@ public class AppraisalService {
     @Autowired
     private final TeamRepository teamRepository;
 
+    @Autowired
+    private final AppraisalPeriodRepository appraisalPeriodRepository;
+
     public AppraisalService(AppraisalRepository appraisalRepository, UserRepository userRepository,
-            TeamRepository teamRepository) {
+            TeamRepository teamRepository, AppraisalPeriodRepository appraisalPeriodRepository) {
         this.appraisalRepository = appraisalRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
+        this.appraisalPeriodRepository = appraisalPeriodRepository;
     }
 
     public User breakRelationships(User user) {
@@ -104,17 +110,20 @@ public class AppraisalService {
         return appraisals;
     }
 
-    // returns appraisals that are about the employee
+    // returns appraisal that is about the employee
     public List<Appraisal> getEmployeeAppraisals(String year, Long userId) {
-        List<Appraisal> appraisals = appraisalRepository.findAllAppraisalsByYear(year);
-
-        List<Appraisal> userAppraisals = new ArrayList<>();
+        System.out.println("AppraisalService.getEmployeeAppraisals");
+        List<Appraisal> appraisals = appraisalRepository.findAppraisalsByEmployee(year, userId);
 
         for (Appraisal a : appraisals) {
+            User employee = breakRelationships(a.getEmployee());
+            User manager = breakRelationships(a.getManagerAppraising());
 
+            a.setEmployee(employee);
+            a.setManagerAppraising(manager);
         }
 
-        return null;
+        return appraisals;
     }
 
     // returns appraisals that manager has to do / completed for the period
@@ -126,54 +135,69 @@ public class AppraisalService {
 
         List<User> team = teamRepository.findTeamByTeamHead(userId);
 
-        for (User u : team) {
-            // filter manager out
-            if (u.getUserId() != userId) {
-                Optional<Appraisal> optionalAppraisal = appraisalRepository.findAppraisalByEmployeeManager(
-                        u.getUserId(),
-                        userId);
-                if (optionalAppraisal.isPresent()) {
-                    Appraisal appraisal = optionalAppraisal.get();
-                    // System.out.println("Found manager with id " +
-                    // appraisal.getManagerAppraising().getUserId());
-                    User e = breakRelationships(appraisal.getEmployee());
-                    User m = breakRelationships(appraisal.getManagerAppraising());
+        Optional<AppraisalPeriod> optionalAppraisalPeriod = appraisalPeriodRepository.findAppraisalPeriodByYear(year);
 
-                    appraisal.setEmployee(e);
-                    appraisal.setManagerAppraising(m);
+        if (optionalAppraisalPeriod.isPresent()) {
+            
+            AppraisalPeriod appraisalPeriod = optionalAppraisalPeriod.get();
 
-                    managerAppraisals.add(appraisal);
-                } else {
-                    // appraisals not created yet, creates a blank appraisal for each member
-                    // of their team
-                    Appraisal appraisal = new Appraisal(LocalDate.now().getYear() + "", "Incomplete", "", "", null,
-                            null, "", null, null, null);
-                    appraisal.setAppraisalYear(LocalDate.now().getYear() + "");
-                    appraisal.setStatus("Incomplete");
-                    appraisal.setEmployee(u);
+            for (User u : team) {
+                // filter manager out
+                if (u.getUserId() != userId) {
+                    Optional<Appraisal> optionalAppraisal = appraisalRepository.findAppraisalByEmployeeManager(
+                            u.getUserId(),
+                            userId);
+                    if (optionalAppraisal.isPresent()) {
+                        Appraisal appraisal = optionalAppraisal.get();
 
-                    Optional<User> optionalManager = userRepository.findById(userId);
-                    if (optionalManager.isPresent()) {
-                        User manager = optionalManager.get();
+                        System.out.println("Past appraisal period? " + LocalDate.now().isAfter(appraisalPeriod.getEndDate()));
+                        System.out.println("Not completed? " + !appraisal.getStatus().equals("Completed"));
+                        if (LocalDate.now().isAfter(appraisalPeriod.getEndDate()) && !appraisal.getStatus().equals("Completed")) {
+                            appraisal.setStatus("Overdue");
+                        }
+                        
+                        User e = breakRelationships(appraisal.getEmployee());
+                        User m = breakRelationships(appraisal.getManagerAppraising());
 
-                        User m = new User();
-
-                        m.setUserId(manager.getUserId());
-                        m.setFirstName(manager.getFirstName());
-                        m.setLastName(manager.getLastName());
-                        m.setWorkEmail(manager.getWorkEmail());
-                        m.setUserRole(manager.getUserRole());
-                        m.setIsBlackListed(manager.getIsBlackListed());
-
+                        appraisal.setEmployee(e);
                         appraisal.setManagerAppraising(m);
 
-                        appraisalRepository.save(appraisal);
+                        managerAppraisals.add(appraisal);
                     } else {
-                        throw new IllegalStateException("Manager not found");
+                        // appraisals not created yet, creates a blank appraisal for each member
+                        // of their team
+                        Appraisal appraisal = new Appraisal(LocalDate.now().getYear() + "", "Incomplete", "", "", null,
+                                null, "", null, null, null);
+                        appraisal.setAppraisalYear(LocalDate.now().getYear() + "");
+                        appraisal.setStatus("Incomplete");
+                        appraisal.setEmployee(u);
+
+                        Optional<User> optionalManager = userRepository.findById(userId);
+                        if (optionalManager.isPresent()) {
+                            User manager = optionalManager.get();
+
+                            User m = new User();
+
+                            m.setUserId(manager.getUserId());
+                            m.setFirstName(manager.getFirstName());
+                            m.setLastName(manager.getLastName());
+                            m.setWorkEmail(manager.getWorkEmail());
+                            m.setUserRole(manager.getUserRole());
+                            m.setIsBlackListed(manager.getIsBlackListed());
+
+                            appraisal.setManagerAppraising(m);
+
+                            appraisalRepository.save(appraisal);
+                        } else {
+                            throw new IllegalStateException("Manager not found");
+                        }
                     }
                 }
             }
+        } else {
+            throw new IllegalStateException("Appraisal period not found");
         }
+
         return managerAppraisals;
     }
 
@@ -232,7 +256,7 @@ public class AppraisalService {
                 appraisal.setPromotion(promotion);
                 appraisal.setPromotionJustification(promotionJustification);
                 appraisal.setSubmitted(true);
-                appraisal.setStatus("Complete");
+                appraisal.setStatus("Completed");
                 return "Appraisal for " + appraisal.getEmployee().getFirstName() + " "
                         + appraisal.getEmployee().getLastName() + " has been submitted";
             } else {

@@ -115,7 +115,7 @@ export default function Appraisal() {
           </div>
         </div>
         <div>
-          <div className="mt-10 mx-16 md:grid md:grid-cols-3 md:gap-6">
+          <div className="mt-10 mx-16 md:gap-6">
             <div className="md:col-span-1">
               <div className="mt-2 px-4 sm:px-0">
                 <h2 className="text-lg font-medium leading-6 text-gray-900">

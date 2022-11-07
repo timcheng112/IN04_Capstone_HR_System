@@ -15,4 +15,7 @@ public interface AppraisalRepository extends JpaRepository<Appraisal, Long> {
 
     @Query("SELECT a FROM Appraisal a WHERE a.employee.userId = ?1 AND a.managerAppraising.userId = ?2")
     Optional<Appraisal> findAppraisalByEmployeeManager(Long userId, Long managerId);
+
+    @Query("SELECT a FROM Appraisal a WHERE a.appraisalYear = ?1 AND a.employee.userId = ?2")
+    List<Appraisal> findAppraisalsByEmployee(String year, Long userId);
 }

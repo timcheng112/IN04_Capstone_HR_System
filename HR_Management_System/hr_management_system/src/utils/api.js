@@ -756,6 +756,9 @@ const api = {
   getManagerAppraisals(year, userId) {
     return axios.get(`http://localhost:9191/api/appraisal/${year}/manager/${userId}`)
   },
+  getEmployeeAppraisals(year, userId) {
+    return axios.get(`http://localhost:9191/api/appraisal/${year}/employee/${userId}`)
+  },
   saveAppraisal(appraisalId, strengths, weaknesses, rating, promotion, promotionJustification) {
     return axios.put(`http://localhost:9191/api/appraisal/${appraisalId}?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}`)
   },

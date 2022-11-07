@@ -16,33 +16,6 @@ import {
 } from "@heroicons/react/24/outline";
 import Moment from "react-moment";
 
-const applications = [
-  {
-    applicant: {
-      name: "Ricardo Cooper",
-      email: "ricardo.cooper@example.com",
-      imageUrl:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    date: "2020-01-07",
-    dateFull: "January 7, 2020",
-    stage: "Completed phone screening",
-    href: "#",
-  },
-  {
-    applicant: {
-      name: "Kristen Ramos",
-      email: "kristen.ramos@example.com",
-      imageUrl:
-        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    date: "2020-01-07",
-    dateFull: "January 7, 2020",
-    stage: "Completed phone screening",
-    href: "#",
-  },
-];
-
 export default function Appraisals() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
@@ -57,6 +30,7 @@ export default function Appraisals() {
   const [newEnd, setNewEnd] = useState("");
   const [isManager, setIsManager] = useState(false);
   const [appraisals, setAppraisals] = useState([]);
+  const [myAppraisals, setMyAppraisals] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -90,6 +64,13 @@ export default function Appraisals() {
           .then((response) => setAppraisals(response.data));
       }
     });
+
+    api
+      .getEmployeeAppraisals(new Date().getFullYear(), getUserId())
+      .then((response) => {
+        console.log(response.data);
+        setMyAppraisals(response.data);
+      });
   }, []);
 
   if (error) return `Error`;
@@ -116,6 +97,15 @@ export default function Appraisals() {
     return (
       now >= new Date(startDate).setHours(0, 0, 0, 0) &&
       now <= new Date(endDate).setHours(0, 0, 0, 0)
+    );
+  }
+
+  function afterAppraisalPeriod() {
+    const now = new Date().setHours(0, 0, 0, 0);
+    console.log("after? " + startDate + " - " + endDate);
+    return (
+      now >= new Date(startDate).setHours(0, 0, 0, 0) &&
+      now >= new Date(endDate).setHours(0, 0, 0, 0)
     );
   }
 
@@ -160,14 +150,14 @@ export default function Appraisals() {
           In Progress
         </>
       );
-    } else if (item.status === "Complete") {
+    } else if (item.status === "Completed") {
       return (
         <>
           <CheckCircleIcon
             className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
             aria-hidden="true"
           />
-          Complete
+          Completed
         </>
       );
     } else {
@@ -179,6 +169,115 @@ export default function Appraisals() {
           />
           Overdue
         </>
+      );
+    }
+  }
+
+  function renderMyAppraisalStatus(appraisal) {
+    if (appraisal.status === "Completed") {
+      return (
+        <a
+          href={`/performance/myappraisal/${appraisal.appraisalId}`}
+          className="block hover:bg-gray-50"
+        >
+          <div className="flex items-center px-4 py-4 sm:px-6">
+            <div className="flex min-w-0 flex-1 items-center">
+              <div className="flex-shrink-0">
+                <img
+                  className="h-12 w-12 rounded-full"
+                  src={appraisal.profilePic}
+                  alt=""
+                />
+              </div>
+              <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                <div>
+                  <div className="flex">
+                    <span className="inline mr-1 text-sm text-left font-medium text-gray-900">
+                      Appraised by
+                    </span>
+                    <span className="inline text-sm text-left font-medium text-indigo-600">
+                      {appraisal.managerAppraising.firstName}{" "}
+                      {appraisal.managerAppraising.lastName}
+                    </span>
+                  </div>
+                  <p className="mt-2 flex items-center text-sm text-gray-500">
+                    <EnvelopeIcon
+                      className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                      aria-hidden="true"
+                    />
+                    <span className="truncate">
+                      {appraisal.managerAppraising.workEmail}
+                    </span>
+                  </p>
+                </div>
+                <div className="hidden md:block">
+                  <div>
+                    <p className="text-sm text-gray-900 text-left"></p>
+                    <p className="mt-2 flex items-center text-sm text-gray-500">
+                      {renderAppraisalStatus(appraisal)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <ChevronRightIcon
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </a>
+      );
+    } else {
+      return (
+        <div className="flex items-center px-4 py-4 sm:px-6">
+          <div className="flex min-w-0 flex-1 items-center">
+            <div className="flex-shrink-0">
+              <img
+                className="h-12 w-12 rounded-full"
+                src={appraisal.profilePic}
+                alt=""
+              />
+            </div>
+            <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+              <div>
+                <div className="flex">
+                  <span className="inline mr-1 text-sm text-left font-medium text-gray-900">
+                    Appraised by
+                  </span>
+                  <span className="inline text-sm text-left font-medium text-indigo-600">
+                    {appraisal.managerAppraising.firstName}{" "}
+                    {appraisal.managerAppraising.lastName}
+                  </span>
+                </div>
+                <p className="mt-2 flex items-center text-sm text-gray-500">
+                  <EnvelopeIcon
+                    className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <span className="truncate">
+                    {appraisal.managerAppraising.workEmail}
+                  </span>
+                </p>
+              </div>
+              <div className="hidden md:block">
+                <div>
+                  <p className="text-sm text-gray-900 text-left"></p>
+                  <p className="mt-2 flex items-center text-sm text-gray-500">
+                    {renderAppraisalStatus(appraisal)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <ChevronRightIcon
+              className="h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
+          </div>
+        </div>
       );
     }
   }
@@ -356,8 +455,8 @@ export default function Appraisals() {
                       <>
                         <form onSubmit={handleSubmit}>
                           <p className="mt-2 text-sm text-gray-800 mb-5">
-                            The appraisal period has not been created
-                            for this year. Please add one.
+                            The appraisal period has not been created for this
+                            year. Please add one.
                           </p>
                           <div className="flex flex-row justify-center">
                             <div>
@@ -413,7 +512,7 @@ export default function Appraisals() {
                     Appraisals
                   </h1>
                   <div>
-                    {withinCurrentPeriod() ? (
+                    {withinCurrentPeriod() || afterAppraisalPeriod() ? (
                       <>
                         <div className="mx-32">
                           <label
@@ -438,26 +537,33 @@ export default function Appraisals() {
                               </option>
                             ))}
                           </select>
-                          <span className="inline-flex items-center mt-2 mb-5 rounded-full bg-green-100 px-5 py-2 text-md font-medium text-green-800">
-                            Appraisal period
-                            <Moment
-                              parse="YYYY-MM-DD"
-                              className="mx-2 text-md text-green-800"
-                              locale="Asia/Singapore"
-                              format="DD/MM/YYYY"
-                            >
-                              {startDate}
-                            </Moment>
-                            {" - "}
-                            <Moment
-                              parse="YYYY-MM-DD"
-                              className="mx-2 text-md text-green-800"
-                              locale="Asia/Singapore"
-                              format="DD/MM/YYYY"
-                            >
-                              {endDate}
-                            </Moment>
-                          </span>
+                          {withinCurrentPeriod() ? (
+                            <>
+                              <span className="inline-flex items-center mt-2 mb-5 rounded-full bg-green-100 px-5 py-2 text-md font-medium text-green-800">
+                                Appraisal period
+                                <Moment
+                                  parse="YYYY-MM-DD"
+                                  className="mx-2 text-md text-green-800"
+                                  locale="Asia/Singapore"
+                                  format="DD/MM/YYYY"
+                                >
+                                  {startDate}
+                                </Moment>
+                                {" - "}
+                                <Moment
+                                  parse="YYYY-MM-DD"
+                                  className="mx-2 text-md text-green-800"
+                                  locale="Asia/Singapore"
+                                  format="DD/MM/YYYY"
+                                >
+                                  {endDate}
+                                </Moment>
+                              </span>
+                            </>
+                          ) : (
+                            <></>
+                          )}
+
                           {isManager ? (
                             <>
                               <h1 className="mt-5 font-semibold">
@@ -536,64 +642,9 @@ export default function Appraisals() {
                               role="list"
                               className="divide-y divide-gray-200"
                             >
-                              {applications.map((application) => (
-                                <li key={application.applicant.email}>
-                                  <a
-                                    href={application.href}
-                                    className="block hover:bg-gray-50"
-                                  >
-                                    <div className="flex items-center px-4 py-4 sm:px-6">
-                                      <div className="flex min-w-0 flex-1 items-center">
-                                        <div className="flex-shrink-0">
-                                          <img
-                                            className="h-12 w-12 rounded-full"
-                                            src={application.applicant.imageUrl}
-                                            alt=""
-                                          />
-                                        </div>
-                                        <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                                          <div>
-                                            <p className="truncate text-sm text-left font-medium text-indigo-600">
-                                              {application.applicant.name}
-                                            </p>
-                                            <p className="mt-2 flex items-center text-sm text-gray-500">
-                                              <EnvelopeIcon
-                                                className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                                                aria-hidden="true"
-                                              />
-                                              <span className="truncate">
-                                                {application.applicant.email}
-                                              </span>
-                                            </p>
-                                          </div>
-                                          <div className="hidden md:block">
-                                            <div>
-                                              <p className="text-sm text-gray-900 text-left">
-                                                <time
-                                                  dateTime={application.date}
-                                                >
-                                                  {application.dateFull}
-                                                </time>
-                                              </p>
-                                              <p className="mt-2 flex items-center text-sm text-gray-500">
-                                                <CheckCircleIcon
-                                                  className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-                                                  aria-hidden="true"
-                                                />
-                                                {application.stage}
-                                              </p>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div>
-                                        <ChevronRightIcon
-                                          className="h-5 w-5 text-gray-400"
-                                          aria-hidden="true"
-                                        />
-                                      </div>
-                                    </div>
-                                  </a>
+                              {myAppraisals.map((appraisal) => (
+                                <li key={appraisal.appraisalId}>
+                                  {renderMyAppraisalStatus(appraisal)}
                                 </li>
                               ))}
                             </ul>

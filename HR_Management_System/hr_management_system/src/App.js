@@ -54,6 +54,7 @@ import GoalsPage from "./pages/Performance/indexGoals";
 import AppraisalsPage from "./pages/Performance/indexAppraisals";
 import AppraisalPage from "./pages/Performance/appraisal";
 import PerformancePage from "./pages/Performance";
+import MyAppraisalPage from "./pages/Performance/myAppraisal";
 
 
 function App() {
@@ -171,6 +172,7 @@ function App() {
           <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
           <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
           <PrivateRoute exact path="/performance/appraisal/:appraisalId" component={AppraisalPage} />
+          <PrivateRoute exact path="/performance/myappraisal/:appraisalId" component={MyAppraisalPage} />
         </Switch>
       </div>
     </BrowserRouter>
