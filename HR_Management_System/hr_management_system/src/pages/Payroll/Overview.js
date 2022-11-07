@@ -1,3 +1,4 @@
+import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
 function classNames(...classes) {
@@ -57,6 +58,12 @@ const Overview = ({ searchFilteredEmployees }) => {
                       >
                         Status
                       </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
@@ -102,6 +109,19 @@ const Overview = ({ searchFilteredEmployees }) => {
                             PAID
                             {/* {employee.status} */}
                           </div>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          <button
+                            type="button"
+                            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
+                            disabled
+                          >
+                            <DocumentMagnifyingGlassIcon
+                              className="-ml-1 mr-2 h-5 w-5"
+                              aria-hidden="true"
+                            />
+                            View Payslip
+                          </button>
                         </td>
                       </tr>
                     ))}

@@ -7,14 +7,22 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const EmployeesNotInPayroll = ({ searchFilteredEmployees, isPayrollFormOpen, openPayrollForm, closePayrollForm }) => {
+const EmployeesNotInPayroll = ({
+  searchFilteredEmployees,
+  isPayrollFormOpen,
+  openPayrollForm,
+  closePayrollForm,
+}) => {
   // const [isPayrollFormOpen, setIsPayrollFormOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState();
 
   return (
     <div>
       {isPayrollFormOpen ? (
-        <AddToPayrollForm employee={selectedEmployee} closePayrollForm={closePayrollForm} />
+        <AddToPayrollForm
+          employee={selectedEmployee}
+          closePayrollForm={closePayrollForm}
+        />
       ) : (
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="mt-8 flex flex-col mb-10">
@@ -46,7 +54,7 @@ const EmployeesNotInPayroll = ({ searchFilteredEmployees, isPayrollFormOpen, ope
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
-                          Options
+                          Actions
                         </th>
                       </tr>
                     </thead>
@@ -66,14 +74,10 @@ const EmployeesNotInPayroll = ({ searchFilteredEmployees, isPayrollFormOpen, ope
                             <button
                               type="button"
                               className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                              // onClick={() =>
-                              //   history.push({
-                              //     pathname:
-                              //       "/employees-not-in-payroll/add-to-payroll",
-                              //     state: { employee: employee },
-                              //   })
-                              // }
-                              onClick={() => {setSelectedEmployee(employee); openPayrollForm()}}
+                              onClick={() => {
+                                setSelectedEmployee(employee);
+                                openPayrollForm();
+                              }}
                             >
                               <PlusIcon
                                 className="-ml-1 mr-2 h-5 w-5"

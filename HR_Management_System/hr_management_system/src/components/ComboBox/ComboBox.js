@@ -38,7 +38,7 @@ export default function ComboBox({
     >
       <div className="relative">
         <Combobox.Input
-          className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+          className={classNames("w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm", disabled && "bg-gray-200")}
           onChange={(event) => setQuery(event.target.value)}
           displayValue={(item) => (item !== null ? item[searchParam] : null)}
           placeholder={placeholder}
