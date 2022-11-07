@@ -84,6 +84,7 @@ export default function Goals() {
     api.getAllUserGoals(new Date().getFullYear()).then((response) => {
       console.log("all goals");
       console.log(response.data);
+      
       setUserGoals(response.data);
       response.data.forEach((employee) => {
         employee.financialGoals = employee.goals.filter(
@@ -238,7 +239,7 @@ export default function Goals() {
 
   return (
     financial &&
-    goalPeriods && (
+    goalPeriods && team &&(
       <div className="">
         <Navbar />
         <div className="flex">
@@ -452,18 +453,22 @@ export default function Goals() {
                                       {employee.businessGoals.length}
                                     </td>
                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm text-left font-medium sm:pr-6">
+                                      {/*employee.userRole !== "MANAGER"  && team.teamHead.userId !== employee.userId */}
+                    
+                                  
                                       <button
                                         className="text-indigo-600 hover:text-indigo-900"
                                         onClick={() => {
                                           setOpenView(true);
                                           setSelectedItem(employee.userId);
                                         }}
-                                      >
-                                        View
+                                      > View
                                         <span className="sr-only">
                                           , {employee.name}
                                         </span>
                                       </button>
+                                      {/* :""} */}
+                                    
                                       <ViewEmployeeGoals
                                         uId={selectedItem}
                                         open={openView}
@@ -618,6 +623,7 @@ export default function Goals() {
                                               {employee.businessGoals.length}
                                             </td>
                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm text-left font-medium sm:pr-6">
+                                            {employee.userRole !== "MANAGER" ?
                                               <button
                                                 className="text-indigo-600 hover:text-indigo-900"
                                                 onClick={() => {
@@ -631,7 +637,8 @@ export default function Goals() {
                                                 <span className="sr-only">
                                                   , {employee.name}
                                                 </span>
-                                              </button>
+                                              </button> : ""}
+                                              
                                               <ViewEmployeeGoals
                                                 uId={selectedItem}
                                                 open={openView}
