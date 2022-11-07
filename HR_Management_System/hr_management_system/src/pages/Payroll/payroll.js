@@ -1,9 +1,10 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import Tab from "../../features/jobrequest/Tab";
+import api from "../../utils/api";
 
 const tabs = [
   { name: "Overview", href: "/payroll", current: true },
@@ -20,55 +21,55 @@ const tabs = [
   },
 ];
 
-const departments = [
-  {
-    name: "Sales Department",
-    teams: [{ name: "Sales Team A" }, { name: "Sales Team B" }],
-  },
-  {
-    name: "Finance Department",
-    teams: [{ name: "Finance Team A" }, { name: "Finance Team B" }],
-  },
-];
+// const departments = [
+//   {
+//     name: "Sales Department",
+//     teams: [{ name: "Sales Team A" }, { name: "Sales Team B" }],
+//   },
+//   {
+//     name: "Finance Department",
+//     teams: [{ name: "Finance Team A" }, { name: "Finance Team B" }],
+//   },
+// ];
 
-const employees = [
-  {
-    name: "Jenny Wilson",
-    email: "jennyw@libro.com",
-    gross: "$10,310.00",
-    allowances: "+$0",
-    deductions: "-$100.31",
-    net: "$10,209.69",
-    status: "PAID",
-  },
-  {
-    name: "Jane Cooper",
-    email: "janec@libro.com",
-    gross: "$5,210.00",
-    allowances: "+$0",
-    deductions: "-$521.00",
-    net: "$4,689.99",
-    status: "PENDING",
-  },
-  {
-    name: "Guy Hawkins",
-    email: "guyhawkins@libro.com",
-    gross: "$3,120.00",
-    allowances: "+$0",
-    deductions: "-$936.00",
-    net: "$2,184.00",
-    status: "PAID",
-  },
-  {
-    name: "Cody Fisher",
-    email: "codyfisher@libro.com",
-    gross: "$7,500.00",
-    allowances: "+$0",
-    deductions: "-$2,250.00",
-    net: "$5250.00",
-    status: "UNPAID",
-  },
-];
+// const employees = [
+//   {
+//     name: "Jenny Wilson",
+//     email: "jennyw@libro.com",
+//     gross: "$10,310.00",
+//     allowances: "+$0",
+//     deductions: "-$100.31",
+//     net: "$10,209.69",
+//     status: "PAID",
+//   },
+//   {
+//     name: "Jane Cooper",
+//     email: "janec@libro.com",
+//     gross: "$5,210.00",
+//     allowances: "+$0",
+//     deductions: "-$521.00",
+//     net: "$4,689.99",
+//     status: "PENDING",
+//   },
+//   {
+//     name: "Guy Hawkins",
+//     email: "guyhawkins@libro.com",
+//     gross: "$3,120.00",
+//     allowances: "+$0",
+//     deductions: "-$936.00",
+//     net: "$2,184.00",
+//     status: "PAID",
+//   },
+//   {
+//     name: "Cody Fisher",
+//     email: "codyfisher@libro.com",
+//     gross: "$7,500.00",
+//     allowances: "+$0",
+//     deductions: "-$2,250.00",
+//     net: "$5250.00",
+//     status: "UNPAID",
+//   },
+// ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -77,6 +78,105 @@ function classNames(...classes) {
 const Payroll = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const [employees, setEmployees] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const searchParams = ["firstName", "lastName", "email"];
+  const [query, setQuery] = useState("");
+  const [searchFilteredEmployees, setSearchFilteredEmployees] = useState([]);
+
+  useEffect(() => {
+    console.log(filteredEmployees);
+    console.log(
+      filteredEmployees.filter(
+        (employee) =>
+          employee[searchParams[0]]
+            .toString()
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) > -1 ||
+          employee[searchParams[1]]
+            .toString()
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) > -1 ||
+          employee[searchParams[2]]
+            .toString()
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) > -1
+      )
+    );
+    setSearchFilteredEmployees(
+      query === ""
+        ? filteredEmployees
+        : filteredEmployees.filter(
+            (employee) =>
+              employee[searchParams[0]]
+                .toString()
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) > -1 ||
+              employee[searchParams[1]]
+                .toString()
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) > -1 ||
+              employee[searchParams[2]]
+                .toString()
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) > -1
+          )
+    );
+  }, [filteredEmployees, query, searchParams]);
+
+  useEffect(() => {
+    api
+      .getAllEmployees()
+      .then((response) => {
+        setEmployees(response.data);
+        setFilteredEmployees(response.data);
+      })
+      .catch((error) => console.log(error.response.data.message));
+
+    api
+      .getAllDepartments()
+      .then((response) => setDepartments(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
+
+  const filterByDepartment = () => {
+    setFilteredEmployees([
+      ...employees.filter((employee) =>
+        employee.teams.some(
+          (team) =>
+            team.department.departmentId === selectedDepartment.departmentId
+        )
+      ),
+    ]);
+  };
+
+  const filterByTeam = () => {
+    setFilteredEmployees([
+      ...employees.filter((employee) =>
+        employee.teams.some((team) => team.teamId === selectedTeam.teamId)
+      ),
+    ]);
+  };
+
+  useEffect(() => {
+    if (selectedDepartment !== null) {
+      filterByDepartment();
+    } else {
+      setFilteredEmployees(employees);
+    }
+  }, [selectedDepartment]);
+
+  useEffect(() => {
+    if (selectedTeam !== null) {
+      filterByTeam();
+    } else if (selectedDepartment !== null) {
+      filterByDepartment();
+    } else {
+      setFilteredEmployees(employees);
+    }
+  }, [selectedTeam]);
 
   return (
     <div>
@@ -105,9 +205,11 @@ const Payroll = () => {
                 className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:border-indigo-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                 placeholder="Search"
                 type="search"
-                // onChange={(e) => {
-                //   search(e, requests);
-                // }}
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  console.log(e.target.value);
+                }}
               />
             </div>
           </div>
@@ -121,7 +223,7 @@ const Payroll = () => {
             </button> */}
             <ComboBox
               items={departments}
-              searchParam={"name"}
+              searchParam={"departmentName"}
               selectedItem={selectedDepartment}
               setSelectedItem={(e) => {
                 setSelectedDepartment(e);
@@ -132,7 +234,7 @@ const Payroll = () => {
             <div className="mx-1" />
             <ComboBox
               items={selectedDepartment !== null && selectedDepartment.teams}
-              searchParam={"name"}
+              searchParam={"teamName"}
               selectedItem={selectedTeam}
               setSelectedItem={setSelectedTeam}
               placeholder="Search for Team"
@@ -192,30 +294,37 @@ const Payroll = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {employees.map((employee) => (
+                    {searchFilteredEmployees.map((employee) => (
                       <tr>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {employee.name}
+                          {employee.firstName} {employee.lastName}
+                          <p className="whitespace-nowrap py-2 text-left text-sm text-gray-500">
+                            {employee.currentPosition.positionName}
+                          </p>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
                           {employee.email}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          {employee.gross}
+                          $10,310.00
+                          {/* {employee.gross} */}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
-                          {employee.allowances}
+                          +$0
+                          {/* {employee.allowances} */}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
-                          {employee.deductions}
+                          -$100.31
+                          {/* {employee.deductions} */}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                          {employee.net}
+                          $10,209.69
+                          {/* {employee.net} */}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
                           <div
                             className={classNames(
-                              "rounded-xl w-1/2 text-center font-bold",
+                              "rounded-xl w-1/2 text-center font-bold bg-green-200 text-green-700",
                               employee.status === "PAID" &&
                                 "bg-green-200 text-green-700",
                               employee.status === "PENDING" &&
@@ -224,7 +333,8 @@ const Payroll = () => {
                                 "bg-red-200 text-red-700"
                             )}
                           >
-                            {employee.status}
+                            PAID
+                            {/* {employee.status} */}
                           </div>
                         </td>
                       </tr>
