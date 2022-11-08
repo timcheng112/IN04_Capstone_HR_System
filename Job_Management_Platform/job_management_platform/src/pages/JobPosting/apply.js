@@ -9,12 +9,6 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const jobs = [
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'pending' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'rejected' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'offered' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'pending' },
-]
 
 export default function JobApplication() {
   const[jobs, setJobs] = useState([])
@@ -129,7 +123,7 @@ export default function JobApplication() {
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobPosting.jobType}</td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <MyApplicationOption application={job} />
+                              <MyApplicationOption application={job.jobPosting} />
                             </td>
                           </tr>
                         ))}

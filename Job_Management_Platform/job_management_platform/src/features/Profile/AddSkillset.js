@@ -7,20 +7,19 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const AddSkillset = ({ userSkills, setUserSkills, skills, uss, setUSS}) => {
+const AddSkillset = ({ skills, uss, setUSS}) => {
 
   // const userSkills = [{ skill: skills[0], level: 1 }, { skill: skills[1], level: 3 }]
 
-  useEffect(() => {
-    console.log("CCCC");
-    console.log(userSkills);
-    userSkills.map((element) => (
-      console.log(element.skillset)
-    ))
-    console.log(skills);
-    console.log(uss);
-    console.log(typeof uss[0].level);
-  }, []);
+  // useEffect(() => {
+  //   console.log("CCCC");
+  //   console.log(userSkills);
+  //   userSkills.map((element) => (
+  //     console.log(element.skillset)
+  //   ))
+  //   console.log(skills);
+  //   console.log(uss);
+  // }, []);
 
   const options = skills.map(skill => ({
     "value": skill.skillsetName,

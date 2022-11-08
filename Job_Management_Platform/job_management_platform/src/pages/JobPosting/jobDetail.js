@@ -31,17 +31,36 @@ export default function JobDetail() {
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
   const [requirements, setRequirements] = useState([]);
+  const [apply, setApply] = useState([])
+  const [help,setHelp] = useState(false)
 
-  const [user, setUser] = useState(getUserId()); 
+
+  const [user, setUser] = useState(getUserId());
   const [error, setError] = useState();
 
-  const [open,setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  function bookmark(){
+  function bookmark() {
     api.addUserBookmark(user, location.state.job.postingId)
-    .then(() => alert("Successfully bookmark."))
-    .catch((error) => setError(error));
+      .then(() => alert("Successfully bookmark."))
+      .catch((error) => setError(error));
   }
+
+  // useEffect(() => {
+  //   let arr = []
+  //   api
+  //     .getApplicantApplications(getUserId())
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       response.data.map(((job) => (
+  //         arr.push(job.jobPosting))));
+        
+  //       console.log(arr);
+  //       console.log(arr.includes(location.state.job))
+  //       setApply(arr);
+  //     })
+  //     .catch((error) => setError(error));
+  // }, []);
 
   useEffect(() => {
     console.log(location.state.job)
@@ -102,7 +121,7 @@ export default function JobDetail() {
                   Post on {postDate}
                 </div>
                 <div className="mt-2 flex items-center text-sm text-gray-500">
-                {status == 'CREATED' && <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800">
+                  {status == 'CREATED' && <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800">
                     OPEN
                   </span>}
                   {status !== 'CREATED' && <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800">
@@ -111,11 +130,11 @@ export default function JobDetail() {
                 </div>
               </div>
             </div>
-            {status !== 'CLOSED' && <div className="mt-5 flex xl:mt-0 xl:ml-4">
+            {status !== 'CLOSED'&& <div className="mt-5 flex xl:mt-0 xl:ml-4">
               <span className="hidden sm:block">
                 <button
                   type="button"
-                  onClick={()=>setOpen(true)}
+                  onClick={() => setOpen(true)}
                   className="inline-flex items-center rounded-md border border-indigo-500 bg-white px-4 py-2 text-sm font-medium text-indigo-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
                   <PlusIcon className="-ml-1 mr-2 h-5 w-5 text-indigo-500" aria-hidden="true" />
@@ -126,7 +145,7 @@ export default function JobDetail() {
               <span className="ml-3 hidden sm:block">
                 <button
                   type="button"
-                  onClick={()=>bookmark()}
+                  onClick={() => bookmark()}
                   className="inline-flex items-center rounded-md border border-red-500 bg-white px-4 py-2 text-sm font-medium text-red-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
                   <BookmarkIcon className="-ml-1 mr-2 h-5 w-5 text-red-400" aria-hidden="true" />
@@ -172,15 +191,15 @@ export default function JobDetail() {
             </div>
             {requirements.map((skill) => (
               <span className="inline-flex items-center rounded-md bg-indigo-100 px-2.5 py-1.5 text-sm font-medium text-indigo-800">
-              <svg className="-ml-0.5 mr-1.5 h-2 w-2 text-indigo-400" fill="currentColor" viewBox="0 0 8 8">
-                <circle cx={4} cy={4} r={3} />
-              </svg>
-              {skill.skillsetName}
-            </span>
+                <svg className="-ml-0.5 mr-1.5 h-2 w-2 text-indigo-400" fill="currentColor" viewBox="0 0 8 8">
+                  <circle cx={4} cy={4} r={3} />
+                </svg>
+                {skill.skillsetName}
+              </span>
             ))}
           </div>
         </main>
-      {job !== null && <ApplyJob open={open} setOpen={()=>setOpen(false)} job ={job}/>}
+        {job !== null && <ApplyJob open={open} setOpen={() => setOpen(false)} job={job} />}
       </div>
     </>
   )

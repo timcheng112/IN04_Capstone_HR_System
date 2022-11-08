@@ -1,17 +1,23 @@
 import Navbar from "../../components/Navbar";
 import { ArrowUpTrayIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import { Fragment, useState } from 'react'
+import { Fragment, useState,useEffect } from 'react'
 import WorkList from "../../features/jobrequest/WorkList";
 
 import RecommendationList from "../../features/jobrequest/RecommendationList";
 import api from "../../utils/api.js";
 import { getUserId } from "../../utils/Common.js";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from 'react-router-dom';
 
 
 const works = [{workId:1, positionName: 'UI designer', companyName:"GIC"},{workId:2, positionName: 'Product Manager', companyName:"DBS"}]
 const recommendations = [{recommendationId:1, name: 'Kong Xinyue', email:"12345@gmail.com"}, {recommendationId:2, name: 'Matthew', email:"12345@gmail.com"}]
 export default function Profile() {
+  const [applicant, setApplicant] = useState(null)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [aboutMe, setAboutMe] = useState('')
+  const [citizenship, setCitizenship] = useState('')
+  const [race, setRace] = useState('')
 
   const [addCV, setAddCV] = useState(false)
   const [addTranscript, setAddTranscript] = useState(false)
@@ -20,6 +26,23 @@ export default function Profile() {
   const history = useHistory();
   let [userInfo, setUserInfo] = useState([]);
   const userId = getUserId();
+  const location = useLocation();
+
+  useEffect(() => {
+    setApplicant(location.state.applicant)
+    setFirstName(location.state.applicant.firstName)
+    setLastName(location.state.applicant.lastName)
+    setAboutMe(location.state.applicant.aboutMe)
+    setCitizenship(location.state.applicant.citizenship)
+    setRace(location.state.applicant.race)
+  }, []);
+
+  useEffect(() => {
+    api.getUserQualificationInformation(location.state.applicant.userId).
+    then((response) => {
+      console.log(response.data);
+    })
+  }, []);
 
   return (
     <div>
@@ -37,7 +60,7 @@ export default function Profile() {
             <div className="space-y-6 sm:space-y-5">
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                  Name
+                  First Name
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
                   <input
@@ -45,6 +68,49 @@ export default function Profile() {
                     name="first-name"
                     id="first-name"
                     autoComplete="given-name"
+                    value={firstName}
+                    disabled
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
+                </div>
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Last Name
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="first-name"
+                    id="first-name"
+                    autoComplete="given-name"
+                    value={lastName}
+                    disabled
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
+                </div>
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Citizenship
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="first-name"
+                    id="first-name"
+                    autoComplete="given-name"
+                    value={citizenship}
+                    disabled
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
+                </div>
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Race
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="first-name"
+                    id="first-name"
+                    autoComplete="given-name"
+                    value={race}
                     disabled
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                   />
@@ -61,6 +127,7 @@ export default function Profile() {
                     name="about"
                     rows={3}
                     disabled
+                    value={aboutMe}
                     className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>

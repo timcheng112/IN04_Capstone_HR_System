@@ -759,6 +759,9 @@ const api = {
   findApplicationsByPostingId(postingId) {
     return axios.get(`http://localhost:9191/api/jobapplications/findApplicationsByPostingId?postingId=${postingId}`);
   },
+  getUserQualificationInformation(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserQualificationInformation?userId=${userId}`);
+  },
 };
 
 export default api;

@@ -32,7 +32,7 @@ import java.util.*;
 public class QualificationService {
 
     private final QualificationRepository qualificationRepository;
-    //only can have it on 1 end.
+    // only can have it on 1 end.
     private final DocDataService docDataService;
     private final UserRepository userRepository;
     private final RecommendationRepository recommendationRepository;
@@ -47,54 +47,54 @@ public class QualificationService {
         try {
             DocData doc = docDataService.uploadDoc(file);
             User u1 = userRepository.findById(userId).get();
-            if(u1.getQualificationInformation() == null){
+            if (u1.getQualificationInformation() == null) {
                 QualificationInformation qi = new QualificationInformation(u1);
                 qi.setCv(doc);
                 qi.setLanguagesSpoken(new ArrayList<>());
-                QualificationInformation q1 =qualificationRepository.saveAndFlush(qi);
+                QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
                 u1.setQualificationInformation(q1);
                 System.out.println(qi);
                 System.out.println(u1.getQualificationInformation().getCv());
                 System.out.println("sorry what1");
                 userRepository.saveAndFlush(u1);
-            }else{
-                QualificationInformation qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId()).get();
+            } else {
+                QualificationInformation qi = qualificationRepository
+                        .findById(u1.getQualificationInformation().getInfoId()).get();
                 qi.setCv(doc);
                 QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
                 u1.setQualificationInformation(q1);
 
                 userRepository.saveAndFlush(u1);
-                if(qi.getCv() != null){
+                if (qi.getCv() != null) {
                     System.out.println("there is a cv in here");
-                }else{
+                } else {
                     System.out.println("there is no cv in here");
                 }
-//                System.out.println(u1.getQualificationInformation().getCv());
-//                System.out.println("sorry what2");
+                // System.out.println(u1.getQualificationInformation().getCv());
+                // System.out.println("sorry what2");
 
             }
             return doc.getDocId();
 
-
-        }catch(Exception ex){
+        } catch (Exception ex) {
             throw new Exception("CV cannot be added to User.");
         }
 
     }
 
-    public QualificationInformation getQualificationInformation(Long userId){
+    public QualificationInformation getQualificationInformation(Long userId) {
         User u1 = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(
                         "User with ID: " + userId + " does not exist!"));
-        if(u1.getQualificationInformation() == null){
+        if (u1.getQualificationInformation() == null) {
             QualificationInformation newqi = new QualificationInformation(u1);
             newqi.setLanguagesSpoken(new ArrayList<>());
-            QualificationInformation q1 =qualificationRepository.saveAndFlush(newqi);
+            QualificationInformation q1 = qualificationRepository.saveAndFlush(newqi);
             u1.setQualificationInformation(newqi);
             userRepository.saveAndFlush(u1);
             QualificationInformation qi = u1.getQualificationInformation();
             return qi;
-        }else {
+        } else {
             QualificationInformation qi = u1.getQualificationInformation();
             qi.setUser(null);
             for (JobPosting jp : qi.getBookmarks()) {
@@ -121,13 +121,10 @@ public class QualificationService {
         System.out.println("QualificationService.getUserQualificationInformation");
         System.out.println("userId = " + userId);
 
-        User u1 = userRepository.findById(userId).get();
-        Optional<QualificationInformation> qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId());
-        if (qi.isEmpty()) {
-            throw new IllegalStateException("User does not exist, cannot proceed");
-        }
-
-        QualificationInformation info = qi.get();
+        User u0 = userRepository.findById(userId).get();
+        User u1 = checkQIExists(u0);
+        QualificationInformation info = u1.getQualificationInformation();
+       
 
         // Nullify Relationships
         User insideUser = info.getUser();
@@ -155,7 +152,7 @@ public class QualificationService {
 
         List<UserSkillset> userSkills = info.getUserSkills();
         for (UserSkillset skill : userSkills) {
-//            System.out.println(skill.getUserSkillsetId());
+            // System.out.println(skill.getUserSkillsetId());
             skill.getSkillset().setJobRequests(new ArrayList<>());
             skill.getSkillset().setJobPostings(new ArrayList<>());
         }
@@ -184,7 +181,8 @@ public class QualificationService {
         System.out.println("userId = " + userId + ", document = " + document);
 
         User u1 = userRepository.findById(userId).get();
-        Optional<QualificationInformation> qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId());
+        Optional<QualificationInformation> qi = qualificationRepository
+                .findById(u1.getQualificationInformation().getInfoId());
         if (qi.isEmpty()) {
             throw new IllegalStateException("User does not exist, cannot proceed");
         }
@@ -214,7 +212,7 @@ public class QualificationService {
         try {
             DocData doc = docDataService.uploadDoc(file);
             User u1 = userRepository.findById(userId).get();
-            if (u1.getQualificationInformation() == null){
+            if (u1.getQualificationInformation() == null) {
                 QualificationInformation qi = new QualificationInformation(u1);
                 qi.setCoverLetter(doc);
                 qi.setLanguagesSpoken(new ArrayList<>());
@@ -222,13 +220,14 @@ public class QualificationService {
                 u1.setQualificationInformation(q1);
                 userRepository.saveAndFlush(u1);
             } else {
-                QualificationInformation qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId()).get();
+                QualificationInformation qi = qualificationRepository
+                        .findById(u1.getQualificationInformation().getInfoId()).get();
                 qi.setCoverLetter(doc);
                 QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
                 u1.setQualificationInformation(q1);
 
                 userRepository.saveAndFlush(u1);
-                if (qi.getCv() != null){
+                if (qi.getCv() != null) {
                     System.out.println("there is a cover letter in here");
                 } else {
                     System.out.println("there is no cover letter in here");
@@ -245,7 +244,7 @@ public class QualificationService {
         try {
             DocData doc = docDataService.uploadDoc(file);
             User u1 = userRepository.findById(userId).get();
-            if (u1.getQualificationInformation() == null){
+            if (u1.getQualificationInformation() == null) {
                 QualificationInformation qi = new QualificationInformation(u1);
                 qi.setTranscript(doc);
                 qi.setLanguagesSpoken(new ArrayList<>());
@@ -253,13 +252,14 @@ public class QualificationService {
                 u1.setQualificationInformation(q1);
                 userRepository.saveAndFlush(u1);
             } else {
-                QualificationInformation qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId()).get();
+                QualificationInformation qi = qualificationRepository
+                        .findById(u1.getQualificationInformation().getInfoId()).get();
                 qi.setTranscript(doc);
                 QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
                 u1.setQualificationInformation(q1);
 
                 userRepository.saveAndFlush(u1);
-                if (qi.getCv() != null){
+                if (qi.getCv() != null) {
                     System.out.println("there is a transcript in here");
                 } else {
                     System.out.println("there is no transcript in here");
@@ -273,10 +273,11 @@ public class QualificationService {
 
     public Long addRecommendation(Long userId, String name, Integer phone, String email, String relationship) {
         System.out.println("QualificationService.addRecommendation");
-        System.out.println("userId = " + userId + ", name = " + name + ", phone = " + phone + ", email = " + email + ", relationship = " + relationship);
+        System.out.println("userId = " + userId + ", name = " + name + ", phone = " + phone + ", email = " + email
+                + ", relationship = " + relationship);
         User u1 = userRepository.findById(userId).get();
 
-        if (u1.getQualificationInformation() == null){
+        if (u1.getQualificationInformation() == null) {
             QualificationInformation qi = new QualificationInformation(u1);
 
             QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
@@ -284,7 +285,8 @@ public class QualificationService {
             userRepository.saveAndFlush(u1);
         }
 
-        QualificationInformation qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId()).get();
+        QualificationInformation qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId())
+                .get();
 
         Recommendation rec = new Recommendation(name, phone, email, relationship);
         Recommendation savedRec = recommendationRepository.saveAndFlush(rec);
@@ -302,7 +304,8 @@ public class QualificationService {
         System.out.println("QualificationService.getUserRecommendations");
 
         User u1 = userRepository.findById(userId).get();
-        Optional<QualificationInformation> qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId());
+        Optional<QualificationInformation> qi = qualificationRepository
+                .findById(u1.getQualificationInformation().getInfoId());
 
         if (qi.isEmpty()) {
             return new ArrayList<>();
@@ -317,7 +320,8 @@ public class QualificationService {
         System.out.println("userId = " + userId + ", recoId = " + recoId);
 
         User u1 = userRepository.findById(userId).get();
-        Optional<QualificationInformation> qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId());
+        Optional<QualificationInformation> qi = qualificationRepository
+                .findById(u1.getQualificationInformation().getInfoId());
 
         if (qi.isEmpty() || qi.get().getRecommendations().isEmpty()) {
             throw new IllegalStateException("No Recommendation to remove");
@@ -333,13 +337,16 @@ public class QualificationService {
         return "Recommendation successfully removed";
     }
 
-    public Long addWorkExperience(Long userId, String positionName, String companyName, LocalDate start, LocalDate end, Boolean currentlyWorking, String description) {
+    public Long addWorkExperience(Long userId, String positionName, String companyName, LocalDate start, LocalDate end,
+            Boolean currentlyWorking, String description) {
         System.out.println("QualificationService.addWorkExperience");
-        System.out.println("userId = " + userId + ", positionName = " + positionName + ", companyName = " + companyName + ", start = " + start + ", end = " + end + ", currentlyWorking = " + currentlyWorking + ", description = " + description);
+        System.out.println("userId = " + userId + ", positionName = " + positionName + ", companyName = " + companyName
+                + ", start = " + start + ", end = " + end + ", currentlyWorking = " + currentlyWorking
+                + ", description = " + description);
 
         User u1 = userRepository.findById(userId).get();
 
-        if (u1.getQualificationInformation() == null){
+        if (u1.getQualificationInformation() == null) {
             QualificationInformation qi = new QualificationInformation(u1);
 
             QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
@@ -347,9 +354,11 @@ public class QualificationService {
             userRepository.saveAndFlush(u1);
         }
 
-        QualificationInformation qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId()).get();
+        QualificationInformation qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId())
+                .get();
 
-        WorkExperience workExp = new WorkExperience(positionName, companyName, start, end, currentlyWorking, description);
+        WorkExperience workExp = new WorkExperience(positionName, companyName, start, end, currentlyWorking,
+                description);
         WorkExperience savedExp = workExperienceRepository.saveAndFlush(workExp);
 
         List<WorkExperience> curList = qi.getWorkExperiences();
@@ -365,7 +374,8 @@ public class QualificationService {
         System.out.println("QualificationService.getUserExperiences");
 
         User u1 = userRepository.findById(userId).get();
-        Optional<QualificationInformation> qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId());
+        Optional<QualificationInformation> qi = qualificationRepository
+                .findById(u1.getQualificationInformation().getInfoId());
 
         if (qi.isEmpty()) {
             return new ArrayList<>();
@@ -380,7 +390,8 @@ public class QualificationService {
         System.out.println("userId = " + userId + ", expId = " + expId);
 
         User u1 = userRepository.findById(userId).get();
-        Optional<QualificationInformation> qi = qualificationRepository.findById(u1.getQualificationInformation().getInfoId());
+        Optional<QualificationInformation> qi = qualificationRepository
+                .findById(u1.getQualificationInformation().getInfoId());
 
         if (qi.isEmpty() || qi.get().getWorkExperiences().isEmpty()) {
             throw new IllegalStateException("No Experience to remove");
@@ -396,21 +407,29 @@ public class QualificationService {
         return "Work Experience successfully removed";
     }
 
-//    public String updateUserRecommendation(Long userId, Long recoId, String name, Integer phone, String email, String relationship) {
-//        System.out.println("QualificationService.updateUserRecommendation");
-//        System.out.println("userId = " + userId + ", recoId = " + recoId + ", name = " + name + ", phone = " + phone + ", email = " + email + ", relationship = " + relationship);
-//        //TODO
-//
-//        return "done";
-//    }
+    // public String updateUserRecommendation(Long userId, Long recoId, String name,
+    // Integer phone, String email, String relationship) {
+    // System.out.println("QualificationService.updateUserRecommendation");
+    // System.out.println("userId = " + userId + ", recoId = " + recoId + ", name =
+    // " + name + ", phone = " + phone + ", email = " + email + ", relationship = "
+    // + relationship);
+    // //TODO
+    //
+    // return "done";
+    // }
 
-//    public String updateUserExperience(Long userId, Long experienceId, String positionName, String companyName, LocalDate start, LocalDate end, Boolean currentlyWorking, String description) {
-//        System.out.println("QualificationService.updateUserExperience");
-//        System.out.println("userId = " + userId + ", experienceId = " + experienceId + ", positionName = " + positionName + ", companyName = " + companyName + ", start = " + start + ", end = " + end + ", currentlyWorking = " + currentlyWorking + ", description = " + description);
-//        //TODO
-//
-//        return "done";
-//    }
+    // public String updateUserExperience(Long userId, Long experienceId, String
+    // positionName, String companyName, LocalDate start, LocalDate end, Boolean
+    // currentlyWorking, String description) {
+    // System.out.println("QualificationService.updateUserExperience");
+    // System.out.println("userId = " + userId + ", experienceId = " + experienceId
+    // + ", positionName = " + positionName + ", companyName = " + companyName + ",
+    // start = " + start + ", end = " + end + ", currentlyWorking = " +
+    // currentlyWorking + ", description = " + description);
+    // //TODO
+    //
+    // return "done";
+    // }
 
     public String saveWorkExperiences(Long userId, List<WorkExperience> experiences) {
         System.out.println("QualificationService.saveWorkExperiences");
@@ -420,12 +439,13 @@ public class QualificationService {
         User applicant = checkQIExists(a);
         List<WorkExperience> existingExperiences = applicant.getQualificationInformation().getWorkExperiences();
         List<Long> existingExpIds = existingExperiences.stream().map(x -> x.getExperienceId()).toList();
-//        System.out.println("Existing experience ids are ");
-//        System.out.println(existingExpIds);
-//        System.out.println("Sent experience ids are ");
-        List<Long> sentExpIds = experiences.stream().filter(x-> x.getExperienceId() != -1).map(x -> x.getExperienceId()).toList();
-//        System.out.println(experiences);
-//        System.out.println(experiences.get(0).getStartDate().getClass());
+        // System.out.println("Existing experience ids are ");
+        // System.out.println(existingExpIds);
+        // System.out.println("Sent experience ids are ");
+        List<Long> sentExpIds = experiences.stream().filter(x -> x.getExperienceId() != -1)
+                .map(x -> x.getExperienceId()).toList();
+        // System.out.println(experiences);
+        // System.out.println(experiences.get(0).getStartDate().getClass());
 
         if (experiences.isEmpty()) {
             applicant.getQualificationInformation().setWorkExperiences(new ArrayList<>());
@@ -437,10 +457,11 @@ public class QualificationService {
             for (WorkExperience exp : experiences) {
                 if (exp.getExperienceId() == -1) { // new
                     // persist new
-                    WorkExperience newExp = new WorkExperience(exp.getPositionName(), exp.getCompanyName(), exp.getStartDate(), exp.getEndDate(), exp.getCurrentlyWorking(), exp.getDescription());
+                    WorkExperience newExp = new WorkExperience(exp.getPositionName(), exp.getCompanyName(),
+                            exp.getStartDate(), exp.getEndDate(), exp.getCurrentlyWorking(), exp.getDescription());
                     WorkExperience savedExp = workExperienceRepository.saveAndFlush(newExp);
                     toAdd.add(savedExp);
-//                    System.out.println("added one new work experience");
+                    // System.out.println("added one new work experience");
                 } else if (existingExpIds.contains(exp.getExperienceId())) {
                     // update
                     for (WorkExperience e : existingExperiences) {
@@ -451,7 +472,7 @@ public class QualificationService {
                             e.setEndDate(exp.getEndDate());
                             e.setCurrentlyWorking(exp.getCurrentlyWorking());
                             e.setDescription(exp.getDescription());
-//                            System.out.println("updated one work experience");
+                            // System.out.println("updated one work experience");
                             workExperienceRepository.save(e);
                             break;
                         }
@@ -460,13 +481,13 @@ public class QualificationService {
             }
 
             applicant = userRepository.findById(userId).get();
-//            System.out.println(applicant.getQualificationInformation());
+            // System.out.println(applicant.getQualificationInformation());
 
             List<WorkExperience> toRemove = new ArrayList<>();
             for (WorkExperience e : applicant.getQualificationInformation().getWorkExperiences()) {
                 if (!sentExpIds.contains(e.getExperienceId())) {
                     toRemove.add(e);
-//                    System.out.println("going to remove one experience");
+                    // System.out.println("going to remove one experience");
                 }
             }
 
@@ -485,7 +506,8 @@ public class QualificationService {
         User applicant = checkQIExists(a);
         List<Recommendation> existingRecos = applicant.getQualificationInformation().getRecommendations();
         List<Long> existingRecoIds = existingRecos.stream().map(x -> x.getRecommendationId()).toList();
-        List<Long> sentRecoIds = recos.stream().filter(x-> x.getRecommendationId() != -1).map(x -> x.getRecommendationId()).toList();
+        List<Long> sentRecoIds = recos.stream().filter(x -> x.getRecommendationId() != -1)
+                .map(x -> x.getRecommendationId()).toList();
 
         if (recos.isEmpty()) {
             applicant.getQualificationInformation().setRecommendations(new ArrayList<>());
@@ -497,10 +519,11 @@ public class QualificationService {
             for (Recommendation rec : recos) {
                 if (rec.getRecommendationId() == -1) { // new
                     // persist new
-                    Recommendation newReco = new Recommendation(rec.getName(), rec.getPhone(), rec.getEmail(), rec.getRelationship());
+                    Recommendation newReco = new Recommendation(rec.getName(), rec.getPhone(), rec.getEmail(),
+                            rec.getRelationship());
                     Recommendation savedReco = recommendationRepository.saveAndFlush(newReco);
                     toAdd.add(savedReco);
-//                    System.out.println("added one new work experience");
+                    // System.out.println("added one new work experience");
                 } else if (existingRecoIds.contains(rec.getRecommendationId())) {
                     // update
                     for (Recommendation r : existingRecos) {
@@ -546,7 +569,8 @@ public class QualificationService {
         return edu;
     }
 
-    public User updateApplicantProfileDetails(User user, String aboutMe, EducationEnum education, String schoolName, Integer gradYear, List<String> languages) {
+    public User updateApplicantProfileDetails(User user, String aboutMe, EducationEnum education, String schoolName,
+            Integer gradYear, List<String> languages) {
         System.out.println("QualificationService.updateApplicantProfileDetails");
 
         User applicant = checkQIExists(user);
@@ -565,7 +589,7 @@ public class QualificationService {
     public User checkQIExists(User u1) {
         System.out.println("QualificationService.checkQIExists");
 
-        if (u1.getQualificationInformation() == null){
+        if (u1.getQualificationInformation() == null) {
             QualificationInformation qi = new QualificationInformation(u1);
 
             QualificationInformation q1 = qualificationRepository.saveAndFlush(qi);
@@ -583,7 +607,8 @@ public class QualificationService {
         User applicant = checkQIExists(a);
         List<UserSkillset> existingUserskills = applicant.getQualificationInformation().getUserSkills();
         List<Long> existingUserSkillsIds = existingUserskills.stream().map(x -> x.getUserSkillsetId()).toList();
-        List<Long> sentUserSkillsIds = userSkills.stream().filter(x -> x.getUserSkillsetId() != -1).map(x -> x.getUserSkillsetId()).toList();
+        List<Long> sentUserSkillsIds = userSkills.stream().filter(x -> x.getUserSkillsetId() != -1)
+                .map(x -> x.getUserSkillsetId()).toList();
 
         if (userSkills.isEmpty()) {
             applicant.getQualificationInformation().setUserSkills(new ArrayList<>());
@@ -595,10 +620,11 @@ public class QualificationService {
             for (UserSkillset skill : userSkills) {
                 if (skill.getUserSkillsetId() == -1) { // new
                     // persist new
-                    Long newUId = userSkillsetService.addUserSkillset(userId, skill.getSkillset().getSkillsetId(), skill.getSkillLevel());
+                    Long newUId = userSkillsetService.addUserSkillset(userId, skill.getSkillset().getSkillsetId(),
+                            skill.getSkillLevel());
                     UserSkillset newUserSkill = userSkillsetRepositoy.findById(newUId).get();
                     toAdd.add(newUserSkill);
-//                    System.out.println("added one new work experience");
+                    // System.out.println("added one new work experience");
                 } else if (existingUserSkillsIds.contains(skill.getUserSkillsetId())) {
                     // update
                     for (UserSkillset uss : existingUserskills) {
@@ -627,7 +653,6 @@ public class QualificationService {
         }
 
     }
-
 
     public List<JobPosting> getUserBookmarks(Long userId) {
         System.out.println("QualificationService.getUserBookmarks");
@@ -702,13 +727,13 @@ public class QualificationService {
         return true;
     }
 
-    public Recommendation editRecommendation(Long userId, Long recoId, String name, Integer phone, String email, String relationship) {
+    public Recommendation editRecommendation(Long userId, Long recoId, String name, Integer phone, String email,
+            String relationship) {
         System.out.println("QualificationService.editRecommendation");
 
         User a = userRepository.findById(userId).get();
         User applicant = checkQIExists(a);
         List<Recommendation> recos = applicant.getQualificationInformation().getRecommendations();
-
 
         if (recos.isEmpty()) {
             throw new IllegalStateException("No Recommendations to save. List has been cleared");
@@ -739,13 +764,13 @@ public class QualificationService {
         }
     }
 
-    public WorkExperience editUserExperience(Long userId, Long workExpId, String positionName, String companyName, LocalDate startDate, LocalDate endDate, Boolean currentlyWorking, String description) {
+    public WorkExperience editUserExperience(Long userId, Long workExpId, String positionName, String companyName,
+            LocalDate startDate, LocalDate endDate, Boolean currentlyWorking, String description) {
         System.out.println("QualificationService.editUserExperience");
 
         User a = userRepository.findById(userId).get();
         User applicant = checkQIExists(a);
         List<WorkExperience> exps = applicant.getQualificationInformation().getWorkExperiences();
-
 
         if (exps.isEmpty()) {
             throw new IllegalStateException("No Experiences to save. List has been cleared");
@@ -791,9 +816,9 @@ public class QualificationService {
         qualificationRepository.save(qi);
         System.out.println("userSkills is " + qi.getUserSkills());
 
-//        for (UserSkillset uss : oldList) {
-//            userSkillsetRepositoy.deleteById(uss.getUserSkillsetId());
-//        }
+        // for (UserSkillset uss : oldList) {
+        // userSkillsetRepositoy.deleteById(uss.getUserSkillsetId());
+        // }
 
         List<UserSkillset> newList = new ArrayList<>();
         int length = skillMaps.size();

@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { useHistory, useLocation } from 'react-router-dom';
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
+import ApplicantList from "../../features/jobrequest/ApplicantList";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -20,7 +21,10 @@ export default function JobApplicants() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [job, setJob] = useState(null);
-  const [candidates, setCandidates] = useState([])
+  const [allcandidates, setAllCandidates] = useState([])
+  const [interviewCandidates, setInterviewCandidates] = useState([])
+  const [offerCandidates, setOfferCandidates] = useState([])
+  const [rejectCandidates, setRejectCandidates] = useState([])
 
   const [all,setAll]= useState(true)
   const [interview,setInterview]= useState(false)
@@ -29,10 +33,10 @@ export default function JobApplicants() {
   const location = useLocation();
   const history = useHistory();
   const tabs = [
-    { name: 'Applied', href: '/hiring/allapplicants', current: all },
-    { name: 'Interview', href: '/hiring/interviewapplicants', current: interview },
-    { name: 'Offer', href: '/hiring/offerapplicants', current: offer },
-    { name: 'Disqualified', href: '/hiring/rejectapplicants', current: reject },
+    { name: 'Applied', current: all },
+    { name: 'Interview', current: interview },
+    { name: 'Offer',  current: offer },
+    { name: 'Disqualified',  current: reject },
   ]
   const onChangeHandler = (tabName) => {
     if (tabName === "Applied") {
@@ -76,7 +80,7 @@ export default function JobApplicants() {
   useEffect(() => {
     api.findApplicationsByPostingId(location.state.job.postingId)
       .then((response) => {
-        setCandidates(response.data);
+        setAllCandidates(response.data);
         console.log(response.data)
       })
       .catch((error) => console.log(error));
@@ -175,44 +179,10 @@ export default function JobApplicants() {
               </div>
             </div>
           </div>
-          <ul role="list" className="mt-5 divide-y divide-gray-200 border-t border-gray-200 sm:mt-0 sm:border-t-0">
-            {candidates.map((candidate) => (
-              <li key={candidate.userId}>
-                <a href="#" className="group block">
-                  <div className="flex items-center py-5 px-4 sm:py-6 sm:px-0">
-                    <div className="flex min-w-0 flex-1 items-center">
-                      <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                        <div>
-                          <p className="flex truncate text-sm font-medium text-purple-600">{candidate.firstName}</p>
-                          <p className="mt-2 flex items-center text-sm text-gray-500">
-                            <EnvelopeIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                            <span className="truncate">{candidate.email}</span>
-                          </p>
-                        </div>
-                        <div className="hidden md:block">
-                          <div>
-                            <p className="text-sm text-gray-900">
-                              Applied on <time dateTime={candidate.appliedDatetime}>{candidate.applied}</time>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <button
-                        type='button'
-                        onClick={() => history.push({ pathname: "/hiring/applicantdetail", state: { applicant: candidate } })}>
-                        <ChevronRightIcon
-                          className="h-5 w-5 text-gray-400 group-hover:text-gray-700"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
+          {all && <ApplicantList candidates = {allcandidates}/>}
+          {interview && <ApplicantList candidates = {interviewCandidates}/>}
+          {offer && <ApplicantList candidates = {offerCandidates}/>}
+          {reject && <ApplicantList candidates = {rejectCandidates}/>}
         </div>
       </main>
 

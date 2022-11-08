@@ -29,8 +29,8 @@ export default function Profile() {
   const [recommendations, setRecommendations] = useState([])
   const [works, setWorks] = useState([])
   const [languages, setLanguages] = useState([]);
-  const [skills,setSkills] = useState([])
-  const [userSkills, setUserSkills] = useState([])
+  const [skills,setSkills] = useState(null)
+  const [userSkills, setUserSkills] = useState(null)
   const [uss, setUSS] = useState([])
   const [refreshKey, setRefreshKey] = useState(0);
   const [addskil, setAddskill] = useState(false)
@@ -63,14 +63,14 @@ export default function Profile() {
   const [fName, setFName] = useState(null);
 
   useEffect(() => {
-    api.getUserRecommendations(user).
+    api.getUserRecommendations(getUserId()).
       then((response) => {
         console.log(response.data);
         setRecommendations(response.data);
       });
   }, [refreshKey]);
   useEffect(() => {
-    api.getUserExperiences(user).
+    api.getUserExperiences(getUserId()).
       then((response) => {
         console.log(response.data);
         setWorks(response.data);
@@ -90,7 +90,7 @@ export default function Profile() {
       var ids = [];
       var levels = [];
 
-      api.getUserQualificationInformation(user).
+      api.getUserQualificationInformation(getUserId()).
         then((response) => {
           console.log(response.data);
           setFirstName(response.data.user.firstName);
@@ -251,7 +251,7 @@ export default function Profile() {
     var newMap = {};
     var checkerMap = [];
     var checker = false;
-    map.forEach((val:int, key: int) => {
+    map.forEach((val, key) => {
         newMap[key] = val;
         checkerMap.push(key);
 //        console.log(checkerMap)
@@ -409,38 +409,6 @@ export default function Profile() {
 
   }
 
-
-
-  // function deleteCV() {
-  //   const yes = window.confirm(
-  //     "Are you sure you want to delete your resume? Action is irreversible."
-  //   );
-  //   if(yes){
-  //     if(docId !== null){
-  //       api
-  //         .deleteCV(docId)
-  //         .then((response) => {
-  //           // console.log(response.data)
-  //           if (response.status === 200) {
-  //             //should return a long id
-  //             if (response.data === true) {
-  //               alert("CV deleted successfully.");
-  //               console.log("resume deleted successfully");
-  //               setDocId(null);
-  //               window.location.reload();
-  //             } else {
-  //               console.log("resume not deleted...");
-  //             }
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           alert("No resume to delete");
-  //           console.log(error.response);
-  //         });
-  //     }
-  //   }
-  // }
-
   return (
     <div>
       <Sidebar />
@@ -558,8 +526,8 @@ export default function Profile() {
                   Skills
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  {userSkills.length > 0 && skills.length > 0 &&
-                    <AddSkillset userSkills={userSkills} setUserSkills={setUserSkills} skills={skills} uss={uss} setUSS={setUSS}/>
+                  {skills &&
+                    <AddSkillset skills={skills} uss={uss} setUSS={setUSS}/>
                   }
                 </div>
               </div>
@@ -674,7 +642,7 @@ export default function Profile() {
                     }
                   </div>
                 </div>
-                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                {/* <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Cover Letter
                 </label>
                 <div className="flex mt-1 sm:col-span-2 sm:mt-0">
@@ -718,7 +686,7 @@ export default function Profile() {
                         </>
                     }
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

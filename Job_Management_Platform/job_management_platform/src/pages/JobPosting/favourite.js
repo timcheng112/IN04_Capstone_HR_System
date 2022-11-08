@@ -113,7 +113,10 @@ export default function JobApplication() {
                             </td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobDescription}</td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobType}</td>
-                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>
+                            {job.status == 'CREATED' && 
+                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">OPEN</td>}
+                            {job.status !== 'CREATED' && 
+                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>}
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <MyFavouriteOption job={job} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                             </td>
