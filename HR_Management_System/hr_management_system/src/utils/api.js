@@ -227,6 +227,12 @@ const api = {
       `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
     );
   },
+  addPayInformation(userId, payInformation) {
+    return axios.post(
+        `http://localhost:9191/api/pay/payinfo/addPayInformation?userId=${userId}&payInformation=${payInformation}`
+    )
+  }
+  },
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },

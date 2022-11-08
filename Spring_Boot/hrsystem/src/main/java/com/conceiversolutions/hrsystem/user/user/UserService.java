@@ -1245,12 +1245,6 @@ public class UserService implements UserDetailsService {
             if (u.getCurrentPayInformation() != null) {
                 tempPayInformation = u.getCurrentPayInformation();
                 tempPayInformation.setUser(null);
-                for (Allowance allowance : tempPayInformation.getAllowance()) {
-                    allowance.setPayInfo(null);
-                }
-                for (Deduction deduction : tempPayInformation.getDeduction()) {
-                    deduction.setPayInfo(null);
-                }
             }
 
             Position tempPosition = null;

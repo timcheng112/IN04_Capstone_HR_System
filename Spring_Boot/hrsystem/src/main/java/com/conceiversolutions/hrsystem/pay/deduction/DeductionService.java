@@ -44,8 +44,6 @@ public class DeductionService {
             throw new IllegalStateException("Payslip does not exist to be updated.");
         }else{
             Deduction d = getDeduction(deductionId);
-            d.setDeductionName(deduction.getDeductionName());
-            d.setAmount(deduction.getAmount());
             d.setRemarks(deduction.getRemarks());
 
             //not yet
@@ -59,7 +57,6 @@ public class DeductionService {
         Optional<Deduction> d1 = deductionRepository.findById(deductionId);
         if(d1.isPresent()){
             Deduction d = d1.get();
-            d.getPayInfo().getDeduction().remove(d);
         }
         deductionRepository.deleteById(deductionId);
     }
