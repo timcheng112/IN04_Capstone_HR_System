@@ -271,6 +271,11 @@ public class JobApplicationService {
         List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.PENDING)) {
+                ja.setJobPosting(null);
+                for (UserSkillset uss : ja.getUserSkills()) {
+                    uss.getSkillset().setJobPostings(new ArrayList<>());
+                    uss.getSkillset().setJobRequests(new ArrayList<>());
+                }
                 ja.getApplicant().nullify();
                 apps.add(ja);
             }
@@ -293,6 +298,11 @@ public class JobApplicationService {
         List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.SHORTLISTED)) {
+                ja.setJobPosting(null);
+                for (UserSkillset uss : ja.getUserSkills()) {
+                    uss.getSkillset().setJobPostings(new ArrayList<>());
+                    uss.getSkillset().setJobRequests(new ArrayList<>());
+                }
                 ja.getApplicant().nullify();
                 apps.add(ja);
             }
@@ -315,6 +325,11 @@ public class JobApplicationService {
         List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.OFFERED)) {
+                ja.setJobPosting(null);
+                for (UserSkillset uss : ja.getUserSkills()) {
+                    uss.getSkillset().setJobPostings(new ArrayList<>());
+                    uss.getSkillset().setJobRequests(new ArrayList<>());
+                }
                 ja.getApplicant().nullify();
                 apps.add(ja);
             }
@@ -337,6 +352,11 @@ public class JobApplicationService {
         List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.REJECTED)) {
+                ja.setJobPosting(null);
+                for (UserSkillset uss : ja.getUserSkills()) {
+                    uss.getSkillset().setJobPostings(new ArrayList<>());
+                    uss.getSkillset().setJobRequests(new ArrayList<>());
+                }
                 ja.getApplicant().nullify();
                 apps.add(ja);
             }
