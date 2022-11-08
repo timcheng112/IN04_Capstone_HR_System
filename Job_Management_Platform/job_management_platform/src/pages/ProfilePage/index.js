@@ -42,18 +42,24 @@ export default function Profile() {
   // const email = result[2]
   let [userInfo, setUserInfo] = useState([]);
   // const email = result[1]
-  const [file, setFileState] = useState("");
-  const [fileName, setFileName] = useState("");
+  const [file, setFileState] = useState(null);
+  const [fileName, setFileName] = useState(null);
   const [docId, setDocId] = useState(null);
   const [error, setError] = useState(null);
   const [userQualificationInfo, setUserQualificationInfo] = useState(null);
-  const [clfile, setclFileState] = useState("");
-  const [clfileName, setclfileName] = useState("");
-  const [tfile, settFileState] = useState("");
-  const [tfileName, settfileName] = useState("");
+  const [clfile, setclFileState] = useState(null);
+  const [clfileName, setclfileName] = useState(null);
+  const [tfile, settFileState] = useState(null);
+  const [tfileName, settfileName] = useState(null);
   const [hashmap, setHashmap] = useState(null);
   const [skillIds, setSkillIds] = useState([]);
   const [skillLevels, setSkillLevels] = useState([]);
+  const [cvId, setCVId] = useState('');
+  const [clId, setCLId] = useState('');
+  const [tId, setTId] = useState('');
+  const [curfileName, setcurFileName] = useState(null);
+  const [curclfileName, setcurclfileName] = useState(null);
+  const [curtfileName, setcurtfileName] = useState(null);
 
   useEffect(() => {
     api.getUserRecommendations(user).
@@ -106,6 +112,29 @@ export default function Profile() {
           setLanguages(response.data.languagesSpoken);
           setUserSkills(response.data.userSkills);
           response.data.userSkills.map(item => list.push({skill : item.skillset.skillsetName, level : item.skillLevel}))
+
+          if (response.data.cv === null) {
+            console.log("cv dont exist");
+          } else {
+            console.log("cv exist");
+            setcurFileName(response.data.cv.name);
+            setCVId(response.data.cv.docId);
+          }
+          if (response.data.coverLetter === null) {
+            console.log("cover letter dont exist");
+          } else {
+            console.log("cover letter exist");
+            setcurclfileName(response.data.coverLetter.name);
+            setCLId(response.data.coverLetter.docId);
+          }
+          if (response.data.transcript === null) {
+            console.log("transcript dont exist");
+          } else {
+            console.log("transcript exist");
+            setcurtfileName(response.data.transcript.name);
+            setTId(response.data.transcript.docId);
+          }
+
           console.log(list);
           setUSS(list);
           console.log("AA");
@@ -186,6 +215,9 @@ export default function Profile() {
               console.log(userInfo);
               alert("CV added to user succesfully");
             }
+            setcurFileName(fileName);
+            setFileName(null);
+            setFileState(null);
           })
           .catch((error) => {
             console.log(error.response);
@@ -245,25 +277,39 @@ export default function Profile() {
     }
   }
 
-  // function downloadFile() {
-  //   api.downloadDocument(docId).then((response) => {
-  //     console.log(docId);
-  //     const fileName =
-  //       response.headers["content-disposition"].split("filename=")[1];
-  //     console.log(fileName);
-  //     api.getDocById(docId).then((response) => {
-  //       //console.log(response.data);
-  //       const url = window.URL.createObjectURL(response.data);
+   function downloadFile(fileType) {
+     console.log("DDDDDDOWNLOAD");
+     console.log(cvId);
+     console.log(curfileName);
+     console.log(fileType);
 
-  //       const link = document.createElement("a");
-  //       link.href = url;
-  //       link.setAttribute("download", fileName);
-  //       document.body.appendChild(link);
-  //       link.click();
-  //       link.parentNode.removeChild(link);
-  //     });
-  //   });
-  // }
+     var docToGet;
+     if (fileType === "CV") {
+        docToGet = cvId;
+     } else if (fileType == "CL") {
+        docToGet = clId;
+     } else if (fileType == "T") {
+        docToGet = tId;
+     }
+
+     api.downloadDocument(docToGet).then((response) => {
+       console.log(docId);
+       const fileName =
+         response.headers["content-disposition"].split("filename=")[1];
+       console.log(fileName);
+       api.getDocById(docToGet).then((response) => {
+         //console.log(response.data);
+         const url = window.URL.createObjectURL(response.data);
+
+         const link = document.createElement("a");
+         link.href = url;
+         link.setAttribute("download", curfileName);
+         document.body.appendChild(link);
+         link.click();
+         link.parentNode.removeChild(link);
+       });
+     });
+   }
 
   function handleclFile(e) {
     console.log("handle file")
@@ -294,8 +340,9 @@ export default function Profile() {
               console.log(userInfo);
               alert("Cover Letter added to user succesfully");
             }
-            //                setclFileState('');
-            //                setclfileName('');
+            setclFileState(null);
+            setcurclfileName(clfileName);
+            setclfileName(null);
           })
           .catch((error) => {
             console.log(error.response);
@@ -309,7 +356,7 @@ export default function Profile() {
     }
 
   }
-  
+
 
   function handletFile(e) {
     console.log("handle file")
@@ -340,8 +387,9 @@ export default function Profile() {
               console.log(userInfo);
               alert("Transcript added to user succesfully");
             }
-            //                settFileState('');
-            //                settfileName('');
+            setcurtfileName(tfileName);
+            settFileState(null);
+            settfileName(null);
           })
           .catch((error) => {
             console.log(error.response);
@@ -354,7 +402,7 @@ export default function Profile() {
       alert("No file uploaded");
     }
 
-    
+
   }
 
 
@@ -543,28 +591,37 @@ export default function Profile() {
                     onChange={(e) => handleFile(e)}
                   />
                   <div className="space-x-2">
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick={() => uploadFile("CV")}
-                    >
-                      <ArrowUpTrayIcon
-                        className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                        aria-hidden="true"
-                      />
-                      <span className="hidden md:block">Upload </span>
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick
-                    >
-                      <ArrowDownTrayIcon
-                        className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                        aria-hidden="true"
-                      />
-                      <span className="hidden md:block">Download </span>
-                    </button>
+                    {(file !== null && fileName !== null) &&
+                        <button
+                          type="button"
+                          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          onClick={() => uploadFile("CV")}
+                        >
+                          <ArrowUpTrayIcon
+                            className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                            aria-hidden="true"
+                          />
+                          <span className="hidden md:block">Upload CV</span>
+                        </button>
+                    }
+                    {curfileName!==null &&
+                        <>
+                            <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                              Current CV : {curfileName}
+                            </label>
+                            <button
+                              type="button"
+                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                              onClick = {() => downloadFile("CV")}
+                            >
+                              <ArrowDownTrayIcon
+                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                                aria-hidden="true"
+                              />
+                              <span className="hidden md:block">Download CV</span>
+                            </button>
+                        </>
+                    }
                   </div>
                 </div>
 
@@ -580,28 +637,37 @@ export default function Profile() {
                     onChange={(e) => handletFile(e)}
                   />
                   <div className="space-x-2">
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick={() => uploadtFile("Transcript")}
-                    >
-                      <ArrowUpTrayIcon
-                        className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                        aria-hidden="true"
-                      />
-                      <span className="hidden md:block">Upload </span>
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick
-                    >
-                      <ArrowDownTrayIcon
-                        className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                        aria-hidden="true"
-                      />
-                      <span className="hidden md:block">Download </span>
-                    </button>
+                    {(tfile !== null && tfileName !== null) &&
+                        <button
+                          type="button"
+                          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          onClick={() => uploadtFile("Transcript")}
+                        >
+                          <ArrowUpTrayIcon
+                            className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                            aria-hidden="true"
+                          />
+                          <span className="hidden md:block">Upload Transcript</span>
+                        </button>
+                    }
+                    {curtfileName!==null &&
+                        <>
+                            <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                              Current Transcript : {curtfileName}
+                            </label>
+                            <button
+                              type="button"
+                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                              onClick = {() => downloadFile("T")}
+                            >
+                              <ArrowDownTrayIcon
+                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                                aria-hidden="true"
+                              />
+                              <span className="hidden md:block">Download Transcript</span>
+                            </button>
+                        </>
+                    }
                   </div>
                 </div>
                 <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -613,31 +679,40 @@ export default function Profile() {
                     type="file"
                     multiple
                     name="file"
-                    onChange={(e) => handletFile(e)}
+                    onChange={(e) => handleclFile(e)}
                   />
                   <div className="space-x-2">
-                    <button
-                      type="button"
-                      className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick={() => uploadtFile("Cover Letter")}
-                    >
-                      <ArrowUpTrayIcon
-                        className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                        aria-hidden="true"
-                      />
-                      <span className="hidden md:block">Upload </span>
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick
-                    >
-                      <ArrowDownTrayIcon
-                        className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                        aria-hidden="true"
-                      />
-                      <span className="hidden md:block">Download </span>
-                    </button>
+                    {(clfile !== null && clfileName !== null) &&
+                        <button
+                          type="button"
+                          className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          onClick={() => uploadclFile("Cover Letter")}
+                        >
+                          <ArrowUpTrayIcon
+                            className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                            aria-hidden="true"
+                          />
+                          <span className="hidden md:block">Upload Cover Letter</span>
+                        </button>
+                    }
+                    {curclfileName!==null &&
+                        <>
+                            <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                              Current Cover Letter : {curclfileName}
+                            </label>
+                            <button
+                              type="button"
+                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                              onClick = {() => downloadFile("CL")}
+                            >
+                              <ArrowDownTrayIcon
+                                className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                                aria-hidden="true"
+                              />
+                              <span className="hidden md:block">Download Cover Letter</span>
+                            </button>
+                        </>
+                    }
                   </div>
                 </div>
               </div>
