@@ -280,6 +280,7 @@ const api = {
   },
   getIsDepartmentHead(userId) {
     return axios.get(`http://localhost:9191/api/department/${userId}/isHead`)
+  },
   getEmployeesByDepartment(departmentId) {
     return axios.get(
       `http://localhost:9191/api/user/getEmployeesByDepartment?departmentId=${departmentId}`
