@@ -4,6 +4,7 @@ import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
+import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequestRepository;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import com.conceiversolutions.hrsystem.skillset.skillset.SkillsetRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -21,6 +22,7 @@ import java.util.Optional;
 public class JobPostingService {
     private final JobPostingRepository jobPostingRepository;
     private final SkillsetRepository skillsetRepository;
+    private final JobRequestRepository jobRequestRepository;
 
     public List<JobPosting> getAllJobPosts() {
         System.out.println("JobPostingService.getAllJobPosts");
@@ -213,5 +215,37 @@ public class JobPostingService {
         }
 
         return jobPosts;
+    }
+
+    public JobPosting getJobPostByRequest(Long requestId) {
+        System.out.println("JobPostingService.getJobPostByRequest");
+        System.out.println("requestId = " + requestId);
+
+        Optional<JobRequest> jrOptional = jobRequestRepository.findById(requestId);
+        if (jrOptional.isEmpty()) {
+            throw new IllegalStateException("Job Request not found");
+        }
+
+        JobPosting jp = jrOptional.get().getJobPosting();
+        jp.getPostedBy().nullify();
+
+        if (jp.getJobRequest() != null) {
+            JobRequest jr = jp.getJobRequest();
+            jr.setJobRequirements(new ArrayList<>());
+            jr.setDepartment(null);
+            jr.setTeam(null);
+            jr.setRequestedBy(null);
+            jr.setApprover(null);
+            jr.setJobPosting(null);
+        }
+
+        if (jp.getJobPostRequirements().size() != 0) {
+            for (Skillset sk : jp.getJobPostRequirements()) {
+                sk.setJobRequests(new ArrayList<>());
+                sk.setJobPostings(new ArrayList<>());
+            }
+        }
+
+        return jp;
     }
 }

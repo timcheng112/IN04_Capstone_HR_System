@@ -53,4 +53,9 @@ public class JobPostingController {
         return jobPostingService.editJobPost(jobPostingId, jobTitle, jobDescription, LocalDate.parse(preferredStartDate),
                 jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax),jobRequirementIds);
     }
+
+    @GetMapping(path = "/getJobPostByRequest")
+    public JobPosting getJobPostByRequest(@RequestParam("requestId") Long requestId) {
+        return jobPostingService.getJobPostByRequest(requestId);
+    }
 }
