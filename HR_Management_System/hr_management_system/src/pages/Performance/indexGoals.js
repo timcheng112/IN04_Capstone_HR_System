@@ -44,7 +44,6 @@ export default function Goals() {
   const [manager, setManager] = useState(false);
   const [managerMode, setManagerMode] = useState(false);
   const [team, setTeam] = useState([]);
-  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const now = new Date();
@@ -130,91 +129,6 @@ export default function Goals() {
   }, []);
 
   useEffect(() => {
-    api
-      .getUser(getUserId())
-      .then((response) => {
-        setUser(response.data);
-        console.log(user);
-      })
-      .catch((error) => setError(error));
-
-    api.getGoalPeriodByYear(goalPeriodYear).then((response) => {
-      setStartDate(response.data.startDate);
-      setEndDate(response.data.endDate);
-      setSelectedPeriod(response.data);
-    });
-
-    api.getGoalPeriodByYear(new Date().getFullYear()).then((response) => {
-      setCurrentPeriod(response.data);
-    });
-
-    api.getAllGoalPeriods().then((response) => {
-      setGoalPeriods(response.data);
-    });
-
-    api
-      .getUserGoals(goalPeriodYear, "financial", getUserId())
-      .then((response) => {
-        //console.log(response.data);
-        setFinancial(response.data);
-
-        if (response.data.length <= 0 && !withinCurrentPeriod()) {
-          setOverdueFinancial(true);
-        } else {
-          setOverdueFinancial(false);
-        }
-      });
-
-    api
-      .getUserGoals(goalPeriodYear, "business", getUserId())
-      .then((response) => {
-        console.log(response.data);
-        setBusiness(response.data);
-        if (response.data.length <= 0 && !withinCurrentPeriod()) {
-          setOverdueBusiness(true);
-        } else {
-          setOverdueBusiness(false);
-        }
-      });
-
-    api.getAllUserGoals(new Date().getFullYear()).then((response) => {
-      console.log("all goals");
-      console.log(response.data);
-      setUserGoals(response.data);
-      response.data.forEach((employee) => {
-        employee.financialGoals = employee.goals.filter(
-          (g) => g.type === "financial"
-        );
-        employee.businessGoals = employee.goals.filter(
-          (g) => g.type === "business"
-        );
-        //console.log(employee.goals.filter(g => g.type === "business"))
-        //console.log(employee.firstName + " " + employee.businessGoals.length)
-      });
-    });
-
-    api.getIsTeamHead(getUserId()).then((response) => {
-      console.log(response.data);
-      if (response.data > -1) {
-        setManager(true);
-
-        api.getTeamGoals(response.data, goalPeriodYear).then((response) => {
-          setTeam(response.data);
-          response.data.forEach((employee) => {
-            employee.financialGoals = employee.goals.filter(
-              (g) => g.type === "financial"
-            );
-            employee.businessGoals = employee.goals.filter(
-              (g) => g.type === "business"
-            );
-          });
-        });
-      }
-    });
-
-  }, [refresh]);
-
-  useEffect(() => {
     api.getGoalPeriodByYear(goalPeriodYear).then((response) => {
       setSelectedPeriod(response.data);
     });
@@ -234,14 +148,6 @@ export default function Goals() {
       });
   }, [goalPeriodYear]);
 
-  useEffect(() => {
-    console.log("open goal?");
-    const timer = setTimeout(() => {
-      setRefresh(!refresh);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [openAddGoal, openEditGoal, openAddAchievement]);
-
   const handleSubmit = (evt) => {
     evt.preventDefault();
     if (newStart.substring(0, 4) === newEnd.substring(0, 4)) {
@@ -252,12 +158,11 @@ export default function Goals() {
       };
       api
         .createGoalPeriod(goalPeriod)
-        .then((response) => {
+        .then((response) =>
           alert(
             "Goal period for " + newEnd.substring(0, 4) + " has been created"
-          );
-          setRefresh(!refresh);
-        })
+          )
+        )
         .catch((error) => {
           const message = error.request.response;
           if (message.includes("already exists")) {
@@ -272,23 +177,11 @@ export default function Goals() {
   const handleEdit = (evt) => {
     evt.preventDefault();
 
-    api.getAllGoalsByYear(goalPeriodYear).then((response) => {
-      if (response.data.length) {
-        alert(
-          "Cannot change goal period. There have been " +
-            response.data.length +
-            " goal(s) added to " +
-            goalPeriodYear +
-            "."
-        );
-      } else {
-        api.updateGoalPeriod(startDate, endDate).then((response) => {
-          alert(response.data);
-          setRefresh(!refresh);
-        });
-      }
-      setEditMode(false);
-    });
+    api
+      .updateGoalPeriod(startDate, endDate)
+      .then((response) => alert(response.data));
+
+    setEditMode(false);
   };
 
   const handleDeleteGoalPeriod = (evt) => {
@@ -306,9 +199,6 @@ export default function Goals() {
         console.log("year " + goalPeriodYear);
         api.deleteGoalPeriod(goalPeriodYear).then((response) => {
           alert(response.data);
-          setRefresh(!refresh);
-          setSelectedPeriod(null);
-          //setHrMode(false);
         });
       }
     });
@@ -318,7 +208,6 @@ export default function Goals() {
     console.log(selectedItem);
     api.deleteGoal(selectedItem).then((response) => {
       alert(response.data);
-      setRefresh(!refresh);
     });
   }
 
@@ -341,7 +230,6 @@ export default function Goals() {
     console.log("gid " + goalId);
     setSelectedItem(goalId);
     setOpenAddAchievement(true);
-    setRefresh(!refresh);
   }
 
   function submitNewAchievement(descriptionAchievement) {
@@ -362,6 +250,7 @@ export default function Goals() {
   function editGoalPeriod() {
     console.log("handle edit " + goalPeriodYear);
     api.getAllGoalsByYear(goalPeriodYear).then((response) => {
+      
       if (response.data.length) {
         alert(
           "Cannot change goal period. There have been " +
@@ -372,7 +261,6 @@ export default function Goals() {
         setEditMode(!editMode);
         setStartDate(currentPeriod.startDate);
         setEndDate(currentPeriod.endDate);
-        setRefresh(!refresh);
       }
     });
   }
@@ -382,7 +270,8 @@ export default function Goals() {
   return (
     financial &&
     goalPeriods &&
-    currentDate &&  (
+    currentDate && (
+
       <div className="">
         <Navbar />
         <div className="flex">
@@ -509,7 +398,7 @@ export default function Goals() {
                             locale="Asia/Singapore"
                             format="DD/MM/YYYY"
                           >
-                            {startDate}
+                            {currentPeriod.startDate}
                           </Moment>
                           <h1 className="mx-2 font-sans font-semibold">to</h1>
                           <Moment
@@ -518,7 +407,7 @@ export default function Goals() {
                             locale="Asia/Singapore"
                             format="DD/MM/YYYY"
                           >
-                            {endDate}
+                            {currentPeriod.endDate}
                           </Moment>
                         </div>
                         <button
@@ -1605,6 +1494,10 @@ export default function Goals() {
                                     </div>
                                   </div>
                                 </div>
+                                <AddGoalModal
+                                  open={openAddGoal}
+                                  onClose={() => setOpenAddGoal(false)}
+                                />
                               </>
                             ) : (
                               <>No action required</>
@@ -1617,10 +1510,6 @@ export default function Goals() {
                 </div>
               </>
             )}
-            <AddGoalModal
-              open={openAddGoal}
-              onClose={() => setOpenAddGoal(false)}
-            />
           </main>
         </div>
       </div>

@@ -5,13 +5,17 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <IconButton
+        <><IconButton
           icon="bell"
           size={25}
           onPress={() => {
-            navigation.navigate("Notifications")
-          }}
-        />
+            navigation.navigate("Notifications");
+          } } /><IconButton
+            icon="human"
+            size={25}
+            onPress={() => {
+              navigation.navigate("Profile");
+            } } /></>
       ),
     });
   }, [navigation]);

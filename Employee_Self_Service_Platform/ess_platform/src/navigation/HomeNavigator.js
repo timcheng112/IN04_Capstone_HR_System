@@ -30,6 +30,16 @@ const HomeNavigator = () => {
           },
         }}
       />
+      <HomeStack.Screen
+        name="Notifications"
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: "Profile",
+          headerRight: () => {
+            <IconButton icon="human" size={25} />;
+          },
+        }}
+      />
     </HomeStack.Navigator>
   );
 };
