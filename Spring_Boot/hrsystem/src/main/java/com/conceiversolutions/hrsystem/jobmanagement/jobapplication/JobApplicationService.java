@@ -475,8 +475,7 @@ public class JobApplicationService {
 
         // create position
         Position newPos = new Position(application.getJobPosting().getJobTitle(), application.getJobPosting().getJobDescription(), application.getStartDate(), application.getJobPosting().getJobType());
-        // TODO: get pos type from job posting
-        newPos.setPosType(PositionTypeEnum.EXECUTIVE);
+        newPos.setPosType(application.getJobPosting().getPosType());
         Position savedPos = positionRepository.saveAndFlush(newPos);
 
         // change user to employee

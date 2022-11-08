@@ -455,10 +455,11 @@ const api = {
     departmentId,
     teamId,
     requestedById,
-    jobRequestId
+    jobRequestId,
+    posType
   ) {
     return axios.post(
-      `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salaryMin=${salaryMin}&salaryMax=${salaryMax}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
+      `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salaryMin=${salaryMin}&salaryMax=${salaryMax}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}&posType=${posType}`
     );
   },
   submitJobRequest(
@@ -474,10 +475,11 @@ const api = {
     departmentId,
     teamId,
     requestedById,
-    jobRequestId
+    jobRequestId,
+    posType
   ) {
     return axios.put(
-      `http://localhost:9191/api/jobrequest/submitJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salaryMin=${salaryMin}&salaryMax=${salaryMax}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
+      `http://localhost:9191/api/jobrequest/submitJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salaryMin=${salaryMin}&salaryMax=${salaryMax}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}&posType=${posType}`
     );
   },
   getJobRequestById(jobRequestId) {
@@ -544,10 +546,11 @@ const api = {
     jobRole,
     salaryMin,
     salaryMax,
-    jobRequirements
+    jobRequirements,
+    posType
   ) {
     return axios.put(
-      `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salaryMin=${salaryMin}&salaryMax=${salaryMax}&jobRequirements=${jobRequirements}`
+      `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salaryMin=${salaryMin}&salaryMax=${salaryMax}&jobRequirements=${jobRequirements}&posType=${posType}`
     );
   },
 

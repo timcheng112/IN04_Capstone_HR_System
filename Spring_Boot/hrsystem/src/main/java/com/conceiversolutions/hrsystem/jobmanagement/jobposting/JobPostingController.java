@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.jobmanagement.jobposting;
 
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,8 @@ public class JobPostingController {
                             @RequestParam("jobRole") String jobRole,
                             @RequestParam("salaryMin") Float salaryMin,
                             @RequestParam("salaryMax") Float salaryMax,
-                            @RequestParam("jobRequirements") List<Long> jobRequirementIds) {
+                            @RequestParam("jobRequirements") List<Long> jobRequirementIds,
+                            @RequestParam("posType") String posType) {
         JobTypeEnum jobT = null;
         if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
             jobT = JobTypeEnum.valueOf(jobType);
@@ -51,7 +53,7 @@ public class JobPostingController {
         }
 
         return jobPostingService.editJobPost(jobPostingId, jobTitle, jobDescription, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax),jobRequirementIds);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax),jobRequirementIds, PositionTypeEnum.valueOf(posType));
     }
 
     @GetMapping(path = "/getJobPostByRequest")

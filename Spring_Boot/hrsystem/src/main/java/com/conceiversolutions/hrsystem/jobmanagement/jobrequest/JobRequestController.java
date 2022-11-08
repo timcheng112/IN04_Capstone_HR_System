@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,8 @@ public class JobRequestController {
                                @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamId") Long teamId,
                                @RequestParam("requestedById") Long requestedById,
-                               @RequestParam("jobRequestId") Long jobRequestId) {
+                               @RequestParam("jobRequestId") Long jobRequestId,
+                               @RequestParam("posType") String posType) {
         JobTypeEnum jobT = null;
         if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
             jobT = JobTypeEnum.valueOf(jobType);
@@ -51,7 +53,7 @@ public class JobRequestController {
         }
 
         return jobRequestService.saveJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId, PositionTypeEnum.valueOf(posType));
     }
 
     @PutMapping(path = "/submitJobRequest")
@@ -67,7 +69,8 @@ public class JobRequestController {
                                @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamId") Long teamId,
                                @RequestParam("requestedById") Long requestedById,
-                               @RequestParam("jobRequestId") Long jobRequestId) {
+                               @RequestParam("jobRequestId") Long jobRequestId,
+                                 @RequestParam("posType") String posType) {
         JobTypeEnum jobT = null;
         if (jobType.equals("Contract") || jobType.equals("Intern")) {
             jobT = JobTypeEnum.valueOf(jobType);
@@ -78,7 +81,7 @@ public class JobRequestController {
         }
 
         return jobRequestService.submitJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId, PositionTypeEnum.valueOf(posType));
     }
 
     @GetMapping(path = "/getJobRequestById")

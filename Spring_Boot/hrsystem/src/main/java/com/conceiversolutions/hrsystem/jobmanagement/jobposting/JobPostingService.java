@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobposting;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequestRepository;
@@ -101,7 +102,7 @@ public class JobPostingService {
         return true;
     }
 
-    public Long editJobPost(Long jobPostingId, String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salaryMin,BigDecimal salaryMax, List<Long> jobRequirementIds) {
+    public Long editJobPost(Long jobPostingId, String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salaryMin, BigDecimal salaryMax, List<Long> jobRequirementIds, PositionTypeEnum posType) {
         System.out.println("JobPostingService.editJobPost");
 
         Optional<JobPosting> jp = jobPostingRepository.findById(jobPostingId);
@@ -121,6 +122,7 @@ public class JobPostingService {
         jobPost.setJobRole(roleEnum);
         jobPost.setSalaryMin(salaryMin);
         jobPost.setSalaryMax(salaryMax);
+        jobPost.setPosType(posType);
 
         List<Skillset> skillsets = new ArrayList<>();
         if (!jobRequirementIds.isEmpty()) {

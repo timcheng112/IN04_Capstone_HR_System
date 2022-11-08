@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPostingRepository;
@@ -121,7 +122,7 @@ public class JobRequestService {
     }
 
 
-    public Long saveJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salaryMin, BigDecimal salaryMax, List<Long> jobRequirements, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
+    public Long saveJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salaryMin, BigDecimal salaryMax, List<Long> jobRequirements, Long departmentId, Long requestedById, Long teamId, Long jobRequestId, PositionTypeEnum posType) {
         System.out.println("JobRequestService.saveJobRequest");
 
         checkInput(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, roleEnum, salaryMin, salaryMax, requestedById);
@@ -180,6 +181,7 @@ public class JobRequestService {
             jr.setTeam(team);
             jr.setStatus(JobStatusEnum.PENDING);
             jr.setLastEditedDate(LocalDateTime.now());
+            jr.setPosType(posType);
 
             JobRequest done = jobRequestRepository.saveAndFlush(jr);
             return done.getRequestId();
@@ -188,6 +190,7 @@ public class JobRequestService {
             JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, skillsets, dept, team, requestor, roleEnum, salaryMin, salaryMax);
             jr.setStatus(JobStatusEnum.PENDING);
             jr.setLastEditedDate(LocalDateTime.now());
+            jr.setPosType(posType);
             JobRequest done = jobRequestRepository.saveAndFlush(jr);
 
             List<JobRequest> temp = requestor.getJobRequests();
@@ -198,7 +201,7 @@ public class JobRequestService {
         }
     }
 
-    public Long submitJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salaryMin,BigDecimal salaryMax, List<Long> jobRequirements, Long departmentId, Long requestedById, Long teamId, Long jobRequestId) {
+    public Long submitJobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobTypeEnum, RoleEnum roleEnum, BigDecimal salaryMin,BigDecimal salaryMax, List<Long> jobRequirements, Long departmentId, Long requestedById, Long teamId, Long jobRequestId, PositionTypeEnum posType) {
         System.out.println("JobRequestService.saveJobRequest");
 
         checkInput(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum, roleEnum, salaryMin, salaryMax, requestedById);
@@ -257,6 +260,7 @@ public class JobRequestService {
             jr.setTeam(team);
             jr.setStatus(JobStatusEnum.CREATED);
             jr.setLastEditedDate(LocalDateTime.now());
+            jr.setPosType(posType);
 
             JobRequest done = jobRequestRepository.saveAndFlush(jr);
             return done.getRequestId();
@@ -265,6 +269,7 @@ public class JobRequestService {
             JobRequest jr = new JobRequest(jobTitle, jobDescription, justification, preferredStartDate, jobTypeEnum,  skillsets, dept, team, requestor, roleEnum, salaryMin, salaryMax);
             jr.setStatus(JobStatusEnum.CREATED);
             jr.setLastEditedDate(LocalDateTime.now());
+            jr.setPosType(posType);
             JobRequest done = jobRequestRepository.saveAndFlush(jr);
 
             List<JobRequest> temp = requestor.getJobRequests();
@@ -508,7 +513,7 @@ public class JobRequestService {
         // create job posting
         JobPosting newJP = new JobPosting(jr.getJobTitle(), jr.getJobDescription(), jr.getPreferredStartDate()
                 , jr.getJobType(), jr.getJobRole(), JobStatusEnum.CREATED,  LocalDate.now(), true, approver, jr, skillsets, jr.getSalaryMin(),jr.getSalaryMax());
-
+        newJP.setPosType(jr.getPosType());
         JobPosting savedJP = jobPostingRepository.saveAndFlush(newJP);
         System.out.println("Job Posting Id " + savedJP.getPostingId() + " is created");
 
