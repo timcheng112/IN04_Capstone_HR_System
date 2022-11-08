@@ -3,6 +3,7 @@ import Department from "../../components/ComboBox/Department";
 import Team from "../../components/ComboBox/Team";
 import JobType from "../../components/ComboBox/JobType";
 import JobRole from "../../components/ComboBox/Role";
+import PosType from "../../components/ComboBox/PosType";
 import JobRequirements from "../../features/jobrequest/JobRequirements";
 import { useState, useEffect } from "react";
 import DatePicker from 'react-datepicker';
@@ -30,6 +31,7 @@ export default function NewRequest() {
   const [jobRole, setJobRole] = useState();
   const [requirements, setRequirements] = useState([]);
   const [team, setTeam] = useState();
+  const [posType, setPosType] = useState();
 
   useEffect(() => {
     api
@@ -92,7 +94,7 @@ export default function NewRequest() {
     }
 
     api
-      .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr, 0, teamId, getUserId(), 0)
+      .saveJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr, 0, teamId, getUserId(), 0, posType.name.toUpperCase())
       .then(() => alert("Successfully saved Job Request."))
       .catch((error) => {
         var message = error.request.response;
@@ -139,7 +141,7 @@ export default function NewRequest() {
     }
 
     api
-      .submitJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr, 0, teamId, getUserId(), 0)
+      .submitJobRequest(title, description, justification, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr, 0, teamId, getUserId(), 0, posType.name.toUpperCase())
       .then(() => alert("Successfully submitted Job Request."))
       .catch((error) => {
         var message = error.request.response;
@@ -253,6 +255,13 @@ export default function NewRequest() {
                   Job Role
                 </label>
                 <JobRole selectedRole={jobRole} setSelectedRole={setJobRole} />
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="role" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Position Type
+                </label>
+                <PosType selectedPosType={posType} setSelectedPosType={setPosType} />
               </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">

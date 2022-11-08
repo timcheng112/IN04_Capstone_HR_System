@@ -52,8 +52,19 @@ public class JobRequestController {
             jobT = JobTypeEnum.PARTTIME;
         }
 
+        System.out.println("posType");
+        System.out.println(posType);
+        PositionTypeEnum posT = null;
+        if (posType.equals("SALESMAN") || posType.equals("CASHIER") || posType.equals("EXECUTIVE")) {
+            posT = PositionTypeEnum.valueOf(posType);
+        } else if (posType.equals("STORE MANAGER")) {
+            posT = PositionTypeEnum.STOREMANAGER;
+        } else {
+            posT = PositionTypeEnum.OFFICEWORKER;
+        }
+
         return jobRequestService.saveJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId, PositionTypeEnum.valueOf(posType));
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId, posT);
     }
 
     @PutMapping(path = "/submitJobRequest")
@@ -80,8 +91,19 @@ public class JobRequestController {
             jobT = JobTypeEnum.PARTTIME;
         }
 
+        System.out.println("posType");
+        System.out.println(posType);
+        PositionTypeEnum posT = null;
+        if (posType.equals("SALESMAN") || posType.equals("CASHIER") || posType.equals("EXECUTIVE")) {
+            posT = PositionTypeEnum.valueOf(posType);
+        } else if (posType.equals("STORE MANAGER")) {
+            posT = PositionTypeEnum.STOREMANAGER;
+        } else {
+            posT = PositionTypeEnum.OFFICEWORKER;
+        }
+
         return jobRequestService.submitJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId, PositionTypeEnum.valueOf(posType));
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId, posT);
     }
 
     @GetMapping(path = "/getJobRequestById")

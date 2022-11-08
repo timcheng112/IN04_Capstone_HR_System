@@ -2,6 +2,7 @@ import Navbar from "../../components/Navbar";
 import Department from "../../components/ComboBox/Department";
 import JobType from "../../components/ComboBox/JobType";
 import JobRole from "../../components/ComboBox/Role";
+import PosType from "../../components/ComboBox/PosType";
 import JobRequirements from "../../features/jobrequest/JobRequirements";
 import { useState, useEffect } from "react";
 import { useParams } from 'react-router';
@@ -28,6 +29,7 @@ export default function PostDetail() {
   const [salaryMax, setSalaryMax] = useState(0);
   const [jobType, setJobType] = useState();
   const [jobRole, setJobRole] = useState();
+  const [posType, setPosType] = useState();
   const [requirements, setRequirements] = useState();
   const [team, setTeam] = useState();
   const [status, setStatus] = useState();
@@ -45,6 +47,14 @@ export default function PostDetail() {
     { id: 2, name: 'Manager' },
   ]
 
+  const posLib = [
+      { id: 1, name: 'Salesman' },
+      { id: 2, name: 'Cashier' },
+      { id: 3, name: 'Store Manager' },
+      { id: 4, name: 'Office Worker' },
+      { id: 5, name: 'Executive' },
+    ]
+
   useEffect(() => {
     setPost(location.state.post)
     console.log(location.state.post)
@@ -54,6 +64,7 @@ export default function PostDetail() {
     setSalaryMax(location.state.post.salaryMax)
     setStatus(location.state.post.status)
     setPostId(location.state.post.postingId)
+    setPosType(location.state.post.posType)
     // reset JobType into JSON Object from String
     var jobT;
     if (location.state.post.jobType == "FULLTIME") {
@@ -75,6 +86,21 @@ export default function PostDetail() {
       roleT = rolesLib[1];
     }
     setJobRole(roleT)
+
+    console.log(location.state.post.posType)
+    var posT;
+    if (location.state.post.posType == "SALESMAN") {
+        posT = posLib[0];
+    } else if (location.state.post.posType == "CASHIER") {
+        posT = posLib[1];
+    } else if (location.state.post.posType == "STOREMANAGER") {
+        posT = posLib[2];
+    } else if (location.state.post.posType == "OFFICEWORKER") {
+        posT = posLib[3];
+    } else{
+        posT = posLib[4];
+    }
+    setPosType(posT);
 
     let yyyy = location.state.post.preferredStartDate.slice(0, 4)
     let mm = location.state.post.preferredStartDate.slice(5, 7)
@@ -138,7 +164,7 @@ export default function PostDetail() {
     }
 
     api
-      .editJobPost(postId, title, description, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr)
+      .editJobPost(postId, title, description, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr, posType.name.toUpperCase())
       .then(() => alert("Successfully editted Job Post."))
       .catch((error) => {
         var message = error.request.response;
@@ -248,6 +274,22 @@ export default function PostDetail() {
                 />
               }
               </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                  <label htmlFor="role" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Position Type
+                  </label>
+                  {status !== 'CLOSED' ?<PosType selectedPosType={posType} setSelectedPosType={setPosType} />
+                    : <input
+                    type="text"
+                    name="pos"
+                    id="pos"
+                    disabled
+                    value={location.state.post.posType.toUpperCase()}
+                    className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                }
+                </div>
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
