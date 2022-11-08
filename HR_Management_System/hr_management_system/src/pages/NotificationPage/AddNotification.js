@@ -32,6 +32,7 @@ export default function AddNotification(props) {
         .addNotification(title, description, parseInt(users))
         .then((response) => {
           console.log(response.data);
+          alert("You have sent a notification over.")
         })
         .then(() => {
           history.push("/AllNotifications");

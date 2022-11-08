@@ -751,7 +751,7 @@ function withinCurrentPeriod() {
               <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 mx-20">
               <ul role="list" className="divide-y divide-gray-200">
                 {/* take out everyone except yourself */}
-                {team.filter( (t) => t.userId !== user.userId).map((u) => (
+                { team.length > 0  ? team.filter( (t) => t.userId !== user.userId).map((u) => (
                     <li >
                       <a
                         href="/performance/appraisals"
@@ -793,7 +793,7 @@ function withinCurrentPeriod() {
                                       className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
                                       aria-hidden="true"
                                     /> */}
-                                    {u.userRole}
+                                    {/* {u.userRole} */}
                                   </p>
                                 </div>
                               </div>
@@ -808,7 +808,8 @@ function withinCurrentPeriod() {
                         </div>
                       </a>
                     </li>
-                  ))}
+                  )): "You have no appraisals to appraise currently."
+                }
                 </ul>
               </div>
             </div>
