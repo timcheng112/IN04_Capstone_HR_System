@@ -735,7 +735,7 @@ export default function Goals() {
               <>
                 <div>
                   <div className="sm:flex-auto">
-                    <h1 className="text-xl font-semibold text-gray-900">
+                    <h1 className="text-3xl font-semibold text-gray-900">
                       Goals
                     </h1>
                     {manager ? (
@@ -1106,11 +1106,13 @@ export default function Goals() {
                                   </div>
                                   {business.length <= 0 ? (
                                     <>
-                                     <div className="mt-10 sm:flex sm:items-center">
+                                      <div className="mt-10 sm:flex sm:items-center">
                                         <button
                                           type="button"
                                           className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                          onClick={() => setOpenAddBusinessGoal(true)}
+                                          onClick={() =>
+                                            setOpenAddBusinessGoal(true)
+                                          }
                                         >
                                           <BriefcaseIcon className="mx-auto h-12 w-12 text-gray-400" />
                                           <span className="mt-2 block text-sm font-medium text-gray-900">
@@ -1510,7 +1512,9 @@ export default function Goals() {
                                                   type="button"
                                                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                                                   onClick={() => {
-                                                    setOpenAddBusinessGoal(true);
+                                                    setOpenAddBusinessGoal(
+                                                      true
+                                                    );
                                                   }}
                                                 >
                                                   Add Business Goal
@@ -1698,7 +1702,22 @@ export default function Goals() {
                                 </div>
                               </>
                             ) : (
-                              <>No action required</>
+                              <>
+                                <div className="min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
+                                  <div className="mx-auto max-w-7xl py-12 px-4 text-center sm:px-6 lg:py-20 lg:px-8">
+                                    <h2 className="text-xl font-bold tracking-tight text-gray-900 sm:text-xl">
+                                      <span className="block">
+                                        No action required
+                                      </span>
+                                    </h2>
+                                    <div className="mt-8 flex justify-center">
+                                      <div className="inline-flex rounded-md shadow">
+                                        
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </>
                             )}
                           </>
                         )}

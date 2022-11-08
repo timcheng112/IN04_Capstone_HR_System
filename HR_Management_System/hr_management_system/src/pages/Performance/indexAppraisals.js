@@ -1035,8 +1035,20 @@ export default function Appraisals() {
                       </>
                     ) : (
                       <>
-                        {" "}
-                        <div>No action required</div>
+                        <div>
+                          <div className="min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
+                            <div className="mx-auto max-w-7xl py-12 px-4 text-center sm:px-6 lg:py-20 lg:px-8">
+                              <h2 className="text-xl font-bold tracking-tight text-gray-900 sm:text-xl">
+                                <span className="block">
+                                  No action required
+                                </span>
+                              </h2>
+                              <div className="mt-8 flex justify-center">
+                                <div className="inline-flex rounded-md shadow"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </>
                     )}
                   </div>
