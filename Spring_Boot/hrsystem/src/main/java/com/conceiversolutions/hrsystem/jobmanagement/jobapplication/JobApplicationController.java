@@ -31,6 +31,13 @@ public class JobApplicationController {
         return jobApplicationService.createJobApplication(postingId, applicantId, userSkillIds, LocalDate.parse(availableStartDate));
     }
 
+    @PostMapping("/createJobApplicationTempFix")
+    public Long createJobApplicationTempFix(@RequestParam("postingId") Long postingId,
+                                     @RequestParam("applicantId") Long applicantId,
+                                     @RequestParam("availableStartDate") String availableStartDate) {
+        return jobApplicationService.createJobApplicationTempFix(postingId, applicantId, LocalDate.parse(availableStartDate));
+    }
+
     @DeleteMapping("/cancelJobApplication")
     public String cancelJobApplication(@RequestParam("applicationId") Long applicationId,
                                        @RequestParam("applicantId") Long applicantId) {

@@ -6,6 +6,10 @@ import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPostingReposi
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillsetRepositoy;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.docdata.DocDataRepository;
+import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
+import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -24,6 +28,8 @@ public class JobApplicationService {
     private final JobPostingRepository jobPostingRepository;
     private final UserRepository userRepository;
     private final UserSkillsetRepositoy userSkillsetRepositoy;
+    private final QualificationService qualificationService;
+    private final DocDataRepository docDataRepository;
 
 
     public List<JobApplication> findApplicationsByPostingId(Long postingId) {
@@ -183,5 +189,61 @@ public class JobApplicationService {
         application.setLastUpdatedAt(LocalDateTime.now());
 
         return "Job Application succssfully updated";
+    }
+
+    public Long createJobApplicationTempFix(Long postingId, Long applicantId, LocalDate availableStartDate) {
+        System.out.println("JobApplicationService.createJobApplicationTempFix");
+        System.out.println("postingId = " + postingId + ", applicantId = " + applicantId + ", availableStartDate = " + availableStartDate);
+
+        User a = userRepository.findById(applicantId).get();
+        User applicant = qualificationService.checkQIExists(a);
+
+        if (availableStartDate.isBefore(LocalDate.now().plusDays(1))) {
+            throw new IllegalStateException("Unable to set available date so close");
+        }
+
+//        List<UserSkillset> userSkills = new ArrayList<>();
+//        if (!userSkillIds.isEmpty()) {
+//            userSkills = userSkillsetRepositoy.findAllById(userSkillIds);
+//        }
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+        Optional<JobPosting> jobPostOptional = jobPostingRepository.findById(postingId);
+        if (jobPostOptional.isEmpty()) {
+            throw new IllegalStateException("Job Posting cannot be found, cannot proceed");
+        } else if (!jobPostOptional.get().getStatus().equals(JobStatusEnum.CREATED)) {
+            throw new IllegalStateException("Job Posting is not valid for applying, cannot proceed");
+        }
+
+//        Optional<JobPosting> jobPostOptional = jobPostingRepository.getValidPosting(postingId, JobStatusEnum.CREATED);
+//        if (jobPostOptional.isEmpty()) {
+//            throw new IllegalStateException("Job Posting is not valid for applying, cannot proceed");
+//        }
+        JobPosting jobPosting = jobPostOptional.get();
+        System.out.println("BBBBBBBBBBBBBBBBBBBBBB");
+
+        JobApplication newApplication = new JobApplication(jobPosting, LocalDate.now(), JobStatusEnum.PENDING, applicant, new ArrayList<>(), availableStartDate);
+
+        QualificationInformation qi = applicant.getQualificationInformation();
+        if (qi.getCv() != null) {
+            DocData cv = docDataRepository.findById(qi.getCv().getDocId()).get();
+            newApplication.setCV(cv);
+        }
+        if (qi.getCoverLetter() != null) {
+            DocData coverLetter = docDataRepository.findById(qi.getCoverLetter().getDocId()).get();
+            newApplication.setCoverLetter(coverLetter);
+        }
+        if (qi.getTranscript() != null) {
+            DocData transcript = docDataRepository.findById(qi.getTranscript().getDocId()).get();
+            newApplication.setTranscript(transcript);
+        }
+
+        JobApplication savedApplication = jobApplicationRepository.saveAndFlush(newApplication);
+        List<JobApplication> applications = applicant.getApplications();
+        applications.add(savedApplication);
+        applicant.setApplications(applications);
+        userRepository.save(applicant);
+
+        return savedApplication.getApplicationId();
     }
 }

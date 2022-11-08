@@ -60,6 +60,7 @@ export default function Profile() {
   const [curfileName, setcurFileName] = useState(null);
   const [curclfileName, setcurclfileName] = useState(null);
   const [curtfileName, setcurtfileName] = useState(null);
+  const [fName, setFName] = useState(null);
 
   useEffect(() => {
     api.getUserRecommendations(user).
@@ -135,7 +136,7 @@ export default function Profile() {
             setTId(response.data.transcript.docId);
           }
 
-          console.log(list);
+//          console.log(list);
           setUSS(list);
           console.log("AA");
         });
@@ -145,35 +146,35 @@ export default function Profile() {
             setSkills(response.data);
             var skillMap = new Map();
             response.data.map(item => skillMap.set(item.skillsetName, item.skillsetId));
-            console.log(skillMap.size);
+//            console.log(skillMap.size);
             setHashmap(skillMap);
             list.forEach((item) => {
                   ids.push(skillMap.get(item.skill));
                   levels.push(item.level);
               })
-              console.log(ids);
-              console.log(levels);
-              console.log(skillMap);
+//              console.log(ids);
+//              console.log(levels);
+//              console.log(skillMap);
               setSkillIds(ids);
               setSkillLevels(levels);
-            console.log("AAAA")
+//            console.log("AAAA")
         });
 
     }, []);
   useEffect(() => {
-    console.log("languages")
-    console.log(languages);
+//    console.log("languages")
+//    console.log(languages);
   }, [languages])
   useEffect(() => {
-    console.log("userSkills")
-    console.log(userSkills);
+//    console.log("userSkills")
+//    console.log(userSkills);
   }, [userSkills])
   useEffect(() => {
-    console.log("uss")
-    console.log(uss);
-    console.log("userSkills")
-    console.log(userSkills);
-    console.log(hashmap);
+//    console.log("uss")
+//    console.log(uss);
+//    console.log("userSkills")
+//    console.log(userSkills);
+//    console.log(hashmap);
     let ids = [];
     let levels = [];
     uss.forEach((item) => {
@@ -185,21 +186,21 @@ export default function Profile() {
 //    } else {
 //        console.log("duplicate not located")
 //    }
-    console.log(ids);
-    console.log(levels);
+//    console.log(ids);
+//    console.log(levels);
     setSkillIds(ids);
     setSkillLevels(levels);
   }, [uss])
 
   function handleFile(e) {
-    console.log(e.target.files, "--");
-    console.log(e.target.files[0], "$SSSSS$");
+//    console.log(e.target.files, "--");
+//    console.log(e.target.files[0], "$SSSSS$");
     setFileState(e.target.files[0]);
     setFileName(e.target.files[0].name);
   }
 
   function uploadFile(type) {
-    console.log("upload file")
+//    console.log("upload file")
     let formData = new FormData();
     if (file) {
       formData.append("file", file);
@@ -212,7 +213,7 @@ export default function Profile() {
               //should return a long id
               setDocId(response.data);
               // setDocId(response.data)
-              console.log(userInfo);
+//              console.log(userInfo);
               alert("CV added to user succesfully");
             }
             setcurFileName(fileName);
@@ -231,7 +232,7 @@ export default function Profile() {
     }}
 
   function updateUserDetails() {
-    console.log("UPDATING USER DETAILSSSSS");
+//    console.log("UPDATING USER DETAILSSSSS");
     let boo = true;
     api.updateUserDetails(user, firstName, lastName, aboutMe, level, school, year, citizenship, race, languages)
         .then((response) => {
@@ -246,20 +247,20 @@ export default function Profile() {
     for (var i = 0; i < len; i++) {
         map.set(parseInt(skillIds[i]), parseInt(skillLevels[i]));
     }
-    console.log(map);
+//    console.log(map);
     var newMap = {};
     var checkerMap = [];
     var checker = false;
     map.forEach((val:int, key: int) => {
         newMap[key] = val;
         checkerMap.push(key);
-        console.log(checkerMap)
+//        console.log(checkerMap)
         if (checkerMap.includes(key)) {
             checker = true;
         }
     })
 
-    console.log(newMap);
+//    console.log(newMap);
     api.setSkillsets(user, newMap)
         .then((response) => {
             console.log("set user skillsets ok")
@@ -278,32 +279,35 @@ export default function Profile() {
   }
 
    function downloadFile(fileType) {
-     console.log("DDDDDDOWNLOAD");
-     console.log(cvId);
-     console.log(curfileName);
-     console.log(fileType);
+//     console.log("DDDDDDOWNLOAD");
+//     console.log(cvId);
+//     console.log(curfileName);
+//     console.log(fileType);
 
      var docToGet;
      if (fileType === "CV") {
         docToGet = cvId;
+        setFName(curfileName);
      } else if (fileType == "CL") {
         docToGet = clId;
+        setFName(curclfileName);
      } else if (fileType == "T") {
         docToGet = tId;
+        setFName(curtfileName);
      }
 
      api.downloadDocument(docToGet).then((response) => {
-       console.log(docId);
+//       console.log(docId);
        const fileName =
          response.headers["content-disposition"].split("filename=")[1];
-       console.log(fileName);
+//       console.log(fileName);
        api.getDocById(docToGet).then((response) => {
          //console.log(response.data);
          const url = window.URL.createObjectURL(response.data);
 
          const link = document.createElement("a");
          link.href = url;
-         link.setAttribute("download", curfileName);
+         link.setAttribute("download", fName);
          document.body.appendChild(link);
          link.click();
          link.parentNode.removeChild(link);
@@ -312,17 +316,17 @@ export default function Profile() {
    }
 
   function handleclFile(e) {
-    console.log("handle file")
-    console.log(e.target.files, "--");
-    console.log(e.target.files[0], "$SSSSS$");
+//    console.log("handle file")
+//    console.log(e.target.files, "--");
+//    console.log(e.target.files[0], "$SSSSS$");
     setclFileState(e.target.files[0]);
     setclfileName(e.target.files[0].name);
   }
 
   function uploadclFile(type) {
     //      e.preventDefault();
-    console.log("upload file")
-    console.log(clfile)
+//    console.log("upload file")
+//    console.log(clfile)
 
     let formData = new FormData();
     if (clfile) {
@@ -337,7 +341,7 @@ export default function Profile() {
               //should return a long id
               setDocId(response.data);
               // setDocId(response.data)
-              console.log(userInfo);
+//              console.log(userInfo);
               alert("Cover Letter added to user succesfully");
             }
             setclFileState(null);
@@ -359,17 +363,17 @@ export default function Profile() {
 
 
   function handletFile(e) {
-    console.log("handle file")
-    console.log(e.target.files, "--");
-    console.log(e.target.files[0], "$SSSSS$");
+//    console.log("handle file")
+//    console.log(e.target.files, "--");
+//    console.log(e.target.files[0], "$SSSSS$");
     settFileState(e.target.files[0]);
     settfileName(e.target.files[0].name);
   }
 
   function uploadtFile(type) {
     //      e.preventDefault();
-    console.log("upload file")
-    console.log(tfile)
+//    console.log("upload file")
+//    console.log(tfile)
 
     let formData = new FormData();
     if (tfile) {
@@ -384,7 +388,7 @@ export default function Profile() {
               //should return a long id
               setDocId(response.data);
               // setDocId(response.data)
-              console.log(userInfo);
+//              console.log(userInfo);
               alert("Transcript added to user succesfully");
             }
             setcurtfileName(tfileName);

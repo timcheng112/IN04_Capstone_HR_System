@@ -201,6 +201,9 @@ const api = {
   createJobApplication(postingId, applicantId, userSkillIds, availableStartDate) {
     return axios.post(`http://localhost:9191/api/jobapplications/createJobApplication?postingId=${postingId}&applicantId=${applicantId}&userSkillIds=${userSkillIds}&availableStartDate=${availableStartDate}`);
   },
+  createJobApplicationTempFix(postingId, applicantId, availableStartDate) {
+    return axios.post(`http://localhost:9191/api/jobapplications/createJobApplicationTempFix?postingId=${postingId}&applicantId=${applicantId}&availableStartDate=${availableStartDate}`);
+  },
   cancelJobApplication(applicationId, applicantId) {
     return axios.delete(`http://localhost:9191/api/jobapplications/cancelJobApplication?applicationId=${applicationId}&applicantId=${applicantId}`);
   },
