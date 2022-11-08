@@ -60,4 +60,11 @@ public class DepartmentController {
     public Department getDepartmentByEmployeeId(@RequestParam("employeeId") Long employeeId) {
         return departmentService.getDepartmentByEmployeeId(employeeId);
     }
+
+    @GetMapping(path = "{employeeId}/isHead")
+    public Long isEmployeeDepartmentHead(@PathVariable("employeeId") Long employeeId) throws Exception {
+        return departmentService.isEmployeeDepartmentHead(employeeId);
+    }
+
+    
 }

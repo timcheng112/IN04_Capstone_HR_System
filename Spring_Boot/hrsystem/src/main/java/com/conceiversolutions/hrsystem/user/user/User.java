@@ -167,6 +167,9 @@ public class User implements UserDetails {
     @Column(name = "bank_acc_no", nullable = true, length = 32)
     private String bankAccNo;
 
+    @Column(name= "bank_name", nullable = true)
+    private String bankName;
+
     @OneToMany
     @JoinColumn(name = "unread_notifications")
     private List<Notification> notificationsUnread;

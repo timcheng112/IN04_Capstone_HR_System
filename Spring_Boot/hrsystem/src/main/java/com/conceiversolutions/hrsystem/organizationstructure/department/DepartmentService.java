@@ -1,6 +1,5 @@
 package com.conceiversolutions.hrsystem.organizationstructure.department;
 
-
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.Organization;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationRepository;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+//come back and add relationship - S&A
 @Service
 @AllArgsConstructor
 public class DepartmentService {
@@ -29,23 +29,25 @@ public class DepartmentService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
 
-//    @Autowired
-//    public DepartmentService(DepartmentRepository departmentRepository, OrganizationRepository organizationRepository) {
-//        this.departmentRepository = departmentRepository;
-//        this.organizationRepository = organizationRepository;
-//    }
+    // @Autowired
+    // public DepartmentService(DepartmentRepository departmentRepository,
+    // OrganizationRepository organizationRepository) {
+    // this.departmentRepository = departmentRepository;
+    // this.organizationRepository = organizationRepository;
+    // }
 
     public List<Department> getAllDepartment() {
         System.out.println("DepartmentService.getAllDepartment");
         List<Department> dept = departmentRepository.findAll();
-//        System.out.println(dept.isEmpty());
+        // System.out.println(dept.isEmpty());
         if (dept.isEmpty()) {
             throw new IllegalStateException("Unable to retrieve, no departments exist");
         }
 
-        for(Department d : dept){
-            //get org, dept, team
-            System.out.println("Department ID is : " + d.getDepartmentId() + ", Department name is : " + d.getDepartmentName());
+        for (Department d : dept) {
+            // get org, dept, team
+            System.out.println(
+                    "Department ID is : " + d.getDepartmentId() + ", Department name is : " + d.getDepartmentName());
             Organization org = d.getOrganization();
             org.setDepartments(new ArrayList<>());
             org.setOrganizationHead(null);
@@ -75,8 +77,8 @@ public class DepartmentService {
 
             List<Team> deptTeams = d.getTeams();
 
-//            d.getOrganization().getOrganizationHead();
-            for(Team t : deptTeams){
+            // d.getOrganization().getOrganizationHead();
+            for (Team t : deptTeams) {
                 System.out.println("for each team " + t.getTeamName());
                 t.setRoster(null);
                 t.setUsers(new ArrayList<>());
@@ -89,12 +91,13 @@ public class DepartmentService {
         return dept;
     }
 
-    public Department getDepartment(Long id){
+    public Department getDepartment(Long id) {
         System.out.println("DepartmentService.getDepartment");
         Optional<Department> dept = departmentRepository.findById(id);
-        if(dept.isPresent()){
+        if (dept.isPresent()) {
             Department d = dept.get();
-            System.out.println("Department ID is : " + d.getDepartmentId() + ", Department name is : " + d.getDepartmentName());
+            System.out.println(
+                    "Department ID is : " + d.getDepartmentId() + ", Department name is : " + d.getDepartmentName());
             Organization org = d.getOrganization();
             org.setDepartments(new ArrayList<>());
             org.setOrganizationHead(null);
@@ -124,9 +127,8 @@ public class DepartmentService {
 
             List<Team> deptTeams = d.getTeams();
 
-
-//            d.getOrganization().getOrganizationHead();
-            for(Team t : deptTeams){
+            // d.getOrganization().getOrganizationHead();
+            for (Team t : deptTeams) {
                 System.out.println("for each team " + t.getTeamName());
                 t.setRoster(null);
                 t.setUsers(new ArrayList<>());
@@ -135,7 +137,7 @@ public class DepartmentService {
                 t.setTeamHead(null);
             }
             return d;
-        }else{
+        } else {
             throw new IllegalStateException("Department does not exist.");
         }
     }
@@ -154,14 +156,16 @@ public class DepartmentService {
         if (!deptHead.getUserRole().equals(RoleEnum.MANAGER)) {
             throw new IllegalStateException("User selected is not a Manager, please appoint a manager instead");
         } else if (!deptHead.isEnabled()) {
-            throw new IllegalStateException("Manager selected is not an active employee, please appoint an active employee instead");
+            throw new IllegalStateException(
+                    "Manager selected is not an active employee, please appoint an active employee instead");
         }
 
-//        Department newDept = new Department(Long.valueOf(4), deptName, org, new ArrayList<>(), deptHead);
+        // Department newDept = new Department(Long.valueOf(4), deptName, org, new
+        // ArrayList<>(), deptHead);
         Department newDept = new Department(deptName, org, new ArrayList<>(), deptHead, false);
-//        System.out.println(newDept.getDepartmentName());
+        // System.out.println(newDept.getDepartmentName());
         Department savedDept = departmentRepository.saveAndFlush(newDept);
-//        System.out.println(savedDept.getDepartmentId());
+        // System.out.println(savedDept.getDepartmentId());
         List<Department> orgDepts = org.getDepartments();
         orgDepts.add(savedDept);
         org.setDepartments(orgDepts);
@@ -178,6 +182,7 @@ public class DepartmentService {
         d1.setTeams(department.getTeams());
         departmentRepository.save(d1);
     }
+
     public boolean deleteDepartment(Long departmentId) {
         Optional<Department> d = departmentRepository.findById(departmentId);
         if (d.isEmpty()) {
@@ -206,10 +211,9 @@ public class DepartmentService {
 
         return true;
     }
-//    public void deleteAllDepartments(){
-//        departmentRepository.deleteAll();
-//    }
-
+    // public void deleteAllDepartments(){
+    // departmentRepository.deleteAll();
+    // }
 
     public String changeDeptHead(Integer deptId, Integer newHeadId) {
         Optional<Department> d = departmentRepository.findById(Long.valueOf(deptId));
@@ -223,31 +227,32 @@ public class DepartmentService {
         if (!newDeptHead.getUserRole().equals(RoleEnum.MANAGER)) {
             throw new IllegalStateException("User selected is not a Manager, please appoint a manager instead");
         } else if (!newDeptHead.isEnabled()) {
-            throw new IllegalStateException("Manager selected is not an active employee, please appoint an active employee instead");
+            throw new IllegalStateException(
+                    "Manager selected is not an active employee, please appoint an active employee instead");
         }
 
         dept.setDepartmentHead(newDeptHead);
 
         departmentRepository.saveAndFlush(dept);
 
-        return "Department " + dept.getDepartmentName() + " head has been successfully updated to be " + newDeptHead.getFirstName() + " " + newDeptHead.getLastName();
+        return "Department " + dept.getDepartmentName() + " head has been successfully updated to be "
+                + newDeptHead.getFirstName() + " " + newDeptHead.getLastName();
     }
 
     public Department getDepartmentByEmployeeId(Long employeeId) {
         Optional<Department> dept = departmentRepository.findDepartmentByEmployeeId(employeeId);
-        if(dept.isPresent()){
+        if (dept.isPresent()) {
             Department d = dept.get();
-            System.out.println("Department ID is : " + d.getDepartmentId() + ", Department name is : " + d.getDepartmentName());
+            System.out.println(
+                    "Department ID is : " + d.getDepartmentId() + ", Department name is : " + d.getDepartmentName());
             Organization org = d.getOrganization();
             org.setDepartments(new ArrayList<>());
             org.setOrganizationHead(null);
             d.setDepartmentHead(null);
 
-
-
             List<Team> deptTeams = d.getTeams();
 
-            for(Team t : deptTeams){
+            for (Team t : deptTeams) {
                 System.out.println("for each team " + t.getTeamName());
                 t.setRoster(null);
                 t.setUsers(new ArrayList<>());
@@ -259,5 +264,50 @@ public class DepartmentService {
         } else {
             throw new IllegalStateException("Department does not exist.");
         }
+    }
+
+    public Long isEmployeeDepartmentHead(Long employeeId) {
+        List<Department> allDepartments = getAllDepartment();
+
+        for (Department d : allDepartments) {
+            if (d.getDepartmentHead().getUserId() == employeeId) {
+                return d.getDepartmentId();
+            }
+        }
+        return Long.valueOf(-1);
+    }
+
+    public List<User> getDepartmentHeads() {
+        System.out.println("DepartmentService.getDepartmentHeads");
+        List<User> allDepartmentHeads = new ArrayList<>();
+
+        List<Department> allDepartments = departmentRepository.findAll();
+
+        for (Department d : allDepartments) {
+            Optional<Organization> organization = organizationRepository.findById(Long.valueOf(1));
+
+            System.out.println("organization optional " + organization);
+
+            if (organization.isPresent()) {
+                d.setOrganization(organization.get());
+            } 
+
+            System.out.println("Department id " + d.getDepartmentId());
+            User user = d.getDepartmentHead();
+            User u = new User();
+
+            u.setUserId(user.getUserId());
+            u.setFirstName(user.getFirstName());
+            u.setLastName(user.getLastName());
+            u.setWorkEmail(user.getWorkEmail());
+            u.setUserRole(user.getUserRole());
+            u.setProfilePic(user.getProfilePic());
+            u.setIsBlackListed(user.getIsBlackListed());
+
+            System.out.println("department head " + u);
+            
+            allDepartmentHeads.add(u);
+        }
+        return allDepartmentHeads;
     }
 }

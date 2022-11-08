@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Long> {
     
-    @Query("SELECT g FROM Goal g Where g.year = ?1")
+    @Query("SELECT g FROM Goal g WHERE g.year = ?1")
     List<Goal> findAllGoalsByYear(String year);
-
+    
 }

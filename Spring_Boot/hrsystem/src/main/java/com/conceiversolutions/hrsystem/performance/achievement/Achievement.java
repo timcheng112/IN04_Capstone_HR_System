@@ -27,7 +27,7 @@ public class Achievement {
     private LocalDate lastModified;
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Goal.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Goal.class)
     @JoinColumn(name = "goal")
     private Goal employeeGoal;
 
