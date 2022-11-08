@@ -1,5 +1,5 @@
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import DatePicker from 'react-datepicker';
@@ -22,6 +22,18 @@ export default function AddWork({ open, setOpen, refreshKeyHandler }) {
   const [enabled, setEnabled] = useState(false)
   const [user, setUser] = useState(getUserId());
   const [error, setError] = useState();
+
+  useEffect(()=>{
+    if(!open){
+      setPosition('');
+      setCompany('');
+      setDescription('');
+      setStartDate(new Date());
+      setEndDate(new Date());
+      setEnabled(false);
+    }
+  },[open])
+
   function add(){    
     var date = startDate.getDate()
     if (startDate.getDate() < 10) {
@@ -48,6 +60,7 @@ export default function AddWork({ open, setOpen, refreshKeyHandler }) {
     api.addWorkExperience(user, position, company, helpStartDate.trim(), helpEndDate.trim(), enabled, description)
     .then(() => {alert("Successfully added.");refreshKeyHandler();})
     .catch((error) => setError(error));
+    setOpen(false);
   }
 
   return (

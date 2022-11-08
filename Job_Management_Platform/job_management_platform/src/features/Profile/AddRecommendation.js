@@ -11,15 +11,27 @@ export default function Recommendation({ open, setOpen,refreshKeyHandler }) {
   const [user, setUser] = useState(getUserId());
   const [error, setError] = useState();
   const[relationship,setRelationship] = useState("")
+
   useEffect(() => {
     api.getUser(getUserId()).then((response) => {
       console.log(response.data);
     });
   }, []);
+
+  useEffect(()=>{
+    if(!open){
+      setName('');
+      setEmail('');
+      setPhone('');
+      setRelationship('');
+    }
+  },[open])
+
   function add(){    
     api.addRecommendation(user,name,phone,email,relationship)
     .then(() => {alert("Successfully added.");refreshKeyHandler();})
     .catch((error) => setError(error));
+    setOpen(false);
   }
 
   return (
