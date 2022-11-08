@@ -43,7 +43,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@EqualsAndHashCode
+//@EqualsAndHashCode
 @Getter
 @Setter
 public class User implements UserDetails {

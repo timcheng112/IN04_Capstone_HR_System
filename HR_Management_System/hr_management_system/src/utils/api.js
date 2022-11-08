@@ -772,21 +772,21 @@ const api = {
     return axios.get(`http://localhost:9191/api/qualification/getUserExperiences?userId=${userId}`);
   },
   getShortlistedApplicants(postingId) {
-    return axios.get(`http://localhost:9191/api/jobapplications/getShortlistedApplicants?requestId=${requestId}`);
+    return axios.get(`http://localhost:9191/api/jobapplications/getShortlistedApplicants?postingId=${postingId}`);
   },
   getOfferedApplicants(postingId) {
-    return axios.get(`http://localhost:9191/api/jobapplications/getOfferedApplicants?requestId=${requestId}`);
+    return axios.get(`http://localhost:9191/api/jobapplications/getOfferedApplicants?postingId=${postingId}`);
   },
   getRejectedApplicants(postingId) {
-    return axios.get(`http://localhost:9191/api/jobapplications/getRejectedApplicants?requestId=${requestId}`);
+    return axios.get(`http://localhost:9191/api/jobapplications/getRejectedApplicants?postingId=${postingId}`);
   },
   shortlistApplicant(userId, postingId) {
-    return axios.put(`http://localhost:9191/api/jobapplications/shortlistApplicant?userId=${userId}&requestId=${requestId}`);
+    return axios.put(`http://localhost:9191/api/jobapplications/shortlistApplicant?userId=${userId}&postingId=${postingId}`);
   },
   rejectApplicant(userId, postingId) {
-    return axios.put(`http://localhost:9191/api/jobapplications/rejectApplicant?userId=${userId}&requestId=${requestId}`);
+    return axios.put(`http://localhost:9191/api/jobapplications/rejectApplicant?userId=${userId}&postingId=${postingId}`);
   },
-  offerApplicant(userId, postingId, startDate, salaryOffered)
+  offerApplicant(userId, postingId, startDate, salaryOffered){
     return axios.put(`http://localhost:9191/api/jobapplications/offerApplicant?userId=${userId}&postingId=${postingId}&startDate=${startDate}&salaryOffered=${salaryOffered}`);
   },
 };

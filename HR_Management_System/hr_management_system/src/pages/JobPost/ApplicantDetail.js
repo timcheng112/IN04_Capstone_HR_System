@@ -25,6 +25,7 @@ export default function Profile() {
   const [languages, setLanguages] = useState([])
   const [userSkills, setUserSkills] = useState(null)
   const [job, setJob] = useState()
+  const [uId, setUId] = useState()
 
   const [curfileName, setcurFileName] = useState(null);
   const [curclfileName, setcurclfileName] = useState(null);
@@ -38,23 +39,24 @@ export default function Profile() {
 
   useEffect(() => {
     setApplicant(location.state.applicant)
-    setFirstName(location.state.applicant.firstName)
-    setLastName(location.state.applicant.lastName)
-    setCitizenship(location.state.applicant.citizenship)
-    setRace(location.state.applicant.race)
+    setUId(location.state.applicant.applicant.userId)
+    setFirstName(location.state.applicant.applicant.firstName)
+    setLastName(location.state.applicant.applicant.lastName)
+    setCitizenship(location.state.applicant.applicant.citizenship)
+    setRace(location.state.applicant.applicant.race)
     setJob(location.state.job)
     console.log(location.state.job)
   }, []);
 
   useEffect(() => {
-    api.getUserRecommendations(location.state.applicant.userId).
+    api.getUserRecommendations(location.state.applicant.applicant.userId).
       then((response) => {
         console.log(response.data);
         setRecommendations(response.data);
       });
   }, []);
   useEffect(() => {
-    api.getUserExperiences(location.state.applicant.userId).
+    api.getUserExperiences(location.state.applicant.applicant.userId).
       then((response) => {
         console.log(response.data);
         setWorks(response.data);
@@ -62,7 +64,7 @@ export default function Profile() {
   }, []);
 
   useEffect(() => {
-    api.getUserQualificationInformation(location.state.applicant.userId).
+    api.getUserQualificationInformation(location.state.applicant.applicant.userId).
       then((response) => {
         console.log(response.data);
         setAboutMe(response.data.personalStatement);
@@ -124,6 +126,11 @@ export default function Profile() {
         link.parentNode.removeChild(link);
       });
     });
+  }
+
+  function shortList(){
+    api.shortlistApplicant(uId,job.postingId)
+    .then(() => {alert("Successfully shortlist the applicant.")});
   }
 
   return (
@@ -418,24 +425,25 @@ export default function Profile() {
               >
                 Back
               </button>
-              <button
+              {applicant.status=='PENDING' && <button
                 type="button"
+                onClick = {()=>shortList()}
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Shortlist
-              </button>
-              <button
+              </button>}
+              {(applicant.status=='PENDING' || applicant.status=='SHORTLISTED') && <button
                 type="button"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 Reject
-              </button>
-              <button
+              </button>}
+              {applicant.status=='SHORTLISTED' && <button
                 type="button"
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Offer
-              </button>
+              </button>}
             </div>
           </div>
         </form>

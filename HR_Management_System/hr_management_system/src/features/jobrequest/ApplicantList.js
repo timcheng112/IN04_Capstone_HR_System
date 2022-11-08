@@ -35,7 +35,7 @@ export default function ApplicantList({candidates,job}){
                     <div>
                       <button
                         type='button'
-                        onClick={() => history.push({ pathname: "/hiring/applicantdetail", state: { applicant: candidate.applicant, job: job } })}>
+                        onClick={() => history.push({ pathname: "/hiring/applicantdetail", state: { applicant: candidate, job: job } })}>
                         <ChevronRightIcon
                           className="h-5 w-5 text-gray-400 group-hover:text-gray-700"
                           aria-hidden="true"

@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name="job_postings")
 @Getter
 @Setter
-@EqualsAndHashCode
+//@EqualsAndHashCode
 @ToString
 public class JobPosting {
     @Id

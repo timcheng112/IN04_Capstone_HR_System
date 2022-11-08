@@ -16,6 +16,7 @@ export default function RequestOption({ request, refreshKeyHandler }) {
   const [trash, setTrash] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const [post, setPost] =useState();
 
   useEffect(() => {
     api
@@ -23,6 +24,15 @@ export default function RequestOption({ request, refreshKeyHandler }) {
       .then((response) => {
         setUser(response.data);
         //        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  useEffect(() => {
+    api
+      .getJobPostByRequest(request.requestId)
+      .then((response) => {
+        setPost(response.data);
       })
       .catch((error) => setError(error));
   }, []);
@@ -74,7 +84,7 @@ export default function RequestOption({ request, refreshKeyHandler }) {
         </button>
         {request.status === 'APPROVED' && <button
           type="button"
-          onClick={() =>  history.push({ pathname: "/hiring/allapplicants", state: { job: request }})}
+          onClick={() =>  history.push({ pathname: "/hiring/allapplicants", state: { job: post }})}
         >
           <ChevronRightIcon
             className="h-5 w-5 text-gray-400 group-hover:text-gray-700"
