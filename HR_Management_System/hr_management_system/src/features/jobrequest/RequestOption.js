@@ -72,15 +72,15 @@ export default function RequestOption({ request, refreshKeyHandler }) {
           />
           <span className="hidden md:block">Delete</span>
         </button>
-        <button
+        {request.status === 'APPROVED' && <button
           type="button"
-          onClick={() =>  history.push({ pathname: "/hiring/allapplicants"})}
+          onClick={() =>  history.push({ pathname: "/hiring/allapplicants", state: { job: request }})}
         >
           <ChevronRightIcon
             className="h-5 w-5 text-gray-400 group-hover:text-gray-700"
             aria-hidden="true"
           />
-        </button>
+        </button>}
       </div>
       <ConfirmDialog
         title="Job Request"
