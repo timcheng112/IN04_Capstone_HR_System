@@ -529,22 +529,22 @@ export default function Appraisals() {
                                       type="date"
                                       name="start-date"
                                       id="start-date"
-                                      min={format(
-                                        new Date(
-                                          new Date().getFullYear(),
-                                          new Date().getMonth(),
-                                          new Date().getDate()
-                                        ),
-                                        "yyyy-MM-dd"
-                                      )}
-                                      max={format(
-                                        new Date(
-                                          new Date().getFullYear(),
-                                          12,
-                                          31
-                                        ),
-                                        "yyyy-MM-dd"
-                                      )}
+                                      // min={format(
+                                      //   new Date(
+                                      //     new Date().getFullYear(),
+                                      //     new Date().getMonth(),
+                                      //     new Date().getDate()
+                                      //   ),
+                                      //   "yyyy-MM-dd"
+                                      // )}
+                                      // max={format(
+                                      //   new Date(
+                                      //     new Date().getFullYear(),
+                                      //     12,
+                                      //     31
+                                      //   ),
+                                      //   "yyyy-MM-dd"
+                                      // )}
                                       className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                       onChange={(s) =>
                                         setStartDate(s.target.value)
@@ -567,22 +567,22 @@ export default function Appraisals() {
                                       name="end-date"
                                       id="end-date"
                                       className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                      min={format(
-                                        new Date(
-                                          new Date().getFullYear(),
-                                          new Date().getMonth(),
-                                          new Date().getDate()
-                                        ),
-                                        "yyyy-MM-dd"
-                                      )}
-                                      max={format(
-                                        new Date(
-                                          new Date().getFullYear(),
-                                          12,
-                                          31
-                                        ),
-                                        "yyyy-MM-dd"
-                                      )}
+                                      // min={format(
+                                      //   new Date(
+                                      //     new Date().getFullYear(),
+                                      //     new Date().getMonth(),
+                                      //     new Date().getDate()
+                                      //   ),
+                                      //   "yyyy-MM-dd"
+                                      // )}
+                                      // max={format(
+                                      //   new Date(
+                                      //     new Date().getFullYear(),
+                                      //     12,
+                                      //     31
+                                      //   ),
+                                      //   "yyyy-MM-dd"
+                                      // )}
                                       onChange={(e) =>
                                         setEndDate(e.target.value)
                                       }
@@ -721,12 +721,18 @@ export default function Appraisals() {
                                           {renderAppraisalStatus(appraisal)}
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-left text-gray-500">
-                                          <a
-                                            href="#"
-                                            className="text-indigo-600"
-                                          >
-                                            View
-                                          </a>
+                                          {appraisal.promotion ? (
+                                            <>
+                                              <a
+                                                href="#"
+                                                className="text-indigo-600"
+                                              >
+                                                View
+                                              </a>
+                                            </>
+                                          ) : (
+                                            <>NA</>
+                                          )}
                                         </td>
                                       </tr>
                                     ))}
@@ -761,18 +767,18 @@ export default function Appraisals() {
                                   type="date"
                                   name="start-date"
                                   id="start-date"
-                                  min={format(
-                                    new Date(
-                                      new Date().getFullYear(),
-                                      new Date().getMonth(),
-                                      new Date().getDate()
-                                    ),
-                                    "yyyy-MM-dd"
-                                  )}
-                                  max={format(
-                                    new Date(new Date().getFullYear(), 12, 31),
-                                    "yyyy-MM-dd"
-                                  )}
+                                  // min={format(
+                                  //   new Date(
+                                  //     new Date().getFullYear(),
+                                  //     new Date().getMonth(),
+                                  //     new Date().getDate()
+                                  //   ),
+                                  //   "yyyy-MM-dd"
+                                  // )}
+                                  // max={format(
+                                  //   new Date(new Date().getFullYear(), 12, 31),
+                                  //   "yyyy-MM-dd"
+                                  // )}
                                   className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                   onChange={(s) => setNewStart(s.target.value)}
                                 />
@@ -791,27 +797,27 @@ export default function Appraisals() {
                                   type="date"
                                   name="end-date"
                                   id="end-date"
-                                  min={format(
-                                    nextDay(
-                                      new Date(
-                                        new Date().getFullYear(),
-                                        new Date().getMonth(),
-                                        new Date().getDate()
-                                      ),
-                                      getDay(
-                                        new Date(
-                                          new Date().getFullYear(),
-                                          new Date().getMonth(),
-                                          new Date().getDate()
-                                        )
-                                      ) + 14
-                                    ),
-                                    "yyyy-MM-dd"
-                                  )}
-                                  max={format(
-                                    new Date(2022, 12, 31),
-                                    "yyyy-MM-dd"
-                                  )}
+                                  // min={format(
+                                  //   nextDay(
+                                  //     new Date(
+                                  //       new Date().getFullYear(),
+                                  //       new Date().getMonth(),
+                                  //       new Date().getDate()
+                                  //     ),
+                                  //     getDay(
+                                  //       new Date(
+                                  //         new Date().getFullYear(),
+                                  //         new Date().getMonth(),
+                                  //         new Date().getDate()
+                                  //       )
+                                  //     ) + 14
+                                  //   ),
+                                  //   "yyyy-MM-dd"
+                                  // )}
+                                  // max={format(
+                                  //   new Date(2022, 12, 31),
+                                  //   "yyyy-MM-dd"
+                                  // )}
                                   className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                   onChange={(e) => setNewEnd(e.target.value)}
                                 />

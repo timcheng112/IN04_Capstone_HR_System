@@ -19,6 +19,7 @@ import com.conceiversolutions.hrsystem.performance.achievement.Achievement;
 import com.conceiversolutions.hrsystem.performance.achievement.AchievementRepository;
 import com.conceiversolutions.hrsystem.performance.appraisalPeriod.AppraisalPeriod;
 import com.conceiversolutions.hrsystem.performance.appraisalPeriod.AppraisalPeriodService;
+import com.conceiversolutions.hrsystem.performance.goalPeriod.GoalPeriodService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
@@ -41,17 +42,17 @@ public class GoalService {
     private final NotificationRepository notificationRepository;
 
     @Autowired
-    private final AppraisalPeriodService appraisalPeriodService;
+    private final GoalPeriodService goalPeriodService;
 
     public GoalService(GoalRepository goalRepository, UserRepository userRepository,
             AchievementRepository achievementRepository, TeamRepository teamRepository,
-            NotificationRepository notificationRepository, AppraisalPeriodService appraisalPeriodService) {
+            NotificationRepository notificationRepository, GoalPeriodService goalPeriodService) {
         this.goalRepository = goalRepository;
         this.userRepository = userRepository;
         this.achievementRepository = achievementRepository;
         this.teamRepository = teamRepository;
         this.notificationRepository = notificationRepository;
-        this.appraisalPeriodService = appraisalPeriodService;
+        this.goalPeriodService = goalPeriodService;
     }
 
     public User breakRelationships(User user) {
@@ -290,8 +291,8 @@ public class GoalService {
                 .orElseThrow(() -> new IllegalStateException(
                         "User with id" + userId + "does not exist"));
 
-        LocalDate endDate = appraisalPeriodService
-                .getAppraisalPeriodByYear(LocalDate.now().getYear() + "").getEndDate();
+        LocalDate endDate = goalPeriodService
+                .getGoalPeriodByYear(LocalDate.now().getYear() + "").getEndDate();
 
         String title = "Reminder for Goals Setting";
         String description = "Please be reminded to fill in your Financial goals by the end of the goal period, "
@@ -316,11 +317,12 @@ public class GoalService {
                 .orElseThrow(() -> new IllegalStateException(
                         "User with id" + userId + "does not exist"));
 
-        LocalDate endDate = appraisalPeriodService
-                .getAppraisalPeriodByYear(LocalDate.now().getYear() + "").getEndDate();
+        LocalDate endDate = goalPeriodService
+                .getGoalPeriodByYear(LocalDate.now().getYear() + "").getEndDate();
 
         String title = "Reminder for Goals Setting";
-        String description = "Please be reminded to fill in your Business goals by the end of goal period, " + endDate.getDayOfMonth() + "/" + endDate.getMonthValue() + "/" + endDate.getYear() + ".";
+        String description = "Please be reminded to fill in your Business goals by the end of goal period, "
+                + endDate.getDayOfMonth() + "/" + endDate.getMonthValue() + "/" + endDate.getYear() + ".";
 
         Notification n = new Notification(LocalDateTime.now(), title, description);
 

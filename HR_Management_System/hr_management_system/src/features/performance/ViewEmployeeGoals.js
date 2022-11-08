@@ -34,17 +34,26 @@ export default function ViewEmployeeGoals({
   }, [open]);
 
   function financeGoalsReminder(id) {
-    api.financeGoalsReminder(id).then((response) => {console.log(response.data); alert("Financial Goal setting reminder is successfully sent to team member.");});
+    
+    api.financeGoalsReminder(id).then((response) => {
+      console.log(response.data);
+      alert(
+        "Financial Goal setting reminder is successfully sent to team member."
+      );
+    });
   }
 
   function businessGoalsReminder(id) {
-    api.businessGoalsReminder(id).then((response) => {console.log(response.data); alert("Business Goal setting reminder is successfully sent to team member.");});
+    api.businessGoalsReminder(id).then((response) => {
+      console.log(response.data);
+      alert(
+        "Business Goal setting reminder is successfully sent to team member."
+      );
+    });
   }
 
   return (
     user && (
-
-      
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
@@ -93,19 +102,20 @@ export default function ViewEmployeeGoals({
                       {financial.length === 0 ? (
                         <>
                           <div className="mt-5 mx-4 sm:mt-6">
-                            {<button
-                              type="button"
-                              className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
-                              onClick={() => {
-                                console.log("send reminder financial");
-                                // console.log(user.userId);
-                                financeGoalsReminder(user.userId);
-                              }}
-                              ref={cancelButtonRef}
-                            >
-                              Send Reminder
-                            </button>}
-                            
+                            {
+                              <button
+                                type="button"
+                                className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
+                                onClick={() => {
+                                  console.log("send reminder financial");
+                                  // console.log(user.userId);
+                                  financeGoalsReminder(props.uId);
+                                }}
+                                ref={cancelButtonRef}
+                              >
+                                Send Reminder
+                              </button>
+                            }
                           </div>
                         </>
                       ) : (
@@ -187,7 +197,7 @@ export default function ViewEmployeeGoals({
                               className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
                               onClick={() => {
                                 console.log("send reminder business");
-                                businessGoalsReminder(user.userId);
+                                businessGoalsReminder(props.uId);
                               }}
                               ref={cancelButtonRef}
                             >
