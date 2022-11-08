@@ -1,6 +1,9 @@
 package com.conceiversolutions.hrsystem.user.qualificationinformation;
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
+import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
+import com.conceiversolutions.hrsystem.enums.RaceEnum;
+import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.recommendation.Recommendation;
@@ -23,7 +26,8 @@ public class QualificationInformation {
     private DocData cv;
     @Column(name = "highest_education",nullable = true)
     @Enumerated(EnumType.STRING)
-    private EducationEnum highestEducation;
+    private  EducationEnum highestEducation;
+   
     @Column(name = "school_name", nullable = true, length = 100)
     private String schoolName;
     @Column(name = "school_grad_year", nullable = true)
@@ -51,12 +55,16 @@ public class QualificationInformation {
     @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
     @JoinColumn(name = "transcript")
     private DocData transcript;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = JobPosting.class)
+    @JoinColumn(name = "bookmarked_posting_id")
+    private List<JobPosting> bookmarks;
 
     public QualificationInformation() {
         this.languagesSpoken = new ArrayList<>();
         this.recommendations = new ArrayList<>();
         this.workExperiences = new ArrayList<>();
         this.userSkills = new ArrayList<>();
+        this.bookmarks = new ArrayList<>();
     }
 
     public QualificationInformation(User user) {
@@ -170,6 +178,24 @@ public class QualificationInformation {
 
     public void setSchoolGradYear(Integer schoolGradYear) {
         this.schoolGradYear = schoolGradYear;
+    }
+
+    public List<JobPosting> getBookmarks() {
+        return bookmarks;
+    }
+
+    public void setBookmarks(List<JobPosting> bookmarks) {
+        this.bookmarks = bookmarks;
+    }
+
+    public List<JobPosting> addBookmark(JobPosting newBookmark) {
+        this.bookmarks.add(newBookmark);
+        return this.bookmarks;
+    }
+
+    public List<JobPosting> removeBookmark(JobPosting oldBookmark) {
+        this.bookmarks.remove(oldBookmark);
+        return this.bookmarks;
     }
 
     @Override

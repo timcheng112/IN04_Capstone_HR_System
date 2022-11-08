@@ -1,8 +1,26 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common.js";
 
-export default function Recommendation({ open, setOpen }) {
+export default function Recommendation({ open, setOpen,refreshKeyHandler }) {
+  const[name,setName] = useState("")
+  const[email,setEmail] = useState("")
+  const[phone,setPhone] = useState("")
+  const [user, setUser] = useState(getUserId());
+  const [error, setError] = useState();
+  const[relationship,setRelationship] = useState("")
+  useEffect(() => {
+    api.getUser(getUserId()).then((response) => {
+      console.log(response.data);
+    });
+  }, []);
+  function add(){    
+    api.addRecommendation(user,name,phone,email,relationship)
+    .then(() => {alert("Successfully added.");refreshKeyHandler();})
+    .catch((error) => setError(error));
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -51,6 +69,8 @@ export default function Recommendation({ open, setOpen }) {
                                   type="text"
                                   name="company-name"
                                   id="company-name"
+                                  value={name}
+                                  onChange={(e) => setName(e.target.value)}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -61,9 +81,11 @@ export default function Recommendation({ open, setOpen }) {
                               </label>
                               <div className="mt-1">
                                 <input
-                                  type="text"
+                                  type="number"
                                   name="project-name"
                                   id="project-name"
+                                  value={phone}
+                                  onChange={(e) => setPhone(e.target.value)}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -77,6 +99,8 @@ export default function Recommendation({ open, setOpen }) {
                                   type="text"
                                   name="project-name"
                                   id="project-name"
+                                  value={email}
+                                  onChange={(e) => setEmail(e.target.value)}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -91,7 +115,8 @@ export default function Recommendation({ open, setOpen }) {
                                   name="description"
                                   rows={4}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                  defaultValue={''}
+                                  value={relationship}
+                                  onChange={(e) => setRelationship(e.target.value)}
                                 />
                               </div>
                             </div>
@@ -109,7 +134,8 @@ export default function Recommendation({ open, setOpen }) {
                         Cancel
                       </button>
                       <button
-                        type="submit"
+                        type="button"
+                        onClick={()=>add()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save

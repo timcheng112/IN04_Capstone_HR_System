@@ -1,22 +1,8 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import api from '../../utils/api'
-import { getUserId } from "../../utils/Common.js";
 
-export default function ViewRecommendation({ open, setOpen,recommendation,refreshKeyHandler }) {
-  const[name,setName] = useState(recommendation.name)
-  const[email,setEmail] = useState(recommendation.email)
-  const[phone,setPhone] = useState(recommendation.phone)
-  const[relationship,setRelationship] = useState(recommendation.relationship)
-  const [user, setUser] = useState(getUserId());
-  const [error, setError] = useState();
-
-  function save(){
-    api.editUserRecommendation(user,recommendation.recommendationId, name, phone, email, relationship)
-    .then(() => {alert("Successfully edited.");refreshKeyHandler();})
-    .catch((error) => setError(error));
-  }
+export default function ViewRecommendation({ open, setOpen,recommendation }) {
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -65,8 +51,7 @@ export default function ViewRecommendation({ open, setOpen,recommendation,refres
                                   type="text"
                                   name="company-name"
                                   id="company-name"
-                                  value = {name}
-                                  onChange={e => setName(e.target.value)}
+                                  value = {recommendation.name}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -80,8 +65,7 @@ export default function ViewRecommendation({ open, setOpen,recommendation,refres
                                   type="text"
                                   name="project-name"
                                   id="project-name"
-                                  value = {phone}
-                                  onChange={e => setPhone(e.target.value)}
+                                  value = {recommendation.phone}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -95,8 +79,7 @@ export default function ViewRecommendation({ open, setOpen,recommendation,refres
                                   type="text"
                                   name="project-name"
                                   id="project-name"
-                                  value = {email}
-                                  onChange={e => setEmail(e.target.value)}
+                                  value = {recommendation.email}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -111,8 +94,7 @@ export default function ViewRecommendation({ open, setOpen,recommendation,refres
                                   name="description"
                                   rows={4}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                  value = {relationship}
-                                  onChange={e => setRelationship(e.target.value)}
+                                  value = {recommendation.relationship}
                                 />
                               </div>
                             </div>
@@ -121,22 +103,7 @@ export default function ViewRecommendation({ open, setOpen,recommendation,refres
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-shrink-0 justify-end px-4 py-4">
-                      <button
-                        type="button"
-                        className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        onClick={() => setOpen(false)}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => save()}
-                        className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      >
-                        Save
-                      </button>
-                    </div>
+                  
                   </form>
                 </Dialog.Panel>
               </Transition.Child>

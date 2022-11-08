@@ -1,24 +1,34 @@
 import Sidebar from "../../components/Sidebar"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MyFavouriteOption from "../../features/JobApplication/MyFavouriteOption";
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const jobs = [
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open' },
-]
-
 export default function JobApplication() {
+  const[jobs, setJobs]=useState([]);
+  const [user, setUser] = useState(getUserId()); 
+  const [error, setError] = useState();
   const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [searchParam] = useState([
-    "jobTitle"
+    "jobTitle", "status"
   ]);
+
+  useEffect(() => {
+    api
+      .getUserBookmarks(user)
+      .then((response) => {
+        setJobs(response.data);
+        setFilteredJobs(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, [refreshKey]);
 
   function search(e, items) {
     const value = e.target.value;
@@ -43,7 +53,7 @@ export default function JobApplication() {
         <div className="flex flex-1 flex-col md:pl-64">
           <div className='py-6'/>
           <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-            <h3 className="text-lg  mx-10 font-medium leading-6 text-gray-900">My Favourite</h3>
+            <h3 className="text-lg  mx-10 font-medium leading-6 text-gray-900">My Favourites</h3>
             <div className="mt-3 mx-20 sm:mt-0 sm:ml-4">
               <label htmlFor="desktop-search-candidate" className="sr-only">
                 Search
@@ -103,9 +113,12 @@ export default function JobApplication() {
                             </td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobDescription}</td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobType}</td>
-                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>
+                            {job.status == 'CREATED' && 
+                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">OPEN</td>}
+                            {job.status !== 'CREATED' && 
+                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>}
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <MyFavouriteOption/>
+                              <MyFavouriteOption job={job} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                             </td>
                           </tr>
                         ))}

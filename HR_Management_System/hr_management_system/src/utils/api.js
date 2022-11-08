@@ -449,7 +449,8 @@ const api = {
     preferredStartDate,
     jobType,
     jobRole,
-    salary,
+    salaryMin,
+    salaryMax,
     jobRequirements,
     departmentId,
     teamId,
@@ -457,7 +458,7 @@ const api = {
     jobRequestId
   ) {
     return axios.post(
-      `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
+      `http://localhost:9191/api/jobrequest/saveJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salaryMin=${salaryMin}&salaryMax=${salaryMax}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
     );
   },
   submitJobRequest(
@@ -467,7 +468,8 @@ const api = {
     preferredStartDate,
     jobType,
     jobRole,
-    salary,
+    salaryMin,
+    salaryMax,
     jobRequirements,
     departmentId,
     teamId,
@@ -475,7 +477,7 @@ const api = {
     jobRequestId
   ) {
     return axios.put(
-      `http://localhost:9191/api/jobrequest/submitJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
+      `http://localhost:9191/api/jobrequest/submitJobRequest?jobTitle=${jobTitle}&jobDescription=${jobDescription}&justification=${justification}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salaryMin=${salaryMin}&salaryMax=${salaryMax}&jobRequirements=${jobRequirements}&departmentId=${departmentId}&teamId=${teamId}&requestedById=${requestedById}&jobRequestId=${jobRequestId}`
     );
   },
   getJobRequestById(jobRequestId) {
@@ -525,6 +527,9 @@ const api = {
   getAllJobPosts() {
     return axios.get(`http://localhost:9191/api/jobposting/getAllJobPosts`);
   },
+  getJobPostByRequest(requestId) {
+    return axios.get(`http://localhost:9191/api/jobposting/getJobPostByRequest?requestId=${requestId}`);
+  },
   closeJobPost(jobPostingId) {
     return axios.put(
       `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
@@ -537,11 +542,12 @@ const api = {
     preferredStartDate,
     jobType,
     jobRole,
-    salary,
+    salaryMin,
+    salaryMax,
     jobRequirements
   ) {
     return axios.put(
-      `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salary=${salary}&jobRequirements=${jobRequirements}`
+      `http://localhost:9191/api/jobposting/editJobPost?jobPostingId=${jobPostId}&jobTitle=${jobTitle}&jobDescription=${jobDescription}&preferredStartDate=${preferredStartDate}&jobType=${jobType}&jobRole=${jobRole}&salaryMin=${salaryMin}&salaryMax=${salaryMax}&jobRequirements=${jobRequirements}`
     );
   },
 
@@ -866,6 +872,39 @@ const api = {
       `http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`
     );
   },
+
+  //job Applicants
+  findApplicationsByPostingId(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/findApplicationsByPostingId?postingId=${postingId}`);
+  },
+  getUserQualificationInformation(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserQualificationInformation?userId=${userId}`);
+  },
+  getUserRecommendations(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserRecommendations?userId=${userId}`);
+  },
+  getUserExperiences(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserExperiences?userId=${userId}`);
+  },
+  getShortlistedApplicants(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/getShortlistedApplicants?postingId=${postingId}`);
+  },
+  getOfferedApplicants(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/getOfferedApplicants?postingId=${postingId}`);
+  },
+  getRejectedApplicants(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/getRejectedApplicants?postingId=${postingId}`);
+  },
+  shortlistApplicant(userId, postingId) {
+    return axios.put(`http://localhost:9191/api/jobapplications/shortlistApplicant?userId=${userId}&postingId=${postingId}`);
+  },
+  rejectApplicant(userId, postingId) {
+    return axios.put(`http://localhost:9191/api/jobapplications/rejectApplicant?userId=${userId}&postingId=${postingId}`);
+  },
+  offerApplicant(userId, postingId, startDate, salaryOffered){
+    return axios.put(`http://localhost:9191/api/jobapplications/offerApplicant?userId=${userId}&postingId=${postingId}&startDate=${startDate}&salaryOffered=${salaryOffered}`);
+  },
+  
   sendPayslipEmails(emails, payslipMonth) {
     return axios.post(
       `http://localhost:9191/api/user/payroll/sendPayslipEmails?emails=${emails}&payslipMonth=${payslipMonth}`

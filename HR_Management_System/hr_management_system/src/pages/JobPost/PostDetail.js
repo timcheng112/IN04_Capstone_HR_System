@@ -24,7 +24,8 @@ export default function PostDetail() {
   const [user, setUser] = useState(null);
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
-  const [salary, setSalary] = useState();
+  const [salaryMin, setSalaryMin] = useState(0);
+  const [salaryMax, setSalaryMax] = useState(0);
   const [jobType, setJobType] = useState();
   const [jobRole, setJobRole] = useState();
   const [requirements, setRequirements] = useState();
@@ -49,7 +50,8 @@ export default function PostDetail() {
     console.log(location.state.post)
     setTitle(location.state.post.jobTitle)
     setDescription(location.state.post.jobDescription)
-    setSalary(location.state.post.salary)
+    setSalaryMin(location.state.post.salaryMin)
+    setSalaryMax(location.state.post.salaryMax)
     setStatus(location.state.post.status)
     setPostId(location.state.post.postingId)
     // reset JobType into JSON Object from String
@@ -136,7 +138,7 @@ export default function PostDetail() {
     }
 
     api
-      .editJobPost(postId, title, description, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salary, arr)
+      .editJobPost(postId, title, description, preferredStartDate.trim(), jobType.name.toUpperCase(), jobRole.name.toUpperCase(), salaryMin,salaryMax, arr)
       .then(() => alert("Successfully editted Job Post."))
       .catch((error) => {
         var message = error.request.response;
@@ -258,26 +260,36 @@ export default function PostDetail() {
                 <label htmlFor="salary" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                   Salary
                 </label>
-                <div className="relative mt-1 rounded-md shadow-sm">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <span className="text-gray-500 sm:text-sm">$</span>
+                <div className="flex space-x-3 relative mt-1 rounded-md shadow-sm">
+                  <div>
+                    min
+                    <input
+                      type="float"
+                      name="salary"
+                      id="salary"
+                      className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      placeholder="min"
+                      aria-describedby="salary-currency"
+                      required
+                      value={salaryMin}
+                      onChange={(e) => setSalaryMin(e.target.value)}
+                    />
+                    
                   </div>
-                  <input
-                    type="float"
-                    name="salary"
-                    id="salary"
-                    className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    placeholder="0.00"
-                    aria-describedby="salary-currency"
-                    required
-                    disabled={status === 'CLOSED' ? true : false}
-                    value={salary}
-                    onChange={(e) => setSalary(e.target.value)}
-                  />
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                    <span className="text-gray-500 sm:text-sm" id="salary-currency">
-                      SGD
-                    </span>
+                  <div>
+                    max
+                    <input
+                      type="float"
+                      name="salary"
+                      id="salary"
+                      className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      placeholder="max"
+                      aria-describedby="salary-currency"
+                      required
+                      value={salaryMax}
+                      onChange={(e) => setSalaryMax(e.target.value)}
+                    />
+                    
                   </div>
                 </div>
               </div>

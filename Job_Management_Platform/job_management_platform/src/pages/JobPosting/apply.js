@@ -1,39 +1,57 @@
 import Sidebar from "../../components/Sidebar"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MyApplicationOption from "../../features/JobApplication/MyApplicationOption";
+import api from "../../utils/api.js";
+import { getUserId } from "../../utils/Common.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const jobs = [
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'pending' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'rejected' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'offered' },
-  { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'pending' },
-]
 
 export default function JobApplication() {
+  const[jobs, setJobs] = useState([])
+  const [user, setUser] = useState(getUserId()); 
   const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const [error, setError] = useState(null);
   const [searchParam] = useState([
     "jobTitle"
   ]);
 
+  useEffect(() => {
+    api
+      .getApplicantApplications(user)
+      .then((response) => {
+        setJobs(response.data);
+        setFilteredJobs(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
   function search(e, items) {
     const value = e.target.value;
-    setFilteredJobs(
-      items.filter((item) => {
-        return searchParam.some((newItem) => {
-          return (
-            item[newItem]
-              .toString()
-              .toLowerCase()
-              .indexOf(value.toLowerCase()) > -1
-          );
-        });
-      })
-    );
+    console.log(items);
+
+    let finding = Array.of(value.toLowerCase());
+    console.log(finding);
+    let filtered = new Set();
+
+    var titleFilter = items.filter(x => finding.some(y => x.jobPosting.jobTitle.toLowerCase().indexOf(y) != -1))
+    titleFilter.forEach(item => filtered.add(item))
+
+    var descFilter = items.filter(x => finding.some(y => x.jobPosting.jobDescription.toLowerCase().indexOf(y) != -1))
+    descFilter.forEach(item => filtered.add(item))
+
+    var jtFilter = items.filter(x => finding.some(y => x.jobPosting.jobType.toLowerCase().indexOf(y) != -1))
+    jtFilter.forEach(item => filtered.add(item))
+
+    var statusFilter = items.filter(x => finding.some(y => x.status.toLowerCase().indexOf(y) != -1))
+    statusFilter.forEach(item => filtered.add(item))
+
+//    console.log(filtered);
+    setFilteredJobs(Array.from(filtered));
   }
 
   return (
@@ -85,10 +103,10 @@ export default function JobApplication() {
                             Description
                           </th>
                           <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">
-                            Type
+                            Job Type
                           </th>
                           <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">
-                            Status
+                            Application Status
                           </th>
                           <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6 md:pr-0">
                             <span className="sr-only">Edit</span>
@@ -97,15 +115,15 @@ export default function JobApplication() {
                       </thead>
                       <tbody className="divide-y divide-gray-200 bg-white">
                         {filteredJobs.map((job) => (
-                          <tr key={job.jobTitle}>
+                          <tr key={job.jobPosting.jobTitle}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                              {job.jobTitle}
+                              {job.jobPosting.jobTitle}
                             </td>
-                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobDescription}</td>
-                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobType}</td>
+                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobPosting.jobDescription}</td>
+                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobPosting.jobType}</td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <MyApplicationOption application={job} />
+                              <MyApplicationOption application={job.jobPosting} />
                             </td>
                           </tr>
                         ))}

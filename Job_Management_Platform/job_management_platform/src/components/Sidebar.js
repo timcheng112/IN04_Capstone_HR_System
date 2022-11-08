@@ -11,9 +11,9 @@ import logo from '..//assets/libro-transparent-logo.png'
 
 const navigation = [
   { name: 'Jobs', href: '/jobposting', icon: BriefcaseIcon, current: false },
-  { name: 'My Application', href: '/myapplication', icon: AcademicCapIcon, current: false },
-  { name: 'My Favourite', href: '/myfavourite', icon: StarIcon, current: false },
-  { name: 'My profile', href: '/profile', icon: UserIcon, current: false },
+  { name: 'My Applications', href: '/myapplication', icon: AcademicCapIcon, current: false },
+  { name: 'My Favourites', href: '/myfavourite', icon: StarIcon, current: false },
+  { name: 'Profile', href: '/profile', icon: UserIcon, current: false },
 ]
 // const userNavigation = [
 //   { name: 'Your Profile', href: '#' },

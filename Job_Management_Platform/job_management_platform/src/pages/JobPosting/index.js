@@ -1,6 +1,7 @@
 import Sidebar from "../../components/Sidebar"
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../utils/api";
 import JobPostingOption from "../../features/JobApplication/JobPostingOption";
 
 function classNames(...classes) {
@@ -11,18 +12,25 @@ function classNames(...classes) {
 export default function JobPosting() {
 
   const skills = [{ id: 1, name: 'java' }, { id: 2, name: 'python' }, { id: 3, name: 'matlab' }]
-  
-  const jobs = [
-    { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', postDate:'2022-11-2', salaryMin: '100', salaryMax: '500', jobRequirements: [skills[0],skills[1]],isBookMarked: true },
-    { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', postDate:'2022-11-2', salaryMin: '100', salaryMax: '500',jobRequirements: [skills[0],skills[1]] ,isBookMarked: true },
-    { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', postDate:'2022-11-2', salaryMin: '100', salaryMax: '500',jobRequirements: [skills[0],skills[1]] ,isBookMarked: false },
-    { jobTitle: 'product manager', jobDescription: 'manager', jobType: 'FullTime', status: 'open', postDate:'2022-11-2', salaryMin: '100', salaryMax: '500',jobRequirements: [skills[0],skills[1]] ,isBookMarked: false },
-  ]
-  
+
+  const[jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [searchParam] = useState([
-    "jobTitle"
+    "jobTitle","status"
   ]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    api
+      .getAllJobPosts()
+      .then((response) => {
+        setJobs(response.data);
+        setFilteredJobs(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
   function search(e, items) {
     const value = e.target.value;
     setFilteredJobs(
@@ -46,7 +54,7 @@ export default function JobPosting() {
         <div className="flex flex-1 flex-col md:pl-64">
           <div className='py-6'/>
           <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-            <h3 className="text-lg  mx-10 font-medium leading-6 text-gray-900">Job Postings</h3>
+            <h3 className="text-lg  mx-10 font-medium leading-6 text-gray-900">Available Job Postings</h3>
             <div className="mt-3 mx-20 sm:mt-0 sm:ml-4">
               <label htmlFor="desktop-search-candidate" className="sr-only">
                 Search
@@ -106,7 +114,10 @@ export default function JobPosting() {
                             </td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobDescription}</td>
                             <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.jobType}</td>
-                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>
+                            {job.status == 'CREATED' && 
+                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">OPEN</td>}
+                            {job.status !== 'CREATED' && 
+                            <td className="whitespace-nowrap py-4 px-3 text-left text-sm text-gray-500">{job.status}</td>}
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <JobPostingOption job = {job}/>
                             </td>

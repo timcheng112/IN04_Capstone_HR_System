@@ -38,7 +38,8 @@ public class JobPostingController {
                             @RequestParam("preferredStartDate") String preferredStartDate,
                             @RequestParam("jobType") String jobType,
                             @RequestParam("jobRole") String jobRole,
-                            @RequestParam("salary") Float salary,
+                            @RequestParam("salaryMin") Float salaryMin,
+                            @RequestParam("salaryMax") Float salaryMax,
                             @RequestParam("jobRequirements") List<Long> jobRequirementIds) {
         JobTypeEnum jobT = null;
         if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
@@ -50,6 +51,11 @@ public class JobPostingController {
         }
 
         return jobPostingService.editJobPost(jobPostingId, jobTitle, jobDescription, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirementIds);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax),jobRequirementIds);
+    }
+
+    @GetMapping(path = "/getJobPostByRequest")
+    public JobPosting getJobPostByRequest(@RequestParam("requestId") Long requestId) {
+        return jobPostingService.getJobPostByRequest(requestId);
     }
 }
