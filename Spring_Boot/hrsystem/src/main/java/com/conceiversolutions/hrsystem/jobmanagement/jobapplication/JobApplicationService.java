@@ -271,7 +271,14 @@ public class JobApplicationService {
         List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.PENDING)) {
-                ja.setJobPosting(null);
+                JobPosting jp = ja.getJobPosting();
+                jp.setJobRequest(null);
+                for (Skillset ss : jp.getJobPostRequirements()) {
+                    ss.setJobPostings(new ArrayList<>());
+                    ss.setJobRequests(new ArrayList<>());
+                }
+                jp.getPostedBy().nullify();
+
                 for (UserSkillset uss : ja.getUserSkills()) {
                     uss.getSkillset().setJobPostings(new ArrayList<>());
                     uss.getSkillset().setJobRequests(new ArrayList<>());
@@ -298,7 +305,13 @@ public class JobApplicationService {
         List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.SHORTLISTED)) {
-                ja.setJobPosting(null);
+                JobPosting jp = ja.getJobPosting();
+                jp.setJobRequest(null);
+                for (Skillset ss : jp.getJobPostRequirements()) {
+                    ss.setJobPostings(new ArrayList<>());
+                    ss.setJobRequests(new ArrayList<>());
+                }
+                jp.getPostedBy().nullify();
                 for (UserSkillset uss : ja.getUserSkills()) {
                     uss.getSkillset().setJobPostings(new ArrayList<>());
                     uss.getSkillset().setJobRequests(new ArrayList<>());
@@ -325,7 +338,13 @@ public class JobApplicationService {
         List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.OFFERED)) {
-                ja.setJobPosting(null);
+                JobPosting jp = ja.getJobPosting();
+                jp.setJobRequest(null);
+                for (Skillset ss : jp.getJobPostRequirements()) {
+                    ss.setJobPostings(new ArrayList<>());
+                    ss.setJobRequests(new ArrayList<>());
+                }
+                jp.getPostedBy().nullify();
                 for (UserSkillset uss : ja.getUserSkills()) {
                     uss.getSkillset().setJobPostings(new ArrayList<>());
                     uss.getSkillset().setJobRequests(new ArrayList<>());
@@ -352,7 +371,13 @@ public class JobApplicationService {
         List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.REJECTED)) {
-                ja.setJobPosting(null);
+                JobPosting jp = ja.getJobPosting();
+                jp.setJobRequest(null);
+                for (Skillset ss : jp.getJobPostRequirements()) {
+                    ss.setJobPostings(new ArrayList<>());
+                    ss.setJobRequests(new ArrayList<>());
+                }
+                jp.getPostedBy().nullify();
                 for (UserSkillset uss : ja.getUserSkills()) {
                     uss.getSkillset().setJobPostings(new ArrayList<>());
                     uss.getSkillset().setJobRequests(new ArrayList<>());
