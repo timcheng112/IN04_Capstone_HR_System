@@ -762,6 +762,12 @@ const api = {
   getUserQualificationInformation(userId) {
     return axios.get(`http://localhost:9191/api/qualification/getUserQualificationInformation?userId=${userId}`);
   },
+  getUserRecommendations(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserRecommendations?userId=${userId}`);
+  },
+  getUserExperiences(userId) {
+    return axios.get(`http://localhost:9191/api/qualification/getUserExperiences?userId=${userId}`);
+  },
 };
 
 export default api;

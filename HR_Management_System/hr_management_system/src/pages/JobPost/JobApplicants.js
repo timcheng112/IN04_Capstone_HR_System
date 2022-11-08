@@ -179,7 +179,7 @@ export default function JobApplicants() {
               </div>
             </div>
           </div>
-          {all && <ApplicantList candidates = {allcandidates}/>}
+          {all && <ApplicantList candidates = {allcandidates} job={job}/>}
           {interview && <ApplicantList candidates = {interviewCandidates}/>}
           {offer && <ApplicantList candidates = {offerCandidates}/>}
           {reject && <ApplicantList candidates = {rejectCandidates}/>}
