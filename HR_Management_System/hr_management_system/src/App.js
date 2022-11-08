@@ -60,6 +60,8 @@ import PerformancePage from "./pages/Performance";
 import PayrollPage from "./pages/Payroll/payroll";
 import PayrollHistoryPage from "./pages/Payroll/PayrollHistory";
 import EmployeesNotInPayrollPage from "./pages/Payroll/EmployeesNotInPayroll";
+import AddToPayrollFormPage from "./pages/Payroll/AddToPayrollForm";
+import EmployeePayrollHistory from "./pages/Payroll/ViewEmployeesPayHistory";
 
 function App() {
   return (
@@ -230,16 +232,6 @@ function App() {
           />
 
           <PrivateRoute exact path="/payroll" component={PayrollPage} />
-          <PrivateRoute
-            exact
-            path="/payrollhistory"
-            component={PayrollHistoryPage}
-          />
-          <PrivateRoute
-            exact
-            path="/employeesnotinpayroll"
-            component={EmployeesNotInPayrollPage}
-          />
         </Switch>
       </div>
     </BrowserRouter>
