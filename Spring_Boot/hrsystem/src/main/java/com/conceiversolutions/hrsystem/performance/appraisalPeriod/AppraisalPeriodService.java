@@ -56,10 +56,10 @@ public class AppraisalPeriodService {
         } else {
             AppraisalPeriod ap = appraisalPeriodRepository.save(appraisalPeriod);
 
-            List<User> organizationHeads = organizationService.getOrganizationHeads();
+            List<User> managers = teamService.getManagers();
 
-            for (User u : organizationHeads) {
-                appraisalService.getOrganizationAppraisals(appraisalPeriod.getYear(), u.getUserId());
+            for (User u : managers) {
+                appraisalService.getManagerAppraisals(appraisalPeriod.getYear(), u.getUserId());
             }
 
             List<User> departmentHeads = departmentService.getDepartmentHeads();
@@ -68,11 +68,13 @@ public class AppraisalPeriodService {
                 appraisalService.getDepartmentAppraisals(appraisalPeriod.getYear(), u.getUserId());
             }
 
-            List<User> managers = teamService.getManagers();
+            List<User> organizationHeads = organizationService.getOrganizationHeads();
 
-            for (User u : managers) {
-                appraisalService.getManagerAppraisals(appraisalPeriod.getYear(), u.getUserId());
+            for (User u : organizationHeads) {
+                appraisalService.getOrganizationAppraisals(appraisalPeriod.getYear(), u.getUserId());
             }
+
+            
 
             return ap.getAppraisalPeriodId();
         }

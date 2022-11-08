@@ -212,7 +212,7 @@ public class OrganizationService {
         System.out.println("OrganizationService.getOrganizationHeads");
         List<User> heads = new ArrayList<>();
 
-        List<Organization> allOrganizations = getOrganizations();
+        List<Organization> allOrganizations = organizationRepository.findAll();
 
         for (Organization o : allOrganizations) {
             System.out.println("o head " + o.getOrganizationHead());

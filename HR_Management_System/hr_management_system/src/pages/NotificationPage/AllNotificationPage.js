@@ -163,6 +163,7 @@ export default function Notifications() {
             Delete All
           </button> : ""}
 
+          <div>
           {user.userRole === "ADMINISTRATOR" ?
           <button
             type="button"
@@ -170,12 +171,12 @@ export default function Notifications() {
             onClick={() => history.push("/AddNotification")}
           >
             <PlusCircleIcon
-              className="-ml-0.5 mr-2 h-4 w-4"
+              className="-ml-0.5 mr-2 h-4 w-8"
               aria-hidden="true"
             />
-            Add
+            Add Notifications
           </button> 
-          : ""} 
+          : ""} </div>
 
           {unread.map((message) => (
             <div
@@ -229,7 +230,7 @@ export default function Notifications() {
             </div>
           ))}
 
-          {read.map((message) => (
+          {read.length === 0 && unread.length === 0 ? "You have no notifications" : read.map((message) => (
             <><li
               key={message.notificationId}
               className="relative bg-white py-5 px-4 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 "

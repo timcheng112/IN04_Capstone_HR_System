@@ -48,7 +48,7 @@ export default function Notification(props) {
                   <div className="ml-3 w-0 flex-1 pt-0.5">
                     <p className="text-sm font-medium text-gray-900">Unread Notifications</p>
                     <p className="mt-1 text-sm text-gray-500">
-                      You have unread notifications in your notification.
+                      You have unread notifications in your notifications page.
                     </p>
                     <div className="mt-3 flex space-x-7">
                       <button
