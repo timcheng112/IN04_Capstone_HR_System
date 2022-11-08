@@ -17,6 +17,9 @@ import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.performance.achievement.Achievement;
 import com.conceiversolutions.hrsystem.performance.achievement.AchievementRepository;
+import com.conceiversolutions.hrsystem.performance.appraisalPeriod.AppraisalPeriod;
+import com.conceiversolutions.hrsystem.performance.appraisalPeriod.AppraisalPeriodService;
+import com.conceiversolutions.hrsystem.performance.goalPeriod.GoalPeriodService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
@@ -38,13 +41,18 @@ public class GoalService {
     @Autowired
     private final NotificationRepository notificationRepository;
 
+    @Autowired
+    private final GoalPeriodService goalPeriodService;
+
     public GoalService(GoalRepository goalRepository, UserRepository userRepository,
-            AchievementRepository achievementRepository, TeamRepository teamRepository, NotificationRepository notificationRepository) {
+            AchievementRepository achievementRepository, TeamRepository teamRepository,
+            NotificationRepository notificationRepository, GoalPeriodService goalPeriodService) {
         this.goalRepository = goalRepository;
         this.userRepository = userRepository;
         this.achievementRepository = achievementRepository;
         this.teamRepository = teamRepository;
         this.notificationRepository = notificationRepository;
+        this.goalPeriodService = goalPeriodService;
     }
 
     public User breakRelationships(User user) {
@@ -81,7 +89,7 @@ public class GoalService {
             goal.setType(type);
             goal.setDescription(description);
             goal.setYear(now.getYear() + "");
-            
+
             User u = breakRelationships(user.get());
 
             goal.setEmployee(u);
@@ -278,16 +286,19 @@ public class GoalService {
         }
     }
 
-    public String addFinanceReminderToUser(Long userId){
+    public String addFinanceReminderToUser(Long userId) {
         User u1 = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(
                         "User with id" + userId + "does not exist"));
 
+        LocalDate endDate = goalPeriodService
+                .getGoalPeriodByYear(LocalDate.now().getYear() + "").getEndDate();
+
         String title = "Reminder for Goals Setting";
-        String description = "Please be reminded to fill in your Financial goals by the goal period for your manager to review.";
+        String description = "Please be reminded to fill in your Financial goals by the end of the goal period, "
+                + endDate.getDayOfMonth() + "/" + endDate.getMonthValue() + "/" + endDate.getYear() + ".";
 
         Notification n = new Notification(LocalDateTime.now(), title, description);
-
 
         u1.getNotificationsUnread().add(n);
         System.out.println(u1.getNotificationsUnread());
@@ -297,20 +308,23 @@ public class GoalService {
         System.out.println(u1.getNotificationsUnread());
         System.out.println("read");
         System.out.println(u1.getNotificationsRead());
-        return "Notification added successfully to: " + u1.getFirstName() + " " + u1.getLastName() ;
+        return "Notification added successfully to: " + u1.getFirstName() + " " + u1.getLastName();
 
     }
 
-    public String addBusinessReminderToUser(Long userId){
+    public String addBusinessReminderToUser(Long userId) {
         User u1 = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(
                         "User with id" + userId + "does not exist"));
 
+        LocalDate endDate = goalPeriodService
+                .getGoalPeriodByYear(LocalDate.now().getYear() + "").getEndDate();
+
         String title = "Reminder for Goals Setting";
-        String description = "Please be reminded to fill in your Business goals by the end of goal period for your manager to review.";
+        String description = "Please be reminded to fill in your Business goals by the end of goal period, "
+                + endDate.getDayOfMonth() + "/" + endDate.getMonthValue() + "/" + endDate.getYear() + ".";
 
         Notification n = new Notification(LocalDateTime.now(), title, description);
-
 
         u1.getNotificationsUnread().add(n);
         System.out.println(u1.getNotificationsUnread());
@@ -320,7 +334,7 @@ public class GoalService {
         System.out.println(u1.getNotificationsUnread());
         System.out.println("read");
         System.out.println(u1.getNotificationsRead());
-        return "Notification added successfully to: " + u1.getFirstName() + " " + u1.getLastName() ;
+        return "Notification added successfully to: " + u1.getFirstName() + " " + u1.getLastName();
 
     }
 
