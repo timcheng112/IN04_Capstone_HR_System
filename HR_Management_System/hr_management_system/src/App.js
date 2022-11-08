@@ -32,9 +32,6 @@ import NewJobRequestPage from "./pages/JobRequest/NewRequest";
 import JobRequestHrPage from "./pages/JobRequest/indexHR";
 import JobPostPage from "./pages/JobPost/indexHR";
 import AllApplicantsPage from "./pages/JobPost/JobApplicants";
-import InterviewApplicantsPage from "./pages/JobPost/InterviewApplicants";
-import OfferApplicantsPage from "./pages/JobPost/OfferApplicants";
-import RejectApplicantsPage from "./pages/JobPost/RejectApplicants";
 import ApplicantDetailPage from "./pages/JobPost/ApplicantDetail";
 
 import VideoPage from "./pages/Video";
