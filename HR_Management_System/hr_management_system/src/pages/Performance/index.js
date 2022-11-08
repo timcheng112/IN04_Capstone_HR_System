@@ -6,12 +6,12 @@ import { getUserId } from "../../utils/Common";
 import { useHistory } from "react-router-dom";
 import PerformanceSidebar from "../../components/Sidebar/Performance";
 import {
+  BriefcaseIcon,
   CheckCircleIcon,
   ChevronRightIcon,
+  CurrencyDollarIcon,
   EnvelopeIcon,
 } from "@heroicons/react/24/outline";
-
-
 
 // const people = [
 //   {
@@ -75,10 +75,6 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-
-
-
-
 export default function Performance() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
@@ -105,7 +101,6 @@ export default function Performance() {
   const [team, setTeam] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
-
   const [appraisalPeriods, setAppraisalPeriods] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [newStart, setNewStart] = useState("");
@@ -129,361 +124,354 @@ export default function Performance() {
   }, []);
 
   useEffect(() => {
-  const now = new Date();
-  setCurrentDate(now);
+    const now = new Date();
+    setCurrentDate(now);
 
-  api
-    .getUser(getUserId())
-    .then((response) => {
-      setUser(response.data);
-      console.log(user);
-    })
-    .catch((error) => setError(error));
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(user);
+      })
+      .catch((error) => setError(error));
 
-  api.getGoalPeriodByYear(goalPeriodYear).then((response) => {
-    setStartDate(response.data.startDate);
-    setEndDate(response.data.endDate);
-    setSelectedPeriod(response.data);
-  });
+    api.getGoalPeriodByYear(goalPeriodYear).then((response) => {
+      setStartDate(response.data.startDate);
+      setEndDate(response.data.endDate);
+      setSelectedPeriod(response.data);
+    });
 
-  api.getGoalPeriodByYear(new Date().getFullYear()).then((response) => {
-    setCurrentPeriod(response.data);
-  });
+    api.getGoalPeriodByYear(new Date().getFullYear()).then((response) => {
+      setCurrentPeriod(response.data);
+    });
 
-  api.getAllGoalPeriods().then((response) => {
-    setGoalPeriods(response.data);
-  });
+    api.getAllGoalPeriods().then((response) => {
+      setGoalPeriods(response.data);
+    });
 
-  api
-    .getUserGoals(goalPeriodYear, "financial", getUserId())
-    .then((response) => {
-      //console.log(response.data);
-      setFinancial(response.data);
-      if (response.data.length <= 0 && !withinCurrentPeriod()) {
-        setOverdueFinancial(true);
+    api
+      .getUserGoals(goalPeriodYear, "financial", getUserId())
+      .then((response) => {
+        //console.log(response.data);
+        setFinancial(response.data);
+        if (response.data.length <= 0 && !withinCurrentPeriod()) {
+          setOverdueFinancial(true);
+        }
+      });
+
+    api
+      .getUserGoals(goalPeriodYear, "business", getUserId())
+      .then((response) => {
+        //console.log(response.data);
+        setBusiness(response.data);
+        if (response.data.length <= 0 && !withinCurrentPeriod()) {
+          setOverdueBusiness(true);
+        }
+      });
+
+    api.getAllUserGoals(new Date().getFullYear()).then((response) => {
+      console.log("all goals");
+      console.log(response.data);
+
+      setUserGoals(response.data);
+      response.data.forEach((employee) => {
+        employee.financialGoals = employee.goals.filter(
+          (g) => g.type === "financial"
+        );
+        employee.businessGoals = employee.goals.filter(
+          (g) => g.type === "business"
+        );
+        //console.log(employee.goals.filter(g => g.type === "business"))
+        //console.log(employee.firstName + " " + employee.businessGoals.length)
+      });
+    });
+
+    api.getIsTeamHead(getUserId()).then((response) => {
+      console.log(response.data);
+      if (response.data > -1) {
+        setManager(true);
+
+        api.getTeamGoals(response.data, goalPeriodYear).then((response) => {
+          console.log("team");
+          console.log(response.data);
+          setTeam(response.data);
+          response.data.forEach((employee) => {
+            employee.financialGoals = employee.goals.filter(
+              (g) => g.type === "financial"
+            );
+            employee.businessGoals = employee.goals.filter(
+              (g) => g.type === "business"
+            );
+          });
+        });
       }
     });
+  }, []);
 
-  api
-    .getUserGoals(goalPeriodYear, "business", getUserId())
-    .then((response) => {
-      //console.log(response.data);
-      setBusiness(response.data);
-      if (response.data.length <= 0 && !withinCurrentPeriod()) {
-        setOverdueBusiness(true);
-      }
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(user);
+      })
+      .catch((error) => setError(error));
+
+    api.getGoalPeriodByYear(goalPeriodYear).then((response) => {
+      setStartDate(response.data.startDate);
+      setEndDate(response.data.endDate);
+      setSelectedPeriod(response.data);
     });
 
-  api.getAllUserGoals(new Date().getFullYear()).then((response) => {
-    console.log("all goals");
-    console.log(response.data);
-    
-    setUserGoals(response.data);
-    response.data.forEach((employee) => {
-      employee.financialGoals = employee.goals.filter(
-        (g) => g.type === "financial"
-      );
-      employee.businessGoals = employee.goals.filter(
-        (g) => g.type === "business"
-      );
-      //console.log(employee.goals.filter(g => g.type === "business"))
-      //console.log(employee.firstName + " " + employee.businessGoals.length)
+    api.getGoalPeriodByYear(new Date().getFullYear()).then((response) => {
+      setCurrentPeriod(response.data);
     });
-  });
 
-  api.getIsTeamHead(getUserId()).then((response) => {
-    console.log(response.data);
-    if (response.data > -1) {
-      setManager(true);
+    api.getAllGoalPeriods().then((response) => {
+      setGoalPeriods(response.data);
+    });
 
-      api.getTeamGoals(response.data, goalPeriodYear).then((response) => {
-        console.log("team")
+    api
+      .getUserGoals(goalPeriodYear, "financial", getUserId())
+      .then((response) => {
+        //console.log(response.data);
+        setFinancial(response.data);
+
+        if (response.data.length <= 0 && !withinCurrentPeriod()) {
+          setOverdueFinancial(true);
+        } else {
+          setOverdueFinancial(false);
+        }
+      });
+
+    api
+      .getUserGoals(goalPeriodYear, "business", getUserId())
+      .then((response) => {
         console.log(response.data);
-        setTeam(response.data);
-        response.data.forEach((employee) => {
-          employee.financialGoals = employee.goals.filter(
-            (g) => g.type === "financial"
-          );
-          employee.businessGoals = employee.goals.filter(
-            (g) => g.type === "business"
-          );
-        });
+        setBusiness(response.data);
+        if (response.data.length <= 0 && !withinCurrentPeriod()) {
+          setOverdueBusiness(true);
+        } else {
+          setOverdueBusiness(false);
+        }
       });
-    }
-  });
-}, []);
 
-useEffect(() => {
-  api
-    .getUser(getUserId())
-    .then((response) => {
-      setUser(response.data);
-      console.log(user);
-    })
-    .catch((error) => setError(error));
+    api.getAllUserGoals(new Date().getFullYear()).then((response) => {
+      console.log("all goals");
+      console.log(response.data);
+      setUserGoals(response.data);
+      response.data.forEach((employee) => {
+        employee.financialGoals = employee.goals.filter(
+          (g) => g.type === "financial"
+        );
+        employee.businessGoals = employee.goals.filter(
+          (g) => g.type === "business"
+        );
+        //console.log(employee.goals.filter(g => g.type === "business"))
+        //console.log(employee.firstName + " " + employee.businessGoals.length)
+      });
+    });
 
-  api.getGoalPeriodByYear(goalPeriodYear).then((response) => {
-    setStartDate(response.data.startDate);
-    setEndDate(response.data.endDate);
-    setSelectedPeriod(response.data);
-  });
+    api.getIsTeamHead(getUserId()).then((response) => {
+      console.log(response.data);
+      if (response.data > -1) {
+        setManager(true);
 
-  api.getGoalPeriodByYear(new Date().getFullYear()).then((response) => {
-    setCurrentPeriod(response.data);
-  });
+        api.getTeamGoals(response.data, goalPeriodYear).then((response) => {
+          setTeam(response.data);
+          response.data.forEach((employee) => {
+            employee.financialGoals = employee.goals.filter(
+              (g) => g.type === "financial"
+            );
+            employee.businessGoals = employee.goals.filter(
+              (g) => g.type === "business"
+            );
+          });
+        });
+      }
+    });
+  }, [refresh]);
 
-  api.getAllGoalPeriods().then((response) => {
-    setGoalPeriods(response.data);
-  });
+  useEffect(() => {
+    api.getGoalPeriodByYear(goalPeriodYear).then((response) => {
+      setSelectedPeriod(response.data);
+    });
 
-  api
-    .getUserGoals(goalPeriodYear, "financial", getUserId())
-    .then((response) => {
+    api
+      .getUserGoals(goalPeriodYear, "financial", getUserId())
+      .then((response) => {
+        console.log(response.data);
+        setFinancial(response.data);
+      });
+
+    api
+      .getUserGoals(goalPeriodYear, "business", getUserId())
+      .then((response) => {
+        //console.log(response.data);
+        setBusiness(response.data);
+      });
+  }, [goalPeriodYear]);
+
+  //appraisals
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        //console.log(user);
+      })
+      .catch((error) => setError(error));
+
+    api.getAllAppraisalPeriods().then((response) => {
+      setAppraisalPeriods(response.data);
+      setSelectedPeriod(response.data[0]);
+      //console.log(response.data[0]);
+    });
+
+    api.getAppraisalPeriodByYear(new Date().getFullYear()).then((response) => {
+      setCurrentPeriod(response.data);
+      setStartDate(response.data.startDate);
+      setEndDate(response.data.endDate);
+      console.log(response.data);
+    });
+
+    api.getIsTeamHead(getUserId()).then((response) => {
       //console.log(response.data);
-      setFinancial(response.data);
-
-      if (response.data.length <= 0 && !withinCurrentPeriod()) {
-        setOverdueFinancial(true);
-      } else {
-        setOverdueFinancial(false);
+      if (response.data > -1) {
+        setIsManager(true);
+        api
+          .getManagerAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => {
+            setAppraisals(response.data);
+            console.log(response.data);
+          });
       }
     });
 
-  api
-    .getUserGoals(goalPeriodYear, "business", getUserId())
-    .then((response) => {
-      console.log(response.data);
-      setBusiness(response.data);
-      if (response.data.length <= 0 && !withinCurrentPeriod()) {
-        setOverdueBusiness(true);
-      } else {
-        setOverdueBusiness(false);
+    api.getIsDepartmentHead(getUserId()).then((response) => {
+      if (response.data > -1) {
+        setIsManager(true);
+        //console.log("department head");
+        api
+          .getDepartmentAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => setAppraisals(response.data));
       }
     });
 
-  api.getAllUserGoals(new Date().getFullYear()).then((response) => {
-    console.log("all goals");
-    console.log(response.data);
-    setUserGoals(response.data);
-    response.data.forEach((employee) => {
-      employee.financialGoals = employee.goals.filter(
-        (g) => g.type === "financial"
-      );
-      employee.businessGoals = employee.goals.filter(
-        (g) => g.type === "business"
-      );
-      //console.log(employee.goals.filter(g => g.type === "business"))
-      //console.log(employee.firstName + " " + employee.businessGoals.length)
+    api.getIsOrganizationHead(getUserId()).then((response) => {
+      if (response.data > -1) {
+        setOrganizationHead(true);
+        setIsManager(true);
+        console.log("organization head");
+        api
+          .getOrganizationAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => setAppraisals(response.data));
+      }
     });
-  });
 
-  api.getIsTeamHead(getUserId()).then((response) => {
-    console.log(response.data);
-    if (response.data > -1) {
-      setManager(true);
-
-      api.getTeamGoals(response.data, goalPeriodYear).then((response) => {
-        setTeam(response.data);
-        response.data.forEach((employee) => {
-          employee.financialGoals = employee.goals.filter(
-            (g) => g.type === "financial"
-          );
-          employee.businessGoals = employee.goals.filter(
-            (g) => g.type === "business"
-          );
-        });
+    api
+      .getEmployeeAppraisals(new Date().getFullYear(), getUserId())
+      .then((response) => {
+        console.log("myappraisals");
+        console.log("myappraisals" + response.data);
+        console.log(response.data.length);
+        setMyAppraisals(response.data);
       });
-    }
-  });
 
-}, [refresh]);
-
-useEffect(() => {
-  api.getGoalPeriodByYear(goalPeriodYear).then((response) => {
-    setSelectedPeriod(response.data);
-  });
-
-  api
-    .getUserGoals(goalPeriodYear, "financial", getUserId())
-    .then((response) => {
+    api.getAllAppraisalsByYear(new Date().getFullYear()).then((response) => {
       console.log(response.data);
-      setFinancial(response.data);
+      const a = response.data.filter(
+        (a) => a.employee.userId + "" !== getUserId() + ""
+      );
+      console.log(a);
+      setAllAppraisals(a);
+    });
+  }, []);
+
+  useEffect(() => {
+    //console.log('refresh');
+
+    api.getAllAppraisalPeriods().then((response) => {
+      setAppraisalPeriods(response.data);
+      setSelectedPeriod(response.data[0]);
+      //console.log(response.data[0]);
     });
 
-  api
-    .getUserGoals(goalPeriodYear, "business", getUserId())
-    .then((response) => {
+    api.getAppraisalPeriodByYear(new Date().getFullYear()).then((response) => {
+      setCurrentPeriod(response.data);
+      setStartDate(response.data.startDate);
+      setEndDate(response.data.endDate);
+      console.log(response.data);
+    });
+
+    api.getIsTeamHead(getUserId()).then((response) => {
       //console.log(response.data);
-      setBusiness(response.data);
-    });
-}, [goalPeriodYear]);
-
-
-
-//appraisals
-useEffect(() => {
-  api
-    .getUser(getUserId())
-    .then((response) => {
-      setUser(response.data);
-      //console.log(user);
-    })
-    .catch((error) => setError(error));
-
-  api.getAllAppraisalPeriods().then((response) => {
-    setAppraisalPeriods(response.data);
-    setSelectedPeriod(response.data[0]);
-    //console.log(response.data[0]);
-  });
-
-  api.getAppraisalPeriodByYear(new Date().getFullYear()).then((response) => {
-    setCurrentPeriod(response.data);
-    setStartDate(response.data.startDate);
-    setEndDate(response.data.endDate);
-    console.log(response.data);
-  });
-
-  api.getIsTeamHead(getUserId()).then((response) => {
-    //console.log(response.data);
-    if (response.data > -1) {
-      setIsManager(true);
-      api
-        .getManagerAppraisals(new Date().getFullYear(), getUserId())
-        .then((response) => {
-          setAppraisals(response.data);
-          console.log(response.data);
-        });
-    }
-  });
-
-  api.getIsDepartmentHead(getUserId()).then((response) => {
-    if (response.data > -1) {
-      setIsManager(true);
-      //console.log("department head");
-      api
-        .getDepartmentAppraisals(new Date().getFullYear(), getUserId())
-        .then((response) => setAppraisals(response.data));
-    }
-  });
-
-  api.getIsOrganizationHead(getUserId()).then((response) => {
-    if (response.data > -1) {
-      setOrganizationHead(true);
-      setIsManager(true);
-      console.log("organization head");
-      api
-        .getOrganizationAppraisals(new Date().getFullYear(), getUserId())
-        .then((response) => setAppraisals(response.data));
-    }
-  });
-
-  api
-    .getEmployeeAppraisals(new Date().getFullYear(), getUserId())
-    .then((response) => {
-      console.log("myappraisals" )
-      console.log("myappraisals" + response.data)
-      console.log(response.data.length);
-      setMyAppraisals(response.data);
+      if (response.data > -1) {
+        setIsManager(true);
+        api
+          .getManagerAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => {
+            setAppraisals(response.data);
+            console.log(response.data);
+          });
+      }
     });
 
-  api.getAllAppraisalsByYear(new Date().getFullYear()).then((response) => {
-    console.log(response.data);
-    const a = response.data.filter(
-      (a) => a.employee.userId + "" !== getUserId() + ""
+    api.getIsDepartmentHead(getUserId()).then((response) => {
+      if (response.data > -1) {
+        setIsManager(true);
+        //console.log("department head");
+        api
+          .getDepartmentAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => setAppraisals(response.data));
+      }
+    });
+
+    api.getIsOrganizationHead(getUserId()).then((response) => {
+      if (response.data > -1) {
+        setOrganizationHead(true);
+        setIsManager(true);
+        console.log("organization head");
+        api
+          .getOrganizationAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => setAppraisals(response.data));
+      }
+    });
+
+    api.getAllAppraisalsByYear(new Date().getFullYear()).then((response) => {
+      console.log(response.data);
+      const a = response.data.filter(
+        (a) => a.employee.userId + "" !== getUserId() + ""
+      );
+      console.log(a);
+      setAllAppraisals(a);
+    });
+  }, [refresh]);
+
+  //
+  // useEffect(() => {
+  //   console.log("use effect!");
+  //   const url = window.location.href;
+  //   const tempTeamId = url.substring(31);
+  //   // console.log("urlSubstring:" + tempTeamId);
+  //   // setTeamId(tempTeamId);
+  //   teamId.current = tempTeamId;
+
+  //   api.getTeam(teamId.current).then((response) => {
+  //     setTeam(response.data);
+  //     console.log(team);
+  //   });
+  // }, [teamId, refreshKey]);
+
+  function withinCurrentPeriod() {
+    const now = new Date().setHours(0, 0, 0, 0);
+    //console.log(now >= new Date(startDate).setHours(0,0,0,0));
+    //console.log(now <= new Date(endDate).setHours(0,0,0,0))
+    return (
+      now >= new Date(startDate).setHours(0, 0, 0, 0) &&
+      now <= new Date(endDate).setHours(0, 0, 0, 0)
     );
-    console.log(a);
-    setAllAppraisals(a);
-  });
-}, []);
-
-useEffect(() => {
-  //console.log('refresh');
-
-  api.getAllAppraisalPeriods().then((response) => {
-    setAppraisalPeriods(response.data);
-    setSelectedPeriod(response.data[0]);
-    //console.log(response.data[0]);
-  });
-
-  api.getAppraisalPeriodByYear(new Date().getFullYear()).then((response) => {
-    setCurrentPeriod(response.data);
-    setStartDate(response.data.startDate);
-    setEndDate(response.data.endDate);
-    console.log(response.data);
-  });
-
-  api.getIsTeamHead(getUserId()).then((response) => {
-    //console.log(response.data);
-    if (response.data > -1) {
-      setIsManager(true);
-      api
-        .getManagerAppraisals(new Date().getFullYear(), getUserId())
-        .then((response) => {
-          setAppraisals(response.data);
-          console.log(response.data);
-        });
-    }
-  });
-
-  api.getIsDepartmentHead(getUserId()).then((response) => {
-    if (response.data > -1) {
-      setIsManager(true);
-      //console.log("department head");
-      api
-        .getDepartmentAppraisals(new Date().getFullYear(), getUserId())
-        .then((response) => setAppraisals(response.data));
-    }
-  });
-
-  api.getIsOrganizationHead(getUserId()).then((response) => {
-    if (response.data > -1) {
-      setOrganizationHead(true);
-      setIsManager(true);
-      console.log("organization head");
-      api
-        .getOrganizationAppraisals(new Date().getFullYear(), getUserId())
-        .then((response) => setAppraisals(response.data));
-    }
-  });
-
-  api.getAllAppraisalsByYear(new Date().getFullYear()).then((response) => {
-    console.log(response.data);
-    const a = response.data.filter(
-      (a) => a.employee.userId + "" !== getUserId() + ""
-    );
-    console.log(a);
-    setAllAppraisals(a);
-  });
-}, [refresh]);
-
-//
-// useEffect(() => {
-//   console.log("use effect!");
-//   const url = window.location.href;
-//   const tempTeamId = url.substring(31);
-//   // console.log("urlSubstring:" + tempTeamId);
-//   // setTeamId(tempTeamId);
-//   teamId.current = tempTeamId;
-
-//   api.getTeam(teamId.current).then((response) => {
-//     setTeam(response.data);
-//     console.log(team);
-//   });
-// }, [teamId, refreshKey]);
-
-
-
-
-
-function withinCurrentPeriod() {
-  const now = new Date().setHours(0, 0, 0, 0);
-  //console.log(now >= new Date(startDate).setHours(0,0,0,0));
-  //console.log(now <= new Date(endDate).setHours(0,0,0,0))
-  return (
-    now >= new Date(startDate).setHours(0, 0, 0, 0) &&
-    now <= new Date(endDate).setHours(0, 0, 0, 0)
-  );
-}
+  }
 
   if (error) return `Error`;
 
@@ -504,8 +492,8 @@ function withinCurrentPeriod() {
       <div className="py-10">
         <main className="flex-1">
           <div className="sm:flex-auto">
-            <h1 className="text-2xl font-bold text-gray-900 mb-10">
-              Current Performance Goal Period ({goalPeriodYear})
+            <h1 className="text-2xl font-bold text-indigo-600 mb-10">
+              Current Performance Period ({goalPeriodYear})
             </h1>
           </div>
           <div>
@@ -522,50 +510,57 @@ function withinCurrentPeriod() {
                   </h2>
                   <div className="sm:flex-auto"></div>
                   <div className="sm:mt-0 sm:ml-16 sm:flex-none">
-                    <button
-                      type="button"
-                      className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                      onClick={ () => history.push("/performance/goals")}
-                    >
-                      Add
-                    </button>
+                    {financial.length > 0 && (
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                        onClick={() => history.push("/performance/goals")}
+                      >
+                        Add
+                      </button>
+                    )}
                   </div>
                 </div>
-                <div className="mt-8 flex flex-col">
-                  <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                      <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                        <table className="min-w-full">
-                          <thead className="bg-white">
-                            <tr>
-                              <th
-                                scope="col"
-                                className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                              >
-                                Goals
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                              >
-                                Created
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                              >
-                                Goal Period
-                              </th>
-                              <th
-                                scope="col"
-                                className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                              >
-                                <span className="sr-only">Edit</span>
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="bg-white">
-                            {/* {locations.map((location) => (
+                {financial.length <= 0 ? (
+                  <>
+                    <div className="mt-8 sm:flex sm:items-center">
+                      <button
+                        type="button"
+                        className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        onClick={() => history.push(`/performance/goals`)}
+                      >
+                        <CurrencyDollarIcon className="mx-auto h-12 w-12 text-gray-400" />
+                        <span className="mt-2 block text-sm font-medium text-gray-900">
+                          Add a Financial Goal
+                        </span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="mt-8 flex flex-col">
+                      <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                            <table className="min-w-full">
+                              <thead className="bg-white">
+                                <tr>
+                                  <th
+                                    scope="col"
+                                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                  >
+                                    Goals
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                  >
+                                    Created
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody className="bg-white">
+                                {/* {locations.map((location) => (
                               <Fragment key={location.name}>
                                 <tr className="border-t border-gray-200">
                                   <th
@@ -576,46 +571,34 @@ function withinCurrentPeriod() {
                                     {location.name}
                                   </th>
                                 </tr> */}
-                              {financial.map((g) => (
-                                <tr
-                                  key={g.goalId}
-                                  // className={classNames(
-                                  //   personIdx === 0
-                                  //     ? "border-gray-300"
-                                  //     : "border-gray-200",
-                                  //   "border-t"
-                                  // )}
-                                >
-                                  <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                    {g.description}
-                                  </td>
-                                  <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
-                                    {g.created}
-                                  </td>
-                                  <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
-                                    {g.year}
-                                  </td>
-                                  <td className="relative whitespace-nowrap text-left py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                    {/* <a
-                                      href="#"
-                                      className="text-indigo-600 font-semibold hover:text-indigo-900"
-                                    >
-                                      Edit
-                                      <span className="sr-only">
-                                        , {person.name}
-                                      </span>
-                                    </a> */}
-                                  </td>
-                                </tr>
-                              ))}
-                              {/* </Fragment> */}
-                            {/* ))} */}
-                          </tbody>
-                        </table>
+                                {financial.map((g) => (
+                                  <tr
+                                    key={g.goalId}
+                                    // className={classNames(
+                                    //   personIdx === 0
+                                    //     ? "border-gray-300"
+                                    //     : "border-gray-200",
+                                    //   "border-t"
+                                    // )}
+                                  >
+                                    <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                      {g.description}
+                                    </td>
+                                    <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                                      {g.created}
+                                    </td>
+                                  </tr>
+                                ))}
+                                {/* </Fragment> */}
+                                {/* ))} */}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -631,50 +614,57 @@ function withinCurrentPeriod() {
                   </h2>
                   <div className="sm:flex-auto"></div>
                   <div className="sm:mt-0 sm:ml-16 sm:flex-none">
-                    <button
-                      type="button"
-                      className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                      onClick={ () => history.push("/performance/goals")}
-                    >
-                      Add
-                    </button>
+                    {business.length > 0 && (
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                        onClick={() => history.push("/performance/goals")}
+                      >
+                        Add
+                      </button>
+                    )}
                   </div>
                 </div>
-                <div className="mt-8 flex flex-col">
-                  <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                      <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                        <table className="min-w-full">
-                          <thead className="bg-white">
-                            <tr>
-                              <th
-                                scope="col"
-                                className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                              >
-                                Goals
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                              >
-                                Created
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                              >
-                                {/* Goal Period */}
-                              </th>
-                              <th
-                                scope="col"
-                                className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                              >
-                                {/* <span className="sr-only">Edit</span> */}
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="bg-white">
-                            {/* {locations.map((location) => (
+                {business.length <= 0 ? (
+                  <>
+                    <div className="mt-10 sm:flex sm:items-center">
+                      <button
+                        type="button"
+                        className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        onClick={() => history.push(`/performance/goals`)}
+                      >
+                        <BriefcaseIcon className="mx-auto h-12 w-12 text-gray-400" />
+                        <span className="mt-2 block text-sm font-medium text-gray-900">
+                          Add a Business Goal
+                        </span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="mt-8 flex flex-col">
+                      <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                            <table className="min-w-full">
+                              <thead className="bg-white">
+                                <tr>
+                                  <th
+                                    scope="col"
+                                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                  >
+                                    Goals
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                  >
+                                    Created
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody className="bg-white">
+                                {/* {locations.map((location) => (
                               <Fragment key={location.name}>
                                 <tr className="border-t border-gray-200">
                                   <th
@@ -701,41 +691,29 @@ function withinCurrentPeriod() {
                                     <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                                       {b.created}
                                     </td>
-                                    <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
-                                      {/* {b.year} */}
-                                    </td>
-                                    <td className="relative whitespace-nowrap text-left py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                      {/* <a
-                                        href="#"
-                                        className="text-indigo-600 font-semibold hover:text-indigo-900"
-                                      >
-                                        Edit
-                                        <span className="sr-only">
-                                          , {person.name}
-                                        </span>
-                                      </a> */}
-                                    </td>
                                   </tr>
                                 ))}
-                              {/* </Fragment>
+                                {/* </Fragment>
                             ))} */}
-                          </tbody>
-                        </table>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
 
           {/* {user.userRole === "MANAGER"?"" : ""} */}
           <div>
-            <div className="px-4 sm:px-6 lg:px-8 mt-10 mx-10">
+            <div className="px-4 sm:px-6 lg:px-8 mt-10 mx-8">
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
                   <h1 className="text-xl font-semibold text-center">
-                    My Appraisals
+                    Appraisals
                   </h1>
                 </div>
                 {/* <div className="sm:mt-0 sm:m-17 sm:flex-none">
@@ -749,86 +727,85 @@ function withinCurrentPeriod() {
                   </div> */}
               </div>
               <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 mx-20">
-              <ul role="list" className="divide-y divide-gray-200">
-                {/* take out everyone except yourself */}
-                { team.length > 0  ? team.filter( (t) => t.userId !== user.userId).map((u) => (
-                    <li >
-                      <a
-                        href="/performance/appraisals"
-                        className="block hover:bg-gray-50"
-                      >
-                        <div className="flex items-center px-4 py-4 sm:px-6">
-                          <div className="flex min-w-0 flex-1 items-center">
-                            <div className="flex-shrink-0">
-                              {/* <img
+                <ul role="list" className="divide-y divide-gray-200">
+                  {/* take out everyone except yourself */}
+                  {team.length > 0
+                    ? team
+                        .filter((t) => t.userId !== user.userId)
+                        .map((u) => (
+                          <li>
+                            <a
+                              href="/performance/appraisals"
+                              className="block hover:bg-gray-50"
+                            >
+                              <div className="flex items-center px-4 py-4 sm:px-6">
+                                <div className="flex min-w-0 flex-1 items-center">
+                                  <div className="flex-shrink-0">
+                                    {/* <img
                                 className="h-12 w-12 rounded-full"
                                 // src={application.applicant.imageUrl}
                                 alt=""
                               /> */}
-                            </div>
-                            <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                              <div>
-                                <p className="truncate text-sm text-left font-medium text-indigo-600">
-                                  {u.firstName}
-                                </p>
-                                <p className="mt-2 flex items-center text-sm text-gray-500">
-                                  <EnvelopeIcon
-                                    className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="truncate">
-                                    {u.workEmail}
-                                  </span>
-                                </p>
-                              </div>
-                              <div className="hidden md:block">
-                                <div>
-                                  <p className="text-sm text-gray-900 text-left">
-                                    {/* <time dateTime={a.date}>
+                                  </div>
+                                  <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                                    <div>
+                                      <p className="truncate text-sm text-left font-medium text-indigo-600">
+                                        {u.firstName}
+                                      </p>
+                                      <p className="mt-2 flex items-center text-sm text-gray-500">
+                                        <EnvelopeIcon
+                                          className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                          aria-hidden="true"
+                                        />
+                                        <span className="truncate">
+                                          {u.workEmail}
+                                        </span>
+                                      </p>
+                                    </div>
+                                    <div className="hidden md:block">
+                                      <div>
+                                        <p className="text-sm text-gray-900 text-left">
+                                          {/* <time dateTime={a.date}>
                                       {a.dateFull}
                                     </time> */}
-                                  </p>
-                                  <p className="mt-2 flex items-center text-sm text-gray-500">
-                                    {/* <CheckCircleIcon
+                                        </p>
+                                        <p className="mt-2 flex items-center text-sm text-gray-500">
+                                          {/* <CheckCircleIcon
                                       className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
                                       aria-hidden="true"
                                     /> */}
-                                    {/* {u.userRole} */}
-                                  </p>
+                                          {/* {u.userRole} */}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div>
+                                  <ChevronRightIcon
+                                    className="h-5 w-5 text-gray-400"
+                                    aria-hidden="true"
+                                  />
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                          <div>
-                            <ChevronRightIcon
-                              className="h-5 w-5 text-gray-400"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                  )): "You have no appraisals to appraise currently."
-                }
+                            </a>
+                          </li>
+                        ))
+                    : "You have no appraisals to appraise currently."}
                 </ul>
               </div>
             </div>
           </div>
 
-
-
-
           <div>
             <div className="px-4 sm:px-6 lg:px-8 mt-10 mx-10">
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
-                  <h1 className="text-xl font-semibold text-center">
+                  {/* <h1 className="text-xl font-semibold text-center">
                     Manager Reviews
-                  </h1>
+                  </h1> */}
                 </div>
               </div>
               <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 mx-20">
-              
                 {/* <ul role="list" className="divide-y divide-gray-200">
                   {user.managerReviews.map((u) => (
                     <li key={u}>
