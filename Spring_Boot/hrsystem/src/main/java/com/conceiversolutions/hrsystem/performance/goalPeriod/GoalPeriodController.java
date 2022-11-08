@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.performance.goalPeriod;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +19,15 @@ public class GoalPeriodController {
 
     private final GoalPeriodService goalPeriodService;
 
-    @Autowired
     public GoalPeriodController(GoalPeriodService goalPeriodService) {
         this.goalPeriodService = goalPeriodService;
     }
 
+    @GetMapping
+    public List<GoalPeriod> getGoalPeriods() {
+        return goalPeriodService.getGoalPeriods();
+    }
+    
     @PostMapping
     public Long addGoalPeriod(@RequestBody GoalPeriod goalPeriod) throws Exception {
         return goalPeriodService.addGoalPeriod(goalPeriod);

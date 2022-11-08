@@ -2,7 +2,6 @@ package com.conceiversolutions.hrsystem.training.module;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.conceiversolutions.hrsystem.training.video.Video;
 import com.conceiversolutions.hrsystem.user.user.User;
 
@@ -25,7 +22,6 @@ public class ModuleController {
 
     private final ModuleService moduleService;
 
-    @Autowired
     public ModuleController(ModuleService moduleService) {
         this.moduleService = moduleService;
     }

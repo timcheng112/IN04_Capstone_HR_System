@@ -19,6 +19,8 @@ export default function Register() {
   const [gender, setGender] = useState("Male");
   const [race, setRace] = useState("Chinese");
   const [citizenship, setCitizenship] = useState("Citizen");
+  const [bankName, setBankName] = useState("DBS Bank");
+  const [accountNumber, setAccountNumber] = useState();
   const [role, setRole] = useState("Employee");
   const [positionName, setPositionName] = useState("");
   const [positionDescription, setPositionDescription] = useState("");
@@ -392,6 +394,47 @@ export default function Register() {
                   <option>PR</option>
                   <option>Foreigner</option>
                 </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="bank-name"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Bank Name
+                </label>
+                <select
+                  id="bank-name"
+                  name="bank-name"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+                  value={bankName}
+                  onChange={(r) => setBankName(r.target.value)}
+                >
+                  <option>DBS Bank</option>
+                  <option>UOB Singapore</option>
+                  <option>Citibank Singapore</option>
+                  <option>Maybank Singapore</option>
+                  <option>Standard Chartered Singapore</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="account-number"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Bank Account Number
+                </label>
+                <input
+                  id="account-number"
+                  name="accountNumber"
+                  type="text"
+                  autoComplete="text"
+                  required
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  // placeholder="0052312891"
+                  placeholder="Account Number"
+                  value={accountNumber}
+                  onChange={(l) => setAccountNumber(l.target.value)}
+                />
               </div>
               <div>
                 <label
