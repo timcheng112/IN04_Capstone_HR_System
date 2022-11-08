@@ -220,6 +220,12 @@ const api = {
   removeUserBookmark(userId, jobPostId) {
     return axios.delete(`http://localhost:9191/api/qualification/removeUserBookmark?userId=${userId}&jobPostId=${jobPostId}`);
   },
+  rejectOffer(userId, postingId) {
+    return axios.put(`http://localhost:9191/api/jobapplications/rejectOffer?userId=${userId}&postingId=${postingId}`);
+  }
+  acceptOffer(userId, postingId) {
+    return axios.put(`http://localhost:9191/api/jobapplications/acceptOffer?userId=${userId}&postingId=${postingId}`);
+  }
 };
 
 export default api;
