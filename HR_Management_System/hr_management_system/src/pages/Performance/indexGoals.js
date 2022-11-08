@@ -235,12 +235,12 @@ export default function Goals() {
   }, [goalPeriodYear]);
 
   useEffect(() => {
-    console.log("open goal?");
+    //console.log("open goal?");
     const timer = setTimeout(() => {
       setRefresh(!refresh);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [openAddGoal, openEditGoal, openAddAchievement]);
+  }, [openAddGoal, openEditGoal, openAddAchievement, openView]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
