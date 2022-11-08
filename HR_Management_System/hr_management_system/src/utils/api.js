@@ -886,6 +886,9 @@ const api = {
   getUserExperiences(userId) {
     return axios.get(`http://localhost:9191/api/qualification/getUserExperiences?userId=${userId}`);
   },
+  getPendingApplicants(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/getPendingApplicants?postingId=${postingId}`);
+  },
   getShortlistedApplicants(postingId) {
     return axios.get(`http://localhost:9191/api/jobapplications/getShortlistedApplicants?postingId=${postingId}`);
   },

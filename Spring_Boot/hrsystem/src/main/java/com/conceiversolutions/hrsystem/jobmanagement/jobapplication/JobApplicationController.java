@@ -56,6 +56,11 @@ public class JobApplicationController {
         return jobApplicationService.editJobApplication(postingId, userSkillIds, LocalDate.parse(availableStartDate));
     }
 
+    @GetMapping("/getPendingApplicants")
+    public List<User> getPendingApplicants(@RequestParam("postingId") Long postingId) {
+        return jobApplicationService.getPendingApplicants(postingId);
+    }
+
     @GetMapping("/getShortlistedApplicants")
     public List<User> getShortlistedApplicants(@RequestParam("postingId") Long postingId) {
         return jobApplicationService.getShortlistedApplicants(postingId);
