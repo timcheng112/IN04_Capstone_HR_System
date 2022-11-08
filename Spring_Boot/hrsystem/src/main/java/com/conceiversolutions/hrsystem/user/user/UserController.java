@@ -1,8 +1,10 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
+import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
@@ -114,7 +116,8 @@ public class UserController {
         Position newPos = positionRepository.saveAndFlush(position);
 
         User newEmployee = new User(firstName, lastName, phone, email, workEmail, LocalDate.parse(dob),
-                GenderEnum.valueOf(gender), RaceEnum.valueOf(race), CitizenshipEnum.valueOf(citizenship),RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
+                GenderEnum.valueOf(gender), RaceEnum.valueOf(race), CitizenshipEnum.valueOf(citizenship),
+                RoleEnum.valueOf(userRole), isPartTimer, isHrEmployee,
                 LocalDate.parse(dateJoined), null, newPos);
         try {
             Long employeeId = userService.addNewUser(newEmployee);

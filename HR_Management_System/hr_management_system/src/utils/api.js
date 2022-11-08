@@ -15,6 +15,8 @@ const api = {
     workEmail,
     dob,
     gender,
+    race,
+    citizenship,
     role,
     isPartTimer,
     isHrEmployee,
@@ -25,7 +27,7 @@ const api = {
     jobType
   ) {
     return axios.post(
-      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}&positionType=${positionType}&positionName=${positionName}&positionDescription=${positionDescription}&jobType=${jobType}`
+      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&race=${race}&citizenship=${citizenship}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}&positionType=${positionType}&positionName=${positionName}&positionDescription=${positionDescription}&jobType=${jobType}`
     );
   },
   confirmToken(token) {
