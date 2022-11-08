@@ -1237,16 +1237,18 @@ public class UserService implements UserDetailsService {
             }
 
             //nullify other side for pay information, allowance & deduction
-            PayInformation tempPayInformation = u.getCurrentPayInformation();
-            tempPayInformation.setUser(null);
-            for (Allowance allowance: tempPayInformation.getAllowance()) {
-                allowance.setPayInfo(null);
+            if (u.getCurrentPayInformation() != null) {
+                PayInformation tempPayInformation = u.getCurrentPayInformation();
+                tempPayInformation.setUser(null);
+                for (Allowance allowance: tempPayInformation.getAllowance()) {
+                    allowance.setPayInfo(null);
+                }
+                for (Deduction deduction : tempPayInformation.getDeduction()) {
+                    deduction.setPayInfo(null);
+                }
+                u.nullify();
+                u.setCurrentPayInformation(tempPayInformation);
             }
-            for (Deduction deduction : tempPayInformation.getDeduction()) {
-                deduction.setPayInfo(null);
-            }
-            u.nullify();
-            u.setCurrentPayInformation(tempPayInformation);
 
         }
         return employees;
