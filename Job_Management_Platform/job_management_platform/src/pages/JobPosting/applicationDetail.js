@@ -116,7 +116,7 @@ export default function ApplicationDetail() {
                 </div>
               </div>
             </div>
-            {status !== 'CLOSED'&& <div className="mt-5 flex xl:mt-0 xl:ml-4">
+            {status === 'OFFERED'&& <div className="mt-5 flex xl:mt-0 xl:ml-4">
               <span className="hidden sm:block">
                 <button
                   type="button"
