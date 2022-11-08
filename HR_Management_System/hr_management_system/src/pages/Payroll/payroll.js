@@ -30,6 +30,8 @@ const Payroll = () => {
     useState(false);
   const [isPersonalPayrollOpen, setIsPersonalPayrollOpen] = useState(false);
   const [isPayrollFormOpen, setIsPayrollFormOpen] = useState(false);
+  const [isEditPayInformationFormOpen, setIsEditPayInformationFormOpen] =
+    useState(false);
 
   const ref = document.getElementById("tabs");
   const [isPayrollTabsGone, setIsPayrollTabsGone] = useState(false);
@@ -50,12 +52,18 @@ const Payroll = () => {
   }, []);
 
   useEffect(() => {
-    !isPayrollFormOpen &&
+    (!isPayrollFormOpen && !isEditPayInformationFormOpen) &&
       setSticky(document.getElementById("tabs").getBoundingClientRect().bottom);
     scrollPosition >= sticky
       ? setIsPayrollTabsGone(true)
       : setIsPayrollTabsGone(false);
-  }, [ref, sticky, scrollPosition, isPayrollFormOpen]);
+  }, [
+    ref,
+    sticky,
+    scrollPosition,
+    isPayrollFormOpen,
+    isEditPayInformationFormOpen,
+  ]);
 
   const tabs = [
     { name: "Overview", current: isOverviewOpen },
@@ -188,7 +196,7 @@ const Payroll = () => {
       <Navbar />
       <div className="py-5"></div>
       <div className="px-4 sm:px-6 lg:px-8">
-        {!isPayrollFormOpen && (
+        {(!isPayrollFormOpen && !isEditPayInformationFormOpen) && (
           <div
             className={classNames(
               "sm:flex sm:items-center space-x-4",
@@ -254,7 +262,16 @@ const Payroll = () => {
         )}
       </div>
       {isOverviewOpen && (
-        <Overview searchFilteredEmployees={searchFilteredEmployees} />
+        <Overview
+          searchFilteredEmployees={searchFilteredEmployees}
+          isEditPayInformationFormOpen={isEditPayInformationFormOpen}
+          openEditPayInformationForm={() =>
+            setIsEditPayInformationFormOpen(true)
+          }
+          closeEditPayInformationForm={() =>
+            setIsEditPayInformationFormOpen(false)
+          }
+        />
       )}
       {isPayrollHistoryOpen && <PayrollHistory />}
       {isEmployeesNotInPayrollOpen && (
