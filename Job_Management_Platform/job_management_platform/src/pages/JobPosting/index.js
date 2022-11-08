@@ -54,7 +54,7 @@ export default function JobPosting() {
         <div className="flex flex-1 flex-col md:pl-64">
           <div className='py-6'/>
           <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-            <h3 className="text-lg  mx-10 font-medium leading-6 text-gray-900">Job Postings</h3>
+            <h3 className="text-lg  mx-10 font-medium leading-6 text-gray-900">Available Job Postings</h3>
             <div className="mt-3 mx-20 sm:mt-0 sm:ml-4">
               <label htmlFor="desktop-search-candidate" className="sr-only">
                 Search
