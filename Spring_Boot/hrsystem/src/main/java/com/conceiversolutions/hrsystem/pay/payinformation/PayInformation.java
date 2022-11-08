@@ -6,11 +6,16 @@ import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
 import com.conceiversolutions.hrsystem.pay.deduction.Deduction;
 import com.conceiversolutions.hrsystem.user.user.User;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "pay_information")
 public class PayInformation {
@@ -33,7 +38,7 @@ public class PayInformation {
     private BigDecimal eventPhHourlyPay;
     @Column(name = "overtime_hourly_pay", nullable = true)
     private BigDecimal overtimeHourlyPay;
-    @Column(name = "pay_method", nullable = false)
+    @Column(name = "pay_method", nullable = true)
     private String paymentMethod;
     @Column(name = "in_payroll", nullable = false)
     private Boolean inPayroll;
@@ -45,7 +50,7 @@ public class PayInformation {
     private Boolean hasCommission;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "self_help_group")
+    @Column(nullable = true, name = "self_help_group")
     private SelfHelpGroupEnum selfHelpGroup;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "allowanceId")
     // @JoinColumn(name="allowanceId") mappedBy ^ over here suffice for linkage
@@ -240,21 +245,29 @@ public class PayInformation {
         this.deduction = deduction;
     }
 
+    public BigDecimal getBasicSalary() {
+        return basicSalary;
+    }
+
+    public void setBasicSalary(BigDecimal basicSalary) {
+        this.basicSalary = basicSalary;
+    }
+
+    public Boolean getInPayroll() {
+        return inPayroll;
+    }
+
+    public void setInPayroll(Boolean inPayroll) {
+        this.inPayroll = inPayroll;
+    }
+
     @Override
     public String toString() {
-        return "PayInformation{" +
-                "payInformationId=" + payInformationId +
-                ", payType='" + payType + '\'' +
-                ", basicHourlyPay=" + basicHourlyPay +
-                ", weekendHourlyPay=" + weekendHourlyPay +
-                ", eventPhHourlyPay=" + eventPhHourlyPay +
-                ", overtimeHourlyPay=" + overtimeHourlyPay +
-                ", paymentMethod='" + paymentMethod + '\'' +
-                ", hasCommission=" + hasCommission +
-                ", selfHelpGroup=" + selfHelpGroup +
-                ", allowance=" + allowance +
-                ", deduction=" + deduction +
-                ", user=" + user +
-                '}';
+        return "PayInformation [payInformationId=" + payInformationId + ", payType=" + payType + ", basicSalary="
+                + basicSalary + ", basicHourlyPay=" + basicHourlyPay + ", weekendHourlyPay=" + weekendHourlyPay
+                + ", eventPhHourlyPay=" + eventPhHourlyPay + ", overtimeHourlyPay=" + overtimeHourlyPay
+                + ", paymentMethod=" + paymentMethod + ", inPayroll=" + inPayroll + ", hasCommission=" + hasCommission
+                + ", selfHelpGroup=" + selfHelpGroup + ", allowance=" + allowance + ", deduction=" + deduction
+                + ", user=" + user + "]";
     }
 }

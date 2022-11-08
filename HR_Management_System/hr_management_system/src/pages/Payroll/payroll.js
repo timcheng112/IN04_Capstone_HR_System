@@ -18,16 +18,19 @@ const Payroll = () => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
+
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const searchParams = ["firstName", "lastName", "email"];
   const [query, setQuery] = useState("");
   const [searchFilteredEmployees, setSearchFilteredEmployees] = useState([]);
+
   const [isOverviewOpen, setIsOverviewOpen] = useState(true);
   const [isPayrollHistoryOpen, setIsPayrollHistoryOpen] = useState(false);
   const [isEmployeesNotInPayrollOpen, setIsEmployeesNotInPayrollOpen] =
     useState(false);
   const [isPersonalPayrollOpen, setIsPersonalPayrollOpen] = useState(false);
   const [isPayrollFormOpen, setIsPayrollFormOpen] = useState(false);
+
   const ref = document.getElementById("tabs");
   const [isPayrollTabsGone, setIsPayrollTabsGone] = useState(false);
   const [sticky, setSticky] = useState();
@@ -71,6 +74,11 @@ const Payroll = () => {
 
   const onChangeHandler = (tabName) => {
     if (tabName === "Overview") {
+      setFilteredEmployees(
+        employees.filter(
+          (employee) => employee.currentPayInformation.inPayroll
+        )
+      );
       setIsOverviewOpen(true);
       setIsPayrollHistoryOpen(false);
       setIsEmployeesNotInPayrollOpen(false);
@@ -81,6 +89,11 @@ const Payroll = () => {
       setIsEmployeesNotInPayrollOpen(false);
       setIsPersonalPayrollOpen(false);
     } else if (tabName === "Employees Not In Payroll") {
+      setFilteredEmployees(
+        filteredEmployees.filter(
+          (employee) => !employee.currentPayInformation.inPayroll
+        )
+      );
       setIsOverviewOpen(false);
       setIsPayrollHistoryOpen(false);
       setIsEmployeesNotInPayrollOpen(true);
@@ -120,7 +133,11 @@ const Payroll = () => {
       .getAllEmployees()
       .then((response) => {
         setEmployees(response.data);
-        setFilteredEmployees(response.data);
+        setFilteredEmployees(
+          response.data.filter(
+            (employee) => employee.currentPayInformation.inPayroll
+          )
+        );
       })
       .catch((error) => console.log(error.response.data.message));
 

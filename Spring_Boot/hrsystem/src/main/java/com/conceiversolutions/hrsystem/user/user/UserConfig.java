@@ -52,8 +52,8 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // admin1.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(2000), true, false, admin1));
+                                admin1.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(2000), true, false, admin1));
                                 admin1.setWorkEmail("simj@libro.com");
                                 admin1.setEnabled(true);
                                 admin1.setCurrentPosition(adminPosition);
@@ -73,8 +73,8 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // admin2.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(3000), true, false, admin2));
+                                admin2.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(3000), true, false, admin2));
                                 admin2.setWorkEmail("yapa@libro.com");
                                 admin2.setEnabled(true);
                                 admin2.setCurrentPosition(adminPosition);
@@ -94,8 +94,8 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // ceo.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(10000), true, false, ceo));
+                                ceo.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(10000), true, false, ceo));
                                 ceo.setWorkEmail("ongj@libro.com");
                                 ceo.setEnabled(true);
                                 ceo.setCurrentPosition(
@@ -120,8 +120,8 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // matthewManager.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(5000), true, false, matthewManager));
+                                matthewManager.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(5000), true, false, matthewManager));
                                 matthewManager.setWorkEmail("matthew@libro.com");
                                 matthewManager.setEnabled(true);
                                 Position SOMPosition = new Position("Sales Operation Manager",
@@ -165,8 +165,8 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // xueqiManager.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(5250), true, false, xueqiManager));
+                                xueqiManager.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(5250), true, false, xueqiManager));
                                 xueqiManager.setWorkEmail("xueqi@libro.com");
                                 xueqiManager.setEnabled(true);
                                 xueqiManager.setCurrentPosition(managerPosition);
@@ -191,8 +191,8 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // shihanManager.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(4850), true, false, shihanManager));
+                                shihanManager.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(4850), true, false, shihanManager));
                                 shihanManager.setWorkEmail("shihan@libro.com");
                                 shihanManager.setEnabled(true);
                                 shihanManager.setCurrentPosition(managerPosition);
@@ -220,8 +220,8 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // xinyueEmployee.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(7000), true, false, xinyueEmployee));
+                                xinyueEmployee.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(7000), true, false, xinyueEmployee));
                                 xinyueEmployee.setWorkEmail("xinyue@libro.com");
                                 xinyueEmployee.setEnabled(true);
                                 xinyueEmployee.setCurrentPosition(hrDirector);
@@ -259,8 +259,8 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // alisonEmployee.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(4000), true, false, alisonEmployee));
+                                alisonEmployee.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(4000), true, false, alisonEmployee));
                                 alisonEmployee.setWorkEmail("alison@libro.com");
                                 alisonEmployee.setEnabled(true);
                                 alisonEmployee.setCurrentPosition(hrManager);
@@ -288,8 +288,8 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // timEmployee.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(2000), true, false, timEmployee));
+                                timEmployee.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(2000), true, false, timEmployee));
                                 timEmployee.setWorkEmail("tim@libro.com");
                                 timEmployee.setEnabled(true);
                                 timEmployee.setCurrentPosition(hrEmployee);
@@ -312,8 +312,8 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // hedgehogEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(2250), true,
-                                //                 false, hedgehogEmployee));
+                                hedgehogEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(2250), true,
+                                                false, hedgehogEmployee));
                                 hedgehogEmployee.setWorkEmail("hedgehog@libro.com");
                                 hedgehogEmployee.setEnabled(true);
                                 hedgehogEmployee.setCurrentPosition(hrEmployee);
@@ -339,9 +339,9 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // bruceEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(10),
-                                //                 new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), true, false,
-                                //                 bruceEmployee));
+                                bruceEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(10),
+                                                new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), true, false,
+                                                bruceEmployee));
                                 bruceEmployee.setWorkEmail("bruce@libro.com");
                                 bruceEmployee.setEnabled(true);
                                 bruceEmployee.setCurrentPosition(cashierEmployee);
@@ -364,9 +364,9 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // barryEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(10),
-                                //                 new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), true, false,
-                                //                 barryEmployee));
+                                barryEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(10),
+                                                new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), true, false,
+                                                barryEmployee));
                                 barryEmployee.setWorkEmail("barry@libro.com");
                                 barryEmployee.setEnabled(true);
                                 barryEmployee.setCurrentPosition(cashierEmployee);
@@ -392,9 +392,9 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // dianaEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(9),
-                                //                 new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), true, true,
-                                //                 dianaEmployee));
+                                dianaEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(9),
+                                                new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), true, true,
+                                                dianaEmployee));
                                 dianaEmployee.setWorkEmail("diana@libro.com");
                                 dianaEmployee.setEnabled(true);
                                 dianaEmployee.setCurrentPosition(salesmanEmployee);
@@ -417,9 +417,9 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // clarkEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(9),
-                                //                 new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), true, true,
-                                //                 clarkEmployee));
+                                clarkEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(9),
+                                                new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), true, true,
+                                                clarkEmployee));
                                 clarkEmployee.setWorkEmail("clark@libro.com");
                                 clarkEmployee.setEnabled(true);
                                 clarkEmployee.setCurrentPosition(salesmanEmployee);
