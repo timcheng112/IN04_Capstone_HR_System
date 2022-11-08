@@ -230,6 +230,11 @@ const api = {
       `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
     );
   },
+  addPayInformation(userId, payInformation) {
+    return axios.post(
+      `http://localhost:9191/api/pay/payinfo/addPayInformation?userId=${userId}&payInformation=${payInformation}`
+    );
+  },
   getUser(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
   },
@@ -859,6 +864,11 @@ const api = {
   removeMemberFromTeam(userId, teamId) {
     return axios.delete(
       `http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`
+    );
+  },
+  sendPayslipEmails(emails, payslipMonth) {
+    return axios.post(
+      `http://localhost:9191/api/user/payroll/sendPayslipEmails?emails=${emails}&payslipMonth=${payslipMonth}`
     );
   },
   getAllAppraisals() {

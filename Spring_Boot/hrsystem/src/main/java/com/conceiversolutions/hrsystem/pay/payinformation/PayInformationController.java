@@ -25,9 +25,9 @@ public class PayInformationController {
         return payInformationService.getPayInformation(id);
     }
 
-    @PostMapping
-    public void addNewPayInformation(@RequestBody PayInformation payInformation) {
-        payInformationService.addNewPayInformation(payInformation);
+    @PostMapping(path = "/addPayInformation")
+    public void addNewPayInformation(@RequestParam("userId") Long userId, @RequestBody PayInformation payInformation) {
+        payInformationService.addNewPayInformation(userId, payInformation);
     }
 
 //    @PutMapping(path = "{payInformationId}")
