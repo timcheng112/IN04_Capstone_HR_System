@@ -258,6 +258,29 @@ public class JobApplicationService {
         return savedApplication.getApplicationId();
     }
 
+    public List<User> getPendingApplicants(Long postingId) {
+        System.out.println("JobApplicationService.getPendingApplicants");
+        System.out.println("postingId = " + postingId);
+
+        Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(postingId);
+        if (jobPostingOptional.isEmpty()) {
+            throw new IllegalStateException("Job Posting not found");
+        }
+
+        List<JobApplication> applications = jobApplicationRepository.findApplicationsByPostingId(postingId);
+        List<User> applicants = new ArrayList<>();
+        for (JobApplication ja : applications) {
+            if (ja.getStatus().equals(JobStatusEnum.PENDING)) {
+                User tempUser = ja.getApplicant();
+                tempUser.nullify();
+                applicants.add(tempUser);
+            }
+        }
+
+        System.out.println("size of pending applicants list is " + applicants.size());
+        return applicants;
+    }
+
     public List<User> getShortlistedApplicants(Long postingId) {
         System.out.println("JobApplicationService.getShortlistedApplicants");
         System.out.println("postingId = " + postingId);
