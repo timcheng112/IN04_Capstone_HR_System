@@ -15,6 +15,8 @@ const api = {
     workEmail,
     dob,
     gender,
+    race,
+    citizenship,
     role,
     isPartTimer,
     isHrEmployee,
@@ -25,7 +27,7 @@ const api = {
     jobType
   ) {
     return axios.post(
-      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}&positionType=${positionType}&positionName=${positionName}&positionDescription=${positionDescription}&jobType=${jobType}`
+      `http://localhost:9191/api/user/register/registerNewAccountHRMS?firstName=${firstName}&lastName=${lastName}&phone=${phone}&email=${email}&workEmail=${workEmail}&dob=${dob}&gender=${gender}&race=${race}&citizenship=${citizenship}&userRole=${role}&isPartTimer=${isPartTimer}&isHrEmployee=${isHrEmployee}&dateJoined=${dateJoined}&positionType=${positionType}&positionName=${positionName}&positionDescription=${positionDescription}&jobType=${jobType}`
     );
   },
   confirmToken(token) {
@@ -180,10 +182,38 @@ const api = {
       `http://localhost:9191/api/user/getUnassignedEmployees?taskId=${taskId}`
     );
   },
-  assignTaskToEmployeeByCategory(userId, categoryId) {
+  assignTaskToEmployeeByCategory(userId, categoryId, isOnboarding) {
     return axios.post(
-      `http://localhost:9191/api/category/assignCategoryTasks?userId=${userId}&categoryId=${categoryId}`
+      `http://localhost:9191/api/category/assignCategoryTasks?userId=${userId}&categoryId=${categoryId}&isOnboarding=${isOnboarding}`
     );
+  },
+  getChecklists() {
+    return axios.get(`http://localhost:9191/api/checklist`);
+  },
+  getOnboardingChecklists() {
+    return axios.get("http://localhost:9191/api/checklist/onboardingchecklist");
+  },
+  getOffboardingChecklists() {
+    return axios.get(
+      "http://localhost:9191/api/checklist/offboardingchecklist"
+    );
+  },
+  getChecklistById(checklistId) {
+    return axios.get(`http://localhost:9191/api/checklist/${checklistId}`);
+  },
+  addNewChecklist(checklist, taskIds) {
+    return axios.post(
+      `http://localhost:9191/api/checklist?taskIds=${taskIds}`,
+      checklist
+    );
+  },
+  editChecklist(checklistId, checklistTitle, checklistDescription, taskIds) {
+    return axios.put(
+      `http://localhost:9191/api/checklist/${checklistId}?checklistTitle=${checklistTitle}&checklistDescription=${checklistDescription}&taskIds=${taskIds}`
+    );
+  },
+  deleteChecklist(checklistId) {
+    return axios.delete(`http://localhost:9191/api/checklist/${checklistId}`);
   },
 
   getOrganization() {
@@ -250,6 +280,20 @@ const api = {
   },
   getIsDepartmentHead(userId) {
     return axios.get(`http://localhost:9191/api/department/${userId}/isHead`)
+  getEmployeesByDepartment(departmentId) {
+    return axios.get(
+      `http://localhost:9191/api/user/getEmployeesByDepartment?departmentId=${departmentId}`
+    );
+  },
+  getEmployeesByTeam(teamId) {
+    return axios.get(
+      `http://localhost:9191/api/user/getEmployeesByTeam?teamId=${teamId}`
+    );
+  },
+  getEmployeesByRosterAndDate(rosterId, date) {
+    return axios.get(
+      `http://localhost:9191/api/user/getEmployeesByRosterAndDate?rosterId=${rosterId}&date=${date}`
+    );
   },
   getAllTeams() {
     return axios.get(`http://localhost:9191/api/team/getAllTeams`);
@@ -576,6 +620,11 @@ const api = {
   getTemplateShiftsByRoster(rosterId) {
     return axios.get(
       `http://localhost:9191/api/shift/getTemplateShiftsByRoster?rosterId=${rosterId}`
+    );
+  },
+  getShiftsByRosterAndTime(rosterId, date) {
+    return axios.get(
+      `http://localhost:9191/api/shift/getShiftsByRosterAndTime?rosterId=${rosterId}&dateString=${date}`
     );
   },
   getShiftListItemByDateAndUserId(date, userId) {

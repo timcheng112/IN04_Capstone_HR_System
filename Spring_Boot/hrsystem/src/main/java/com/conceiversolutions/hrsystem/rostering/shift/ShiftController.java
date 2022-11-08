@@ -50,7 +50,7 @@ public class ShiftController {
     public Shift getShiftByTeamAndTime(@RequestParam("teamId") Long teamId, @RequestParam("dateString") String date) {
 
         LocalDate localDate = LocalDate.parse(date);
-        
+
         System.out.println("date for getShiftByTeamAndTime: " + date);
 
         return shiftService.getShiftByTeamAndTime(teamId, localDate);
@@ -69,5 +69,13 @@ public class ShiftController {
     @PutMapping(path = "/editShift/{shiftId}")
     public void editShift(@RequestBody Shift editedShift, @PathVariable("shiftId") Long shiftId) {
         shiftService.editShift(shiftId, editedShift);
+    }
+
+    @GetMapping(path = "/getShiftsByRosterAndTime")
+    public List<Shift> getShiftsByRosterAndTime(@RequestParam("rosterId") Long rosterId,
+            @RequestParam("dateString") String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        System.out.println("date for getShiftByTeamAndTime: " + date);
+        return shiftService.getShiftsByRosterAndTime(rosterId, localDate);
     }
 }

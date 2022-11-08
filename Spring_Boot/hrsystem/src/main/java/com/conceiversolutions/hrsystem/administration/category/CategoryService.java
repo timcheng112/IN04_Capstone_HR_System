@@ -33,6 +33,7 @@ public class CategoryService {
         for (Category category : categories) {
             for (Task task : category.getTasks()) {
                 task.setCategory(null);
+                // task.getCategory().setTasks(new ArrayList<>());
                 // task.setTaskListItems(new ArrayList<>());
                 for (TaskListItem taskListItem : task.getTaskListItems()) {
                     taskListItem.setUser(null);
@@ -80,7 +81,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void assignTaskToEmployeeByCategory(Long employeeId, Long categoryId) {
+    public void assignTaskToEmployeeByCategory(Long employeeId, Long categoryId, Boolean isOnboarding) {
         System.out.println("EMPLOYEE ID " + employeeId + " CATEGORY ID " + categoryId);
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalStateException("Category with ID: " + categoryId + " does not exist!"));
@@ -89,10 +90,12 @@ public class CategoryService {
         List<Task> tasks = category.getTasks();
         List<Long> taskIds = new ArrayList<>();
         for (Task task : tasks) {
-            List<User> employees = userRepository.findEmployeesWithTask(task.getTaskId(), RoleEnum.ADMINISTRATOR,
-                    RoleEnum.APPLICANT);
-            if (!employees.contains(user)) {
-                taskIds.add(task.getTaskId());
+            if (task.getIsOnboarding() == isOnboarding) {
+                List<User> employees = userRepository.findEmployeesWithTask(task.getTaskId(), RoleEnum.ADMINISTRATOR,
+                        RoleEnum.APPLICANT);
+                if (!employees.contains(user)) {
+                    taskIds.add(task.getTaskId());
+                }
             }
         }
 

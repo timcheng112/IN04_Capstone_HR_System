@@ -45,6 +45,10 @@ public class JobPosting {
     private JobStatusEnum status;
     @Column(name = "salary", nullable = false, length = 64)
     private BigDecimal salary;
+    @Column(name = "salary_min", nullable = true)
+    private BigDecimal salaryMin;
+    @Column(name = "salary_max", nullable = true)
+    private BigDecimal salaryMax;
     @Column(name = "post_date", nullable = false)
     private LocalDate postDate;
     @Column(name = "is_active", nullable = false)
@@ -79,5 +83,21 @@ public class JobPosting {
         this.postedBy = postedBy;
         this.jobRequest = jobRequest;
         this.jobPostRequirements = jobRequirements;
+    }
+
+    public JobPosting(String jobTitle, String jobDescription, LocalDate preferredStartDate, JobTypeEnum jobType, RoleEnum jobRole, JobStatusEnum status, LocalDate postDate, Boolean isActive, User postedBy, JobRequest jobRequest, List<Skillset> jobRequirements, BigDecimal salaryMin, BigDecimal salaryMax) {
+        this.jobTitle = jobTitle;
+        this.jobDescription = jobDescription;
+        this.preferredStartDate = preferredStartDate;
+        this.jobType = jobType;
+        this.jobRole = jobRole;
+        this.status = status;
+        this.postDate = postDate;
+        this.isActive = isActive;
+        this.postedBy = postedBy;
+        this.jobRequest = jobRequest;
+        this.jobPostRequirements = jobRequirements;
+        this.salaryMin = salaryMin;
+        this.salaryMax = salaryMax;
     }
 }

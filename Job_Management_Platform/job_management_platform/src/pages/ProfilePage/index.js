@@ -1,69 +1,27 @@
-import { Suspense, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-// import Navbar from "../../components/Navbar.js";
-//import SideProfile from './sideprofile.js'
-import { PaperClipIcon } from "@heroicons/react/20/solid";
-import loading from "../../assets/Spinner.svg";
-import { getUserId } from "../../utils/Common.js";
-import api from "../../utils/api.js";
-import axios from "axios";
-import Navbar from "../../components/Navbar";
-
+import Sidebar from "../../components/Sidebar";
+import Education from "../../features/Profile/Education";
 import {
-  CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
-  HomeIcon,
-  InboxIcon,
-  AcademicCapIcon,
-  BanknotesIcon,
-  CheckBadgeIcon,
-  ClockIcon,
-  ReceiptRefundIcon,
-  UsersIcon,
-} from "@heroicons/react/24/outline";
+  PlusIcon
+} from "@heroicons/react/20/solid";
+import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
+import { Fragment, useState } from 'react'
+import WorkList from "../../features/Profile/WorkList";
 
-const actions1 = [
-  {
-    title: "Benefits",
-    href: "#",
-    icon: CheckBadgeIcon,
-    iconForeground: "text-purple-700",
-    iconBackground: "bg-purple-50",
-  },
-  {
-    title: "Schedule",
-    href: "#",
-    icon: UsersIcon,
-    iconForeground: "text-sky-700",
-    iconBackground: "bg-sky-50",
-  },
-];
+import Language from "../../features/Profile/Language";
+import RecommendationList from "../../features/Profile/RecommendationList";
+import api from "../../utils/api.js";
+import { getUserId } from "../../utils/Common.js";
+import { useHistory } from "react-router-dom";
 
-const actions2 = [
-  {
-    title: "Current Pay Info",
-    href: "#",
-    icon: BanknotesIcon,
-    iconForeground: "text-yellow-700",
-    iconBackground: "bg-yellow-50",
-  },
-  {
-    title: "Training",
-    href: "#",
-    icon: AcademicCapIcon,
-    iconForeground: "text-indigo-700",
-    iconBackground: "bg-indigo-50",
-  },
-];
+import AddSkillset from "../../features/Profile/AddSkillset";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-
-
-export default function ProfilePage(props) {
+const works = [{workId:1, positionName: 'UI designer', companyName:"GIC"},{workId:2, positionName: 'Product Manager', companyName:"DBS"}]
+const recommendations = [{recommendationId:1, name: 'Kong Xinyue', email:"12345@gmail.com"}, {recommendationId:2, name: 'Matthew', email:"12345@gmail.com"}]
+export default function Profile() {
+  const [addskil, setAddskill] = useState(false)
+  const [addCV, setAddCV] = useState(false)
+  const [addTranscript, setAddTranscript] = useState(false)
+  const [addCoverletter, setAddCoverletter] = useState(false)
   const [user, setUser] = useState(getUserId()); //logged in user
   const history = useHistory();
   // const email = result[2]
@@ -75,301 +33,345 @@ export default function ProfilePage(props) {
   const [docId, setDocId] = useState(null);
   const [error, setError] = useState(null);
 
-  console.log(userId);
-  // console.log(email)
+//  function testMatt() {
+//      sample API calls for backend
+//    let exp = [{"experienceId": 1,
+//                    "positionName": "Bababa",
+//                    "companyName": "BAaaaaa",
+//                    "startDate": "2019-01-05",
+//                    "endDate": "2020-02-10",
+//                    "currentlyWorking": false,
+//                    "description": "Teach kiddos how wto kick butt"},
+//                {"experienceId": -1,
+//                    "positionName": "dddd",
+//                    "companyName": "dddd",
+//                    "startDate": "2021-02-25",
+//                    "endDate": null,
+//                    "currentlyWorking": true,
+//                    "description": "dddd"
+//                }]
+//    let exp = []
+//    console.log(exp);
+//    api.saveWorkExperiences(16, exp);
 
-  // useEffect to get the user details
-  useEffect(
-    () => {
-      //   async function getUserInfo(){
-      //   await api.getUserInfo(userId).then(response => {
-      //   setUserInfo(response.data);
-      //   console.log(userInfo);
-      //       })
-      axios.get(`http://localhost:9191/api/user/${userId}`).then((response) => {
-        setUserInfo(response.data);
-        console.log(userInfo);
-      });
-    },
+//    let rec = [{"recommendationId": -1,
+//                    "name": "Daren",
+//                    "phone": "91919191",
+//                    "email": "asdasdas@asdsad.com",
+//                    "relationship": "friend1"},
+//                {"recommendationId": -1,
+//                    "name": "Jonathan",
+//                    "phone": "92929292",
+//                    "email": "jony@jony.com",
+//                    "relationship": "friend2"}]
+//    console.log(rec);
+//    api.saveUserRecommendations(16, rec);
+//
+//    let userskills = [{"userSkillsetId": 1,
+//                    "skillLevel": "1",
+//                    "skillset": {
+//                                "skillsetId": 1,
+//                                "skillsetName": "Java",
+//                                "jobRequests": [],
+//                                "jobPostings": []
+//                                    }},
+//                    {"userSkillsetId": -1,
+//                    "skillLevel": "3",
+//                    "skillset": {
+//                                "skillsetId": 3,
+//                                "skillsetName": "MySQL",
+//                                "jobRequests": [],
+//                                "jobPostings": []
+//                                    }}]
+//    console.log(userskills);
+//    api.saveUserSkillsets(16, userskills);
+//  }
 
-    //   }getUserInfo()}
-    [userId, userInfo]
-  );
-
-  function handleFile(e) {
-    console.log(e.target.files, "--");
-    console.log(e.target.files[0], "$SSSSS$");
-    // let f = e.target.files[0]
-    setFileState(e.target.files[0]);
-    setfileName(e.target.files[0].name);
-    // console.log(file + "what now")
-    // console.log(fileName + "printing fileName")
-  }
+  // function handleFile(e) {
+  //   console.log(e.target.files, "--");
+  //   console.log(e.target.files[0], "$SSSSS$");
+  //   // let f = e.target.files[0]
+  //   setFileState(e.target.files[0]);
+  //   setfileName(e.target.files[0].name);
+  //   // console.log(file + "what now")
+  //   // console.log(fileName + "printing fileName")
+  // }
   
-  function uploadFile(e) {
-    e.preventDefault();
-    // console.log(file[0])
-    // console.log("printing file contents above")
-    let formData = new FormData();
-    if(file){
-      formData.append("document", file);
-    }
+  // function uploadFile(e) {
+  //   e.preventDefault();
+  //   // console.log(file[0])
+  //   // console.log("printing file contents above")
+  //   let formData = new FormData();
+  //   if(file){
+  //     formData.append("document", file);
+  //   }
   
-    try {
-      api
-        .addCV(formData, user)
-        .then((response) => {
-          // console.log(response.data)
-          if (response.status === 200) {
-            //should return a long id
-            setDocId(response.data);
-            // setDocId(response.data)
-            console.log(userInfo);
-            alert("Resume added to user succesfully");
-          }
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
-    } catch (err) {
-      console.log("There was a problem with upload..");
-      console.log(err);
-    }
-  }
+  //   try {
+  //     api
+  //       .addCV(formData, user)
+  //       .then((response) => {
+  //         // console.log(response.data)
+  //         if (response.status === 200) {
+  //           //should return a long id
+  //           setDocId(response.data);
+  //           // setDocId(response.data)
+  //           console.log(userInfo);
+  //           alert("Resume added to user succesfully");
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log(error.response);
+  //       });
+  //   } catch (err) {
+  //     console.log("There was a problem with upload..");
+  //     console.log(err);
+  //   }
+  // }
   
-  function downloadFile() {
-    api.downloadDocument(docId).then((response) => {
-      console.log(docId);
-      const fileName =
-        response.headers["content-disposition"].split("filename=")[1];
-      console.log(fileName);
-      api.getDocById(docId).then((response) => {
-        //console.log(response.data);
-        const url = window.URL.createObjectURL(response.data);
+  // function downloadFile() {
+  //   api.downloadDocument(docId).then((response) => {
+  //     console.log(docId);
+  //     const fileName =
+  //       response.headers["content-disposition"].split("filename=")[1];
+  //     console.log(fileName);
+  //     api.getDocById(docId).then((response) => {
+  //       //console.log(response.data);
+  //       const url = window.URL.createObjectURL(response.data);
   
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", fileName);
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
-      });
-    });
-  }
+  //       const link = document.createElement("a");
+  //       link.href = url;
+  //       link.setAttribute("download", fileName);
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       link.parentNode.removeChild(link);
+  //     });
+  //   });
+  // }
   
-  function deleteCV() {
-    const yes = window.confirm(
-      "Are you sure you want to delete your resume? Action is irreversible."
-    );
-    if(yes){
-      if(docId !== null){
-        api
-          .deleteCV(docId)
-          .then((response) => {
-            // console.log(response.data)
-            if (response.status === 200) {
-              //should return a long id
-              if (response.data === true) {
-                alert("CV deleted successfully.");
-                console.log("resume deleted successfully");
-                setDocId(null);
-                window.location.reload();
-              } else {
-                console.log("resume not deleted...");
-              }
-            }
-          })
-          .catch((error) => {
-            alert("No resume to delete");
-            console.log(error.response);
-          });
-      }
-    }
-  }
+  // function deleteCV() {
+  //   const yes = window.confirm(
+  //     "Are you sure you want to delete your resume? Action is irreversible."
+  //   );
+  //   if(yes){
+  //     if(docId !== null){
+  //       api
+  //         .deleteCV(docId)
+  //         .then((response) => {
+  //           // console.log(response.data)
+  //           if (response.status === 200) {
+  //             //should return a long id
+  //             if (response.data === true) {
+  //               alert("CV deleted successfully.");
+  //               console.log("resume deleted successfully");
+  //               setDocId(null);
+  //               window.location.reload();
+  //             } else {
+  //               console.log("resume not deleted...");
+  //             }
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           alert("No resume to delete");
+  //           console.log(error.response);
+  //         });
+  //     }
+  //   }
+  // }
 
   return (
-    <>
-      {userInfo.firstName ? (
-        <>
-          <div>
-            <Navbar />
-            <div>
-              {/* picture */}
-              <div class="md:grid grid-cols-4 grid-rows-1  bg-white gap-2 p-24 rounded-xl">
-                <div class="md:col-span-1 h-auto shadow-xl box border border-2 rounded bg-rose-50/75 ">
-                  <div class="flex rounded-full w-full h-full relative  ">
-                    <img
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      class="w-44 h-44 m-auto rounded-full border-2"
-                      alt=""
-                    ></img>
-                  </div>
+    <div>
+      <Sidebar />
+      <div className="flex flex-1 flex-col md:pl-64">
+        <div className='py-6' />
+        <form className="space-y-8 divide-y divide-gray-200">
+          <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
+            <div className="space-y-6 sm:space-y-5">
+              <div>
+                <h3 className="text-lg font-medium  leading-6 text-gray-900">Profile</h3>
+              </div>
+
+            </div>
+            <div className="space-y-6 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  First name
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="first-name"
+                    id="first-name"
+                    autoComplete="given-name"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
                 </div>
 
-                {/* this is personal info */}
-                <div class="md:col-span-3 h-auto w-auto shadow-xl p-4 space-y-2 p-3 rounded box-border border-2 items-justify">
-                  <div class="flex mt-4 ">
-                    <span class="text-sm  font-bold uppercase rounded-l px-4 py-2 bg-gray-50 whitespace-no-wrap w-2/6">
-                      Name:
-                    </span>
-                    <div class="mt-1  px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6">
-                      {userInfo.firstName + " " + userInfo.lastName}
-                    </div>
-                  </div>
-                  <div class="flex ">
-                    <span class="text-sm  font-bold uppercase rounded-l px-4 py-2 bg-gray-50 whitespace-no-wrap w-2/6">
-                      Email:
-                    </span>
-                    <div class="mt-1  px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6">
-                      {userInfo.email}
-                    </div>
-                  </div>
-                  <div class="flex ">
-                    <span class="text-sm  font-bold uppercase rounded-l px-4 py-2 bg-gray-50 whitespace-no-wrap w-2/6">
-                      D.O.B:
-                    </span>
-                    <div class=" px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6">
-                      {userInfo.dob}
-                    </div>
-                  </div>
-                  <div class="flex ">
-                    <span class="text-sm  font-bold uppercase rounded-l px-4 py-2 bg-gray-50 whitespace-no-wrap w-2/6">
-                      Role:
-                    </span>
-                    <div class=" px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6">
-                      {userInfo.userRole}
-                    </div>
-                    {/* class="px-4 border-l-0 cursor-default border-gray-300 focus:outline-none  rounded-md rounded-l-none shadow-sm -ml-1 w-4/6" */}
-                  </div>
+                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Last name
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <input
+                    type="text"
+                    name="last-name"
+                    id="last-name"
+                    autoComplete="family-name"
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  About me
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <textarea
+                    id="about"
+                    name="about"
+                    rows={3}
+                    className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="country" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Education
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+
+                  <Education />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="street-address" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Work experience
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <WorkList  templateWorks={works}/>
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Skills
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                {/* <button
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddskill(true)}
+                  >
+                    <PlusIcon
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Add skill</span>
+                  </button> */}
+                  <AddSkillset />
+                </div>
+              </div>
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="region" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Language
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <Language />
+                </div>
+              </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Recommendations
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <RecommendationList templateRecommendations={recommendations}/>
+                </div>
+              </div>
+              <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  CV
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
                   <button
                     type="button"
-                    onClick={() => history.push("/updateProfile")}
-                    className="mt-4 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddCV(true)}
                   >
-                    Update Info
+                    <ArrowUpTrayIcon 
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Upload CV</span>
                   </button>
-                  <span> | </span>
+                </div>
+
+                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Transcript
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
                   <button
                     type="button"
-                    onClick={() => history.push("/reset")}
-                    className="mt-4 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddTranscript(true)}
                   >
-                    Change Password
+                    <ArrowUpTrayIcon 
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Upload Transcript</span>
                   </button>
                 </div>
-
-                <div className=" mt-12 md:col-span-2 h-auto shadow-xl p-4 space-y-2 hidden md:block ">
-                  <form onSubmit={uploadFile} encType="multipart/form">
-                    <dt className="mt-5 my-5 text-lg font-medium leading-6 text-gray-900">
-                      My Documents (CV)
-                    </dt>
-
-                    <div className="mb-8 break-word">
-                      {/* <input id="file" type="file" name="file" onChange ={(e) => handleFile(e)} /> */}
-
-                      <label
-                        // for not ok anymore for react, use htmlFor. same with class - classNames  stroke-width - strokeWidth  stroke-linejoin - strokeLinejoin
-                        htmlFor="file"
-                        className=" break-word relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
-                      >
-                        <div>
-                          {file ? (
-                            ""
-                          ) : (
-                            <span className=" break-word mb-2 block text-xl font-semibold text-[#07074D]">
-                              You have no CV uploaded.
-                            </span>
-                          )}
-                          {/* <span className="mb-2 block text-base font-medium text-[#6B7280]">
-                        Or
-                      </span> */}
-                          <span className="block ml-20 mb-2 block text-md text-[#07074D]">
-                            {/* <button id="file"
-                          type="file"
-                          multiple
-                          onChange={(e) => handleFile(e)}>Select a file to upload</button> */}
-                            <input
-                              id="file"
-                              type="file"
-                              multiple
-                              name="file"
-                              onChange={(e) => handleFile(e)}
-                            />
-                          </span>
-                        </div>
-                      </label>
-                    </div>
-
-                    <dd className="m-1 sm:mt-0">
-                      {file ? (
-                        <ul role="list">
-                          <li className=" py-3 pl-3 pr-4 text-sm">
-                            <div className="flex w-0 flex-1 ">
-                              {/* where the fetching for download should be */}
-                            </div>
-                            <div className="flex-1 ml-at mt-4  space-x-4 ">
-                              <PaperClipIcon
-                                className="inline-block h-6 w-6 flex-shrink-0 text-gray-400"
-                                aria-hidden="true"
-                              >
-                                {" "}
-                              </PaperClipIcon>
-
-                              {fileName}
-                              <input
-                                type="submit"
-                                value="Submit"
-                                className=" vertical-center px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
-                              ></input>
-                            </div>
-                          </li>
-                        </ul>
-                      ) : (
-                        ""
-                      )}
-                      {/* Uncaught TypeError: Cannot read properties of null (reading 'cv') when i use userInfo.qualificationInformation.cv dk why updated in db but not on front end. qi is null on frontend */}
-                      {docId ? (
-                        <>
-                          <button
-                            type="button"
-                            className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                            onClick={() => downloadFile()}
-                          >
-                            Download Your CV
-                          </button>{" "}
-                          <button
-                            type="button"
-                            className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                            onClick={() => deleteCV()}
-                          >
-                            Delete CV
-                          </button>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                      {/* <button
-                  type="button"
-                  className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                  onClick={() => downloadFile()}
-                >
-                  Download Your CV
-                </button> */}
-                    </dd>
-                  </form>
-                </div>
-                <div class="flex items-center mt-12 md:col-span-2 h-auto shadow-xl p-4 space-y-2 hidden md:block">
-                  <h3 class="font-bold uppercase"> Coming soon in SR2...</h3>
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Cover Letter
+                </label>
+                <div className="mt-1 sm:col-span-2 sm:mt-0">
+                  <button
+                    type="button"
+                    className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick = {()=> setAddCoverletter(true)}
+                  >
+                    <ArrowUpTrayIcon 
+                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden md:block">Upload Cover Letter</span>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        </>
-      ) : (
-        <div className="min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
-          <img className="h-full w-auto" src={loading} alt="" />
-        </div>
-      )}
-    </>
-  );
+
+
+
+          <div className="pt-5">
+            <div className="flex justify-end">
+              <button
+                type="button"
+                className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+
+        </form>
+//        testing code
+//        <button
+//            type="submit"
+//            onClick= {()=>testMatt()}
+//            className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+//          >
+//            butt
+//          </button>
+      </div>
+    </div>
+  )
 }

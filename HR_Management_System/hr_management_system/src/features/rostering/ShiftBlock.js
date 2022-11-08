@@ -4,7 +4,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import { format, parseISO } from "date-fns";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditShiftModal from "./EditShiftModal";
 import ViewShiftModal from "./ViewShiftModal";
 
@@ -20,6 +20,8 @@ const ShiftBlock = ({
   refreshKeyHandler,
   willBePersisted,
   openSuccess,
+  person,
+  isUserHrOrManager,
 }) => {
   console.log(shift.startTime);
   const [open, setOpen] = useState(false);
@@ -36,6 +38,7 @@ const ShiftBlock = ({
         onClose={() => setOpen(false)}
         shift={shift}
         shiftListItem={shiftListItem}
+        person={person}
       />
       <EditShiftModal
         open={openEdit}
@@ -62,22 +65,24 @@ const ShiftBlock = ({
             {format(shift.endTime, "h:mmaa")}
           </p>
         </div>
-        <div className="flex flex-col">
-          <button
-            type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none"
-            onClick={() => setOpenEdit(true)}
-          >
-            <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none"
-            onClick={() => deleteShiftHandler()}
-          >
-            <TrashIcon className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
+        {isUserHrOrManager && (
+          <div className="flex flex-col">
+            <button
+              type="button"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none"
+              onClick={() => setOpenEdit(true)}
+            >
+              <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none"
+              onClick={() => deleteShiftHandler()}
+            >
+              <TrashIcon className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

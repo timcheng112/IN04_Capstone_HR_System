@@ -15,7 +15,7 @@ import ViewOrganisation from "./pages/OrgChart/ViewOrganisation/viewOrganisation
 import ProfilePage from "./pages/ProfilePage";
 import UpdateProfile from "./pages/UpdateProfile";
 import HomePage from "./pages/Home";
-import TrainingPage from "./pages/Training/index"
+import TrainingPage from "./pages/Training/index";
 
 import EmployeeChart from "./pages/OrgChart/ViewOrgChart/viewOrgChart";
 import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
@@ -43,9 +43,13 @@ import LeavePage from "./pages/Leave/indexHR";
 import LeaveQuotaPage from "./pages/Leave/quota";
 import Notification from "./components/Notification";
 import AllNotificationPage from "./pages/NotificationPage/AllNotificationPage";
-import NotificationExpandPage from "./pages/NotificationPage/NotificationExpandPage"
+import NotificationExpandPage from "./pages/NotificationPage/NotificationExpandPage";
 import AddNotification from "./pages/NotificationPage/AddNotification";
 import Attendance from "./pages/Attendance";
+import OnboardingTemplateChecklists from "./pages/Onboarding/ViewTemplateChecklists";
+import OffboardingTemplateChecklists from "./pages/Offboarding/ViewTemplateChecklists";
+import AddTemplateChecklist from "./pages/Onboarding/AddTemplateChecklist";
+import ChecklistDetail from "./pages/Onboarding/ChecklistDetail";
 // import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 
 import PromotionPage from "./pages/Progression";
@@ -56,6 +60,11 @@ import AppraisalPage from "./pages/Performance/appraisal";
 import PerformancePage from "./pages/Performance";
 import MyAppraisalPage from "./pages/Performance/myAppraisal";
 
+import PayrollPage from "./pages/Payroll/payroll";
+import PayrollHistoryPage from "./pages/Payroll/PayrollHistory";
+import EmployeesNotInPayrollPage from "./pages/Payroll/EmployeesNotInPayroll";
+import AddToPayrollFormPage from "./pages/Payroll/AddToPayrollForm";
+import EmployeePayrollHistory from "./pages/Payroll/ViewEmployeesPayHistory";
 
 function App() {
   return (
@@ -85,8 +94,9 @@ function App() {
           {/* //          <PublicRoute exact path="/updateProfile" component={UpdateProfile}/> */}
           {/* //          <PublicRoute exact path="/viewOrgChart" component={EmployeeChart} /> */}
           <PrivateRoute exact path="/home" component={HomePage} />
-          <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart}/>
-          <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam}/>
+          <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart} />
+          <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam} />
+          <PrivateRoute exact path="/mytraining" component={TrainingPage} />
 
           <PrivateRoute
             exact
@@ -105,6 +115,26 @@ function App() {
             exact
             path="/admin/onboardinghr"
             component={OnboardingHrPage}
+          />
+          <PrivateRoute
+            exact
+            path="/admin/onboardingtemplatechecklists"
+            component={OnboardingTemplateChecklists}
+          />
+          <PrivateRoute
+            exact
+            path="/admin/offboardingtemplatechecklists"
+            component={OffboardingTemplateChecklists}
+          />
+          <PrivateRoute
+            exact
+            path="/admin/addtemplatechecklist"
+            component={AddTemplateChecklist}
+          />
+          <PrivateRoute
+            exact
+            path="/admin/checklistdetail"
+            component={ChecklistDetail}
           />
           <PrivateRoute
             exact
@@ -151,28 +181,63 @@ function App() {
             path="/admin/leavequota"
             component={LeaveQuotaPage}
           />
-          <PublicRoute exact path="/notification" component={Notification}/>
-          <PrivateRoute exact path="/AllNotifications" component={AllNotificationPage}/>
+          <PublicRoute exact path="/notification" component={Notification} />
+          <PrivateRoute
+            exact
+            path="/AllNotifications"
+            component={AllNotificationPage}
+          />
           {/* <PublicRoute exact path="/AllNotifications/:notificationId" component={NotificationExpandPage}/> */}
+          <PublicRoute
+            exact
+            path="/NotificationExpandPage"
+            component={NotificationExpandPage}
+          />
           {/* <PrivateRoute exact path="/NotificationExpandPage" component={NotificationExpandPage}/> */}
-          <PrivateRoute exact path="/AddNotification" component={AddNotification}/>
+          <PrivateRoute
+            exact
+            path="/AddNotification"
+            component={AddNotification}
+          />
 
-          <PrivateRoute exact path="/mytraining/completed" component={TrainingCompletedPage} />
-          <PrivateRoute exact path="/training" component={AllTrainingPage} />  
-          <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />     
-          <PrivateRoute exact path="/module/:moduleId/video/:videoId" component={VideoPage} />  
-          <PrivateRoute exact path="/video" component={AllVideosPage} />  
+          <PrivateRoute
+            exact
+            path="/mytraining/completed"
+            component={TrainingCompletedPage}
+          />
+          <PrivateRoute exact path="/training" component={AllTrainingPage} />
+          <PrivateRoute exact path="/module/:moduleId" component={ModulePage} />
+          <PrivateRoute
+            exact
+            path="/module/:moduleId/video/:videoId"
+            component={VideoPage}
+          />
+          <PrivateRoute exact path="/video" component={AllVideosPage} />
           <PrivateRoute exact path="/mytraining" component={TrainingPage} />
           {/* <PrivateRoute exact path="/test" component={EmployeeList} /> */}
-          
 
-          <PrivateRoute exact path="/career/promotion" component={PromotionPage} />
-          <PrivateRoute exact path="/career/transfer" component={TransferPage} />
+          <PrivateRoute
+            exact
+            path="/career/promotion"
+            component={PromotionPage}
+          />
+          <PrivateRoute
+            exact
+            path="/career/transfer"
+            component={TransferPage}
+          />
           <PrivateRoute exact path="/performance" component={PerformancePage} />
           <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
           <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
           <PrivateRoute exact path="/performance/appraisal/:appraisalId" component={AppraisalPage} />
           <PrivateRoute exact path="/performance/myappraisal/:appraisalId" component={MyAppraisalPage} />
+          <PrivateRoute
+            exact
+            path="/performance/appraisals"
+            component={AppraisalsPage}
+          />
+
+          <PrivateRoute exact path="/payroll" component={PayrollPage} />
         </Switch>
       </div>
     </BrowserRouter>

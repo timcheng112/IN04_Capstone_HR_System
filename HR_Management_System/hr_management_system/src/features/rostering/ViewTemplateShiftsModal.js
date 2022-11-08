@@ -1,4 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import {
   add,
   differenceInCalendarDays,
@@ -12,6 +13,7 @@ import {
 } from "date-fns";
 import React, { Fragment, useEffect, useState } from "react";
 import api from "../../utils/api";
+import EmployeesCheckbox from "./EmployeesCheckbox";
 import SelectMenuPosition from "./SelectMenuPosition";
 import ShiftBlock from "./ShiftBlock";
 import TemplateShiftRadioGroup from "./TemplateShiftRadioGroup";
@@ -34,12 +36,35 @@ const ViewTemplateShiftsModal = ({
   const [isPhEvent, setIsPhEvent] = useState(false);
   const [templateShifts, setTemplateShifts] = useState([]);
   const [posType, setPosType] = useState({ id: 1, name: "SALESMAN" });
+  const [showEmployees, setShowEmployees] = useState(false);
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployees, setSelectedEmployees] = useState([
+    { ...person, posType: "SALESMAN" },
+  ]);
 
   useEffect(() => {
     setSelectedShift();
     setDuplicateEndDateValue(null);
     setIsPhEvent(null);
     setPosType({ id: 1, name: "SALESMAN" });
+    setSelectedEmployees([{ ...person, posType: "SALESMAN" }]);
+    setShowEmployees(false);
+
+    if (open) {
+      api
+        .getEmployeesByRosterAndDate(rosterId, format(date, "yyyy-MM-dd"))
+        .then((response) =>
+          setEmployees(
+            response.data
+              .filter((employee) => employee.userId !== person.userId)
+              .sort((a, b) => a.userId - b.userId)
+              .map(
+                (employee) => (employee = { ...employee, posType: "SALESMAN" })
+              )
+          )
+        )
+        .catch((err) => console.log(err.response.data.message));
+    }
   }, [open]);
 
   useEffect(() => {
@@ -78,9 +103,15 @@ const ViewTemplateShiftsModal = ({
         days: i,
       });
       let shiftToBeAdded = {
-        userId: person.userId,
+        userId: [
+          ...selectedEmployees.map((employee) => employee.userId),
+          // person.userId,
+        ],
         isPhEvent: isPhEvent,
-        positionType: posType,
+        positionType: [
+          ...selectedEmployees.map((employee) => employee.posType),
+        ],
+        // posType,
         shift: {
           shiftTitle: selectedShift.shiftTitle,
           startTime: new Date(
@@ -192,6 +223,69 @@ const ViewTemplateShiftsModal = ({
                           {person && person.lastName}
                         </text>
                       </div>
+                      <label
+                        htmlFor="employees-names"
+                        className="block text-sm font-medium text-gray-700 mt-2"
+                      >
+                        Duplicate to
+                      </label>
+                      <div className="col-span-2">
+                        {showEmployees ? (
+                          <div>
+                            <div className="block">
+                              <ChevronUpIcon
+                                className="h-10 ml-auto text-gray-400 hover:text-gray-900"
+                                onClick={() => setShowEmployees(false)}
+                              />
+                            </div>
+                            <EmployeesCheckbox
+                              people={employees}
+                              addSelectedEmployee={(employee) => {
+                                // selectedEmployees.push(employee);
+                                setSelectedEmployees([
+                                  { ...person, posType: "SALESMAN" },
+                                  ...[
+                                    ...selectedEmployees.filter(
+                                      (a) => a.userId !== person.userId
+                                    ),
+                                    employee,
+                                  ].sort((a, b) => a.userId - b.userId),
+                                ]);
+                                // console.log(selectedEmployees);
+                              }}
+                              removeSelectedEmployee={(employee) => {
+                                // selectedEmployees = selectedEmployees.filter(
+                                //   (selectedEmployee) =>
+                                //     selectedEmployee.userId !== employee.userId
+                                // );
+                                setSelectedEmployees([
+                                  ...selectedEmployees.filter(
+                                    (selectedEmployee) =>
+                                      selectedEmployee.userId !==
+                                      employee.userId
+                                  ),
+                                ]);
+                                // console.log(selectedEmployees);
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="block">
+                            <ChevronDownIcon
+                              className="h-10 float-right text-gray-400 hover:text-gray-900"
+                              onClick={() => setShowEmployees(true)}
+                            />
+                          </div>
+                        )}
+                        {/* <p
+                          id="employee-name"
+                          name="employee-name"
+                          className="mt-1 p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        >
+                          {person && person.firstName}{" "}
+                          {person && person.lastName}
+                        </p> */}
+                      </div>
                     </div>
                     <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                       <label
@@ -239,11 +333,17 @@ const ViewTemplateShiftsModal = ({
                       </div>
                     </div>
                     <div className="space-y-6 sm:space-y-5">
-                      <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                        <SelectMenuPosition
-                          posType={posType}
-                          setPosType={setPosType}
-                        />
+                      <div className="sm:grid sm:grid-cols-2 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                        {selectedEmployees.map((selectedEmployee) => {
+                          return (
+                            <SelectMenuPosition
+                              posType={posType}
+                              setPosType={setPosType}
+                              employee={selectedEmployee}
+                              setSelectedEmployees={setSelectedEmployees}
+                            />
+                          );
+                        })}
                       </div>
                     </div>
                     <div className="flex items-center sm:border-t sm:border-gray-200 sm:pt-5">

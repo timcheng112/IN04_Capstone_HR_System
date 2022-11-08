@@ -1,6 +1,10 @@
 import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon, PlusIcon, UserPlusIcon } from "@heroicons/react/20/solid";
-import { Fragment, useState } from "react";
+import {
+  ChevronDownIcon,
+  PlusIcon,
+  UserPlusIcon,
+} from "@heroicons/react/20/solid";
+import { Fragment, useEffect, useState } from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import AddTaskModal from "../../features/onboarding/AddTaskModal";
 import EditCategoryModal from "../../features/onboarding/EditCategoryModal";
@@ -22,16 +26,34 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
   const [openEdit, setOpenEdit] = useState(false);
   const [openAssign, setOpenAssign] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [departments, setDepartments] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [error, setError] = useState(null);
   const history = useHistory();
 
   function deleteCategory() {
-    api.deleteCategory(category.categoryId).then(() => {
-      alert("Successfully deleted!");
-      refreshKeyHandler();
-    })
+    api
+      .deleteCategory(category.categoryId)
+      .then(() => {
+        alert("Successfully deleted!");
+        refreshKeyHandler();
+      })
       .catch((error) => alert("Unable to delete as category contains tasks"));
   }
+
+  useEffect(() => {
+    api
+      .getAllDepartments()
+      .then((response) => setDepartments(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
+
+  useEffect(() => {
+    api
+      .getAllTeams()
+      .then((response) => setTeams(response.data))
+      .catch((error) => console.log(error.response.data.message));
+  }, []);
 
   return (
     <div className="space-x-2">
@@ -87,7 +109,15 @@ export default function CategoryOptions({ category, refreshKeyHandler }) {
         category={category}
         refreshKeyHandler={refreshKeyHandler}
       />
-      <AssignCategoryTasksModal open={openAssign} onClose={() => setOpenAssign(false)} category={category} refreshKeyHandler={refreshKeyHandler} />
+      <AssignCategoryTasksModal
+        open={openAssign}
+        onClose={() => setOpenAssign(false)}
+        category={category}
+        // refreshKeyHandler={refreshKeyHandler}
+        isOnboarding={true}
+        departments={departments}
+        teams={teams}
+      />
       <ConfirmDialog
         title="category"
         item="category"

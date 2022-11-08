@@ -6,6 +6,7 @@ import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuotaRepository;
 import com.conceiversolutions.hrsystem.engagement.leave.LeaveRepository;
+import com.conceiversolutions.hrsystem.enums.EducationEnum;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
@@ -13,12 +14,19 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
+import com.conceiversolutions.hrsystem.pay.deduction.Deduction;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.rostering.roster.Roster;
+import com.conceiversolutions.hrsystem.rostering.roster.RosterRepository;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepository;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemService;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
+import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationService;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequest;
 import com.conceiversolutions.hrsystem.user.reactivationrequest.ReactivationRequestRepository;
 import com.conceiversolutions.hrsystem.user.registration.EmailValidator;
@@ -57,6 +65,9 @@ public class UserService implements UserDetailsService {
     private final TeamRepository teamRepository;
     private final PositionRepository positionRepository;
     private final LeaveQuotaRepository leaveQuotaRepository;
+    private final ShiftListItemService shiftListItemService;
+    private final RosterRepository rosterRepository;
+    private final QualificationService qualificationService;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -298,6 +309,17 @@ public class UserService implements UserDetailsService {
             // taskListItem.getTask().setTaskListItems(new ArrayList<>());
             // taskListItem.getTask().setCategory(null);
             // }
+            List<Team> teams = employee.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                // t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+                t.getDepartment().setTeams(new ArrayList<>());
+                t.getDepartment().setOrganization(null);
+                t.getDepartment().setDepartmentHead(null);
+            }
             employee.setBlocks(new ArrayList<>());
             employee.setShiftListItems(new ArrayList<>());
             employee.setSwapRequestsReceived(new ArrayList<>());
@@ -318,7 +340,7 @@ public class UserService implements UserDetailsService {
             employee.setCurrentLeaveQuota(null);
             employee.setQualificationInformation(null);
 
-            employee.setTeams(new ArrayList<>());
+            // employee.setTeams(new ArrayList<>());
 
             // List<Team> teams = employee.getTeams();
             // for (Team t : teams) {
@@ -361,7 +383,18 @@ public class UserService implements UserDetailsService {
             employee.setCurrentLeaveQuota(null);
             employee.setQualificationInformation(null);
             // List<Team> teams = employee.getTeams();
-            employee.setTeams(new ArrayList<>());
+            // employee.setTeams(new ArrayList<>());
+            List<Team> teams = employee.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                // t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+                t.getDepartment().setTeams(new ArrayList<>());
+                t.getDepartment().setOrganization(null);
+                t.getDepartment().setDepartmentHead(null);
+            }
             // for (Team t : teams) {
             // t.setTeamHead(null);
             // t.setUsers(new ArrayList<>());
@@ -564,7 +597,7 @@ public class UserService implements UserDetailsService {
         return userRepository.enableUser(email);
     }
 
-    public int disableUser(String email){
+    public int disableUser(String email) {
         System.out.println("UserService.disableUser");
         System.out.println("email = " + email);
         return userRepository.disableUser(email);
@@ -1189,9 +1222,12 @@ public class UserService implements UserDetailsService {
             for (Team t : teams) {
                 t.setTeamHead(null);
                 t.setUsers(new ArrayList<>());
-                t.setDepartment(null);
+                // t.setDepartment(null);
                 t.setRoster(null);
                 t.setTeamHead(null);
+                t.getDepartment().setTeams(new ArrayList<>());
+                t.getDepartment().setOrganization(null);
+                t.getDepartment().setDepartmentHead(null);
             }
             // u.setTaskListItems(null);
             for (TaskListItem taskListItem : u.getTaskListItems()) {
@@ -1199,25 +1235,20 @@ public class UserService implements UserDetailsService {
                 taskListItem.getTask().setTaskListItems(new ArrayList<>());
                 taskListItem.getTask().setCategory(null);
             }
-            u.setQualificationInformation(null);
-            u.setBlocks(new ArrayList<>());
-            u.setShiftListItems(new ArrayList<>());
-            u.setSwapRequestsReceived(new ArrayList<>());
-            u.setSwapRequestsRequested(new ArrayList<>());
-            u.setReactivationRequest(null);
-            u.setAttendances(new ArrayList<>());
-            u.setCurrentPayInformation(null);
-            u.setEmployeeAppraisals(new ArrayList<>());
-            u.setManagerAppraisals(new ArrayList<>());
-            u.setManagerReviews(new ArrayList<>());
-            u.setEmployeeReviews(new ArrayList<>());
-            u.setApplications(new ArrayList<>());
-            u.setGoals(new ArrayList<>());
-            u.setPositions(new ArrayList<>());
-            u.setJobRequests(new ArrayList<>());
-            u.setLeaves(new ArrayList<>());
-            u.setLeaveQuotas(new ArrayList<>());
-            u.setCurrentLeaveQuota(null);
+
+            //nullify other side for pay information, allowance & deduction
+            if (u.getCurrentPayInformation() != null) {
+                PayInformation tempPayInformation = u.getCurrentPayInformation();
+                tempPayInformation.setUser(null);
+                for (Allowance allowance: tempPayInformation.getAllowance()) {
+                    allowance.setPayInfo(null);
+                }
+                for (Deduction deduction : tempPayInformation.getDeduction()) {
+                    deduction.setPayInfo(null);
+                }
+                u.nullify();
+                u.setCurrentPayInformation(tempPayInformation);
+            }
 
         }
         return employees;
@@ -1317,7 +1348,7 @@ public class UserService implements UserDetailsService {
         return employees;
     }
 
-    public List<User> getAllApplicants(){
+    public List<User> getAllApplicants() {
         List<User> applicants = userRepository.findAllApplicants(RoleEnum.APPLICANT);
         System.out.println("size of applicant " + applicants.size());
         for (User u : applicants) {
@@ -1549,12 +1580,13 @@ public class UserService implements UserDetailsService {
         userRepository.saveAndFlush(user);
         return "Successfully set password";
     }
+
     @Transactional
-    public String setUserStatus(String email){
+    public String setUserStatus(String email) {
         User user = userRepository.findUserByWorkEmail(email).get();
-        if(user.getIsEnabled()){
+        if (user.getIsEnabled()) {
             disableUser(user.getEmail());
-        }else{
+        } else {
             enableUser(user.getEmail());
         }
 
@@ -2288,4 +2320,138 @@ public class UserService implements UserDetailsService {
         return lst;
     }
 
+    public List<User> getEmployeesByDepartment(Long departmentId) {
+        List<User> users = userRepository.getEmployeesByDepartment(departmentId);
+        for (User user : users) {
+            user.setTeams(new ArrayList<>());
+            user.setQualificationInformation(null);
+            user.setBlocks(new ArrayList<>());
+            user.setShiftListItems(new ArrayList<>());
+            user.setSwapRequestsReceived(new ArrayList<>());
+
+            user.setSwapRequestsRequested(new ArrayList<>());
+            user.setReactivationRequest(null);
+            user.setAttendances(new ArrayList<>());
+            user.setCurrentPayInformation(null);
+            user.setEmployeeAppraisals(new ArrayList<>());
+
+            user.setManagerAppraisals(new ArrayList<>());
+            user.setManagerReviews(new ArrayList<>());
+            user.setEmployeeReviews(new ArrayList<>());
+            user.setApplications(new ArrayList<>());
+            user.setPositions(new ArrayList<>());
+
+            user.setJobRequests(new ArrayList<>());
+            user.setLeaves(new ArrayList<>());
+            user.setLeaveQuotas(new ArrayList<>());
+            user.setCurrentLeaveQuota(null);
+            user.setTaskListItems(new ArrayList<>());
+        }
+        return users;
+    }
+
+    public List<User> getEmployeesByTeam(Long teamId) {
+        List<User> users = userRepository.getEmployeesByTeam(teamId);
+        for (User user : users) {
+            user.setTeams(new ArrayList<>());
+            user.setQualificationInformation(null);
+            user.setBlocks(new ArrayList<>());
+            user.setShiftListItems(new ArrayList<>());
+            user.setSwapRequestsReceived(new ArrayList<>());
+
+            user.setSwapRequestsRequested(new ArrayList<>());
+            user.setReactivationRequest(null);
+            user.setAttendances(new ArrayList<>());
+            user.setCurrentPayInformation(null);
+            user.setEmployeeAppraisals(new ArrayList<>());
+
+            user.setManagerAppraisals(new ArrayList<>());
+            user.setManagerReviews(new ArrayList<>());
+            user.setEmployeeReviews(new ArrayList<>());
+            user.setApplications(new ArrayList<>());
+            user.setPositions(new ArrayList<>());
+
+            user.setJobRequests(new ArrayList<>());
+            user.setLeaves(new ArrayList<>());
+            user.setLeaveQuotas(new ArrayList<>());
+            user.setCurrentLeaveQuota(null);
+            user.setTaskListItems(new ArrayList<>());
+        }
+        return users;
+    }
+
+    public List<User> getEmployeesByRosterAndDate(Long rosterId, LocalDate localDate) {
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new IllegalStateException("Roster with ID: " + rosterId + " does not exist!"));
+        List<User> employees = getEmployeesByTeam(roster.getTeam().getTeamId());
+        List<User> filteredEmployees = new ArrayList<>();
+        for (User employee : employees) {
+            try {
+                shiftListItemService.getShiftListItemByDateAndUserId(localDate, employee.getUserId());
+            } catch (Exception e) {
+                filteredEmployees.add(employee);
+            }
+        }
+        for (User employee : filteredEmployees) {
+            employee.setProfilePic(null);
+            employee.setPositions(new ArrayList<>());
+            employee.setCurrentPosition(null);
+            employee.setQualificationInformation(null);
+            employee.setApplications(new ArrayList<>());
+            employee.setJobRequests(new ArrayList<>());
+            employee.setPayslips(new ArrayList<>());
+            employee.setAttendances(new ArrayList<>());
+            employee.setEmployeeAppraisals(new ArrayList<>());
+            employee.setManagerAppraisals(new ArrayList<>());
+            employee.setManagerReviews(new ArrayList<>());
+            employee.setEmployeeReviews(new ArrayList<>());
+            employee.setGoals(new ArrayList<>());
+            employee.setTaskListItems(new ArrayList<>());
+            employee.setTeams(new ArrayList<>());
+            employee.setCurrentPayInformation(null);
+            employee.setReactivationRequest(null);
+            employee.setPreferredDates(null);
+            employee.setBlocks(new ArrayList<>());
+            employee.setShiftListItems(new ArrayList<>());
+            employee.setSwapRequestsReceived(new ArrayList<>());
+            employee.setSwapRequestsRequested(new ArrayList<>());
+            employee.setLeaves(new ArrayList<>());
+            employee.setLeaveQuotas(new ArrayList<>());
+            employee.setCurrentLeaveQuota(null);
+        }
+        return filteredEmployees;
+    }
+
+    public String updateUserDetails(Long userId, String firstName, String lastName, String aboutMe,
+            String educationLevel, String schoolName, Integer gradYear, List<String> languages) {
+        System.out.println("UserService.updateUserDetails");
+        System.out.println("userId = " + userId + ", firstName = " + firstName + ", lastName = " + lastName
+                + ", aboutMe = " + aboutMe + ", educationLevel = " + educationLevel + ", schoolName = " + schoolName
+                + ", gradYear = " + gradYear + ", languages = " + languages);
+
+        User user = userRepository.findById(userId).get();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+
+        EducationEnum education = getEduEnum(educationLevel.toUpperCase());
+
+        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education, schoolName,
+                gradYear, languages);
+
+        return "User details updated successfully";
+    }
+
+    private EducationEnum getEduEnum(String educationLevel) {
+        System.out.println("UserService.getEduEnum");
+        System.out.println("educationLevel = " + educationLevel);
+        EducationEnum edu = switch (educationLevel) {
+            case "O LEVEL" -> EducationEnum.O;
+            case "N LEVEL" -> EducationEnum.N;
+            case "A LEVEL" -> EducationEnum.A;
+            default -> EducationEnum.valueOf(educationLevel);
+        };
+
+        System.out.println("education level is " + edu);
+        return edu;
+    }
 }

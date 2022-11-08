@@ -1,18 +1,17 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef, useState, useEffect } from "react";
-import { useHistory } from "react-router";
-// import InputText from '../../components/inputText';
-// import TextArea from '../../components/textArea';
+import {
+  TrashIcon,
+} from "@heroicons/react/20/solid";
 import api from "../../utils/api";
 
-export default function ViewTaskModal({ open, onClose, task }) {
+export default function ViewTaskModal({ open, onClose, task, refreshKeyHandler }) {
   const tabs = [
     { name: "Task Details", href: "#", current: true },
     { name: "Assigned Employees", href: "#", current: false },
   ];
 
   const [tabId, setTabId] = useState(0);
-
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
@@ -28,9 +27,17 @@ export default function ViewTaskModal({ open, onClose, task }) {
       .catch((error) => setError(error));
   }, [open]);
 
-  const history = useHistory();
   const [error, setError] = useState(null);
-  const cancelButtonRef = useRef(null);
+
+  function deleteTaskListItem(user) {
+    api
+      .deleteTaskListItem(findStatusHandler(user).taskListItemId)
+      .then(() => {
+        alert("Successfully deleted!");
+        refreshKeyHandler();
+      })
+      .catch((error) => setError(error));
+  }
 
   //   const handleSubmit = (evt) => {
   //     evt.preventDefault()
@@ -231,6 +238,15 @@ export default function ViewTaskModal({ open, onClose, task }) {
                                       </span>
                                     )}
                                   </td>
+                                  {findStatusHandler(person) && <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    <button
+                                      type="button"
+                                      className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                                      onClick={() => deleteTaskListItem(person)}
+                                    >
+                                      <TrashIcon className="md:-ml-0.5 md:mr-2 h-4 w-4" aria-hidden="true" />
+                                    </button>
+                                  </td>}
                                 </tr>
                               ))}
                             </tbody>

@@ -2,7 +2,8 @@ import React from "react";
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid";
 
 export default function Breadcrumb({ currentPage }) {
-  const pages = [{ name: "Admin", href: "#", current: false }, currentPage];
+  // const pages = [{ name: "Admin", href: "#", current: false }, currentPage];
+  const pages = [currentPage];
 
   return (
     <nav className="flex" aria-label="Breadcrumb">

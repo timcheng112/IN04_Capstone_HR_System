@@ -49,8 +49,12 @@ public class JobRequest {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private JobStatusEnum status;
-    @Column(name = "salary", nullable = false)
+    @Column(name = "salary", nullable = true)
     private BigDecimal salary;
+    @Column(name = "salary_min", nullable = true)
+    private BigDecimal salaryMin;
+    @Column(name = "salary_max", nullable = true)
+    private BigDecimal salaryMax;
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = Skillset.class)
     @JoinTable(
             name = "job_request_requirements",
@@ -100,6 +104,27 @@ public class JobRequest {
         this.approvedDate = null;
         this.lastEditedDate = LocalDateTime.now();
         this.jobPosting = null;
+    }
+
+    public JobRequest(String jobTitle, String jobDescription, String justification, LocalDate preferredStartDate, JobTypeEnum jobType, List<Skillset> jobRequirements, Department department, Team team, User requestedBy, RoleEnum jobRole, BigDecimal salaryMin, BigDecimal salaryMax) {
+        this.jobTitle = jobTitle;
+        this.jobDescription = jobDescription;
+        this.justification = justification;
+        this.preferredStartDate = preferredStartDate;
+        this.jobType = jobType;
+        this.jobRequirements = jobRequirements;
+        this.department = department;
+        this.team = team;
+        this.requestedBy = requestedBy;
+        this.jobRole = jobRole;
+        this.requestDate = LocalDate.now();
+        this.status = JobStatusEnum.PENDING;
+        this.approver = null;
+        this.approvedDate = null;
+        this.lastEditedDate = LocalDateTime.now();
+        this.jobPosting = null;
+        this.salaryMin = salaryMin;
+        this.salaryMax = salaryMax;
     }
 
     public void approveJobRequest() {

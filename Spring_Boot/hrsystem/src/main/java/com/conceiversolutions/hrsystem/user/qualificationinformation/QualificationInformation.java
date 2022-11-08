@@ -38,7 +38,7 @@ public class QualificationInformation {
     @JoinColumn(name = "work_experience_id")
     private List<WorkExperience> workExperiences;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Recommendation.class)
-    @JoinColumn(name = "recommendation_id")
+    @JoinColumn(name = "recommendation_list_id")
     private List<Recommendation> recommendations;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "qualificationInformation")
     private User user;

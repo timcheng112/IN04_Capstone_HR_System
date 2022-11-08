@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   eachDayOfInterval,
   format,
@@ -37,11 +37,22 @@ const Calendar = ({
 
   const shiftHandler = (person, dayIndex) => {
     for (let i = 0; i < shiftsToBeAdded.length; i++) {
-      if (
-        shiftsToBeAdded[i].userId === person.userId &&
-        isSameDay(shiftsToBeAdded[i].shift.startTime, weekArr[dayIndex])
-      ) {
-        return shiftsToBeAdded[i];
+      if (Array.isArray(shiftsToBeAdded[i].userId)) {
+        if (
+          shiftsToBeAdded[i].userId.some(
+            (userId) => userId === person.userId
+          ) &&
+          isSameDay(shiftsToBeAdded[i].shift.startTime, weekArr[dayIndex])
+        ) {
+          return shiftsToBeAdded[i];
+        }
+      } else {
+        if (
+          shiftsToBeAdded[i].userId === person.userId &&
+          isSameDay(shiftsToBeAdded[i].shift.startTime, weekArr[dayIndex])
+        ) {
+          return shiftsToBeAdded[i];
+        }
       }
     }
     return null;
