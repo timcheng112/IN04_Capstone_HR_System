@@ -755,6 +755,10 @@ const api = {
       `http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`
     );
   },
+  //job Applicants
+  findApplicationsByPostingId(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/findApplicationsByPostingId?postingId=${postingId}`);
+  },
 };
 
 export default api;

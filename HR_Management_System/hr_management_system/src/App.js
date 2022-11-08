@@ -183,21 +183,6 @@ function App() {
           />
           <PrivateRoute
             exact
-            path="/hiring/interviewapplicants"
-            component={InterviewApplicantsPage}
-          />
-          <PrivateRoute
-            exact
-            path="/hiring/offerapplicants"
-            component={OfferApplicantsPage}
-          />
-          <PrivateRoute
-            exact
-            path="/hiring/rejectapplicants"
-            component={RejectApplicantsPage}
-          />
-          <PrivateRoute
-            exact
             path="/hiring/applicantdetail"
             component={ApplicantDetailPage}
           />
