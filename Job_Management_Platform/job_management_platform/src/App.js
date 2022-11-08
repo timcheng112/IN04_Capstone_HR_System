@@ -15,7 +15,7 @@ import JobPostingPage from "./pages/JobPosting";
 import JobApplicationPage from "./pages/JobPosting/apply";
 import FavouriteJobPage from "./pages/JobPosting/favourite";
 import JobDetailPage from "./pages/JobPosting/jobDetail";
-import JobOfferPage from "./pages/JobPosting/jobOffer";
+import ApplicationDetailPage from "./pages/JobPosting/applicationDetail";
 import Home from "./pages/Home";
 import AllNotificationPage from "./pages/NotificationPage/AllNotificationPage";
 import AddNotification from "./pages/NotificationPage/AddNotification";
@@ -44,6 +44,7 @@ function App() {
           <PrivateRoute exact path="/myapplication" component={JobApplicationPage} />
           <PrivateRoute exact path="/myfavourite" component={FavouriteJobPage} />
           <PrivateRoute exact path="/jobdetail" component={JobDetailPage} />
+          <PrivateRoute exact path="/applicationdetail" component={ApplicationDetailPage} />
           <PrivateRoute exact path="/myoffer" component={JobDetailPage} />
 
           <PrivateRoute exact path="/AllNotifications" component={AllNotificationPage}/>

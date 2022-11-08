@@ -2,40 +2,38 @@ import { Fragment, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   AcademicCapIcon,
-  BriefcaseIcon, UserIcon, StarIcon,
-  
+  BriefcaseIcon, UserIcon, StarIcon, ArrowLeftOnRectangleIcon
+
 } from '@heroicons/react/24/outline'
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import { deleteUser, getUserId } from "../utils/Common";
 import logo from '..//assets/libro-transparent-logo.png'
+import { useHistory } from "react-router-dom";
 
-
-const navigation = [
-  { name: 'Jobs', href: '/jobposting', icon: BriefcaseIcon, current: false },
-  { name: 'My Applications', href: '/myapplication', icon: AcademicCapIcon, current: false },
-  { name: 'My Favourites', href: '/myfavourite', icon: StarIcon, current: false },
-  { name: 'Profile', href: '/profile', icon: UserIcon, current: false },
-]
-// const userNavigation = [
-//   { name: 'Your Profile', href: '#' },
-//   { name: 'Settings', href: '#' },
-//   { name: 'Sign out', href: '#' },
-// ]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Sidebar() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const navigation = [
+    { name: 'Jobs', href: '/jobposting', icon: BriefcaseIcon, current: false },
+    { name: 'My Applications', href: '/myapplication', icon: AcademicCapIcon, current: false },
+    { name: 'My Favourites', href: '/myfavourite', icon: StarIcon, current: false },
+    { name: 'Profile', href: '/profile', icon: UserIcon, current: false },
+  ]
+  const history = useHistory();
+  function logout() {
+    deleteUser();
+    history.push("/")
+  }
 
   return (
     <>
       <div>
-        
+
 
         {/* Static sidebar for desktop */}
         <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex flex-grow flex-col overflow-y-auto border-r border-gray-200 bg-white pt-5">
             <div className="flex flex-shrink-0 items-center px-4">
               <img
@@ -68,9 +66,16 @@ export default function Sidebar() {
               </nav>
             </div>
           </div>
+          <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
+            <button className='inline-flex items-center'
+              onClick={() => logout()}>
+              <ArrowLeftOnRectangleIcon className="md:-ml-0.5 md:mr-2 h-4 w-4" aria-hidden="true" />
+                <span className="hidden md:block"> Log out</span>
+            </button>
+          </div>
         </div>
 
-        
+
       </div>
     </>
   )
