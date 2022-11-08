@@ -120,7 +120,7 @@ export default function ViewTeam() {
             onClose={() => setOpenChange(false)}
           />
 
-          {/* <MoveUserModal
+          {/*<MoveUserModal
             teamId={team.teamId}
             empInQuestion={person.userId}
             open={openMove}
@@ -183,13 +183,13 @@ export default function ViewTeam() {
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
-                              Position
+                              Role
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
-                              Status
+                              {/* Status */}
                             </th>
                             <th
                               scope="col"
@@ -231,9 +231,9 @@ export default function ViewTeam() {
                          </div> */}
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
+                              {/* <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                                 Active
-                              </span>
+                              </span> */}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               {/* <a
@@ -276,19 +276,25 @@ export default function ViewTeam() {
                               scope="col"
                               className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                             >
-                              Name
+                              {/* Name */}
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
-                              Role
+                              {/* Role */}
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
                               {/* Position */}
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                            >
+                              {/* Status */}
                             </th>
                             <th
                               scope="col"
@@ -337,11 +343,11 @@ export default function ViewTeam() {
                                   {/* {person.department} */}
                                 </div>
                               </td>
-                              {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                <span className="inline-flex rounded-full bg-delete-100 px-2 text-xs font-semibold leading-5 text-green-800">
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {/* <span className="inline-flex rounded-full bg-delete-100 px-2 text-xs font-semibold leading-5 text-green-800">
                                   Active
-                                </span>
-                              </td> */}
+                                </span> */}
+                              </td>
                               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                 {/* <span className="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">
                                   Delete
@@ -353,7 +359,6 @@ export default function ViewTeam() {
                                     console.log(team.teamId);
                                     setOldteam(team.teamId);
                                     setToRemove(person.userId);
-                                    
                                     setEmpInQuestion(person.userId);
                                   }}
                                   className="text-indigo-600 hover:text-indigo-900"

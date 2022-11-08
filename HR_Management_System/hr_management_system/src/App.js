@@ -56,7 +56,10 @@ import PromotionPage from "./pages/Progression";
 import TransferPage from "./pages/Progression/indexTransfer";
 import GoalsPage from "./pages/Performance/indexGoals";
 import AppraisalsPage from "./pages/Performance/indexAppraisals";
+import AppraisalPage from "./pages/Performance/appraisal";
 import PerformancePage from "./pages/Performance";
+import MyAppraisalPage from "./pages/Performance/myAppraisal";
+
 import PayrollPage from "./pages/Payroll/payroll";
 import PayrollHistoryPage from "./pages/Payroll/PayrollHistory";
 import EmployeesNotInPayrollPage from "./pages/Payroll/EmployeesNotInPayroll";
@@ -225,6 +228,9 @@ function App() {
           />
           <PrivateRoute exact path="/performance" component={PerformancePage} />
           <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
+          <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
+          <PrivateRoute exact path="/performance/appraisal/:appraisalId" component={AppraisalPage} />
+          <PrivateRoute exact path="/performance/myappraisal/:appraisalId" component={MyAppraisalPage} />
           <PrivateRoute
             exact
             path="/performance/appraisals"

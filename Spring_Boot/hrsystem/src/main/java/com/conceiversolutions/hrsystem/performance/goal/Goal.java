@@ -26,26 +26,23 @@ public class Goal {
     @Column(name = "goal_id")
     private Long goalId;
     private String type;
-    @Column(name = "last_modified")
-    private LocalDate lastModified;
     private LocalDate created;
     private String description;
     private String year;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "employee")
     private User employee;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Achievement> achievements;
 
     public Goal() {
 
     }
 
-    public Goal(String type, LocalDate lastModified, LocalDate created, String description, String year, User employee, List<Achievement> achievements) {
+    public Goal(String type, LocalDate created, String description, String year, User employee, List<Achievement> achievements) {
         this.type = type;
-        this.lastModified = lastModified;
         this.created = created;
         this.description = description;
         this.year = year;
@@ -67,14 +64,6 @@ public class Goal {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public LocalDate getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(LocalDate lastModified) {
-        this.lastModified = lastModified;
     }
 
     public LocalDate getCreated() {
@@ -122,7 +111,6 @@ public class Goal {
         return "Goal{" +
                 "goalId=" + goalId +
                 ", type='" + type + '\'' +
-                ", lastModified=" + lastModified +
                 ", created=" + created +
                 ", description='" + description + '\'' +
                 ", employee=" + employee +
