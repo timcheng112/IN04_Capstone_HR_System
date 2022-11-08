@@ -7,14 +7,27 @@ import {
   CurrencyDollarIcon,
   EnvelopeIcon,
 } from '@heroicons/react/20/solid'
-import { useState } from "react";
-import ApplicantDetail from "../../features/jobrequest/ApplicantDetail";
+import { useState, useEffect } from "react";
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function JobApplicants() {
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data)
+      })
+      .catch((error) => setError(error));
+  }, []);
 
   const tabs = [
     { name: 'Applied', href: '/hiring/allapplicants', current: true },
@@ -48,7 +61,6 @@ export default function JobApplicants() {
       appliedDatetime: '2020-07-01T15:34:56',
     },
   ]
-  const[open, setOpen] = useState(false);
 
   return (
     <div>
@@ -61,9 +73,12 @@ export default function JobApplicants() {
               <ol role="list" className="flex items-center space-x-4">
                 <li>
                   <div>
-                    <a href="/hiring/jobrequest" className="text-sm font-medium text-gray-500 hover:text-gray-700">
+                    {user!==null && !user.isHrEmployee && <a href="/hiring/jobrequest" className="text-sm font-medium text-gray-500 hover:text-gray-700">
                       Jobs
-                    </a>
+                    </a>}
+                    {user!==null && user.isHrEmployee && <a href="/hiring/jobrequesthr" className="text-sm font-medium text-gray-500 hover:text-gray-700">
+                      Jobs
+                    </a>}
                   </div>
                 </li>
                 <li>
