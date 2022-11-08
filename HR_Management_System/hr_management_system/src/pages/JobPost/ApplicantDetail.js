@@ -100,6 +100,13 @@ export default function Profile() {
           setTId(response.data.transcript.docId);
         }
       })
+      if (location.state.applicant.coverLetter === null) {
+        console.log("cover letter dont exist");
+      } else {
+        console.log("cover letter exist");
+        setcurclfileName(location.state.applicant.coverLetter.name);
+        setCLId(location.state.applicant.coverLetter.docId);
+      }
   }, []);
 
   function downloadFile(fileType) {
@@ -411,7 +418,7 @@ export default function Profile() {
                   <button
                     type="button"
                     className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick
+                    onClick={() => downloadFile("CL")}
                   >
                     <ArrowDownTrayIcon
                       className="md:-ml-0.5 md:mr-2 h-4 w-4"
