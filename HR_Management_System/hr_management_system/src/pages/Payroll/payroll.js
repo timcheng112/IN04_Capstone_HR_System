@@ -1,8 +1,13 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownOnSquareIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import React, { useEffect, useRef, useState } from "react";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
 import PayrollTabs from "../../features/payroll/PayrollTabs";
+import PayslipDocument from "../../features/payroll/PayslipDocument/PayslipDocument";
 import api from "../../utils/api";
 import EmployeesNotInPayroll from "./EmployeesNotInPayroll";
 import Overview from "./Overview";
@@ -24,6 +29,7 @@ const Payroll = () => {
   const [query, setQuery] = useState("");
   const [searchFilteredEmployees, setSearchFilteredEmployees] = useState([]);
 
+  const [isPayslipOpen, setIsPayslipOpen] = useState(false);
   const [isOverviewOpen, setIsOverviewOpen] = useState(true);
   const [isPayrollHistoryOpen, setIsPayrollHistoryOpen] = useState(false);
   const [isEmployeesNotInPayrollOpen, setIsEmployeesNotInPayrollOpen] =
@@ -52,7 +58,9 @@ const Payroll = () => {
   }, []);
 
   useEffect(() => {
-    (!isPayrollFormOpen && !isEditPayInformationFormOpen) &&
+    !isPayslipOpen &&
+      !isPayrollFormOpen &&
+      !isEditPayInformationFormOpen &&
       setSticky(document.getElementById("tabs").getBoundingClientRect().bottom);
     scrollPosition >= sticky
       ? setIsPayrollTabsGone(true)
@@ -196,7 +204,7 @@ const Payroll = () => {
       <Navbar />
       <div className="py-5"></div>
       <div className="px-4 sm:px-6 lg:px-8">
-        {(!isPayrollFormOpen && !isEditPayInformationFormOpen) && (
+        {!isPayslipOpen && !isPayrollFormOpen && !isEditPayInformationFormOpen && (
           <div
             className={classNames(
               "sm:flex sm:items-center space-x-4",
@@ -261,7 +269,42 @@ const Payroll = () => {
           </div>
         )}
       </div>
-      {isOverviewOpen && (
+      {isPayslipOpen && (
+        <div className="flex">
+          <PayslipDocument />
+          <div className="grid grid-rows-2">
+            <button
+              type="button"
+              className="col-span-1 rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
+              // disabled
+            >
+              <div className="flex justify-center">
+                <ArrowDownOnSquareIcon
+                  className="h-8 w-8"
+                  aria-hidden="true"
+                />
+              </div>
+              <div className="flex justify-center">
+                <p className="text-xl font-bold mt-2">Download</p>
+              </div>
+            </button>
+            <button
+              type="button"
+              className="col-span-1 mt-2 rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300"
+              // disabled
+              onClick={() => setIsPayslipOpen(false)}
+            >
+              <div className="flex justify-center">
+                <XMarkIcon className="h-8 w-8" aria-hidden="true" />
+              </div>
+              <div className="flex justify-center">
+                <p className="text-xl font-bold mt-2">Close</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      )}
+      {!isPayslipOpen && isOverviewOpen && (
         <Overview
           searchFilteredEmployees={searchFilteredEmployees}
           isEditPayInformationFormOpen={isEditPayInformationFormOpen}
@@ -271,10 +314,11 @@ const Payroll = () => {
           closeEditPayInformationForm={() =>
             setIsEditPayInformationFormOpen(false)
           }
+          openPayslip={() => setIsPayslipOpen(true)}
         />
       )}
-      {isPayrollHistoryOpen && <PayrollHistory />}
-      {isEmployeesNotInPayrollOpen && (
+      {!isPayslipOpen && isPayrollHistoryOpen && <PayrollHistory />}
+      {!isPayslipOpen && isEmployeesNotInPayrollOpen && (
         <EmployeesNotInPayroll
           searchFilteredEmployees={searchFilteredEmployees}
           isPayrollFormOpen={isPayrollFormOpen}
@@ -282,7 +326,7 @@ const Payroll = () => {
           closePayrollForm={() => setIsPayrollFormOpen(false)}
         />
       )}
-      {isPersonalPayrollOpen && <EmployeePayrollHistory />}
+      {!isPayslipOpen && isPersonalPayrollOpen && <EmployeePayrollHistory />}
     </div>
   );
 };
