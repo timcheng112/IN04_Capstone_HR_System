@@ -43,6 +43,8 @@ public class JobRequestController {
                                @RequestParam("requestedById") Long requestedById,
                                @RequestParam("jobRequestId") Long jobRequestId,
                                @RequestParam("posType") String posType) {
+        System.out.println("jobType");
+        System.out.println(jobType);
         JobTypeEnum jobT = null;
         if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
             jobT = JobTypeEnum.valueOf(jobType);
@@ -82,10 +84,12 @@ public class JobRequestController {
                                @RequestParam("requestedById") Long requestedById,
                                @RequestParam("jobRequestId") Long jobRequestId,
                                  @RequestParam("posType") String posType) {
+        System.out.println("jobType");
+        System.out.println(jobType);
         JobTypeEnum jobT = null;
-        if (jobType.equals("Contract") || jobType.equals("Intern")) {
+        if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
             jobT = JobTypeEnum.valueOf(jobType);
-        } else if (jobType.equals("Full Time")) {
+        } else if (jobType.equals("FULL TIME")) {
             jobT = JobTypeEnum.FULLTIME;
         } else {
             jobT = JobTypeEnum.PARTTIME;
