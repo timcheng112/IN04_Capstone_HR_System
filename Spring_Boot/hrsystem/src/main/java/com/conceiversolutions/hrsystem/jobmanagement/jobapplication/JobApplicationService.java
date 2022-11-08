@@ -8,13 +8,16 @@ import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillsetRepositoy;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.docdata.DocDataRepository;
+import com.conceiversolutions.hrsystem.user.docdata.DocDataService;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ public class JobApplicationService {
     private final UserSkillsetRepositoy userSkillsetRepositoy;
     private final QualificationService qualificationService;
     private final DocDataRepository docDataRepository;
+    private final DocDataService docDataService;
 
 
     public List<JobApplication> findApplicationsByPostingId(Long postingId) {
@@ -191,10 +195,9 @@ public class JobApplicationService {
         return "Job Application succssfully updated";
     }
 
-    public Long createJobApplicationTempFix(Long postingId, Long applicantId, LocalDate availableStartDate) {
+    public Long createJobApplicationTempFix(Long postingId, Long applicantId, LocalDate availableStartDate, MultipartFile file) throws IOException {
         System.out.println("JobApplicationService.createJobApplicationTempFix");
         System.out.println("postingId = " + postingId + ", applicantId = " + applicantId + ", availableStartDate = " + availableStartDate);
-
         User a = userRepository.findById(applicantId).get();
         User applicant = qualificationService.checkQIExists(a);
 
@@ -229,8 +232,8 @@ public class JobApplicationService {
             DocData cv = docDataRepository.findById(qi.getCv().getDocId()).get();
             newApplication.setCV(cv);
         }
-        if (qi.getCoverLetter() != null) {
-            DocData coverLetter = docDataRepository.findById(qi.getCoverLetter().getDocId()).get();
+        if (!file.isEmpty()) {
+            DocData coverLetter = docDataService.uploadDoc(file);
             newApplication.setCoverLetter(coverLetter);
         }
         if (qi.getTranscript() != null) {

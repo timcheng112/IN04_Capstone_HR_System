@@ -2,7 +2,9 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobapplication;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,8 +36,9 @@ public class JobApplicationController {
     @PostMapping("/createJobApplicationTempFix")
     public Long createJobApplicationTempFix(@RequestParam("postingId") Long postingId,
                                      @RequestParam("applicantId") Long applicantId,
-                                     @RequestParam("availableStartDate") String availableStartDate) {
-        return jobApplicationService.createJobApplicationTempFix(postingId, applicantId, LocalDate.parse(availableStartDate));
+                                     @RequestParam("availableStartDate") String availableStartDate,
+                                        @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        return jobApplicationService.createJobApplicationTempFix(postingId, applicantId, LocalDate.parse(availableStartDate), file);
     }
 
     @DeleteMapping("/cancelJobApplication")

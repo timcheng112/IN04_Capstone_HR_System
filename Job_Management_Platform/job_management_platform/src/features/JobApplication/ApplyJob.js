@@ -43,13 +43,13 @@ export default function ApplyJob({ open, setOpen, job }) {
             setcurcvFileName(response.data.cv.name);
             setCVId(response.data.cv.docId);
           }
-          if (response.data.coverLetter === null) {
-            console.log("cover letter dont exist");
-          } else {
-            console.log("cover letter exist");
-            setcurclfileName(response.data.coverLetter.name);
-            setCLId(response.data.coverLetter.docId);
-          }
+//          if (response.data.coverLetter === null) {
+//            console.log("cover letter dont exist");
+//          } else {
+//            console.log("cover letter exist");
+//            setcurclfileName(response.data.coverLetter.name);
+//            setCLId(response.data.coverLetter.docId);
+//          }
           if (response.data.transcript === null) {
             console.log("transcript dont exist");
           } else {
@@ -157,33 +157,34 @@ export default function ApplyJob({ open, setOpen, job }) {
   //    console.log("upload file")
   //    console.log(clfile)
 
-      let formData = new FormData();
+//      let formData = new FormData();
       if (clfile) {
-        formData.append("file", clfile);
+        alert("File Attached");
+//        formData.append("file", clfile);
 
-        try {
-          api
-            .uploadDocument(formData, user, type)
-            .then((response) => {
-              // console.log(response.data)
-              if (response.status === 200) {
-                //should return a long id
-                setDocId(response.data);
-                // setDocId(response.data)
-  //              console.log(userInfo);
-                alert("Cover Letter added to user succesfully");
-              }
-              setclFileState(null);
-              setcurclfileName(clfileName);
-              setclfileName(null);
-            })
-            .catch((error) => {
-              console.log(error.response);
-            });
-        } catch (err) {
-          console.log("There was a problem with upload..");
-          console.log(err);
-        }
+//        try {
+//          api
+//            .uploadDocument(formData, user, type)
+//            .then((response) => {
+//              // console.log(response.data)
+//              if (response.status === 200) {
+//                //should return a long id
+//                setDocId(response.data);
+//                // setDocId(response.data)
+//  //              console.log(userInfo);
+//                alert("Cover Letter added to user succesfully");
+//              }
+//              setclFileState(null);
+//              setcurclfileName(clfileName);
+//              setclfileName(null);
+//            })
+//            .catch((error) => {
+//              console.log(error.response);
+//            });
+//        } catch (err) {
+//          console.log("There was a problem with upload..");
+//          console.log(err);
+//        }
       } else {
         alert("No file uploaded");
       }
@@ -241,7 +242,12 @@ export default function ApplyJob({ open, setOpen, job }) {
     console.log(job.postingId);
     let newDate = format(availableDate, "yyyy-MM-dd");
 
-    api.createJobApplicationTempFix(job.postingId, user, newDate)
+    let formData = new FormData();
+    if (clfile) {
+      formData.append("file", clfile);
+    }
+
+    api.createJobApplicationTempFix(job.postingId, user, newDate, formData)
         .then((response) => {
             console.log(response.data);
             alert("Application Successfully Registered");
