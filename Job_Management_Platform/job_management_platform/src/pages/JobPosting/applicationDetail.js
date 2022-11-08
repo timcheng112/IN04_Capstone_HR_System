@@ -3,15 +3,14 @@ import Sidebar from '../../components/Sidebar'
 import {
   BriefcaseIcon,
   CalendarIcon,
-  PlusIcon,
+  CheckIcon,
   ChevronRightIcon,
   CurrencyDollarIcon,
   LinkIcon,
-  BookmarkIcon,
+  XMarkIcon,
   UserCircleIcon as UserCircleIconMini,
 } from '@heroicons/react/20/solid'
 import { useLocation } from 'react-router'
-import ApplyJob from '../../features/JobApplication/ApplyJob'
 import { getUserId } from "../../utils/Common.js";
 import api from "../../utils/api";
 
@@ -24,6 +23,7 @@ export default function ApplicationDetail() {
   const [job, setJob] = useState(null);
   const [title, setTitle] = useState("")
   const [jobType, setJobType] = useState("");
+  const [salary,setSalary] =useState(null);
   const [salaryMin, setSalaryMin] = useState("");
   const [salaryMax, setSalaryMax] = useState("");
   const [postDate, setPostDate] = useState("")
@@ -31,50 +31,32 @@ export default function ApplicationDetail() {
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
   const [requirements, setRequirements] = useState([]);
-  const [apply, setApply] = useState([])
-  const [help,setHelp] = useState(false)
-
-
-  const [user, setUser] = useState(getUserId());
-  const [error, setError] = useState();
-
-  const [open, setOpen] = useState(false);
-
-  function bookmark() {
-    api.addUserBookmark(user, location.state.job.postingId)
-      .then(() => alert("Successfully bookmark."))
-      .catch((error) => setError(error));
-  }
-
-  // useEffect(() => {
-  //   let arr = []
-  //   api
-  //     .getApplicantApplications(getUserId())
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       response.data.map(((job) => (
-  //         arr.push(job.jobPosting))));
-        
-  //       console.log(arr);
-  //       console.log(arr.includes(location.state.job))
-  //       setApply(arr);
-  //     })
-  //     .catch((error) => setError(error));
-  // }, []);
+  const [postId, setPostId] = useState()
 
   useEffect(() => {
     console.log(location.state.job)
-    setTitle(location.state.job.jobTitle)
-    setJobType(location.state.job.jobType)
-    setSalaryMin(location.state.job.salaryMin)
-    setSalaryMax(location.state.job.salaryMax)
-    setPostDate(location.state.job.postDate)
-    setStartDate(location.state.job.preferredStartDate)
-    setDescription(location.state.job.jobDescription)
+    setTitle(location.state.job.jobPosting.jobTitle)
+    setJobType(location.state.job.jobPosting.jobType)
+    setSalaryMin(location.state.job.jobPosting.salaryMin)
+    setSalary(location.state.job.jobPosting.salary)
+    setSalaryMax(location.state.job.jobPosting.salaryMax)
+    setPostDate(location.state.job.jobPosting.postDate)
+    setStartDate(location.state.job.jobPosting.preferredStartDate)
+    setDescription(location.state.job.jobPosting.jobDescription)
     setStatus(location.state.job.status)
-    setRequirements(location.state.job.jobPostRequirements)
-    setJob(location.state.job)
+    setRequirements(location.state.job.jobPosting.jobPostRequirements)
+    setPostId(location.state.job.jobPosting.postingId)
+
   }, [location]);
+
+  function accept(){
+    api.acceptOffer(getUserId(), postId)
+    .then(() => {alert("Successfully accept the offer.")});
+  }
+  function reject(){
+    api.rejectOffer(getUserId(), postId)
+    .then(() => {alert("Successfully reject the offer.")});
+  }
 
   return (
     <>
@@ -112,10 +94,14 @@ export default function ApplicationDetail() {
                   <BriefcaseIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                   {jobType}
                 </div>
-                <div className="mt-2 flex items-center text-sm text-gray-500">
+                {!status == 'OFFERED' && <div className="mt-2 flex items-center text-sm text-gray-500">
                   <CurrencyDollarIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                  ${salaryMin}k &ndash; ${salaryMax}k
-                </div>
+                  ${salaryMin} &ndash; ${salaryMax}
+                </div>}
+                {status == 'OFFERED' && <div className="mt-2 flex items-center text-sm text-gray-500">
+                  <CurrencyDollarIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                  ${salary}
+                </div>}
                 <div className="mt-2 flex items-center text-sm text-gray-500">
                   <CalendarIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                   Post on {postDate}
@@ -134,22 +120,22 @@ export default function ApplicationDetail() {
               <span className="hidden sm:block">
                 <button
                   type="button"
-                  onClick={() => setOpen(true)}
-                  className="inline-flex items-center rounded-md border border-indigo-500 bg-white px-4 py-2 text-sm font-medium text-indigo-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                  onClick={()=>accept()}
+                  className="inline-flex items-center rounded-md border border-green-500 bg-white px-4 py-2 text-sm font-medium text-green-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
-                  <PlusIcon className="-ml-1 mr-2 h-5 w-5 text-indigo-500" aria-hidden="true" />
-                  Apply
+                  <CheckIcon className="-ml-1 mr-2 h-5 w-5 text-green-500" aria-hidden="true" />
+                  Accept
                 </button>
               </span>
 
               <span className="ml-3 hidden sm:block">
                 <button
                   type="button"
-                  onClick={() => bookmark()}
+                  onClick={()=>reject()}
                   className="inline-flex items-center rounded-md border border-red-500 bg-white px-4 py-2 text-sm font-medium text-red-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 >
-                  <BookmarkIcon className="-ml-1 mr-2 h-5 w-5 text-red-400" aria-hidden="true" />
-                  Bookmark
+                  <XMarkIcon className="-ml-1 mr-2 h-5 w-5 text-red-400" aria-hidden="true" />
+                  Reject
                 </button>
               </span>
 
@@ -199,7 +185,6 @@ export default function ApplicationDetail() {
             ))}
           </div>
         </main>
-        {job !== null && <ApplyJob open={open} setOpen={() => setOpen(false)} job={job} />}
       </div>
     </>
   )
