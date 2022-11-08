@@ -17,6 +17,7 @@ import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository
 import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
 import com.conceiversolutions.hrsystem.pay.deduction.Deduction;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformationRepository;
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
 import com.conceiversolutions.hrsystem.rostering.roster.RosterRepository;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
@@ -68,6 +69,7 @@ public class UserService implements UserDetailsService {
     private final ShiftListItemService shiftListItemService;
     private final RosterRepository rosterRepository;
     private final QualificationService qualificationService;
+    private final PayInformationRepository payInformationRepository;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -1229,25 +1231,38 @@ public class UserService implements UserDetailsService {
                 t.getDepartment().setOrganization(null);
                 t.getDepartment().setDepartmentHead(null);
             }
+
+            List<TaskListItem> taskListItems = u.getTaskListItems();
             // u.setTaskListItems(null);
-            for (TaskListItem taskListItem : u.getTaskListItems()) {
+            for (TaskListItem taskListItem : taskListItems) {
                 taskListItem.setUser(null);
                 taskListItem.getTask().setTaskListItems(new ArrayList<>());
                 taskListItem.getTask().setCategory(null);
             }
 
-            //nullify other side for pay information, allowance & deduction
-            PayInformation tempPayInformation = u.getCurrentPayInformation();
-            tempPayInformation.setUser(null);
-            for (Allowance allowance: tempPayInformation.getAllowance()) {
-                allowance.setPayInfo(null);
+            // nullify other side for pay information, allowance & deduction
+            PayInformation tempPayInformation = null;
+            if (u.getCurrentPayInformation() != null) {
+                tempPayInformation = u.getCurrentPayInformation();
+                tempPayInformation.setUser(null);
+                for (Allowance allowance : tempPayInformation.getAllowance()) {
+                    allowance.setPayInfo(null);
+                }
+                for (Deduction deduction : tempPayInformation.getDeduction()) {
+                    deduction.setPayInfo(null);
+                }
             }
-            for (Deduction deduction : tempPayInformation.getDeduction()) {
-                deduction.setPayInfo(null);
-            }
-            u.nullify();
-            u.setCurrentPayInformation(tempPayInformation);
 
+            Position tempPosition = null;
+            if (u.getCurrentPosition() != null) {
+                tempPosition = u.getCurrentPosition();
+            }
+
+            u.nullify();
+            u.setTeams(teams);
+            u.setTaskListItems(taskListItems);
+            u.setCurrentPayInformation(tempPayInformation);
+            u.setCurrentPosition(tempPosition);
         }
         return employees;
     }
@@ -1424,6 +1439,7 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         positionRepository.save(user.getCurrentPosition());
+        payInformationRepository.save(user.getCurrentPayInformation());
         User newUser = userRepository.saveAndFlush(user);
         return newUser.getUserId();
     }

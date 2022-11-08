@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
 import PayrollTabs from "../../features/payroll/PayrollTabs";
@@ -18,16 +18,43 @@ const Payroll = () => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
+
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const searchParams = ["firstName", "lastName", "email"];
   const [query, setQuery] = useState("");
   const [searchFilteredEmployees, setSearchFilteredEmployees] = useState([]);
+
   const [isOverviewOpen, setIsOverviewOpen] = useState(true);
   const [isPayrollHistoryOpen, setIsPayrollHistoryOpen] = useState(false);
   const [isEmployeesNotInPayrollOpen, setIsEmployeesNotInPayrollOpen] =
     useState(false);
   const [isPersonalPayrollOpen, setIsPersonalPayrollOpen] = useState(false);
   const [isPayrollFormOpen, setIsPayrollFormOpen] = useState(false);
+
+  const ref = document.getElementById("tabs");
+  const [isPayrollTabsGone, setIsPayrollTabsGone] = useState(false);
+  const [sticky, setSticky] = useState();
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const handleScroll = () => {
+    const position = window.pageYOffset;
+    setScrollPosition(position);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    setSticky(document.getElementById("tabs").getBoundingClientRect().bottom);
+    scrollPosition >= sticky
+      ? setIsPayrollTabsGone(true)
+      : setIsPayrollTabsGone(false);
+  }, [ref, sticky, scrollPosition]);
 
   const tabs = [
     { name: "Overview", current: isOverviewOpen },
@@ -47,6 +74,11 @@ const Payroll = () => {
 
   const onChangeHandler = (tabName) => {
     if (tabName === "Overview") {
+      setFilteredEmployees(
+        employees.filter(
+          (employee) => employee.currentPayInformation.inPayroll
+        )
+      );
       setIsOverviewOpen(true);
       setIsPayrollHistoryOpen(false);
       setIsEmployeesNotInPayrollOpen(false);
@@ -57,6 +89,11 @@ const Payroll = () => {
       setIsEmployeesNotInPayrollOpen(false);
       setIsPersonalPayrollOpen(false);
     } else if (tabName === "Employees Not In Payroll") {
+      setFilteredEmployees(
+        filteredEmployees.filter(
+          (employee) => !employee.currentPayInformation.inPayroll
+        )
+      );
       setIsOverviewOpen(false);
       setIsPayrollHistoryOpen(false);
       setIsEmployeesNotInPayrollOpen(true);
@@ -96,7 +133,11 @@ const Payroll = () => {
       .getAllEmployees()
       .then((response) => {
         setEmployees(response.data);
-        setFilteredEmployees(response.data);
+        setFilteredEmployees(
+          response.data.filter(
+            (employee) => employee.currentPayInformation.inPayroll
+          )
+        );
       })
       .catch((error) => console.log(error.response.data.message));
 
@@ -149,7 +190,13 @@ const Payroll = () => {
       <div className="py-5"></div>
       <div className="px-4 sm:px-6 lg:px-8">
         {!isPayrollFormOpen && (
-          <div className="sm:flex sm:items-center space-x-4">
+          <div
+            className={classNames(
+              "sm:flex sm:items-center space-x-4",
+              isPayrollTabsGone && "fixed top-0 w-full bg-white pr-20 shadow-xl"
+            )}
+            id="tabs"
+          >
             <div className="sm:flex-auto">
               <PayrollTabs tabs={tabs} onChangeHandler={onChangeHandler} />
             </div>
