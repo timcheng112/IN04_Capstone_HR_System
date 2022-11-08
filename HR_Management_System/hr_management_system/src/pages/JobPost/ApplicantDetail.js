@@ -27,7 +27,7 @@ export default function Profile() {
   const [job, setJob] = useState()
   const [uId, setUId] = useState()
   const [postId, setPostId] = useState()
-  const [open,setOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const [curfileName, setcurFileName] = useState(null);
   const [curclfileName, setcurclfileName] = useState(null);
@@ -131,13 +131,19 @@ export default function Profile() {
     });
   }
 
-  function shortList(){
-    api.shortlistApplicant(uId,job.postingId)
-    .then(() => {alert("Successfully shortlist the applicant.")});
+  function shortList() {
+    api.shortlistApplicant(uId, job.postingId)
+      .then(() => {
+        alert("Successfully shortlist the applicant.");
+        history.push({ pathname: "/hiring/allapplicants", state: { job: job } });
+      });
   }
-  function reject(){
-    api.rejectApplicant(uId,job.postingId)
-    .then(() => {alert("Successfully reject the applicant.")});
+  function reject() {
+    api.rejectApplicant(uId, job.postingId)
+      .then(() => {
+        alert("Successfully reject the applicant.");
+        history.push({ pathname: "/hiring/allapplicants", state: { job: job } });
+      });
   }
 
   return (
@@ -363,7 +369,7 @@ export default function Profile() {
                 <div className="flex mt-1 sm:col-span-2 sm:mt-0">
                   {curfileName !== null &&
                     <div className="flex space-x-3">
-                      <label  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                      <label className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                         {curfileName}
                       </label>
                       <button
@@ -432,28 +438,28 @@ export default function Profile() {
               >
                 Back
               </button>
-              {applicant.status=='PENDING' && <button
+              {applicant.status == 'PENDING' && <button
                 type="button"
-                onClick = {()=>shortList()}
+                onClick={() => shortList()}
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Shortlist
               </button>}
-              {(applicant.status=='PENDING' || applicant.status=='SHORTLISTED') && <button
+              {(applicant.status == 'PENDING' || applicant.status == 'SHORTLISTED') && <button
                 type="button"
-                onClick = {()=>reject()}
+                onClick={() => reject()}
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 Reject
               </button>}
-              {applicant.status=='SHORTLISTED' && <button
+              {applicant.status == 'SHORTLISTED' && <button
                 type="button"
-                onClick = {()=>setOpen(true)}
+                onClick={() => setOpen(true)}
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Offer
               </button>}
-              <Offer open={open} setOpen={setOpen} uId={uId} postingId={postId}/>
+              <Offer open={open} setOpen={setOpen} uId={uId} postingId={postId} />
             </div>
           </div>
         </form>
