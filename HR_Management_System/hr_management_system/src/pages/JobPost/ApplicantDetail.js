@@ -2,7 +2,7 @@ import Navbar from "../../components/Navbar";
 import { ArrowUpTrayIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Fragment, useState, useEffect } from 'react'
 import WorkList from "../../features/jobrequest/WorkList";
-
+import Offer from "../../features/jobrequest/Offer";
 import RecommendationList from "../../features/jobrequest/RecommendationList";
 import api from "../../utils/api.js";
 import { getUserId } from "../../utils/Common.js";
@@ -26,6 +26,8 @@ export default function Profile() {
   const [userSkills, setUserSkills] = useState(null)
   const [job, setJob] = useState()
   const [uId, setUId] = useState()
+  const [postId, setPostId] = useState()
+  const [open,setOpen] = useState(false)
 
   const [curfileName, setcurFileName] = useState(null);
   const [curclfileName, setcurclfileName] = useState(null);
@@ -40,6 +42,7 @@ export default function Profile() {
   useEffect(() => {
     setApplicant(location.state.applicant)
     setUId(location.state.applicant.applicant.userId)
+    setPostId(location.state.applicant.jobPosting.postingId)
     setFirstName(location.state.applicant.applicant.firstName)
     setLastName(location.state.applicant.applicant.lastName)
     setCitizenship(location.state.applicant.applicant.citizenship)
@@ -131,6 +134,10 @@ export default function Profile() {
   function shortList(){
     api.shortlistApplicant(uId,job.postingId)
     .then(() => {alert("Successfully shortlist the applicant.")});
+  }
+  function reject(){
+    api.rejectApplicant(uId,job.postingId)
+    .then(() => {alert("Successfully reject the applicant.")});
   }
 
   return (
@@ -434,16 +441,19 @@ export default function Profile() {
               </button>}
               {(applicant.status=='PENDING' || applicant.status=='SHORTLISTED') && <button
                 type="button"
+                onClick = {()=>reject()}
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 Reject
               </button>}
               {applicant.status=='SHORTLISTED' && <button
                 type="button"
+                onClick = {()=>setOpen(true)}
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Offer
               </button>}
+              <Offer open={open} setOpen={setOpen} uId={uId} postingId={postId}/>
             </div>
           </div>
         </form>
