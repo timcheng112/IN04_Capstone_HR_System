@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -803,16 +800,25 @@ public class QualificationService {
         System.out.println("skillMaps is ");
         System.out.println(skillMaps);
         List<Integer> keys = skillMaps.keySet().stream().toList();
-
+        HashSet<Integer> keySet = new HashSet<>();
+        boolean check = false;
         for (Integer key : keys) {
+            if (keySet.contains(key)) {
+                check = true;
+                continue;
+            }
             Skillset chosenSS = skillsetRepository.findById(Long.valueOf(key)).get();
             UserSkillset newUSS = new UserSkillset(skillMaps.get(key), chosenSS);
             UserSkillset savedUSS = userSkillsetRepositoy.saveAndFlush(newUSS);
 
             newList.add(savedUSS);
+            keySet.add(key);
         }
         qi.setUserSkills(newList);
         qualificationRepository.save(qi);
+        if (check) {
+            return "There was a duplicate Skillset entry, Only one is saved";
+        }
         return "set successfully";
     }
 }

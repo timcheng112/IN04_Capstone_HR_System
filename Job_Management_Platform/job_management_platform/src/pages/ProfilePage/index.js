@@ -302,11 +302,13 @@ export default function Profile() {
 
   function updateUserDetails() {
     console.log("UPDATING USER DETAILSSSSS");
+    let boo = true;
     api.updateUserDetails(user, firstName, lastName, aboutMe, level, school, year, citizenship, race, languages)
         .then((response) => {
             console.log("update user details ok");
         })
         .catch((error) => {
+            boo = false;
             setError(error);
         })
     var len = skillIds.length;
@@ -315,14 +317,34 @@ export default function Profile() {
         map.set(parseInt(skillIds[i]), parseInt(skillLevels[i]));
     }
     console.log(map);
-    //TODO: set skillset not working yet
-//    api.setSkillsets(user, map)
-//        .then((response) => {
-//            console.log("set user skillsets ok")
-//        })
-//        .catch((error) => {
-//            setError(error);
-//        })
+    var newMap = {};
+    var checkerMap = [];
+    var checker = false;
+    map.forEach((val:int, key: int) => {
+        newMap[key] = val;
+        checkerMap.push(key);
+        console.log(checkerMap)
+        if (checkerMap.includes(key)) {
+            checker = true;
+        }
+    })
+
+    console.log(newMap);
+    api.setSkillsets(user, newMap)
+        .then((response) => {
+            console.log("set user skillsets ok")
+        })
+        .catch((error) => {
+            boo = false;
+            alert("User Skillset Updating failed")
+            setError(error);
+        });
+    if (checker) {
+        alert("Multiple of the same skillset has been detected, will save the last one");
+    }
+    if (boo) {
+        alert("User Update Successful")
+    }
   }
 
   // function downloadFile() {
