@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.jobmanagement.jobapplication;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
+import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPostingRepository;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -322,4 +324,82 @@ public class JobApplicationService {
     }
 
 
+    public String shortlistApplicant(Long userId, Long postingId) {
+        System.out.println("JobApplicationService.shortlistApplicant");
+        System.out.println("userId = " + userId + ", postingId = " + postingId);
+
+        Optional<User> uOptional = userRepository.findById(userId);
+        User applicant = qualificationService.checkQIExists(uOptional.get());
+
+        Optional<JobApplication> jobApplicationOptional = jobApplicationRepository.findApplicantApplication(postingId, userId);
+        if (jobApplicationOptional.isEmpty()) {
+            throw new IllegalStateException("Job Application not found");
+        }
+
+        JobApplication application = jobApplicationOptional.get();
+        if (application.getStatus().equals(JobStatusEnum.REJECTED)) {
+            throw new IllegalStateException("Only Not Rejected applications can be offered");
+        }
+
+        // shortlist
+        application.setStatus(JobStatusEnum.SHORTLISTED);
+        application.setLastUpdatedAt(LocalDateTime.now());
+        jobApplicationRepository.save(application);
+
+        return "Applicant Shortlisted Successfully";
+    }
+
+
+    public String rejectApplicant(Long userId, Long postingId) {
+        System.out.println("JobApplicationService.rejectApplicant");
+        System.out.println("userId = " + userId + ", postingId = " + postingId);
+
+        Optional<User> uOptional = userRepository.findById(userId);
+        User applicant = qualificationService.checkQIExists(uOptional.get());
+
+        Optional<JobApplication> jobApplicationOptional = jobApplicationRepository.findApplicantApplication(postingId, userId);
+        if (jobApplicationOptional.isEmpty()) {
+            throw new IllegalStateException("Job Application not found");
+        }
+
+        JobApplication application = jobApplicationOptional.get();
+
+        // reject
+        application.setStatus(JobStatusEnum.REJECTED);
+        application.setLastUpdatedAt(LocalDateTime.now());
+        jobApplicationRepository.save(application);
+        return "Applicant Rejected Successfully";
+    }
+
+    public String offerApplicant(Long userId, Long postingId, LocalDate startDate, BigDecimal salaryOffered) {
+        System.out.println("JobApplicationService.offerApplicant");
+        System.out.println("userId = " + userId + ", postingId = " + postingId + ", startDate = " + startDate + ", salaryOffered = " + salaryOffered);
+
+        Optional<User> uOptional = userRepository.findById(userId);
+        User applicant = qualificationService.checkQIExists(uOptional.get());
+
+        Optional<JobApplication> jobApplicationOptional = jobApplicationRepository.findApplicantApplication(postingId, userId);
+        if (jobApplicationOptional.isEmpty()) {
+            throw new IllegalStateException("Job Application not found");
+        }
+
+        JobApplication application = jobApplicationOptional.get();
+        if (!application.getStatus().equals(JobStatusEnum.SHORTLISTED)) {
+            throw new IllegalStateException("Only Shortlisted applications can be offered");
+        }
+
+        // offer
+        application.setStatus(JobStatusEnum.OFFERED);
+        application.setLastUpdatedAt(LocalDateTime.now());
+        application.setStartDate(startDate);
+        jobApplicationRepository.save(application);
+
+        if (application.getJobPosting().getJobType().equals(JobTypeEnum.FULLTIME) ||
+                application.getJobPosting().getJobType().equals(JobTypeEnum.INTERN)) {
+            application.getJobPosting().setSalary(salaryOffered);
+            jobPostingRepository.save(application.getJobPosting());
+        }
+
+        return "Offer Made to Applicant";
+    }
 }

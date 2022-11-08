@@ -774,6 +774,15 @@ const api = {
   getRejectedApplicants(postingId) {
     return axios.get(`http://localhost:9191/api/jobapplications/getRejectedApplicants?requestId=${requestId}`);
   },
+  shortlistApplicant(userId, postingId) {
+    return axios.put(`http://localhost:9191/api/jobapplications/shortlistApplicant?userId=${userId}&requestId=${requestId}`);
+  },
+  rejectApplicant(userId, postingId) {
+    return axios.put(`http://localhost:9191/api/jobapplications/rejectApplicant?userId=${userId}&requestId=${requestId}`);
+  },
+  offerApplicant(userId, postingId, startDate, salaryOffered)
+    return axios.put(`http://localhost:9191/api/jobapplications/offerApplicant?userId=${userId}&postingId=${postingId}&startDate=${startDate}&salaryOffered=${salaryOffered}`);
+  },
 };
 
 export default api;

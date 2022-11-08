@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -68,5 +69,25 @@ public class JobApplicationController {
     @GetMapping("/getRejectedApplicants")
     public List<User> getRejectedApplicants(@RequestParam("postingId") Long postingId) {
         return jobApplicationService.getRejectedApplicants(postingId);
+    }
+
+    @PutMapping("/shortlistApplicant")
+    public String shortlistApplicant(@RequestParam("userId") Long userId,
+                                     @RequestParam("postingId") Long postingId) {
+        return jobApplicationService.shortlistApplicant(userId, postingId);
+    }
+
+    @PutMapping("/rejectApplicant")
+    public String rejectApplicant(@RequestParam("userId") Long userId,
+                                     @RequestParam("postingId") Long postingId) {
+        return jobApplicationService.rejectApplicant(userId, postingId);
+    }
+
+    @PutMapping("/offerApplicant")
+    public String offerApplicant(@RequestParam("userId") Long userId,
+                                 @RequestParam("postingId") Long postingId,
+                                 @RequestParam("startDate") String startDate,
+                                 @RequestParam("salaryOffered") Float salaryOffered) {
+        return jobApplicationService.offerApplicant(userId, postingId, LocalDate.parse(startDate), BigDecimal.valueOf(salaryOffered));
     }
 }
