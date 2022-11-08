@@ -90,4 +90,16 @@ public class JobApplicationController {
                                  @RequestParam("salaryOffered") Float salaryOffered) {
         return jobApplicationService.offerApplicant(userId, postingId, LocalDate.parse(startDate), BigDecimal.valueOf(salaryOffered));
     }
+
+    @PutMapping("/rejectOffer")
+    public String rejectOffer(@RequestParam("userId") Long userId,
+                              @RequestParam("postingId") Long postingId) {
+        return jobApplicationService.rejectApplicantOffer(userId, postingId);
+    }
+
+    @PutMapping("/acceptOffer")
+    public String acceptOffer(@RequestParam("userId") Long userId,
+                              @RequestParam("postingId") Long postingId) {
+        return jobApplicationService.acceptApplicantOffer(userId, postingId);
+    }
 }

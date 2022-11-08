@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobapplication;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPostingRepository;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
@@ -10,6 +11,8 @@ import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillsetReposit
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.docdata.DocDataRepository;
 import com.conceiversolutions.hrsystem.user.docdata.DocDataService;
+import com.conceiversolutions.hrsystem.user.position.Position;
+import com.conceiversolutions.hrsystem.user.position.PositionRepository;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationInformation;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationService;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -36,6 +39,7 @@ public class JobApplicationService {
     private final QualificationService qualificationService;
     private final DocDataRepository docDataRepository;
     private final DocDataService docDataService;
+    private final PositionRepository positionRepository;
 
 
     public List<JobApplication> findApplicationsByPostingId(Long postingId) {
@@ -401,5 +405,66 @@ public class JobApplicationService {
         }
 
         return "Offer Made to Applicant";
+    }
+
+    public String rejectApplicantOffer(Long userId, Long postingId) {
+        System.out.println("JobApplicationService.rejectApplicantOffer");
+        System.out.println("userId = " + userId + ", postingId = " + postingId);
+
+        Optional<User> uOptional = userRepository.findById(userId);
+        User applicant = qualificationService.checkQIExists(uOptional.get());
+
+        Optional<JobApplication> jobApplicationOptional = jobApplicationRepository.findApplicantApplication(postingId, userId);
+        if (jobApplicationOptional.isEmpty()) {
+            throw new IllegalStateException("Job Application not found");
+        }
+
+        JobApplication application = jobApplicationOptional.get();
+        if (!application.getStatus().equals(JobStatusEnum.OFFERED)) {
+            throw new IllegalStateException("Only Offered applications can be rejected by the Applicant");
+        }
+        // reject offer
+        application.setStatus(JobStatusEnum.REJECTED);
+        application.setLastUpdatedAt(LocalDateTime.now());
+        jobApplicationRepository.save(application);
+        return "Applicant Rejected Offer Successfully";
+    }
+
+    public String acceptApplicantOffer(Long userId, Long postingId) {
+        System.out.println("JobApplicationService.acceptApplicantOffer");
+        System.out.println("userId = " + userId + ", postingId = " + postingId);
+
+        Optional<User> uOptional = userRepository.findById(userId);
+        User applicant = qualificationService.checkQIExists(uOptional.get());
+
+        Optional<JobApplication> jobApplicationOptional = jobApplicationRepository.findApplicantApplication(postingId, userId);
+        if (jobApplicationOptional.isEmpty()) {
+            throw new IllegalStateException("Job Application not found");
+        }
+
+        JobApplication application = jobApplicationOptional.get();
+        if (!application.getStatus().equals(JobStatusEnum.OFFERED)) {
+            throw new IllegalStateException("Only Offered applications can be accepted by the Applicant");
+        }
+        // accept offer
+        application.setStatus(JobStatusEnum.ACCEPTED);
+        application.setLastUpdatedAt(LocalDateTime.now());
+
+        // create position
+        Position newPos = new Position(application.getJobPosting().getJobTitle(), application.getJobPosting().getJobDescription(), application.getStartDate(), application.getJobPosting().getJobType());
+        // TODO: get pos type from job posting
+        newPos.setPosType(PositionTypeEnum.EXECUTIVE);
+        Position savedPos = positionRepository.saveAndFlush(newPos);
+
+        // change user to employee
+        applicant.setCurrentPosition(savedPos);
+        List<Position> positions = new ArrayList<>();
+        positions.add(savedPos);
+        applicant.setPositions(positions);
+
+
+        // TODO: to continue
+//        jobApplicationRepository.save(application);
+        return "Applicant Rejected Offer Successfully";
     }
 }
