@@ -3,11 +3,15 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import React, { useEffect, useRef, useState } from "react";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
+import PayrollSummaryReportDocument from "../../features/payroll/PayrollSummaryReport.js/PayrollSummaryReportDocument";
+import PayrollSummaryReportDocumentViewer from "../../features/payroll/PayrollSummaryReport.js/PayrollSummaryReportDocumentViewer";
 import PayrollTabs from "../../features/payroll/PayrollTabs";
 import PayslipDocument from "../../features/payroll/PayslipDocument/PayslipDocument";
+import PayslipDocumentViewer from "../../features/payroll/PayslipDocument/PayslipDocumentViewer";
 import api from "../../utils/api";
 import EmployeesNotInPayroll from "./EmployeesNotInPayroll";
 import Overview from "./Overview";
@@ -29,6 +33,7 @@ const Payroll = () => {
   const [query, setQuery] = useState("");
   const [searchFilteredEmployees, setSearchFilteredEmployees] = useState([]);
 
+  const [isSummaryReportOpen, setIsSummaryReportOpen] = useState(false);
   const [isPayslipOpen, setIsPayslipOpen] = useState(false);
   const [isOverviewOpen, setIsOverviewOpen] = useState(true);
   const [isPayrollHistoryOpen, setIsPayrollHistoryOpen] = useState(false);
@@ -38,6 +43,8 @@ const Payroll = () => {
   const [isPayrollFormOpen, setIsPayrollFormOpen] = useState(false);
   const [isEditPayInformationFormOpen, setIsEditPayInformationFormOpen] =
     useState(false);
+
+  const [loadingDocument, setLoadingDocument] = useState(false);
 
   const ref = document.getElementById("tabs");
   const [isPayrollTabsGone, setIsPayrollTabsGone] = useState(false);
@@ -58,7 +65,8 @@ const Payroll = () => {
   }, []);
 
   useEffect(() => {
-    !isPayslipOpen &&
+    !isSummaryReportOpen &&
+      !isPayslipOpen &&
       !isPayrollFormOpen &&
       !isEditPayInformationFormOpen &&
       setSticky(document.getElementById("tabs").getBoundingClientRect().bottom);
@@ -71,6 +79,8 @@ const Payroll = () => {
     scrollPosition,
     isPayrollFormOpen,
     isEditPayInformationFormOpen,
+    isPayslipOpen,
+    isSummaryReportOpen,
   ]);
 
   const tabs = [
@@ -202,9 +212,9 @@ const Payroll = () => {
   return (
     <div>
       <Navbar />
-      <div className="py-5"></div>
+      <div className={classNames(!isPayslipOpen && !isSummaryReportOpen && "py-5")}></div>
       <div className="px-4 sm:px-6 lg:px-8">
-        {!isPayslipOpen && !isPayrollFormOpen && !isEditPayInformationFormOpen && (
+        {!isPayslipOpen && !isSummaryReportOpen  && !isPayrollFormOpen && !isEditPayInformationFormOpen && (
           <div
             className={classNames(
               "sm:flex sm:items-center space-x-4",
@@ -269,25 +279,74 @@ const Payroll = () => {
           </div>
         )}
       </div>
-      {isPayslipOpen && (
-        <div className="flex">
-          <PayslipDocument />
-          <div className="grid grid-rows-2">
+      {isSummaryReportOpen && <div className="flex">
+          <PayrollSummaryReportDocumentViewer />
+          <div className="grid grid-rows-2 shadow-xl pl-1 mb-2">
+            <PDFDownloadLink
+              document={<PayrollSummaryReportDocument />}
+              fileName="Payroll_Summary_Report"
+            >
+              {({ loading }) =>
+                loading ? setLoadingDocument(true) : setLoadingDocument(false)
+              }
+              <button
+                type="button"
+                className="h-full rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
+                disabled={loadingDocument}
+              >
+                <div className="flex justify-center">
+                  <ArrowDownOnSquareIcon
+                    className="h-8 w-8"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="flex justify-center">
+                  <p className="text-xl font-bold mt-2">Download</p>
+                </div>
+              </button>
+            </PDFDownloadLink>
             <button
               type="button"
-              className="col-span-1 rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
+              className="col-span-1 mt-2 rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300"
               // disabled
+              onClick={() => setIsSummaryReportOpen(false)}
             >
               <div className="flex justify-center">
-                <ArrowDownOnSquareIcon
-                  className="h-8 w-8"
-                  aria-hidden="true"
-                />
+                <XMarkIcon className="h-8 w-8" aria-hidden="true" />
               </div>
               <div className="flex justify-center">
-                <p className="text-xl font-bold mt-2">Download</p>
+                <p className="text-xl font-bold mt-2">Close</p>
               </div>
             </button>
+          </div>
+        </div>}
+      {isPayslipOpen && (
+        <div className="flex">
+          <PayslipDocumentViewer />
+          <div className="grid grid-rows-2 shadow-xl pl-1 mb-2">
+            <PDFDownloadLink
+              document={<PayslipDocument />}
+              fileName="Payslip_Document"
+            >
+              {({ loading }) =>
+                loading ? setLoadingDocument(true) : setLoadingDocument(false)
+              }
+              <button
+                type="button"
+                className="h-full rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
+                disabled={loadingDocument}
+              >
+                <div className="flex justify-center">
+                  <ArrowDownOnSquareIcon
+                    className="h-8 w-8"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="flex justify-center">
+                  <p className="text-xl font-bold mt-2">Download</p>
+                </div>
+              </button>
+            </PDFDownloadLink>
             <button
               type="button"
               className="col-span-1 mt-2 rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300"
@@ -304,7 +363,7 @@ const Payroll = () => {
           </div>
         </div>
       )}
-      {!isPayslipOpen && isOverviewOpen && (
+      {!isPayslipOpen && !isSummaryReportOpen && isOverviewOpen && (
         <Overview
           searchFilteredEmployees={searchFilteredEmployees}
           isEditPayInformationFormOpen={isEditPayInformationFormOpen}
@@ -317,8 +376,13 @@ const Payroll = () => {
           openPayslip={() => setIsPayslipOpen(true)}
         />
       )}
-      {!isPayslipOpen && isPayrollHistoryOpen && <PayrollHistory />}
-      {!isPayslipOpen && isEmployeesNotInPayrollOpen && (
+      {!isPayslipOpen && !isSummaryReportOpen && isPayrollHistoryOpen && (
+        <PayrollHistory
+          openSummaryReport={() => setIsSummaryReportOpen(true)}
+          closeSummaryReport={() => setIsSummaryReportOpen(false)}
+        />
+      )}
+      {!isPayslipOpen && !isSummaryReportOpen && isEmployeesNotInPayrollOpen && (
         <EmployeesNotInPayroll
           searchFilteredEmployees={searchFilteredEmployees}
           isPayrollFormOpen={isPayrollFormOpen}
@@ -326,7 +390,7 @@ const Payroll = () => {
           closePayrollForm={() => setIsPayrollFormOpen(false)}
         />
       )}
-      {!isPayslipOpen && isPersonalPayrollOpen && <EmployeePayrollHistory />}
+      {!isPayslipOpen && !isSummaryReportOpen && isPersonalPayrollOpen && <EmployeePayrollHistory />}
     </div>
   );
 };
