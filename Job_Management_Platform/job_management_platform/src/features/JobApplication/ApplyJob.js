@@ -75,14 +75,18 @@ export default function ApplyJob({ open, setOpen, job }) {
 //     console.log(fileType);
 
      var docToGet;
+     var filegetname;
      if (fileType === "CV") {
         docToGet = cvId;
+        filegetname = curcvfileName;
         setFName(curcvfileName);
      } else if (fileType == "CL") {
         docToGet = clId;
+        filegetname = curclfileName;
         setFName(curclfileName);
      } else if (fileType == "T") {
         docToGet = tId;
+        filegetname = curtfileName;
         setFName(curtfileName);
      }
 
@@ -97,7 +101,7 @@ export default function ApplyJob({ open, setOpen, job }) {
 
          const link = document.createElement("a");
          link.href = url;
-         link.setAttribute("download", fName);
+         link.setAttribute("download", filegetname);
          document.body.appendChild(link);
          link.click();
          link.parentNode.removeChild(link);

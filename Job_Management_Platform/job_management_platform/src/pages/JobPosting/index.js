@@ -33,18 +33,20 @@ export default function JobPosting() {
 
   function search(e, items) {
     const value = e.target.value;
-    setFilteredJobs(
-      items.filter((item) => {
-        return searchParam.some((newItem) => {
-          return (
-            item[newItem]
-              .toString()
-              .toLowerCase()
-              .indexOf(value.toLowerCase()) > -1
-          );
-        });
-      })
-    );
+    console.log(items);
+    let finding = Array.of(value.toLowerCase());
+    let filtered = new Set();
+
+    var titleFilter = items.filter(x => finding.some(y => x.jobTitle.toLowerCase().indexOf(y) != -1))
+    titleFilter.forEach(item => filtered.add(item))
+
+    var descFilter = items.filter(x => finding.some(y => x.jobDescription.toLowerCase().indexOf(y) != -1))
+    descFilter.forEach(item => filtered.add(item))
+
+    var typeFilter = items.filter(x => finding.some(y => x.jobType.toLowerCase().indexOf(y) != -1))
+    typeFilter.forEach(item => filtered.add(item))
+
+    setFilteredJobs(Array.from(filtered));
   }
 
   return (

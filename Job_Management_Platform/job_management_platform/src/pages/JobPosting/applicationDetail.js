@@ -41,7 +41,7 @@ export default function ApplicationDetail() {
     setSalary(location.state.job.jobPosting.salary)
     setSalaryMax(location.state.job.jobPosting.salaryMax)
     setPostDate(location.state.job.jobPosting.postDate)
-    setStartDate(location.state.job.jobPosting.preferredStartDate)
+    setStartDate(location.state.job.applyDate)
     setDescription(location.state.job.jobPosting.jobDescription)
     setStatus(location.state.job.status)
     setRequirements(location.state.job.jobPosting.jobPostRequirements)
@@ -159,7 +159,7 @@ export default function ApplicationDetail() {
           <div className='py-3' />
           <div className="flex space-x-12 mx-auto  sm:px-6 lg:px-8">
             <div className="px-4 ">
-              <h2 className="flex text-lg font-medium text-gray-900">StartDate</h2>
+              <h2 className="flex text-lg font-medium text-gray-900">Apply Date</h2>
             </div>
             <textarea
               id="description"

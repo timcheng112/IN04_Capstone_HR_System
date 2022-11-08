@@ -402,7 +402,7 @@ public class QualificationService {
 
         info.getWorkExperiences().remove(exp);
         qualificationRepository.save(info);
-        recommendationRepository.deleteById(expId);
+        workExperienceRepository.deleteById(expId);
 
         return "Work Experience successfully removed";
     }

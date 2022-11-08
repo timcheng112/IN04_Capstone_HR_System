@@ -211,7 +211,12 @@ export default function Profile() {
             // console.log(response.data)
             if (response.status === 200) {
               //should return a long id
-              setDocId(response.data);
+              if (type == "Transcript") {
+                setTId(response.data);
+              } else if (type == "CV") {
+                setCVId(response.data);
+              }
+
               // setDocId(response.data)
 //              console.log(userInfo);
               alert("CV added to user succesfully");
@@ -250,14 +255,13 @@ export default function Profile() {
 //    console.log(map);
     var newMap = {};
     var checkerMap = [];
-    var checker = false;
     map.forEach((val, key) => {
         newMap[key] = val;
         checkerMap.push(key);
 //        console.log(checkerMap)
-        if (checkerMap.includes(key)) {
-            checker = true;
-        }
+//        if (checkerMap.includes(key)) {
+//            checker = true;
+//        }
     })
 
 //    console.log(newMap);
@@ -270,9 +274,9 @@ export default function Profile() {
             alert("User Skillset Updating failed")
             setError(error);
         });
-    if (checker) {
-        alert("Multiple of the same skillset has been detected, will save the last one");
-    }
+//    if (checker) {
+//        alert("Multiple of the same skillset has been detected, will save the last one");
+//    }
     if (boo) {
         alert("User Update Successful")
     }

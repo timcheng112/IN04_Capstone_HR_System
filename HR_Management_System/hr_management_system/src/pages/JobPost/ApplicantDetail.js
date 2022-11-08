@@ -110,15 +110,19 @@ export default function Profile() {
   }, []);
 
   function downloadFile(fileType) {
+    var filegetname;
     var docToGet;
     if (fileType === "CV") {
       docToGet = cvId;
+      filegetname = curfileName;
       setFName(curfileName);
     } else if (fileType == "CL") {
       docToGet = clId;
+      filegetname = curclfileName;
       setFName(curclfileName);
     } else if (fileType == "T") {
       docToGet = tId;
+      filegetname = curtfileName;
       setFName(curtfileName);
     }
 
@@ -130,7 +134,7 @@ export default function Profile() {
 
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", fName);
+        link.setAttribute("download", filegetname);
         document.body.appendChild(link);
         link.click();
         link.parentNode.removeChild(link);
@@ -421,17 +425,24 @@ export default function Profile() {
                   Cover Letter
                 </label>
                 <div className="flex mt-1 sm:col-span-2 sm:mt-0">
-                  <button
-                    type="button"
-                    className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => downloadFile("CL")}
-                  >
-                    <ArrowDownTrayIcon
-                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
-                      aria-hidden="true"
-                    />
-                    <span className="hidden md:block">Download Cover Letter</span>
-                  </button>
+                  {curclfileName !== null &&
+                  <>
+                      <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                        {curclfileName}
+                      </label>
+                      <button
+                        type="button"
+                        className="inline-flex  rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        onClick={() => downloadFile("CL")}
+                      >
+                        <ArrowDownTrayIcon
+                          className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                          aria-hidden="true"
+                        />
+                        <span className="hidden md:block">Download Cover Letter</span>
+                      </button>
+                      </>
+                  }
                 </div>
               </div>
             </div>
