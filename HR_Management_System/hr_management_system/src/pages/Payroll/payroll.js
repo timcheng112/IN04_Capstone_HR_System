@@ -12,6 +12,7 @@ import PayrollSummaryReportDocumentViewer from "../../features/payroll/PayrollSu
 import PayrollTabs from "../../features/payroll/PayrollTabs";
 import PayslipDocument from "../../features/payroll/PayslipDocument/PayslipDocument";
 import PayslipDocumentViewer from "../../features/payroll/PayslipDocument/PayslipDocumentViewer";
+import RunPayRollDialog from "../../features/payroll/RunPayrollDialog";
 import api from "../../utils/api";
 import EmployeesNotInPayroll from "./EmployeesNotInPayroll";
 import Overview from "./Overview";
@@ -212,74 +213,83 @@ const Payroll = () => {
   return (
     <div>
       <Navbar />
-      <div className={classNames(!isPayslipOpen && !isSummaryReportOpen && "py-5")}></div>
+      <div
+        className={classNames(!isPayslipOpen && !isSummaryReportOpen && "py-5")}
+      ></div>
       <div className="px-4 sm:px-6 lg:px-8">
-        {!isPayslipOpen && !isSummaryReportOpen  && !isPayrollFormOpen && !isEditPayInformationFormOpen && (
-          <div
-            className={classNames(
-              "sm:flex sm:items-center space-x-4",
-              isPayrollTabsGone && "fixed top-0 w-full bg-white pr-20 shadow-xl"
-            )}
-            id="tabs"
-          >
-            <div className="sm:flex-auto">
-              <PayrollTabs tabs={tabs} onChangeHandler={onChangeHandler} />
-            </div>
-            <div className="w-full max-w-lg lg:max-w-xs">
-              <label htmlFor="search" className="sr-only">
-                Search
-              </label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <MagnifyingGlassIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
+        {!isPayslipOpen &&
+          !isSummaryReportOpen &&
+          !isPayrollFormOpen &&
+          !isEditPayInformationFormOpen && (
+            <div
+              className={classNames(
+                "sm:flex sm:items-center space-x-4",
+                isPayrollTabsGone &&
+                  "fixed top-0 w-full bg-white pr-20 shadow-xl"
+              )}
+              id="tabs"
+            >
+              <div className="sm:flex-auto">
+                <PayrollTabs tabs={tabs} onChangeHandler={onChangeHandler} />
+              </div>
+              <div className="w-full max-w-lg lg:max-w-xs">
+                <label htmlFor="search" className="sr-only">
+                  Search
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <MagnifyingGlassIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <input
+                    id="search"
+                    name="search"
+                    className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:border-indigo-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                    placeholder="Search"
+                    type="search"
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      console.log(e.target.value);
+                    }}
                   />
                 </div>
-                <input
-                  id="search"
-                  name="search"
-                  className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:border-indigo-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Search"
-                  type="search"
-                  value={query}
-                  onChange={(e) => {
-                    setQuery(e.target.value);
-                    console.log(e.target.value);
+              </div>
+              <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex">
+                <ComboBox
+                  items={departments}
+                  searchParam={"departmentName"}
+                  selectedItem={selectedDepartment}
+                  setSelectedItem={(e) => {
+                    setSelectedDepartment(e);
+                    setSelectedTeam(null);
                   }}
+                  placeholder="Search for Department"
+                  disabled={isPayrollHistoryOpen || isPersonalPayrollOpen}
+                />
+                <div className="mx-1" />
+                <ComboBox
+                  items={
+                    selectedDepartment !== null && selectedDepartment.teams
+                  }
+                  searchParam={"teamName"}
+                  selectedItem={selectedTeam}
+                  setSelectedItem={setSelectedTeam}
+                  placeholder="Search for Team"
+                  disabled={
+                    selectedDepartment === null ||
+                    isPayrollHistoryOpen ||
+                    isPersonalPayrollOpen
+                  }
                 />
               </div>
             </div>
-            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex">
-              <ComboBox
-                items={departments}
-                searchParam={"departmentName"}
-                selectedItem={selectedDepartment}
-                setSelectedItem={(e) => {
-                  setSelectedDepartment(e);
-                  setSelectedTeam(null);
-                }}
-                placeholder="Search for Department"
-                disabled={isPayrollHistoryOpen || isPersonalPayrollOpen}
-              />
-              <div className="mx-1" />
-              <ComboBox
-                items={selectedDepartment !== null && selectedDepartment.teams}
-                searchParam={"teamName"}
-                selectedItem={selectedTeam}
-                setSelectedItem={setSelectedTeam}
-                placeholder="Search for Team"
-                disabled={
-                  selectedDepartment === null ||
-                  isPayrollHistoryOpen ||
-                  isPersonalPayrollOpen
-                }
-              />
-            </div>
-          </div>
-        )}
+          )}
       </div>
-      {isSummaryReportOpen && <div className="flex">
+      {isSummaryReportOpen && (
+        <div className="flex">
           <PayrollSummaryReportDocumentViewer />
           <div className="grid grid-rows-2 shadow-xl pl-1 mb-2">
             <PDFDownloadLink
@@ -319,7 +329,8 @@ const Payroll = () => {
               </div>
             </button>
           </div>
-        </div>}
+        </div>
+      )}
       {isPayslipOpen && (
         <div className="flex">
           <PayslipDocumentViewer />
@@ -374,6 +385,7 @@ const Payroll = () => {
             setIsEditPayInformationFormOpen(false)
           }
           openPayslip={() => setIsPayslipOpen(true)}
+          onChangeHandler={onChangeHandler}
         />
       )}
       {!isPayslipOpen && !isSummaryReportOpen && isPayrollHistoryOpen && (
@@ -382,15 +394,19 @@ const Payroll = () => {
           closeSummaryReport={() => setIsSummaryReportOpen(false)}
         />
       )}
-      {!isPayslipOpen && !isSummaryReportOpen && isEmployeesNotInPayrollOpen && (
-        <EmployeesNotInPayroll
-          searchFilteredEmployees={searchFilteredEmployees}
-          isPayrollFormOpen={isPayrollFormOpen}
-          openPayrollForm={() => setIsPayrollFormOpen(true)}
-          closePayrollForm={() => setIsPayrollFormOpen(false)}
-        />
+      {!isPayslipOpen &&
+        !isSummaryReportOpen &&
+        isEmployeesNotInPayrollOpen && (
+          <EmployeesNotInPayroll
+            searchFilteredEmployees={searchFilteredEmployees}
+            isPayrollFormOpen={isPayrollFormOpen}
+            openPayrollForm={() => setIsPayrollFormOpen(true)}
+            closePayrollForm={() => setIsPayrollFormOpen(false)}
+          />
+        )}
+      {!isPayslipOpen && !isSummaryReportOpen && isPersonalPayrollOpen && (
+        <EmployeePayrollHistory />
       )}
-      {!isPayslipOpen && !isSummaryReportOpen && isPersonalPayrollOpen && <EmployeePayrollHistory />}
     </div>
   );
 };

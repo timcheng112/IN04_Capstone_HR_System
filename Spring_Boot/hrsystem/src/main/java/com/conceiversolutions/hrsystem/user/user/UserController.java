@@ -377,4 +377,10 @@ public class UserController {
         return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear,
                 languages);
     }
+
+    @PostMapping(path = "/payroll/sendPayslipEmails")
+    public void sendPayslipEmails(@RequestParam("emails") List<String> emails,
+            @RequestParam("payslipMonth") String payslipMonth) {
+        userService.sendPayslipEmails(emails, payslipMonth);
+    }
 }

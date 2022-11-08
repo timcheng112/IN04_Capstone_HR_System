@@ -5,6 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { format, subDays } from "date-fns";
 import React, { useState } from "react";
+import RunPayRollDialog from "../../features/payroll/RunPayrollDialog";
 import EditPayInformationForm from "./EditPayInformationForm";
 
 function classNames(...classes) {
@@ -17,12 +18,21 @@ const Overview = ({
   openEditPayInformationForm,
   closeEditPayInformationForm,
   openPayslip,
+  onChangeHandler
 }) => {
   const date = format(subDays(new Date(), 7), "MMMM yyyy");
   const [selectedEmployee, setSelectedEmployee] = useState();
+  const [isRunPayrollDialogOpen, setIsRunPayrollDialogOpen] = useState(false);
 
   return (
     <div>
+      {isRunPayrollDialogOpen && (
+        <RunPayRollDialog
+          open={isRunPayrollDialogOpen}
+          onClose={() => setIsRunPayrollDialogOpen(false)}
+          onChangeHandler={onChangeHandler}
+        />
+      )}
       {isEditPayInformationFormOpen ? (
         <EditPayInformationForm
           employee={selectedEmployee}
@@ -36,6 +46,7 @@ const Overview = ({
               <button
                 type="button"
                 className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
+                onClick={() => setIsRunPayrollDialogOpen(true)}
               >
                 <Cog8ToothIcon
                   className="-ml-1 mr-2 h-5 w-5"

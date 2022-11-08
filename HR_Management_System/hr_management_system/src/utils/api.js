@@ -752,6 +752,12 @@ const api = {
       `http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`
     );
   },
+
+  sendPayslipEmails(emails, payslipMonth) {
+    return axios.post(
+      `http://localhost:9191/api/user/payroll/sendPayslipEmails?emails=${emails}&payslipMonth=${payslipMonth}`
+    );
+  },
 };
 
 export default api;

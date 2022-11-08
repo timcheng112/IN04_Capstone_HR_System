@@ -4,6 +4,8 @@ import { useHistory, useLocation } from "react-router";
 import Navbar from "../../components/Navbar";
 
 const AddToPayrollForm = ({ employee, closePayrollForm }) => {
+  const [bankName, setBankName] = useState("DBS Bank");
+  const [accountNumber, setAccountNumber] = useState();
   const [showAddAllowanceRow, setShowAddAllowanceRow] = useState(false);
   const [allowanceName, setAllowanceName] = useState();
   const [allowanceType, setAllowanceType] = useState("Bonus");
@@ -427,15 +429,23 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
                       >
                         Bank Name
                       </label>
-                      <input
+                      <select
                         type="text"
                         name="bank-name"
                         id="bank-name"
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
                         // defaultValue={employee.bankName}
                         // disabled
+                        value={bankName}
+                        onChange={(e) => setBankName(e.target.value)}
                         disabled={isBankInfoVerified}
-                      />
+                      >
+                        <option>DBS Bank</option>
+                        <option>UOB Singapore</option>
+                        <option>Citibank Singapore</option>
+                        <option>Maybank Singapore</option>
+                        <option>Standard Chartered Singapore</option>
+                      </select>
                     </div>
 
                     <div className="col-span-6 sm:col-span-6">
@@ -451,6 +461,8 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
                         id="account-number"
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
                         // defaultValue={employee.bankAccountNumber}
+                        value={accountNumber}
+                        onChange={(e) => setAccountNumber(e.target.value)}
                         disabled={isBankInfoVerified}
                       />
                     </div>
