@@ -114,7 +114,7 @@ export default function JobDetail() {
                 </div>
                 <div className="mt-2 flex items-center text-sm text-gray-500">
                   <CurrencyDollarIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                  ${salaryMin}k &ndash; ${salaryMax}k
+                  ${salaryMin} &ndash; ${salaryMax}
                 </div>
                 <div className="mt-2 flex items-center text-sm text-gray-500">
                   <CalendarIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
