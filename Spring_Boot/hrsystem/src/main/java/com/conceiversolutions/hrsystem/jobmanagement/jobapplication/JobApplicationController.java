@@ -56,24 +56,24 @@ public class JobApplicationController {
         return jobApplicationService.editJobApplication(postingId, userSkillIds, LocalDate.parse(availableStartDate));
     }
 
-    @GetMapping("/getPendingApplicants")
-    public List<User> getPendingApplicants(@RequestParam("postingId") Long postingId) {
-        return jobApplicationService.getPendingApplicants(postingId);
+    @GetMapping("/getPendingApplications")
+    public List<JobApplication> getPendingApplications(@RequestParam("postingId") Long postingId) {
+        return jobApplicationService.getPendingApplications(postingId);
     }
 
-    @GetMapping("/getShortlistedApplicants")
-    public List<User> getShortlistedApplicants(@RequestParam("postingId") Long postingId) {
-        return jobApplicationService.getShortlistedApplicants(postingId);
+    @GetMapping("/getShortlistedApplications")
+    public List<JobApplication> getShortlistedApplications(@RequestParam("postingId") Long postingId) {
+        return jobApplicationService.getShortlistedApplications(postingId);
     }
 
-    @GetMapping("/getOfferedApplicants")
-    public List<User> getOfferedApplicants(@RequestParam("postingId") Long postingId) {
-        return jobApplicationService.getOfferedApplicants(postingId);
+    @GetMapping("/getOfferedApplications")
+    public List<JobApplication> getOfferedApplications(@RequestParam("postingId") Long postingId) {
+        return jobApplicationService.getOfferedApplications(postingId);
     }
 
-    @GetMapping("/getRejectedApplicants")
-    public List<User> getRejectedApplicants(@RequestParam("postingId") Long postingId) {
-        return jobApplicationService.getRejectedApplicants(postingId);
+    @GetMapping("/getRejectedApplications")
+    public List<JobApplication> getRejectedApplications(@RequestParam("postingId") Long postingId) {
+        return jobApplicationService.getRejectedApplications(postingId);
     }
 
     @PutMapping("/shortlistApplicant")
