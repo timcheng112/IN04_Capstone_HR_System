@@ -28,9 +28,10 @@ export default function Profile() {
   const [year, setYear] = useState()
   const [recommendations, setRecommendations] = useState([])
   const [works, setWorks] = useState([])
-  const [languages, setLanguages] = useState(['English', 'Chinese']);
-  const [skills, setSkills] = useState([])
+  const [languages, setLanguages] = useState([]);
+  const [skills,setSkills] = useState([])
   const [userSkills, setUserSkills] = useState([])
+  const [uss, setUSS] = useState([])
   const [refreshKey, setRefreshKey] = useState(0);
   const [addskil, setAddskill] = useState(false)
   const [addCV, setAddCV] = useState(false)
@@ -50,6 +51,9 @@ export default function Profile() {
   const [clfileName, setclfileName] = useState("");
   const [tfile, settFileState] = useState("");
   const [tfileName, settfileName] = useState("");
+  const [hashmap, setHashmap] = useState(null);
+  const [skillIds, setSkillIds] = useState([]);
+  const [skillLevels, setSkillLevels] = useState([]);
 
   useEffect(() => {
     api.getUserRecommendations(user).
@@ -65,15 +69,98 @@ export default function Profile() {
         setWorks(response.data);
       });
   }, [refreshKey]);
+//  useEffect(() => {
+//    api.getAllSkillsets().
+//      then((response) => {
+//        console.log(response.data);
+//        setSkills(response.data);
+//        console.log(response.data[0]);
+//        setUserSkills([{ skill: response.data[0], level: 1 }, { skill: response.data[1], level: 3 }])
+//      });
+//  }, []);
   useEffect(() => {
-    api.getAllSkillsets().
-      then((response) => {
-        console.log(response.data);
-        setSkills(response.data);
-        console.log(response.data[0]);
-        setUserSkills([{ skill: response.data[0], level: 1 }, { skill: response.data[1], level: 3 }])
-      });
-  }, []);
+      var list = []
+      var ids = [];
+      var levels = [];
+
+      api.getUserQualificationInformation(user).
+        then((response) => {
+          console.log(response.data);
+          setFirstName(response.data.user.firstName);
+          setLastName(response.data.user.lastName);
+          setCitizenship(response.data.user.citizenship);
+          setRace(response.data.user.race);
+          setAboutMe(response.data.personalStatement);
+          if (response.data.highestEducation === "O") {
+            setLevel("O Level");
+          } else if (response.data.highestEducation === "N") {
+            setLevel("N Level");
+          } else if (response.data.highestEducation === "A") {
+            setLevel("A Level");
+          } else {
+            setLevel(response.data.highestEducation)
+          }
+          setSchool(response.data.schoolName);
+          setYear(response.data.schoolGradYear);
+          setUserQualificationInfo(response.data);
+          setLanguages(response.data.languagesSpoken);
+          setUserSkills(response.data.userSkills);
+          response.data.userSkills.map(item => list.push({skill : item.skillset.skillsetName, level : item.skillLevel}))
+          console.log(list);
+          setUSS(list);
+          console.log("AA");
+        });
+      api.getAllSkillsets().
+        then((response) => {
+            console.log(response.data);
+            setSkills(response.data);
+            var skillMap = new Map();
+            response.data.map(item => skillMap.set(item.skillsetName, item.skillsetId));
+            console.log(skillMap.size);
+            setHashmap(skillMap);
+            list.forEach((item) => {
+                  ids.push(skillMap.get(item.skill));
+                  levels.push(item.level);
+              })
+              console.log(ids);
+              console.log(levels);
+              console.log(skillMap);
+              setSkillIds(ids);
+              setSkillLevels(levels);
+            console.log("AAAA")
+        });
+
+    }, []);
+  useEffect(() => {
+    console.log("languages")
+    console.log(languages);
+  }, [languages])
+  useEffect(() => {
+    console.log("userSkills")
+    console.log(userSkills);
+  }, [userSkills])
+  useEffect(() => {
+    console.log("uss")
+    console.log(uss);
+    console.log("userSkills")
+    console.log(userSkills);
+    console.log(hashmap);
+    let ids = [];
+    let levels = [];
+    uss.forEach((item) => {
+        ids.push(hashmap.get(item.skill));
+        levels.push(item.level);
+    })
+//    if (new Set(ids).size !== ids.length) {
+//        console.log("duplicate located")
+//    } else {
+//        console.log("duplicate not located")
+//    }
+    console.log(ids);
+    console.log(levels);
+    setSkillIds(ids);
+    setSkillLevels(levels);
+  }, [uss])
 
   function handleFile(e) {
     console.log(e.target.files, "--");
@@ -109,9 +196,33 @@ export default function Profile() {
       }
     } else {
       alert("No file uploaded");
-    }
+    }}
 
+  function updateUserDetails() {
+    console.log("UPDATING USER DETAILSSSSS");
+    api.updateUserDetails(user, firstName, lastName, aboutMe, level, school, year, citizenship, race, languages)
+        .then((response) => {
+            console.log("update user details ok");
+        })
+        .catch((error) => {
+            setError(error);
+        })
+    var len = skillIds.length;
+    var map = new Map();
+    for (var i = 0; i < len; i++) {
+        map.set(parseInt(skillIds[i]), parseInt(skillLevels[i]));
+    }
+    console.log(map);
+    //TODO: set skillset not working yet
+//    api.setSkillsets(user, map)
+//        .then((response) => {
+//            console.log("set user skillsets ok")
+//        })
+//        .catch((error) => {
+//            setError(error);
+//        })
   }
+
   // function downloadFile() {
   //   api.downloadDocument(docId).then((response) => {
   //     console.log(docId);
@@ -373,7 +484,9 @@ export default function Profile() {
                   Skills
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
-                  <AddSkillset userSkills={userSkills} setUserSkills={setUserSkills} skills={skills} />
+                  {userSkills.length > 0 && skills.length > 0 &&
+                    <AddSkillset userSkills={userSkills} setUserSkills={setUserSkills} skills={skills} uss={uss} setUSS={setUSS}/>
+                  }
                 </div>
               </div>
 
@@ -515,6 +628,7 @@ export default function Profile() {
             <div className="flex justify-end">
               <button
                 type="submit"
+                onClick = {() => updateUserDetails()}
                 className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Save

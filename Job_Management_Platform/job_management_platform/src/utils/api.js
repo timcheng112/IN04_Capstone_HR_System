@@ -175,7 +175,14 @@ const api = {
     return axios.put(`http://localhost:9191/api/qualification/saveUserSkillsets?userId=${userId}`
     ,userskills);
   },
-
+//  setUserSkillsets(userId, skillIds, skillLevels) {
+//    return axios.put(`http://localhost:9191/api/qualification/setUserSkillsets?userId=${userId}`
+//    , skillIds, skillLevels);
+//  },
+  setSkillsets(userId, map) {
+    return axios.post(`http://localhost:9191/api/qualification/setSkillsets?userId=${userId}`
+    ,map);
+  },
   // Job Posting
   getAllJobPosts() {
     return axios.get(`http://localhost:9191/api/jobposting/getAllJobPosts`);
