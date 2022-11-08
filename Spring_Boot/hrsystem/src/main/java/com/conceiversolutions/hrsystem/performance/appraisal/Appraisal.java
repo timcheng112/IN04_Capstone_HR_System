@@ -24,10 +24,7 @@ public class Appraisal {
     private Long appraisalId;
     @Column(name = "appraisal_year")
     private String appraisalYear;
-    @Column(name = "start_date")
-    private LocalDate startDate;
-    @Column(name = "end_date")
-    private LocalDate endDate;
+    private String status;
     private String strengths;
     private String weaknesses;
     private Integer rating;
@@ -36,10 +33,10 @@ public class Appraisal {
     private String promotionJustification;
     private Boolean submitted;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "employee")
     private User employee;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "managerAppraising")
     private User managerAppraising;
 
@@ -47,12 +44,9 @@ public class Appraisal {
 
     }
 
-    public Appraisal(String appraisalYear, LocalDate startDate, LocalDate endDate, String strengths, String weaknesses,
-                     Integer rating, Boolean promotion, String promotionJustification, Boolean submitted, User employee,
-                     User managerAppraising) {
+    public Appraisal(String appraisalYear, String status, String strengths, String weaknesses, Integer rating, Boolean promotion, String promotionJustification, Boolean submitted, User employee, User managerAppraising) {
         this.appraisalYear = appraisalYear;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.status = status;
         this.strengths = strengths;
         this.weaknesses = weaknesses;
         this.rating = rating;
@@ -79,20 +73,12 @@ public class Appraisal {
         this.appraisalYear = appraisalYear;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getStrengths() {
@@ -164,8 +150,7 @@ public class Appraisal {
         return "Appraisal{" +
                 "appraisalId=" + appraisalId +
                 ", appraisalYear='" + appraisalYear + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
+                ", status='" + status + '\'' +
                 ", strengths='" + strengths + '\'' +
                 ", weaknesses='" + weaknesses + '\'' +
                 ", rating=" + rating +

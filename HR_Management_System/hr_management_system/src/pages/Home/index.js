@@ -6,10 +6,12 @@ import {
   Bars3Icon,
   BellIcon,
   CalendarDaysIcon,
+  ChartBarIcon,
   CheckBadgeIcon,
   ClipboardDocumentCheckIcon,
   ClipboardDocumentListIcon,
   ClockIcon,
+  PresentationChartLineIcon,
   ReceiptRefundIcon,
   UsersIcon,
   XMarkIcon,
@@ -929,7 +931,7 @@ export default function Home() {
                                 "rounded-lg inline-flex p-3 ring-4 ring-white"
                               )}
                             >
-                              <ClockIcon
+                              <ChartBarIcon
                                 className="h-6 w-6"
                                 aria-hidden="true"
                               />
@@ -982,7 +984,7 @@ export default function Home() {
                                 "rounded-lg inline-flex p-3 ring-4 ring-white"
                               )}
                             >
-                              <AcademicCapIcon
+                              <PresentationChartLineIcon
                                 className="h-6 w-6"
                                 aria-hidden="true"
                               />

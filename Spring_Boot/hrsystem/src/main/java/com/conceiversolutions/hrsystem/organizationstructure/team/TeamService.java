@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+//come back and add relationship - S&A
 @Service
 @AllArgsConstructor
 public class TeamService {
@@ -301,18 +303,18 @@ public class TeamService {
         // remove team members & team head
         List<User> teamMembers = team.getUsers();
 
-        //for loop index will be not be correct if not persisted proper
-        //so need to remove user inside, persist user. then clear teamMember list
+        // for loop index will be not be correct if not persisted proper
+        // so need to remove user inside, persist user. then clear teamMember list
         System.out.println("!!!");
-        if(!teamMembers.isEmpty()){
+        if (!teamMembers.isEmpty()) {
             for (User u : teamMembers) {
                 System.out.println(u);
-    //            removeMemberFromTeam(teamId.intValue(), u.getUserId().intValue());
+                // removeMemberFromTeam(teamId.intValue(), u.getUserId().intValue());
 
                 boolean checker = false;
                 for (Team t1 : u.getTeams()) {
                     if (t1.getTeamId().equals(team.getTeamId())) {
-//                        System.out.println("!!!2");
+                        // System.out.println("!!!2");
                         checker = true;
                         break;
                     }
@@ -326,22 +328,21 @@ public class TeamService {
 
                 u.setTeams(tempTeams);
                 userRepository.save(u);
-//                System.out.println("!!!3");
+                // System.out.println("!!!3");
 
-                }
+            }
         }
-//        System.out.println("!!!4");
+        // System.out.println("!!!4");
         team.setUsers(null);
-//        System.out.println("!!!5");
+        // System.out.println("!!!5");
         team.setTeamHead(null);
 
-//        System.out.println("!!!6");
-//        System.out.println(team.getTeamHead() + "excuse me where are you");
+        // System.out.println("!!!6");
+        // System.out.println(team.getTeamHead() + "excuse me where are you");
         team.getDepartment().removeTeam(team);
-//        System.out.println("!!!7");
-//        System.out.println();
+        // System.out.println("!!!7");
+        // System.out.println();
         teamRepository.save(team);
-
 
         // delete from user team head
         // User th1 = t.getTeamHead();
@@ -350,7 +351,7 @@ public class TeamService {
         // th1.setTeams(tempTeams);
         // userRepository.saveAndFlush(th1);
 
-//        System.out.println("!!!8");
+        // System.out.println("!!!8");
         // delete from team
         dept.removeTeam(team);
         departmentRepository.saveAndFlush(dept);
@@ -367,16 +368,16 @@ public class TeamService {
         rosterRepository.saveAndFlush(ros);
         // rosterRepository.findAll().remove(ros);
 
-//        int o = organizationRepository.findAll().size();
-//        System.out.println(o);
-//        List<Organization> temp = organizationRepository.findAll();
-//        if(!temp.isEmpty()){
-//            for(Organization org: temp){
-//                System.out.println(org);
-////                org.getDepartments()
-//            }
-//            System.out.println();
-//        }
+        // int o = organizationRepository.findAll().size();
+        // System.out.println(o);
+        // List<Organization> temp = organizationRepository.findAll();
+        // if(!temp.isEmpty()){
+        // for(Organization org: temp){
+        // System.out.println(org);
+        //// org.getDepartments()
+        // }
+        // System.out.println();
+        // }
 
         teamRepository.delete(team);
         return teamId + " is deleted successfully";
@@ -396,7 +397,7 @@ public class TeamService {
 
         Department dept = d.get();
         User teamHead = userRepository.findById(Long.valueOf(teamHeadId)).get();
-//        User teamHead = userService.getUser(Long.valueOf(teamHeadId));
+        // User teamHead = userService.getUser(Long.valueOf(teamHeadId));
         if (!teamHead.getUserRole().equals(RoleEnum.MANAGER)) {
             throw new IllegalStateException("User selected is not a Manager, please appoint a manager instead");
         } else if (!teamHead.isEnabled()) {
@@ -423,8 +424,6 @@ public class TeamService {
 
         emptyRoster.setTeam(savedTeam);
         rosterRepository.saveAndFlush(emptyRoster);
-
-
 
         return savedTeam.getTeamId();
     }
@@ -470,7 +469,7 @@ public class TeamService {
         return true;
     }
 
-    public boolean removeMemberFromTeam(Integer userId, Integer teamId ) {
+    public boolean removeMemberFromTeam(Integer userId, Integer teamId) {
         Optional<Team> t = teamRepository.findById(Long.valueOf(teamId));
         if (t.isEmpty()) {
             throw new IllegalStateException("Team does not exist");
@@ -494,15 +493,16 @@ public class TeamService {
             throw new IllegalStateException("Employee is not in the team");
         }
 
-        for(ShiftListItem sli : user.getShiftListItems()){
-
-        }
+//        for(ShiftListItem sli : user.getShiftListItems()){
+//
+//        }
 
         List<Team> tempTeams = user.getTeams();
         tempTeams.remove(team);
 
         user.setTeams(tempTeams);
         team.removeUser(user);
+
 
         userRepository.save(user);
         teamRepository.save(team);
@@ -570,7 +570,7 @@ public class TeamService {
                 + " " + newTeamHead.getLastName();
     }
 
-    public String moveEmployeeToTeam(Integer userId, Integer teamId, Integer newTeamId ) throws Exception {
+    public String moveEmployeeToTeam(Integer userId, Integer teamId, Integer newTeamId) throws Exception {
         System.out.println("TeamService.moveEmployeeToTeam");
         Optional<Team> t = teamRepository.findById(Long.valueOf(teamId));
         if (t.isEmpty()) {
@@ -582,26 +582,45 @@ public class TeamService {
         Optional<Department> d = departmentRepository.findById(Long.valueOf(deptId));
         Department dept = d.get();
 
-//        Optional<User> u = userRepository.findById(Long.valueOf(userId));
-//        if (u.isEmpty()) {
-//            throw new IllegalStateException("User does not exist");
-//        }
-//        User user = u.get();
+        // Optional<User> u = userRepository.findById(Long.valueOf(userId));
+        // if (u.isEmpty()) {
+        // throw new IllegalStateException("User does not exist");
+        // }
+        // User user = u.get();
 
         // remove team members & team head
-//        List<User> teamMembers = team.getUsers();
-        if(team.getTeamHead().getUserId() == Long.valueOf(userId)){
+        // List<User> teamMembers = team.getUsers();
+        if (team.getTeamHead().getUserId() == Long.valueOf(userId)) {
             throw new Exception("User is team head. Unable to change teams for user until team head is changed.");
         }
 
-        //remove from team and relationships regarding user
+        // remove from team and relationships regarding user
         boolean isRemoved = removeMemberFromTeam(teamId, userId);
-        //add to team and relating to user
+        // add to team and relating to user
         boolean isAdded = addMemberToTeam(newTeamId, userId);
 
-        //need to come back to this and check shifts and drop upcoming roster &/ shifts for user
+        // need to come back to this and check shifts and drop upcoming roster &/ shifts
+        // for user
 
         System.out.println("isRemoved: " + isRemoved + "& isAdded:" + isAdded);
-        return "Member successfully moved to " + newTeamId ;
+        return "Member successfully moved to " + newTeamId;
+    }
+
+    public Long isEmployeeTeamHead(Long employeeId) {
+        List<Team> allTeams = teamRepository.findAll();
+
+        for (Team t : allTeams) {
+            if (t.getTeamHead().getUserId() == employeeId) {
+                System.out.println("Team head found for team " + t.getTeamId());
+                return t.getTeamId();
+            }
+        }
+        return Long.valueOf(-1);
+    }
+
+    public List<User> getManagers() {
+        List<User> managers = teamRepository.findTeamHeads();
+        System.out.println("Managers = " + managers);
+        return managers;
     }
 }
