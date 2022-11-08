@@ -514,6 +514,7 @@ public class JobRequestService {
         // set job request as approved
         jr.setApprover(approver);
         jr.setStatus(JobStatusEnum.APPROVED);
+        jr.setJobPosting(savedJP);
         jobRequestRepository.save(jr);
 
         return true;

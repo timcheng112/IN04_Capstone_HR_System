@@ -232,9 +232,11 @@ public class JobApplicationService {
             DocData cv = docDataRepository.findById(qi.getCv().getDocId()).get();
             newApplication.setCV(cv);
         }
-        if (!file.isEmpty()) {
-            DocData coverLetter = docDataService.uploadDoc(file);
-            newApplication.setCoverLetter(coverLetter);
+        if (null != file) {
+            if (!file.isEmpty()) {
+                DocData coverLetter = docDataService.uploadDoc(file);
+                newApplication.setCoverLetter(coverLetter);
+            }
         }
         if (qi.getTranscript() != null) {
             DocData transcript = docDataRepository.findById(qi.getTranscript().getDocId()).get();
@@ -249,4 +251,75 @@ public class JobApplicationService {
 
         return savedApplication.getApplicationId();
     }
+
+    public List<User> getShortlistedApplicants(Long postingId) {
+        System.out.println("JobApplicationService.getShortlistedApplicants");
+        System.out.println("postingId = " + postingId);
+
+        Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(postingId);
+        if (jobPostingOptional.isEmpty()) {
+            throw new IllegalStateException("Job Posting not found");
+        }
+
+        List<JobApplication> applications = jobApplicationRepository.findApplicationsByPostingId(postingId);
+        List<User> applicants = new ArrayList<>();
+        for (JobApplication ja : applications) {
+            if (ja.getStatus().equals(JobStatusEnum.SHORTLISTED)) {
+                User tempUser = ja.getApplicant();
+                tempUser.nullify();
+                applicants.add(tempUser);
+            }
+        }
+
+        System.out.println("size of shortlisted applicants list is " + applicants.size());
+        return applicants;
+    }
+
+    public List<User> getOfferedApplicants(Long postingId) {
+        System.out.println("JobApplicationService.getOfferedApplicants");
+        System.out.println("postingId = " + postingId);
+
+        Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(postingId);
+        if (jobPostingOptional.isEmpty()) {
+            throw new IllegalStateException("Job Posting not found");
+        }
+
+        List<JobApplication> applications = jobApplicationRepository.findApplicationsByPostingId(postingId);
+        List<User> applicants = new ArrayList<>();
+        for (JobApplication ja : applications) {
+            if (ja.getStatus().equals(JobStatusEnum.OFFERED)) {
+                User tempUser = ja.getApplicant();
+                tempUser.nullify();
+                applicants.add(tempUser);
+            }
+        }
+
+        System.out.println("size of offered applicants list is " + applicants.size());
+        return applicants;
+    }
+
+    public List<User> getRejectedApplicants(Long postingId) {
+        System.out.println("JobApplicationService.getRejectedApplicants");
+        System.out.println("postingId = " + postingId);
+
+        Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(postingId);
+        if (jobPostingOptional.isEmpty()) {
+            throw new IllegalStateException("Job Posting not found");
+        }
+
+        List<JobApplication> applications = jobApplicationRepository.findApplicationsByPostingId(postingId);
+        List<User> applicants = new ArrayList<>();
+        for (JobApplication ja : applications) {
+            if (ja.getStatus().equals(JobStatusEnum.REJECTED)) {
+                User tempUser = ja.getApplicant();
+                tempUser.nullify();
+                applicants.add(tempUser);
+            }
+        }
+
+        System.out.println("size of rejected applicants list is " + applicants.size());
+        return applicants;
+    }
+
+
 }

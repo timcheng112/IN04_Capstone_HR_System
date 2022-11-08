@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.jobmanagement.jobapplication;
 
+import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,5 +53,20 @@ public class JobApplicationController {
                                    @RequestParam("userSkillIds") List<Long> userSkillIds,
                                    @RequestParam("availableStartDate") String availableStartDate) {
         return jobApplicationService.editJobApplication(postingId, userSkillIds, LocalDate.parse(availableStartDate));
+    }
+
+    @GetMapping("/getShortlistedApplicants")
+    public List<User> getShortlistedApplicants(@RequestParam("postingId") Long postingId) {
+        return jobApplicationService.getShortlistedApplicants(postingId);
+    }
+
+    @GetMapping("/getOfferedApplicants")
+    public List<User> getOfferedApplicants(@RequestParam("postingId") Long postingId) {
+        return jobApplicationService.getOfferedApplicants(postingId);
+    }
+
+    @GetMapping("/getRejectedApplicants")
+    public List<User> getRejectedApplicants(@RequestParam("postingId") Long postingId) {
+        return jobApplicationService.getRejectedApplicants(postingId);
     }
 }

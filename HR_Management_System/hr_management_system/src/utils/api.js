@@ -508,6 +508,9 @@ const api = {
   getAllJobPosts() {
     return axios.get(`http://localhost:9191/api/jobposting/getAllJobPosts`);
   },
+  getJobPostByRequest(requestId) {
+    return axios.get(`http://localhost:9191/api/jobposting/getJobPostByRequest?requestId=${requestId}`);
+  },
   closeJobPost(jobPostingId) {
     return axios.put(
       `http://localhost:9191/api/jobposting/closeJobPost?jobPostingId=${jobPostingId}`
@@ -767,6 +770,15 @@ const api = {
   },
   getUserExperiences(userId) {
     return axios.get(`http://localhost:9191/api/qualification/getUserExperiences?userId=${userId}`);
+  },
+  getShortlistedApplicants(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/getShortlistedApplicants?requestId=${requestId}`);
+  },
+  getOfferedApplicants(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/getOfferedApplicants?requestId=${requestId}`);
+  },
+  getRejectedApplicants(postingId) {
+    return axios.get(`http://localhost:9191/api/jobapplications/getRejectedApplicants?requestId=${requestId}`);
   },
 };
 
