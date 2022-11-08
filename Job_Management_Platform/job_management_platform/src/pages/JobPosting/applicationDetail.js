@@ -13,6 +13,7 @@ import {
 import { useLocation } from 'react-router'
 import { getUserId } from "../../utils/Common.js";
 import api from "../../utils/api";
+import { useHistory } from "react-router";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -32,6 +33,7 @@ export default function ApplicationDetail() {
   const [status, setStatus] = useState("");
   const [requirements, setRequirements] = useState([]);
   const [postId, setPostId] = useState()
+  const history = useHistory();
 
   useEffect(() => {
     console.log(location.state.job)
@@ -52,10 +54,12 @@ export default function ApplicationDetail() {
   function accept(){
     api.acceptOffer(getUserId(), postId)
     .then(() => {alert("Successfully accept the offer.")});
+    history.push("/myapplication")
   }
   function reject(){
     api.rejectOffer(getUserId(), postId)
     .then(() => {alert("Successfully reject the offer.")});
+    history.push("/myapplication")
   }
 
   return (
