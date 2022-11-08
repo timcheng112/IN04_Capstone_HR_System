@@ -78,7 +78,7 @@ export default function JobApplicants() {
   }, []);
 
   useEffect(() => {
-    api.findApplicationsByPostingId(location.state.job.postingId)
+    api.getPendingApplicants(location.state.job.postingId)
       .then((response) => {
         setAllCandidates(response.data);
         console.log(response.data)
