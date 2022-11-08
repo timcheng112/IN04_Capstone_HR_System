@@ -258,8 +258,8 @@ public class JobApplicationService {
         return savedApplication.getApplicationId();
     }
 
-    public List<User> getPendingApplicants(Long postingId) {
-        System.out.println("JobApplicationService.getPendingApplicants");
+    public List<JobApplication> getPendingApplications(Long postingId) {
+        System.out.println("JobApplicationService.getPendingApplications");
         System.out.println("postingId = " + postingId);
 
         Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(postingId);
@@ -268,21 +268,20 @@ public class JobApplicationService {
         }
 
         List<JobApplication> applications = jobApplicationRepository.findApplicationsByPostingId(postingId);
-        List<User> applicants = new ArrayList<>();
+        List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.PENDING)) {
-                User tempUser = ja.getApplicant();
-                tempUser.nullify();
-                applicants.add(tempUser);
+                ja.getApplicant().nullify();
+                apps.add(ja);
             }
         }
 
-        System.out.println("size of pending applicants list is " + applicants.size());
-        return applicants;
+        System.out.println("size of pending applications list is " + apps.size());
+        return apps;
     }
 
-    public List<User> getShortlistedApplicants(Long postingId) {
-        System.out.println("JobApplicationService.getShortlistedApplicants");
+    public List<JobApplication> getShortlistedApplications(Long postingId) {
+        System.out.println("JobApplicationService.getShortlistedApplications");
         System.out.println("postingId = " + postingId);
 
         Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(postingId);
@@ -291,21 +290,20 @@ public class JobApplicationService {
         }
 
         List<JobApplication> applications = jobApplicationRepository.findApplicationsByPostingId(postingId);
-        List<User> applicants = new ArrayList<>();
+        List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.SHORTLISTED)) {
-                User tempUser = ja.getApplicant();
-                tempUser.nullify();
-                applicants.add(tempUser);
+                ja.getApplicant().nullify();
+                apps.add(ja);
             }
         }
 
-        System.out.println("size of shortlisted applicants list is " + applicants.size());
-        return applicants;
+        System.out.println("size of shortlisted applications list is " + apps.size());
+        return apps;
     }
 
-    public List<User> getOfferedApplicants(Long postingId) {
-        System.out.println("JobApplicationService.getOfferedApplicants");
+    public List<JobApplication> getOfferedApplications(Long postingId) {
+        System.out.println("JobApplicationService.getOfferedApplications");
         System.out.println("postingId = " + postingId);
 
         Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(postingId);
@@ -314,21 +312,20 @@ public class JobApplicationService {
         }
 
         List<JobApplication> applications = jobApplicationRepository.findApplicationsByPostingId(postingId);
-        List<User> applicants = new ArrayList<>();
+        List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.OFFERED)) {
-                User tempUser = ja.getApplicant();
-                tempUser.nullify();
-                applicants.add(tempUser);
+                ja.getApplicant().nullify();
+                apps.add(ja);
             }
         }
 
-        System.out.println("size of offered applicants list is " + applicants.size());
-        return applicants;
+        System.out.println("size of offered applications list is " + apps.size());
+        return apps;
     }
 
-    public List<User> getRejectedApplicants(Long postingId) {
-        System.out.println("JobApplicationService.getRejectedApplicants");
+    public List<JobApplication> getRejectedApplications(Long postingId) {
+        System.out.println("JobApplicationService.getRejectedApplications");
         System.out.println("postingId = " + postingId);
 
         Optional<JobPosting> jobPostingOptional = jobPostingRepository.findById(postingId);
@@ -337,17 +334,16 @@ public class JobApplicationService {
         }
 
         List<JobApplication> applications = jobApplicationRepository.findApplicationsByPostingId(postingId);
-        List<User> applicants = new ArrayList<>();
+        List<JobApplication> apps = new ArrayList<>();
         for (JobApplication ja : applications) {
             if (ja.getStatus().equals(JobStatusEnum.REJECTED)) {
-                User tempUser = ja.getApplicant();
-                tempUser.nullify();
-                applicants.add(tempUser);
+                ja.getApplicant().nullify();
+                apps.add(ja);
             }
         }
 
-        System.out.println("size of rejected applicants list is " + applicants.size());
-        return applicants;
+        System.out.println("size of rejected applications list is " + apps.size());
+        return apps;
     }
 
 
