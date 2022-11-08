@@ -50,11 +50,12 @@ const Payroll = () => {
   }, []);
 
   useEffect(() => {
-    setSticky(document.getElementById("tabs").getBoundingClientRect().bottom);
+    !isPayrollFormOpen &&
+      setSticky(document.getElementById("tabs").getBoundingClientRect().bottom);
     scrollPosition >= sticky
       ? setIsPayrollTabsGone(true)
       : setIsPayrollTabsGone(false);
-  }, [ref, sticky, scrollPosition]);
+  }, [ref, sticky, scrollPosition, isPayrollFormOpen]);
 
   const tabs = [
     { name: "Overview", current: isOverviewOpen },
@@ -75,9 +76,7 @@ const Payroll = () => {
   const onChangeHandler = (tabName) => {
     if (tabName === "Overview") {
       setFilteredEmployees(
-        employees.filter(
-          (employee) => employee.currentPayInformation.inPayroll
-        )
+        employees.filter((employee) => employee.currentPayInformation.inPayroll)
       );
       setIsOverviewOpen(true);
       setIsPayrollHistoryOpen(false);
@@ -90,7 +89,7 @@ const Payroll = () => {
       setIsPersonalPayrollOpen(false);
     } else if (tabName === "Employees Not In Payroll") {
       setFilteredEmployees(
-        filteredEmployees.filter(
+        employees.filter(
           (employee) => !employee.currentPayInformation.inPayroll
         )
       );
