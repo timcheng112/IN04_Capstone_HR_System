@@ -7,6 +7,7 @@ export default function WorkList({
   templateWorks
 }) {
   const [openView, setOpenView] = useState(false)
+  
 
   return (
     <div className="overflow-hidden bg-white shadow sm:rounded-md max-w-lg">
@@ -25,7 +26,7 @@ export default function WorkList({
                       <div className="flex items-center text-sm text-gray-500">
                         <CalendarIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                         <p>
-                          From to
+                          From {position.startDate} to {position.endDate}
                         </p>
                       </div>
                     </div>

@@ -6,7 +6,7 @@ import {
 import { useState, useEffect } from "react";
 import { useHistory, useLocation } from 'react-router-dom';
 
-export default function ApplicantList({candidates}){
+export default function ApplicantList({candidates,job}){
   const history = useHistory();
   return(
     <ul role="list" className="mt-5 divide-y divide-gray-200 border-t border-gray-200 sm:mt-0 sm:border-t-0">
@@ -35,7 +35,7 @@ export default function ApplicantList({candidates}){
                     <div>
                       <button
                         type='button'
-                        onClick={() => history.push({ pathname: "/hiring/applicantdetail", state: { applicant: candidate.applicant } })}>
+                        onClick={() => history.push({ pathname: "/hiring/applicantdetail", state: { applicant: candidate.applicant, job: job } })}>
                         <ChevronRightIcon
                           className="h-5 w-5 text-gray-400 group-hover:text-gray-700"
                           aria-hidden="true"

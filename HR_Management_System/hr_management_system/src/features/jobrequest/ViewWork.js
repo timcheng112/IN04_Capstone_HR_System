@@ -1,5 +1,5 @@
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import DatePicker from 'react-datepicker';
@@ -15,6 +15,18 @@ export default function ViewWork({ open, setOpen, work }) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [enabled, setEnabled] = useState(work.currentlyWorking)
+
+  useEffect(() => {
+    let yyyy = work.startDate.slice(0, 4)
+    let mm = work.startDate.slice(5, 7)
+    let dd = work.startDate.slice(8, 10)
+    setStartDate(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
+
+    let aaaa = work.endDate.slice(0, 4)
+    let bb = work.endDate.slice(5, 7)
+    let cc = work.endDate.slice(8, 10)
+    setEndDate(new Date(parseInt(aaaa), parseInt(bb), parseInt(cc)))
+  }, []);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -147,21 +159,6 @@ export default function ViewWork({ open, setOpen, work }) {
 
                         </div>
                       </div>
-                    </div>
-                    <div className="flex flex-shrink-0 justify-end px-4 py-4">
-                      <button
-                        type="button"
-                        className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        onClick={() => setOpen(false)}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      >
-                        Save
-                      </button>
                     </div>
                   </form>
                 </Dialog.Panel>
