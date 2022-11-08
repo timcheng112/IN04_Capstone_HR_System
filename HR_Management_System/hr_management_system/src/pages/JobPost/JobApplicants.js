@@ -78,7 +78,7 @@ export default function JobApplicants() {
   }, []);
 
   useEffect(() => {
-    api.getPendingApplicants(location.state.job.postingId)
+    api.getPendingApplications(location.state.job.postingId)
       .then((response) => {
         setAllCandidates(response.data);
         console.log(response.data)
@@ -86,7 +86,7 @@ export default function JobApplicants() {
       .catch((error) => console.log(error));
   }, []);
   useEffect(() => {
-    api.getShortlistedApplicants(location.state.job.postingId)
+    api.getShortlistedApplications(location.state.job.postingId)
       .then((response) => {
         setInterviewCandidates(response.data);
         console.log(response.data)
@@ -94,7 +94,7 @@ export default function JobApplicants() {
       .catch((error) => console.log(error));
   }, []);
   useEffect(() => {
-    api.getOfferedApplicants(location.state.job.postingId)
+    api.getOfferedApplications(location.state.job.postingId)
       .then((response) => {
         setOfferCandidates(response.data);
         console.log(response.data)
@@ -102,7 +102,7 @@ export default function JobApplicants() {
       .catch((error) => console.log(error));
   }, []);
   useEffect(() => {
-    api.getRejectedApplicants(location.state.job.postingId)
+    api.getRejectedApplications(location.state.job.postingId)
       .then((response) => {
         setRejectCandidates(response.data);
         console.log(response.data)
