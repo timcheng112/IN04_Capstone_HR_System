@@ -221,7 +221,7 @@ public class UserConfig {
                                                 true,
                                                 null);
                                 xinyueEmployee.setCurrentPayInformation(
-                                                new PayInformation(new BigDecimal(7000), true, false, xinyueEmployee));
+                                                new PayInformation(new BigDecimal(7000), false, false, xinyueEmployee));
                                 xinyueEmployee.setWorkEmail("xinyue@libro.com");
                                 xinyueEmployee.setEnabled(true);
                                 xinyueEmployee.setCurrentPosition(hrDirector);
@@ -340,7 +340,7 @@ public class UserConfig {
                                                 false,
                                                 null);
                                 bruceEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(10),
-                                                new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), true, false,
+                                                new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), false, false,
                                                 bruceEmployee));
                                 bruceEmployee.setWorkEmail("bruce@libro.com");
                                 bruceEmployee.setEnabled(true);
@@ -393,7 +393,7 @@ public class UserConfig {
                                                 false,
                                                 null);
                                 dianaEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(9),
-                                                new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), true, true,
+                                                new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), false, true,
                                                 dianaEmployee));
                                 dianaEmployee.setWorkEmail("diana@libro.com");
                                 dianaEmployee.setEnabled(true);
