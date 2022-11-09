@@ -45,16 +45,13 @@ export default function JobRequestHR() {
       .then((response) => {
         setRequests(response.data);
         setFilteredRequests(response.data);
-        //        console.log(response.data);
+        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, [refreshKey]);
 
+
   function search(e, items) {
-    //    console.log("e");
-    //    console.log(e);
-    //    console.log("items");
-    //    console.log(items);
 
     const value = e.target.value;
     //    console.log("looking for this value");
@@ -66,15 +63,11 @@ export default function JobRequestHR() {
     var titleFilter = items.filter((x) =>
       finding.some((y) => x.jobTitle.toLowerCase().indexOf(y) != -1)
     );
-    //    console.log("titleFilter")
-    //    console.log(titleFilter)
     titleFilter.forEach((item) => filtered.add(item));
 
     var statusFilter = items.filter((x) =>
       finding.some((y) => x.status.toLowerCase().indexOf(y) != -1)
     );
-    //    console.log("statusFilter")
-    //    console.log(statusFilter)
     statusFilter.forEach((item) => filtered.add(item));
 
     var deptFilter = items.filter((x) =>
@@ -82,8 +75,6 @@ export default function JobRequestHR() {
         (y) => x.department.departmentName.toLowerCase().indexOf(y) != -1
       )
     );
-    //    console.log("deptFilter")
-    //    console.log(deptFilter)
     deptFilter.forEach((item) => filtered.add(item));
 
     var requestorFilter = items.filter((x) =>
@@ -91,13 +82,7 @@ export default function JobRequestHR() {
         (y) => x.requestedBy.firstName.toLowerCase().indexOf(y) != -1
       )
     );
-    //    console.log("requestorFilter")
-    //    console.log(requestorFilter)
     requestorFilter.forEach((item) => filtered.add(item));
-
-    //    console.log("filtered")
-    //    console.log(filtered)
-
     setFilteredRequests(Array.from(filtered));
 
     //    setFilteredRequests(

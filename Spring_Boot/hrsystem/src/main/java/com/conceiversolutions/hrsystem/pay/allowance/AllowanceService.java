@@ -26,7 +26,7 @@ public class AllowanceService {
         if(allowanceOptional.isPresent()){
             return allowanceOptional.get();
         }else{
-            throw new IllegalStateException("Pay Information does not exist.");
+            throw new IllegalStateException("Allowance of id " + id + " does not exist.");
         }
 
     }
@@ -44,8 +44,6 @@ public class AllowanceService {
             throw new IllegalStateException("Payslip does not exist to be updated.");
         }else{
             Allowance a = getAllowance(allowanceId);
-            a.setAmount(allowance.getAmount());
-            a.setAllowanceName(allowance.getAllowanceName());
             a.setRemarks(allowance.getRemarks());
 
             //not yet

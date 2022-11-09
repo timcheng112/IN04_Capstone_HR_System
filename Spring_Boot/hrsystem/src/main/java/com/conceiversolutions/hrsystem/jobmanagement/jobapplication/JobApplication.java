@@ -35,10 +35,12 @@ public class JobApplication {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserSkillset.class)
     @JoinColumn(name = "application_id")
     private List<UserSkillset> userSkills;
-    @OneToOne(targetEntity = JobPosting.class, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(targetEntity = JobPosting.class, fetch = FetchType.LAZY, optional = false)
     private JobPosting jobPosting;
     @Column(name = "available_start_date", nullable = false)
     private LocalDate availableStartDate;
+    @Column(name = "start_date")
+    private LocalDate startDate;
     @Column(name = "last_update_at", nullable = false)
     private LocalDateTime lastUpdatedAt;
 

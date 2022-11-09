@@ -1,20 +1,67 @@
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { Switch } from '@headlessui/react'
+import api from '../../utils/api';
+import { getUserId } from "../../utils/Common.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function ViewWork({ open, setOpen, work }) {
+export default function ViewWork({ open, setOpen, work, refreshKeyHandler }) {
+  const [position, setPosition] = useState(work.positionName)
+  const [company, setCompany] = useState(work.companyName)
+  const [description, setDescription] = useState(work.description)
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [enabled, setEnabled] = useState(work.currentlyWorking)
+  const [user, setUser] = useState(getUserId());
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    let yyyy = work.startDate.slice(0, 4)
+    let mm = work.startDate.slice(5, 7)
+    let dd = work.startDate.slice(8, 10)
+    setStartDate(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
+
+    let aaaa = work.endDate.slice(0, 4)
+    let bb = work.endDate.slice(5, 7)
+    let cc = work.endDate.slice(8, 10)
+    setEndDate(new Date(parseInt(aaaa), parseInt(bb), parseInt(cc)))
+  }, []);
+
+  function save(){
+    var date = startDate.getDate()
+    if (startDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = startDate.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + (month);
+    }
+
+    var helpStartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
+
+    var edate = endDate.getDate()
+    if (endDate.getDate() < 10) {
+      edate = "0" + edate;
+    }
+    var emonth = endDate.getMonth() + 1;
+    if (emonth < 10) {
+      emonth = "0" + (emonth);
+    }
+
+    var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
+
+    api.editUserExperience(user, work.experienceId, position, company,helpStartDate.trim(), helpEndDate.trim(), enabled, description)
+    .then(() => {alert("Successfully edited.");refreshKeyHandler();})
+    .catch((error) => setError(error));
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -63,7 +110,8 @@ export default function ViewWork({ open, setOpen, work }) {
                                   type="text"
                                   name="company-name"
                                   id="company-name"
-                                  value= {work.companyName}
+                                  value={company}
+                                  onChange={e => setCompany(e.target.value)}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -77,7 +125,8 @@ export default function ViewWork({ open, setOpen, work }) {
                                   type="text"
                                   name="project-name"
                                   id="project-name"
-                                  value= {work.positionName}
+                                  value={position}
+                                  onChange={e => setPosition(e.target.value)}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                               </div>
@@ -92,7 +141,8 @@ export default function ViewWork({ open, setOpen, work }) {
                                   name="description"
                                   rows={4}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                  value= {work.description}
+                                  value={description}
+                                  onChange={e => setDescription(e.target.value)}
                                 />
                               </div>
                             </div>
@@ -157,7 +207,8 @@ export default function ViewWork({ open, setOpen, work }) {
                         Cancel
                       </button>
                       <button
-                        type="submit"
+                        type="button"
+                        onClick={()=> save()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save

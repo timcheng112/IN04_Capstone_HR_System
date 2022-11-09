@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
 import lombok.AllArgsConstructor;
@@ -34,12 +35,16 @@ public class JobRequestController {
                                @RequestParam("preferredStartDate") String preferredStartDate,
                                @RequestParam("jobType") String jobType,
                                @RequestParam("jobRole") String jobRole,
-                               @RequestParam("salary") Float salary,
+                               @RequestParam("salaryMin") Float salaryMin,
+                               @RequestParam("salaryMax") Float salaryMax,
                                @RequestParam("jobRequirements") List<Long> jobRequirements,
                                @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamId") Long teamId,
                                @RequestParam("requestedById") Long requestedById,
-                               @RequestParam("jobRequestId") Long jobRequestId) {
+                               @RequestParam("jobRequestId") Long jobRequestId,
+                               @RequestParam("posType") String posType) {
+        System.out.println("jobType");
+        System.out.println(jobType);
         JobTypeEnum jobT = null;
         if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
             jobT = JobTypeEnum.valueOf(jobType);
@@ -49,8 +54,19 @@ public class JobRequestController {
             jobT = JobTypeEnum.PARTTIME;
         }
 
+        System.out.println("posType");
+        System.out.println(posType);
+        PositionTypeEnum posT = null;
+        if (posType.equals("SALESMAN") || posType.equals("CASHIER") || posType.equals("EXECUTIVE")) {
+            posT = PositionTypeEnum.valueOf(posType);
+        } else if (posType.equals("STORE MANAGER")) {
+            posT = PositionTypeEnum.STOREMANAGER;
+        } else {
+            posT = PositionTypeEnum.OFFICEWORKER;
+        }
+
         return jobRequestService.saveJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId, posT);
     }
 
     @PutMapping(path = "/submitJobRequest")
@@ -60,23 +76,38 @@ public class JobRequestController {
                                @RequestParam("preferredStartDate") String preferredStartDate,
                                @RequestParam("jobType") String jobType,
                                @RequestParam("jobRole") String jobRole,
-                               @RequestParam("salary") Float salary,
+                               @RequestParam("salaryMin") Float salaryMin,
+                               @RequestParam("salaryMax") Float salaryMax,
                                @RequestParam("jobRequirements") List<Long> jobRequirements,
                                @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamId") Long teamId,
                                @RequestParam("requestedById") Long requestedById,
-                               @RequestParam("jobRequestId") Long jobRequestId) {
+                               @RequestParam("jobRequestId") Long jobRequestId,
+                                 @RequestParam("posType") String posType) {
+        System.out.println("jobType");
+        System.out.println(jobType);
         JobTypeEnum jobT = null;
-        if (jobType.equals("Contract") || jobType.equals("Intern")) {
+        if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
             jobT = JobTypeEnum.valueOf(jobType);
-        } else if (jobType.equals("Full Time")) {
+        } else if (jobType.equals("FULL TIME")) {
             jobT = JobTypeEnum.FULLTIME;
         } else {
             jobT = JobTypeEnum.PARTTIME;
         }
 
+        System.out.println("posType");
+        System.out.println(posType);
+        PositionTypeEnum posT = null;
+        if (posType.equals("SALESMAN") || posType.equals("CASHIER") || posType.equals("EXECUTIVE")) {
+            posT = PositionTypeEnum.valueOf(posType);
+        } else if (posType.equals("STORE MANAGER")) {
+            posT = PositionTypeEnum.STOREMANAGER;
+        } else {
+            posT = PositionTypeEnum.OFFICEWORKER;
+        }
+
         return jobRequestService.submitJobRequest(jobTitle, jobDescription, justification, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirements, departmentId, requestedById, teamId, jobRequestId);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax), jobRequirements, departmentId, requestedById, teamId, jobRequestId, posT);
     }
 
     @GetMapping(path = "/getJobRequestById")
