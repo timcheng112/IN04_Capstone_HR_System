@@ -18,7 +18,7 @@ const Overview = ({
   openEditPayInformationForm,
   closeEditPayInformationForm,
   openPayslip,
-  onChangeHandler
+  onChangeHandler,
 }) => {
   const date = format(subDays(new Date(), 7), "MMMM yyyy");
   const [selectedEmployee, setSelectedEmployee] = useState();
@@ -71,7 +71,7 @@ const Overview = ({
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
-                          Gross
+                          Basic
                         </th>
                         <th
                           scope="col"
@@ -122,7 +122,12 @@ const Overview = ({
                             </p>
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                            $10,310.00
+                            {/* $10,310.00 */}$
+                            {employee.currentPayInformation.basicSalary
+                              ? employee.currentPayInformation.basicSalary.toLocaleString("en-US") +
+                                "/mth"
+                              : employee.currentPayInformation.basicHourlyPay.toLocaleString("en-US") +
+                                "/hr"}
                             {/* {employee.gross} */}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">

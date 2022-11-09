@@ -15,15 +15,15 @@ public class Payslip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="payslip_id")
     private Long payslipId;
-    @Column(name="month_of_payment", nullable = false)
+    @Column(name="month_of_payment")
     private Integer monthOfPayment;
-    @Column(name="year_of_payslip", nullable = false)
+    @Column(name="year_of_payslip")
     private Integer yearOfPayslip;
-    @Column(name="date_of_payment" ,nullable = false)
+    @Column(name="date_of_payment")
     private LocalDate dateOfPayment;
-    @Column(name="gross_salary", nullable = false)
+    @Column(name="gross_salary")
     private BigDecimal grossSalary;
-    @Column(name="date_generated", nullable = false)
+    @Column(name="date_generated")
     private LocalDate dateGenerated;
     //we cant handle blob yet, null - true
     @OneToOne(targetEntity = DocData.class, fetch = FetchType.LAZY)

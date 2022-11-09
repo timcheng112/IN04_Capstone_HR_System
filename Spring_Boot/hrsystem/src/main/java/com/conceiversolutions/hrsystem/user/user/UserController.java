@@ -6,6 +6,9 @@ import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplate;
+import com.conceiversolutions.hrsystem.pay.deductionTemplate.DeductionTemplate;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.conceiversolutions.hrsystem.user.position.Position;
 
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
@@ -382,5 +385,13 @@ public class UserController {
     public void sendPayslipEmails(@RequestParam("emails") List<String> emails,
             @RequestParam("payslipMonth") String payslipMonth) {
         userService.sendPayslipEmails(emails, payslipMonth);
+    }
+
+    @PutMapping(path = "/payroll/editUserPayrollInformation")
+    public void editUserPayrollInformation(@RequestParam("userId") Long userId,
+            @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo,
+            @RequestBody PayInformation payInformation) {
+        userService.editUserPayrollInformation(userId, bankName, bankAccNo, payInformation.getAllowanceTemplates(),
+                payInformation.getDeductionTemplates());
     }
 }

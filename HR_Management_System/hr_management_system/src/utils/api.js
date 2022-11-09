@@ -866,11 +866,17 @@ const api = {
       `http://localhost:9191/api/team/removeMemberFromTeam?userId=${userId}&teamId=${teamId}`
     );
   },
+<<<<<<< Updated upstream
+=======
+
+  // Payroll
+>>>>>>> Stashed changes
   sendPayslipEmails(emails, payslipMonth) {
     return axios.post(
       `http://localhost:9191/api/user/payroll/sendPayslipEmails?emails=${emails}&payslipMonth=${payslipMonth}`
     );
   },
+<<<<<<< Updated upstream
   getAllAppraisals() {
     return axios.get(`http://localhost:9191/api/appraisal)`);
   },
@@ -904,6 +910,19 @@ const api = {
   businessGoalsReminder(userId){
     return axios.get(`http://localhost:9191/api/goal/businessReminder/${userId}`);
   },
+=======
+  editUserPayrollInformation(
+    userId,
+    bankName,
+    bankAccNo,
+    temp
+  ) {
+    return axios.put(
+      `http://localhost:9191/api/user/payroll/editUserPayrollInformation?userId=${userId}&bankName=${bankName}&bankAccNo=${bankAccNo}`,
+      temp
+    );
+  },
+>>>>>>> Stashed changes
 };
 
 export default api;
