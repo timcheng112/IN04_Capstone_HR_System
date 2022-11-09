@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.jobmanagement.jobposting;
 
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +39,10 @@ public class JobPostingController {
                             @RequestParam("preferredStartDate") String preferredStartDate,
                             @RequestParam("jobType") String jobType,
                             @RequestParam("jobRole") String jobRole,
-                            @RequestParam("salary") Float salary,
-                            @RequestParam("jobRequirements") List<Long> jobRequirementIds) {
+                            @RequestParam("salaryMin") Float salaryMin,
+                            @RequestParam("salaryMax") Float salaryMax,
+                            @RequestParam("jobRequirements") List<Long> jobRequirementIds,
+                            @RequestParam("posType") String posType) {
         JobTypeEnum jobT = null;
         if (jobType.equals("CONTRACT") || jobType.equals("INTERN")) {
             jobT = JobTypeEnum.valueOf(jobType);
@@ -48,8 +51,23 @@ public class JobPostingController {
         } else {
             jobT = JobTypeEnum.PARTTIME;
         }
+        System.out.println("posType");
+        System.out.println(posType);
+        PositionTypeEnum posT = null;
+        if (posType.equals("SALESMAN") || posType.equals("CASHIER") || posType.equals("EXECUTIVE")) {
+            posT = PositionTypeEnum.valueOf(posType);
+        } else if (posType.equals("STORE MANAGER")) {
+            posT = PositionTypeEnum.STOREMANAGER;
+        } else {
+            posT = PositionTypeEnum.OFFICEWORKER;
+        }
 
         return jobPostingService.editJobPost(jobPostingId, jobTitle, jobDescription, LocalDate.parse(preferredStartDate),
-                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salary), jobRequirementIds);
+                jobT, RoleEnum.valueOf(jobRole), BigDecimal.valueOf(salaryMin), BigDecimal.valueOf(salaryMax),jobRequirementIds, posT);
+    }
+
+    @GetMapping(path = "/getJobPostByRequest")
+    public JobPosting getJobPostByRequest(@RequestParam("requestId") Long requestId) {
+        return jobPostingService.getJobPostByRequest(requestId);
     }
 }

@@ -31,6 +31,8 @@ import JobRequestDetailPage from "./pages/JobRequest/RequestDetail";
 import NewJobRequestPage from "./pages/JobRequest/NewRequest";
 import JobRequestHrPage from "./pages/JobRequest/indexHR";
 import JobPostPage from "./pages/JobPost/indexHR";
+import AllApplicantsPage from "./pages/JobPost/JobApplicants";
+import ApplicantDetailPage from "./pages/JobPost/ApplicantDetail";
 
 import VideoPage from "./pages/Video";
 import AllTrainingPage from "./pages/Training/indexAll";
@@ -173,6 +175,16 @@ function App() {
             exact
             path="/hiring/jobpost/details"
             component={JobPostDetailPage}
+          />
+          <PrivateRoute
+            exact
+            path="/hiring/allapplicants"
+            component={AllApplicantsPage}
+          />
+          <PrivateRoute
+            exact
+            path="/hiring/applicantdetail"
+            component={ApplicantDetailPage}
           />
 
           <PrivateRoute exact path="/admin/leaves" component={LeavePage} />

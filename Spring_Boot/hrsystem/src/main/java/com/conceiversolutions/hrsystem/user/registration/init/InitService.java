@@ -1,6 +1,8 @@
 package com.conceiversolutions.hrsystem.user.registration.init;
 
+import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
+import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.address.AddressService;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentService;
@@ -62,6 +64,8 @@ public class InitService {
                 "aloysiusyap@gmail.com",
                 LocalDate.of(1997, 11, 11),
                 GenderEnum.MALE,
+                RaceEnum.CHINESE,
+                CitizenshipEnum.CITIZEN,
                 RoleEnum.MANAGER,
                 false,
                 false,

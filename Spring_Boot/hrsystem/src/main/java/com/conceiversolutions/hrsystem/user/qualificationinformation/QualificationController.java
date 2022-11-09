@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.user.qualificationinformation;
 
 
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
+import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.skillset.userskillset.UserSkillset;
 import com.conceiversolutions.hrsystem.user.recommendation.Recommendation;
 import com.conceiversolutions.hrsystem.user.workexperience.WorkExperience;
@@ -10,7 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin("*")
 @AllArgsConstructor
@@ -31,6 +35,7 @@ public class QualificationController{
     public Long addDocument(@RequestParam("file") MultipartFile file,
                             @RequestParam("userId") Long userId,
                             @RequestParam("documentType") String documentType) throws Exception {
+        System.out.println("document type is " + documentType);
         if (documentType.equals("CV")) {
             return qualificationService.addCVtoUser(file, userId);
         } else if (documentType.equals("Cover Letter")) {
@@ -76,6 +81,16 @@ public class QualificationController{
         return qualificationService.removeUserRecommendation(userId, recoId);
     }
 
+    @PutMapping(path = "/editRecommendation")
+    public Recommendation editRecommendation(@RequestParam("userId") Long userId,
+                                             @RequestParam("recoId") Long recoId,
+                                             @RequestParam("name") String name,
+                                             @RequestParam(value = "phone", required = false) Integer phone,
+                                             @RequestParam("email") String email,
+                                             @RequestParam("relationship") String relationship) {
+        return qualificationService.editRecommendation(userId, recoId, name, phone, email, relationship);
+    }
+
     // Work Experiences
     @PostMapping(path = "/addWorkExperience")
     public Long addWorkExperience(@RequestParam("userId") Long userId,
@@ -102,6 +117,18 @@ public class QualificationController{
         return qualificationService.removeUserExperience(userId, expId);
     }
 
+    @PutMapping(path = "/editUserExperience")
+    public WorkExperience editUserExperience(@RequestParam("userId") Long userId,
+                                             @RequestParam("workExpId") Long workExpId,
+                                             @RequestParam("positionName") String positionName,
+                                             @RequestParam("companyName") String companyName,
+                                             @RequestParam("startDate") String startDate,
+                                             @RequestParam(value = "endDate", required = false, defaultValue = "null") String endDate,
+                                             @RequestParam("currentlyWorking") Boolean currentlyWorking,
+                                             @RequestParam("description") String description) {
+        return qualificationService.editUserExperience(userId, workExpId, positionName, companyName, LocalDate.parse(startDate), LocalDate.parse(endDate), currentlyWorking, description);
+    }
+
     @PutMapping(path = "/saveWorkExperiences")
     public String saveWorkExperiences(@RequestParam("userId") Long userId,
                                                     @RequestBody List<WorkExperience> experiences) {
@@ -120,5 +147,28 @@ public class QualificationController{
         return qualificationService.saveUserSkillsets(userId, userSkills);
     }
 
+    @PostMapping(path = "/setSkillsets")
+    public String setSkillsets(@RequestParam("userId") Long userId,
+                                   @RequestBody Map<Integer, Integer> skillMaps) {
+        System.out.println("QualificationController.setSkillsets");
+        System.out.println(skillMaps);
+        return qualificationService.setUserSkillsets(userId, skillMaps);
+    }
 
+    @GetMapping(path = "/getUserBookmarks")
+    public List<JobPosting> getUserBookmarks(@RequestParam("userId") Long userId) {
+        return qualificationService.getUserBookmarks(userId);
+    }
+
+    @PostMapping(path = "/addUserBookmark")
+    public boolean addUserBookmark(@RequestParam("userId") Long userId,
+                                   @RequestParam("jobPostId") Long jobPostId) {
+        return qualificationService.addUserBookmark(userId, jobPostId);
+    }
+
+    @DeleteMapping(path = "/removeUserBookmark")
+    public boolean removeUserBookmark(@RequestParam("userId") Long userId,
+                                   @RequestParam("jobPostId") Long jobPostId) {
+        return qualificationService.removeUserBookmark(userId, jobPostId);
+    }
 }

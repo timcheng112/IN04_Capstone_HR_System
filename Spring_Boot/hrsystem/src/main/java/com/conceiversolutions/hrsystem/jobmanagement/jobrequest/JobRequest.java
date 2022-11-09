@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobrequest;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobposting.JobPosting;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
@@ -82,6 +83,9 @@ public class JobRequest {
     private LocalDateTime lastEditedDate;
     @OneToOne(fetch = FetchType.LAZY, targetEntity = JobPosting.class)
     private JobPosting jobPosting;
+    @Column(name = "pos_type")
+    @Enumerated(EnumType.STRING)
+    private PositionTypeEnum posType;
 
     public JobRequest() {
     }
