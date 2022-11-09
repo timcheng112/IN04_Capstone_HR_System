@@ -910,12 +910,6 @@ const api = {
   offerApplicant(userId, postingId, startDate, salaryOffered){
     return axios.put(`http://localhost:9191/api/jobapplications/offerApplicant?userId=${userId}&postingId=${postingId}&startDate=${startDate}&salaryOffered=${salaryOffered}`);
   },
-  
-  sendPayslipEmails(emails, payslipMonth) {
-    return axios.post(
-      `http://localhost:9191/api/user/payroll/sendPayslipEmails?emails=${emails}&payslipMonth=${payslipMonth}`
-    );
-  },
   getAllAppraisals() {
     return axios.get(`http://localhost:9191/api/appraisal)`);
   },
@@ -948,6 +942,24 @@ const api = {
   },
   businessGoalsReminder(userId){
     return axios.get(`http://localhost:9191/api/goal/businessReminder/${userId}`);
+  },
+  
+  //payroll
+  sendPayslipEmails(emails, payslipMonth) {
+    return axios.post(
+      `http://localhost:9191/api/user/payroll/sendPayslipEmails?emails=${emails}&payslipMonth=${payslipMonth}`
+    );
+  },
+  editUserPayrollInformation(
+    userId,
+    bankName,
+    bankAccNo,
+    temp
+  ) {
+    return axios.put(
+      `http://localhost:9191/api/user/payroll/editUserPayrollInformation?userId=${userId}&bankName=${bankName}&bankAccNo=${bankAccNo}`,
+      temp
+    );
   },
 };
 
