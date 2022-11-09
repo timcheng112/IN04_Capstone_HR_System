@@ -2599,9 +2599,7 @@ public class UserService implements UserDetailsService {
         }
 
         for (AllowanceTemplate allowance : allowances) {
-            System.out.println("***ALLOWANCE***: " + allowance);
             AllowanceTemplate savedAllowance = allowanceTemplateRepository.saveAndFlush(allowance);
-            System.out.println("***SAVED ALLOWANCE***: " + savedAllowance);
             user.getCurrentPayInformation().addAllowanceTemplate(savedAllowance);
         }
         for (DeductionTemplate deduction : deductions) {
