@@ -79,7 +79,7 @@ const AddTemplateChecklist = () => {
       .catch((error) => console.log(error.response.data.message));
   }, []);
 
-  function createTaskListItem(taskId) {
+  function createTaskListItem(taskId, isLast) {
     console.log("Creating TaskListItem");
     const taskListItem = { isDone: false };
     if (selectedUsers.length > 0) {
@@ -90,37 +90,40 @@ const AddTemplateChecklist = () => {
           .then(() => {
             console.log("Task List Item created");
             if (index === selectedUsers.length - 1) {
-              if(location.state.isOnboarding){
+              if (location.state.isOnboarding) {
                 history.push("/admin/onboardingtemplatechecklists");
-              }
-              else{
+              } else {
                 history.push("/admin/offboardingtemplatechecklists");
               }
-              alert("Successfully created!");
+              if (isLast) {
+                alert("Successfully created!");
+              }
             }
           })
           .catch((error) => {
             console.log(error.response.data.message);
             if (index === selectedUsers.length - 1) {
-              if(location.state.isOnboarding){
+              if (location.state.isOnboarding) {
                 history.push("/admin/onboardingtemplatechecklists");
-              }
-              else{
+              } else {
                 history.push("/admin/offboardingtemplatechecklists");
               }
-              alert("Successfully created!");
+              if (isLast) {
+                alert("Successfully created!");
+              }
             }
           });
       });
     } else {
       console.log("No selected users.");
-      if(location.state.isOnboarding){
+      if (location.state.isOnboarding) {
         history.push("/admin/onboardingtemplatechecklists");
-      }
-      else{
+      } else {
         history.push("/admin/offboardingtemplatechecklists");
       }
-      alert("Successfully created!");
+      if (isLast) {
+        alert("Successfully created!");
+      }
     }
   }
 
@@ -136,7 +139,11 @@ const AddTemplateChecklist = () => {
         taskIds.push(selectedTasks[i].taskId);
       }
       api.addNewChecklist(checklist, taskIds).then((response) => {
-        taskIds.forEach((taskId) => createTaskListItem(taskId));
+        taskIds.forEach((taskId, index) => {
+          index === taskIds.length - 1
+            ? createTaskListItem(taskId, true)
+            : createTaskListItem(taskId, false);
+        });
         // .then((response) => {
         //   history.push("/admin/viewtemplatechecklists");
         //   alert("Successfully created!");
@@ -184,8 +191,8 @@ const AddTemplateChecklist = () => {
           <div className="space-y-6 sm:space-y-5">
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900">
-                New {location.state.isOnboarding ? "Onboarding" : "Offboarding"} Template
-                Checklist
+                New {location.state.isOnboarding ? "Onboarding" : "Offboarding"}{" "}
+                Template Checklist
               </h3>
             </div>
             <div className="space-y-6 sm:space-y-5">
@@ -282,7 +289,11 @@ const AddTemplateChecklist = () => {
             <button
               type="button"
               className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => location.state.isOnboarding ? history.push("/admin/onboardingtemplatechecklists") : history.push("/admin/offboardingtemplatechecklists") }
+              onClick={() =>
+                location.state.isOnboarding
+                  ? history.push("/admin/onboardingtemplatechecklists")
+                  : history.push("/admin/offboardingtemplatechecklists")
+              }
             >
               Cancel
             </button>
