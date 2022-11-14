@@ -42,7 +42,7 @@ public class ChecklistService {
     for (Checklist checklist : checklists) {
       Boolean isAdded = false;
       for (Task task : checklist.getTasks()) {
-        if(task.getIsOnboarding() && !isAdded){
+        if (task.getIsOnboarding() && !isAdded) {
           result.add(checklist);
           isAdded = true;
         }
@@ -62,7 +62,7 @@ public class ChecklistService {
     for (Checklist checklist : checklists) {
       Boolean isAdded = false;
       for (Task task : checklist.getTasks()) {
-        if(!task.getIsOnboarding() && !isAdded){
+        if (!task.getIsOnboarding() && !isAdded) {
           result.add(checklist);
           isAdded = true;
         }
@@ -119,7 +119,7 @@ public class ChecklistService {
       for (Long taskId : taskIds) {
         Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
-        if(!checklist.getTasks().contains(task)){
+        if (!checklist.getTasks().contains(task)) {
           checklist.addTask(task);
         }
       }
@@ -130,7 +130,7 @@ public class ChecklistService {
   public void deleteChecklist(Long checklistId) {
     Checklist checklist = checklistRepository.findById(checklistId)
         .orElseThrow(() -> new IllegalStateException("Checklist with ID: " + checklistId + " does not exist!"));
-    //checklist.setTasks(new ArrayList<>());
+    // checklist.setTasks(new ArrayList<>());
     checklistRepository.deleteById(checklistId);
   }
 }
