@@ -15,4 +15,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("SELECT t FROM Task t WHERE t.isOnboarding = ?1")
     List<Task> findTaskByIsOnboarding(Boolean isOnboarding);
+
+    @Query("SELECT t FROM Task t WHERE t.autoAssign = ?1")
+    List<Task> findTaskByAutoAssign(Boolean autoAssign);
 }

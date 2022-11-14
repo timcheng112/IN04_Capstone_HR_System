@@ -61,6 +61,7 @@ export default function AddTaskModal({
       setName("");
       setDescription("");
       setAssignedEmployees([]);
+      setEnabled(false);
       setShowStepOne(true);
     }
   }, [open]);
@@ -83,6 +84,7 @@ export default function AddTaskModal({
       name: name,
       description: description,
       isOnboarding: true,
+      autoAssign: enabled,
     };
     api
       .addNewTask(task, category.categoryId)

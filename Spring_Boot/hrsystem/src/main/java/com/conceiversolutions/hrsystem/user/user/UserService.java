@@ -1,6 +1,9 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import com.conceiversolutions.hrsystem.administration.task.Task;
+import com.conceiversolutions.hrsystem.administration.task.TaskRepository;
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItemService;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
@@ -81,6 +84,8 @@ public class UserService implements UserDetailsService {
     private final AllowanceTemplateRepository allowanceTemplateRepository;
     private final DeductionTemplateRepository deductionTemplateRepository;
     private final PayslipRepository payslipRepository;
+    private final TaskRepository taskRepository;
+    private final TaskListItemService taskListItemService;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -472,6 +477,15 @@ public class UserService implements UserDetailsService {
                 user.setLeaveQuotas(List.of(savedLQ));
             }
             // TODO : deal with contract
+        }
+
+        // Add auto assigned tasks
+        if (!user.getUserRole().equals(RoleEnum.APPLICANT)) {
+            List<Task> tasks = taskRepository.findTaskByAutoAssign(true);
+            for(Task task : tasks){
+                TaskListItem t = new TaskListItem();
+                taskListItemService.addNewTaskListItem(t, user.getUserId(), task.getTaskId());
+            }
         }
 
         // List<Position> newPositions = user.getPositions();
