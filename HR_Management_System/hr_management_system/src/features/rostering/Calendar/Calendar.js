@@ -36,6 +36,7 @@ const Calendar = ({
   });
 
   const shiftHandler = (person, dayIndex) => {
+    console.log(person)
     for (let i = 0; i < shiftsToBeAdded.length; i++) {
       if (Array.isArray(shiftsToBeAdded[i].userId)) {
         if (

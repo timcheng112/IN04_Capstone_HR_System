@@ -1272,12 +1272,23 @@ public class UserService implements UserDetailsService {
                 }
             }
 
+            List<ShiftListItem> tempShiftListItems = new ArrayList<>();
+            if (u.getShiftListItems() != null) {
+                tempShiftListItems = u.getShiftListItems();
+                for (ShiftListItem shiftListItem : tempShiftListItems) {
+                    shiftListItem.setUser(null);
+                    shiftListItem.getShift().setRoster(null);
+                    shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+                }
+            }
+
             u.nullify();
             u.setTeams(teams);
             u.setTaskListItems(taskListItems);
             u.setCurrentPayInformation(tempPayInformation);
             u.setCurrentPosition(tempPosition);
             u.setPayslips(tempPayslips);
+            u.setShiftListItems(tempShiftListItems);
         }
         return employees;
     }
@@ -2455,7 +2466,8 @@ public class UserService implements UserDetailsService {
     }
 
     public String updateUserDetails(Long userId, String firstName, String lastName, String aboutMe,
-            String educationLevel, String schoolName, Integer gradYear, String citizenship, String race, List<String> languages) {
+            String educationLevel, String schoolName, Integer gradYear, String citizenship, String race,
+            List<String> languages) {
         System.out.println("UserService.updateUserDetails");
         System.out.println("userId = " + userId + ", firstName = " + firstName + ", lastName = " + lastName
                 + ", aboutMe = " + aboutMe + ", educationLevel = " + educationLevel + ", schoolName = " + schoolName
@@ -2471,9 +2483,8 @@ public class UserService implements UserDetailsService {
         user.setCitizenship(c);
 
         EducationEnum education = getEduEnum(educationLevel.toUpperCase());
-        
 
-        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education,schoolName,
+        User updatedUser = qualificationService.updateApplicantProfileDetails(user, aboutMe, education, schoolName,
                 gradYear, languages);
 
         return "User details updated successfully";
