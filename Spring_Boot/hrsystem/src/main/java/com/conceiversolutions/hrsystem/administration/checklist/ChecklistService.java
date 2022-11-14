@@ -40,9 +40,11 @@ public class ChecklistService {
     List<Checklist> checklists = checklistRepository.findAll();
     List<Checklist> result = new ArrayList<>();
     for (Checklist checklist : checklists) {
+      Boolean isAdded = false;
       for (Task task : checklist.getTasks()) {
-        if(task.getIsOnboarding()){
+        if(task.getIsOnboarding() && !isAdded){
           result.add(checklist);
+          isAdded = true;
         }
         task.getCategory().setTasks(new ArrayList<>());
         for (TaskListItem taskListItem : task.getTaskListItems()) {
@@ -58,9 +60,11 @@ public class ChecklistService {
     List<Checklist> checklists = checklistRepository.findAll();
     List<Checklist> result = new ArrayList<>();
     for (Checklist checklist : checklists) {
+      Boolean isAdded = false;
       for (Task task : checklist.getTasks()) {
-        if(!task.getIsOnboarding()){
+        if(!task.getIsOnboarding() && !isAdded){
           result.add(checklist);
+          isAdded = true;
         }
         task.getCategory().setTasks(new ArrayList<>());
         for (TaskListItem taskListItem : task.getTaskListItems()) {

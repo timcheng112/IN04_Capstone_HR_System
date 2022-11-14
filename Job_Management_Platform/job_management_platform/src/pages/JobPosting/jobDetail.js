@@ -80,8 +80,8 @@ export default function JobDetail() {
     <>
       <Sidebar />
       <div className="flex flex-1 flex-col md:pl-64">
-        <header className="bg-gray-50 py-8">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 xl:flex xl:items-center xl:justify-between">
+        <header className="flex bg-gray-50 py-8">
+          <div className="px-4 sm:px-6 lg:px-8 xl:flex xl:items-center xl:justify-between w-full">
             <div className="min-w-0 flex-1">
               <nav className="flex" aria-label="Breadcrumb">
                 <ol role="list" className="flex items-center space-x-4">
@@ -157,7 +157,7 @@ export default function JobDetail() {
           </div>
         </header>
         <main className="pt-8 pb-16">
-          <div className="flex space-x-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="flex space-x-10 mx-auto sm:px-6 lg:px-8">
             <div className="px-4 ">
               <h2 className="flex text-lg font-medium text-gray-900">Description</h2>
             </div>
@@ -171,9 +171,9 @@ export default function JobDetail() {
             />
           </div>
           <div className='py-3' />
-          <div className="flex space-x-12 mx-auto  sm:px-6 lg:px-8">
-            <div className="px-4 ">
-              <h2 className="flex text-lg font-medium text-gray-900">StartDate</h2>
+          <div className="flex space-x-10 mx-auto sm:px-6 lg:px-8">
+            <div className="px-4 bg-green-500">
+              <h2 className="text-lg font-medium text-gray-900 bg-red-500">Start Date</h2>
             </div>
             <textarea
               id="description"
@@ -181,7 +181,7 @@ export default function JobDetail() {
               rows={2}
               disabled
               defaultValue={startDate}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
           </div>
           <div className='py-5' />
