@@ -1,4 +1,4 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Transition, Switch } from "@headlessui/react";
 import { useEffect, useRef } from "react";
 import { Fragment, useState } from "react";
 import { useHistory } from "react-router";
@@ -7,6 +7,10 @@ import AssignTaskToEmployeeList from "./AssignTaskToEmployeeList";
 // import InputText from '../../components/inputText';
 // import TextArea from '../../components/textArea';
 import api from "../../utils/api";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export default function AddTaskModal({
   open,
@@ -18,6 +22,7 @@ export default function AddTaskModal({
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [enabled, setEnabled] = useState(false);
   const [error, setError] = useState(null);
   const [showStepOne, setShowStepOne] = useState(true);
   const [searchParam] = useState([
@@ -104,29 +109,29 @@ export default function AddTaskModal({
     const value = e.target.value;
     isUnassigned
       ? setFilteredUnassignedEmployees(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        )
+        items.filter((item) => {
+          return searchParam.some((newItem) => {
+            return (
+              item[newItem]
+                .toString()
+                .toLowerCase()
+                .indexOf(value.toLowerCase()) > -1
+            );
+          });
+        })
+      )
       : setFilteredAssignedEmployees(
-          items.filter((item) => {
-            return searchParam.some((newItem) => {
-              return (
-                item[newItem]
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) > -1
-              );
-            });
-          })
-        );
+        items.filter((item) => {
+          return searchParam.some((newItem) => {
+            return (
+              item[newItem]
+                .toString()
+                .toLowerCase()
+                .indexOf(value.toLowerCase()) > -1
+            );
+          });
+        })
+      );
   }
 
   function assignEmployeeToTask(employee) {
@@ -236,6 +241,33 @@ export default function AddTaskModal({
                               value={description}
                               onChange={(e) => setDescription(e.target.value)}
                             />
+                          </div>
+                          <div className="inline-flex space-x-4 items-center">
+                          <label
+                            htmlFor="category-name"
+                            className="block text-sm font-medium text-gray-700 mt-2"
+                          >
+                            Auto assign
+                          </label>
+                          <div className="mt-3.5">
+                          <Switch
+                            checked={enabled}
+                            onChange={setEnabled}
+                            className={classNames(
+                              enabled ? 'bg-indigo-600' : 'bg-gray-200',
+                              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+                            )}
+                          >
+                            <span className="sr-only">Use setting</span>
+                            <span
+                              aria-hidden="true"
+                              className={classNames(
+                                enabled ? 'translate-x-5' : 'translate-x-0',
+                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                              )}
+                            />
+                          </Switch>
+                          </div>
                           </div>
                         </form>
                       </div>
