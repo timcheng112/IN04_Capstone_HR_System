@@ -34,6 +34,8 @@ export default function AdminPage(userId) {
   const history = useHistory();
   const [openDeactivate, setOpenDeactivate] = useState(false);
   const [activated, setActivated] = useState(false);
+  const [userInfo, setUserInfo] = useState([]);
+
   useLayoutEffect(() => {
     const isIndeterminate =
       selectedPeople.length > 0 && selectedPeople.length < people.length;
@@ -63,6 +65,15 @@ export default function AdminPage(userId) {
         alert("Unable to get all employees right now");
       });
   }, [userId]);
+
+  // useEffect(() => {
+
+  //   api.getUserInfo(userId).then((response) => {
+  //     setUserInfo(response.data);
+  //     // console.log(userInfo);
+  //   });
+  //   // getUserInfo();
+  // }, []);
 
   function Activate(email) {
     const yes = window.confirm("Are you sure you want to activate user?");
@@ -190,6 +201,7 @@ export default function AdminPage(userId) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
+                    {/* people.filter((u) => u.userId !== userInfo.userId) */}
                     {people.map((person) => (
                       <tr
                         key={person.email}

@@ -66,4 +66,11 @@ public class NotificationController {
     public List<Notification> getReadNotifications(@PathVariable("userId") Long userId) {
         return notificationService.getUserReadNotifications(userId);
     }
+
+    @PostMapping(path="/broadcastMessage")
+    public String broadcastMessage( @RequestParam(name = "notificationTitle", required = false) String notificationTitle,
+                                   @RequestParam(name = "notificationDescription", required = false) String notificationDescription) {
+//        System.out.println("notif.broadcastMessage");
+        return notificationService.broadcastMessage(notificationTitle, notificationDescription);
+    }
 }

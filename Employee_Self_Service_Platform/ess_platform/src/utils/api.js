@@ -14,6 +14,9 @@ const api = {
       `http://${URL}:9191/api/user/login/loginHRMS?workEmail=${workEmail}&password=${password}`
     );
   },
+  getUser(userId){
+    return axios.get(`http://${URL}:9191/api/user/${userId}`);
+  },
 
   // onboarding/offboarding
   getTaskListItems() {

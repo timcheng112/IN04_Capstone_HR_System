@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import { IconButton } from "react-native-paper";
 import NotificationScreen from "../screens/NotificationScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const HomeStack = createNativeStackNavigator();
 
@@ -31,7 +32,7 @@ const HomeNavigator = () => {
         }}
       />
       <HomeStack.Screen
-        name="Notifications"
+        name="Profile"
         component={ProfileScreen}
         options={{
           tabBarLabel: "Profile",

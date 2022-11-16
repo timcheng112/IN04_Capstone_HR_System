@@ -10,12 +10,15 @@ export default function HomeScreen({ navigation }) {
           size={25}
           onPress={() => {
             navigation.navigate("Notifications");
-          } } /><IconButton
+          } } />
+          
+          <IconButton
             icon="human"
             size={25}
             onPress={() => {
               navigation.navigate("Profile");
-            } } /></>
+            } } />
+            </>
       ),
     });
   }, [navigation]);

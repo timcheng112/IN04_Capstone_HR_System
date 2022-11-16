@@ -35,6 +35,8 @@ public class Notification {
         this.description = description;
     }
 
+
+
 //    public Notification(LocalDateTime notifTime, String title, String description, User employee) {
 //        this.notifTime = notifTime;
 //        this.title = title;
