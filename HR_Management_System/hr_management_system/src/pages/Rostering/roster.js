@@ -10,6 +10,7 @@ import InfoPanel from "../../components/rostering/InfoPanel.js";
 import { format, isSameDay, isWeekend, parseISO } from "date-fns";
 import { getUserId } from "../../utils/Common.js";
 import EmptyStateRostering from "../../features/rostering/EmptyStateRostering.js";
+import GenerateFixedShiftsModal from "../../features/rostering/GenerateFixedShiftsModal.js";
 
 export default function Roster() {
   const [open, setOpen] = useState(false);
@@ -23,6 +24,7 @@ export default function Roster() {
   const [teamShifts, setTeamShifts] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const [openPublish, setOpenPublish] = useState(false);
+  const [openGenerateShifts, setOpenGenerateShifts] = useState(false);
 
   console.log(shiftsToBeAdded);
 
@@ -242,6 +244,16 @@ export default function Roster() {
                 >
                   View Template Shifts
                 </button>
+                {selectedTeam && selectedTeam.isOffice && (
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
+                    onClick={() => setOpenGenerateShifts(true)}
+                    disabled={selectedTeam === null}
+                  >
+                    Generate Fixed Shifts
+                  </button>
+                )}
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
@@ -295,6 +307,18 @@ export default function Roster() {
           rosterId={selectedTeam !== null ? selectedTeam.roster.rosterId : ""}
         />
         <AddShiftModal open={open} onClose={() => setOpen(false)} />
+        <GenerateFixedShiftsModal
+          open={openGenerateShifts}
+          onClose={() => setOpenGenerateShifts(false)}
+          rosterId={selectedTeam && selectedTeam.roster.rosterId}
+          team={selectedTeam}
+          checkIfThereExistsShiftOnSameDay={(value) =>
+            checkIfThereExistsShiftOnSameDay(value)
+          }
+          addShiftHandler={(shiftToBeAdded) =>
+            setShiftsToBeAdded(shiftsToBeAdded.concat(shiftToBeAdded))
+          }
+        />
       </div>
     </>
   );
