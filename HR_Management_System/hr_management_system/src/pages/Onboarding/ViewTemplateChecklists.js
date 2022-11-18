@@ -48,6 +48,10 @@ const ViewTemplateChecklists = () => {
       .catch((error) => console.log(error.response.data.message));
   }, [refreshKey]);
 
+  useEffect(() => {
+    console.log(checklists)
+  }, [checklists])
+
   return (
     <div>
       <Navbar />

@@ -621,7 +621,7 @@ export default function Home() {
                           </div>
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
-                              <a href="/home" className="focus:outline-none">
+                              <a href="/rostering" className="focus:outline-none">
                                 {/* Extend touch target to entire panel */}
                                 <span
                                   className="absolute inset-0"
@@ -672,7 +672,7 @@ export default function Home() {
                           </div>
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
-                              <a href="/home" className="focus:outline-none">
+                              <a href="/payroll" className="focus:outline-none">
                                 {/* Extend touch target to entire panel */}
                                 <span
                                   className="absolute inset-0"
@@ -732,7 +732,7 @@ export default function Home() {
                                   className="absolute inset-0"
                                   aria-hidden="true"
                                 />
-                                On-boarding
+                                Onboarding
                               </a>
                             </h3>
                             <p className="mt-2 text-sm text-gray-500">
@@ -786,7 +786,7 @@ export default function Home() {
                                   className="absolute inset-0"
                                   aria-hidden="true"
                                 />
-                                Off-boarding
+                                Offboarding
                               </a>
                             </h3>
                             <p className="mt-2 text-sm text-gray-500">

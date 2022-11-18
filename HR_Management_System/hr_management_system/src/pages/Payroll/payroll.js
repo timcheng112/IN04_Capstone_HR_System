@@ -155,23 +155,37 @@ const Payroll = () => {
   }, [filteredEmployees, query]);
 
   useEffect(() => {
-    api
-      .getAllEmployees()
-      .then((response) => {
-        setEmployees(response.data);
-        setFilteredEmployees(
-          response.data.filter(
-            (employee) => employee.currentPayInformation.inPayroll
-          )
-        );
-      })
-      .catch((error) => console.log(error.response.data.message));
+    if (isEmployeesNotInPayrollOpen) {
+      api
+        .getAllEmployees()
+        .then((response) => {
+          setEmployees(response.data);
+          setFilteredEmployees(
+            response.data.filter(
+              (employee) => !employee.currentPayInformation.inPayroll
+            )
+          );
+        })
+        .catch((error) => console.log(error.response.data.message));
+    } else {
+      api
+        .getAllEmployees()
+        .then((response) => {
+          setEmployees(response.data);
+          setFilteredEmployees(
+            response.data.filter(
+              (employee) => employee.currentPayInformation.inPayroll
+            )
+          );
+        })
+        .catch((error) => console.log(error.response.data.message));
+    }
 
     api
       .getAllDepartments()
       .then((response) => setDepartments(response.data))
       .catch((error) => console.log(error.response.data.message));
-  }, []);
+  }, [isPayrollFormOpen]);
 
   const filterByDepartment = () => {
     setFilteredEmployees([
@@ -311,7 +325,7 @@ const Payroll = () => {
                   />
                 </div>
                 <div className="flex justify-center">
-                  <p className="text-xl font-bold mt-2">Download</p>
+                  <p className="text-xl font-bold mt-2">Export</p>
                 </div>
               </button>
             </PDFDownloadLink>
@@ -354,7 +368,7 @@ const Payroll = () => {
                   />
                 </div>
                 <div className="flex justify-center">
-                  <p className="text-xl font-bold mt-2">Download</p>
+                  <p className="text-xl font-bold mt-2">Export</p>
                 </div>
               </button>
             </PDFDownloadLink>
