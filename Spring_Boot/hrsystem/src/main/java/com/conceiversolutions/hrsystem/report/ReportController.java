@@ -21,8 +21,10 @@ public class ReportController {
 
     @GetMapping(path ="/allReports")
     public List<Report> getAllReports(){
+        System.out.println("ReportService.getAllReports");
         return reportService.getAllReports();
     }
+
 
 
 }
