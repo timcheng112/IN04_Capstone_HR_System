@@ -6,6 +6,9 @@ import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
 import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplate;
+import com.conceiversolutions.hrsystem.pay.deductionTemplate.DeductionTemplate;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.conceiversolutions.hrsystem.user.position.Position;
 
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
@@ -64,10 +67,12 @@ public class UserController {
             @RequestParam("phone") Integer phone,
             @RequestParam("email") String email,
             @RequestParam("dob") String dob,
-            @RequestParam("gender") String gender) {
+            @RequestParam("gender") String gender,
+            @RequestParam("race") String race,
+            @RequestParam("citizenship") String citizenship) {
         System.out.println("UserController.registerNewAccountJMP");
         User newApplicant = new User(firstName, lastName, password, phone, email, LocalDate.parse(dob),
-                GenderEnum.valueOf(gender), RoleEnum.APPLICANT, false, false, null);
+                GenderEnum.valueOf(gender), RaceEnum.valueOf(race), CitizenshipEnum.valueOf(citizenship),RoleEnum.APPLICANT, false, false, null);
         // System.out.println("newApplicant = " + newApplicant.toString());
         try {
             Long applicantId = userService.addNewUser(newApplicant);
@@ -373,8 +378,24 @@ public class UserController {
             @RequestParam("educationLevel") String educationLevel,
             @RequestParam("schoolName") String schoolName,
             @RequestParam("gradYear") Integer gradYear,
+            @RequestParam("citizenship") String citizenship,
+            @RequestParam("race") String race,
             @RequestParam("languages") List<String> languages) {
-        return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear,
+        return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear,citizenship,race,
                 languages);
+    }
+
+    @PostMapping(path = "/payroll/sendPayslipEmails")
+    public void sendPayslipEmails(@RequestParam("emails") List<String> emails,
+            @RequestParam("payslipMonth") String payslipMonth) {
+        userService.sendPayslipEmails(emails, payslipMonth);
+    }
+
+    @PutMapping(path = "/payroll/editUserPayrollInformation")
+    public void editUserPayrollInformation(@RequestParam("userId") Long userId,
+            @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo,
+            @RequestBody PayInformation payInformation) {
+        userService.editUserPayrollInformation(userId, bankName, bankAccNo, payInformation.getAllowanceTemplates(),
+                payInformation.getDeductionTemplates());
     }
 }

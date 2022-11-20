@@ -12,6 +12,7 @@ import com.conceiversolutions.hrsystem.organizationstructure.organization.Organi
 import com.conceiversolutions.hrsystem.organizationstructure.outlet.OutletService;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamService;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.skillset.skillset.SkillsetService;
 import com.conceiversolutions.hrsystem.user.position.Position;
 
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -52,11 +54,21 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // admin1.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(2000), true, false, admin1));
+                                admin1.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(2000), true, false, admin1));
                                 admin1.setWorkEmail("simj@libro.com");
                                 admin1.setEnabled(true);
                                 admin1.setCurrentPosition(adminPosition);
+                                admin1.setBankName("DBS Bank");
+                                admin1.setBankAccNo("0052312891");
+                                Payslip augPayslipAdmin1 = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1800), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipAdmin1 = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1800), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipAdmin1 = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1800), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsAdmin1 = new ArrayList<>();
+                                payslipsAdmin1.add(augPayslipAdmin1);
+                                payslipsAdmin1.add(sepPayslipAdmin1);
+                                payslipsAdmin1.add(octPayslipAdmin1);
+                                admin1.setPayslips(payslipsAdmin1);
                                 userService.initAdmin(admin1);
 
                                 User admin2 = new User(
@@ -73,11 +85,21 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // admin2.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(3000), true, false, admin2));
+                                admin2.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(3000), true, false, admin2));
                                 admin2.setWorkEmail("yapa@libro.com");
                                 admin2.setEnabled(true);
                                 admin2.setCurrentPosition(adminPosition);
+                                admin2.setBankName("UOB Singapore");
+                                admin2.setBankAccNo("0062312891");
+                                Payslip augPayslipAdmin2 = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(2300), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipAdmin2 = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(2300), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipAdmin2 = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(2300), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsAdmin2 = new ArrayList<>();
+                                payslipsAdmin2.add(augPayslipAdmin2);
+                                payslipsAdmin2.add(sepPayslipAdmin2);
+                                payslipsAdmin2.add(octPayslipAdmin2);
+                                admin2.setPayslips(payslipsAdmin2);
                                 userService.initAdmin(admin2);
 
                                 User ceo = new User(
@@ -94,13 +116,23 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // ceo.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(10000), true, false, ceo));
+                                ceo.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(10000), true, false, ceo));
                                 ceo.setWorkEmail("ongj@libro.com");
                                 ceo.setEnabled(true);
                                 ceo.setCurrentPosition(
                                                 new Position("CEO", "CEO position description", JobTypeEnum.FULLTIME,
                                                                 PositionTypeEnum.EXECUTIVE));
+                                ceo.setBankName("Citibank Singapore");
+                                ceo.setBankAccNo("0072312891");
+                                Payslip augPayslipCeo = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(8200), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipCeo = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(8200), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipCeo = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(8200), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsCeo = new ArrayList<>();
+                                payslipsCeo.add(augPayslipCeo);
+                                payslipsCeo.add(sepPayslipCeo);
+                                payslipsCeo.add(octPayslipCeo);
+                                ceo.setPayslips(payslipsCeo);
                                 userService.initAdmin(ceo);
                                 Long ceoId = 3L;
                                 organizationService.addNewOrganization("Libro", ceoId);
@@ -120,14 +152,24 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // matthewManager.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(5000), true, false, matthewManager));
+                                matthewManager.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(5000), true, false, matthewManager));
                                 matthewManager.setWorkEmail("matthew@libro.com");
                                 matthewManager.setEnabled(true);
                                 Position SOMPosition = new Position("Sales Operation Manager",
                                                 "Sales Operation Manager position description", JobTypeEnum.FULLTIME,
                                                 PositionTypeEnum.EXECUTIVE);
                                 matthewManager.setCurrentPosition(SOMPosition);
+                                matthewManager.setBankName("Maybank Singapore");
+                                matthewManager.setBankAccNo("0082316891");
+                                Payslip augPayslipMatthewManager = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(3800), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipMatthewManager = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(3800), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipMatthewManager = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(3800), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsMatthewManager = new ArrayList<>();
+                                payslipsMatthewManager.add(augPayslipMatthewManager);
+                                payslipsMatthewManager.add(sepPayslipMatthewManager);
+                                payslipsMatthewManager.add(octPayslipMatthewManager);
+                                matthewManager.setPayslips(payslipsMatthewManager);
                                 userService.initAdmin(matthewManager);
                                 Long matthewId = 4L;
 
@@ -165,11 +207,21 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // xueqiManager.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(5250), true, false, xueqiManager));
+                                xueqiManager.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(5250), true, false, xueqiManager));
                                 xueqiManager.setWorkEmail("xueqi@libro.com");
                                 xueqiManager.setEnabled(true);
                                 xueqiManager.setCurrentPosition(managerPosition);
+                                xueqiManager.setBankName("Standard Chartered Singapore");
+                                xueqiManager.setBankAccNo("0022386891");
+                                Payslip augPayslipXueqiManager = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(4100), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipXueqiManager = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(4100), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipXueqiManager = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(4100), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsXueqiManager = new ArrayList<>();
+                                payslipsXueqiManager.add(augPayslipXueqiManager);
+                                payslipsXueqiManager.add(sepPayslipXueqiManager);
+                                payslipsXueqiManager.add(octPayslipXueqiManager);
+                                xueqiManager.setPayslips(payslipsXueqiManager);
                                 userService.initAdmin(xueqiManager);
                                 Long xueqiId = 5L;
                                 teamService.addNewTeam("West Mall Team A", xueqiId.intValue(), wmId.intValue(), false,
@@ -191,11 +243,21 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // shihanManager.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(4850), true, false, shihanManager));
+                                shihanManager.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(4850), true, false, shihanManager));
                                 shihanManager.setWorkEmail("shihan@libro.com");
                                 shihanManager.setEnabled(true);
                                 shihanManager.setCurrentPosition(managerPosition);
+                                shihanManager.setBankName("DBS Bank");
+                                shihanManager.setBankAccNo("0069316891");
+                                Payslip augPayslipShihanManager = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(3600), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipShihanManager = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(3600), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipShihanManager = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(3600), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsShihanManager = new ArrayList<>();
+                                payslipsShihanManager.add(augPayslipShihanManager);
+                                payslipsShihanManager.add(sepPayslipShihanManager);
+                                payslipsShihanManager.add(octPayslipShihanManager);
+                                shihanManager.setPayslips(payslipsShihanManager);
                                 userService.initAdmin(shihanManager);
                                 Long shihanId = 6L;
                                 teamService.addNewTeam("NEX Team A", shihanId.intValue(), nexId.intValue(), false, 1);
@@ -220,11 +282,21 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // xinyueEmployee.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(7000), true, false, xinyueEmployee));
+                                xinyueEmployee.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(7000), false, false, xinyueEmployee));
                                 xinyueEmployee.setWorkEmail("xinyue@libro.com");
                                 xinyueEmployee.setEnabled(true);
                                 xinyueEmployee.setCurrentPosition(hrDirector);
+                                xinyueEmployee.setBankName("DBS Bank");
+                                xinyueEmployee.setBankAccNo("0059386891");
+                                Payslip augPayslipXinyueEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(5900), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipXinyueEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(5900), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipXinyueEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(5900), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsXinyueEmployee = new ArrayList<>();
+                                payslipsXinyueEmployee.add(augPayslipXinyueEmployee);
+                                payslipsXinyueEmployee.add(sepPayslipXinyueEmployee);
+                                payslipsXinyueEmployee.add(octPayslipXinyueEmployee);
+                                xinyueEmployee.setPayslips(payslipsXinyueEmployee);
                                 userService.initAdmin(xinyueEmployee);
                                 Long xinyueId = 7L;
 
@@ -259,11 +331,21 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // alisonEmployee.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(4000), true, false, alisonEmployee));
+                                alisonEmployee.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(4000), true, false, alisonEmployee));
                                 alisonEmployee.setWorkEmail("alison@libro.com");
                                 alisonEmployee.setEnabled(true);
                                 alisonEmployee.setCurrentPosition(hrManager);
+                                alisonEmployee.setBankName("DBS Bank");
+                                alisonEmployee.setBankAccNo("0049316891");
+                                Payslip augPayslipAlisonEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(3000), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipAlisonEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(3000), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipAlisonEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(3000), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsAlisonEmployee = new ArrayList<>();
+                                payslipsAlisonEmployee.add(augPayslipAlisonEmployee);
+                                payslipsAlisonEmployee.add(sepPayslipAlisonEmployee);
+                                payslipsAlisonEmployee.add(octPayslipAlisonEmployee);
+                                alisonEmployee.setPayslips(payslipsAlisonEmployee);
                                 userService.initAdmin(alisonEmployee);
                                 Long alisonId = 8L;
                                 teamService.addNewTeam("HR Team", alisonId.intValue(), hrOffice.intValue(), true, 2);
@@ -288,11 +370,21 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // timEmployee.setCurrentPayInformation(
-                                //                 new PayInformation(new BigDecimal(2000), true, false, timEmployee));
+                                timEmployee.setCurrentPayInformation(
+                                                new PayInformation(new BigDecimal(2000), true, false, timEmployee));
                                 timEmployee.setWorkEmail("tim@libro.com");
                                 timEmployee.setEnabled(true);
                                 timEmployee.setCurrentPosition(hrEmployee);
+                                timEmployee.setBankName("DBS Bank");
+                                timEmployee.setBankAccNo("0089812891");
+                                Payslip augPayslipTimEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1100), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipTimEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1100), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipTimEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1100), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsTimEmployee = new ArrayList<>();
+                                payslipsTimEmployee.add(augPayslipTimEmployee);
+                                payslipsTimEmployee.add(sepPayslipTimEmployee);
+                                payslipsTimEmployee.add(octPayslipTimEmployee);
+                                timEmployee.setPayslips(payslipsTimEmployee);
                                 userService.initAdmin(timEmployee);
                                 Long timId = 9L;
                                 teamService.addMemberToTeam(hrTeamId.intValue(), timId.intValue());
@@ -312,11 +404,21 @@ public class UserConfig {
                                                 false,
                                                 true,
                                                 null);
-                                // hedgehogEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(2250), true,
-                                //                 false, hedgehogEmployee));
+                                hedgehogEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(2250), true,
+                                                false, hedgehogEmployee));
                                 hedgehogEmployee.setWorkEmail("hedgehog@libro.com");
                                 hedgehogEmployee.setEnabled(true);
                                 hedgehogEmployee.setCurrentPosition(hrEmployee);
+                                hedgehogEmployee.setBankName("DBS Bank");
+                                hedgehogEmployee.setBankAccNo("0015812891");
+                                Payslip augPayslipHedgehogEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1200), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipHedgehogEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1200), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipHedgehogEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1200), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsHedgehogEmployee = new ArrayList<>();
+                                payslipsHedgehogEmployee.add(augPayslipHedgehogEmployee);
+                                payslipsHedgehogEmployee.add(sepPayslipHedgehogEmployee);
+                                payslipsHedgehogEmployee.add(octPayslipHedgehogEmployee);
+                                hedgehogEmployee.setPayslips(payslipsHedgehogEmployee);
                                 userService.initAdmin(hedgehogEmployee);
                                 Long hedgehogId = 10L;
                                 teamService.addMemberToTeam(hrTeamId.intValue(), hedgehogId.intValue());
@@ -339,12 +441,23 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // bruceEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(10),
-                                //                 new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), true, false,
-                                //                 bruceEmployee));
+                                bruceEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(10),
+                                                new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), false,
+                                                false,
+                                                bruceEmployee));
                                 bruceEmployee.setWorkEmail("bruce@libro.com");
                                 bruceEmployee.setEnabled(true);
                                 bruceEmployee.setCurrentPosition(cashierEmployee);
+                                bruceEmployee.setBankName("UOB Singapore");
+                                bruceEmployee.setBankAccNo("0035812891");
+                                Payslip augPayslipBruceEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1000), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipBruceEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1200), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipBruceEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1100), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsBruceEmployee = new ArrayList<>();
+                                payslipsBruceEmployee.add(augPayslipBruceEmployee);
+                                payslipsBruceEmployee.add(sepPayslipBruceEmployee);
+                                payslipsBruceEmployee.add(octPayslipBruceEmployee);
+                                bruceEmployee.setPayslips(payslipsBruceEmployee);
                                 userService.initAdmin(bruceEmployee);
                                 Long bruceId = 11L;
                                 teamService.addMemberToTeam(wmTeamId.intValue(), bruceId.intValue());
@@ -364,12 +477,22 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // barryEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(10),
-                                //                 new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), true, false,
-                                //                 barryEmployee));
+                                barryEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(10),
+                                                new BigDecimal(20), new BigDecimal(20), new BigDecimal(15), true, false,
+                                                barryEmployee));
                                 barryEmployee.setWorkEmail("barry@libro.com");
                                 barryEmployee.setEnabled(true);
                                 barryEmployee.setCurrentPosition(cashierEmployee);
+                                barryEmployee.setBankName("DBS Bank");
+                                barryEmployee.setBankAccNo("0062112891");
+                                Payslip augPayslipBarryEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1300), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipBarryEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(900), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipBarryEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1250), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsBarryEmployee = new ArrayList<>();
+                                payslipsBarryEmployee.add(augPayslipBarryEmployee);
+                                payslipsBarryEmployee.add(sepPayslipBarryEmployee);
+                                payslipsBarryEmployee.add(octPayslipBarryEmployee);
+                                barryEmployee.setPayslips(payslipsBarryEmployee);
                                 userService.initAdmin(barryEmployee);
                                 Long barryId = 12L;
                                 teamService.addMemberToTeam(nexTeamId.intValue(), barryId.intValue());
@@ -392,12 +515,22 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // dianaEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(9),
-                                //                 new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), true, true,
-                                //                 dianaEmployee));
+                                dianaEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(9),
+                                                new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), false, true,
+                                                dianaEmployee));
                                 dianaEmployee.setWorkEmail("diana@libro.com");
                                 dianaEmployee.setEnabled(true);
                                 dianaEmployee.setCurrentPosition(salesmanEmployee);
+                                dianaEmployee.setBankName("Maybank Singapore");
+                                dianaEmployee.setBankAccNo("0095212891");
+                                Payslip augPayslipDianaEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(900), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipDianaEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(870), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipDianaEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(930), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsDianaEmployee = new ArrayList<>();
+                                payslipsDianaEmployee.add(augPayslipDianaEmployee);
+                                payslipsDianaEmployee.add(sepPayslipDianaEmployee);
+                                payslipsDianaEmployee.add(octPayslipDianaEmployee);
+                                dianaEmployee.setPayslips(payslipsDianaEmployee);
                                 userService.initAdmin(dianaEmployee);
                                 Long dianaId = 13L;
                                 teamService.addMemberToTeam(wmTeamId.intValue(), dianaId.intValue());
@@ -417,12 +550,22 @@ public class UserConfig {
                                                 false,
                                                 false,
                                                 null);
-                                // clarkEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(9),
-                                //                 new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), true, true,
-                                //                 clarkEmployee));
+                                clarkEmployee.setCurrentPayInformation(new PayInformation(new BigDecimal(9),
+                                                new BigDecimal(18), new BigDecimal(18), new BigDecimal(14), true, true,
+                                                clarkEmployee));
                                 clarkEmployee.setWorkEmail("clark@libro.com");
                                 clarkEmployee.setEnabled(true);
                                 clarkEmployee.setCurrentPosition(salesmanEmployee);
+                                clarkEmployee.setBankName("Standard Chartered Singapore");
+                                clarkEmployee.setBankAccNo("0071647423");
+                                Payslip augPayslipClarkEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1340), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipClarkEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1125), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipClarkEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(880), LocalDate.of(2022, 10, 31));
+                                List<Payslip> payslipsClarkEmployee = new ArrayList<>();
+                                payslipsClarkEmployee.add(augPayslipClarkEmployee);
+                                payslipsClarkEmployee.add(sepPayslipClarkEmployee);
+                                payslipsClarkEmployee.add(octPayslipClarkEmployee);
+                                clarkEmployee.setPayslips(payslipsClarkEmployee);
                                 userService.initAdmin(clarkEmployee);
                                 Long clarkId = 14L;
                                 teamService.addMemberToTeam(nexTeamId.intValue(), clarkId.intValue());

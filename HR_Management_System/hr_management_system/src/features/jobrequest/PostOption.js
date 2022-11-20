@@ -1,6 +1,6 @@
 import {
   EyeIcon,
-  PencilSquareIcon,
+  ChevronRightIcon,
   XMarkIcon
 } from "@heroicons/react/20/solid";
 import { useState, useEffect } from "react";
@@ -56,6 +56,15 @@ export default function PostOption({post, refreshKeyHandler}) {
             aria-hidden="true"
           />
           <span className="hidden md:block">Close</span>
+        </button>}
+        {post.status === 'CREATED' && <button
+          type="button"
+          onClick={() =>  history.push({ pathname: "/hiring/allapplicants", state: { job: post }})}
+        >
+          <ChevronRightIcon
+            className="h-5 w-5 text-gray-400 group-hover:text-gray-700"
+            aria-hidden="true"
+          />
         </button>}
       </div>
       <CloseDialog

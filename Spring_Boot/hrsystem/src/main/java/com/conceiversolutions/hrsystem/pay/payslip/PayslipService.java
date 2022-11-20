@@ -76,4 +76,9 @@ public class PayslipService {
     public void deleteAllPayslips(){
         payslipRepository.deleteAll();
     }
+
+    // public List<Payslip> getPayslipsByMonth(Integer monthIndex) {
+        
+    //     return null;
+    // }
 }

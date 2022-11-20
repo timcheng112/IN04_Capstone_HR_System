@@ -38,11 +38,11 @@ export default function Roster() {
   }, [selectedTeam]);
 
   // SHOW WARNING PROMPT ON REFRESH IF EDITS EXIST
-  if (shiftsToBeAdded.length > 0) {
-    window.onbeforeunload = function () {
-      return "Changes made will be lost if you leave the page, are you sure?";
-    };
-  }
+  // if (shiftsToBeAdded.length > 0) {
+  //   window.onbeforeunload = function () {
+  //     return "Changes made will be lost if you leave the page, are you sure?";
+  //   };
+  // }
 
   useEffect(() => {
     api

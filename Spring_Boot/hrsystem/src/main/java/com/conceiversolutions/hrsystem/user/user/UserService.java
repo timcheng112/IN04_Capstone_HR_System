@@ -6,17 +6,26 @@ import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuotaRepository;
 import com.conceiversolutions.hrsystem.engagement.leave.LeaveRepository;
+import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
 import com.conceiversolutions.hrsystem.enums.EducationEnum;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.RaceEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
+import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplate;
+import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplateRepository;
 import com.conceiversolutions.hrsystem.pay.deduction.Deduction;
+import com.conceiversolutions.hrsystem.pay.deductionTemplate.DeductionTemplate;
+import com.conceiversolutions.hrsystem.pay.deductionTemplate.DeductionTemplateRepository;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformationRepository;
+import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
+import com.conceiversolutions.hrsystem.pay.payslip.PayslipRepository;
 import com.conceiversolutions.hrsystem.rostering.roster.Roster;
 import com.conceiversolutions.hrsystem.rostering.roster.RosterRepository;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
@@ -68,6 +77,10 @@ public class UserService implements UserDetailsService {
     private final ShiftListItemService shiftListItemService;
     private final RosterRepository rosterRepository;
     private final QualificationService qualificationService;
+    private final PayInformationRepository payInformationRepository;
+    private final AllowanceTemplateRepository allowanceTemplateRepository;
+    private final DeductionTemplateRepository deductionTemplateRepository;
+    private final PayslipRepository payslipRepository;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -1229,27 +1242,53 @@ public class UserService implements UserDetailsService {
                 t.getDepartment().setOrganization(null);
                 t.getDepartment().setDepartmentHead(null);
             }
+
+            List<TaskListItem> taskListItems = u.getTaskListItems();
             // u.setTaskListItems(null);
-            for (TaskListItem taskListItem : u.getTaskListItems()) {
+            for (TaskListItem taskListItem : taskListItems) {
                 taskListItem.setUser(null);
                 taskListItem.getTask().setTaskListItems(new ArrayList<>());
                 taskListItem.getTask().setCategory(null);
             }
 
-            //nullify other side for pay information, allowance & deduction
+            // nullify other side for pay information, allowance & deduction
+            PayInformation tempPayInformation = null;
             if (u.getCurrentPayInformation() != null) {
-                PayInformation tempPayInformation = u.getCurrentPayInformation();
+                tempPayInformation = u.getCurrentPayInformation();
                 tempPayInformation.setUser(null);
-                for (Allowance allowance: tempPayInformation.getAllowance()) {
-                    allowance.setPayInfo(null);
-                }
-                for (Deduction deduction : tempPayInformation.getDeduction()) {
-                    deduction.setPayInfo(null);
-                }
-                u.nullify();
-                u.setCurrentPayInformation(tempPayInformation);
             }
 
+            Position tempPosition = null;
+            if (u.getCurrentPosition() != null) {
+                tempPosition = u.getCurrentPosition();
+            }
+
+            List<Payslip> tempPayslips = new ArrayList<>();
+            if (u.getPayslips() != null) {
+                tempPayslips = u.getPayslips();
+                for (Payslip payslip : tempPayslips) {
+                    payslip.setPayInformation(null);
+                    payslip.setEmployee(null);
+                }
+            }
+
+            List<ShiftListItem> tempShiftListItems = new ArrayList<>();
+            if (u.getShiftListItems() != null) {
+                tempShiftListItems = u.getShiftListItems();
+                for (ShiftListItem shiftListItem : tempShiftListItems) {
+                    shiftListItem.setUser(null);
+                    shiftListItem.getShift().setRoster(null);
+                    shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+                }
+            }
+
+            u.nullify();
+            u.setTeams(teams);
+            u.setTaskListItems(taskListItems);
+            u.setCurrentPayInformation(tempPayInformation);
+            u.setCurrentPosition(tempPosition);
+            u.setPayslips(tempPayslips);
+            u.setShiftListItems(tempShiftListItems);
         }
         return employees;
     }
@@ -1426,6 +1465,10 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         positionRepository.save(user.getCurrentPosition());
+        payInformationRepository.save(user.getCurrentPayInformation());
+        for (Payslip payslip : user.getPayslips()) {
+            payslipRepository.save(payslip);
+        }
         User newUser = userRepository.saveAndFlush(user);
         return newUser.getUserId();
     }
@@ -2423,15 +2466,21 @@ public class UserService implements UserDetailsService {
     }
 
     public String updateUserDetails(Long userId, String firstName, String lastName, String aboutMe,
-            String educationLevel, String schoolName, Integer gradYear, List<String> languages) {
+            String educationLevel, String schoolName, Integer gradYear, String citizenship, String race,
+            List<String> languages) {
         System.out.println("UserService.updateUserDetails");
         System.out.println("userId = " + userId + ", firstName = " + firstName + ", lastName = " + lastName
                 + ", aboutMe = " + aboutMe + ", educationLevel = " + educationLevel + ", schoolName = " + schoolName
                 + ", gradYear = " + gradYear + ", languages = " + languages);
 
+        RaceEnum r = RaceEnum.valueOf(race.toUpperCase());
+        CitizenshipEnum c = CitizenshipEnum.valueOf(citizenship.toUpperCase());
+
         User user = userRepository.findById(userId).get();
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setRace(r);
+        user.setCitizenship(c);
 
         EducationEnum education = getEduEnum(educationLevel.toUpperCase());
 
@@ -2453,5 +2502,123 @@ public class UserService implements UserDetailsService {
 
         System.out.println("education level is " + edu);
         return edu;
+    }
+
+    public void sendPayslipEmails(List<String> emails, String payslipMonth) {
+        for (String email : emails) {
+            User tempUser = getEmployee(email);
+
+            if (tempUser == null) {
+                throw new IllegalStateException("User does not exist.");
+            }
+
+            emailSender.send(email, buildPayslipEmail(tempUser.getFirstName(), payslipMonth));
+        }
+    }
+
+    public String buildPayslipEmail(String name, String payslipMonth) {
+        return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
+                "\n" +
+                "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
+                "\n" +
+                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n"
+                +
+                "    <tbody><tr>\n" +
+                "      <td width=\"100%\" height=\"53\" bgcolor=\"#0b0c0c\">\n" +
+                "        \n" +
+                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n"
+                +
+                "          <tbody><tr>\n" +
+                "            <td width=\"70\" bgcolor=\"#0b0c0c\" valign=\"middle\">\n" +
+                "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n"
+                +
+                "                  <tbody><tr>\n" +
+                "                    <td style=\"padding-left:10px\">\n" +
+                "                  \n" +
+                "                    </td>\n" +
+                "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n"
+                +
+                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Hi "
+                + name + ", your payslip for " + payslipMonth + " has been issued!</span>\n"
+                +
+                "                    </td>\n" +
+                "                  </tr>\n" +
+                "                </tbody></table>\n" +
+                "              </a>\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "        </tbody></table>\n" +
+                "        \n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table>\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
+                "    <tbody><tr>\n" +
+                "      <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
+                "      <td>\n" +
+                "        \n" +
+                "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n"
+                +
+                "                  <tbody><tr>\n" +
+                "                    <td bgcolor=\"#1D70B8\" width=\"100%\" height=\"10\"></td>\n" +
+                "                  </tr>\n" +
+                "                </tbody></table>\n" +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\" height=\"10\"></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
+                "    <tbody><tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n"
+                +
+                "        \n" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name
+                + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">You can view your payslip on Libro's HRMS or ESS portals! If there are any discrepancies, please inform the HR department.<p>Grow with Libro</p>"
+                +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
+                "\n" +
+                "</div></div>";
+    }
+
+    public void editUserPayrollInformation(Long userId, String bankName, String bankAccNo,
+            List<AllowanceTemplate> allowances,
+            List<DeductionTemplate> deductions) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
+        if (user.getBankName() != bankName) {
+            user.setBankName(bankName);
+        }
+        if (user.getBankAccNo() != bankAccNo) {
+            user.setBankAccNo(bankAccNo);
+        }
+
+        for (AllowanceTemplate allowance : allowances) {
+            AllowanceTemplate savedAllowance = allowanceTemplateRepository.saveAndFlush(allowance);
+            user.getCurrentPayInformation().addAllowanceTemplate(savedAllowance);
+        }
+        for (DeductionTemplate deduction : deductions) {
+            DeductionTemplate savedDeduction = deductionTemplateRepository.saveAndFlush(deduction);
+            user.getCurrentPayInformation().addDeductionTemplate(savedDeduction);
+        }
+
+        user.getCurrentPayInformation().setInPayroll(true);
+        userRepository.save(user);
     }
 }

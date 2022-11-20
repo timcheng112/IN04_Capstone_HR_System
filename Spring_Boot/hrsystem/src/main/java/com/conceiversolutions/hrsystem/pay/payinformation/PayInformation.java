@@ -1,16 +1,23 @@
 package com.conceiversolutions.hrsystem.pay.payinformation;
 
 import com.conceiversolutions.hrsystem.enums.SelfHelpGroupEnum;
+import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplate;
+import com.conceiversolutions.hrsystem.pay.deductionTemplate.DeductionTemplate;
 import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
 import com.conceiversolutions.hrsystem.pay.deduction.Deduction;
 import com.conceiversolutions.hrsystem.user.user.User;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "pay_information")
 public class PayInformation {
@@ -33,26 +40,33 @@ public class PayInformation {
     private BigDecimal eventPhHourlyPay;
     @Column(name = "overtime_hourly_pay", nullable = true)
     private BigDecimal overtimeHourlyPay;
-    @Column(name = "pay_method", nullable = false)
+    @Column(name = "pay_method", nullable = true)
     private String paymentMethod;
-    @Column(name = "in_payroll", nullable = false)
+    @Column(name = "in_payroll", nullable = true)
     private Boolean inPayroll;
     // @OneToOne(mappedBy = "payInformation")
     // @JoinColumn(name = "payslip_id")
     // private Payslip payslip;
 
-    @Column(name = "has_commission", nullable = false)
+    @Column(name = "has_commission", nullable = true)
     private Boolean hasCommission;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "self_help_group")
+    @Column(nullable = true, name = "self_help_group")
     private SelfHelpGroupEnum selfHelpGroup;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "allowanceId")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     // @JoinColumn(name="allowanceId") mappedBy ^ over here suffice for linkage
     private List<Allowance> allowance;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "deductionId")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     // @JoinColumn(name ="deductionId")
     private List<Deduction> deduction;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JoinColumn(name="allowanceId") mappedBy ^ over here suffice for linkage
+    private List<AllowanceTemplate> allowanceTemplates;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JoinColumn(name ="deductionId")
+    private List<DeductionTemplate> deductionTemplates;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -60,6 +74,8 @@ public class PayInformation {
     public PayInformation() {
         this.allowance = new ArrayList<>();
         this.deduction = new ArrayList<>();
+        this.allowanceTemplates = new ArrayList<>();
+        this.deductionTemplates = new ArrayList<>();
     }
 
     public PayInformation(BigDecimal basicSalary, Boolean inPayroll, Boolean hasCommission,
@@ -67,6 +83,28 @@ public class PayInformation {
         this.basicSalary = basicSalary;
         this.inPayroll = inPayroll;
         this.hasCommission = hasCommission;
+        this.user = user;
+    }
+
+    public PayInformation(String payType, BigDecimal basicSalary, BigDecimal basicHourlyPay,
+            BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay,
+            String paymentMethod, Boolean inPayroll, Boolean hasCommission, SelfHelpGroupEnum selfHelpGroup,
+            List<Allowance> allowance, List<Deduction> deduction, List<AllowanceTemplate> allowanceTemplates,
+            List<DeductionTemplate> deductionTemplates, User user) {
+        this.payType = payType;
+        this.basicSalary = basicSalary;
+        this.basicHourlyPay = basicHourlyPay;
+        this.weekendHourlyPay = weekendHourlyPay;
+        this.eventPhHourlyPay = eventPhHourlyPay;
+        this.overtimeHourlyPay = overtimeHourlyPay;
+        this.paymentMethod = paymentMethod;
+        this.inPayroll = inPayroll;
+        this.hasCommission = hasCommission;
+        this.selfHelpGroup = selfHelpGroup;
+        this.allowance = allowance;
+        this.deduction = deduction;
+        this.allowanceTemplates = allowanceTemplates;
+        this.deductionTemplates = deductionTemplates;
         this.user = user;
     }
 
@@ -81,6 +119,8 @@ public class PayInformation {
         this.user = user;
         this.allowance = new ArrayList<>();
         this.deduction = new ArrayList<>();
+        this.allowanceTemplates = new ArrayList<>();
+        this.deductionTemplates = new ArrayList<>();
     }
 
     public PayInformation(Long payInformationId, String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay,
@@ -98,6 +138,8 @@ public class PayInformation {
         this.user = employee;
         this.allowance = new ArrayList<>();
         this.deduction = new ArrayList<>();
+        this.allowanceTemplates = new ArrayList<>();
+        this.deductionTemplates = new ArrayList<>();
     }
 
     public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay,
@@ -127,30 +169,6 @@ public class PayInformation {
         this.selfHelpGroup = selfHelpGroup;
         this.allowance = allowance;
         this.deduction = deduction;
-        this.user = user;
-    }
-
-    public Boolean getHasCommission() {
-        return hasCommission;
-    }
-
-    public void setHasCommission(Boolean hasCommission) {
-        this.hasCommission = hasCommission;
-    }
-
-    public SelfHelpGroupEnum getSelfHelpGroup() {
-        return this.selfHelpGroup;
-    }
-
-    public void setSelfHelpGroup(SelfHelpGroupEnum selfHelpGroup) {
-        this.selfHelpGroup = selfHelpGroup;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
         this.user = user;
     }
 
@@ -240,20 +258,96 @@ public class PayInformation {
         this.deduction = deduction;
     }
 
+    public BigDecimal getBasicSalary() {
+        return basicSalary;
+    }
+
+    public void setBasicSalary(BigDecimal basicSalary) {
+        this.basicSalary = basicSalary;
+    }
+
+    public Boolean getInPayroll() {
+        return inPayroll;
+    }
+
+    public void setInPayroll(Boolean inPayroll) {
+        this.inPayroll = inPayroll;
+    }
+
+    public Boolean getHasCommission() {
+        return hasCommission;
+    }
+
+    public void setHasCommission(Boolean hasCommission) {
+        this.hasCommission = hasCommission;
+    }
+
+    public SelfHelpGroupEnum getSelfHelpGroup() {
+        return selfHelpGroup;
+    }
+
+    public void setSelfHelpGroup(SelfHelpGroupEnum selfHelpGroup) {
+        this.selfHelpGroup = selfHelpGroup;
+    }
+
+    public List<AllowanceTemplate> getAllowanceTemplates() {
+        return allowanceTemplates;
+    }
+
+    public void setAllowanceTemplates(List<AllowanceTemplate> allowanceTemplates) {
+        this.allowanceTemplates = allowanceTemplates;
+    }
+
+    public List<DeductionTemplate> getDeductionTemplates() {
+        return deductionTemplates;
+    }
+
+    public void setDeductionTemplates(List<DeductionTemplate> deductionTemplates) {
+        this.deductionTemplates = deductionTemplates;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void addAllowanceTemplate(AllowanceTemplate allowanceTemplate) {
+        this.allowanceTemplates.add(allowanceTemplate);
+    }
+
+    public void removeAllowanceTemplate(AllowanceTemplate allowanceTemplate) {
+        this.allowanceTemplates.remove(allowanceTemplate);
+    }
+
+    public void addDeductionTemplate(DeductionTemplate deductionTemplate) {
+        this.deductionTemplates.add(deductionTemplate);
+    }
+
+    public void removeDeductionTemplate(DeductionTemplate deductionTemplate) {
+        this.deductionTemplates.remove(deductionTemplate);
+    }
+
     @Override
     public String toString() {
         return "PayInformation{" +
                 "payInformationId=" + payInformationId +
                 ", payType='" + payType + '\'' +
+                ", basicSalary=" + basicSalary +
                 ", basicHourlyPay=" + basicHourlyPay +
                 ", weekendHourlyPay=" + weekendHourlyPay +
                 ", eventPhHourlyPay=" + eventPhHourlyPay +
                 ", overtimeHourlyPay=" + overtimeHourlyPay +
                 ", paymentMethod='" + paymentMethod + '\'' +
+                ", inPayroll=" + inPayroll +
                 ", hasCommission=" + hasCommission +
                 ", selfHelpGroup=" + selfHelpGroup +
                 ", allowance=" + allowance +
                 ", deduction=" + deduction +
+                ", allowanceTemplates=" + allowanceTemplates +
+                ", deductionTemplates=" + deductionTemplates +
                 ", user=" + user +
                 '}';
     }

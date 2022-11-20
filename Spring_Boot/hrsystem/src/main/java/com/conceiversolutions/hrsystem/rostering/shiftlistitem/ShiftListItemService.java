@@ -129,11 +129,12 @@ public class ShiftListItemService {
         if (shiftListItem != null) {
             shiftListItem.getShift().setRoster(null);
             shiftListItem.getShift().setShiftListItems(new ArrayList<>());
-            shiftListItem.getUser().setTeams(new ArrayList<>());
-            shiftListItem.getUser().setQualificationInformation(null);
-            shiftListItem.getUser().setPositions(new ArrayList<>());
-            shiftListItem.getUser().setTaskListItems(new ArrayList<>());
-            shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+            // shiftListItem.getUser().setTeams(new ArrayList<>());
+            // shiftListItem.getUser().setQualificationInformation(null);
+            // shiftListItem.getUser().setPositions(new ArrayList<>());
+            // shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+            // shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().nullify();
         }
 
         return shiftListItem;

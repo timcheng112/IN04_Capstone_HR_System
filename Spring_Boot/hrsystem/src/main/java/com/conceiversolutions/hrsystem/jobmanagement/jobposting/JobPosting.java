@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.jobmanagement.jobposting;
 
 import com.conceiversolutions.hrsystem.enums.JobStatusEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.jobmanagement.jobrequest.JobRequest;
 import com.conceiversolutions.hrsystem.skillset.skillset.Skillset;
@@ -21,7 +22,7 @@ import java.util.List;
 @Table(name="job_postings")
 @Getter
 @Setter
-@EqualsAndHashCode
+//@EqualsAndHashCode
 @ToString
 public class JobPosting {
     @Id
@@ -43,7 +44,7 @@ public class JobPosting {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private JobStatusEnum status;
-    @Column(name = "salary", nullable = false, length = 64)
+    @Column(name = "salary", nullable = true, length = 64)
     private BigDecimal salary;
     @Column(name = "salary_min", nullable = true)
     private BigDecimal salaryMin;
@@ -66,6 +67,9 @@ public class JobPosting {
             inverseJoinColumns = @JoinColumn(name = "posting_requirement_id")
     )
     private List<Skillset> jobPostRequirements;
+    @Column(name = "pos_type")
+    @Enumerated(EnumType.STRING)
+    private PositionTypeEnum posType;
 
     public JobPosting() {
     }

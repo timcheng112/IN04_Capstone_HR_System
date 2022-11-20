@@ -53,8 +53,9 @@ export default function AdminPage(userId) {
     api
       .getAllEmployees()
       .then((response) => {
-        console.log(response.data);
-        setEmployees(response.data);
+        const filtered = response.data.filter(e => e.userId + "" !== getUserId())
+        console.log(filtered);
+        setEmployees(filtered);
       })
       .catch((error) => {
         history.push("/");
