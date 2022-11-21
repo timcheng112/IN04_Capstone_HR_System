@@ -17,9 +17,7 @@ export default function ForgotPassword() {
     if (tokenFromUrl.length > 0 && !verified) {
       setToken(tokenFromUrl);
       setVerified(true);
-      api
-        .confirmToken(tokenFromUrl)
-        .then((response) => console.log(response.data));
+
     }
   }, []);
 
@@ -56,7 +54,14 @@ export default function ForgotPassword() {
         .then((response) =>
           api
             .changePassword(response.data, password)
-            .then((response) => alert(response.data)).finally(() => history.push("/"))
+            .then((response) => {
+                alert(response.data);
+                api
+                    .confirmToken(token)
+                    .then((response) => console.log(response.data));
+                }
+            )
+        .finally(() => history.push("/"))
         );
     } else {
       alert("Passwords do not match");
