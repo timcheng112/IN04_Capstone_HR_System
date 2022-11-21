@@ -31,6 +31,8 @@ import JobRequestDetailPage from "./pages/JobRequest/RequestDetail";
 import NewJobRequestPage from "./pages/JobRequest/NewRequest";
 import JobRequestHrPage from "./pages/JobRequest/indexHR";
 import JobPostPage from "./pages/JobPost/indexHR";
+import AllApplicantsPage from "./pages/JobPost/JobApplicants";
+import ApplicantDetailPage from "./pages/JobPost/ApplicantDetail";
 
 import VideoPage from "./pages/Video";
 import AllTrainingPage from "./pages/Training/indexAll";
@@ -56,7 +58,10 @@ import PromotionPage from "./pages/Progression";
 import TransferPage from "./pages/Progression/indexTransfer";
 import GoalsPage from "./pages/Performance/indexGoals";
 import AppraisalsPage from "./pages/Performance/indexAppraisals";
+import AppraisalPage from "./pages/Performance/appraisal";
 import PerformancePage from "./pages/Performance";
+import MyAppraisalPage from "./pages/Performance/myAppraisal";
+
 import PayrollPage from "./pages/Payroll/payroll";
 import PayrollHistoryPage from "./pages/Payroll/PayrollHistory";
 import EmployeesNotInPayrollPage from "./pages/Payroll/EmployeesNotInPayroll";
@@ -171,6 +176,16 @@ function App() {
             path="/hiring/jobpost/details"
             component={JobPostDetailPage}
           />
+          <PrivateRoute
+            exact
+            path="/hiring/allapplicants"
+            component={AllApplicantsPage}
+          />
+          <PrivateRoute
+            exact
+            path="/hiring/applicantdetail"
+            component={ApplicantDetailPage}
+          />
 
           <PrivateRoute exact path="/admin/leaves" component={LeavePage} />
           <PrivateRoute
@@ -225,6 +240,9 @@ function App() {
           />
           <PrivateRoute exact path="/performance" component={PerformancePage} />
           <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
+          <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
+          <PrivateRoute exact path="/performance/appraisal/:appraisalId" component={AppraisalPage} />
+          <PrivateRoute exact path="/performance/myappraisal/:appraisalId" component={MyAppraisalPage} />
           <PrivateRoute
             exact
             path="/performance/appraisals"

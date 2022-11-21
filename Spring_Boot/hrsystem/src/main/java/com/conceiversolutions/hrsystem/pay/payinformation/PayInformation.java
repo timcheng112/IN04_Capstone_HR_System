@@ -42,13 +42,13 @@ public class PayInformation {
     private BigDecimal overtimeHourlyPay;
     @Column(name = "pay_method", nullable = true)
     private String paymentMethod;
-    @Column(name = "in_payroll", nullable = false)
+    @Column(name = "in_payroll", nullable = true)
     private Boolean inPayroll;
     // @OneToOne(mappedBy = "payInformation")
     // @JoinColumn(name = "payslip_id")
     // private Payslip payslip;
 
-    @Column(name = "has_commission", nullable = false)
+    @Column(name = "has_commission", nullable = true)
     private Boolean hasCommission;
 
     @Enumerated(EnumType.STRING)
@@ -86,7 +86,11 @@ public class PayInformation {
         this.user = user;
     }
 
-    public PayInformation(String payType, BigDecimal basicSalary, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay, String paymentMethod, Boolean inPayroll, Boolean hasCommission, SelfHelpGroupEnum selfHelpGroup, List<Allowance> allowance, List<Deduction> deduction, List<AllowanceTemplate> allowanceTemplates, List<DeductionTemplate> deductionTemplates, User user) {
+    public PayInformation(String payType, BigDecimal basicSalary, BigDecimal basicHourlyPay,
+            BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay, BigDecimal overtimeHourlyPay,
+            String paymentMethod, Boolean inPayroll, Boolean hasCommission, SelfHelpGroupEnum selfHelpGroup,
+            List<Allowance> allowance, List<Deduction> deduction, List<AllowanceTemplate> allowanceTemplates,
+            List<DeductionTemplate> deductionTemplates, User user) {
         this.payType = payType;
         this.basicSalary = basicSalary;
         this.basicHourlyPay = basicHourlyPay;
@@ -105,7 +109,7 @@ public class PayInformation {
     }
 
     public PayInformation(BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay,
-                          BigDecimal overtimeHourlyPay, Boolean inPayroll, Boolean hasCommission, User user) {
+            BigDecimal overtimeHourlyPay, Boolean inPayroll, Boolean hasCommission, User user) {
         this.basicHourlyPay = basicHourlyPay;
         this.weekendHourlyPay = weekendHourlyPay;
         this.eventPhHourlyPay = eventPhHourlyPay;
@@ -308,6 +312,22 @@ public class PayInformation {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void addAllowanceTemplate(AllowanceTemplate allowanceTemplate) {
+        this.allowanceTemplates.add(allowanceTemplate);
+    }
+
+    public void removeAllowanceTemplate(AllowanceTemplate allowanceTemplate) {
+        this.allowanceTemplates.remove(allowanceTemplate);
+    }
+
+    public void addDeductionTemplate(DeductionTemplate deductionTemplate) {
+        this.deductionTemplates.add(deductionTemplate);
+    }
+
+    public void removeDeductionTemplate(DeductionTemplate deductionTemplate) {
+        this.deductionTemplates.remove(deductionTemplate);
     }
 
     @Override

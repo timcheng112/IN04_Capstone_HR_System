@@ -65,12 +65,20 @@ public class DeductionTemplate {
         this.amount = amount;
     }
 
-    public Boolean getFlatAmount() {
+    public Boolean getIsFlatAmount() {
         return isFlatAmount;
     }
 
-    public void setFlatAmount(Boolean flatAmount) {
-        isFlatAmount = flatAmount;
+    public void setIsFlatAmount(Boolean isFlatAmount) {
+        this.isFlatAmount = isFlatAmount;
+    }
+
+    public Boolean getIsRecurring() {
+        return isRecurring;
+    }
+
+    public void setIsRecurring(Boolean isRecurring) {
+        this.isRecurring = isRecurring;
     }
 
     public DeductionTypeEnum getDeductionType() {
@@ -79,14 +87,6 @@ public class DeductionTemplate {
 
     public void setDeductionType(DeductionTypeEnum deductionType) {
         this.deductionType = deductionType;
-    }
-
-    public Boolean getRecurring() {
-        return isRecurring;
-    }
-
-    public void setRecurring(Boolean recurring) {
-        isRecurring = recurring;
     }
 
     @Override

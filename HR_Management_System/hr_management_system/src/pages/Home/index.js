@@ -6,10 +6,12 @@ import {
   Bars3Icon,
   BellIcon,
   CalendarDaysIcon,
+  ChartBarIcon,
   CheckBadgeIcon,
   ClipboardDocumentCheckIcon,
   ClipboardDocumentListIcon,
   ClockIcon,
+  PresentationChartLineIcon,
   ReceiptRefundIcon,
   UsersIcon,
   XMarkIcon,
@@ -253,31 +255,31 @@ export default function Home() {
                           <div className="hidden lg:col-span-2 lg:block">
                             <nav className="flex space-x-4">
                               <a
-                                key="Admin"
+                                key="Administrative"
                                 href="/admin/onboarding"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
-                                Admin
+                                Administrative
                               </a>
                               <a
-                                key="Company"
+                                key="Organisation Structure"
                                 href="/vieworg"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
-                                Company
+                                Organisation Structure
                               </a>
                               <a
-                                key="Career"
+                                key="Career Management"
                                 href="/career/promotion"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
-                                Career
+                                Career Management
                               </a>
                               <a
                                 key="Training"
@@ -289,13 +291,13 @@ export default function Home() {
                                 Training
                               </a>
                               <a
-                                key="Welfare"
+                                key="Registration"
                                 href="/register"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
-                                Welfare
+                                Registration
                               </a>
                               {user.hrEmployee && (
                                 <a
@@ -619,7 +621,7 @@ export default function Home() {
                           </div>
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
-                              <a href="/home" className="focus:outline-none">
+                              <a href="/rostering" className="focus:outline-none">
                                 {/* Extend touch target to entire panel */}
                                 <span
                                   className="absolute inset-0"
@@ -670,7 +672,7 @@ export default function Home() {
                           </div>
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
-                              <a href="/home" className="focus:outline-none">
+                              <a href="/payroll" className="focus:outline-none">
                                 {/* Extend touch target to entire panel */}
                                 <span
                                   className="absolute inset-0"
@@ -730,7 +732,7 @@ export default function Home() {
                                   className="absolute inset-0"
                                   aria-hidden="true"
                                 />
-                                On-boarding
+                                Onboarding
                               </a>
                             </h3>
                             <p className="mt-2 text-sm text-gray-500">
@@ -784,7 +786,7 @@ export default function Home() {
                                   className="absolute inset-0"
                                   aria-hidden="true"
                                 />
-                                Off-boarding
+                                Offboarding
                               </a>
                             </h3>
                             <p className="mt-2 text-sm text-gray-500">
@@ -929,7 +931,7 @@ export default function Home() {
                                 "rounded-lg inline-flex p-3 ring-4 ring-white"
                               )}
                             >
-                              <ClockIcon
+                              <ChartBarIcon
                                 className="h-6 w-6"
                                 aria-hidden="true"
                               />
@@ -982,7 +984,7 @@ export default function Home() {
                                 "rounded-lg inline-flex p-3 ring-4 ring-white"
                               )}
                             >
-                              <AcademicCapIcon
+                              <PresentationChartLineIcon
                                 className="h-6 w-6"
                                 aria-hidden="true"
                               />

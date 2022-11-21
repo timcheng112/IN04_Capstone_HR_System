@@ -2,9 +2,15 @@ package com.conceiversolutions.hrsystem.organizationstructure.organization;
 
 import java.util.List;
 
-import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin("*")
@@ -38,5 +44,10 @@ public class OrganizationController {
     public String changeDeptHead(@RequestParam("orgName") String orgName,
                                  @RequestParam("newOrgId") Integer newOrgId) {
         return organizationService.changeOrgHead(orgName, newOrgId);
+    }
+
+    @GetMapping(path = "{employeeId}/isHead")
+    public Long isEmployeeOrganizationHead(@PathVariable("employeeId") Long employeeId) {
+        return organizationService.isEmployeeOrganizationHead(employeeId);
     }
 }

@@ -24,10 +24,10 @@ function classNames(...classes) {
 export default function Navbar() {
   const navigation = [
     { name: "Dashboard", path: "/" },
-    { name: "Admin", path: "/admin/onboarding" },
-    { name: "Company", path: "/vieworg" },
-    { name: "Career", path: "/career/promotion" },
-    { name: "Welfare", path: "/register" },
+    { name: "Administrative", path: "/admin/onboarding" },
+    { name: "Organisation Structure", path: "/vieworg" },
+    { name: "Career Management", path: "/career/promotion" },
+    { name: "Registration", path: "/register" },
     { name: "Hiring", path: "/hiring/jobrequest" },
     { name: "Reports", path: "/reports" },
     { name: "Rostering", path: "/rostering" },
@@ -35,11 +35,11 @@ export default function Navbar() {
   ];
   const navigationHR = [
     { name: "Dashboard", path: "/" },
-    { name: "Admin", path: "/admin/onboarding" },
-    { name: "Company", path: "/vieworg" },
-    { name: "Career", path: "/career/promotion" },
+    { name: "Administrative", path: "/admin/onboarding" },
+    { name: "Organisation Structure", path: "/vieworg" },
+    { name: "Career Management", path: "/career/promotion" },
     { name: "Training", path: "/mytraining" },
-    { name: "Welfare", path: "/register" },
+    { name: "Registration", path: "/register" },
     { name: "Hiring", path: "/hiring/jobrequesthr" },
     { name: "Reports", path: "/reports" },
     { name: "Rostering", path: "/rostering" },

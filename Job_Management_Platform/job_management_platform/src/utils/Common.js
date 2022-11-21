@@ -18,7 +18,7 @@ export const getUserId = () => {
     document.cookie = `userEmail=${tempEmail}; max-age=3600 path=/;`;
     document.cookie = `userSession=${tempId}; max-age=3600; path=/;`;
 
-    console.log('30 more minutes')
+//    console.log('30 more minutes')
 
     const userId = tempId;
     return userId;

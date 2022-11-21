@@ -73,6 +73,10 @@ public class LeaveQuota {
     private Integer NPL; // no pay leave
     @Column(name = "npl_allocated", nullable = false)
     private Integer NPLAllocated;
+    @Column(name = "oil", nullable = false)
+    private Integer OIL; // no pay leave
+    @Column(name = "oil_allocated", nullable = false)
+    private Integer OILAllocated;
 
     public LeaveQuota(Integer year, LeaveQuota previousLeaveQuota, Integer ANLAllocated, Integer MCLAllocated, Integer HPLAllocated, Integer CCLAllocated, Integer MPLAllocated, Integer BDLAllocated, Integer CPLAllocated, Integer ECLAllocated, Integer MALAllocated, Integer NPLAllocated) {
         this.year = year;
@@ -97,6 +101,8 @@ public class LeaveQuota {
         this.MALAllocated = MALAllocated;
         this.NPL = NPLAllocated;
         this.NPLAllocated = NPLAllocated;
+        this.OIL = 0;
+        this.OILAllocated = 0;
     }
 
     public int getAvailableANL() {
@@ -137,7 +143,8 @@ public class LeaveQuota {
         this.MALAllocated = 5;
         this.NPL = proRation(month, 180);
         this.NPLAllocated = proRation(month, 180);
-
+        this.OIL = 0;
+        this.OILAllocated = 0;
         return this;
     }
 

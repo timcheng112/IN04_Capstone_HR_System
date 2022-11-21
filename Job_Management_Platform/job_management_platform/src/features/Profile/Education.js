@@ -7,73 +7,26 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Education() {
-  const people = [
-    { id: 1, name: 'Wade Cooper' },
-    { id: 2, name: 'Arlene Mccoy' },
-    { id: 3, name: 'Devon Webb' },
-  ]
-  const [selected, setSelected] = useState(people[2])
+export default function Education({level,setLevel,school, setSchool, year, setYear}) {
   return (
     <div>
 
       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 ">
-        <Listbox value={selected} onChange={setSelected}>
-          {({ open }) => (
-            <>
-              <div className="relative mt-1">
-                <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                  <span className="block truncate">{selected.name}</span>
-                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                    <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                  </span>
-                </Listbox.Button>
-
-                <Transition
-                  show={open}
-                  as={Fragment}
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
-                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                    {people.map((person) => (
-                      <Listbox.Option
-                        key={person.id}
-                        className={({ active }) =>
-                          classNames(
-                            active ? 'text-white bg-indigo-600' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-8 pr-4'
-                          )
-                        }
-                        value={person}
-                      >
-                        {({ selected, active }) => (
-                          <>
-                            <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
-                              {person.name}
-                            </span>
-
-                            {selected ? (
-                              <span
-                                className={classNames(
-                                  active ? 'text-white' : 'text-indigo-600',
-                                  'absolute inset-y-0 left-0 flex items-center pl-1.5'
-                                )}
-                              >
-                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                              </span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </Transition>
-              </div>
-            </>
-          )}
-        </Listbox>
+        <select
+          id="level"
+          name="level"
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+          value={level}
+          onChange={(e) => setLevel(e.target.value)}
+        >
+          <option value="O LEVEL">O Level</option>
+          <option value="N LEVEL">N Level</option>
+          <option value="A LEVEL">A Level</option>
+          <option value="DIPLOMA">Diploma</option>
+          <option value="BACHELOR">Bachelor</option>
+          <option value="MASTER">Master</option>
+          <option value="PHD">Phd</option>
+        </select>
       </div>
       <div className='py-4' />
       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 ">
@@ -89,7 +42,8 @@ export default function Education() {
             name="name"
             id="name"
             className="block w-60 border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
-            placeholder="Jane Smith"
+            value={school}
+            onChange={(e) => setSchool(e.target.value)}
           />
         </div>
       </div>
@@ -104,11 +58,13 @@ export default function Education() {
             Graduate Year
           </label>
           <input
-            type="text"
+            type="number"
             name="name"
             id="name"
             className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
             placeholder="YYYY"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
           />
         </div>
       </div>

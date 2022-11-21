@@ -40,9 +40,11 @@ public class ChecklistService {
     List<Checklist> checklists = checklistRepository.findAll();
     List<Checklist> result = new ArrayList<>();
     for (Checklist checklist : checklists) {
+      Boolean isAdded = false;
       for (Task task : checklist.getTasks()) {
-        if(task.getIsOnboarding()){
+        if (task.getIsOnboarding() && !isAdded) {
           result.add(checklist);
+          isAdded = true;
         }
         task.getCategory().setTasks(new ArrayList<>());
         for (TaskListItem taskListItem : task.getTaskListItems()) {
@@ -58,9 +60,11 @@ public class ChecklistService {
     List<Checklist> checklists = checklistRepository.findAll();
     List<Checklist> result = new ArrayList<>();
     for (Checklist checklist : checklists) {
+      Boolean isAdded = false;
       for (Task task : checklist.getTasks()) {
-        if(!task.getIsOnboarding()){
+        if (!task.getIsOnboarding() && !isAdded) {
           result.add(checklist);
+          isAdded = true;
         }
         task.getCategory().setTasks(new ArrayList<>());
         for (TaskListItem taskListItem : task.getTaskListItems()) {
@@ -115,7 +119,7 @@ public class ChecklistService {
       for (Long taskId : taskIds) {
         Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
-        if(!checklist.getTasks().contains(task)){
+        if (!checklist.getTasks().contains(task)) {
           checklist.addTask(task);
         }
       }
@@ -126,7 +130,7 @@ public class ChecklistService {
   public void deleteChecklist(Long checklistId) {
     Checklist checklist = checklistRepository.findById(checklistId)
         .orElseThrow(() -> new IllegalStateException("Checklist with ID: " + checklistId + " does not exist!"));
-    //checklist.setTasks(new ArrayList<>());
+    // checklist.setTasks(new ArrayList<>());
     checklistRepository.deleteById(checklistId);
   }
 }

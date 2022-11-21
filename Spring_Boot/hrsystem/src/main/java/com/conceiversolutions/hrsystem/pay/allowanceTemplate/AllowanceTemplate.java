@@ -65,13 +65,23 @@ public class AllowanceTemplate {
         this.amount = amount;
     }
 
-    public Boolean getFlatAmount() {
+
+    public Boolean getIsFlatAmount() {
         return isFlatAmount;
     }
 
-    public void setFlatAmount(Boolean flatAmount) {
-        isFlatAmount = flatAmount;
+    public void setIsFlatAmount(Boolean isFlatAmount) {
+        this.isFlatAmount = isFlatAmount;
     }
+
+    public Boolean getIsRecurring() {
+        return isRecurring;
+    }
+
+    public void setIsRecurring(Boolean isRecurring) {
+        this.isRecurring = isRecurring;
+    }
+
 
     public AllowanceTypeEnum getAllowanceType() {
         return allowanceType;
@@ -79,14 +89,6 @@ public class AllowanceTemplate {
 
     public void setAllowanceType(AllowanceTypeEnum allowanceType) {
         this.allowanceType = allowanceType;
-    }
-
-    public Boolean getRecurring() {
-        return isRecurring;
-    }
-
-    public void setRecurring(Boolean recurring) {
-        isRecurring = recurring;
     }
 
     @Override

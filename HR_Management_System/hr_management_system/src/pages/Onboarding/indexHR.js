@@ -55,7 +55,7 @@ export default function OnboardingHR() {
   return (
     <div>
       <Navbar />
-      <div className="relative bg-green-800">
+      {/* <div className="relative bg-green-800">
         <div className="absolute inset-0">
           <img
             className="h-full w-full object-cover"
@@ -72,7 +72,7 @@ export default function OnboardingHR() {
             Onboarding
           </h1>
         </div>
-      </div>
+      </div> */}
       <div className="flex">
         <div className="flex-1">
           <AdminSidebar pageTitle="Onboarding (HR)" />
