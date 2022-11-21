@@ -1,14 +1,21 @@
 package com.conceiversolutions.hrsystem.engagement.reward;
 
 import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrack;
+import com.conceiversolutions.hrsystem.engagement.rewardtrack.RTRewardInstance;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 //import java.sql.Blob;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table
+@Getter
+@Setter
+@Table(name="rewards")
 public class Reward {
 
     //attributes
@@ -22,12 +29,8 @@ public class Reward {
     private String name;
     @Column(name="reward_description")
     private String description;
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
-    @JoinColumn(name="reward_image")
-    private DocData image;
-    @Column(name="date_claimed")
-    private LocalDate dateClaimed;
-
+    @Column(name = "points_required")
+    private Integer pointsRequired;
     @Column(name="expiry_date")
     private LocalDate expiryDate;
 
@@ -35,85 +38,36 @@ public class Reward {
     @ManyToOne
     @JoinColumn(name="reward_track_id")
     private RewardTrack rewardTrack;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
+    @JoinColumn(name="reward_image")
+    private DocData image;
+    @OneToMany(targetEntity = RTRewardInstance.class, fetch = FetchType.LAZY, mappedBy = "reward")
+    private List<RTRewardInstance> rewardInstances;
 
     //constructors
-    public Reward(String name, String description, DocData image, LocalDate dateClaimed, LocalDate expiryDate) {
+    public Reward(String name, String description, Integer pointsRequired, LocalDate expiryDate, DocData image, RewardTrack rewardTrack) {
+        this();
         this.name = name;
         this.description = description;
         this.image = image;
-        this.dateClaimed = dateClaimed;
         this.expiryDate = expiryDate;
+        this.rewardTrack = rewardTrack;
+        this.pointsRequired = pointsRequired;
+
     }
 
     public Reward() {
-    }
-
-    public Reward(Long rewardId, String name, String description, DocData image, LocalDate dateClaimed, LocalDate expiryDate) {
-        this.rewardId = rewardId;
-        this.name = name;
-        this.description = description;
-        this.image = image;
-        this.dateClaimed = dateClaimed;
-        this.expiryDate = expiryDate;
-    }
-
-    //getters and setters
-    public Long getRewardId() {
-        return rewardId;
-    }
-
-    public void setRewardId(Long rewardId) {
-        this.rewardId = rewardId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public DocData getImage() {
-        return image;
-    }
-
-    public void setImage(DocData image) {
-        this.image = image;
-    }
-
-    public LocalDate getDateClaimed() {
-        return dateClaimed;
-    }
-
-    public void setDateClaimed(LocalDate dateClaimed) {
-        this.dateClaimed = dateClaimed;
-    }
-
-    public LocalDate getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(LocalDate expiryDate) {
-        this.expiryDate = expiryDate;
+        this.rewardInstances = new ArrayList<>();
     }
 
     @Override
     public String toString() {
         return "Reward{" +
-                "id=" + rewardId +
+                "rewardId=" + rewardId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", image=" + image +
-                ", dateClaimed=" + dateClaimed +
+                ", pointsRequired=" + pointsRequired +
+                ", expiryDate=" + expiryDate +
                 '}';
     }
 }
