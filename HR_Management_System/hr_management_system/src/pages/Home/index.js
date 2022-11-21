@@ -255,31 +255,31 @@ export default function Home() {
                           <div className="hidden lg:col-span-2 lg:block">
                             <nav className="flex space-x-4">
                               <a
-                                key="Admin"
+                                key="Administrative"
                                 href="/admin/onboarding"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
-                                Admin
+                                Administrative
                               </a>
                               <a
-                                key="Company"
+                                key="Organisation Structure"
                                 href="/vieworg"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
-                                Company
+                                Organisation Structure
                               </a>
                               <a
-                                key="Career"
+                                key="Career Management"
                                 href="/career/promotion"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
-                                Career
+                                Career Management
                               </a>
                               <a
                                 key="Training"
@@ -291,13 +291,13 @@ export default function Home() {
                                 Training
                               </a>
                               <a
-                                key="Welfare"
+                                key="Registration"
                                 href="/register"
                                 className={classNames(
                                   "text-white text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10"
                                 )}
                               >
-                                Welfare
+                                Registration
                               </a>
                               {user.hrEmployee && (
                                 <a

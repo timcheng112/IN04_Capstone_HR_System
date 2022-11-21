@@ -15,6 +15,8 @@ export default function Register() {
   const [dobMonth, setDobMonth] = useState("");
   const [dobYear, setDobYear] = useState("");
   const [gender, setGender] = useState("Male");
+  const [race, setRace] = useState("Chinese");
+  const [citizenship, setCitizenship] = useState("Citizen");
 
   const history = useHistory();
 
@@ -28,7 +30,7 @@ export default function Register() {
     console.log("dob = " + dob);
     if (password === confirmPassword) {
       api
-        .register(firstName, lastName, password, phone, email, dob, gender.toUpperCase())
+        .register(firstName, lastName, password, phone, email, dob, gender.toUpperCase(), race.toUpperCase(), citizenship.toUpperCase())
         .then(() => {
           api
             .getUserIdByEmail(email)
@@ -247,7 +249,46 @@ export default function Register() {
                 </select>
               </div>
             </div>
-
+            <div>
+                <label
+                  htmlFor="race"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Race
+                </label>
+                <select
+                  id="race"
+                  name="race"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+                  value={race}
+                  onChange={(r) => setRace(r.target.value)}
+                >
+                  <option>Chinese</option>
+                  <option>Malay</option>
+                  <option>Indian</option>
+                  <option>Eurasian</option>
+                  <option>Others</option>
+                </select>
+            </div>
+            <div>
+                <label
+                  htmlFor="citizenship"
+                  className="block text-sm mt-5 font-medium text-gray-700"
+                >
+                  Citizenship
+                </label>
+                <select
+                  id="citizenship"
+                  name="citizenship"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
+                  value={citizenship}
+                  onChange={(r) => setCitizenship(r.target.value)}
+                >
+                  <option>Citizen</option>
+                  <option>PR</option>
+                  <option>Foreigner</option>
+                </select>
+            </div>
             <div>
               <button
                 type="submit"
