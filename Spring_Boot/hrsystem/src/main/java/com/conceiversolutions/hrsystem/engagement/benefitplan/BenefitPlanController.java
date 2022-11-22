@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.benefitplan;
 
 import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitType;
+import com.conceiversolutions.hrsystem.enums.BenefitTypeEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,10 @@ public class BenefitPlanController {
         return benefitPlanService.getAllBenefitTypes();
     }
 
-    @GetMapping("getBenefitType")
-    public BenefitType getBenefitType(@RequestParam("benefitTypeId") Long benefitTypeId) {
-        return benefitPlanService.getBenefitType(benefitTypeId);
-    }
+//    @GetMapping("getBenefitType")
+//    public BenefitType getBenefitType(@RequestParam("benefitTypeId") Long benefitTypeId) {
+//        return benefitPlanService.getBenefitType(benefitTypeId);
+//    }
 
     // Benefit Plan
     @GetMapping("getAllBenefitPlans")
@@ -33,8 +34,8 @@ public class BenefitPlanController {
     }
 
     @GetMapping("getAllBenefitPlansByType")
-    public List<BenefitPlan> getAllBenefitPlansByType(@RequestParam("benefitTypeId") Long benefitTypeId) {
-        return benefitPlanService.getAllBenefitPlansByType(benefitTypeId);
+    public List<BenefitPlan> getAllBenefitPlansByType(@RequestParam("benefitType") String benefitType) {
+        return benefitPlanService.getAllBenefitPlansByType(BenefitTypeEnum.valueOf(benefitType));
     }
 
     @PostMapping("addBenefitPlan")
@@ -43,9 +44,9 @@ public class BenefitPlanController {
                                @RequestParam("planAmount") Float planAmount,
                                @RequestParam("startDate") String startDate,
                                @RequestParam("endDate") String endDate,
-                               @RequestParam("planTypeId") Long planTypeId) {
+                               @RequestParam("planType") String planType) {
         return benefitPlanService.addBenefitPlan(description, planName, BigDecimal.valueOf(planAmount),
-                LocalDate.parse(startDate), LocalDate.parse(endDate), planTypeId);
+                LocalDate.parse(startDate), LocalDate.parse(endDate), BenefitTypeEnum.valueOf(planType));
     }
 
     @GetMapping("getBenefitPlanById")

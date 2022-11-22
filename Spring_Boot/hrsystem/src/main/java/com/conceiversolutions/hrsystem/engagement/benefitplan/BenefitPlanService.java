@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.engagement.benefitplan;
 import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitType;
 import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitTypeRepository;
 import com.conceiversolutions.hrsystem.engagement.claim.Claim;
+import com.conceiversolutions.hrsystem.enums.BenefitTypeEnum;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -54,21 +55,21 @@ public class BenefitPlanService {
         return benefitPlanRepository.findAll();
     }
 
-    public List<BenefitPlan> getAllBenefitPlansByType(Long benefitTypeId) {
+    public List<BenefitPlan> getAllBenefitPlansByType(BenefitTypeEnum benefitType) {
         System.out.println("BenefitPlanService.getAllBenefitPlansByType");
-        System.out.println("benefitTypeId = " + benefitTypeId);
-        return benefitPlanRepository.findAllByBenefitTypeId(benefitTypeId);
+        System.out.println("benefitType = " + benefitType);
+        return benefitPlanRepository.findAllByBenefitTypeId(benefitType);
     }
 
-    public Long addBenefitPlan(String description, String planName, BigDecimal planAmount, LocalDate startDate, LocalDate endDate, Long planTypeId) {
+    public Long addBenefitPlan(String description, String planName, BigDecimal planAmount, LocalDate startDate, LocalDate endDate, BenefitTypeEnum planType) {
         System.out.println("BenefitPlanService.addBenefitPlan");
-        System.out.println("description = " + description + ", planName = " + planName + ", planAmount = " + planAmount + ", startDate = " + startDate + ", endDate = " + endDate + ", planTypeId = " + planTypeId);
+        System.out.println("description = " + description + ", planName = " + planName + ", planAmount = " + planAmount + ", startDate = " + startDate + ", endDate = " + endDate + ", planType = " + planType);
 
         checkDates(startDate, endDate); // date is invalid
 
 
-        BenefitType type = getBenefitType(planTypeId);
-        BenefitPlan newPlan = new BenefitPlan(description, planName, planAmount, startDate, endDate, type);
+
+        BenefitPlan newPlan = new BenefitPlan(description, planName, planAmount, startDate, endDate, planType);
         BenefitPlan savedPlan = benefitPlanRepository.saveAndFlush(newPlan);
         return savedPlan.getBenefitPlanId();
     }
