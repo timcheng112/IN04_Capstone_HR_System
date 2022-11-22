@@ -18,7 +18,7 @@ public class BenefitPlanController {
 
     // Benefit Type
     @GetMapping("getAllBenefitTypes")
-    public List<BenefitType> getAllBenefitTypes() {
+    public List<BenefitTypeEnum> getAllBenefitTypes() {
         return benefitPlanService.getAllBenefitTypes();
     }
 

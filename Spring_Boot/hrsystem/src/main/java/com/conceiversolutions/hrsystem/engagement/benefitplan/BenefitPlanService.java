@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,21 +34,22 @@ public class BenefitPlanService {
     }
 
     // Benefit Type
-    public List<BenefitType> getAllBenefitTypes() {
+    public List<BenefitTypeEnum> getAllBenefitTypes() {
         System.out.println("BenefitPlanService.getAllBenefitTypes");
-        return benefitTypeRepository.findAll();
+//        return benefitTypeRepository.findAll();
+        return Arrays.stream(BenefitTypeEnum.values()).toList();
     }
 
-    public BenefitType getBenefitType(Long benefitTypeId) {
-        System.out.println("BenefitPlanService.getBenefitType");
-        System.out.println("benefitTypeId = " + benefitTypeId);
-
-        Optional<BenefitType> opt = benefitTypeRepository.findById(benefitTypeId);
-        if (opt.isEmpty()) {
-            throw new IllegalStateException("Benefit Type ID invalid");
-        }
-        return opt.get();
-    }
+//    public BenefitType getBenefitType(Long benefitTypeId) {
+//        System.out.println("BenefitPlanService.getBenefitType");
+//        System.out.println("benefitTypeId = " + benefitTypeId);
+//
+//        Optional<BenefitType> opt = benefitTypeRepository.findById(benefitTypeId);
+//        if (opt.isEmpty()) {
+//            throw new IllegalStateException("Benefit Type ID invalid");
+//        }
+//        return opt.get();
+//    }
 
     // Benefit Plan
     public List<BenefitPlan> getAllBenefitPlans() {
