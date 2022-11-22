@@ -14,6 +14,8 @@ export default function Notifications() {
   const [unread, setUnread] = useState([]);
   const [read, setRead] = useState([]);
   const [refresh, setRefresh] = useState(0);
+  const [adminlist, setAdminList] = useState(false);
+
 
   useEffect(() => {
     api.getUser(getUserId()).then((response) => {
@@ -52,6 +54,16 @@ export default function Notifications() {
       .getUserReadNotifications(getUserId())
       .then((response) => setRead(response.data));
   }, [refresh]);
+
+  useEffect(() => {
+    api
+      .getAllNotifications().then((response) => {setNotifications(response.data); console.log("all notifs"); console.log(response.data);}).catch((error) => {
+        console.log(error);
+        alert("Unable to get all notifications right now");
+      });
+    }, []);
+
+
 
   const deleteANotification = (notificationId) => {
     // evt.preventDefault();
@@ -126,9 +138,11 @@ export default function Notifications() {
     return dt;
   }
 
+  
+
   return (
     read &&
-    unread && user && (
+    unread && user &&  (
       <>
         <Navbar />
         <div className="relative bg-indigo-800">
@@ -149,6 +163,88 @@ export default function Notifications() {
             </h1>
           </div>
         </div>
+
+        {/* getAllNotifications */}
+        {/* {user.userRole === "ADMINISTRATOR"  ? (
+                          
+                            <div className="flex justify-end mt-4 ml-auto mr-6">
+                              <div>
+                                <>
+                                  <button
+                                    type="button"
+                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                    onClick={() => setAdminList(!adminlist)}
+                                  >
+                                    See all Notifications
+                                  </button>
+                                </>
+                              </div>
+                            </div> : "")}
+ */}
+
+        {/* <ul role="list" className="p-40">
+
+          {user.userRole === "ADMINISTRATOR" ?<div className="flex justify-end mt-4 mb-4 ml-auto mr-6">
+                              <div>
+                                <>
+                                  <button
+                                    type="button"
+                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                    onClick={() => setAdminList(!adminlist)}
+                                  >
+                                    See all Notifications
+                                  </button>
+                                </>
+                              </div>
+                            </div> :"" }
+                            </ul> */}
+        {/* {notifications.length > 0 && notifications.reverse().map((message) => (
+            <><li
+              key={message.notificationId}
+              className="relative bg-white py-5 px-4 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 "
+            >
+              <div className="flex justify-between space-x-3">
+                <button
+                  type="button"
+                  className="inline-flex items-left rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 m-4"
+                  onClick={() => {
+                    // console.log("clicked");
+                    console.log(message.notificationId);
+                    deleteANotification(message.notificationId);
+                  }}
+                >
+                  <TrashIcon
+                    className="-ml-0.5 mr-2 h-4 w-4"
+                    aria-hidden="true"
+                  />
+                  Delete
+                </button>
+                <div className="min-w-0 flex-1">
+                  <span className="" aria-hidden="true" />
+
+                  <p className="truncate text-sm text-black-1500 font-bold">
+                    {message.title}
+                  </p>
+                  <p className="mt-5 text-sm text-gray-600 line-clamp-1">
+                    {message.description}
+                  </p>
+                </div>
+                <Moment
+                  parse="YYYY-MM-DD HH:mm"
+                  className=" text-sm text-gray-500"
+                  locale="Asia/Singapore"
+                  format="DD/MM/YYYY H:mm"
+                >
+                  {message.notifTime}
+                </Moment>
+
+                
+              </div>
+              <div className="mt-1"></div>
+            </li> </>
+          ))}
+        </ul>
+       */}
 
         {/* start of lists */}
         <ul role="list" className="p-40">

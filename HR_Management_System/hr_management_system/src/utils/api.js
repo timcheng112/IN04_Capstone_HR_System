@@ -220,7 +220,7 @@ const api = {
     return axios.get(`http://localhost:9191/api/organization/1`);
   },
   getIsOrganizationHead(userId) {
-    return axios.get(`http://localhost:9191/api/organization/${userId}/isHead`)
+    return axios.get(`http://localhost:9191/api/organization/${userId}/isHead`);
   },
   getUserInfo(userId) {
     return axios.get(`http://localhost:9191/api/user/${userId}`);
@@ -284,7 +284,7 @@ const api = {
     return axios.get("http://localhost:9191/api/department/getAllDepartments");
   },
   getIsDepartmentHead(userId) {
-    return axios.get(`http://localhost:9191/api/department/${userId}/isHead`)
+    return axios.get(`http://localhost:9191/api/department/${userId}/isHead`);
   },
   getEmployeesByDepartment(departmentId) {
     return axios.get(
@@ -943,7 +943,7 @@ const api = {
   businessGoalsReminder(userId){
     return axios.get(`http://localhost:9191/api/goal/businessReminder/${userId}`);
   },
-  
+
   //payroll
   sendPayslipEmails(emails, payslipMonth) {
     return axios.post(
@@ -959,6 +959,12 @@ const api = {
     return axios.put(
       `http://localhost:9191/api/user/payroll/editUserPayrollInformation?userId=${userId}&bankName=${bankName}&bankAccNo=${bankAccNo}`,
       temp
+    );
+  },
+
+  broadcastMessage(title, description) {
+    return axios.post(
+      `http://localhost:9191/api/notification/broadcastMessage?title=${title}&description=${description}`
     );
   },
 };

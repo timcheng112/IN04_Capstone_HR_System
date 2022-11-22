@@ -485,6 +485,7 @@ export default function Performance() {
               name: "Current",
               href: "/performance",
               current: true,
+            
             }}
           />
         </div>
