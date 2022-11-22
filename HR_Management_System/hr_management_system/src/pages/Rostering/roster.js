@@ -64,16 +64,20 @@ export default function Roster() {
 
   useEffect(() => {
     if (user && !user.isHrEmployee && teams) {
-      let tempTeam = user.teams[0];
-      for (let i = 0; i < teams.length; i++) {
-        if (teams[i].teamId === tempTeam.teamId) {
-          tempTeam = teams[i];
-          break;
+      if (user.teams[0] !== null && user.teams[0] !== undefined) {
+        let tempTeam = user.teams[0];
+        for (let i = 0; i < teams.length; i++) {
+          if (teams[i].teamId === tempTeam.teamId) {
+            tempTeam = teams[i];
+            break;
+          }
         }
+        console.log("TEMPTEAM: " + tempTeam);
+        setSelectedTeam(tempTeam);
+        console.log("SELECTED TEAM: " + selectedTeam);
+      } else {
+        console.log("User has no team");
       }
-      console.log("TEMPTEAM: " + tempTeam);
-      setSelectedTeam(tempTeam);
-      console.log("SELECTED TEAM: " + selectedTeam);
     }
   }, [teams, user, selectedTeam]);
 
@@ -114,7 +118,19 @@ export default function Roster() {
         api
           .addNewShift(shiftsToBeAdded[i].shift, selectedTeam.roster.rosterId)
           .then((response) => {
-            addNewShiftListItemHandler(shiftsToBeAdded[i], response.data);
+            if (i === shiftsToBeAdded.length - 1) {
+              addNewShiftListItemHandler(
+                shiftsToBeAdded[i],
+                response.data,
+                true
+              );
+            } else {
+              addNewShiftListItemHandler(
+                shiftsToBeAdded[i],
+                response.data,
+                false
+              );
+            }
           })
           .catch((error) => {
             console.log("Error creating shift for " + shiftsToBeAdded[i].shift);
@@ -133,7 +149,7 @@ export default function Roster() {
     }
   }
 
-  function addNewShiftListItemHandler(shift, shiftId) {
+  function addNewShiftListItemHandler(shift, shiftId, isLastLoop) {
     const shiftListItem = {
       isWeekend: isWeekend(shift.shift.startDate),
       isPhEvent: shift.isPhEvent,
@@ -145,11 +161,14 @@ export default function Roster() {
         console.log(shift.userId[i]);
         api
           .addNewShiftListItem(shiftListItem, shiftId, shift.userId[i])
-          .then(() =>
+          .then(() => {
             console.log(
               "Shift List Item created for User with ID: " + shift.userId[i]
-            )
-          )
+            );
+            if (isLastLoop && i === shift.userId.length - 1)
+              setShiftsToBeAdded([]);
+            setOpenPublish(true);
+          })
           .catch((error) => {
             console.log("Error creating shift list item");
             console.log(error.response.data.message);
@@ -191,13 +210,16 @@ export default function Roster() {
       <div className="px-4 sm:px-6 lg:px-8 mt-3">
         <div className="sm:flex sm:items-center">
           <div className="isolate inline-flex -space-x-px rounded-md shadow-sm mx-4">
-            <ComboBox
-              items={teams}
-              searchParam={"teamName"}
-              selectedItem={selectedTeam}
-              setSelectedItem={setSelectedTeam}
-              placeholder="Search for Team"
-            />
+            {user && (
+              <ComboBox
+                items={teams}
+                searchParam={"teamName"}
+                selectedItem={selectedTeam}
+                setSelectedItem={setSelectedTeam}
+                placeholder="Search for Team"
+                disabled={user.teams[0] === undefined && !user.isHrEmployee}
+              />
+            )}
           </div>
 
           <div className="sm:flex sm:items-center">
@@ -285,6 +307,36 @@ export default function Roster() {
                     (shift) => shift.shift !== shiftToBeRemoved
                   )
                 );
+              }}
+              // removeShiftListItemHandler={(employeeId, shiftToBeEdited) => {
+              //   let userIds = []
+              //   let posTypeIndex = 0;
+              //   let posTypes = []
+              //   setShiftsToBeAdded(
+              //     shiftsToBeAdded.map(shift => shift.shift === shiftToBeEdited.shift ? () => {(userIds, index) = shiftToBeEdited.shift.userId.filter(userId => {userId !== employeeId; posTypeIndex = index}); posTypes = shiftToBeEdited.shift.userId.filter()} : console.log())
+              //   )
+              // }}
+              removeShiftListItemHandler={(shiftToBeRemoved, employeeId) => {
+                let positionTypeIndex = 0;
+                let shiftToBeAdded = shiftToBeRemoved;
+                for (let i = 0; i < shiftToBeRemoved.userId.length; i++) {
+                  if (shiftToBeRemoved.userId[i] === employeeId) {
+                    positionTypeIndex = i;
+                    break;
+                  }
+                }
+                shiftToBeAdded.userId = shiftToBeRemoved.userId.filter(
+                  (userId) => userId !== employeeId
+                );
+                shiftToBeAdded.positionType =
+                  shiftToBeRemoved.positionType.splice(positionTypeIndex, 1);
+                console.log(shiftToBeAdded);
+                setShiftsToBeAdded([
+                  ...shiftsToBeAdded.filter(
+                    (shift) => shift !== shiftToBeRemoved
+                  ),
+                  shiftToBeAdded,
+                ]);
               }}
               checkIfThereExistsShiftOnSameDay={(value) =>
                 checkIfThereExistsShiftOnSameDay(value)

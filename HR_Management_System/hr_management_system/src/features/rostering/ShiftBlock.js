@@ -17,6 +17,7 @@ const ShiftBlock = ({
   shiftListItem,
   className,
   removeShiftHandler,
+  removeShiftListItemHandler,
   refreshKeyHandler,
   willBePersisted,
   openSuccess,
@@ -28,7 +29,15 @@ const ShiftBlock = ({
   const [openEdit, setOpenEdit] = useState(false);
 
   const deleteShiftHandler = () => {
-    removeShiftHandler(shift);
+    if (removeShiftListItemHandler !== undefined) {
+      if (shiftListItem.userId.length > 1) {
+        removeShiftListItemHandler(shiftListItem, person.userId);
+      } else {
+        removeShiftHandler(shift);
+      }
+    } else {
+      removeShiftHandler();
+    }
   };
 
   return (

@@ -17,6 +17,7 @@ const Calendar = ({
   value = new Date(),
   addShiftHandler,
   removeShiftHandler,
+  removeShiftListItemHandler,
   checkIfThereExistsShiftOnSameDay,
   people,
   shiftsToBeAdded,
@@ -149,6 +150,7 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              removeShiftListItemHandler={removeShiftListItemHandler}
               checkIfThereExistsShiftOnSameDay={
                 checkIfThereExistsShiftOnSameDay
               }
@@ -166,6 +168,7 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              removeShiftListItemHandler={removeShiftListItemHandler}
               checkIfThereExistsShiftOnSameDay={
                 checkIfThereExistsShiftOnSameDay
               }
@@ -183,6 +186,7 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              removeShiftListItemHandler={removeShiftListItemHandler}
               checkIfThereExistsShiftOnSameDay={
                 checkIfThereExistsShiftOnSameDay
               }
@@ -200,6 +204,7 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              removeShiftListItemHandler={removeShiftListItemHandler}
               checkIfThereExistsShiftOnSameDay={
                 checkIfThereExistsShiftOnSameDay
               }
@@ -217,6 +222,7 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              removeShiftListItemHandler={removeShiftListItemHandler}
               checkIfThereExistsShiftOnSameDay={
                 checkIfThereExistsShiftOnSameDay
               }
@@ -234,6 +240,7 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              removeShiftListItemHandler={removeShiftListItemHandler}
               checkIfThereExistsShiftOnSameDay={
                 checkIfThereExistsShiftOnSameDay
               }
@@ -251,6 +258,7 @@ const Calendar = ({
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
+              removeShiftListItemHandler={removeShiftListItemHandler}
               checkIfThereExistsShiftOnSameDay={
                 checkIfThereExistsShiftOnSameDay
               }

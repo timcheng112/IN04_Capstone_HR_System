@@ -31,6 +31,7 @@ const Cell = ({
   person,
   addShiftHandler,
   removeShiftHandler,
+  removeShiftListItemHandler,
   checkIfThereExistsShiftOnSameDay,
   shift,
   setInfoPanelDate,
@@ -113,17 +114,31 @@ const Cell = ({
 
   const removeShiftAndShiftListItemHandler = (shiftListItem) => {
     api
-      .deleteShiftListItem(shiftListItem.shiftListItemId)
-      .then(() => {
-        api
-          .deleteShift(shiftListItem.shift.shiftId)
-          .then(() => {
-            alert("Successfully deleted!");
-            setOpenDelete(false);
-          })
-          .catch((error) => alert(error.response.data.message));
-      })
-      .catch((error) => alert(error.response.data.message));
+      .getShiftListItemByShiftId(shiftListItem.shift.shiftId)
+      .then((response) => {
+        if (response.data.length > 1) {
+          api
+            .deleteShiftListItem(shiftListItem.shiftListItemId)
+            .then(() => {
+              alert("Successfully deleted!");
+              setOpenDelete(false);
+            })
+            .catch((error) => alert(error.response.data.message));
+        } else {
+          api
+            .deleteShiftListItem(shiftListItem.shiftListItemId)
+            .then(() => {
+              api
+                .deleteShift(shiftListItem.shift.shiftId)
+                .then(() => {
+                  alert("Successfully deleted!");
+                  setOpenDelete(false);
+                })
+                .catch((error) => alert(error.response.data.message));
+            })
+            .catch((error) => alert(error.response.data.message));
+        }
+      });
   };
 
   return (
@@ -231,6 +246,7 @@ const Cell = ({
               shiftListItem={shift}
               className="m-auto mb-2 border-green-600 border-2"
               removeShiftHandler={removeShiftHandler}
+              removeShiftListItemHandler={removeShiftListItemHandler}
               willBePersisted={false}
               person={person}
               isUserHrOrManager={
