@@ -53,6 +53,7 @@ export default function GenerateFixedShiftsModal({
   const [startTimeValue, setStartTimeValue] = useState(null);
   const [endTimeValue, setEndTimeValue] = useState(null);
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
+  const [startMonthValue, setStartMonthValue] = useState(getMonth(date));
   const [duplicateEndMonthValue, setDuplicateEndMonthValue] = useState("-");
 
   const months = [
@@ -87,7 +88,17 @@ export default function GenerateFixedShiftsModal({
         let numOfDays = 0;
         if (duplicateEndMonthValue !== "-") {
           let year = getYear(date);
-          if (getMonth(date) > duplicateEndMonthValue) {
+          // if (getMonth(date) > duplicateEndMonthValue) {
+          //   year += 1;
+          // }
+          if (startMonthValue < getMonth(date)) {
+            year += 1;
+          }
+          let startDate = null;
+          if (startMonthValue !== getMonth(date)) {
+            startDate = new Date(year, startMonthValue, 0);
+          }
+          if (startMonthValue > duplicateEndMonthValue) {
             year += 1;
           }
           const endDate = new Date(
@@ -95,31 +106,63 @@ export default function GenerateFixedShiftsModal({
             duplicateEndMonthValue,
             getDaysInMonth(new Date(year, duplicateEndMonthValue))
           );
-          numOfDays = differenceInCalendarDays(endDate, date);
+          if (startDate !== null) {
+            numOfDays = differenceInCalendarDays(endDate, startDate);
+          } else {
+            numOfDays = differenceInCalendarDays(endDate, date);
+          }
         } else {
-          const nextBDay = add(date, {
-            days: 1,
-          });
-          console.log("nextBday: " + nextBDay);
           let year = getYear(date);
-          if (!isSameMonth(date, nextBDay)) {
-            if (getMonth(nextBDay) < getMonth(date)) {
+          if (startMonthValue === getMonth(date)) {
+            const nextBDay = add(date, {
+              days: 1,
+            });
+            console.log("nextBday: " + nextBDay);
+            // let year = getYear(date);
+            if (!isSameMonth(date, nextBDay)) {
+              if (getMonth(nextBDay) < getMonth(date)) {
+                year += 1;
+              }
+            }
+            const endDate = new Date(
+              year,
+              getMonth(nextBDay),
+              getDaysInMonth(new Date(year, getMonth(nextBDay)))
+            );
+            numOfDays = differenceInCalendarDays(endDate, date);
+          } else {
+            if (startMonthValue < getMonth(date)) {
               year += 1;
             }
+            const startDate = new Date(year, startMonthValue, 0);
+            const endDate = new Date(
+              year,
+              startMonthValue,
+              getDaysInMonth(new Date(year, startMonthValue))
+            );
+            numOfDays = differenceInCalendarDays(endDate, startDate);
           }
-          const endDate = new Date(
-            year,
-            getMonth(nextBDay),
-            getDaysInMonth(new Date(year, getMonth(nextBDay)))
-          );
-          numOfDays = differenceInCalendarDays(endDate, date);
         }
         let arr = [];
         console.log(numOfDays);
         for (let i = 1; i <= numOfDays; i++) {
-          let currDate = add(date, {
-            days: i,
-          });
+          let currDate = null;
+          if (startMonthValue !== getMonth(date)) {
+            let year = getYear(date);
+            if (startMonthValue < getMonth(date)) {
+              year += 1;
+            }
+            console.log("********YEAR: " + year);
+            console.log("********MONTH: " + startMonthValue);
+            const startDate = new Date(year, startMonthValue, 0);
+            currDate = add(startDate, {
+              days: i,
+            });
+          } else {
+            currDate = add(date, {
+              days: i,
+            });
+          }
           // for (let i = 0; i <= selectedEmployees.length; i++) {
           let shiftToBeAdded = {
             // userId:
@@ -228,6 +271,33 @@ export default function GenerateFixedShiftsModal({
     }
   };
 
+  const isStartMonthGreaterThan = (month) => {
+    // month is in the same year
+    if (month >= date.getMonth()) {
+      // start month is in the same year
+      if (startMonthValue >= date.getMonth()) {
+        if (startMonthValue >= month) {
+          return true; // start month is greater than month
+        } else {
+          return false; // start month is not greater than month
+        }
+      } else {
+        // start month is in the next year
+        return true; // start month is greater than month
+      }
+    } else if (startMonthValue >= date.getMonth()) {
+      // month is in the next year, if start month is in the same year
+      return false; // month is greater than start month
+    } else {
+      // month is in the next year, start month is in the next year
+      if (startMonthValue >= month) {
+        return true; // start month is greater than month
+      } else {
+        return false; // start month is not greater than month
+      }
+    }
+  };
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -294,25 +364,29 @@ export default function GenerateFixedShiftsModal({
                         Start Month
                       </label>
                       <div className="mt-1 sm:col-span-2 sm:mt-0">
-                        <input
-                          type="text"
+                        <select
                           name="start-date"
                           id="start-date"
                           className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           placeholder={getMonthName(months[0])}
-                          disabled
-                        />
+                          value={startMonthValue}
+                          onChange={(e) => setStartMonthValue(e.target.value)}
+                        >
+                          {months.map((month) => (
+                            <option value={month}>{getMonthName(month)}</option>
+                          ))}
+                        </select>
                       </div>
                       <label
-                        htmlFor="end-date"
+                        htmlFor="end-month"
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                       >
                         Duplicate until
                       </label>
                       <div className="mt-1 sm:col-span-2 sm:mt-0">
                         <select
-                          id="location"
-                          name="location"
+                          id="end-month"
+                          name="end-month"
                           className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                           value={duplicateEndMonthValue}
                           onChange={(e) =>
@@ -322,7 +396,7 @@ export default function GenerateFixedShiftsModal({
                           <option>-</option>
                           {months.map(
                             (month) =>
-                              month !== months[0] && (
+                              !isStartMonthGreaterThan(month) && (
                                 <option value={month}>
                                   {getMonthName(month)}
                                 </option>
