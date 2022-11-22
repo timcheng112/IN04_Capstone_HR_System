@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.engagement.benefitplan.BenefitPlanInstance;
 import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
@@ -178,6 +179,10 @@ public class User implements UserDetails {
     @JoinColumn(name = "read_notifications")
     private List<Notification> notificationsRead;
 
+    @Column(name = "reward_points")
+    private Integer rewardPoints;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = BenefitPlanInstance.class, mappedBy = "planOwner")
+    private List<BenefitPlanInstance> benefitPlanInstances;
     // TODO add on other relationships to other classes
 
     public User() {
@@ -203,6 +208,8 @@ public class User implements UserDetails {
         this.notificationsRead = new ArrayList<>();
         this.notificationsUnread = new ArrayList<>();
         this.isDisabled = false;
+        this.rewardPoints = 0;
+        this.benefitPlanInstances = new ArrayList<>();
     }
 
     // this should be for making a new applicant's account
@@ -585,8 +592,8 @@ public class User implements UserDetails {
         this.currentLeaveQuota = currentLeaveQuota;
         this.leaveQuotas = leaveQuotas;
         this.leaves = leaves;
-        this.notificationsUnread = new ArrayList<>();
-        this.notificationsRead = new ArrayList<>();
+//        this.notificationsUnread = new ArrayList<>();
+//        this.notificationsRead = new ArrayList<>();
     }
 
     @Override
@@ -799,7 +806,7 @@ public class User implements UserDetails {
         this.setLeaves(new ArrayList<>());
         this.setLeaveQuotas(new ArrayList<>());
         this.setCurrentLeaveQuota(null);
-
+        this.setBenefitPlanInstances(new ArrayList<>());
         return this;
     }
 }
