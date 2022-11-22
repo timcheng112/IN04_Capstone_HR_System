@@ -41,7 +41,7 @@ const ShiftBlock = ({
   };
 
   return (
-    <div className={"col-span-1 flex rounded-md shadow-sm h-20 " + className}>
+    <div className={"col-span-1 flex rounded-md shadow-md h-20 w-16 md:w-24 lg:w-28 xl:w-32 2xl:w-44 " + className}>
       <ViewShiftModal
         open={open}
         onClose={() => setOpen(false)}
