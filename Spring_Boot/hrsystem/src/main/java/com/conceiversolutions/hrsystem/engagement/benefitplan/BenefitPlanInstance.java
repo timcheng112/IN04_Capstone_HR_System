@@ -23,6 +23,8 @@ public class BenefitPlanInstance {
     private Long benefitPlanInstanceId;
     @Column(name = "remaining_amount")
     private BigDecimal remainingAmount;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = BenefitPlan.class, optional = false)
     private BenefitPlan benefitPlan;
@@ -40,6 +42,7 @@ public class BenefitPlanInstance {
         this.remainingAmount = remainingAmount;
         this.benefitPlan = benefitPlan;
         this.planOwner = planOwner;
+        this.isActive = true;
     }
 
     @Override

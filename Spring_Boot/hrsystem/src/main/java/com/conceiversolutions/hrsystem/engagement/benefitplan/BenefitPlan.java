@@ -29,6 +29,8 @@ public class BenefitPlan {
     private LocalDate startDate;
     @Column(name = "end_date")
     private LocalDate endDate;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     @ManyToOne(optional = false, targetEntity = BenefitType.class, fetch = FetchType.LAZY)
     private BenefitType planType;
@@ -43,5 +45,6 @@ public class BenefitPlan {
         this.startDate = startDate;
         this.endDate = endDate;
         this.planType = planType;
+        this.isActive = true;
     }
 }

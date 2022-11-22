@@ -11,4 +11,10 @@ public class ClaimService {
     private final ClaimRepository claimRepository;
 
 
+    public List<Claim> getEmployeeClaims(Long employeeId) {
+        System.out.println("ClaimService.getEmployeeClaims");
+        System.out.println("employeeId = " + employeeId);
+
+        return null;
+    }
 }
