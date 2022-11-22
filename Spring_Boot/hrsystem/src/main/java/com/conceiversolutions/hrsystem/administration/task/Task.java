@@ -23,6 +23,16 @@ public class Task {
     private String description;
     @Column(nullable = true, name = "is_onboarding")
     private Boolean isOnboarding;
+    @Column(nullable = true, name = "auto_assign")
+    private Boolean autoAssign;
+
+    public Boolean getAutoAssign() {
+        return autoAssign;
+    }
+
+    public void setAutoAssign(Boolean autoAssign) {
+        this.autoAssign = autoAssign;
+    }
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Category.class)
     @JoinColumn(name = "category_id")
@@ -34,18 +44,20 @@ public class Task {
     public Task() {
     }
 
-    public Task(String name, String description, Boolean isOnboarding) {
+    public Task(String name, String description, Boolean isOnboarding, Boolean autoAssign ) {
         this.name = name;
         this.description = description;
         this.isOnboarding = isOnboarding;
+        this.autoAssign = autoAssign;
         this.taskListItems = new ArrayList<>();
     }
 
-    public Task(String name, String description, Boolean isOnboarding, Category category,
+    public Task(String name, String description, Boolean isOnboarding, Boolean autoAssign, Category category,
             List<TaskListItem> taskListItems) {
         this.name = name;
         this.description = description;
         this.isOnboarding = isOnboarding;
+        this.autoAssign = autoAssign;
         this.category = category;
         this.taskListItems = taskListItems;
     }

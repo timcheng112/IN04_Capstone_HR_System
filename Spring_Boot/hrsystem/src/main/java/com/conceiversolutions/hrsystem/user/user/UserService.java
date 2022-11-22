@@ -1,6 +1,10 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import com.conceiversolutions.hrsystem.administration.task.Task;
+import com.conceiversolutions.hrsystem.administration.task.TaskRepository;
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItemRepository;
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItemService;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
@@ -81,6 +85,9 @@ public class UserService implements UserDetailsService {
     private final AllowanceTemplateRepository allowanceTemplateRepository;
     private final DeductionTemplateRepository deductionTemplateRepository;
     private final PayslipRepository payslipRepository;
+    private final TaskRepository taskRepository;
+    private final TaskListItemService taskListItemService;
+    private final TaskListItemRepository taskListItemRepository;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -478,6 +485,24 @@ public class UserService implements UserDetailsService {
         // positionRepository.saveAll(newPositions);
 
         User newUser = userRepository.saveAndFlush(user);
+
+        // Add auto assigned tasks
+        if (!newUser.getUserRole().equals(RoleEnum.APPLICANT)) {
+            List<Task> tasks = taskRepository.findTaskByAutoAssign(true);
+            for (Task task : tasks) {
+                TaskListItem taskListItem = new TaskListItem(false);
+                taskListItem.setUser(newUser);
+                taskListItem.setTask(task);
+                TaskListItem savedTaskListItem = taskListItemRepository.saveAndFlush(taskListItem);
+
+                task.addTaskListItem(savedTaskListItem);
+                taskRepository.save(task);
+
+                newUser.addTaskListItem(savedTaskListItem);
+            }
+        }
+
+        // userRepository.save(newUser);
 
         // Sending confirmation TOKEN to set user's isEnabled
         String token = UUID.randomUUID().toString();

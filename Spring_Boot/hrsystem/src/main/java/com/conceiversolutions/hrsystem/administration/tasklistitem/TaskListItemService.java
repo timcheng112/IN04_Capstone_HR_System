@@ -57,10 +57,12 @@ public class TaskListItemService {
         taskListItem.setUser(assignedEmployee);
         taskListItem.setTask(task);
         TaskListItem savedTaskListItem = taskListItemRepository.saveAndFlush(taskListItem);
+
         task.addTaskListItem(savedTaskListItem);
-        taskRepository.saveAndFlush(task);
+        taskRepository.save(task);
+
         assignedEmployee.addTaskListItem(savedTaskListItem);
-        userRepository.saveAndFlush(assignedEmployee);
+        userRepository.save(assignedEmployee);
     }
 
     public void deleteTaskListItem(Long taskListItemId) {
