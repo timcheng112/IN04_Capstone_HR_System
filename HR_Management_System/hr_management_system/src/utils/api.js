@@ -961,6 +961,53 @@ const api = {
       temp
     );
   },
+
+  // Welfare
+  getAllBenefitTypes() {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllBenefitTypes`
+    );
+  },
+  addBenefitPlan(description, planName, planAmount, startDate, endDate, planType) {
+    return axios.post(
+      `http://localhost:9191/api/claims/addBenefitPlan?description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}&planType=${planType}`
+    );
+  },
+  getAllBenefitPlans() {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllBenefitPlans`
+    );
+  },
+  getAllBenefitPlansByType(benefitType) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllBenefitPlansByType?benefitType=${benefitType}`
+    );
+  },
+  getBenefitPlanById(benefitPlanId) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getBenefitPlanById?benefitPlanId=${benefitPlanId}`
+    );
+  },
+  editBenefitPlan(planId, description, planName, planAmount, startDate, endDate) {
+    return axios.put(
+      `http://localhost:9191/api/claims/editBenefitPlan?planId=?${planId}&description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}`
+    );
+  },
+  terminateBenefitPlan(planId) {
+    return axios.put(
+      `http://localhost:9191/api/claims/terminateBenefitPlan?planId=${planId}`
+    );
+  },
+  addBenefitPlanInstance(planId, employeeId) {
+    return axios.post(
+      `http://localhost:9191/api/claims/addBenefitPlanInstance?planId=${planId}&employeeId=${employeeId}`
+    );
+  },
+  getAllBenefitPlanInstancesByPlan() {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllBenefitPlanInstancesByPlan?`
+    );
+  },
 };
 
 export default api;
