@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.user.UserService;
 import org.springframework.stereotype.Service;
 
@@ -96,6 +97,44 @@ public class NotificationService {
                 System.out.println(u1.getNotificationsUnread());
                 System.out.println("read");
                 System.out.println(u1.getNotificationsRead());
+                return "Notification added successfully.";
+        }
+
+        public String addANotificationII(String notificationTitle, String notificationDescription, Long userId, Long senderId){
+
+                User sender = userRepository.findById(senderId)
+                        .orElseThrow(() -> new IllegalStateException(
+                                "User with id" + userId + "does not exist"));
+                String str1 = sender.getFirstName();
+                String str2 = sender.getLastName();
+                String senderName = str1 + " " + str2;
+
+                Notification n = new Notification(LocalDateTime.now(), notificationTitle, notificationDescription, senderName);
+
+                if(userId == -1){
+                        //broadcast
+                        List<User> staff = userRepository.findAllStaff(RoleEnum.EMPLOYEE, RoleEnum.MANAGER);
+                        for(User s : staff){
+                                List<Notification> lst = s.getNotificationsUnread();
+                                lst.add(n);
+                                System.out.println(s.getNotificationsUnread());
+                                notificationRepository.saveAndFlush(n);
+                                userRepository.saveAndFlush(s);
+                        }
+
+                }else{
+                        //notifications targetted to userId
+                        User u1 = userRepository.findById(userId)
+                                .orElseThrow(() -> new IllegalStateException(
+                                        "User with id" + userId + "does not exist"));
+                        u1.getNotificationsUnread().add(n);
+                        System.out.println(u1.getNotificationsUnread());
+                        notificationRepository.saveAndFlush(n);
+                        userRepository.saveAndFlush(u1);
+
+
+                }
+
                 return "Notification added successfully.";
         }
 

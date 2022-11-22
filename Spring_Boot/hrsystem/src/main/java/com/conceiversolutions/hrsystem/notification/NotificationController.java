@@ -73,4 +73,14 @@ public class NotificationController {
 //        System.out.println("notif.broadcastMessage");
         return notificationService.broadcastMessage(notificationTitle, notificationDescription);
     }
+
+    public String addANotificationII(@RequestParam(name = "notificationTitle", required = false) String notificationTitle,
+                                     @RequestParam(name = "notificationDescription", required = false) String notificationDesc,
+                                     @RequestParam("userId") Long userId,
+                                     @RequestParam("senderId") Long senderId){
+
+        return notificationService.addANotificationII(notificationTitle,notificationDesc,userId, senderId);
+
+
+    }
 }
