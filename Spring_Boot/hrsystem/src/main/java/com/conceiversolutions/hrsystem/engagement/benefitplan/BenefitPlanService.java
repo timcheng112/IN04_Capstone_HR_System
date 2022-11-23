@@ -159,4 +159,18 @@ public class BenefitPlanService {
         }
         return planInstances;
     }
+
+    public List<BenefitPlanInstance> getAllBenefitPlanInstancesByEmployeeId(Long employeeId) {
+        System.out.println("BenefitPlanService.getAllBenefitPlanInstancesByEmployeeId");
+        System.out.println("employeeId = " + employeeId);
+
+        List<BenefitPlanInstance> planInstances = benefitPlanInstanceRepository.findAllByEmployeeId(employeeId);
+        for (BenefitPlanInstance bpi : planInstances) {
+            bpi.setPlanOwner(null);
+            for (Claim claim : bpi.getClaims()) {
+                claim.setBenefitPlanInstance(null);
+            }
+        }
+        return planInstances;
+    }
 }
