@@ -21,6 +21,47 @@ export default function ViewPlan({ open, setOpen, plan }) {
   const [user, setUser] = useState(getUserId());
   const [error, setError] = useState();
 
+  useEffect(() => {
+    let yyyy = plan.startDate.slice(0, 4)
+    let mm = plan.startDate.slice(5, 7)
+    let dd = plan.startDate.slice(8, 10)
+    setStartDate(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
+
+    let aaaa = plan.endDate.slice(0, 4)
+    let bb = plan.endDate.slice(5, 7)
+    let cc = plan.endDate.slice(8, 10)
+    setEndDate(new Date(parseInt(aaaa), parseInt(bb), parseInt(cc)))
+  }, []);
+
+  function save(){    
+    var date = startDate.getDate()
+    if (startDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = startDate.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + (month);
+    }
+
+    var helpStartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
+
+    var edate = endDate.getDate()
+    if (endDate.getDate() < 10) {
+      edate = "0" + edate;
+    }
+    var emonth = endDate.getMonth() + 1;
+    if (emonth < 10) {
+      emonth = "0" + (emonth);
+    }
+
+    var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
+
+    api.editBenefitPlan(plan.planId,description, name, amount, helpStartDate.trim(), helpEndDate.trim())
+    .then(() => {alert("Successfully saved.");})
+    .catch((error) => setError(error));
+    setOpen(false);
+  }
+
 
 
   return (
@@ -161,7 +202,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
                       </button>
                       <button
                         type="button"
-                        //onClick={()=>add()}
+                        onClick={()=>save()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save

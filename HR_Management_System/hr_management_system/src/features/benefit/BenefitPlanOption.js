@@ -27,6 +27,12 @@ export default function BenefitPlanOption({ plan }) {
       .catch((error) => setError(error));
   }, []);
 
+  function terminate(){
+    api.terminateBenefitPlan(plan.planId)
+    .then(() => {alert("Successfully terminated.");})
+    .catch((error) => setError(error));
+  }
+
   return (
     <div>
       <div className="space-x-4">
@@ -63,7 +69,6 @@ export default function BenefitPlanOption({ plan }) {
           />
           <span className="hidden md:block">Terminate</span>
         </button>}
-      
       </div>
       <ViewPlan open={open} setOpen={setOpen} plan={plan}/>
       <CheckDialog 
@@ -72,7 +77,7 @@ export default function BenefitPlanOption({ plan }) {
           open={trash}
           onClose={() => setTrash(false)}
           setOpen={() => setTrash(false)}
-          //onConfirm={onClickHandler}
+          onConfirm={terminate}
         />
     </div>
   )

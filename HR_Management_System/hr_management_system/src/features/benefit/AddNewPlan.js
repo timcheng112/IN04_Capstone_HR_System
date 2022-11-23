@@ -31,34 +31,34 @@ export default function AddNewPlan({ open, setOpen }) {
     }
   }, [open])
 
-  // function add(){    
-  //   var date = startDate.getDate()
-  //   if (startDate.getDate() < 10) {
-  //     date = "0" + date;
-  //   }
-  //   var month = startDate.getMonth() + 1;
-  //   if (month < 10) {
-  //     month = "0" + (month);
-  //   }
+  function add(){    
+    var date = startDate.getDate()
+    if (startDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = startDate.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + (month);
+    }
 
-  //   var helpStartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
+    var helpStartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
 
-  //   var edate = endDate.getDate()
-  //   if (endDate.getDate() < 10) {
-  //     edate = "0" + edate;
-  //   }
-  //   var emonth = endDate.getMonth() + 1;
-  //   if (emonth < 10) {
-  //     emonth = "0" + (emonth);
-  //   }
+    var edate = endDate.getDate()
+    if (endDate.getDate() < 10) {
+      edate = "0" + edate;
+    }
+    var emonth = endDate.getMonth() + 1;
+    if (emonth < 10) {
+      emonth = "0" + (emonth);
+    }
 
-  //   var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
+    var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
 
-  //   api.addWorkExperience(user, position, company, helpStartDate.trim(), helpEndDate.trim(), enabled, description)
-  //   .then(() => {alert("Successfully added.");refreshKeyHandler();})
-  //   .catch((error) => setError(error));
-  //   setOpen(false);
-  // }
+    api.addBenefitPlan(description, name, amount, helpStartDate.trim(), helpEndDate.trim(), type)
+    .then(() => {alert("Successfully added.");})
+    .catch((error) => setError(error));
+    setOpen(false);
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -198,7 +198,7 @@ export default function AddNewPlan({ open, setOpen }) {
                       </button>
                       <button
                         type="button"
-                        //onClick={()=>add()}
+                        onClick={()=>add()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save

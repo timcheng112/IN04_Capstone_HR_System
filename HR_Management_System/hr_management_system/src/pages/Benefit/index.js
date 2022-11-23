@@ -11,6 +11,10 @@ import BenefitPlanList from "../../features/benefit/BenefitPlanList";
 export default function Benefits() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [medical, setMedical] = useState([]);
+  const [dental, setDental] = useState([]);
+  const [life, setLife] = useState([]);
+  const [accident, setAccident] = useState([]);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -31,7 +35,42 @@ export default function Benefits() {
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
-        console.log(user);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  useEffect(() => {
+    api
+      .getAllBenefitPlansByType('MEDICAL')
+      .then((response) => {
+        setMedical(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  useEffect(() => {
+    api
+      .getAllBenefitPlansByType('DENTAL')
+      .then((response) => {
+        setDental(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  useEffect(() => {
+    api
+      .getAllBenefitPlansByType('LIFE')
+      .then((response) => {
+        setLife(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  useEffect(() => {
+    api
+      .getAllBenefitPlansByType('ACCIDENT')
+      .then((response) => {
+        setAccident(response.data);
+        console.log(response.data);
       })
       .catch((error) => setError(error));
   }, []);
@@ -55,13 +94,13 @@ export default function Benefits() {
             <Tab tabs={tabs} />
           </div>
           <div className="py-3"></div>
-          <BenefitPlanList type = 'Medical' plans = {plans} />
+          <BenefitPlanList type = 'Medical' plans = {medical} />
           <div className="py-3"></div>
-          <BenefitPlanList type = 'Dental' plans = {plans} />
+          <BenefitPlanList type = 'Dental' plans = {dental} />
           <div className="py-3"></div>
-          <BenefitPlanList type = 'Life Insurance' plans = {plans} />
+          <BenefitPlanList type = 'Life Insurance' plans = {life} />
           <div className="py-3"></div>
-          <BenefitPlanList type = 'Accident Insurance' plans = {plans} />
+          <BenefitPlanList type = 'Accident Insurance' plans = {accident} />
         </main>
       </div>
     </div>
