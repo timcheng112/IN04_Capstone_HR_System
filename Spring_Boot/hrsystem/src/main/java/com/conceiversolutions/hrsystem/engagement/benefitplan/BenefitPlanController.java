@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.benefitplan;
 
 import com.conceiversolutions.hrsystem.enums.BenefitTypeEnum;
+import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,5 +86,15 @@ public class BenefitPlanController {
     @GetMapping("getAllBenefitPlanInstancesByEmployeeId")
     public List<BenefitPlanInstance> getAllBenefitPlanInstancesByEmployeeId(@RequestParam("employeeId") Long employeeId) {
         return benefitPlanService.getAllBenefitPlanInstancesByEmployeeId(employeeId);
+    }
+
+    @GetMapping("getEmployeesAssignedToPlan")
+    public List<User> getEmployeesAssignedToPlan(@RequestParam("planId") Long planId) {
+        return benefitPlanService.getEmployeesAssignedToPlan(planId);
+    }
+
+    @GetMapping("getEmployeesUnassignedToPlan")
+    public List<User> getEmployeesUnassignedToPlan(@RequestParam("planId") Long planId) {
+        return benefitPlanService.getEmployeesUnassignedToPlan(planId);
     }
 }

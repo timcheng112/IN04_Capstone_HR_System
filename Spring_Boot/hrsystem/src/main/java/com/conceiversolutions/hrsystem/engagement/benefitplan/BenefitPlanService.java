@@ -1,9 +1,8 @@
 package com.conceiversolutions.hrsystem.engagement.benefitplan;
 
-import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitType;
-import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitTypeRepository;
 import com.conceiversolutions.hrsystem.engagement.claim.Claim;
 import com.conceiversolutions.hrsystem.enums.BenefitTypeEnum;
+import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,6 @@ import java.util.Optional;
 public class BenefitPlanService {
     private final BenefitPlanRepository benefitPlanRepository;
     private final BenefitPlanInstanceRepository benefitPlanInstanceRepository;
-    private final BenefitTypeRepository benefitTypeRepository;
     private final UserRepository userRepository;
 
     public void checkDates(LocalDate start, LocalDate end) {
@@ -178,5 +177,52 @@ public class BenefitPlanService {
             }
         }
         return planInstances;
+    }
+
+    public List<User> getEmployeesAssignedToPlan(Long planId) {
+        System.out.println("BenefitPlanService.getEmployeesAssignedToPlan");
+        System.out.println("planId = " + planId);
+
+        // get all benefit plan instances linked to the plan
+        List<BenefitPlanInstance> planInstances = benefitPlanInstanceRepository.findAllByBenefitPlanId(planId);
+
+        // then get all the users
+        List<User> employees = new ArrayList<>();
+        for (BenefitPlanInstance bpi : planInstances) {
+            User employee = bpi.getPlanOwner();
+            employee.nullify();
+            employees.add(employee);
+        }
+
+        return employees;
+    }
+
+    public List<User> getEmployeesUnassignedToPlan(Long planId) {
+        System.out.println("BenefitPlanService.getEmployeesUnassignedToPlan");
+        System.out.println("planId = " + planId);
+
+        List<User> allEmployees = userRepository.findAllStaff(RoleEnum.MANAGER, RoleEnum.EMPLOYEE);
+        List<Long> unassignedIds = new ArrayList<>();
+        for (User u : allEmployees) { // for all employees
+            if (u.isEnabled() && !u.getIsBlackListed()) { // if employee is valid
+                List<BenefitPlanInstance> planInstances = u.getBenefitPlanInstances();
+                boolean checker = true;
+                for (BenefitPlanInstance bpi : planInstances) {
+                    if (bpi.getBenefitPlan().getBenefitPlanId().equals(planId)) { // means user already has the plan
+                        checker = false;
+                        break;
+                    }
+                }
+                if (checker) { // true means not already assigned
+                    unassignedIds.add(u.getUserId());
+                }
+            }
+        }
+
+        List<User> unassignedEmployees = userRepository.findAllById(unassignedIds);
+        for (User u : unassignedEmployees) {
+            u.nullify();
+        }
+        return unassignedEmployees;
     }
 }

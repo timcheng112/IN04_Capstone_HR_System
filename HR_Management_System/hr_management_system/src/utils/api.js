@@ -1048,6 +1048,16 @@ const api = {
       `http://localhost:9191/api/claims/withdrawClaim?claimId=${claimId}`
     );
   },
+  getEmployeesAssignedToPlan(planId) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getEmployeesAssignedToPlan?planId=${planId}`
+    );
+  },
+  getEmployeesUnassignedToPlan(planId) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getEmployeesUnassignedToPlan?planId=${planId}`
+    );
+  },
 };
 
 export default api;
