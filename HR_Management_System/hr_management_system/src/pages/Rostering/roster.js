@@ -204,7 +204,7 @@ export default function Roster() {
   }
 
   return (
-    <>
+    <div>
       <Navbar />
 
       <div className="px-4 sm:px-6 lg:px-8 mt-3">
@@ -222,7 +222,7 @@ export default function Roster() {
             )}
           </div>
 
-          <div className="sm:flex sm:items-center">
+          {/* <div className="sm:flex sm:items-center">
             <div>
               <nav
                 className="isolate inline-flex -space-x-px rounded-md shadow-sm"
@@ -234,7 +234,6 @@ export default function Roster() {
                 >
                   Day
                 </a>
-                {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
                 <a
                   href="#"
                   className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
@@ -243,7 +242,7 @@ export default function Roster() {
                 </a>
               </nav>
             </div>
-          </div>
+          </div> */}
           <div className="sm:flex-auto">
             {/* <p className="mt-2 text-sm text-gray-700">
               We probably don't need text here.
@@ -252,12 +251,12 @@ export default function Roster() {
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             {user && (user.isHrEmployee || user.userRole === "MANAGER") && (
               <>
-                <button
+                {/* <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                 >
                   Add user
-                </button>
+                </button> */}
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
@@ -372,6 +371,6 @@ export default function Roster() {
           }
         />
       </div>
-    </>
+    </div>
   );
 }

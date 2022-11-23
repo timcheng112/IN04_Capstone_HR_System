@@ -6,6 +6,7 @@ import {
   isAfter,
   isBefore,
   isToday,
+  isWithinInterval,
   parseISO,
   startOfToday,
 } from "date-fns";
@@ -21,6 +22,7 @@ import ViewCurrentShiftsModal from "../ViewCurrentShiftsModal";
 import ViewTemplateShiftsModal from "../ViewTemplateShiftsModal";
 import { Blocks } from "react-loader-spinner";
 import { getUserId } from "../../../utils/Common";
+import LeaveBlock from "../LeaveBlock";
 
 const Cell = ({
   className,
@@ -51,6 +53,7 @@ const Cell = ({
   const [shiftListItem, setShiftListItem] = useState(null);
   const [isLoading, setIsLoading] = useState(shift ? false : true);
   const [user, setUser] = useState(null);
+  const [leaveBlock, setLeaveBlock] = useState(null);
 
   useEffect(() => {
     api
@@ -111,6 +114,47 @@ const Cell = ({
         });
     }
   }, [date, person, refreshKey, openDelete, openPublish, openSuccess]);
+
+  useEffect(() => {
+    console.log("FINDING LEAVES");
+    setIsLoading(true);
+    if (date !== undefined) {
+      setLeaveBlock(null);
+      api
+        .getEmployeeLeaves(person.userId)
+        .then((response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            const startDateArr = response.data[i].startDate.split("-");
+            const endDateArr = response.data[i].endDate.split("-");
+            const startDate = new Date(
+              startDateArr[0],
+              Number(startDateArr[1]) - 1,
+              startDateArr[2]
+            );
+            const endDate = new Date(
+              endDateArr[0],
+              Number(endDateArr[1]) - 1,
+              endDateArr[2]
+            );
+            if (
+              isWithinInterval(date, {
+                start: startDate,
+                end: endDate,
+              })
+            ) {
+              setLeaveBlock(response.data[i]);
+              console.log("USER HAS A LEAVE ON THIS DATE");
+              break;
+            }
+          }
+          setIsLoading(false);
+        })
+        .catch(
+          (err) => setIsLoading(false)
+          // no leaves at all
+        );
+    }
+  }, [date, person, openDelete, openPublish, openSuccess]);
 
   const removeShiftAndShiftListItemHandler = (shiftListItem) => {
     api
@@ -224,7 +268,9 @@ const Cell = ({
         rosterId={rosterId}
       />
       {children}
-      {(shift && shift !== null) || shiftListItem !== null ? (
+      {(shift && shift !== null) ||
+      shiftListItem !== null ||
+      leaveBlock !== null ? (
         <div>
           {shiftListItem !== null && (
             <ShiftBlock
@@ -254,6 +300,7 @@ const Cell = ({
               }
             />
           )}
+          {leaveBlock !== null && <LeaveBlock leave={leaveBlock}/>}
         </div>
       ) : !isLoading &&
         date &&

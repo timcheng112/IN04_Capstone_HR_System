@@ -16,6 +16,7 @@ import {
   getMonth,
   getYear,
   isSameMonth,
+  isWeekend,
   nextDay,
   set,
 } from "date-fns";
@@ -55,6 +56,7 @@ export default function GenerateFixedShiftsModal({
   const [shiftRemarksValue, setShiftRemarksValue] = useState("");
   const [startMonthValue, setStartMonthValue] = useState(getMonth(date));
   const [duplicateEndMonthValue, setDuplicateEndMonthValue] = useState("-");
+  const [generateOverWeekends, setGenerateOverWeekends] = useState(false);
 
   const months = [
     getMonth(date),
@@ -162,6 +164,11 @@ export default function GenerateFixedShiftsModal({
             currDate = add(date, {
               days: i,
             });
+          }
+          if (!generateOverWeekends) {
+            if (isWeekend(currDate)) {
+              continue; // skip to next iteration
+            }
           }
           // for (let i = 0; i <= selectedEmployees.length; i++) {
           let shiftToBeAdded = {
@@ -404,6 +411,21 @@ export default function GenerateFixedShiftsModal({
                           )}
                         </select>
                       </div>
+                      <label
+                        htmlFor="generateOverWeekends"
+                        className="block text-sm font-medium text-gray-700 sm:mt-px"
+                      >
+                        Generate over the weekends?
+                      </label>
+                      <div className="mt-1 sm:col-span-2 sm:mt-0">
+                        <input
+                          id="generateOverWeekends"
+                          name="generateOverWeekends"
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                          onChange={(e) => setGenerateOverWeekends(e.target.checked)}
+                        />
+                      </div>
                     </div>
                     <AddShiftForm
                       setShiftTitle={(value) => setShiftTitleValue(value)}
@@ -427,7 +449,7 @@ export default function GenerateFixedShiftsModal({
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
                     onClick={createShiftHandler}
                   >
-                    Add Shift
+                    Generate Shifts
                   </button>
                 </div>
               </Dialog.Panel>

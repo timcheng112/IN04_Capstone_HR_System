@@ -37,7 +37,7 @@ const Calendar = ({
   });
 
   const shiftHandler = (person, dayIndex) => {
-    console.log(person)
+    console.log(person);
     for (let i = 0; i < shiftsToBeAdded.length; i++) {
       if (Array.isArray(shiftsToBeAdded[i].userId)) {
         if (
@@ -140,13 +140,13 @@ const Calendar = ({
         </Cell>
         {people.map((person) => (
           <>
-            <Cell className="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6 h-32">
+            <Cell className="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-gray-900 sm:pl-6 h-52 sm:h-48 md:h-44 lg:h-40 xl:h-36 2xl:h-32">
               {person.firstName} {person.lastName}
             </Cell>
             <Cell
               date={weekArr[0]}
               dateToday={value}
-              className="h-32"
+              className="h-52 sm:h-48 md:h-44 lg:h-40 xl:h-36 2xl:h-32"
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
@@ -164,7 +164,7 @@ const Calendar = ({
             <Cell
               date={weekArr[1]}
               dateToday={value}
-              className="h-32"
+              className="h-52 sm:h-48 md:h-44 lg:h-40 xl:h-36 2xl:h-32"
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
@@ -182,7 +182,7 @@ const Calendar = ({
             <Cell
               date={weekArr[2]}
               dateToday={value}
-              className="h-32"
+              className="h-52 sm:h-48 md:h-44 lg:h-40 xl:h-36 2xl:h-32"  
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
@@ -200,7 +200,7 @@ const Calendar = ({
             <Cell
               date={weekArr[3]}
               dateToday={value}
-              className="h-32"
+              className="h-52 sm:h-48 md:h-44 lg:h-40 xl:h-36 2xl:h-32"
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
@@ -218,7 +218,7 @@ const Calendar = ({
             <Cell
               date={weekArr[4]}
               dateToday={value}
-              className="h-32"
+              className="h-52 sm:h-48 md:h-44 lg:h-40 xl:h-36 2xl:h-32"
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
@@ -236,7 +236,7 @@ const Calendar = ({
             <Cell
               date={weekArr[5]}
               dateToday={value}
-              className="h-32"
+              className="h-52 sm:h-48 md:h-44 lg:h-40 xl:h-36 2xl:h-32"
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
@@ -254,7 +254,7 @@ const Calendar = ({
             <Cell
               date={weekArr[6]}
               dateToday={value}
-              className="h-32"
+              className="h-52 sm:h-48 md:h-44 lg:h-40 xl:h-36 2xl:h-32"
               person={person}
               addShiftHandler={addShiftHandler}
               removeShiftHandler={removeShiftHandler}
