@@ -33,7 +33,9 @@ public class ClaimService {
             BenefitPlanInstance bpi = claim.getBenefitPlanInstance();
             bpi.setClaims(new ArrayList<>());
             bpi.setPlanOwner(null);
-            claim.getSupportingDocument().setDocData(new byte[0]);
+            if (claim.getSupportingDocument() != null) {
+                claim.getSupportingDocument().setDocData(new byte[0]);
+            }
         }
 
         return claims;
@@ -135,7 +137,7 @@ public class ClaimService {
             throw new IllegalStateException("Claim cannot be made as incident happened before plan was enrolled.");
         }
 
-        if (bpi.getRemainingAmount().equals(BigDecimal.ZERO)) {
+        if (bpi.getRemainingAmount().compareTo(BigDecimal.valueOf(0)) == 0) {
             throw new IllegalStateException("Benefit Plan Instance has no more remaining amount.");
         }
 

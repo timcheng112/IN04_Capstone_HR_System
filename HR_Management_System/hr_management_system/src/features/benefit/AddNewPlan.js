@@ -17,7 +17,7 @@ export default function AddNewPlan({ open, setOpen }) {
   const [description, setDescription] = useState("")
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [type, setType] = useState("")
+  const [type, setType] = useState("MEDICAL")
   const [user, setUser] = useState(getUserId());
   const [error, setError] = useState();
 

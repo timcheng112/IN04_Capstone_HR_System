@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common.js";
+import { format } from "date-fns";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -18,6 +19,7 @@ export default function AddNewPlan({ open, setOpen,plan }) {
   const [claimDate, setClaimDate] = useState(new Date());
   const [file, setFileState] = useState(null);
   const [fileName, setFileName] = useState(null);
+  const [curFileName, setCurFileName] = useState(null);
   const [user, setUser] = useState(getUserId());
   const [error, setError] = useState();
 
@@ -43,10 +45,53 @@ export default function AddNewPlan({ open, setOpen,plan }) {
 
     var helpincidentDate = (incidentDate.getYear() + 1900) + "-" + month + "-" + date;
 
-    api. makeNewClaim(claimDate, helpincidentDate.trim(), remarks,amount,plan.benefitPlanId,file)
-    .then(() => {alert("Successfully added.");})
-    .catch((error) => setError(error));
+    // upload file if have
+    let formData = new FormData();
+    if (file) {
+      formData.append("file", file);
+    }
+
+    var submitDate = format(claimDate, "yyyy-MM-dd");
+
+//    console.log(submitDate)
+//    console.log(helpincidentDate)
+//    console.log(remarks)
+//    console.log(amount)
+//    console.log(plan.benefitPlanId)
+
+    // todo: this part needs to use benefit plan instance id instead of benefit plan id
+    api.makeNewClaim(submitDate, helpincidentDate.trim(), remarks, amount, plan.benefitPlanId, formData)
+      .then((response) => {
+        let message = response.data;
+        console.log(message);
+        if (message.includes("Partial Claim")) {
+          alert("New Claim has been made with partial amount");
+        } else {
+          alert("New Claim Successfully made.");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        var message = error.response.data.message;
+        console.log(message);
+        if (message.includes("Benefit Plan Instance has no more remaining")) {
+          alert(message);
+        } else if (message.includes("Claim cannot be made as incident happened before")) {
+          alert(message);
+        } else if (message.includes("Benefit Plan Instance ID is not active")) {
+          alert("The Benefit Plan is not active, please choose a different one")
+        } else {
+          alert("There was an error, please try again");
+        }
+        setError(error);
+      });
     setOpen(false);
+  }
+
+  function handleFile(e) {
+//    console.log("Handle File");
+    setFileState(e.target.files[0]);
+    setFileName(e.target.files[0].name);
   }
 
   return (
@@ -134,13 +179,12 @@ export default function AddNewPlan({ open, setOpen,plan }) {
                                 Supporting Document
                               </label>
                               <div className="mt-1">
-                                <button
-                                  type="button"
-                                  className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                                  //onClick={() => upload()}
-                                >
-                                  Upload Document
-                                </button>
+                                <input
+                                      id="file"
+                                      type="file"
+                                      name="file"
+                                      onChange={(e) => handleFile(e)}
+                                  />
                               </div>
                             </div>
 
@@ -162,7 +206,7 @@ export default function AddNewPlan({ open, setOpen,plan }) {
                         onClick={()=>add()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
-                        Save
+                        Submit
                       </button>
                     </div>
                   </form>

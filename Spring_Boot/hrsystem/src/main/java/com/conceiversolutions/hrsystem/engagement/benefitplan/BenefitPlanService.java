@@ -155,6 +155,9 @@ public class BenefitPlanService {
             bpi.setPlanOwner(null);
             for (Claim claim : bpi.getClaims()) {
                 claim.setBenefitPlanInstance(null);
+                if (claim.getSupportingDocument() != null) {
+                    claim.getSupportingDocument().setDocData(new byte[0]);
+                }
             }
         }
         return planInstances;
@@ -169,6 +172,9 @@ public class BenefitPlanService {
             bpi.setPlanOwner(null);
             for (Claim claim : bpi.getClaims()) {
                 claim.setBenefitPlanInstance(null);
+                if (claim.getSupportingDocument() != null) {
+                    claim.getSupportingDocument().setDocData(new byte[0]);
+                }
             }
         }
         return planInstances;
