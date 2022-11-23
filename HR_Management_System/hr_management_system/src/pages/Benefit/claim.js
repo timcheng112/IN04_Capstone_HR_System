@@ -22,9 +22,6 @@ export default function Benefits() {
       current: true,
     },
   ];
-  const claims = [{ benefitPlanId: 1, planName: 'test1', planAmount: '111', startDate: '2022-11-30', endDate: '2022-11-30', planType: 'Medical', isActive: true },
-  { benefitPlanId: 2, planName: 'test2', planAmount: '111', startDate: '2022-11-30', endDate: '2022-11-30', planType: 'Medical', isActive: true },
-  { benefitPlanId: 3, planName: 'test3', planAmount: '111', startDate: '2022-11-30', endDate: '2022-11-30', planType: 'Medical', isActive: false },]
 
   useEffect(() => {
     api
@@ -35,6 +32,7 @@ export default function Benefits() {
       })
       .catch((error) => setError(error));
   }, []);
+  const claims = []
 
 
   return (
@@ -64,34 +62,36 @@ export default function Benefits() {
                       <thead className="bg-gray-50">
                         <tr>
                           <th scope="col" className=" py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                            Name
+                            Benefit Plan
                           </th>
                           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Amount
+                            Claim Amount
                           </th>
                           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Start Date
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            End Date
+                            Claim Date
                           </th>
                           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                             Status
                           </th>
+                          {user !== null && user.hrEmployee &&
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              Plan Owner
+                            </th>}
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200 bg-white">
                         {claims.map((claim) => (
-                          <tr key={claim.benefitPlanId}>
+                          <tr key={claim.claimId}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                              {claim.planName}
+                              {claim.benefitPlanInstance.benefitPlan.planName}
                             </td>
-                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">$ {claim.planAmount}</td>
-                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.startDate}</td>
-                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.endDate}</td>
-                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.status}</td>
+                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">$ {claim.claimAmount}</td>
+                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.claimDate}</td>
+                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.claimStatus}</td>
+                            {user !== null && user.hrEmployee &&
+                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.benefitPlanInstance.planOwner}</td>}
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <ClaimOption claim ={claim}/>
+                              <ClaimOption claim={claim} />
                             </td>
                           </tr>
                         ))}

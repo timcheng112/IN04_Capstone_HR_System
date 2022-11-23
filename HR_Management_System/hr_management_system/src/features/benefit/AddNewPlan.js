@@ -31,7 +31,9 @@ export default function AddNewPlan({ open, setOpen }) {
     }
   }, [open])
 
-  function add(){    
+  function add(){   
+    console.log(type)
+    console.log(name) 
     var date = startDate.getDate()
     if (startDate.getDate() < 10) {
       date = "0" + date;
@@ -151,8 +153,8 @@ export default function AddNewPlan({ open, setOpen }) {
                               </label>
                               <div className="mt-1">
                                 <select
-                                  id="citizenship"
-                                  name="citizenship"
+                                  id="type"
+                                  name="type"
                                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white"
                                   value={type}
                                   onChange={(e) => setType(e.target.value)}

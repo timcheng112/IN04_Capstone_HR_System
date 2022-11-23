@@ -14,7 +14,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
 
   const [name, setName] = useState(plan.planName)
   const [amount, setAmount] = useState(plan.planAmount)
-  const [description, setDescription] = useState("")
+  const [description, setDescription] = useState(plan.description)
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [type, setType] = useState(plan.planType)
@@ -56,7 +56,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
 
     var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
 
-    api.editBenefitPlan(plan.planId,description, name, amount, helpStartDate.trim(), helpEndDate.trim())
+    api.editBenefitPlan(plan.benefitPlanId,description, name, amount, helpStartDate.trim(), helpEndDate.trim())
     .then(() => {alert("Successfully saved.");})
     .catch((error) => setError(error));
     setOpen(false);
@@ -112,6 +112,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
                                   name="company-name"
                                   id="company-name"
                                   value={name}
+                                  disabled = {user !== null && !user.hrEmployee}
                                   onChange={(e) => setName(e.target.value)}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
@@ -127,6 +128,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
                                   name="description"
                                   rows={4}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                  disabled = {user !== null && !user.hrEmployee}
                                   value={description}
                                   onChange={(e) => setDescription(e.target.value)}
                                 />
@@ -142,6 +144,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
                                   name="salary"
                                   id="salary"
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                  disabled = {user !== null && !user.hrEmployee}
                                   required
                                   placeholder="0.00"
                                   value={amount}
@@ -200,13 +203,13 @@ export default function ViewPlan({ open, setOpen, plan }) {
                       >
                         Cancel
                       </button>
-                      <button
+                      {user !== null && user.hrEmployee &&<button
                         type="button"
                         onClick={()=>save()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save
-                      </button>
+                      </button>}
                     </div>
                   </form>
                 </Dialog.Panel>
