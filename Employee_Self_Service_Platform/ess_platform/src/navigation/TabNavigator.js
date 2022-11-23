@@ -4,6 +4,7 @@ import HomeNavigator from "./HomeNavigator";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import AdminDrawerNavigator from "./AdminDrawerNavigator";
 import TrainingNavigator from "./TrainingNavigator";
+import WelfareNavigator from "./WelfareNavigator";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -44,6 +45,15 @@ const TabNavigator = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="book" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Welfare"
+        component={WelfareNavigator}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="smile-circle" size={24} color={color} />
           ),
         }}
       />
