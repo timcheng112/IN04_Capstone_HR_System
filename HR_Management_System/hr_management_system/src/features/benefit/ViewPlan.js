@@ -10,7 +10,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function ViewPlan({ open, setOpen, plan }) {
+export default function ViewPlan({ open, setOpen, plan, user }) {
 
   const [name, setName] = useState(plan.planName)
   const [amount, setAmount] = useState(plan.planAmount)
@@ -18,22 +18,17 @@ export default function ViewPlan({ open, setOpen, plan }) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [type, setType] = useState(plan.planType)
-  const [user, setUser] = useState(getUserId());
+  const [userId, setUserId] = useState(getUserId());
   const [error, setError] = useState();
+  const [employee, setEmployee] = useState(null);
 
   useEffect(() => {
-    let yyyy = plan.startDate.slice(0, 4)
-    let mm = plan.startDate.slice(5, 7)
-    let dd = plan.startDate.slice(8, 10)
-    setStartDate(new Date(parseInt(yyyy), parseInt(mm), parseInt(dd)))
+    setStartDate(new Date(plan.startDate));
+    setEndDate(new Date(plan.endDate));
+    setEmployee(user);
+  }, [open]);
 
-    let aaaa = plan.endDate.slice(0, 4)
-    let bb = plan.endDate.slice(5, 7)
-    let cc = plan.endDate.slice(8, 10)
-    setEndDate(new Date(parseInt(aaaa), parseInt(bb), parseInt(cc)))
-  }, []);
-
-  function save(){    
+  function save(){
     var date = startDate.getDate()
     if (startDate.getDate() < 10) {
       date = "0" + date;
@@ -57,8 +52,8 @@ export default function ViewPlan({ open, setOpen, plan }) {
     var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
 
     api.editBenefitPlan(plan.benefitPlanId,description, name, amount, helpStartDate.trim(), helpEndDate.trim())
-    .then(() => {alert("Successfully saved.");})
-    .catch((error) => setError(error));
+        .then(() => {alert("Successfully saved.");})
+        .catch((error) => setError(error));
     setOpen(false);
   }
 
@@ -112,7 +107,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
                                   name="company-name"
                                   id="company-name"
                                   value={name}
-                                  disabled = {user !== null && !user.hrEmployee}
+                                  disabled = {employee !== null && !employee.hrEmployee}
                                   onChange={(e) => setName(e.target.value)}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
@@ -128,7 +123,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
                                   name="description"
                                   rows={4}
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                  disabled = {user !== null && !user.hrEmployee}
+                                  disabled = {employee !== null && !employee.hrEmployee}
                                   value={description}
                                   onChange={(e) => setDescription(e.target.value)}
                                 />
@@ -144,7 +139,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
                                   name="salary"
                                   id="salary"
                                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                  disabled = {user !== null && !user.hrEmployee}
+                                  disabled = {employee !== null && !employee.hrEmployee}
                                   required
                                   placeholder="0.00"
                                   value={amount}
@@ -203,7 +198,7 @@ export default function ViewPlan({ open, setOpen, plan }) {
                       >
                         Cancel
                       </button>
-                      {user !== null && user.hrEmployee &&<button
+                      {employee !== null && employee.hrEmployee &&<button
                         type="button"
                         onClick={()=>save()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

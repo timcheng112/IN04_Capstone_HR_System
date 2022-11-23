@@ -63,7 +63,7 @@ export default function BenefitPlan({ type, plans }) {
                         Active
                       </span>}
                       {!plan.isActive && <span className="whitespace-nowrap inline-flex items-center rounded-full bg-red-100 px-3 py-0.5 text-sm font-medium text-red-800">
-                        Not active
+                        Inactive
                       </span>}
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

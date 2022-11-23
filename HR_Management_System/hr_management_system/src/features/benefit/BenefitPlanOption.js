@@ -73,7 +73,7 @@ export default function BenefitPlanOption({ plan }) {
         </button>}
       </div>
       <AddNewClaim open={claim} setOpen={setClaim} plan={plan}/>
-      <ViewPlan open={open} setOpen={setOpen} plan={plan}/>
+      <ViewPlan open={open} setOpen={setOpen} plan={plan} user={user}/>
       <CheckDialog 
           title="Plan"
           item="Plan"

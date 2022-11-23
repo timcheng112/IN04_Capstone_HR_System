@@ -990,7 +990,7 @@ const api = {
   },
   editBenefitPlan(planId, description, planName, planAmount, startDate, endDate) {
     return axios.put(
-      `http://localhost:9191/api/claims/editBenefitPlan?planId=?${planId}&description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}`
+      `http://localhost:9191/api/claims/editBenefitPlan?planId=${planId}&description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}`
     );
   },
   terminateBenefitPlan(planId) {
