@@ -11,6 +11,8 @@ import { useHistory } from "react-router-dom";
 export default function Benefits() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [claims, setClaims] = useState([]);
+  const [myClaims, setMyClaims] = useState([]);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -32,7 +34,24 @@ export default function Benefits() {
       })
       .catch((error) => setError(error));
   }, []);
-  const claims = []
+  useEffect(() => {
+    api
+      .getAllClaims()
+      .then((response) => {
+        setClaims(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  useEffect(() => {
+    api
+      .getEmployeeClaims(getUserId())
+      .then((response) => {
+        setMyClaims(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
 
   return (
@@ -80,7 +99,7 @@ export default function Benefits() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200 bg-white">
-                        {claims.map((claim) => (
+                        {user !== null && user.hrEmployee && claims.map((claim) => (
                           <tr key={claim.claimId}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
                               {claim.benefitPlanInstance.benefitPlan.planName}
@@ -88,8 +107,20 @@ export default function Benefits() {
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">$ {claim.claimAmount}</td>
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.claimDate}</td>
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.claimStatus}</td>
-                            {user !== null && user.hrEmployee &&
-                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.benefitPlanInstance.planOwner}</td>}
+                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.benefitPlanInstance.planOwner}</td>
+                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                              <ClaimOption claim={claim} />
+                            </td>
+                          </tr>
+                        ))}
+                        {user !== null && !user.hrEmployee && claims.map((claim) => (
+                          <tr key={claim.claimId}>
+                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
+                              {claim.benefitPlanInstance.benefitPlan.planName}
+                            </td>
+                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">$ {claim.claimAmount}</td>
+                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.claimDate}</td>
+                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.claimStatus}</td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <ClaimOption claim={claim} />
                             </td>

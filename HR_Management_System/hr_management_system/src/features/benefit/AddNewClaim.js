@@ -15,6 +15,7 @@ export default function AddNewPlan({ open, setOpen,plan }) {
   const [amount, setAmount] = useState(0)
   const [remarks, setRemarks] = useState("")
   const [incidentDate, setIncidentDate] = useState(new Date());
+  const [claimDate, setClaimDate] = useState(new Date());
   const [file, setFileState] = useState(null);
   const [fileName, setFileName] = useState(null);
   const [user, setUser] = useState(getUserId());
@@ -30,34 +31,23 @@ export default function AddNewPlan({ open, setOpen,plan }) {
     }
   }, [open])
 
-  // function add(){    
-  //   var date = startDate.getDate()
-  //   if (startDate.getDate() < 10) {
-  //     date = "0" + date;
-  //   }
-  //   var month = startDate.getMonth() + 1;
-  //   if (month < 10) {
-  //     month = "0" + (month);
-  //   }
+  function add(){    
+    var date = incidentDate.getDate()
+    if (incidentDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = incidentDate.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + (month);
+    }
 
-  //   var helpStartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
+    var helpincidentDate = (incidentDate.getYear() + 1900) + "-" + month + "-" + date;
 
-  //   var edate = endDate.getDate()
-  //   if (endDate.getDate() < 10) {
-  //     edate = "0" + edate;
-  //   }
-  //   var emonth = endDate.getMonth() + 1;
-  //   if (emonth < 10) {
-  //     emonth = "0" + (emonth);
-  //   }
-
-  //   var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
-
-  //   api.addBenefitPlan(description, name, amount, helpStartDate.trim(), helpEndDate.trim(), type)
-  //   .then(() => {alert("Successfully added.");})
-  //   .catch((error) => setError(error));
-  //   setOpen(false);
-  // }
+    api. makeNewClaim(claimDate, helpincidentDate.trim(), remarks,amount,plan.benefitPlanId,file)
+    .then(() => {alert("Successfully added.");})
+    .catch((error) => setError(error));
+    setOpen(false);
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -169,7 +159,7 @@ export default function AddNewPlan({ open, setOpen,plan }) {
                       </button>
                       <button
                         type="button"
-                        //onClick={()=>add()}
+                        onClick={()=>add()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save

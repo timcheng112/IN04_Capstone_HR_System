@@ -42,7 +42,7 @@ export default function BenefitPlanOption({ claim }) {
           />
           <span className="hidden md:block">View</span>
         </button>
-        <button
+        {user !== null && user === claim.benefitPlanInstance.planOwner.userId && <button
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           onClick={() => setTrash(true)}
@@ -52,29 +52,7 @@ export default function BenefitPlanOption({ claim }) {
             aria-hidden="true"
           />
           <span className="hidden md:block">Withdraw</span>
-        </button>
-        {/* <button
-          type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-          onClick={() => setTrash(true)}
-        >
-          <CheckIcon
-            className="md:-ml-0.5 md:mr-2 h-4 w-4"
-            aria-hidden="true"
-          />
-          <span className="hidden md:block">Approve</span>
-        </button>
-        <button
-          type="button"
-          className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-          onClick={() => setTrash(true)}
-        >
-          <XMarkIcon
-            className="md:-ml-0.5 md:mr-2 h-4 w-4"
-            aria-hidden="true"
-          />
-          <span className="hidden md:block">Reject</span>
-        </button> */}
+        </button>}
       
       </div>
       <CheckDialog 
