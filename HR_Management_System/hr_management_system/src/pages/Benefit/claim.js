@@ -17,7 +17,16 @@ export default function Benefits() {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const tabs = [
+    { name: "My Benefit Plans", href: "/welfare/mybenefits", current: false },
+    {
+      name: "Claims",
+      href: "#",
+      current: true,
+    },
+  ];
+  const hrtabs = [
     { name: "Benefit Plans", href: "/welfare/benefits", current: false },
+    { name: "My Plans", href: "/welfare/mybenefits", current: false },
     {
       name: "Claims",
       href: "#",
@@ -69,7 +78,8 @@ export default function Benefits() {
       <div className="py-10">
         <main className="flex-1">
           <div className="sm:flex-auto px-6">
-            <Tab tabs={tabs} />
+            {user !== null && !user.hrEmployee && <Tab tabs={tabs} />}
+            {user !== null && user.hrEmployee && <Tab tabs={hrtabs} />}
           </div>
           <div className="py-3"></div>
           <div className="px-4 sm:px-6 lg:px-8">

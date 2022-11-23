@@ -10,7 +10,7 @@ import { Fragment, useState } from "react";
 import WelfareBreadcrumb from "../Breadcrumb/WelfareBreadcrumb";
 
 const navigation = [
-  { name: "Benefits", href: "/welfare/benefits", icon: SparklesIcon, current: false },
+  { name: "Benefits", href: "/welfare/mybenefits", icon: SparklesIcon, current: false },
   { name: "Rewards", href: "/welfare/rewards", icon: GiftIcon, current: false },
 ];
 

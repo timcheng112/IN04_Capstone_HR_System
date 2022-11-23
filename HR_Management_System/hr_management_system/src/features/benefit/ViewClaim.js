@@ -12,6 +12,7 @@ function classNames(...classes) {
 
 export default function ViewClaim({ open, setOpen, claim }) {
   const [user, setUser] = useState(getUserId());
+  const [error, setError] = useState(null);
   
   useEffect(() => {
     api
@@ -22,6 +23,17 @@ export default function ViewClaim({ open, setOpen, claim }) {
       })
       .catch((error) => setError(error));
   }, []);
+
+  function approve(){
+    api.approveClaim(claim.claimId)
+    .then(() => {alert("Successfully approve.");})
+    .catch((error) => setError(error));
+  }
+  function reject(){
+    api.rejectClaim(claim.claimId)
+    .then(() => {alert("Successfully reject.");})
+    .catch((error) => setError(error));
+  }
 
   // function downloadFile() {
   //   api.downloadDocument(Number(leave.leaveId)).then((response) => {
@@ -66,7 +78,7 @@ export default function ViewClaim({ open, setOpen, claim }) {
                       <div className="flex items-start justify-between">
                         <div className="py-2"></div>
                         <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
-                          {leave.employee.firstName}
+                          Claim Details
                         </h3>
                         <div className="ml-3 flex h-7 items-center">
                           <button
@@ -156,12 +168,14 @@ export default function ViewClaim({ open, setOpen, claim }) {
                     {user !== null && user.hrEmployee &&<div className="flex flex-shrink-0 justify-end px-4 py-4">
                       <button
                         type="button"
+                        onClick={() => approve()}
                         className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Approve
                       </button>
                       <button
                         type="button"
+                        onClick={() => reject()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Reject

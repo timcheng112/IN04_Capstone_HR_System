@@ -10,6 +10,7 @@ import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 import CheckDialog from "./CheckDialog";
 import { useHistory } from 'react-router-dom';
+import ViewClaim from "./ViewClaim";
 
 export default function BenefitPlanOption({ claim }) {
   const history = useHistory();
@@ -27,6 +28,12 @@ export default function BenefitPlanOption({ claim }) {
       })
       .catch((error) => setError(error));
   }, []);
+
+  function withdraw(){
+    api.withdrawClaim(claim.claimId)
+    .then(() => {alert("Successfully withdraw.");})
+    .catch((error) => setError(error));
+  }
 
   return (
     <div>
@@ -55,13 +62,14 @@ export default function BenefitPlanOption({ claim }) {
         </button>}
       
       </div>
+      <ViewClaim open={open} setOpen={setOpen} claim={claim} />
       <CheckDialog 
           title="Claim"
           item="Claim"
           open={trash}
           onClose={() => setTrash(false)}
           setOpen={() => setTrash(false)}
-          //onConfirm={onClickHandler}
+          onConfirm={withdraw}
         />
     </div>
   )

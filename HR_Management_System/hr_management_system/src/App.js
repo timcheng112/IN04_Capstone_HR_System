@@ -68,7 +68,8 @@ import EmployeesNotInPayrollPage from "./pages/Payroll/EmployeesNotInPayroll";
 import AddToPayrollFormPage from "./pages/Payroll/AddToPayrollForm";
 import EmployeePayrollHistory from "./pages/Payroll/ViewEmployeesPayHistory";
 
-import BenefitsPage from "./pages/Benefit/index";
+import MyBenefitsPage from "./pages/Benefit/index";
+import BenefitsPage from "./pages/Benefit/indexHR";
 import ClaimsPage from "./pages/Benefit/claim";
 
 function App() {
@@ -254,6 +255,7 @@ function App() {
 
           <PrivateRoute exact path="/payroll" component={PayrollPage} />
 
+          <PrivateRoute exact path="/welfare/mybenefits" component={MyBenefitsPage} />
           <PrivateRoute exact path="/welfare/benefits" component={BenefitsPage} />
           <PrivateRoute exact path="/welfare/claims" component={ClaimsPage} />
         </Switch>

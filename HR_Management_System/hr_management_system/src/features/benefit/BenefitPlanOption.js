@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 import ViewPlan from "./ViewPlan";
-import AddNewClaim from "./AddNewClaim";
+import AssignBenefit from "./AssignBenefit";
 import CheckDialog from "./CheckDialog";
 import { useHistory } from 'react-router-dom';
 
@@ -58,7 +58,7 @@ export default function BenefitPlanOption({ plan }) {
             className="md:-ml-0.5 md:mr-2 h-4 w-4"
             aria-hidden="true"
           />
-          <span className="hidden md:block">Claim</span>
+          <span className="hidden md:block">Assign</span>
         </button>
         {plan.isActive && user !== null && user.hrEmployee && <button
           type="button"
@@ -72,7 +72,7 @@ export default function BenefitPlanOption({ plan }) {
           <span className="hidden md:block">Terminate</span>
         </button>}
       </div>
-      <AddNewClaim open={claim} setOpen={setClaim} plan={plan}/>
+      <AssignBenefit open={claim} onClose={()=>setClaim(false)} plan={plan}/>
       <ViewPlan open={open} setOpen={setOpen} plan={plan} user={user}/>
       <CheckDialog 
           title="Plan"
