@@ -5,13 +5,14 @@ import ClaimScreen from "../screens/ClaimScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import WDrawerContent from "../components/general/WDrawerContent";
 
+
 const WelfareDrawerNavigator = () => {
   const WelfareDrawer = createDrawerNavigator();
 
   return (
     <WelfareDrawer.Navigator
       minSwipeDistance={10}
-      initialRouteName="Onboarding"
+      initialRouteName="Welfare"
       drawerContent={(props) => <WDrawerContent {...props} />}
     >
       <WelfareDrawer.Screen name="Benefits" component={BenefitScreen} />
