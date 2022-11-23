@@ -1,4 +1,5 @@
 import { ArrowLeftIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import Navbar from "../../components/Navbar";
@@ -44,15 +45,18 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
       setAllowances([
         ...allowances,
         {
-          allowanceName: allowanceName,
-          amount: allowanceAmount,
-          // remarks:
-          //   !allowanceRemarks || allowanceRemarks === ""
-          //     ? "-"
-          //     : allowanceRemarks,
-          isFlatAmount: allowanceIsFlatAmount,
-          allowanceType: allowanceType.toUpperCase(),
-          isRecurring: allowanceIsRecurring,
+          template: {
+            allowanceName: allowanceName,
+            amount: allowanceAmount,
+            isFlatAmount: allowanceIsFlatAmount,
+            allowanceType: allowanceType.toUpperCase(),
+            isRecurring: allowanceIsRecurring,
+          },
+          date: format(new Date(), "yyyy-MM-dd"),
+          remarks:
+            !allowanceRemarks || allowanceRemarks === ""
+              ? "-"
+              : allowanceRemarks,
         },
       ]);
       setShowAddAllowanceRow(false);
@@ -86,15 +90,18 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
       setDeductions([
         ...deductions,
         {
-          deductionName: deductionName,
-          deductionType: deductionType.toUpperCase(),
-          amount: deductionAmount,
-          // remarks:
-          //   !deductionRemarks || deductionRemarks === ""
-          //     ? "-"
-          //     : deductionRemarks,
-          isFlatAmount: deductionIsFlatAmount,
-          isRecurring: deductionIsRecurring,
+          template: {
+            deductionName: deductionName,
+            deductionType: deductionType.toUpperCase(),
+            amount: deductionAmount,
+            isFlatAmount: deductionIsFlatAmount,
+            isRecurring: deductionIsRecurring,
+          },
+          date: format(new Date(), "yyyy-MM-dd"),
+          remarks:
+            !deductionRemarks || deductionRemarks === ""
+              ? "-"
+              : deductionRemarks,
         },
       ]);
       setShowAddDeductionRow(false);
@@ -120,8 +127,10 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
   const submitHandler = () => {
     if (isPersonalInfoVerified && isJobInfoVerified && isBankInfoVerified) {
       const temp = {
-        allowanceTemplates: allowances,
-        deductionTemplates: deductions,
+        // allowanceTemplates: allowances,
+        // deductionTemplates: deductions,
+        allowance: allowances,
+        deduction: deductions,
       };
       api
         .editUserPayrollInformation(
@@ -133,19 +142,19 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
         .then(() => {
           alert(
             "Successfully added " +
-            employee.firstName +
-            " " +
-            employee.lastName +
-            " to payroll!"
+              employee.firstName +
+              " " +
+              employee.lastName +
+              " to payroll!"
           );
           closePayrollForm();
         })
         .catch((error) => alert(error.response.data.message));
     } else {
-      let msg = ""
-      msg += !isPersonalInfoVerified ? "Personal Information; " : ""
-      msg += !isJobInfoVerified ? "Job Information; " : ""
-      msg += !isBankInfoVerified ? "Bank Information; " : ""
+      let msg = "";
+      msg += !isPersonalInfoVerified ? "Personal Information; " : "";
+      msg += !isJobInfoVerified ? "Job Information; " : "";
+      msg += !isBankInfoVerified ? "Bank Information; " : "";
       alert("Please verify " + msg);
     }
   };
@@ -605,55 +614,55 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {allowances.length > 0
                     ? allowances.map((allowance) => (
-                      <tr>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {allowance.allowanceName}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-900">
-                          {allowance.allowanceType}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
-                          +${allowance.amount}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
-                          <input
-                            type="checkbox"
-                            checked={allowance.isFlatAmount}
-                            disabled
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />{" "}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
-                          <input
-                            type="checkbox"
-                            checked={allowance.isRecurring}
-                            disabled
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />{" "}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-900">
-                          {allowance.remarks}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-900">
-                          <TrashIcon
-                            className="w-5 text-gray-400 hover:text-gray-900 hover:cursor-pointer"
-                            onClick={() => removeAllowanceHandler(allowance)}
-                          />
-                        </td>
-                      </tr>
-                    ))
+                        <tr>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
+                            {allowance.template.allowanceName}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-900">
+                            {allowance.template.allowanceType}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
+                            +${allowance.template.amount}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
+                            <input
+                              type="checkbox"
+                              checked={allowance.template.isFlatAmount}
+                              disabled
+                              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />{" "}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
+                            <input
+                              type="checkbox"
+                              checked={allowance.template.isRecurring}
+                              disabled
+                              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />{" "}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-900">
+                            {allowance.remarks}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-900">
+                            <TrashIcon
+                              className="w-5 text-gray-400 hover:text-gray-900 hover:cursor-pointer"
+                              onClick={() => removeAllowanceHandler(allowance)}
+                            />
+                          </td>
+                        </tr>
+                      ))
                     : !showAddAllowanceRow && (
-                      <tr>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          No Allowances
-                        </td>
-                        <td />
-                        <td />
-                        <td />
-                        <td />
-                        <td />
-                      </tr>
-                    )}
+                        <tr>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
+                            No Allowances
+                          </td>
+                          <td />
+                          <td />
+                          <td />
+                          <td />
+                          <td />
+                        </tr>
+                      )}
                   {showAddAllowanceRow && (
                     <tr>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
@@ -738,23 +747,23 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
                   onClick={
                     showAddAllowanceRow
                       ? () => {
-                        setShowAddAllowanceRow(false);
-                        setAllowanceName();
-                        setAllowanceType("Bonus");
-                        setAllowanceAmount();
-                        setAllowanceIsFlatAmount(false);
-                        setAllowanceIsRecurring(false);
-                        setAllowanceRemarks();
-                      }
+                          setShowAddAllowanceRow(false);
+                          setAllowanceName();
+                          setAllowanceType("Bonus");
+                          setAllowanceAmount();
+                          setAllowanceIsFlatAmount(false);
+                          setAllowanceIsRecurring(false);
+                          setAllowanceRemarks();
+                        }
                       : () => {
-                        setShowAddAllowanceRow(true);
-                        setAllowanceName();
-                        setAllowanceType("Bonus");
-                        setAllowanceAmount();
-                        setAllowanceIsFlatAmount(false);
-                        setAllowanceIsRecurring(false);
-                        setAllowanceRemarks();
-                      }
+                          setShowAddAllowanceRow(true);
+                          setAllowanceName();
+                          setAllowanceType("Bonus");
+                          setAllowanceAmount();
+                          setAllowanceIsFlatAmount(false);
+                          setAllowanceIsRecurring(false);
+                          setAllowanceRemarks();
+                        }
                   }
                 >
                   {showAddAllowanceRow ? "Cancel" : "Add"}
@@ -836,55 +845,55 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {deductions.length > 0
                     ? deductions.map((deduction) => (
-                      <tr>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {deduction.deductionName}
-                        </td>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {deduction.deductionType}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
-                          -${deduction.amount}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
-                          <input
-                            type="checkbox"
-                            checked={deduction.isFlatAmount}
-                            disabled
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
-                          <input
-                            type="checkbox"
-                            checked={deduction.isRecurring}
-                            disabled
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />
-                        </td>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          {deduction.remarks}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-900">
-                          <TrashIcon
-                            className="w-5 text-gray-400 hover:text-gray-900 hover:cursor-pointer"
-                            onClick={() => removeDeductionHandler(deduction)}
-                          />
-                        </td>
-                      </tr>
-                    ))
+                        <tr>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
+                            {deduction.template.deductionName}
+                          </td>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
+                            {deduction.template.deductionType}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
+                            -${deduction.template.amount}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
+                            <input
+                              type="checkbox"
+                              checked={deduction.template.isFlatAmount}
+                              disabled
+                              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
+                            <input
+                              type="checkbox"
+                              checked={deduction.template.isRecurring}
+                              disabled
+                              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                          </td>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
+                            {deduction.remarks}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-900">
+                            <TrashIcon
+                              className="w-5 text-gray-400 hover:text-gray-900 hover:cursor-pointer"
+                              onClick={() => removeDeductionHandler(deduction)}
+                            />
+                          </td>
+                        </tr>
+                      ))
                     : !showAddDeductionRow && (
-                      <tr>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                          No Deductions
-                        </td>
-                        <td />
-                        <td />
-                        <td />
-                        <td />
-                        <td />
-                      </tr>
-                    )}
+                        <tr>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
+                            No Deductions
+                          </td>
+                          <td />
+                          <td />
+                          <td />
+                          <td />
+                          <td />
+                        </tr>
+                      )}
                   {showAddDeductionRow && (
                     <tr>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
@@ -968,23 +977,23 @@ const AddToPayrollForm = ({ employee, closePayrollForm }) => {
                   onClick={
                     showAddDeductionRow
                       ? () => {
-                        setShowAddDeductionRow(false);
-                        setDeductionName();
-                        setDeductionType("Damages");
-                        setDeductionAmount();
-                        setDeductionIsFlatAmount(false);
-                        setDeductionIsRecurring(false);
-                        setDeductionRemarks();
-                      }
+                          setShowAddDeductionRow(false);
+                          setDeductionName();
+                          setDeductionType("Damages");
+                          setDeductionAmount();
+                          setDeductionIsFlatAmount(false);
+                          setDeductionIsRecurring(false);
+                          setDeductionRemarks();
+                        }
                       : () => {
-                        setShowAddDeductionRow(true);
-                        setDeductionName();
-                        setDeductionType("Damages");
-                        setDeductionAmount();
-                        setDeductionIsFlatAmount(false);
-                        setDeductionIsRecurring(false);
-                        setDeductionRemarks();
-                      }
+                          setShowAddDeductionRow(true);
+                          setDeductionName();
+                          setDeductionType("Damages");
+                          setDeductionAmount();
+                          setDeductionIsFlatAmount(false);
+                          setDeductionIsRecurring(false);
+                          setDeductionRemarks();
+                        }
                   }
                 >
                   {showAddDeductionRow ? "Cancel" : "Add"}

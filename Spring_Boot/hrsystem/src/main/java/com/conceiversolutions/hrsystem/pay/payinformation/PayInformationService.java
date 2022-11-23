@@ -28,9 +28,11 @@ public class PayInformationService {
     }
 
     public PayInformation getPayInformation(Long id){
-        Optional<PayInformation> payInfo = payInformationRepository.findById(id);
-        if(payInfo.isPresent()){
-            return payInfo.get();
+        Optional<PayInformation> payInfoOptional = payInformationRepository.findById(id);
+        if(payInfoOptional.isPresent()){
+            PayInformation payInformation = payInfoOptional.get();
+            payInformation.getUser().nullify();
+            return payInformation;
         }else{
             throw new IllegalStateException("Pay Information does not exist.");
         }
