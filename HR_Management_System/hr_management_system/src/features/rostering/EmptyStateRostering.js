@@ -2,7 +2,7 @@ import { CalendarDaysIcon, PlusIcon } from "@heroicons/react/20/solid";
 
 export default function EmptyStateRostering() {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mt-20">
       <CalendarDaysIcon className="h-20 w-20" />
       <h3 className="mt-2 text-sm font-medium text-gray-900">
         No roster selected
