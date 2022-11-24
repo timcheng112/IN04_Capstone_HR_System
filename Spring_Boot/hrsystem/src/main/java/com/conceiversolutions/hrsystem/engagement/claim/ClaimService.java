@@ -5,7 +5,6 @@ import com.conceiversolutions.hrsystem.engagement.benefitplan.BenefitPlanInstanc
 import com.conceiversolutions.hrsystem.enums.StatusEnum;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
 import com.conceiversolutions.hrsystem.user.docdata.DocDataService;
-import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -144,6 +143,7 @@ public class ClaimService {
         DocData supportingDocument = null;
         if (null != file) { // if file is uploaded, will set.
             if (!file.isEmpty()) {
+                System.out.println("File is being uploaded");
                 supportingDocument = docDataService.uploadDoc(file);
             }
         }

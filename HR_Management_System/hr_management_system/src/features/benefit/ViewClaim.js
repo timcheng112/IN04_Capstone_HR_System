@@ -26,33 +26,47 @@ export default function ViewClaim({ open, setOpen, claim }) {
 
   function approve(){
     api.approveClaim(claim.claimId)
-    .then(() => {alert("Successfully approve.");})
+      .then(() => {
+        alert("Successfully approved.");
+        setOpen(false);
+        })
     .catch((error) => setError(error));
   }
   function reject(){
     api.rejectClaim(claim.claimId)
-    .then(() => {alert("Successfully reject.");})
+      .then(() => {
+        alert("Successfully rejected.");
+        setOpen(false);
+        })
+    .catch((error) => setError(error));
+  }
+  function withdraw(){
+    api.withdrawClaim(claim.claimId)
+      .then(() => {
+        alert("Successfully withdrawn.");
+        setOpen(false);
+        })
     .catch((error) => setError(error));
   }
 
-  // function downloadFile() {
-  //   api.downloadDocument(Number(leave.leaveId)).then((response) => {
-  //     console.log(leave.supportingDocument.docId);
-  //     const fileName =
-  //       response.headers["content-disposition"].split("filename=")[1];
-  //     console.log(fileName);
-  //     api.getDocById(leave.supportingDocument.docId).then((response) => {
-  //       //console.log(response.data);
-  //       const url = window.URL.createObjectURL(response.data);
+   function downloadFile() {
+//     console.log(claim.supportingDocument.docId);
+     api.downloadDocument(claim.supportingDocument.docId).then((response) => {
+       const fileName = response.headers["content-disposition"].split("filename=")[1];
+       api.getDocById(claim.supportingDocument.docId).then((response) => {
+         //console.log(response.data);
+         const url = window.URL.createObjectURL(response.data);
 
-  //       const link = document.createElement("a");
-  //       link.href = url;
-  //       link.setAttribute("download", fileName);
-  //       document.body.appendChild(link);
-  //       link.click();
-  //       link.parentNode.removeChild(link);
-  //     });
-  //   });
+         const link = document.createElement("a");
+         link.href = url;
+         link.setAttribute("download", fileName);
+         document.body.appendChild(link);
+         link.click();
+         link.parentNode.removeChild(link);
+       });
+     });
+   }
+
 
 
   return (
@@ -156,7 +170,7 @@ export default function ViewClaim({ open, setOpen, claim }) {
                               <button
                                 type="button"
                                 className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                                //onClick={() => downloadFile()}
+                                onClick={() => downloadFile()}
                               >
                                 Download Document
                               </button>
@@ -165,7 +179,7 @@ export default function ViewClaim({ open, setOpen, claim }) {
                         </dl>
                       </div>
                     </div>
-                    {user !== null && user.hrEmployee &&<div className="flex flex-shrink-0 justify-end px-4 py-4">
+                    {user !== null && user.hrEmployee && claim.claimStatus === "PENDING" &&<div className="flex flex-shrink-0 justify-end px-4 py-4">
                       <button
                         type="button"
                         onClick={() => approve()}
@@ -179,6 +193,15 @@ export default function ViewClaim({ open, setOpen, claim }) {
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Reject
+                      </button>
+                    </div>}
+                    {user !== null && !user.hrEmployee && claim.claimStatus === "PENDING" &&<div className="flex flex-shrink-0 justify-end px-4 py-4">
+                      <button
+                        type="button"
+                        onClick={() => withdraw()}
+                        className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        Withdraw
                       </button>
                     </div>}
                   </div>

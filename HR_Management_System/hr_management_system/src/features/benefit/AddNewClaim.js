@@ -11,7 +11,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AddNewPlan({ open, setOpen,plan }) {
+export default function AddNewPlan({ open, setOpen, plan }) {
 
   const [amount, setAmount] = useState(0)
   const [remarks, setRemarks] = useState("")
@@ -31,6 +31,7 @@ export default function AddNewPlan({ open, setOpen,plan }) {
       setFileName(null);
       setFileState(null);
     }
+//    console.log(plan);
   }, [open])
 
   function add(){    
@@ -60,10 +61,10 @@ export default function AddNewPlan({ open, setOpen,plan }) {
 //    console.log(plan.benefitPlanId)
 
     // todo: this part needs to use benefit plan instance id instead of benefit plan id
-    api.makeNewClaim(submitDate, helpincidentDate.trim(), remarks, amount, plan.benefitPlanId, formData)
+    api.makeNewClaim(submitDate, helpincidentDate.trim(), remarks, amount, plan.benefitPlanInstanceId, formData)
       .then((response) => {
         let message = response.data;
-        console.log(message);
+//        console.log(message);
         if (message.includes("Partial Claim")) {
           alert("New Claim has been made with partial amount");
         } else {
@@ -71,15 +72,17 @@ export default function AddNewPlan({ open, setOpen,plan }) {
         }
       })
       .catch((error) => {
-        console.log(error);
+//        console.log(error);
         var message = error.response.data.message;
-        console.log(message);
+//        console.log(message);
         if (message.includes("Benefit Plan Instance has no more remaining")) {
           alert(message);
         } else if (message.includes("Claim cannot be made as incident happened before")) {
           alert(message);
         } else if (message.includes("Benefit Plan Instance ID is not active")) {
           alert("The Benefit Plan is not active, please choose a different one")
+        } else if (message.includes("Claim Date cannot be before")) {
+          alert("Cannot claim for an event in the future");
         } else {
           alert("There was an error, please try again");
         }

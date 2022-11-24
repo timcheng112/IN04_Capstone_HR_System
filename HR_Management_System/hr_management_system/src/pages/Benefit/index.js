@@ -106,7 +106,7 @@ export default function Benefits() {
                         {plans.map((plan) => (
                           <tr key={plan.benefitPlanInstanceId}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
-                              {plan.planName}
+                              {plan.benefitPlan.planName}
                             </td>
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">$ {plan.remainingAmount}</td>
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{plan.enrolDate}</td>
