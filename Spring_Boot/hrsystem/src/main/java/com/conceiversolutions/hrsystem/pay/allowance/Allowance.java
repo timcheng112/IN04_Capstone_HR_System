@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.pay.allowance;
 
 import com.conceiversolutions.hrsystem.enums.AllowanceTypeEnum;
+import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplate;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -23,6 +24,9 @@ public class Allowance {
     @Column(name = "date")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Singapore")
     private LocalDate date;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = true, targetEntity = AllowanceTemplate.class)
+    private AllowanceTemplate template;
 
     public Allowance() {
     }
@@ -63,5 +67,13 @@ public class Allowance {
                 ", remarks='" + remarks + '\'' +
                 ", date=" + date +
                 '}';
+    }
+
+    public AllowanceTemplate getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(AllowanceTemplate template) {
+        this.template = template;
     }
 }

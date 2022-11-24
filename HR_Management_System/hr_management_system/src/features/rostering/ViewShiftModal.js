@@ -92,57 +92,61 @@ const ViewShiftModal = ({ open, onClose, shift, shiftListItem, person }) => {
                           </p>
                         </div>
                       </div>
-                      <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                        <label
-                          htmlFor="salesman-quota"
-                          className="block text-sm font-medium text-gray-700 mt-2 col-span-2"
-                        >
-                          Salesman Quota
-                        </label>
-                        <div className="col-span-1">
-                          <p
-                            id="salesman-quota"
-                            name="salesman-quota"
-                            className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          >
-                            {shift.minQuota[0]}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                        <label
-                          htmlFor="cashier-quota"
-                          className="block text-sm font-medium text-gray-700 mt-2 col-span-2"
-                        >
-                          Cashier Quota
-                        </label>
-                        <div className="col-span-1">
-                          <p
-                            id="cashier-quota"
-                            name="cashier-quota"
-                            className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          >
-                            {shift.minQuota[1]}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                        <label
-                          htmlFor="storemanager-quota"
-                          className="block text-sm font-medium text-gray-700 mt-2 col-span-2"
-                        >
-                          Store Manager Quota
-                        </label>
-                        <div className="col-span-1">
-                          <p
-                            id="storemanager-quota"
-                            name="storemanager-quota"
-                            className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          >
-                            {shift.minQuota[2]}
-                          </p>
-                        </div>
-                      </div>
+                      {shift.minQuota && (
+                        <>
+                          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                            <label
+                              htmlFor="salesman-quota"
+                              className="block text-sm font-medium text-gray-700 mt-2 col-span-2"
+                            >
+                              Salesman Quota
+                            </label>
+                            <div className="col-span-1">
+                              <p
+                                id="salesman-quota"
+                                name="salesman-quota"
+                                className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              >
+                                {shift.minQuota[0]}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                            <label
+                              htmlFor="cashier-quota"
+                              className="block text-sm font-medium text-gray-700 mt-2 col-span-2"
+                            >
+                              Cashier Quota
+                            </label>
+                            <div className="col-span-1">
+                              <p
+                                id="cashier-quota"
+                                name="cashier-quota"
+                                className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              >
+                                {shift.minQuota[1]}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                            <label
+                              htmlFor="storemanager-quota"
+                              className="block text-sm font-medium text-gray-700 mt-2 col-span-2"
+                            >
+                              Store Manager Quota
+                            </label>
+                            <div className="col-span-1">
+                              <p
+                                id="storemanager-quota"
+                                name="storemanager-quota"
+                                className="p-2 block w-full text-gray-900 bg-gray-50 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              >
+                                {shift.minQuota[2]}
+                              </p>
+                            </div>
+                          </div>
+                        </>
+                      )}
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
                           htmlFor="shift-remarks"

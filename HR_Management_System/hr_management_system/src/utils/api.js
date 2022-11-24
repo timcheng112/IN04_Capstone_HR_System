@@ -715,6 +715,9 @@ const api = {
   getAllStaff() {
     return axios.get(`http://localhost:9191/api/user/getAllStaff`);
   },
+  getShiftById(shiftId) {
+    return axios.get(`http://localhost:9191/api/shift/${shiftId}`);
+  },
   getShiftByTeamAndTime(teamId, dateString) {
     return axios.get(
       `http://localhost:9191/api/shift/getShiftByTeamAndTime?teamId=${teamId}&dateString=${dateString}`
