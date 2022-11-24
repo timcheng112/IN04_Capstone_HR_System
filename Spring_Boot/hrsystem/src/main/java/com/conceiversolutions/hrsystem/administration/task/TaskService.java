@@ -91,7 +91,7 @@ public class TaskService {
     }
 
     @Transactional
-    public void editTask(Long taskId, String taskName, String taskDescription) {
+    public void editTask(Long taskId, String taskName, String taskDescription, Boolean autoAssign) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalStateException("Task with ID: " + taskId + " does not exist!"));
 
@@ -129,6 +129,8 @@ public class TaskService {
             isTaskDescriptionValid = false;
         }
 
+        task.setAutoAssign(autoAssign);
+
         if (errMsg != "" && !(isTaskNameChanged && isTaskDescriptionChanged)) {
             if (isTaskNameChanged && isTaskDescriptionValid || isTaskDescriptionChanged && isTaskNameValid) {
                 System.out.println("Changes are valid");
@@ -144,6 +146,10 @@ public class TaskService {
 
     public List<Task> getOffboardingTasks() {
         return taskRepository.findTaskByIsOnboarding(false);
+    }
+
+    public List<Task> getAutoAssignTasks(){
+        return taskRepository.findTaskByAutoAssign(true);
     }
 
     public void assignTaskToEmployee(Long employeeId, Long taskId) {
