@@ -152,6 +152,7 @@ public class UserService implements UserDetailsService {
             u.setJobRequests(new ArrayList<>());
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
+            u.setBenefitPlanInstances(new ArrayList<>());
             if (u.getCurrentLeaveQuota() != null) { // first layer
                 if (u.getCurrentLeaveQuota().getPreviousLeaveQuota() != null) { // second layer
                     u.getCurrentLeaveQuota().getPreviousLeaveQuota().setPreviousLeaveQuota(null); // third layer don't
@@ -206,7 +207,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
-
+            u.setBenefitPlanInstances(new ArrayList<>());
             return u;
         } else {
             throw new IllegalStateException("User does not exist.");
@@ -257,6 +258,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
             return u;
         } else {
             throw new IllegalStateException("User does not exist.");
@@ -306,6 +308,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
             return u;
         } else {
             throw new IllegalStateException("Employee does not exist.");
@@ -1221,6 +1224,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
         }
 
         return managers;
@@ -1332,6 +1336,7 @@ public class UserService implements UserDetailsService {
             u.setJobRequests(new ArrayList<>());
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
+            u.setBenefitPlanInstances(new ArrayList<>());
             for (LeaveQuota lq : u.getLeaveQuotas()) {
                 u.getCurrentLeaveQuota().setPreviousLeaveQuota(null);
             }
@@ -1382,6 +1387,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
         }
 
         return employees;
@@ -1424,6 +1430,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
         }
 
         return applicants;
@@ -1544,7 +1551,7 @@ public class UserService implements UserDetailsService {
                 u.setLeaves(new ArrayList<>());
                 u.setLeaveQuotas(new ArrayList<>());
                 u.setCurrentLeaveQuota(null);
-
+                u.setBenefitPlanInstances(new ArrayList<>());
                 availManagers.add(u);
             }
         }
@@ -2075,6 +2082,7 @@ public class UserService implements UserDetailsService {
         u.setJobRequests(new ArrayList<>());
         u.setLeaves(new ArrayList<>());
         u.setLeaveQuotas(new ArrayList<>());
+        u.setBenefitPlanInstances(new ArrayList<>());
         for (LeaveQuota lq : u.getLeaveQuotas()) {
             u.getCurrentLeaveQuota().setPreviousLeaveQuota(null);
         }
