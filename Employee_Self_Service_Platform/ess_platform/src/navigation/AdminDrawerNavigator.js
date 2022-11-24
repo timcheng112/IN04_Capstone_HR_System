@@ -16,10 +16,38 @@ const AdminDrawerNavigator = () => {
       initialRouteName="Onboarding"
       drawerContent={(props) => <DrawerContent {...props} />}
     >
-      <AdminDrawer.Screen name="Onboarding" component={OnboardingScreen} />
-      <AdminDrawer.Screen name="Offboarding" component={OffboardingScreen} />
-      <AdminDrawer.Screen name="Leave" component={LeaveScreen} />
-      <AdminDrawer.Screen name="LeaveApplication" component={LeaveApplicationScreen} />
+      <AdminDrawer.Screen
+        name="Onboarding"
+        component={OnboardingScreen}
+        options={{
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+        }}
+      />
+      <AdminDrawer.Screen
+        name="Offboarding"
+        component={OffboardingScreen}
+        options={{
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+        }}
+      />
+      <AdminDrawer.Screen
+        name="Leave"
+        component={LeaveScreen}
+        options={{
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+        }}
+      />
+      <AdminDrawer.Screen
+        name="LeaveApplication"
+        component={LeaveApplicationScreen}
+        options={{
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+        }}
+      />
     </AdminDrawer.Navigator>
   );
 };
