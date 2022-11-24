@@ -10,6 +10,7 @@ import api from "../utils/api";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MyClaims from "../components/benefit/MyClaim";
 
 const styles = StyleSheet.create({
   container: {
@@ -59,9 +60,10 @@ const ClaimScreen = ({navigation}) => {
     userId  &&
     <SafeAreaView style={styles.container}>
       <View style={styles.inline}>
-        <Text style={styles.headlines}>Claims History</Text>
+        <Text style={styles.headlines}>My Claims</Text>
 
         </View>
+        <MyClaims navigation ={navigation} userId={userId} />
 
     </SafeAreaView>
   )
