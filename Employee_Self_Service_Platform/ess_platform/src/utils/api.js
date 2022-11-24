@@ -6,6 +6,7 @@ import axios from "axios";
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"
 const URL = "192.168.1.82"; // TIM
+// const URL = "10.249.73.251";
 
 const api = {
   login(workEmail, password) {
@@ -139,6 +140,11 @@ const api = {
   deleteAllNotifications(userId) {
     return axios.delete(
       `http://${URL}:9191/api/notification/deleteNotifications?userId=${userId}`
+    );
+  },
+  getShiftListItemByDateAndTeam(date, teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
     );
   },
 };

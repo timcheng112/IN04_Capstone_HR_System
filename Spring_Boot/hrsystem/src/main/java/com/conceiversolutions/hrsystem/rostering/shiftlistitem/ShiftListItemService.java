@@ -131,9 +131,10 @@ public class ShiftListItemService {
             shiftListItem.getShift().setShiftListItems(new ArrayList<>());
             // shiftListItem.getShift().getShiftListItems();
             // shiftListItem.getShift().removeShiftListItem(shiftListItem);
-            // for (ShiftListItem shiftListItemInShift : shiftListItem.getShift().getShiftListItems()) {
-            //     shiftListItemInShift.setUser(null);
-            //     shiftListItemInShift.setShift(null);
+            // for (ShiftListItem shiftListItemInShift :
+            // shiftListItem.getShift().getShiftListItems()) {
+            // shiftListItemInShift.setUser(null);
+            // shiftListItemInShift.setShift(null);
             // }
             // shiftListItem.getUser().setTeams(new ArrayList<>());
             // shiftListItem.getUser().setQualificationInformation(null);
@@ -157,11 +158,12 @@ public class ShiftListItemService {
             if (shiftListItem != null) {
                 shiftListItem.getShift().setRoster(null);
                 shiftListItem.getShift().setShiftListItems(new ArrayList<>());
-                shiftListItem.getUser().setTeams(new ArrayList<>());
-                shiftListItem.getUser().setQualificationInformation(null);
-                shiftListItem.getUser().setPositions(new ArrayList<>());
-                shiftListItem.getUser().setTaskListItems(new ArrayList<>());
-                shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+                shiftListItem.getUser().nullify();
+                // shiftListItem.getUser().setTeams(new ArrayList<>());
+                // shiftListItem.getUser().setQualificationInformation(null);
+                // shiftListItem.getUser().setPositions(new ArrayList<>());
+                // shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+                // shiftListItem.getUser().setShiftListItems(new ArrayList<>());
             }
         }
 

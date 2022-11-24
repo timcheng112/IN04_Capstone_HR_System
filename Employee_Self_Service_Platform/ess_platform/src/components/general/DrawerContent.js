@@ -2,7 +2,7 @@ import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import React from "react";
 import { View } from "react-native";
-import { Drawer } from "react-native-paper";
+import { Drawer, Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { AuthContext } from "../login/Context";
 
@@ -19,6 +19,14 @@ const DrawerContent = (props) => {
     >
       <DrawerContentScrollView {...props}>
         <View style={{ flex: 1, elevation: 16 }}>
+          <Drawer.Section
+            style={{
+              borderBottomColor: "#f4f4f4",
+              borderBottomWidth: 1,
+            }}
+          >
+            <DrawerItem label="Admin"></DrawerItem>
+          </Drawer.Section>
           <Drawer.Section style={{ marginTop: 15 }}>
             <DrawerItem
               icon={({ color, size }) => (
@@ -48,11 +56,7 @@ const DrawerContent = (props) => {
             ></DrawerItem>
             <DrawerItem
               icon={({ color, size }) => (
-                <AntDesign
-                  name="flag"
-                  size={size}
-                  color={color}
-                />
+                <AntDesign name="flag" size={size} color={color} />
               )}
               label="Leave"
               onPress={() => {
