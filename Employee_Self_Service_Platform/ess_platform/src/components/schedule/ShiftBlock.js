@@ -18,14 +18,10 @@ const colours = [
 ];
 
 const ShiftBlock = ({ user, shiftListItem }) => {
-  //   const randomColourPicker = () => {
-  //     return colours[Math.random(colours.length)];
-  //   };
   function getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }
 
-  console.log("COLOUR: " + colours[Math.random(colours.length)]);
   const colour = colours[getRandomInt(colours.length)];
 
   return (
