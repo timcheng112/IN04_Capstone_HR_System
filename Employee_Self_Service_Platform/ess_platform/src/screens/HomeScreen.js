@@ -9,6 +9,7 @@ export default function HomeScreen({ navigation }) {
         <IconButton
           icon="bell"
           size={25}
+          color="white"
           onPress={() => {
             navigation.navigate("Notifications");
           }}

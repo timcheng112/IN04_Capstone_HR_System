@@ -1,5 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitType;
+import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitTypeRepository;
 import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
 import com.conceiversolutions.hrsystem.enums.GenderEnum;
 import com.conceiversolutions.hrsystem.enums.JobTypeEnum;
@@ -29,9 +31,9 @@ import java.util.List;
 public class UserConfig {
         @Bean
         CommandLineRunner userCommandLineRunner(UserRepository userRepository, UserService userService,
-                        OrganizationService organizationService, DepartmentService departmentService,
-                        AddressService addressService, OutletService outletService,
-                        TeamService teamService, SkillsetService skillsetService) {
+                                                OrganizationService organizationService, DepartmentService departmentService,
+                                                AddressService addressService, OutletService outletService,
+                                                TeamService teamService, SkillsetService skillsetService, BenefitTypeRepository benefitTypeRepository) {
                 // User Init for test data
                 return args -> {
                         if (!userRepository.existsById(1L)) {
@@ -595,7 +597,14 @@ public class UserConfig {
                                                 RoleEnum.APPLICANT, false, false, null);
                                 sandyApplicant.setEnabled(true);
                                 userService.initApplicant(sandyApplicant);
-                                // firstName, lastName, password, phone, email, dob, gender.toUpperCase()
+
+                                // Create Benefit Types
+                                BenefitType benefitType1 = new BenefitType("Medical");
+                                BenefitType benefitType2 = new BenefitType("Dental");
+                                BenefitType benefitType3 = new BenefitType("Accident");
+                                BenefitType benefitType4 = new BenefitType("Life");
+                                List<BenefitType> benefitTypes = List.of(benefitType1, benefitType2, benefitType3, benefitType4);
+                                benefitTypeRepository.saveAllAndFlush(benefitTypes);
 
                                 System.out.println("************* Init Completed *************");
                         } else {

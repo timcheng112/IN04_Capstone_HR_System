@@ -17,6 +17,8 @@ const HomeNavigator = () => {
           headerRight: () => {
             <IconButton icon="bell" size={25} />;
           },
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
         }}
       />
       {/* <HomeStack.Screen name="Profile" component={ProfileScreen} /> */}
