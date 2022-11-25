@@ -862,11 +862,21 @@ const api = {
     return axios.put(
       `http://localhost:9191/api/appraisal/${appraisalId}?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}`
     );
-  getAllEmployeeAppraisals(userId) {
-    return axios.get(`http://localhost:9191/api/appraisal/employee/${userId}`)
   },
-  saveAppraisal(appraisalId, strengths, weaknesses, rating, promotion, promotionJustification) {
-    return axios.put(`http://localhost:9191/api/appraisal/${appraisalId}?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}`)
+  getAllEmployeeAppraisals(userId) {
+    return axios.get(`http://localhost:9191/api/appraisal/employee/${userId}`);
+  },
+  saveAppraisal(
+    appraisalId,
+    strengths,
+    weaknesses,
+    rating,
+    promotion,
+    promotionJustification
+  ) {
+    return axios.put(
+      `http://localhost:9191/api/appraisal/${appraisalId}?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}`
+    );
   },
   submitAppraisal(
     appraisalId,
