@@ -8,10 +8,11 @@ import {
   startOfMonth,
 } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Button, Card, Text } from "react-native-paper";
 import api from "../../utils/api";
+import { Feather } from "@expo/vector-icons";
 
 const IndicatePreferencesComponent = () => {
   const currDate = new Date();
@@ -19,6 +20,7 @@ const IndicatePreferencesComponent = () => {
   //   const initialDate = new Date(getYear(currDate), getMonth(currDate) + 1, 1);
   const [selectedDates, setSelectedDates] = useState({});
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -61,9 +63,14 @@ const IndicatePreferencesComponent = () => {
       setSelectedDates({});
       api.getPreferredDatesByUserId(userId).then((response) => {
         console.log("User's Preferred Dates: " + response.data);
+        let filteredPreferredDates = response.data.dates;
+        filteredPreferredDates = filteredPreferredDates.filter(
+          (date) => Number(date.slice(5, 7)) === getMonth(initialDate) + 1
+        );
         let preferredDates = {};
-        for (let i = 0; i < response.data.dates.length; i++) {
-          preferredDates[response.data.dates[i]] = {
+        for (let i = 0; i < filteredPreferredDates.length; i++) {
+          console.log(filteredPreferredDates[i]);
+          preferredDates[filteredPreferredDates[i]] = {
             selected: true,
             selectedColor: "#171717",
             // selectedColor: "pink",
@@ -93,69 +100,96 @@ const IndicatePreferencesComponent = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <Card style={{ flex: 1, margin: "4%", borderRadius: 20 }}>
-        <Text style={{marginTop: 5, marginLeft: "5%"}}>Legend</Text>
-        <Card.Content
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            // justifyContent: "center",
-            alignItems: "center",
-            marginTop: 5,
-          }}
-        >
-          <Card.Cover
-            source={require("../../../assets/helptip3.png")}
-            style={{ width: 30, height: 30, marginRight: 5 }}
-            resizeMode="center"
-          />
-          <Text>Selected</Text>
-        </Card.Content>
-        <Card.Content
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            // justifyContent: "center",
-            alignItems: "center",
-            marginTop: 5,
-          }}
-        >
-          <Card.Cover
-            source={require("../../../assets/helptip4.png")}
-            style={{ width: 30, height: 30, marginRight: 5 }}
-          />
-          <Text>Unselected</Text>
-        </Card.Content>
-        <Card.Content
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            // justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Card.Cover
-            source={require("../../../assets/helptip.png")}
-            style={{ width: 30, height: 30, marginRight: 5 }}
-          />
-          <Text>Submitted + Selected</Text>
-        </Card.Content>
-        <Card.Content
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            // justifyContent: "center",
-            alignItems: "center",
-            marginTop: 5,
-          }}
-        >
-          <Card.Cover
-            source={require("../../../assets/helptip2.png")}
-            style={{ width: 30, height: 30, marginRight: 5 }}
-          />
-          <Text>Submitted + Unselected</Text>
-        </Card.Content>
+    <ScrollView style={{ flex: 1 }}>
+      <Card
+        style={{ flex: 1, margin: "4%", borderRadius: 20, paddingBottom: "4%" }}
+      >
+        <Card.Title
+          style={{ marginBottom: "-5%", padding: "4%" }}
+          title="Legend"
+          titleStyle={{ fontSize: 18 }}
+          right={() =>
+            !showLegend ? (
+              <Feather
+                name="eye"
+                size={24}
+                color="black"
+                onPress={() => setShowLegend(!showLegend)}
+              />
+            ) : (
+              <Feather
+                name="eye-off"
+                size={24}
+                color="black"
+                onPress={() => setShowLegend(!showLegend)}
+              />
+            )
+          }
+        />
+        {showLegend && (
+          <>
+            <Card.Content
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                // justifyContent: "center",
+                alignItems: "center",
+                marginTop: 5,
+              }}
+            >
+              <Card.Cover
+                source={require("../../../assets/helptip3.png")}
+                style={{ width: 30, height: 30, marginRight: 5 }}
+                resizeMode="center"
+              />
+              <Text>Selected</Text>
+            </Card.Content>
+            <Card.Content
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                // justifyContent: "center",
+                alignItems: "center",
+                marginTop: 5,
+              }}
+            >
+              <Card.Cover
+                source={require("../../../assets/helptip4.png")}
+                style={{ width: 30, height: 30, marginRight: 5 }}
+              />
+              <Text>Unselected</Text>
+            </Card.Content>
+            <Card.Content
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                // justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Card.Cover
+                source={require("../../../assets/helptip.png")}
+                style={{ width: 30, height: 30, marginRight: 5 }}
+              />
+              <Text>Submitted + Selected</Text>
+            </Card.Content>
+            <Card.Content
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                // justifyContent: "center",
+                alignItems: "center",
+                marginTop: 5,
+              }}
+            >
+              <Card.Cover
+                source={require("../../../assets/helptip2.png")}
+                style={{ width: 30, height: 30, marginRight: 5 }}
+              />
+              <Text>Submitted + Unselected</Text>
+            </Card.Content>
+          </>
+        )}
       </Card>
       <Calendar
         style={{
@@ -201,7 +235,7 @@ const IndicatePreferencesComponent = () => {
       >
         Submit Preferences
       </Button>
-    </View>
+    </ScrollView>
   );
 };
 

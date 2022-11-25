@@ -1,13 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Card, Divider, Text } from "react-native-paper";
-import { format, addDays } from "date-fns";
-import { FlatList, View } from "react-native";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  Divider,
+  IconButton,
+  Text,
+} from "react-native-paper";
+import {
+  format,
+  addDays,
+  getDate,
+  eachDayOfInterval,
+  endOfYear,
+  isSameDay,
+} from "date-fns";
+import { Dimensions, FlatList, View } from "react-native";
 import ShiftBlock from "./ShiftBlock";
 import api from "../../utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { ScrollView } from "react-native-gesture-handler";
+import { Feather } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ScheduleComponent = () => {
   const [userId, setUserId] = useState(null);
@@ -16,12 +32,25 @@ const ScheduleComponent = () => {
   const [shiftListItems, setShiftListItems] = useState(null);
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
+  const windowWidth = Dimensions.get("window").width;
+  const [currWeekDates, setCurrWeekDates] = useState(
+    eachDayOfInterval({
+      start: date,
+      end: addDays(date, 7),
+    })
+  );
 
   const onChange = (event, selectedDate) => {
     console.log("SELECTED DATE: " + selectedDate);
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
+    setCurrWeekDates(
+      eachDayOfInterval({
+        start: currentDate,
+        end: addDays(currentDate, 7),
+      })
+    );
   };
 
   useEffect(() => {
@@ -109,29 +138,103 @@ const ScheduleComponent = () => {
   return (
     // <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: "4%" }}>
     <View style={{ flex: 1, padding: "4%" }}>
-      <Button
-        onPress={() => setShow(true)}
-        mode="contained"
+      <Card
         style={{
-          alignSelf: "center",
-          borderRadius: 10,
-          backgroundColor: "#ffffff",
-          marginBottom: 10,
+          margin: "-4%",
+          flex: 2.5,
           elevation: 10,
-          shadowColor: "#000000",
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
         }}
       >
-        <Text
-          style={{
-            fontSize: 20,
-            fontFamily: "Poppins_700Bold",
-            textAlign: "center",
-            // color: "white"
+        <Card.Title
+          title={format(date, "dd MMMM yyyy")}
+          titleStyle={{ fontFamily: "Poppins_600SemiBold" }}
+          // left={(props) => (
+          //   <TouchableOpacity onPress={() => setShow(true)}>
+          //     <Feather name="calendar" size={24} color="black" />
+          //   </TouchableOpacity>
+          // )}
+          right={(props) => (
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                style={{ width: 100 }}
+                onPress={() => {
+                  setDate(new Date());
+                  setCurrWeekDates(
+                    eachDayOfInterval({
+                      start: new Date(),
+                      end: addDays(new Date(), 7),
+                    })
+                  );
+                }}
+              >
+                Today
+              </Button>
+              <TouchableOpacity onPress={() => setShow(true)}>
+                <Feather name="calendar" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          )}
+          rightStyle={{ padding: "4%" }}
+        />
+        <FlatList
+          data={currWeekDates}
+          horizontal
+          renderItem={({ item }) => (
+            <View style={{ width: (windowWidth - 40) / 5 }}>
+              <Text
+                style={{ fontFamily: "Poppins_300Light", textAlign: "center" }}
+              >
+                {format(item, "E")}
+              </Text>
+              <View
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <View>
+                  <Badge
+                    size={30}
+                    style={
+                      isSameDay(item, date)
+                        ? { backgroundColor: "indigo" }
+                        : { backgroundColor: "white" }
+                    }
+                    onPress={() => setDate(item)}
+                  >
+                    {getDate(item)}
+                  </Badge>
+                </View>
+              </View>
+            </View>
+          )}
+          ItemSeparatorComponent={() => {
+            return (
+              <View
+                style={{
+                  height: "100%",
+                  width: 10,
+                }}
+              />
+            );
           }}
-        >
-          {format(date, "E MMM dd, yyyy")}
-        </Text>
-      </Button>
+        />
+        <Card.Content>
+          <Text style={{ fontFamily: "Poppins_300Light" }}>
+            Team:{" "}
+            {user && user.teams.length > 0 ? user.teams[0].teamName : "No Team"}
+          </Text>
+        </Card.Content>
+      </Card>
       {show && (
         <DateTimePicker
           testID="dateTimePicker"
@@ -141,11 +244,12 @@ const ScheduleComponent = () => {
           onChange={onChange}
         />
       )}
-      <View style={{ flex: 2, alignItems: "center" }}>
+      {/* <View style={{ flex: 2, alignItems: "center" }}>
         <Avatar.Image
           source={{
             uri: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
           }}
+          style={{ elevation: 10 }}
         />
         <Text style={{ marginTop: 10 }}>
           Employee: {user && user.firstName + " " + user.lastName}
@@ -154,17 +258,23 @@ const ScheduleComponent = () => {
           {user && user.teams.length > 0 ? user.teams[0].teamName : "No Team"}
         </Text>
       </View>
-      <Divider/>
+      <Divider /> */}
       <View
         style={{
           // borderTopColor: "#616161",
           // borderTopWidth: 1,
           paddingTop: "2%",
           flex: 2,
+          marginTop: "5%",
           marginBottom: 10,
+          // margin: "-4%",
+          // padding: "-4%",
+          // backgroundColor: "white"
         }}
       >
-        <Text style={{ marginBottom: 10 }}>My Shift: </Text>
+        <Text style={{ marginBottom: "4%", fontFamily: "Poppins_600SemiBold" }}>
+          My Shift:{" "}
+        </Text>
         {myShiftListItem !== null ? (
           <ShiftBlock user={user} shiftListItem={myShiftListItem} />
         ) : (
@@ -194,7 +304,7 @@ const ScheduleComponent = () => {
               <Text
                 style={{
                   fontSize: 20,
-                  fontFamily: "Poppins_700Bold",
+                  fontFamily: "Poppins_500Medium",
                 }}
               >
                 No shift for this date!
@@ -203,7 +313,7 @@ const ScheduleComponent = () => {
           </Card>
         )}
       </View>
-      <Divider/>
+      <Divider />
       <View
         style={{
           // borderTopColor: "#616161",
@@ -212,7 +322,9 @@ const ScheduleComponent = () => {
           flex: 4,
         }}
       >
-        <Text style={{ marginBottom: 10 }}>Team Members' Shifts: </Text>
+        <Text style={{ marginBottom: "4%", fontFamily: "Poppins_600SemiBold" }}>
+          Team Members' Shifts:{" "}
+        </Text>
         {shiftListItems && shiftListItems.length > 0 ? (
           <View>
             <FlatList
@@ -252,7 +364,7 @@ const ScheduleComponent = () => {
               <Text
                 style={{
                   fontSize: 20,
-                  fontFamily: "Poppins_700Bold",
+                  fontFamily: "Poppins_500Medium",
                 }}
               >
                 No shifts for this date!
