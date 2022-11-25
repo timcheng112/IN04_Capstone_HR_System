@@ -2,12 +2,16 @@ package com.conceiversolutions.hrsystem.engagement.rewardtrack;
 
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -75,5 +79,18 @@ public class RewardTrackService {
         rt.setIsActive(true);
         rewardTrackRepository.save(rt);
         return "Reward Track " + rt.getName() + " has been published";
+    }
+
+    public RewardTrack getRewardTrackByDepartment(Long deptId) {
+        System.out.println("RewardTrackService.getRewardTrackByDepartment");
+        System.out.println("deptId = " + deptId);
+
+        List<RewardTrack> rt = rewardTrackRepository.findActiveByDepartmentId(deptId);
+        if (rt.isEmpty()) {
+            throw new IllegalStateException("No Active reward tracks for this department");
+        } else if (rt.size() > 1) {
+            throw new IllegalStateException("More than 1 active reward tracks identified. Please ensure only one is active");
+        }
+        return rt.get(0);
     }
 }

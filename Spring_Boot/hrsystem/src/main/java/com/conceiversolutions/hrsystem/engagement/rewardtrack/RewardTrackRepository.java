@@ -11,4 +11,8 @@ import java.util.Optional;
 public interface RewardTrackRepository extends JpaRepository<RewardTrack,Long> {
     @Query("SELECT rt FROM RewardTrack rt WHERE rt.department.departmentName =?1 AND rt.isActive = TRUE")
     List<RewardTrack> findActiveByDepartmentName(String deptName);
+
+    @Query("SELECT rt FROM RewardTrack rt WHERE rt.department.departmentId =?1 AND rt.isActive = TRUE")
+
+    List<RewardTrack> findActiveByDepartmentId(Long deptId);
 }

@@ -67,4 +67,16 @@ public class RewardTrackController {
         return dummyData.toggleDummyData();
     }
 
+    @GetMapping("/getRewardTrackByDepartment")
+    public RewardTrack getRewardTrackByDepartment(@RequestParam("departmentId") Long departmentId) {
+        RewardTrack rt = rewardTrackService.getRewardTrackByDepartment(departmentId);
+        for (Reward reward : rt.getRewards()) {
+            reward.setRewardInstances(new ArrayList<>());
+            reward.getImage().setDocData(new byte[0]);
+        }
+        rt.getDepartment().setOrganization(null);
+        rt.getDepartment().setDepartmentHead(null);
+        rt.getDepartment().setTeams(new ArrayList<>());
+        return rt;
+    }
 }

@@ -1069,6 +1069,11 @@ const api = {
       `http://localhost:9191/api/rewards/getRewardTrack?rewardTrackId=${rewardTrackId}`
     );
   },
+  getRewardTrackByDepartment(departmentId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrackByDepartment?departmentId=${departmentId}`
+    );
+  },
   saveRewardTrack(name, startDate, endDate, departmentId, pointsRatio, rewardTrackId) {
     return axios.post(
       `http://localhost:9191/api/rewards/saveRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&departmentId=${departmentId}&pointsRatio=${pointsRatio}&rewardTrackId=${rewardTrackId}`
