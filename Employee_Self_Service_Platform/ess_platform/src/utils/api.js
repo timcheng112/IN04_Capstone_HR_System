@@ -5,8 +5,8 @@ import axios from "axios";
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"
-const URL = "192.168.1.82"; // TIM
-// const URL = "10.249.73.251";
+// const URL = "192.168.1.82"; // TIM
+const URL = "172.17.93.172";
 
 const api = {
   login(workEmail, password) {
@@ -145,6 +145,23 @@ const api = {
   getShiftListItemByDateAndTeam(date, teamId) {
     return axios.get(
       `http://${URL}:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
+    );
+  },
+  getPreferredDatesByUserId(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/preferred_date/getPreferredDatesByUserId?userId=${userId}`
+    );
+  },
+  addNewPreferredDates(dates, userId) {
+    return axios.post(
+      `http://${URL}:9191/api/preferred_date?dates=${dates}&userId=${userId}`,
+      preferredDates
+    );
+  },
+  editPreferredDates(userId, newDates) {
+    return axios.put(
+      `http://${URL}:9191/api/preferred_date/editPreferredDates?userId=${userId}`,
+      newDates
     );
   },
 };
