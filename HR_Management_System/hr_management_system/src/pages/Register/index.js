@@ -148,6 +148,7 @@ export default function Register() {
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />
+            <div className="sm:border-t sm:border-gray-200 sm:pt-5" />
             <div className="-space-y-px rounded-md ">
               <div>
                 <label
@@ -395,6 +396,8 @@ export default function Register() {
                   <option>Foreigner</option>
                 </select>
               </div>
+              <div className="sm:border-t sm:border-gray-200 sm:pt-5" />
+              <hr />
               <div>
                 <label
                   htmlFor="bank-name"
@@ -436,6 +439,8 @@ export default function Register() {
                   onChange={(l) => setAccountNumber(l.target.value)}
                 />
               </div>
+              <div className="sm:border-t sm:border-gray-200 sm:pt-5" />
+              <hr />
               <div>
                 <label
                   htmlFor="date-joined"
@@ -538,6 +543,8 @@ export default function Register() {
                   onChange={(e) => setPositionDescription(e.target.value)}
                 />
               </div>
+              <div className="sm:border-t sm:border-gray-200 sm:pt-5" />
+              <hr />
               <div>
                 <label
                   htmlFor="job-type"

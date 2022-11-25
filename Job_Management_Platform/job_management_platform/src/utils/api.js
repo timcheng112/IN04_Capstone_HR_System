@@ -1,9 +1,9 @@
 import axios from "axios";
 
 const api = {
-  register(firstName, lastName, password, phone, email, dob, gender) {
+  register(firstName, lastName, password, phone, email, dob, gender, race, citizenship) {
     return axios.post(
-      `http://localhost:9191/api/user/register/registerNewAccountJMP?firstName=${firstName}&lastName=${lastName}&password=${password}&phone=${phone}&email=${email}&dob=${dob}&gender=${gender}`
+      `http://localhost:9191/api/user/register/registerNewAccountJMP?firstName=${firstName}&lastName=${lastName}&password=${password}&phone=${phone}&email=${email}&dob=${dob}&gender=${gender}&race=${race}&citizenship=${citizenship}`
     );
   },
   login(email, password) {

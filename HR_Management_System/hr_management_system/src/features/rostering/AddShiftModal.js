@@ -169,18 +169,20 @@ export default function AddShiftModal({
               "shift is on the same day: " + shiftToBeAdded.shift.startTime
             );
           } else {
-            api
-              .getShiftListItemByDateAndUserId(
-                format(shiftToBeAdded.shift.startTime, "yyyy-MM-dd"),
-                person.userId
-              )
-              .then(() =>
-                console.log("THERE EXISTS A PERSISTED SHIFT ON THE SAME DAY")
-              )
-              .catch(() => {
-                arr.push(shiftToBeAdded);
-                addShiftHandler(arr);
-              });
+            selectedEmployees.forEach((employee) => {
+              api
+                .getShiftListItemByDateAndUserId(
+                  format(shiftToBeAdded.shift.startTime, "yyyy-MM-dd"),
+                  employee.userId
+                )
+                .then(() =>
+                  console.log("THERE EXISTS A PERSISTED SHIFT ON THE SAME DAY")
+                )
+                .catch(() => {
+                  arr.push(shiftToBeAdded);
+                  addShiftHandler(arr);
+                });
+            });
           }
         }
         // }
