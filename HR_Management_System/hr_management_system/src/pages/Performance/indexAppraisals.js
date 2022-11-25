@@ -123,6 +123,11 @@ export default function Appraisals() {
 
   useEffect(() => {
     //console.log('refresh');
+    var selectedYear = new Date().getFullYear();
+    if (currentPeriod) {
+      console.log("current period " + currentPeriod);
+      selectedYear = currentPeriod;
+    }
 
     api.getAllAppraisalPeriods().then((response) => {
       setAppraisalPeriods(response.data);
@@ -130,7 +135,7 @@ export default function Appraisals() {
       //console.log(response.data[0]);
     });
 
-    api.getAppraisalPeriodByYear(new Date().getFullYear()).then((response) => {
+    api.getAppraisalPeriodByYear(selectedYear).then((response) => {
       setCurrentPeriod(response.data);
       setStartDate(response.data.startDate);
       setEndDate(response.data.endDate);
@@ -141,12 +146,10 @@ export default function Appraisals() {
       //console.log(response.data);
       if (response.data > -1) {
         setIsManager(true);
-        api
-          .getManagerAppraisals(new Date().getFullYear(), getUserId())
-          .then((response) => {
-            setAppraisals(response.data);
-            console.log(response.data);
-          });
+        api.getManagerAppraisals(selectedYear, getUserId()).then((response) => {
+          setAppraisals(response.data);
+          console.log(response.data);
+        });
       }
     });
 
@@ -154,9 +157,13 @@ export default function Appraisals() {
       if (response.data > -1) {
         setIsManager(true);
         //console.log("department head");
+        //console.log("dept head " + selectedYear);
         api
-          .getDepartmentAppraisals(new Date().getFullYear(), getUserId())
-          .then((response) => setAppraisals(response.data));
+          .getDepartmentAppraisals(selectedYear, getUserId())
+          .then((response) => {
+            setAppraisals(response.data);
+            console.log(response.data);
+          });
       }
     });
 
@@ -166,12 +173,19 @@ export default function Appraisals() {
         setIsManager(true);
         console.log("organization head");
         api
-          .getOrganizationAppraisals(new Date().getFullYear(), getUserId())
+          .getOrganizationAppraisals(selectedYear, getUserId())
           .then((response) => setAppraisals(response.data));
       }
     });
 
-    api.getAllAppraisalsByYear(new Date().getFullYear()).then((response) => {
+    api
+      .getEmployeeAppraisals(selectedYear, getUserId())
+      .then((response) => {
+        console.log(response.data.length);
+        setMyAppraisals(response.data);
+      });
+
+    api.getAllAppraisalsByYear(selectedYear).then((response) => {
       console.log(response.data);
       const a = response.data.filter(
         (a) => a.employee.userId + "" !== getUserId() + ""
@@ -217,7 +231,7 @@ export default function Appraisals() {
 
   function withinCurrentPeriod() {
     const now = new Date().setHours(0, 0, 0, 0);
-    console.log("now? " + startDate + " - " + endDate);
+    //console.log("now? " + startDate + " - " + endDate);
     return (
       now >= new Date(startDate).setHours(0, 0, 0, 0) &&
       now <= new Date(endDate).setHours(0, 0, 0, 0)
@@ -230,6 +244,15 @@ export default function Appraisals() {
     return (
       now >= new Date(startDate).setHours(0, 0, 0, 0) &&
       now >= new Date(endDate).setHours(0, 0, 0, 0)
+    );
+  }
+
+  function beforeAppraisalPeriod() {
+    const now = new Date().setHours(0, 0, 0, 0);
+    //console.log("after? " + startDate + " - " + endDate);
+    return (
+      now < new Date(startDate).setHours(0, 0, 0, 0) &&
+      now < new Date(endDate).setHours(0, 0, 0, 0)
     );
   }
 
@@ -448,6 +471,12 @@ export default function Appraisals() {
       );
       setEditMode(false);
     }
+  }
+
+  function changeSelectedPeriod(year) {
+    console.log("selected period " + year);
+    setCurrentPeriod(year);
+    setRefresh(!refresh);
   }
 
   return (
@@ -837,7 +866,7 @@ export default function Appraisals() {
                 </>
               ) : (
                 <>
-                  <h1 className="text-xl font-semibold text-gray-900 mb-10">
+                  <h1 className="text-3xl font-semibold text-gray-900 mb-10">
                     Appraisals
                   </h1>
                   <div>
@@ -855,7 +884,9 @@ export default function Appraisals() {
                             name="period"
                             className="mt-1 block font-semibold text-lg w-full rounded-md border border-gray-300 px-3 py-1 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 bg-white"
                             defaultValue={new Date().getFullYear().toString()}
-                            onChange={(e) => setCurrentPeriod(e.target.value)}
+                            onChange={(e) =>
+                              changeSelectedPeriod(e.target.value)
+                            }
                           >
                             {appraisalPeriods.map((appraisalPeriod) => (
                               <option

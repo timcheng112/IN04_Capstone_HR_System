@@ -65,6 +65,17 @@ public class GoalService {
         u.setUserRole(user.getUserRole());
         u.setProfilePic(user.getProfilePic());
         u.setIsBlackListed(user.getIsBlackListed());
+        u.setCitizenship(user.getCitizenship());
+        u.setDateJoined(user.getDateJoined());
+        u.setDob(user.getDob());
+        u.setEmail(user.getEmail());
+        u.setGender(user.getGender());
+        u.setIsEnabled(user.getIsEnabled());
+        u.setIsHrEmployee(user.getIsHrEmployee());
+        u.setIsPartTimer(user.getIsPartTimer());
+        u.setPassword(user.getPassword());
+        u.setPhone(user.getPhone());
+        u.setRace(user.getRace());
 
         return u;
     }
@@ -336,6 +347,17 @@ public class GoalService {
         System.out.println(u1.getNotificationsRead());
         return "Notification added successfully to: " + u1.getFirstName() + " " + u1.getLastName();
 
+    }
+
+    public List<Goal> getUserGoals(Long userId) {
+        List<Goal> goals = goalRepository.findUserGoals(userId);
+        for (Goal g : goals) {
+            g.getEmployee().nullify();
+            for (Achievement a : g.getAchievements()) {
+                a.setEmployeeGoal(null);
+            }
+        }
+        return goals;
     }
 
 }
