@@ -24,8 +24,14 @@ public class RewardTrackController {
         for (RewardTrack rt : rewardTracks) {
             for (Reward reward : rt.getRewards()) {
                 reward.setRewardInstances(new ArrayList<>());
-                reward.getImage().setDocData(new byte[0]);
+                if (reward.getImage() != null) {
+                    reward.getImage().setDocData(new byte[0]);
+                }
+                reward.setRewardTrack(null);
             }
+            rt.getRewards().sort((r1, r2) -> {
+                return r1.getPointsRequired() - r2.getPointsRequired();
+            });
             rt.getDepartment().setOrganization(null);
             rt.getDepartment().setDepartmentHead(null);
             rt.getDepartment().setTeams(new ArrayList<>());
@@ -38,8 +44,14 @@ public class RewardTrackController {
         RewardTrack rt = rewardTrackService.getRewardTrack(rewardTrackId);
         for (Reward reward : rt.getRewards()) {
             reward.setRewardInstances(new ArrayList<>());
-            reward.getImage().setDocData(new byte[0]);
+            if (reward.getImage() != null) {
+                reward.getImage().setDocData(new byte[0]);
+            }
+            reward.setRewardTrack(null);
         }
+        rt.getRewards().sort((r1, r2) -> {
+            return r1.getPointsRequired() - r2.getPointsRequired();
+        });
         rt.getDepartment().setOrganization(null);
         rt.getDepartment().setDepartmentHead(null);
         rt.getDepartment().setTeams(new ArrayList<>());
@@ -57,6 +69,16 @@ public class RewardTrackController {
                 departmentId, Double.valueOf(pointsRatio), rewardTrackId);
     }
 
+    @PutMapping("editRewardTrack")
+    public Long editRewardTrack(@RequestParam("name") String name,
+                                @RequestParam("startDate") String startDate,
+                                @RequestParam("endDate") String endDate,
+                                @RequestParam("pointsRatio") Float pointsRatio,
+                                @RequestParam("rewardTrackId") Long rewardTrackId) {
+        return rewardTrackService.saveRewardTrack(name, LocalDate.parse(startDate), LocalDate.parse(endDate),
+                null, Double.valueOf(pointsRatio), rewardTrackId);
+    }
+
     @PutMapping("publishRewardTrack")
     public String saveRewardTrack(@RequestParam("rewardTrackId") Long rewardTrackId) {
         return rewardTrackService.publishRewardTrack(rewardTrackId);
@@ -72,11 +94,22 @@ public class RewardTrackController {
         RewardTrack rt = rewardTrackService.getRewardTrackByDepartment(departmentId);
         for (Reward reward : rt.getRewards()) {
             reward.setRewardInstances(new ArrayList<>());
-            reward.getImage().setDocData(new byte[0]);
+            if (reward.getImage() != null) {
+                reward.getImage().setDocData(new byte[0]);
+            }
+            reward.setRewardTrack(null);
         }
+        rt.getRewards().sort((r1, r2) -> {
+            return r1.getPointsRequired() - r2.getPointsRequired();
+        });
         rt.getDepartment().setOrganization(null);
         rt.getDepartment().setDepartmentHead(null);
         rt.getDepartment().setTeams(new ArrayList<>());
         return rt;
+    }
+
+    @DeleteMapping("deleteRewardTrack")
+    public String deleteRewardTrack(@RequestParam("rewardTrackId") Long rewardTrackId) {
+        return rewardTrackService.deleteRewardTrack(rewardTrackId);
     }
 }

@@ -1,5 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.rewardtrack;
 
+import com.conceiversolutions.hrsystem.engagement.reward.Reward;
+import com.conceiversolutions.hrsystem.engagement.reward.RewardRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
@@ -8,10 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +18,7 @@ public class RewardTrackService {
 
     private final RewardTrackRepository rewardTrackRepository;
     private final DepartmentRepository departmentRepository;
+    private final RewardRepository rewardRepository;
 
     public List<RewardTrack> getAllRewardTracks() {
         System.out.println("RewardTrackService.getAllRewardTracks");
@@ -41,7 +41,10 @@ public class RewardTrackService {
         System.out.println("name = " + name + ", startDate = " + startDate + ", endDate = " + endDate + ", departmentId = " + departmentId + ", pointsRatio = " + pointsRatio + ", rewardTrackId = " + rewardTrackId);
 
         checkDates(startDate, endDate);
-        Department dept = departmentRepository.findById(departmentId).get();
+        Department dept = null;
+        if (departmentId != null) {
+            dept = departmentRepository.findById(departmentId).get();
+        }
         RewardTrack rt;
         if (rewardTrackId != null) {
             rt = getRewardTrack(rewardTrackId);
@@ -92,5 +95,23 @@ public class RewardTrackService {
             throw new IllegalStateException("More than 1 active reward tracks identified. Please ensure only one is active");
         }
         return rt.get(0);
+    }
+
+    public String deleteRewardTrack(Long rewardTrackId) {
+        System.out.println("RewardTrackService.deleteRewardTrack");
+        System.out.println("rewardTrackId = " + rewardTrackId);
+        RewardTrack rewardTrack = getRewardTrack(rewardTrackId);
+
+        List<Reward> rewards = rewardTrack.getRewards();
+        rewardTrack.setRewards(new ArrayList<>());
+        for (Reward reward : rewards) {
+            if (!reward.getRewardInstances().isEmpty()) {
+                throw new IllegalStateException("A Reward in the Reward Track has been claimed, unable to delete the track");
+            }
+            reward.setRewardTrack(null);
+        }
+        rewardRepository.deleteAll(rewards);
+        rewardTrackRepository.deleteById(rewardTrackId);
+        return "Reward Track successfully deleted";
     }
 }

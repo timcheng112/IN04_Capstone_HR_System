@@ -1079,6 +1079,16 @@ const api = {
       `http://localhost:9191/api/rewards/saveRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&departmentId=${departmentId}&pointsRatio=${pointsRatio}&rewardTrackId=${rewardTrackId}`
     );
   },
+  editRewardTrack(name, startDate, endDate, pointsRatio, rewardTrackId) {
+    return axios.put(
+      `http://localhost:9191/api/rewards/editRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&pointsRatio=${pointsRatio}&rewardTrackId=${rewardTrackId}`
+    );
+  },
+  deleteRewardTrack(rewardTrackId) {
+    return axios.delete(
+      `http://localhost:9191/api/rewards/deleteRewardTrack?rewardTrackId=${rewardTrackId}`
+    );
+  },
   publishRewardTrack(rewardTrackId) {
     return axios.put(
       `http://localhost:9191/api/rewards/publishRewardTrack?rewardTrackId=${rewardTrackId}`
@@ -1112,6 +1122,31 @@ const api = {
   getEmployeeReviewForms(employeeId) {
     return axios.get(
       `http://localhost:9191/api/rewards/getEmployeeReviewForms?employeeId=${employeeId}`
+    );
+  },
+  getRewardTrackRewards(rewardTrackId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrackRewards?rewardTrackId=${rewardTrackId}`
+    );
+  },
+  getReward(rewardId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getReward?rewardId=${rewardId}`
+    );
+  },
+  addNewReward(name, description, pointsRequired, expiryDate, rewardTrackId, file) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/addNewReward?file=&name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardTrackId=${rewardTrackId}`
+      , file);
+  },
+  editReward(name, description, pointsRequired, expiryDate, rewardId, file) {
+    return axios.put(
+      `http://localhost:9191/api/rewards/addNewRewardeditReward?file=&name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardId=${rewardId}`
+      , file);
+  },
+  deleteReward(rewardId) {
+    return axios.delete(
+      `http://localhost:9191/api/rewards/deleteReward?rewardId=${rewardId}`
     );
   },
 };
