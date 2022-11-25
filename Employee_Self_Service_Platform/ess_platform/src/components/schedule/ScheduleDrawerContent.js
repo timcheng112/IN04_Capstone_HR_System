@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
-import React from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
 import { Drawer, Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -28,80 +28,59 @@ const DrawerContent = (props) => {
               borderBottomWidth: 1,
             }}
           >
-            <DrawerItem label="Admin"></DrawerItem>
+            <DrawerItem label="Scheduling"></DrawerItem>
           </Drawer.Section>
-          <Drawer.Section style={{ marginTop: 15 }}>
+          <Drawer.Section {...props} style={{ marginTop: 15 }}>
             <DrawerItem
+              {...props}
               icon={({ color, size }) => (
                 <MaterialCommunityIcons
-                  name="seatbelt"
-                  size={size}
-                  color={focusedRoute === "Onboarding" ? "black" : color}
-                />
-              )}
-              style={
-                focusedRoute === "Onboarding" && {
-                  backgroundColor: "#c4b5fd",
-                  borderRadius: 20,
-                }
-              }
-              labelStyle={focusedRoute === "Onboarding" && { color: "black" }}
-              label="Onboarding"
-              onPress={() => {
-                props.navigation.navigate("Onboarding");
-              }}
-            ></DrawerItem>
-            <DrawerItem
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="seat-outline"
-                  size={size}
-                  color={focusedRoute === "Offboarding" ? "black" : color}
-                />
-              )}
-              style={
-                focusedRoute === "Offboarding" && {
-                  backgroundColor: "#c4b5fd",
-                  borderRadius: 20,
-                }
-              }
-              labelStyle={focusedRoute === "Offboarding" && { color: "black" }}
-              label="Offboarding"
-              onPress={() => {
-                props.navigation.navigate("Offboarding");
-              }}
-            ></DrawerItem>
-            <DrawerItem
-              icon={({ color, size }) => (
-                <AntDesign
-                  name="flag"
+                  name="calendar-account-outline"
                   size={size}
                   color={focusedRoute === "Leave" ? "black" : color}
                 />
               )}
               style={
-                focusedRoute === "Leave" && {
+                focusedRoute === "My Schedule" && {
                   backgroundColor: "#c4b5fd",
                   borderRadius: 20,
                 }
               }
-              labelStyle={focusedRoute === "Leave" && { color: "black" }}
-              label="Leave"
+              labelStyle={focusedRoute === "My Schedule" && { color: "black" }}
+              label="My Schedule"
               onPress={() => {
-                props.navigation.navigate("Leave");
+                props.navigation.navigate("My Schedule");
+              }}
+            ></DrawerItem>
+            <DrawerItem
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="calendar-month-outline"
+                  size={size}
+                  color={focusedRoute === "Leave" ? "black" : color}
+                />
+              )}
+              style={
+                focusedRoute === "Indicate Preferences" && {
+                  backgroundColor: "#c4b5fd",
+                  borderRadius: 20,
+                }
+              }
+              labelStyle={
+                focusedRoute === "Indicate Preferences" && { color: "black" }
+              }
+              label="Indicate Preferences"
+              onPress={() => {
+                props.navigation.navigate("Indicate Preferences");
               }}
             ></DrawerItem>
             {/* <DrawerItem
               icon={({ color, size }) => (
-                <AntDesign
-                  name="flag"
-                  size={size}
-                  color={color}
-                />
+                <AntDesign name="flag" size={size} color={color} />
               )}
-              label="Apply"
+              label="Leave"
               onPress={() => {
-                props.navigation.navigate("Apply");
+                props.navigation.navigate("Leave");
               }}
             ></DrawerItem> */}
           </Drawer.Section>

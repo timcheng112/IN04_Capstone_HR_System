@@ -217,6 +217,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setPreferredDates(null);
 
             return u;
         } else {

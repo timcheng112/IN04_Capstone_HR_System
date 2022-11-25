@@ -17,6 +17,7 @@ import {
   initialLoginState,
   loginReducer,
 } from "./src/components/login/AuthContext";
+import { StatusBar } from "expo-status-bar";
 
 export default function Main({ navigation }) {
   const [loginState, dispatch] = React.useReducer(
@@ -80,6 +81,11 @@ export default function Main({ navigation }) {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <PaperProvider>
+          <StatusBar
+            backgroundColor="#3949ab"
+            // barStyle="dark-content" // Here is where you change the font-color
+            style="light"
+          />
           {loginState.userToken === null ? <LoginScreen /> : <TabNavigator />}
         </PaperProvider>
       </NavigationContainer>

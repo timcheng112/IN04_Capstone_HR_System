@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Card, Text } from "react-native-paper";
+import { Avatar, Button, Card, Divider, Text } from "react-native-paper";
 import { format, addDays } from "date-fns";
 import { FlatList, View } from "react-native";
 import ShiftBlock from "./ShiftBlock";
@@ -154,10 +154,11 @@ const ScheduleComponent = () => {
           {user && user.teams.length > 0 ? user.teams[0].teamName : "No Team"}
         </Text>
       </View>
+      <Divider/>
       <View
         style={{
-          borderTopColor: "#616161",
-          borderTopWidth: 1,
+          // borderTopColor: "#616161",
+          // borderTopWidth: 1,
           paddingTop: "2%",
           flex: 2,
           marginBottom: 10,
@@ -202,10 +203,11 @@ const ScheduleComponent = () => {
           </Card>
         )}
       </View>
+      <Divider/>
       <View
         style={{
-          borderTopColor: "#616161",
-          borderTopWidth: 1,
+          // borderTopColor: "#616161",
+          // borderTopWidth: 1,
           paddingTop: "2%",
           flex: 4,
         }}

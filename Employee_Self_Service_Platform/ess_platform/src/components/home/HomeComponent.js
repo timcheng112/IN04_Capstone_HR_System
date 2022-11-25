@@ -263,7 +263,7 @@ const HomeComponent = () => {
               borderRadius: 10,
             }}
             onPress={() => {
-              navigation.navigate("Schedule");
+              navigation.navigate("Schedule", { screen: "My Schedule" });
             }}
           >
             <View style={{ flex: 1, justifyContent: "center" }}>
