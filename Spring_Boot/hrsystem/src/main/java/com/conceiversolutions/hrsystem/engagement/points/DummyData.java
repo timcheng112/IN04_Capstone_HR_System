@@ -30,36 +30,39 @@ public class DummyData {
 
     static final Logger LOGGER =
             Logger.getLogger(DummyData.class.getName());
+    static Boolean toggle = false;
 
     @Scheduled(fixedRate = 60000)
     @Async
     public void simulateSales() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        if (toggle) {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        LOGGER.info("Simulating Sales every minute at " +
-                LocalDateTime.now().format(dateTimeFormatter));
+            LOGGER.info("Simulating Sales every minute at " +
+                    LocalDateTime.now().format(dateTimeFormatter));
 
-        Department dept = departmentRepository.findByDepartmentName("Sales").get();
-        Set<User> salesEmployees = new HashSet<User>();
-        for (Team t : dept.getTeams()) {
-            salesEmployees.addAll(t.getUsers());
-            salesEmployees.add(t.getTeamHead());
+            Department dept = departmentRepository.findByDepartmentName("Sales").get();
+            Set<User> salesEmployees = new HashSet<User>();
+            for (Team t : dept.getTeams()) {
+                salesEmployees.addAll(t.getUsers());
+                salesEmployees.add(t.getTeamHead());
+            }
+            salesEmployees.add(dept.getDepartmentHead());
+
+            List<User> employees = salesEmployees.stream().toList();
+            List<RewardTrack> rt = rewardTrackRepository.findActiveByDepartmentName("Sales");
+            if (rt.isEmpty()) {
+                throw new IllegalStateException("No Active reward tracks for this department");
+            } else if (rt.size() > 1) {
+                throw new IllegalStateException("More than 1 active reward tracks identified. Please ensure only one is active");
+            }
+
+            for (User employee : employees) {
+                simulateSale(employee, rt.get(0));
+            }
+
+            LOGGER.info("Simulated Sales Successfully");
         }
-        salesEmployees.add(dept.getDepartmentHead());
-
-        List<User> employees = salesEmployees.stream().toList();
-        List<RewardTrack> rt = rewardTrackRepository.findActiveByDepartmentName("Sales");
-        if (rt.isEmpty()) {
-            throw new IllegalStateException("No Active reward tracks for this department");
-        } else if (rt.size() > 1) {
-            throw new IllegalStateException("More than 1 active reward tracks identified. Please ensure only one is active");
-        }
-
-        for (User employee : employees) {
-            simulateSale(employee, rt.get(0));
-        }
-
-        LOGGER.info("Simulated Sales Successfully");
     }
 
     private void simulateSale(User employee, RewardTrack rt) {
@@ -73,5 +76,12 @@ public class DummyData {
         employee.setRewardPoints(employee.getRewardPoints() + (int) pointsToReward);
         userRepository.save(employee);
         System.out.println("Employee has " + employee.getRewardPoints() + " points");
+    }
+
+    public String toggleDummyData() {
+        System.out.println("DummyData.toggleDummyData");
+        toggle = !toggle;
+        System.out.println("Toggle has been set to " + toggle.toString());
+        return "Toggle has been set to " + toggle.toString();
     }
 }

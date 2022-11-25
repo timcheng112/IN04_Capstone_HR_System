@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.engagement.rewardtrack;
+package com.conceiversolutions.hrsystem.engagement.reward;
 
 import com.conceiversolutions.hrsystem.engagement.reward.Reward;
 import com.conceiversolutions.hrsystem.user.user.User;

@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.engagement.rewardtrack;
 
+import com.conceiversolutions.hrsystem.engagement.points.DummyData;
 import com.conceiversolutions.hrsystem.engagement.reward.Reward;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RewardTrackController {
     private final RewardTrackService rewardTrackService;
+    private final DummyData dummyData;
 
     @GetMapping("/getAllRewardTracks")
     public List<RewardTrack> getAllRewardTracks() {
@@ -58,6 +60,11 @@ public class RewardTrackController {
     @PutMapping("publishRewardTrack")
     public String saveRewardTrack(@RequestParam("rewardTrackId") Long rewardTrackId) {
         return rewardTrackService.publishRewardTrack(rewardTrackId);
+    }
+
+    @PutMapping("toggleDummyData")
+    public String toggleDummyData() {
+        return dummyData.toggleDummyData();
     }
 
 }

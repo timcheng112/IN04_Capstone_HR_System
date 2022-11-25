@@ -1058,6 +1058,57 @@ const api = {
       `http://localhost:9191/api/claims/getEmployeesUnassignedToPlan?planId=${planId}`
     );
   },
+  // Welfare Rewards
+  getAllRewardTracks() {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getAllRewardTracks`
+    );
+  },
+  getRewardTrack(rewardTrackId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrack?rewardTrackId=${rewardTrackId}`
+    );
+  },
+  saveRewardTrack(name, startDate, endDate, departmentId, pointsRatio, rewardTrackId) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/saveRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&departmentId=${departmentId}&pointsRatio=${pointsRatio}&rewardTrackId=${rewardTrackId}`
+    );
+  },
+  publishRewardTrack(rewardTrackId) {
+    return axios.put(
+      `http://localhost:9191/api/rewards/publishRewardTrack?rewardTrackId=${rewardTrackId}`
+    );
+  },
+  toggleDummyData() {
+    return axios.put(
+      `http://localhost:9191/api/rewards/toggleDummyData`
+    );
+  },
+  submitReviewForm(employeeName, rating, justification, departmentName, teamName) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/submitReviewForm?employeeName=${employeeName}&rating=${rating}&justification=${justification}&departmentName=${departmentName}&teamName=${teamName}`
+    );
+  },
+  getAllReviewForms() {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getAllReviewForms`
+    );
+  },
+  getAllUnvettedReviewForms() {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getAllUnvettedReviewForms`
+    );
+  },
+  vetReviewForm(employeeId, reviewFormId, departmentId, teamId) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/vetReviewForm?employeeId=${employeeId}&reviewFormId=${reviewFormId}&departmentId=${departmentId}&teamId=${teamId}`
+    );
+  },
+  getEmployeeReviewForms(employeeId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getEmployeeReviewForms?employeeId=${employeeId}`
+    );
+  },
 };
 
 export default api;
