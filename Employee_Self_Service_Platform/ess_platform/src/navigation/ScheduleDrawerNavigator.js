@@ -12,6 +12,10 @@ const ScheduleDrawerNavigator = () => {
     <ScheduleDrawer.Navigator
       minSwipeDistance={10}
       initialRouteName="My Schedule"
+      screenOptions={{
+        activeBackgroundColor: "#5cbbff",
+        activeTintColor: "#ffffff",
+      }}
       drawerContent={(props) => <ScheduleDrawerContent {...props} />}
     >
       <ScheduleDrawer.Screen
@@ -20,6 +24,7 @@ const ScheduleDrawerNavigator = () => {
         options={{
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
         }}
       />
       <ScheduleDrawer.Screen
@@ -28,6 +33,7 @@ const ScheduleDrawerNavigator = () => {
         options={{
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
         }}
       />
     </ScheduleDrawer.Navigator>

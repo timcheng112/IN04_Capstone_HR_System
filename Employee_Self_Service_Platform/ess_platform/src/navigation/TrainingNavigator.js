@@ -14,6 +14,8 @@ const TrainingNavigator = () => {
         component={TrainingScreen}
         options={{
           tabBarLabel: "Training",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
         }}
       />
       <TrainingStack.Screen
@@ -21,6 +23,8 @@ const TrainingNavigator = () => {
         component={ModuleScreen}
         options={{
           tabBarLabel: "Module",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
         }}
       />
       <TrainingStack.Screen
@@ -28,6 +32,8 @@ const TrainingNavigator = () => {
         component={VideoScreen}
         options={{
           tabBarLabel: "Video",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
         }}
       />
     </TrainingStack.Navigator>
