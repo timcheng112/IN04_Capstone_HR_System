@@ -483,8 +483,9 @@ export default function Performance() {
           <PerformanceSidebar
             currentPage={{
               name: "Current",
-              href: "/performance",
+              href: "/myperformance",
               current: true,
+            
             }}
           />
         </div>

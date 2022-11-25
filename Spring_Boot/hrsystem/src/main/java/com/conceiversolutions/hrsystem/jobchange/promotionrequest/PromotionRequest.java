@@ -4,7 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
-import com.conceiversolutions.hrsystem.enums.StatusEnum;
+import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
+import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
@@ -17,47 +18,84 @@ public class PromotionRequest {
     private Long promotionId;
     @Column(name = "created", nullable = false)
     private LocalDate created;
-    @Column(name = "appraisal_id", nullable = false)
-    private Long appraisalId;
-    @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
-    @Column(name = "manager_id", nullable = false)
-    private Long managerId;
-    @Column(name = "approved_by", nullable = true)
-    private Long approvedBy;
-    @Column(name = "interview_comments", nullable = true)
-    private String interviewComments;
-    @Column(name = "new_position_id", nullable = false)
-    private Long newPositionId;
-    @Column(name = "new_department_id", nullable = false)
-    private Long newDepartmentId;
-    @Column(name = "processed_by", nullable = true)
-    private Long processedBy;
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private StatusEnum status;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
+    @OneToOne
+    @JoinColumn(name = "appraisal")
+    private Appraisal appraisal;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "employee", nullable = false)
     private User employee;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "manager", nullable = false)
+    private User manager;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "interviewer", nullable = true)
+    private User interviewer;
+
+    @OneToOne
+    @JoinColumn(name = "new_position", nullable = true)
+    private Position newPosition;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "processed_by", nullable = true)
+    private User processedBy;
+
+    // CREATED -> SUBMITTED / WITHDRAWN -> PASSED / FAILED (INTERVIEW) -> APPROVED /
+    // REJECTED
+    @Column(name = "status", nullable = false)
+    private String status;
+
+    @Column(name = "promotion_justification", nullable = true)
+    private String promotionJustification;
+    @Column(name = "withdraw_remarks", nullable = true)
+    private String withdrawRemarks;
+
+    @Column(name = "interview_date", nullable = true)
+    private LocalDate interviewDate;
+    @Column(name = "interview_remarks", nullable = true)
+    private String interviewRemarks;
+
+    @Column(name = "effective_from", nullable = true)
+    private LocalDate effectiveFrom;
+    @Column(name = "interview_comments", nullable = true)
+    private String rejectRemarks;
 
     public PromotionRequest() {
     }
 
-    public PromotionRequest(LocalDate created, Long appraisalId, Long employeeId, Long managerId, Long approvedBy,
-                            String interviewComments, Long newPositionId, Long newDepartmentId, Long processedBy,
-                            StatusEnum status, User employee) {
+    public PromotionRequest(LocalDate created, Appraisal appraisal, User employee, User manager, User interviewer,
+            String status, String promotionJustification, String withdrawRemarks) {
         this.created = created;
-        this.appraisalId = appraisalId;
-        this.employeeId = employeeId;
-        this.managerId = managerId;
-        this.approvedBy = approvedBy;
-        this.interviewComments = interviewComments;
-        this.newPositionId = newPositionId;
-        this.newDepartmentId = newDepartmentId;
+        this.appraisal = appraisal;
+        this.employee = employee;
+        this.manager = manager;
+        this.interviewer = interviewer;
+        this.status = status;
+        this.promotionJustification = promotionJustification;
+        this.withdrawRemarks = withdrawRemarks;
+    }
+
+    public PromotionRequest(LocalDate created, Appraisal appraisal, User employee, User manager, User interviewer,
+            Position newPosition, User processedBy, String status, String promotionJustification,
+            String withdrawRemarks, LocalDate interviewDate, String interviewRemarks, LocalDate effectiveFrom,
+            String rejectRemarks) {
+        this.created = created;
+        this.appraisal = appraisal;
+        this.employee = employee;
+        this.manager = manager;
+        this.interviewer = interviewer;
+        this.newPosition = newPosition;
         this.processedBy = processedBy;
         this.status = status;
-        this.employee = employee;
+        this.promotionJustification = promotionJustification;
+        this.withdrawRemarks = withdrawRemarks;
+        this.interviewDate = interviewDate;
+        this.interviewRemarks = interviewRemarks;
+        this.effectiveFrom = effectiveFrom;
+        this.rejectRemarks = rejectRemarks;
     }
 
     public Long getPromotionId() {
@@ -76,76 +114,68 @@ public class PromotionRequest {
         this.created = created;
     }
 
-    public Long getAppraisalId() {
-        return appraisalId;
-    }
-
-    public void setAppraisalId(Long appraisalId) {
-        this.appraisalId = appraisalId;
-    }
-
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public Long getManagerId() {
-        return managerId;
-    }
-
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
-    }
-
-    public Long getApprovedBy() {
-        return approvedBy;
-    }
-
-    public void setApprovedBy(Long approvedBy) {
-        this.approvedBy = approvedBy;
-    }
-
-    public String getInterviewComments() {
-        return interviewComments;
-    }
-
-    public void setInterviewComments(String interviewComments) {
-        this.interviewComments = interviewComments;
-    }
-
-    public Long getNewPositionId() {
-        return newPositionId;
-    }
-
-    public void setNewPositionId(Long newPositionId) {
-        this.newPositionId = newPositionId;
-    }
-
-    public Long getNewDepartmentId() {
-        return newDepartmentId;
-    }
-
-    public void setNewDepartmentId(Long newDepartmentId) {
-        this.newDepartmentId = newDepartmentId;
-    }
-
-    public Long getProcessedBy() {
-        return processedBy;
-    }
-
-    public void setProcessedBy(Long processedBy) {
-        this.processedBy = processedBy;
-    }
-
-    public StatusEnum getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(StatusEnum status) {
+    public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPromotionJustification() {
+        return promotionJustification;
+    }
+
+    public void setPromotionJustification(String promotionJustification) {
+        this.promotionJustification = promotionJustification;
+    }
+
+    public String getWithdrawRemarks() {
+        return withdrawRemarks;
+    }
+
+    public void setWithdrawRemarks(String withdrawRemarks) {
+        this.withdrawRemarks = withdrawRemarks;
+    }
+
+    public LocalDate getInterviewDate() {
+        return interviewDate;
+    }
+
+    public void setInterviewDate(LocalDate interviewDate) {
+        this.interviewDate = interviewDate;
+    }
+
+    public String getInterviewRemarks() {
+        return interviewRemarks;
+    }
+
+    public void setInterviewRemarks(String interviewRemarks) {
+        this.interviewRemarks = interviewRemarks;
+    }
+
+    public LocalDate getEffectiveFrom() {
+        return effectiveFrom;
+    }
+
+    public void setEffectiveFrom(LocalDate effectiveFrom) {
+        this.effectiveFrom = effectiveFrom;
+    }
+
+    public String getRejectRemarks() {
+        return rejectRemarks;
+    }
+
+    public void setRejectRemarks(String rejectRemarks) {
+        this.rejectRemarks = rejectRemarks;
+    }
+
+    public Appraisal getAppraisal() {
+        return appraisal;
+    }
+
+    public void setAppraisal(Appraisal appraisal) {
+        this.appraisal = appraisal;
     }
 
     public User getEmployee() {
@@ -156,13 +186,56 @@ public class PromotionRequest {
         this.employee = employee;
     }
 
-    @Override
-    public String toString() {
-        return "PromotionRequest [appraisalId=" + appraisalId + ", approvedBy=" + approvedBy + ", created=" + created
-                + ", employee=" + employee + ", employeeId=" + employeeId + ", interviewComments=" + interviewComments
-                + ", managerId=" + managerId + ", newDepartmentId=" + newDepartmentId + ", newPositionId="
-                + newPositionId + ", processedBy=" + processedBy + ", promotionId=" + promotionId + ", status=" + status
-                + "]";
+    public User getManager() {
+        return manager;
     }
 
+    public void setManager(User manager) {
+        this.manager = manager;
+    }
+
+    public User getInterviewer() {
+        return interviewer;
+    }
+
+    public void setInterviewer(User interviewer) {
+        this.interviewer = interviewer;
+    }
+
+    public Position getNewPosition() {
+        return newPosition;
+    }
+
+    public void setNewPosition(Position newPosition) {
+        this.newPosition = newPosition;
+    }
+
+    public User getProcessedBy() {
+        return processedBy;
+    }
+
+    public void setProcessedBy(User processedBy) {
+        this.processedBy = processedBy;
+    }
+
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "PromotionRequest{" +
+                "promotionId=" + promotionId +
+                ", created=" + created +
+                ", appraisal=" + appraisal +
+                ", employee=" + employee +
+                ", manager=" + manager +
+                ", interviewer=" + interviewer +
+                ", newPosition=" + newPosition +
+                ", processedBy=" + processedBy +
+                ", status='" + status + '\'' +
+                ", promotionJustification='" + promotionJustification + '\'' +
+                ", withdrawRemarks='" + withdrawRemarks + '\'' +
+                ", interviewDate=" + interviewDate +
+                ", interviewRemarks='" + interviewRemarks + '\'' +
+                ", effectiveFrom=" + effectiveFrom +
+                ", rejectRemarks='" + rejectRemarks + '\'' +
+                '}';
+    }
 }
