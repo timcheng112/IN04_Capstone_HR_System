@@ -993,7 +993,7 @@ export default function Home() {
                           <div className="mt-8">
                             <h3 className="text-lg font-medium">
                               <a
-                                href="/performance"
+                                href="/myperformance"
                                 className="focus:outline-none"
                               >
                                 {/* Extend touch target to entire panel */}

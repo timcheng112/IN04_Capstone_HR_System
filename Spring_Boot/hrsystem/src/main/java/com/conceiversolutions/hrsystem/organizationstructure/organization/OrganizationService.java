@@ -208,17 +208,14 @@ public class OrganizationService {
         return Long.valueOf(-1);
     }
 
-    public List<User> getOrganizationHeads() {
-        System.out.println("OrganizationService.getOrganizationHeads");
-        List<User> heads = new ArrayList<>();
+    public User getOrganizationHead() throws Exception {
+        System.out.println("OrganizationService.getOrganizationHead");
 
-        List<Organization> allOrganizations = organizationRepository.findAll();
+        Optional<Organization> organization = organizationRepository.findOrgByName("Libro");
+        System.out.println(organization);
 
-        for (Organization o : allOrganizations) {
-            System.out.println("o head " + o.getOrganizationHead());
-            heads.add(o.getOrganizationHead());
-        }
-
-        return heads;
+        return new User();
     }
+
+    
 }
