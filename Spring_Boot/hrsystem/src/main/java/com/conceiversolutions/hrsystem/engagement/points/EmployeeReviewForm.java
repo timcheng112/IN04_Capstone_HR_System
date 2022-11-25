@@ -30,14 +30,19 @@ public class EmployeeReviewForm {
     private String departmentName;
     @Column(name = "team_name")
     private String teamName;
+    @Column(name = "vetted")
+    private Boolean vetted;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     private User employee;
 
     public EmployeeReviewForm() {
+        this.vetted = false;
+        this.employee = null;
     }
 
     public EmployeeReviewForm(String employeeName, Integer rating, LocalDate date, String justification, String departmentName, String teamName) {
+        this();
         this.employeeName = employeeName;
         this.rating = rating;
         this.date = date;

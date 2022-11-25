@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.organizationstructure.department;
 
+import com.conceiversolutions.hrsystem.user.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,7 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
     @Query("SELECT d.teams FROM Department d WHERE d.departmentHead.userId = ?1")
     List<Team> findTeamsByDepartmentHead(Long userId);
+
+    @Query("SELECT d FROM Department d WHERE d.departmentName =?1")
+    Optional<Department> findByDepartmentName(String deptName);
 }
