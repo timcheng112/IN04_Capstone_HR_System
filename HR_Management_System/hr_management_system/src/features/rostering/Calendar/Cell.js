@@ -54,6 +54,7 @@ const Cell = ({
   const [isLoading, setIsLoading] = useState(shift ? false : true);
   const [user, setUser] = useState(null);
   const [leaveBlock, setLeaveBlock] = useState(null);
+  const [preferredDates, setPreferredDates] = useState([]);
 
   useEffect(() => {
     api
@@ -185,6 +186,18 @@ const Cell = ({
       });
   };
 
+  useEffect(() => {
+    if (person !== null && person !== undefined) {
+      console.log("TEST 1");
+      api
+        .getPreferredDatesByUserId(person.userId)
+        .then((response) => {
+          setPreferredDates(response.data.dates);
+        })
+        .catch((err) => console.log(err.response.data.message));
+    }
+  }, [person]);
+
   return (
     <div
       className={
@@ -193,7 +206,10 @@ const Cell = ({
         (compareAsc(date, dateToday) === -1 && !isToday(date)
           ? " bg-gray-100"
           : " bg-white") +
-        (isToday(date) ? " bg-sky-100" : "")
+        (isToday(date) ? " bg-sky-100" : "") +
+        (date && preferredDates.includes(format(date, "yyyy-MM-dd"))
+          ? " bg-green-100"
+          : "")
       }
       onClick={onClickHandler}
       onMouseOver={handleMouseOver}
@@ -300,7 +316,7 @@ const Cell = ({
               }
             />
           )}
-          {leaveBlock !== null && <LeaveBlock leave={leaveBlock}/>}
+          {leaveBlock !== null && <LeaveBlock leave={leaveBlock} />}
         </div>
       ) : !isLoading &&
         date &&

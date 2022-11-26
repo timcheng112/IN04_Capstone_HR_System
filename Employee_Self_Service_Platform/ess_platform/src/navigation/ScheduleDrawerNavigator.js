@@ -25,6 +25,7 @@ const ScheduleDrawerNavigator = () => {
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
           headerTintColor: "white",
+          unmountOnBlur: true,
         }}
       />
       <ScheduleDrawer.Screen
@@ -34,6 +35,7 @@ const ScheduleDrawerNavigator = () => {
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
           headerTintColor: "white",
+          unmountOnBlur: true,
         }}
       />
     </ScheduleDrawer.Navigator>
