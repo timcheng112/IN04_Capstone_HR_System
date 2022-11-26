@@ -8,7 +8,7 @@ import {
   startOfMonth,
 } from "date-fns";
 import React, { createRef, useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Button, Card, Text } from "react-native-paper";
 import api from "../../utils/api";
@@ -108,7 +108,15 @@ const IndicatePreferencesComponent = () => {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView
+      style={{ flex: 1 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={isLoading}
+          onRefresh={() => setShowCalendar(!showCalendar)}
+        />
+      }
+    >
       <Card
         style={{
           flex: 1,
@@ -208,7 +216,12 @@ const IndicatePreferencesComponent = () => {
         <LottieView
           source={require("../../../assets/loading.json")}
           autoPlay
-          style={{ height: "60%", width: "60%", alignSelf: "center", justifyContent: "center"}}
+          style={{
+            height: "60%",
+            width: "60%",
+            alignSelf: "center",
+            justifyContent: "center",
+          }}
           resizeMode="contain"
         />
       ) : (

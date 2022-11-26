@@ -4,6 +4,7 @@ import ScheduleScreen from "../screens/ScheduleScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import ScheduleDrawerContent from "../components/schedule/ScheduleDrawerContent";
 import IndicatePreferencesScreen from "../screens/IndicatePreferencesScreen";
+import SwapRequestScreen from "../screens/SwapRequestScreen";
 
 const ScheduleDrawerNavigator = () => {
   const ScheduleDrawer = createDrawerNavigator();
@@ -31,6 +32,16 @@ const ScheduleDrawerNavigator = () => {
       <ScheduleDrawer.Screen
         name="Indicate Preferences"
         component={IndicatePreferencesScreen}
+        options={{
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
+          unmountOnBlur: true,
+        }}
+      />
+      <ScheduleDrawer.Screen
+        name="Swap Request"
+        component={SwapRequestScreen}
         options={{
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },

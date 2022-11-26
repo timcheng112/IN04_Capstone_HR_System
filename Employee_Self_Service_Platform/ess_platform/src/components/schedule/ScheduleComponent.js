@@ -16,7 +16,7 @@ import {
   endOfYear,
   isSameDay,
 } from "date-fns";
-import { Dimensions, FlatList, View } from "react-native";
+import { Dimensions, FlatList, RefreshControl, ScrollView, View } from "react-native";
 import ShiftBlock from "./ShiftBlock";
 import api from "../../utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -29,6 +29,7 @@ import LottieView from "lottie-react-native";
 const ScheduleComponent = () => {
   const [userId, setUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const [user, setUser] = useState(null);
   const [myShiftListItem, setMyShiftListItem] = useState(null);
   const [shiftListItems, setShiftListItems] = useState(null);
@@ -138,11 +139,20 @@ const ScheduleComponent = () => {
       }
       setIsLoading(false);
     }
-  }, [user, userId, date]);
+  }, [user, userId, date, refresh]);
 
   return (
     // <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: "4%" }}>
-    <View style={{ flex: 1, padding: "4%" }}>
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ padding: "4%" }}
+      refreshControl={
+        <RefreshControl
+          refreshing={isLoading}
+          onRefresh={() => setRefresh(!refresh)}
+        />
+      }
+    >
       <Card
         style={{
           margin: "-4%",
@@ -234,7 +244,7 @@ const ScheduleComponent = () => {
             );
           }}
         />
-        <Card.Content>
+        <Card.Content style={{marginTop: "4%"}}>
           <Text style={{ fontFamily: "Poppins_300Light" }}>
             Team:{" "}
             {user && user.teams.length > 0 ? user.teams[0].teamName : "No Team"}
@@ -403,7 +413,7 @@ const ScheduleComponent = () => {
           </Card>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

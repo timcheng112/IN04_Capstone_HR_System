@@ -51,7 +51,7 @@ const DrawerContent = (props) => {
               onPress={() => {
                 props.navigation.navigate("My Schedule");
               }}
-            ></DrawerItem>
+            />
             <DrawerItem
               icon={({ color, size }) => (
                 <MaterialCommunityIcons
@@ -73,16 +73,27 @@ const DrawerContent = (props) => {
               onPress={() => {
                 props.navigation.navigate("Indicate Preferences");
               }}
-            ></DrawerItem>
-            {/* <DrawerItem
+            />
+            <DrawerItem
               icon={({ color, size }) => (
-                <AntDesign name="flag" size={size} color={color} />
+                <MaterialCommunityIcons
+                  name="swap-horizontal"
+                  size={size}
+                  color={focusedRoute === "Leave" ? "black" : color}
+                />
               )}
-              label="Leave"
+              style={
+                focusedRoute === "Swap Request" && {
+                  backgroundColor: "#c4b5fd",
+                  borderRadius: 20,
+                }
+              }
+              labelStyle={focusedRoute === "Swap Request" && { color: "black" }}
+              label="Swap Request"
               onPress={() => {
-                props.navigation.navigate("Leave");
+                props.navigation.navigate("Swap Request");
               }}
-            ></DrawerItem> */}
+            />
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>
