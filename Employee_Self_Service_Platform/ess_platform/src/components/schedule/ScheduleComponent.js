@@ -187,6 +187,7 @@ const ScheduleComponent = () => {
         <FlatList
           data={currWeekDates}
           horizontal
+          showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => (
             <View style={{ width: (windowWidth - 40) / 5 }}>
               <Text

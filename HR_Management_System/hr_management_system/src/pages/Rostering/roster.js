@@ -58,7 +58,10 @@ export default function Roster() {
   useEffect(() => {
     api
       .getAllTeams()
-      .then((response) => setTeams(response.data))
+      .then((response) => {
+        console.log(response.data);
+        setTeams(response.data);
+      })
       .catch((error) => console.log(error.response.data.message));
   }, []);
 
@@ -346,7 +349,7 @@ export default function Roster() {
               refreshKey={refreshKey}
               openPublish={openPublish}
               closePublish={() => setOpenPublish(false)}
-              rosterId={selectedTeam.roster.rosterId}
+              rosterId={selectedTeam && selectedTeam.roster.rosterId}
             />
           </>
         ) : (
