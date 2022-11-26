@@ -71,6 +71,7 @@ import EmployeePayrollHistory from "./pages/Payroll/ViewEmployeesPayHistory";
 import MyBenefitsPage from "./pages/Benefit/index";
 import BenefitsPage from "./pages/Benefit/indexHR";
 import ClaimsPage from "./pages/Benefit/claim";
+import RewardTrackPage from "./pages/Reward/index"
 
 function App() {
   return (
@@ -258,6 +259,7 @@ function App() {
           <PrivateRoute exact path="/welfare/mybenefits" component={MyBenefitsPage} />
           <PrivateRoute exact path="/welfare/benefits" component={BenefitsPage} />
           <PrivateRoute exact path="/welfare/claims" component={ClaimsPage} />
+          <PrivateRoute exact path="/welfare/rewardtrack" component={RewardTrackPage} />
         </Switch>
       </div>
     </BrowserRouter>
