@@ -232,7 +232,8 @@ const api = {
   },
   addPayInformation(userId, payInformation) {
     return axios.post(
-      `http://localhost:9191/api/pay/payinfo/addPayInformation?userId=${userId}&payInformation=${payInformation}`
+      `http://localhost:9191/api/pay/payinfo/addPayInformation?userId=${userId}`,
+      payInformation
     );
   },
   getUser(userId) {

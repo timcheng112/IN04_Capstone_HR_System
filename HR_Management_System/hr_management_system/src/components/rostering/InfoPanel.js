@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api.js";
-import {
-  format,
-  formatISO,
-  getDate,
-  getDay,
-  getMonth,
-  getYear,
-} from "date-fns";
+import { format } from "date-fns";
 import Tabs from "./Tabs.js";
 import "./InfoPanel.css";
 import TabDisplay from "./TabDisplay.js";
@@ -49,43 +42,114 @@ const publicHolidays = [
 ];
 
 //dont instantiate date here later.
-const InfoPanel = ({ teamId, selectedDate, addShiftHandler }) => {
-  const [shift, setShift] = useState(null);
+const InfoPanel = ({ teamId, selectedDate }) => {
+  const [shifts, setShifts] = useState();
 
   let day = format(selectedDate, "iiii");
   let dateString = format(selectedDate, "dd MMMM yyyy");
-  let apiDateString = formatISO(selectedDate);
-  const shiftFound = false;
+  let apiDateString = format(selectedDate, "yyyy-MM-dd");
 
   console.log("DATESTRING|||" + dateString + "||");
   console.log("IS IT A PH? " + publicHolidays.includes(dateString));
 
-  useEffect(() => {
-    const temp = async () => {
-      if (shift != null) {
-        shiftFound = true;
-      }
+  // if (findShifts()) {
+  //   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  // } else {
+  //   setShifts([]);
+  // }
+  // findShifts();
+
+  function findShiftsPromise() {
+    console.log("### findShifts ###");
+    return new Promise(async (resolve) => {
       await api
         .getShiftByTeamAndTime(teamId, apiDateString)
         .then((res) => {
-          console.log("get shift by team and time: " + res);
-          setShift(res.data);
-
-          // updateDateInfo(teamId, selectedDate);
+          if (res.data != null) {
+            console.log("get shift by team and time: " + res.data);
+            setShifts(res.data);
+            resolve(true);
+          } else {
+            console.warn("no shifts found");
+            resolve(false);
+          }
         })
         .catch((error) => {
-          var message = error.request.response;
+          let message = error.request.response;
           console.log(message);
-          if (message.includes("Shift with teamId:")) {
+          if (message.includes("Shift with team ID")) {
             alert(
               "No Shift was found for team " + teamId + " at specified time."
             );
-          } else if (message.includes("More than 1 Shifts were found")) {
-            alert("More than 1 shifts were found?!");
+            resolve(false);
+          } else {
+            // alert("Cannot find shift.");
+            resolve(false);
           }
         });
-    };
-  }, [shift]);
+    });
+  }
+
+  async function findShifts() {
+    console.log("### findShifts ###");
+    await api
+      .getShiftByTeamAndTime(teamId, apiDateString)
+      .then((res) => {
+        if (res.data != null) {
+          console.log("get shift by team and time: " + res.data);
+          setShifts(res.data);
+          return true;
+        } else {
+          console.warn("no shifts found");
+          return false;
+        }
+      })
+      .catch((error) => {
+        let message = error.request.response;
+        console.log(message);
+        if (message.includes("Shift with team ID")) {
+          setShifts(null);
+          // alert(
+          //   "No Shift was found for team " + teamId + " at specified time."
+          // );
+          return false;
+        } else {
+          // alert("Cannot find shift.");
+          return false;
+        }
+      });
+  }
+
+  useEffect(() => {
+    // findShifts();
+    api
+      .getShiftByTeamAndTime(teamId, apiDateString)
+      .then((res) => {
+        if (res.data != null) {
+          console.log("get shift by team and time: " + res.data);
+          setShifts(res.data);
+          // return true;
+        } else {
+          console.warn("no shifts found");
+          // return false;
+        }
+      })
+      .catch((error) => {
+        let message = error.request.response;
+        console.log(message);
+        if (message.includes("Shift with team ID")) {
+          setShifts(null);
+          // alert(
+          //   "No Shift was found for team " + teamId + " at specified time."
+          // );
+          // return false;
+        } else {
+          // alert("Cannot find shift.");
+          // return false;
+          setShifts(null);
+        }
+      });
+  }, [selectedDate]);
 
   return (
     //find shift information with cooresponding team & date.
@@ -121,9 +185,9 @@ const InfoPanel = ({ teamId, selectedDate, addShiftHandler }) => {
                 Evening Shift
               </div>
             </td>
-          </tr> */}
+          </tr>
 
-          {/* <tr>
+          <tr>
             <td>
               #Cashiers <br />
               {0}/{4}
@@ -148,26 +212,39 @@ const InfoPanel = ({ teamId, selectedDate, addShiftHandler }) => {
       </table>
 
       <div>
-        {shiftFound ? (
-          <Tabs>
-            <div label="All">
-              <TabDisplay shiftId={shift.shiftId} idx="-1" />
-            </div>
-            <div label="Salesmen">
-              <TabDisplay shiftId={shift.shiftId} idx="0" />
-            </div>
-            <div label="Cashiers">
-              <TabDisplay shiftId={shift.shiftId} idx="1" />
-            </div>
-            <div label="Managers">
-              <TabDisplay shiftId={shift.shiftId} idx="2" />
-            </div>
-          </Tabs>
+        {shifts ? (
+          <>
+            {/* <div>
+              <h1>shiftfound</h1>
+            </div> */}
+            <Tabs>
+              {shifts.map((shift) => (
+                <div label={shift.shiftTitle}>
+                  <TabDisplay shift={shift} />
+                </div>
+              ))}
+            </Tabs>
+          </>
         ) : (
-          <></>
-          // <div>
-          //   <div>No Shifts Assigned To This Date.</div>
-          // </div>
+          // <Tabs>
+          //   <div label="All">
+          //     <TabDisplay shiftId={shift.shiftId} idx="-1" />
+          //   </div>
+          //   <div label="Salesmen">
+          //     <TabDisplay shiftId={shift.shiftId} idx="0" />
+          //   </div>
+          //   <div label="Cashiers">
+          //     <TabDisplay shiftId={shift.shiftId} idx="1" />
+          //   </div>
+          //   <div label="Managers">
+          //     <TabDisplay shiftId={shift.shiftId} idx="2" />
+          //   </div>
+          // </Tabs>
+          <>
+            <div>
+              <div>No Shifts Assigned To This Date.</div>
+            </div>
+          </>
         )}
       </div>
       {/* <Tabs>
