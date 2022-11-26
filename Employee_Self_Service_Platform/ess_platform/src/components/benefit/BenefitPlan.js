@@ -45,7 +45,7 @@ export default function BenefitPlan({ navigation, userId }) {
         </DataTable.Header>
 
         {plans.map((plan) => (
-          <DataTable.Row>
+          <DataTable.Row key={plan.benefitPlanInstanceId}>
             <DataTable.Cell>{plan.benefitPlan.planName}</DataTable.Cell>
             <DataTable.Cell>$ {plan.remainingAmount}</DataTable.Cell>
             <DataTable.Cell>{plan.enrolDate}</DataTable.Cell>
