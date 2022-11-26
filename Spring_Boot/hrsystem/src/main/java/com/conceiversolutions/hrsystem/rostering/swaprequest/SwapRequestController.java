@@ -30,11 +30,16 @@ public class SwapRequestController {
         return swapRequestService.getSwapRequestById(swapRequestId);
     }
 
+    @GetMapping(path = "getSwapRequestsByUserId")
+    public List<SwapRequest> getSwapRequestsByUserId(@RequestParam(name = "userId") Long userId) {
+        return swapRequestService.getSwapRequestsByUserId(userId);
+    }
+
     @PostMapping
-    public Long addNewSwapRequest(@RequestBody SwapRequest swapRequest,
+    public Long addNewSwapRequest(@RequestParam(name = "reason") String reason,
             @RequestParam(name = "receiverShiftListItemId") Long receiverShiftListItemId,
             @RequestParam(name = "requesterShiftListItemId") Long requesterShiftListItemId) {
-        return swapRequestService.addNewSwapRequest(swapRequest, receiverShiftListItemId, requesterShiftListItemId);
+        return swapRequestService.addNewSwapRequest(reason, receiverShiftListItemId, requesterShiftListItemId);
     }
 
     @DeleteMapping(path = "{swapRequestId}")

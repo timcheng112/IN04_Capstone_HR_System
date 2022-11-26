@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.conceiversolutions.hrsystem.enums.StatusEnum;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 import com.conceiversolutions.hrsystem.rostering.shift.ShiftRepository;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
@@ -25,11 +26,15 @@ public class SwapRequestService {
                 List<SwapRequest> swapRequests = swapRequestRepository.findAll();
                 for (SwapRequest swapRequest : swapRequests) {
                         swapRequest.getReceiverShiftListItem().getShift().setRoster(null);
-                        swapRequest.getReceiverShiftListItem().setUser(null);
+                        swapRequest.getReceiverShiftListItem().getUser().nullify();
+                        // swapRequest.getReceiverShiftListItem().setUser(null);
                         swapRequest.getRequestorShiftListItem().getShift().setRoster(null);
-                        swapRequest.getRequestorShiftListItem().setUser(null);
-                        swapRequest.setReceiver(null);
-                        swapRequest.setRequestor(null);
+                        swapRequest.getRequestorShiftListItem().getUser().nullify();
+                        // swapRequest.getRequestorShiftListItem().setUser(null);
+                        // swapRequest.setReceiver(null);
+                        // swapRequest.setRequestor(null);
+                        swapRequest.getReceiver().nullify();
+                        swapRequest.getRequestor().nullify();
                 }
                 return swapRequests;
         }
@@ -43,7 +48,7 @@ public class SwapRequestService {
                 return swapRequest;
         }
 
-        public Long addNewSwapRequest(SwapRequest swapRequest, Long receiverShiftListItemId,
+        public Long addNewSwapRequest(String reason, Long receiverShiftListItemId,
                         Long requesterShiftListItemId) {
                 ShiftListItem receiverShiftListItem = shiftListItemRepository.findById(receiverShiftListItemId)
                                 .orElseThrow(() -> new IllegalStateException(
@@ -65,21 +70,30 @@ public class SwapRequestService {
                         throw new IllegalStateException("Cannot swap the same shifts!");
                 }
 
-                User receiver = receiverShiftListItem.getUser();
-                User requester = requesterShiftListItem.getUser();
-                swapRequest.setReceiverShiftListItem(receiverShiftListItem);
-                swapRequest.setRequestorShiftListItem(requesterShiftListItem);
-                swapRequest.setReceiver(receiver);
-                swapRequest.setRequestor(requester);
-                SwapRequest savedSwapRequest = swapRequestRepository.saveAndFlush(swapRequest);
+                try {
+                        User receiver = receiverShiftListItem.getUser();
+                        User requester = requesterShiftListItem.getUser();
 
-                receiver.addSwapRequestsReceived(savedSwapRequest);
-                userRepository.saveAndFlush(receiver);
+                        SwapRequest swapRequest = new SwapRequest();
+                        swapRequest.setStatus(StatusEnum.PENDING);
+                        swapRequest.setReason(reason);
+                        swapRequest.setReceiverShiftListItem(receiverShiftListItem);
+                        swapRequest.setRequestorShiftListItem(requesterShiftListItem);
+                        swapRequest.setReceiver(receiver);
+                        swapRequest.setRequestor(requester);
+                        SwapRequest savedSwapRequest = swapRequestRepository.saveAndFlush(swapRequest);
 
-                requester.addSwapRequestsRequested(savedSwapRequest);
-                userRepository.saveAndFlush(requester);
+                        receiver.addSwapRequestsReceived(savedSwapRequest);
+                        userRepository.save(receiver);
 
-                return savedSwapRequest.getSwapRequestId();
+                        requester.addSwapRequestsRequested(savedSwapRequest);
+                        userRepository.save(requester);
+
+                        return savedSwapRequest.getSwapRequestId();
+                } catch (Exception e) {
+                        throw new IllegalStateException("Shifts already involved in another swap!");
+                }
+
         }
 
         public void deleteSwapRequest(Long swapRequestId) {
@@ -93,5 +107,20 @@ public class SwapRequestService {
                 swapRequest.setRequestor(null);
 
                 swapRequestRepository.deleteById(swapRequestId);
+        }
+
+        public List<SwapRequest> getSwapRequestsByUserId(Long userId) {
+                User user = userRepository.findById(userId).orElseThrow(
+                                () -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
+                List<SwapRequest> swapRequests = user.getSwapRequestsRequested();
+                for (SwapRequest swapRequest : swapRequests) {
+                        swapRequest.getReceiverShiftListItem().getShift().setRoster(null);
+                        swapRequest.getReceiverShiftListItem().getUser().nullify();
+                        swapRequest.getRequestorShiftListItem().getShift().setRoster(null);
+                        swapRequest.getRequestorShiftListItem().getUser().nullify();
+                        swapRequest.getReceiver().nullify();
+                        swapRequest.getRequestor().nullify();
+                }
+                return swapRequests;
         }
 }

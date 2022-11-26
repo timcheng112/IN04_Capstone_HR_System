@@ -2426,29 +2426,30 @@ public class UserService implements UserDetailsService {
     public List<User> getEmployeesByTeam(Long teamId) {
         List<User> users = userRepository.getEmployeesByTeam(teamId);
         for (User user : users) {
-            user.setTeams(new ArrayList<>());
-            user.setQualificationInformation(null);
-            user.setBlocks(new ArrayList<>());
-            user.setShiftListItems(new ArrayList<>());
-            user.setSwapRequestsReceived(new ArrayList<>());
+            // user.setTeams(new ArrayList<>());
+            // user.setQualificationInformation(null);
+            // user.setBlocks(new ArrayList<>());
+            // user.setShiftListItems(new ArrayList<>());
+            // user.setSwapRequestsReceived(new ArrayList<>());
 
-            user.setSwapRequestsRequested(new ArrayList<>());
-            user.setReactivationRequest(null);
-            user.setAttendances(new ArrayList<>());
-            user.setCurrentPayInformation(null);
-            user.setEmployeeAppraisals(new ArrayList<>());
+            // user.setSwapRequestsRequested(new ArrayList<>());
+            // user.setReactivationRequest(null);
+            // user.setAttendances(new ArrayList<>());
+            // user.setCurrentPayInformation(null);
+            // user.setEmployeeAppraisals(new ArrayList<>());
 
-            user.setManagerAppraisals(new ArrayList<>());
-            user.setManagerReviews(new ArrayList<>());
-            user.setEmployeeReviews(new ArrayList<>());
-            user.setApplications(new ArrayList<>());
-            user.setPositions(new ArrayList<>());
+            // user.setManagerAppraisals(new ArrayList<>());
+            // user.setManagerReviews(new ArrayList<>());
+            // user.setEmployeeReviews(new ArrayList<>());
+            // user.setApplications(new ArrayList<>());
+            // user.setPositions(new ArrayList<>());
 
-            user.setJobRequests(new ArrayList<>());
-            user.setLeaves(new ArrayList<>());
-            user.setLeaveQuotas(new ArrayList<>());
-            user.setCurrentLeaveQuota(null);
-            user.setTaskListItems(new ArrayList<>());
+            // user.setJobRequests(new ArrayList<>());
+            // user.setLeaves(new ArrayList<>());
+            // user.setLeaveQuotas(new ArrayList<>());
+            // user.setCurrentLeaveQuota(null);
+            // user.setTaskListItems(new ArrayList<>());
+            user.nullify();
         }
         return users;
     }

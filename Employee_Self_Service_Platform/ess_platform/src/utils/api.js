@@ -17,6 +17,11 @@ const api = {
   getUser(userId) {
     return axios.get(`http://${URL}:9191/api/user/${userId}`);
   },
+  getEmployeesByTeam(teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/user/getEmployeesByTeam?teamId=${teamId}`
+    );
+  },
   // onboarding/offboarding
   getTaskListItems() {
     return axios.get(`http://localhost:9191/api/task_list_item`);
@@ -147,6 +152,11 @@ const api = {
       `http://${URL}:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
     );
   },
+  getShiftListItemByTeam(teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/shift_list_item/getShiftListItemByTeam?teamId=${teamId}`
+    );
+  },
   getPreferredDatesByUserId(userId) {
     return axios.get(
       `http://${URL}:9191/api/preferred_date/getPreferredDatesByUserId?userId=${userId}`
@@ -163,6 +173,19 @@ const api = {
       `http://${URL}:9191/api/preferred_date/editPreferredDates?userId=${userId}`,
       newDates
     );
+  },
+  addNewSwapRequest(reason, receiverShiftListItemId, requesterShiftListItemId) {
+    return axios.post(
+      `http://${URL}:9191/api/swap_request?reason=${reason}&receiverShiftListItemId=${receiverShiftListItemId}&requesterShiftListItemId=${requesterShiftListItemId}`
+    );
+  },
+  getSwapRequestsByUserId(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/swap_request/getSwapRequestsByUserId?userId=${userId}`
+    );
+  },
+  deleteSwapRequestById(swapRequestId) {
+    return axios.delete(`http://${URL}:9191/api/swap_request/${swapRequestId}`);
   },
 };
 
