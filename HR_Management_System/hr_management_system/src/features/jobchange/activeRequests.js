@@ -1,7 +1,11 @@
 import {
+  CheckBadgeIcon,
   CheckCircleIcon,
   ChevronRightIcon,
+  ClipboardDocumentCheckIcon,
   EnvelopeIcon,
+  FaceSmileIcon,
+  PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
@@ -18,6 +22,50 @@ export default function ActiveRequests() {
     });
   }, []);
 
+  function renderStatus(status) {
+    if (status === "Created") {
+      return (
+        <>
+          <PlusCircleIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
+    } else if (status === "Submitted") {
+      return (
+        <>
+          <ClipboardDocumentCheckIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
+    } else if (status === "Passed") {
+      return (
+        <>
+          <FaceSmileIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
+    } else if (status === "Approved") {
+      return (
+        <>
+          <CheckBadgeIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
+    }
+  }
+
   return (
     requests && (
       <div>
@@ -25,7 +73,10 @@ export default function ActiveRequests() {
           <ul role="list" className="divide-y divide-gray-200">
             {requests.map((request) => (
               <li key={request.promotionId}>
-                <a href={`/promotion/${request.promotionId}`} className="block hover:bg-gray-50">
+                <a
+                  href={`/promotion/${request.promotionId}`}
+                  className="block hover:bg-gray-50"
+                >
                   <div className="flex items-center px-4 py-4 sm:px-6">
                     <div className="flex min-w-0 flex-1 items-center">
                       <div className="flex-shrink-0">
@@ -65,11 +116,7 @@ export default function ActiveRequests() {
                               </Moment>
                             </p>
                             <p className="mt-2 flex items-center text-sm text-gray-500">
-                              <CheckCircleIcon
-                                className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-                                aria-hidden="true"
-                              />
-                              {request.status}
+                              {renderStatus(request.status)}
                             </p>
                           </div>
                         </div>

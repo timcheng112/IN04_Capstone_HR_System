@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import GoalList from "../performance/GoalList";
@@ -24,6 +24,8 @@ export default function NominationUneditable({ request }) {
     if (request) {
       console.log(request);
 
+      setSelectedPosition(request.newPosition);
+
       api.getAllEmployeeAppraisals(request.employee.userId).then((response) => {
         console.log(response.data);
         setAppraisals(response.data);
@@ -38,12 +40,6 @@ export default function NominationUneditable({ request }) {
         <div>
           <div className="overflow-hidden bg-white mx-10 my-12 shadow sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6">
-              <span className={classNames(
-                          request.status === "Submitted" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800",
-                          "inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium "
-                        )}>
-                {request.status}
-              </span>
               <h3 className="text-lg font-medium leading-6 text-gray-900">
                 Promotion Request for {request.employee.firstName}{" "}
                 {request.employee.lastName}
@@ -186,6 +182,24 @@ export default function NominationUneditable({ request }) {
                           </>
                         )}
                       </Listbox>
+                    </div>
+                    <div className="sm:col-span-6">
+                      <label
+                        htmlFor="scheduled"
+                        className="block text-md text-center font-sans font-medium text-gray-700"
+                      >
+                        Scheduled On
+                      </label>
+                      <div className="mt-1">
+                        <input
+                          type="date"
+                          name="scheduled"
+                          id="scheduled"
+                          disabled
+                          className="block w-full min-w-0 flex-1 rounded-md border-gray-300 disabled:cursor-not-allowed focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          defaultValue={request.interviewDate}
+                        />
+                      </div>
                     </div>
                     {withdraw && (
                       <div className="sm:col-span-6">

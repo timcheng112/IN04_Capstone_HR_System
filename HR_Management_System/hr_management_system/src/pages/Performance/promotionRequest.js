@@ -3,9 +3,13 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import PerformanceSidebar from "../../components/Sidebar/Performance";
 import Interview from "../../features/jobchange/interview";
+import InterviewUneditable from "../../features/jobchange/interviewUneditable";
 import Nomination from "../../features/jobchange/nomination";
 import NominationUneditable from "../../features/jobchange/nominationUneditable";
+import Processing from "../../features/jobchange/processing";
+import ProcessingUneditable from "../../features/jobchange/processingUneditable";
 import api from "../../utils/api";
+import { getUserId } from "../../utils/Common";
 
 const steps = [
   {
@@ -45,13 +49,20 @@ export default function PromotionRequest() {
     api.getPromotionRequest(requestId).then((response) => {
       setRequest(response.data);
 
-      renderSelectedStep(response.data.status);
+      const status = response.data.status;
+
+      renderSelectedStep(status, false);
+
+      api.getUser(getUserId()).then((response) => {
+        //console.log(response.data.isHrEmployee);
+        renderSelectedStep(status, response.data.isHrEmployee);
+      });
 
       console.log(response.data);
     });
   }, []);
 
-  function renderSelectedStep(status) {
+  function renderSelectedStep(status, isHR) {
     //console.log(status);
     if (status === "Created" || status === "Withdrawn") {
       setSelectedStep(steps[0]);
@@ -60,11 +71,16 @@ export default function PromotionRequest() {
       steps
         .filter((s) => s.id === "01")
         .map((step) => (step.status = "complete"));
-      steps
-        .filter((s) => s.id === "02")
-        .map((step) => (step.status = "current"));
-      setSelectedStep(steps[1]);
-    } else if (status === "Passed" || status === "Failed") {
+      console.log("interviewer " + request.interviewer.userId === getUserId());
+      if (request.interviewer.userId + "" === getUserId()) {
+        steps
+          .filter((s) => s.id === "02")
+          .map((step) => (step.status = "current"));
+        setSelectedStep(steps[1]);
+      } else {
+        setSelectedStep(steps[0]);
+      }
+    } else if (status === "Passed") {
       steps.map((s) => (s.status = "upcoming"));
       steps
         .filter((s) => s.id === "01")
@@ -72,10 +88,25 @@ export default function PromotionRequest() {
       steps
         .filter((s) => s.id === "02")
         .map((step) => (step.status = "complete"));
+
+      if (isHR) {
+        steps
+          .filter((s) => s.id === "03")
+          .map((step) => (step.status = "current"));
+        setSelectedStep(steps[2]);
+      }
+    } else if (status === "Approved") {
+      steps.map((s) => (s.status = "complete"));
+      setSelectedStep(steps[0]);
+    } else if (status === "Rejected") {
+      steps.map((s) => (s.status = "upcoming"));
       steps
-        .filter((s) => s.id === "03")
-        .map((step) => (step.status = "current"));
-      setSelectedStep(steps[2]);
+        .filter((s) => s.id === "01")
+        .map((step) => (step.status = "complete"));
+      steps
+        .filter((s) => s.id === "02")
+        .map((step) => (step.status = "complete"));
+      setSelectedStep(steps[0]);
     }
   }
 
@@ -88,11 +119,26 @@ export default function PromotionRequest() {
       }
     } else if (selectedStep.id === "02") {
       if (request.status === "Submitted") {
-        return <Interview request={request} />
-      } else if (request.status === "Passed" || request.status === "Failed") {
-
+        if (request.interviewer.userId + "" === getUserId()) {
+          return <Interview request={request} />;
+        }
+      } else if (
+        request.status === "Passed" ||
+        request.status === "Failed" ||
+        request.status === "Approved" ||
+        request.status === "Rejected"
+      ) {
+        return <InterviewUneditable request={request} />;
       }
     } else if (selectedStep.id === "03") {
+      if (request.status === "Passed") {
+        return <Processing request={request} />;
+      } else if (
+        request.status === "Approved" ||
+        request.status === "Rejected"
+      ) {
+        return <ProcessingUneditable request={request} />;
+      }
     } else {
       return <h1>Error</h1>;
     }

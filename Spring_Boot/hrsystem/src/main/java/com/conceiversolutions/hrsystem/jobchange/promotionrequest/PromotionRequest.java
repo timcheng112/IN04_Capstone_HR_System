@@ -60,7 +60,7 @@ public class PromotionRequest {
 
     @Column(name = "effective_from", nullable = true)
     private LocalDate effectiveFrom;
-    @Column(name = "interview_comments", nullable = true)
+    @Column(name = "reject_remarks", nullable = true)
     private String rejectRemarks;
 
     public PromotionRequest() {

@@ -18,6 +18,12 @@ public interface PromotionRepository extends JpaRepository<PromotionRequest, Lon
     @Query("SELECT p FROM PromotionRequest p WHERE p.status <> 'Withdrawn' AND p.status <> 'Failed' AND p.status <> 'Rejected' AND p.manager.userId = ?1")
     public List<PromotionRequest> findUserActiveRequests(Long userId);
 
+    @Query("SELECT p FROM PromotionRequest p WHERE p.status <> 'Withdrawn' AND p.status <> 'Failed' AND p.status <> 'Rejected' AND p.interviewer.userId = ?1")
+    public List<PromotionRequest> findUserToInterviewRequests(Long userId);
+
+    @Query("SELECT DISTINCT p FROM PromotionRequest p, User u WHERE p.status = 'Passed' AND u.isHrEmployee = true")
+    public List<PromotionRequest> findUserToApproveRequests(Long userId);
+
     @Query("SELECT p FROM PromotionRequest p WHERE p.status = 'Withdrawn' OR p.status = 'Failed' OR p.status = 'Rejected' AND p.manager.userId = ?1")
     public List<PromotionRequest> findUserRequestHistory(Long userId);
 }

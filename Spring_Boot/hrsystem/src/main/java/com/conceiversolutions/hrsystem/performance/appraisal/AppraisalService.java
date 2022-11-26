@@ -66,6 +66,8 @@ public class AppraisalService {
         u.setPassword(user.getPassword());
         u.setPhone(user.getPhone());
         u.setRace(user.getRace());
+        u.setCurrentPosition(user.getCurrentPosition());
+        u.setCurrentLeaveQuota(user.getCurrentLeaveQuota());
 
         return u;
     }
@@ -190,20 +192,13 @@ public class AppraisalService {
                             appraisal.setStatus("Incomplete");
                         }
 
-                        appraisal.setEmployee(u);
+                        appraisal.setEmployee(breakRelationships(u));
 
                         Optional<User> optionalManager = userRepository.findById(userId);
                         if (optionalManager.isPresent()) {
                             User manager = optionalManager.get();
 
-                            User m = new User();
-
-                            m.setUserId(manager.getUserId());
-                            m.setFirstName(manager.getFirstName());
-                            m.setLastName(manager.getLastName());
-                            m.setWorkEmail(manager.getWorkEmail());
-                            m.setUserRole(manager.getUserRole());
-                            m.setIsBlackListed(manager.getIsBlackListed());
+                            User m = breakRelationships(manager);                          
 
                             appraisal.setManagerAppraising(m);
 
@@ -520,9 +515,14 @@ public class AppraisalService {
 
     public List<Appraisal> getAllEmployeeAppraisals(Long userId) {
         List<Appraisal> appraisals = appraisalRepository.findAllEmployeeAppraisals(userId);
+
         for (Appraisal a : appraisals) {
-            a.getEmployee().nullify();
-            a.getManagerAppraising().nullify();
+            User employee = a.getEmployee();
+        
+            a.setEmployee(breakRelationships(employee));
+            
+            User manager = a.getManagerAppraising();
+            a.setManagerAppraising(breakRelationships(manager));
         }
         return appraisals;
     }

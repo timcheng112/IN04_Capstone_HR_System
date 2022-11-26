@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.jobchange.promotionrequest;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -8,9 +9,12 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentService;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationService;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamService;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformationService;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.appraisal.AppraisalRepository;
 import com.conceiversolutions.hrsystem.user.position.Position;
@@ -38,6 +42,35 @@ public class PromotionService {
 
     private final AppraisalRepository appraisalRepository;
 
+    private final PayInformationService payInformationService;
+
+    public User breakRelationships(User user) {
+        User u = new User();
+
+        u.setUserId(user.getUserId());
+        u.setFirstName(user.getFirstName());
+        u.setLastName(user.getLastName());
+        u.setWorkEmail(user.getWorkEmail());
+        u.setUserRole(user.getUserRole());
+        u.setProfilePic(user.getProfilePic());
+        u.setIsBlackListed(user.getIsBlackListed());
+        u.setCitizenship(user.getCitizenship());
+        u.setDateJoined(user.getDateJoined());
+        u.setDob(user.getDob());
+        u.setEmail(user.getEmail());
+        u.setGender(user.getGender());
+        u.setIsEnabled(user.getIsEnabled());
+        u.setIsHrEmployee(user.getIsHrEmployee());
+        u.setIsPartTimer(user.getIsPartTimer());
+        u.setPassword(user.getPassword());
+        u.setPhone(user.getPhone());
+        u.setRace(user.getRace());
+        u.setCurrentPosition(user.getCurrentPosition());
+        u.setCurrentLeaveQuota(user.getCurrentLeaveQuota());
+
+        return u;
+    }
+
     public List<PromotionRequest> getAllPromotionRequests() {
         return promotionRepository.findAll();
     }
@@ -54,11 +87,11 @@ public class PromotionService {
 
         if (optionalEmployee.isPresent() && optionalManager.isPresent() && optionalAppraisal.isPresent()) {
 
-            User employee = optionalEmployee.get().nullify();
-            User manager = optionalManager.get().nullify();
+            User employee = breakRelationships(optionalEmployee.get());
+            User manager = breakRelationships(optionalManager.get());
             Appraisal appraisal = optionalAppraisal.get();
-            appraisal.getEmployee().nullify();
-            appraisal.getManagerAppraising().nullify();
+            appraisal.setEmployee(breakRelationships(appraisal.getEmployee()));
+            appraisal.setManagerAppraising(breakRelationships(appraisal.getManagerAppraising()));
 
             Optional<PromotionRequest> existingPromotionRequest = promotionRepository
                     .findExistingPromotionRequest(appraisalId, employeeId, managerId);
@@ -87,7 +120,7 @@ public class PromotionService {
 
                 if (optionalInterviewer.isPresent()) {
 
-                    User interviewer = optionalInterviewer.get().nullify();
+                    User interviewer = breakRelationships(optionalInterviewer.get());
                     PromotionRequest promotionRequest = new PromotionRequest(created, appraisal, employee, manager,
                             interviewer, "Created", promotionJustification, "");
 
@@ -118,11 +151,17 @@ public class PromotionService {
         List<PromotionRequest> activeRequests = promotionRepository.findUserActiveRequests(userId);
 
         for (PromotionRequest pr : activeRequests) {
-            pr.getAppraisal().getEmployee().nullify();
-            pr.getAppraisal().getManagerAppraising().nullify();
-            pr.getEmployee().nullify();
-            pr.getManager().nullify();
-            pr.getInterviewer().nullify();
+            pr.getAppraisal().setEmployee(breakRelationships(pr.getAppraisal().getEmployee()));
+            pr.getAppraisal().setManagerAppraising(breakRelationships(pr.getAppraisal().getManagerAppraising()));
+
+            pr.setEmployee(breakRelationships(pr.getEmployee()));
+            pr.setManager(breakRelationships(pr.getManager()));
+            pr.setInterviewer(breakRelationships(pr.getInterviewer()));
+
+            if (pr.getProcessedBy() != null) {
+                pr.setProcessedBy(breakRelationships(pr.getProcessedBy()));
+            }
+
             // pr.getProcessedBy().nullify();
         }
 
@@ -136,25 +175,38 @@ public class PromotionService {
         if (optionalPromotion.isPresent()) {
             PromotionRequest promotionRequest = optionalPromotion.get();
 
-            promotionRequest.getAppraisal().getEmployee().nullify();
-            promotionRequest.getAppraisal().getManagerAppraising().nullify();
+            // promotionRequest.getAppraisal().getEmployee().nullify();
+            // promotionRequest.getAppraisal().getManagerAppraising().nullify();
 
-            promotionRequest.getEmployee().nullify();
-            promotionRequest.getManager().nullify();
+            // promotionRequest.getEmployee().nullify();
+            // promotionRequest.getManager().nullify();
+
+            promotionRequest.getAppraisal()
+                    .setEmployee(breakRelationships(promotionRequest.getAppraisal().getEmployee()));
+            promotionRequest.getAppraisal()
+                    .setManagerAppraising(breakRelationships(promotionRequest.getAppraisal().getManagerAppraising()));
+
+            promotionRequest.setEmployee(breakRelationships(promotionRequest.getEmployee()));
+            promotionRequest.setManager(breakRelationships(promotionRequest.getManager()));
 
             if (promotionRequest.getInterviewer() != null) {
-                promotionRequest.getInterviewer().nullify();
+                promotionRequest.setInterviewer(breakRelationships(promotionRequest.getInterviewer()));
+                // promotionRequest.getInterviewer().nullify();
+            }
+
+            if (promotionRequest.getProcessedBy() != null) {
+                promotionRequest.setProcessedBy(breakRelationships(promotionRequest.getProcessedBy()));
             }
 
             return promotionRequest;
         } else {
-            throw new IllegalStateException("Promotion Request unable to be found");
+            throw new IllegalStateException("Unable to find promotion request");
         }
     }
 
     @Transactional
     public String submitPromotionRequest(Long promotionId, String promotionJustification, Long positionId,
-            String withdrawRemarks) throws Exception {
+            String withdrawRemarks, String interviewDate) throws Exception {
 
         System.out.println("PromotionService.submitPromotionRequest");
 
@@ -174,6 +226,7 @@ public class PromotionService {
 
                     promotionRequest.setPromotionJustification(promotionJustification);
                     promotionRequest.setNewPosition(newPosition);
+                    promotionRequest.setInterviewDate(LocalDate.parse(interviewDate));
 
                     promotionRequest.setWithdrawRemarks("");
                     promotionRequest.setStatus("Submitted");
@@ -203,12 +256,154 @@ public class PromotionService {
     public List<PromotionRequest> getUserRequestHistory(Long userId) {
         List<PromotionRequest> requests = promotionRepository.findUserRequestHistory(userId);
         for (PromotionRequest pr : requests) {
-            pr.getEmployee().nullify();
-            pr.getManager().nullify();
+
+            pr.getAppraisal().setEmployee(breakRelationships(pr.getAppraisal().getEmployee()));
+            pr.getAppraisal().setManagerAppraising(breakRelationships(pr.getAppraisal().getManagerAppraising()));
+
+            User employee = pr.getEmployee();
+            User manager = pr.getManager();
+
+            pr.setEmployee(breakRelationships(employee));
+            pr.setManager(breakRelationships(manager));
+
+            // pr.getEmployee().nullify();
+            // pr.getManager().nullify();
             if (pr.getInterviewer() != null) {
-                pr.getInterviewer().nullify();
+                User interviewer = pr.getInterviewer();
+                pr.setInterviewer(breakRelationships(interviewer));
+                // pr.getInterviewer().nullify();
+            }
+
+            if (pr.getProcessedBy() != null) {
+                User processedBy = pr.getProcessedBy();
+                pr.setProcessedBy(breakRelationships(processedBy));
             }
         }
         return requests;
+    }
+
+    @Transactional
+    public String conductInterview(Long promotionId, String comments, String status) throws Exception {
+
+        System.out.println("PromotionService.conductInterview");
+
+        Optional<PromotionRequest> optionalRequest = promotionRepository.findById(promotionId);
+
+        if (optionalRequest.isPresent()) {
+
+            PromotionRequest request = optionalRequest.get();
+
+            request.setInterviewRemarks(comments);
+            request.setStatus(status);
+
+            return "" + request.getEmployee().getFirstName() + " "
+                    + request.getEmployee().getLastName() + " has "
+                    + request.getStatus().toLowerCase() + " the promotion interview.";
+
+        } else {
+            throw new IllegalStateException("Unable to find promotion request");
+        }
+
+    }
+
+    @Transactional
+    public String processPromotionRequest(Long promotionId, String effectiveFrom, String rejectRemarks,
+            String basicSalary, String basicHourlyPay, String weekendHourlyPay, String eventPay,
+            Long processedById) throws Exception {
+
+        Optional<PromotionRequest> optionalRequest = promotionRepository.findById(promotionId);
+        Optional<User> optionalProcessed = userRepository.findById(processedById);
+
+        if (optionalRequest.isPresent() && optionalProcessed.isPresent()) {
+
+            PromotionRequest pr = optionalRequest.get();
+
+            Optional<User> optionalEmployee = userRepository.findById(pr.getEmployee().getUserId());
+            Optional<Position> optionalPosition = positionRepository.findById(pr.getNewPosition().getPositionId());
+
+            if (optionalEmployee.isPresent() && optionalPosition.isPresent()) {
+
+                User employee = optionalEmployee.get();
+
+                Position newPosition = optionalPosition.get();
+
+                breakRelationships(employee).setCurrentPosition(newPosition);
+
+                pr.setEmployee(employee);
+
+                User processedBy = optionalProcessed.get();
+               
+                pr.setProcessedBy(breakRelationships(processedBy));
+
+                PayInformation pi = payInformationService.getUserPayInformation(pr.getEmployee().getUserId());
+
+                if (rejectRemarks.isEmpty()) {
+
+                    pr.setEffectiveFrom(LocalDate.parse(effectiveFrom));
+
+                    if (!basicSalary.isEmpty()) {
+                        pi.setBasicSalary(new BigDecimal(basicSalary));
+                    } else {
+                        pi.setBasicHourlyPay(new BigDecimal(basicHourlyPay));
+                        pi.setWeekendHourlyPay(new BigDecimal(weekendHourlyPay));
+                        pi.setEventPhHourlyPay(new BigDecimal(eventPay));
+                    }
+
+                    pr.setStatus("Approved");
+
+                } else {
+                    pr.setRejectRemarks(rejectRemarks);
+                    pr.setStatus("Rejected");
+                }
+
+                pr.setEmployee(breakRelationships(pr.getEmployee()));
+                pr.setManager(breakRelationships(pr.getManager()));
+                pr.setInterviewer(breakRelationships(pr.getInterviewer()));
+
+                return "Promotion request for " + pr.getEmployee().getFirstName() + " " + pr.getEmployee().getLastName()
+                        + " has been " + pr.getStatus().toLowerCase();
+
+            } else {
+                throw new IllegalStateException("Unable to find employee or new position");
+            }
+
+        } else {
+            throw new IllegalStateException("Unable to find request or user");
+        }
+
+    }
+
+    public List<PromotionRequest> getUserToInterviewRequests(Long userId) {
+        List<PromotionRequest> toInterview = promotionRepository.findUserToInterviewRequests(userId);
+
+        for (PromotionRequest p : toInterview) {
+            p.getAppraisal().setEmployee(breakRelationships(p.getEmployee()));
+            p.getAppraisal().setManagerAppraising(breakRelationships(p.getManager()));
+
+            p.setEmployee(breakRelationships(p.getEmployee()));
+            p.setManager(breakRelationships(p.getManager()));
+            p.setInterviewer(breakRelationships(p.getInterviewer()));
+            if (p.getProcessedBy() != null) {
+                p.setProcessedBy(breakRelationships(p.getProcessedBy()));
+            }
+        }
+
+        return toInterview;
+    }
+
+    public List<PromotionRequest> getUserToApproveRequests(Long userId) {
+        List<PromotionRequest> promotionRequests = promotionRepository.findUserToApproveRequests(userId);
+        for (PromotionRequest p : promotionRequests) {
+            p.getAppraisal().setEmployee(breakRelationships(p.getEmployee()));
+            p.getAppraisal().setManagerAppraising(breakRelationships(p.getManager()));
+
+            p.setEmployee(breakRelationships(p.getEmployee()));
+            p.setManager(breakRelationships(p.getManager()));
+            p.setInterviewer(breakRelationships(p.getInterviewer()));
+            if (p.getProcessedBy() != null) {
+                p.setProcessedBy(breakRelationships(p.getProcessedBy()));
+            }
+        }
+        return promotionRequests;
     }
 }

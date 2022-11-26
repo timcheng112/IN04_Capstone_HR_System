@@ -76,6 +76,8 @@ public class GoalService {
         u.setPassword(user.getPassword());
         u.setPhone(user.getPhone());
         u.setRace(user.getRace());
+        u.setCurrentPosition(user.getCurrentPosition());
+        u.setCurrentLeaveQuota(user.getCurrentLeaveQuota());
 
         return u;
     }

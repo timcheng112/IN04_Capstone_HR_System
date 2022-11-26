@@ -4,6 +4,7 @@ import {
   Bars3BottomLeftIcon,
   ChartBarSquareIcon,
   ChartPieIcon,
+  DocumentTextIcon,
   FolderIcon,
   InboxStackIcon,
   PresentationChartLineIcon,
@@ -36,6 +37,12 @@ const navigationhr = [
     current: false,
   },
   {
+    name: "Reviews",
+    href: "/performance/appraisals",
+    icon: DocumentTextIcon,
+    current: false,
+  },
+  {
     name: "Promotions",
     href: "/promotion",
     icon: PresentationChartLineIcon,
@@ -65,6 +72,12 @@ const navigation = [
     name: "Appraisals",
     href: "/performance/appraisals",
     icon: UserGroupIcon,
+    current: false,
+  },
+  {
+    name: "Reviews",
+    href: "/performance/appraisals",
+    icon: DocumentTextIcon,
     current: false,
   },
   {

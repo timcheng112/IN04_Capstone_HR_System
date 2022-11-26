@@ -776,7 +776,7 @@ const api = {
     );
   },
   getEmployeeGoals(userId) {
-    return axios.get(`http://localhost:9191/api/goal/employee/${userId}`)
+    return axios.get(`http://localhost:9191/api/goal/employee/${userId}`);
   },
   getAllUserGoals(year) {
     return axios.get(`http://localhost:9191/api/goal/users/${year}`);
@@ -894,7 +894,7 @@ const api = {
     return axios.delete(`http://localhost:9191/api/appraisal/${appraisalId}`);
   },
   getEligibleForPromotion(userId) {
-    return axios.get(`http://localhost:9191/api/appraisal/promotion/${userId}`)
+    return axios.get(`http://localhost:9191/api/appraisal/promotion/${userId}`);
   },
   // activateUser(email){
   //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
@@ -1038,19 +1038,58 @@ const api = {
 
   //promotion
   getAllPositions() {
-    return axios.get(`http://localhost:9191/api/position`)
+    return axios.get(`http://localhost:9191/api/position`);
+  },
+  getUserCurrentPosition(userId) {
+    return axios.get(`http://localhost:9191/api/position/${userId}`);
   },
   getUserActiveRequests(userId) {
-    return axios.get(`http://localhost:9191/api/promotion/active/${userId}`)
+    return axios.get(`http://localhost:9191/api/promotion/active/${userId}`);
+  },
+  getUserToInterviewRequests(userId) {
+    return axios.get(`http://localhost:9191/api/promotion/interview/${userId}`);
+  },
+  getUserToApproveRequests(userId) {
+    return axios.get(`http://localhost:9191/api/promotion/approve/${userId}`);
   },
   getUserRequestHistory(userId) {
-    return axios.get(`http://localhost:9191/api/promotion/history/${userId}`)
+    return axios.get(`http://localhost:9191/api/promotion/history/${userId}`);
   },
   getPromotionRequest(promotionId) {
-    return axios.get(`http://localhost:9191/api/promotion/${promotionId}`)
+    return axios.get(`http://localhost:9191/api/promotion/${promotionId}`);
   },
-  submitPromotionRequest(promotionId, promotionJustification, positionId, withdrawRemarks) {
-    return axios.put(`http://localhost:9191/api/promotion/submit/${promotionId}/?promotionJustification=${promotionJustification}&positionId=${positionId}&withdrawRemarks=${withdrawRemarks}`)
+  submitPromotionRequest(
+    promotionId,
+    promotionJustification,
+    positionId,
+    withdrawRemarks,
+    interviewDate
+  ) {
+    return axios.put(
+      `http://localhost:9191/api/promotion/submit/${promotionId}/?promotionJustification=${promotionJustification}&positionId=${positionId}&withdrawRemarks=${withdrawRemarks}&interviewDate=${interviewDate}`
+    );
+  },
+  conductInterview(promotionId, comments, status) {
+    return axios.put(
+      `http://localhost:9191/api/promotion/interview/${promotionId}/?comments=${comments}&status=${status}`
+    );
+  },
+  getUserPayInformation(userId) {
+    return axios.get(`http://localhost:9191/api/pay/payinfo/user/${userId}`);
+  },
+  processPromotionRequest(
+    promotionId,
+    effectiveFrom,
+    rejectRemarks,
+    basicSalary,
+    basicHourlyPay,
+    weekendHourlyPay,
+    eventPay,
+    processedById
+  ) {
+    return axios.put(
+      `http://localhost:9191/api/promotion/process/${promotionId}?effectiveFrom=${effectiveFrom}&rejectRemarks=${rejectRemarks}&basicSalary=${basicSalary}&basicHourlyPay=${basicHourlyPay}&weekendHourlyPay=${weekendHourlyPay}&eventPay=${eventPay}&processedBy=${processedById}`
+    );
   },
 };
 

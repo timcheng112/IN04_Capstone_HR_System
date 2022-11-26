@@ -1,58 +1,135 @@
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
+import { useEffect, useState } from "react";
+import api from "../../utils/api";
 
-export default function InterviewUneditable() {
-    return (
-        <div>
-      <div className="mx-10 my-10 overflow-hidden bg-white shadow sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6">
-          <span
-            className={classNames(
-              request.status === "Passed"
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800",
-              "inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium "
-            )}
-          >
-            {request.status}
-          </span>
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Interview Information
-          </h3>
+export default function InterviewUneditable({ request }) {
+  const [currentPosition, setCurrentPosition] = useState(null);
+
+  useEffect(() => {
+    api.getUserCurrentPosition(request.employee.userId).then((response) => {
+      console.log(response.data);
+      setCurrentPosition(response.data);
+    });
+  }, []);
+
+  return (
+    currentPosition && (
+      <>
+        <div className="bg-white mx-10">
+          <form className="mt-10 p-10 space-y-8 divide-y divide-gray-200">
+            <div className="space-y-8 divide-y divide-gray-200">
+              <div>
+                <div>
+                  <h3 className="text-lg font-sans font-medium leading-6 text-gray-900">
+                    Interview Details for {request.employee.firstName}{" "}
+                    {request.employee.lastName}'s Promotion
+                  </h3>
+                </div>
+
+                <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                  <div className="sm:col-span-6">
+                    <label
+                      htmlFor="interviewer"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      Interviewer
+                    </label>
+                    <div className="mt-1 flex shadow-sm">
+                      <input
+                        type="text"
+                        name="interviewer"
+                        id="interviewer"
+                        disabled
+                        className="block w-full min-w-0 flex-1 rounded-md border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 focus:border-gray-300 focus:ring-gray-300 sm:text-sm"
+                        value={
+                          request.interviewer.firstName +
+                          " " +
+                          request.interviewer.lastName
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-6">
+                    <label
+                      htmlFor="scheduled"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      Scheduled On
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="date"
+                        name="scheduled"
+                        id="scheduled"
+                        disabled
+                        className="block w-full min-w-0 flex-1 rounded-md border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        defaultValue={request.interviewDate}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="position"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      Current Position
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        name="position"
+                        id="position"
+                        defaultValue={currentPosition.positionName}
+                        disabled
+                        className="block w-full min-w-0 flex-1 p-3 rounded-md border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="newPosition"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      New Position
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        name="newPosition"
+                        id="newPosition"
+                        defaultValue={request.newPosition.positionName}
+                        disabled
+                        className="block w-full min-w-0 flex-1 p-3 rounded-md border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-6">
+                    <label
+                      htmlFor="comments"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      Comments
+                    </label>
+                    <div className="mt-1">
+                      <textarea
+                        id="comments"
+                        name="comments"
+                        rows={3}
+                        disabled
+                        className="block w-full rounded-md border-gray-300 shadow-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        defaultValue={request.interviewRemarks}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
-        <div className="px-4 py-5 sm:p-0">
-          <dl className="sm:divide-y sm:divide-gray-200">
-            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Interviewer</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                Margot Foster
-              </dd>
-            </div>
-            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                Scheduled on
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                Backend Developer
-              </dd>
-            </div>
-            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                Interviewer Remarks
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
-                incididunt cillum culpa consequat. Excepteur qui ipsum aliquip
-                consequat sint. Sit id mollit nulla mollit nostrud in ea officia
-                proident. Irure nostrud pariatur mollit ad adipisicing
-                reprehenderit deserunt qui eu.
-              </dd>
-            </div>
-            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6"></div>
-          </dl>
-        </div>
-      </div>
-    </div>
+      </>
     )
+  );
 }

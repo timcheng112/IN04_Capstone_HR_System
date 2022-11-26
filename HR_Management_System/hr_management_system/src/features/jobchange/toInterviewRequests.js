@@ -1,102 +1,73 @@
 import {
-  ArrowLeftOnRectangleIcon,
+  CheckBadgeIcon,
   CheckCircleIcon,
   ChevronRightIcon,
+  ClipboardDocumentCheckIcon,
   EnvelopeIcon,
-  FaceFrownIcon,
-  XCircleIcon,
+  FaceSmileIcon,
+  PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 
-const applications = [
-  {
-    applicant: {
-      name: "Ricardo Cooper",
-      email: "ricardo.cooper@example.com",
-      imageUrl:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    date: "2020-01-07",
-    dateFull: "January 7, 2020",
-    stage: "Completed phone screening",
-    href: "#",
-  },
-  {
-    applicant: {
-      name: "Kristen Ramos",
-      email: "kristen.ramos@example.com",
-      imageUrl:
-        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    date: "2020-01-07",
-    dateFull: "January 7, 2020",
-    stage: "Completed phone screening",
-    href: "#",
-  },
-  {
-    applicant: {
-      name: "Ted Fox",
-      email: "ted.fox@example.com",
-      imageUrl:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    date: "2020-01-07",
-    dateFull: "January 7, 2020",
-    stage: "Completed phone screening",
-    href: "#",
-  },
-];
-
-export default function RequestHistory() {
+export default function ToInterviewRequests() {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    api.getUserRequestHistory(getUserId()).then((response) => {
-      console.log(response.data);
-      setRequests(response.data);
-    });
+    api
+      .getUserToInterviewRequests(getUserId())
+      .then((response) => setRequests(response.data));
   }, []);
 
   function renderStatus(status) {
-    if (status === "Withdrawn") {
+    if (status === "Created") {
       return (
         <>
-          <ArrowLeftOnRectangleIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+          <PlusCircleIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
             aria-hidden="true"
           />
           {status}
         </>
       );
-    } else if (status === "Failed") {
+    } else if (status === "Submitted") {
       return (
         <>
-          <FaceFrownIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+          <ClipboardDocumentCheckIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
             aria-hidden="true"
           />
-          {status} {"Interview"}
+          {status}
         </>
       );
-    } else if (status === "Rejected") {
+    } else if (status === "Passed") {
       return (
         <>
-          <XCircleIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+          <FaceSmileIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
             aria-hidden="true"
           />
-          {"Rejected"}
+          {status}
+        </>
+      );
+    } else if (status === "Approved") {
+      return (
+        <>
+          <CheckBadgeIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
         </>
       );
     }
   }
 
   return (
-    <>
-      <div className="mt-10">
+    requests && (
+      <div>
         <div className="overflow-hidden bg-white shadow sm:rounded-md">
           <ul role="list" className="divide-y divide-gray-200">
             {requests.map((request) => (
@@ -133,7 +104,7 @@ export default function RequestHistory() {
                         <div className="hidden md:block">
                           <div>
                             <p className="text-sm text-left text-gray-900">
-                              Created on{" "}
+                              Created {""}
                               <Moment
                                 parse="YYYY-MM-DD"
                                 className=" text-sm text-gray-500"
@@ -163,6 +134,6 @@ export default function RequestHistory() {
           </ul>
         </div>
       </div>
-    </>
+    )
   );
 }

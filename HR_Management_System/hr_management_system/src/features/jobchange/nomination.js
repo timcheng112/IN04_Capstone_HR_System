@@ -71,6 +71,7 @@ export default function Nomination({ request }) {
     positionId: 0,
     positionName: "Select A Position",
   });
+  const [interviewDate, setInterviewDate] = useState("");
 
   useEffect(() => {
     if (request) {
@@ -80,6 +81,11 @@ export default function Nomination({ request }) {
         console.log(response.data);
         setAppraisals(response.data);
       });
+
+      if (request.newPosition) {
+        setSelectedPosition(request.newPosition);
+      }
+
     }
     api.getAllPositions().then((response) => {
       setPositions(response.data);
@@ -99,12 +105,14 @@ export default function Nomination({ request }) {
           request.promotionId,
           justification,
           selectedPosition.positionId,
-          withdrawRemarks
+          withdrawRemarks,
+          interviewDate
         )
         .then((response) => {
           console.log(response.data);
           alert(response.data);
-        });
+        })
+        .finally(() => window.location.reload());
     }
   };
 
@@ -203,24 +211,13 @@ export default function Nomination({ request }) {
                     <GoalList userId={request.employee.userId} />
                   </dd>
                 </div>
-                <div className="sm:col-span-2">
-                  <dt className="text-sm font-medium text-gray-500">
-                    Previous Appraisals
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
-                    incididunt cillum culpa consequat. Excepteur qui ipsum
-                    aliquip consequat sint. Sit id mollit nulla mollit nostrud
-                    in ea officia proident. Irure nostrud pariatur mollit ad
-                    adipisicing reprehenderit deserunt qui eu.
-                  </dd>
-                </div>
+                <div className="sm:col-span-2"></div>
               </dl>
             </div>
             <form className="space-y-8 mx-10" onSubmit={submitRequest}>
               <div className="space-y-8">
                 <div>
-                  <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                  <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-6">
                       <label
                         htmlFor="Justification"
@@ -329,6 +326,24 @@ export default function Nomination({ request }) {
                           </>
                         )}
                       </Listbox>
+                    </div>
+                    <div className="sm:col-span-6">
+                      <label
+                        htmlFor="scheduled"
+                        className="block text-md text-center font-sans font-medium text-gray-900"
+                      >
+                        Interview Date
+                      </label>
+                      <div className="mt-1">
+                        <input
+                          type="date"
+                          name="scheduled"
+                          id="scheduled"
+                          className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          value={interviewDate}
+                          onChange={(e) => setInterviewDate(e.target.value)}
+                        />
+                      </div>
                     </div>
                     {withdraw && (
                       <div className="sm:col-span-6">

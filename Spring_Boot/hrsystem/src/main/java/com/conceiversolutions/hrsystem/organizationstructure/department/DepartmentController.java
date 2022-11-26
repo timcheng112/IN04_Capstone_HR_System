@@ -3,6 +3,8 @@ package com.conceiversolutions.hrsystem.organizationstructure.department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.conceiversolutions.hrsystem.user.user.User;
+
 import java.util.List;
 
 
@@ -64,6 +66,11 @@ public class DepartmentController {
     @GetMapping(path = "{employeeId}/isHead")
     public Long isEmployeeDepartmentHead(@PathVariable("employeeId") Long employeeId) throws Exception {
         return departmentService.isEmployeeDepartmentHead(employeeId);
+    }
+
+    @GetMapping(path = "/heads")
+    public List<User> getDepartmentHeads() {
+        return departmentService.getDepartmentHeads();
     }
 
     
