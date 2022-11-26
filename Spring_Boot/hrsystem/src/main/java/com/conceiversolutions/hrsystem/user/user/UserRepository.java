@@ -90,4 +90,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.userRole = ?1")
     List<User> findAllApplicants(RoleEnum role);
 
+    @Query("SELECT u FROM User u WHERE u.isHrEmployee = 1")
+    List<User> findAllHREmployees();
+
 }

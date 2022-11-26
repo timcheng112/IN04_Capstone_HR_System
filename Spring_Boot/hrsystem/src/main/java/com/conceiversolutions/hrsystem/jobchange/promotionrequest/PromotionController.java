@@ -1,9 +1,7 @@
 package com.conceiversolutions.hrsystem.jobchange.promotionrequest;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,4 +16,10 @@ public class PromotionController {
     public List<PromotionRequest> getAllPromotionRequests(){
         return promotionService.getAllPromotionRequests();
     }
+
+    public String addAPromotionRequest(@PathVariable("userInQuestion") Long employeeId, @PathVariable("userId") Long managerId, @PathVariable("departmentId")  Long departmentId,@PathVariable("assigned") Long processedBy, @RequestParam("interviewComments") String interviewComments ){
+        return promotionService.addAPromotionRequest(employeeId,managerId, departmentId, processedBy, interviewComments);
+    }
+
+
 }

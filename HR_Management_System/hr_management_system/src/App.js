@@ -67,6 +67,8 @@ import PayrollHistoryPage from "./pages/Payroll/PayrollHistory";
 import EmployeesNotInPayrollPage from "./pages/Payroll/EmployeesNotInPayroll";
 import AddToPayrollFormPage from "./pages/Payroll/AddToPayrollForm";
 import EmployeePayrollHistory from "./pages/Payroll/ViewEmployeesPayHistory";
+import NFC from "./pages/Attendance/nfc";
+import PromotionRequestIndex from "./pages/Performance/indexPromotions";
 
 function App() {
   return (
@@ -247,6 +249,16 @@ function App() {
             exact
             path="/performance/appraisals"
             component={AppraisalsPage}
+          />
+          <PrivateRoute
+            exact
+            path="/attendance/"
+            component={NFC}
+          />
+          <PrivateRoute
+            exact
+            path="/promotion/"
+            component={PromotionRequestIndex}
           />
 
           <PrivateRoute exact path="/payroll" component={PayrollPage} />

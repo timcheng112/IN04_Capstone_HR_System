@@ -27,4 +27,10 @@ public class AttendanceController {
     public String deleteAttendance(@PathVariable Long attendanceId){
         return attendanceService.deleteAttendance(attendanceId);
     }
+
+    @GetMapping(path = "/nfc")
+    public String callNFC(){
+        return attendanceService.callNFC();
+//        return "ran";
+    }
 }

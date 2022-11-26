@@ -16,6 +16,10 @@ import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.time.temporal.ChronoUnit;
 
+import java.util.Arrays;
+import java.util.List;
+import javax.smartcardio.*;
+
 @Service
 @AllArgsConstructor
 public class AttendanceService {
@@ -82,6 +86,77 @@ public class AttendanceService {
 
     }
 
+    public String callNFC(){
+        try{
+
+            // show the list of available terminals
+            TerminalFactory factory = TerminalFactory.getDefault();
+            CardTerminals cardTerminals = factory.terminals();
+            List<CardTerminal> terminals = factory.terminals().list();
+
+            System.out.println("Terminals: " + terminals);
+
+            // get the first terminal
+            CardTerminal terminal = terminals.get(0);
+//			Card card = null;
+            String cardId = "";
+            while (true) {
+                try {
+                    if (cardTerminals.waitForChange(100000L)) {
+                        // check if card is same as new card
+                        Card newCard = terminal.connect("*");
+
+                        ATR atr = newCard.getATR();
+                        byte[] baAtr = atr.getBytes();
+
+//							System.out.println("AAAAA");
+                        CardChannel channel = newCard.getBasicChannel();
+                        byte[] cmdApduGetCardUid = new byte[]{
+                                (byte)0xFF, (byte)0xCA, (byte)0x00, (byte)0x00, (byte)0x00};
+
+//							System.out.println("BBBBB");
+                        ResponseAPDU respApdu = channel.transmit(
+                                new CommandAPDU(cmdApduGetCardUid));
+
+                        if(respApdu.getSW1() == 0x90 && respApdu.getSW2() == 0x00){
+//								System.out.println("CCCCC");
+                            byte[] baCardUid = respApdu.getData();
+
+                            if (cardId.equals("")) {
+                                System.out.println("new card");
+                                cardId = Arrays.toString(baCardUid);
+                            } else if (cardId.equals(Arrays.toString(baCardUid))) {
+                                System.out.println("same card");
+                            } else {
+                                System.out.println("diff card");
+                                cardId = Arrays.toString(baCardUid);
+                            }
+
+                            System.out.println("Card id is" + Arrays.toString(baCardUid));
+                            Thread.sleep(2000);
+                        }
+                        newCard.disconnect(false);
+//							System.out.println("EEEEE");
+                    }
+
+
+
+                } catch (Exception ex) {
+                    System.out.println("smth happened");
+                }
+                return cardId;
+            }
+
+
+
+        } catch (CardException e) {
+            e.printStackTrace();
+        }
+        return "it ran but it is not returning card ID for some reason";
+
+    }
+
+
 //    public List<Attendance> findAttendanceByUserAttendance(){
 //
 //        //find by user and attendance for the day
@@ -90,6 +165,7 @@ public class AttendanceService {
 //    }
 
     //for part time
+
     public void countAttendanceForToday(Attendance attendance ){
 
 //        User u1 = userRepository.findById(attendance.getUser().getUserId()).get();

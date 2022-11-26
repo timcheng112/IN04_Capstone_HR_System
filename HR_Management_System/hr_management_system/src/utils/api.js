@@ -70,6 +70,11 @@ const api = {
       `http://localhost:9191/api/user/login/getEmployeeByToken?token=${token}`
     );
   },
+
+  getAllManagers(){
+    return axios.get(`http://localhost:9191/api/user/getAllManagers`);
+  },
+  
   changePassword(workEmail, password) {
     return axios.get(
       `http://localhost:9191/api/user/login/changePasswordHRMS?workEmail=${workEmail}&password=${password}`
@@ -966,6 +971,19 @@ const api = {
     return axios.post(
       `http://localhost:9191/api/notification/broadcastMessage?title=${title}&description=${description}`
     );
+  },
+
+  callNFC(){
+    return axios.get(`http://localhost:9191/api/attendance/nfc`);
+  },
+  getAllHREmployees(){
+    return axios.get(`http://localhost:9191/api/user/getAllHREmployees`);
+  },
+  getAllOpenPosts(){
+    return axios.get(`http://localhost:9191/api/jobposting/getAllOpenPosts`);
+  },
+  createPromotionRequest(req){
+    return axios.post(`http://localhost:9191/api/promotion/createPromotionRequest`);
   },
 };
 

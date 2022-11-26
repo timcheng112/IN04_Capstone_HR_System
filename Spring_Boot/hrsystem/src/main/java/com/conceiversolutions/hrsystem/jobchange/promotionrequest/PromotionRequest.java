@@ -17,8 +17,10 @@ public class PromotionRequest {
     private Long promotionId;
     @Column(name = "created", nullable = false)
     private LocalDate created;
-    @Column(name = "appraisal_id", nullable = false)
+    @Column(name = "appraisal_id", nullable = true)
     private Long appraisalId;
+
+    //hr incharge?
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
     @Column(name = "manager_id", nullable = false)
@@ -27,7 +29,7 @@ public class PromotionRequest {
     private Long approvedBy;
     @Column(name = "interview_comments", nullable = true)
     private String interviewComments;
-    @Column(name = "new_position_id", nullable = false)
+    @Column(name = "new_position_id", nullable = true)
     private Long newPositionId;
     @Column(name = "new_department_id", nullable = false)
     private Long newDepartmentId;
@@ -49,6 +51,33 @@ public class PromotionRequest {
                             StatusEnum status, User employee) {
         this.created = created;
         this.appraisalId = appraisalId;
+        this.employeeId = employeeId;
+        this.managerId = managerId;
+        this.approvedBy = approvedBy;
+        this.interviewComments = interviewComments;
+        this.newPositionId = newPositionId;
+        this.newDepartmentId = newDepartmentId;
+        this.processedBy = processedBy;
+        this.status = status;
+        this.employee = employee;
+    }
+
+    public PromotionRequest(Long promotionId, LocalDate created, Long employeeId, Long managerId, Long approvedBy, String interviewComments, Long newPositionId, Long newDepartmentId, Long processedBy, StatusEnum status, User employee) {
+        this.promotionId = promotionId;
+        this.created = created;
+        this.employeeId = employeeId;
+        this.managerId = managerId;
+        this.approvedBy = approvedBy;
+        this.interviewComments = interviewComments;
+        this.newPositionId = newPositionId;
+        this.newDepartmentId = newDepartmentId;
+        this.processedBy = processedBy;
+        this.status = status;
+        this.employee = employee;
+    }
+
+    public PromotionRequest(LocalDate created, Long employeeId, Long managerId, Long approvedBy, String interviewComments, Long newPositionId, Long newDepartmentId, Long processedBy, StatusEnum status, User employee) {
+        this.created = created;
         this.employeeId = employeeId;
         this.managerId = managerId;
         this.approvedBy = approvedBy;

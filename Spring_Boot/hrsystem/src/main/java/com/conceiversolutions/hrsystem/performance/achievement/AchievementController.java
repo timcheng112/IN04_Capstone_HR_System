@@ -15,4 +15,12 @@ public class AchievementController {
         this.achievementService = achievementService;
     }
 
+    public String deleteAchievement(Long achievementId){
+        return achievementService.deleteAchievement(achievementId);
+    }
+
+//    public void editAchievement(Long achievementId){
+//
+//    }
+
 }

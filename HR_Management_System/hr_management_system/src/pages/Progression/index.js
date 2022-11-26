@@ -53,6 +53,9 @@ export default function Progression() {
                   HR Mode
                 </button>
               )}
+
+
+              
             </div>
           </div>
         </main>
