@@ -18,11 +18,41 @@ const WelfareDrawerNavigator = () => {
       initialRouteName="Welfare"
       drawerContent={(props) => <WDrawerContent {...props} />}
     >
-      <WelfareDrawer.Screen name="Benefits" component={BenefitScreen} />
-      <WelfareDrawer.Screen name="Claims" component={ClaimScreen} />
-      <WelfareDrawer.Screen name="PlanDetail" component={PlanDetailScreen} />
-      <WelfareDrawer.Screen name="ClaimDetail" component={ClaimDetailScreen} />
-      <WelfareDrawer.Screen name="NewClaim" component={NewClaimScreen} />
+      <WelfareDrawer.Screen name="Benefits" component={BenefitScreen}
+        options={{
+          title: "Benefits",
+          headerTitle: "Benefits",
+//          unmountOnBlur: true,
+        }}
+      />
+      <WelfareDrawer.Screen name="Claims" component={ClaimScreen}
+        options={{
+          title: "Claims",
+          headerTitle: "Claims",
+//          unmountOnBlur: true,
+        }}
+      />
+      <WelfareDrawer.Screen name="PlanDetail" component={PlanDetailScreen}
+       options={{
+           title: "PlanDetail",
+           headerTitle: "PlanDetail",
+           unmountOnBlur: true,
+         }}
+       />
+      <WelfareDrawer.Screen name="ClaimDetail" component={ClaimDetailScreen}
+        options={{
+           title: "ClaimDetail",
+           headerTitle: "ClaimDetail",
+           unmountOnBlur: true,
+         }}
+      />
+      <WelfareDrawer.Screen name="NewClaim" component={NewClaimScreen}
+        options={{
+           title: "NewClaim",
+           headerTitle: "NewClaim",
+//           unmountOnBlur: true,
+         }}
+      />
     </WelfareDrawer.Navigator>
   );
 };
