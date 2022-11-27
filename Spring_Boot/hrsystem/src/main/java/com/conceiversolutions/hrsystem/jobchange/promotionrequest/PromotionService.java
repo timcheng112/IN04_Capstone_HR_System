@@ -105,14 +105,15 @@ public class PromotionService {
                     interviewerId = departmentHead.getUserId();
                     // System.out.println("Department head is user with id " +
                     // departmentHead.getUserId());
+                } else if (departmentService.isEmployeeDepartmentHead(managerId) > -1) {
+                   
+                    User organizationHead = organizationService.getOrganizationHead();
+                    System.out.println("organizationHead " + organizationHead);
+                    interviewerId = organizationHead.getUserId();
+                    
+                } else if (organizationService.isEmployeeOrganizationHead(managerId) > -1) {
+                    interviewerId = managerId;
                 }
-                // else if (departmentService.isEmployeeDepartmentHead(managerId) > -1) {
-                // System.out.println("Department " + managerId);
-                // User organizationHead = organizationService.getOrganizationHead();
-                // interviewerId = organizationHead.getUserId();
-                // } else if (organizationService.isEmployeeOrganizationHead(managerId) > -1) {
-                // interviewerId = managerId;
-                // }
 
                 System.out.println("Interviewer is user " + interviewerId);
 
@@ -332,7 +333,7 @@ public class PromotionService {
                 pr.setEmployee(employee);
 
                 User processedBy = optionalProcessed.get();
-               
+
                 pr.setProcessedBy(breakRelationships(processedBy));
 
                 PayInformation pi = payInformationService.getUserPayInformation(pr.getEmployee().getUserId());

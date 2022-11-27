@@ -50,19 +50,28 @@ export default function PromotionRequest() {
       setRequest(response.data);
 
       const status = response.data.status;
+      const toInterview = response.data.interviewer;
+      const interviewDate = response.data.interviewDate;
 
-      renderSelectedStep(status, false);
+      console.log(response.data);
+
+      renderSelectedStep(status, false, toInterview, interviewDate);
 
       api.getUser(getUserId()).then((response) => {
         //console.log(response.data.isHrEmployee);
-        renderSelectedStep(status, response.data.isHrEmployee);
+        renderSelectedStep(
+          status,
+          response.data.isHrEmployee,
+          toInterview,
+          interviewDate
+        );
       });
 
       console.log(response.data);
     });
   }, []);
 
-  function renderSelectedStep(status, isHR) {
+  function renderSelectedStep(status, isHR, interviewer, interviewDate) {
     //console.log(status);
     if (status === "Created" || status === "Withdrawn") {
       setSelectedStep(steps[0]);
@@ -71,8 +80,16 @@ export default function PromotionRequest() {
       steps
         .filter((s) => s.id === "01")
         .map((step) => (step.status = "complete"));
-      console.log("interviewer " + request.interviewer.userId === getUserId());
-      if (request.interviewer.userId + "" === getUserId()) {
+
+      const date = new Date();
+      const today =
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+
+      console.log(today);
+      console.log(interviewDate);
+      console.log("date " + today === interviewDate);
+
+      if (interviewer.userId + "" === getUserId() && today === interviewDate) {
         steps
           .filter((s) => s.id === "02")
           .map((step) => (step.status = "current"));
@@ -95,6 +112,14 @@ export default function PromotionRequest() {
           .map((step) => (step.status = "current"));
         setSelectedStep(steps[2]);
       }
+    } else if (status === "Failed") {
+      steps.map((s) => (s.status = "upcoming"));
+      steps
+        .filter((s) => s.id === "01")
+        .map((step) => (step.status = "complete"));
+      steps
+        .filter((s) => s.id === "02")
+        .map((step) => (step.status = "complete"));
     } else if (status === "Approved") {
       steps.map((s) => (s.status = "complete"));
       setSelectedStep(steps[0]);

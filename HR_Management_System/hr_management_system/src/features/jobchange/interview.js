@@ -47,7 +47,7 @@ export default function Interview({ request }) {
           alert(response.data);
         })
         .finally(() => {
-          history.push("/promotion")
+          history.push("/promotion");
         });
     }
   }
@@ -64,7 +64,8 @@ export default function Interview({ request }) {
               <div>
                 <div>
                   <h3 className="text-lg font-sans font-medium leading-6 text-gray-900">
-                    Interview Details for {request.employee.firstName} {request.employee.lastName}'s Promotion
+                    Interview Details for {request.employee.firstName}{" "}
+                    {request.employee.lastName}'s Promotion
                   </h3>
                 </div>
 
@@ -179,17 +180,17 @@ export default function Interview({ request }) {
               <div className="flex justify-end">
                 <div>
                   <button
-                    type="submit"
-                    className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                  >
-                    Approve
-                  </button>
-                  <button
                     type="button"
                     className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     onClick={() => failInterview()}
                   >
                     Reject
+                  </button>
+                  <button
+                    type="submit"
+                    className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                  >
+                    Approve
                   </button>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import {
   ArrowLeftOnRectangleIcon,
+  CheckBadgeIcon,
   CheckCircleIcon,
   ChevronRightIcon,
   EnvelopeIcon,
@@ -91,6 +92,16 @@ export default function RequestHistory() {
           {"Rejected"}
         </>
       );
+    } else if (status === "Approved") {
+      return (
+        <>
+          <CheckBadgeIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
     }
   }
 
@@ -98,6 +109,16 @@ export default function RequestHistory() {
     <>
       <div className="mt-10">
         <div className="overflow-hidden bg-white shadow sm:rounded-md">
+          {requests.length <= 0 ? (<div className="p-4">
+              {/* <img
+                src={require("../../assets/shiba-thumbs-up.png")}
+                alt="shiba"
+                className="object-contain h-20 w-full"
+              /> */}
+              <h1 className="font-sans font-semibold text-xl">
+                No Previous Requests
+              </h1>
+            </div>) : (<></>)}
           <ul role="list" className="divide-y divide-gray-200">
             {requests.map((request) => (
               <li key={request.promotionId}>

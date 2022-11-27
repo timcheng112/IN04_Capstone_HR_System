@@ -1,74 +1,86 @@
 import {
-    CheckBadgeIcon,
-    CheckCircleIcon,
-    ChevronRightIcon,
-    ClipboardDocumentCheckIcon,
-    EnvelopeIcon,
-    FaceSmileIcon,
-    PlusCircleIcon,
-  } from "@heroicons/react/24/outline";
-  import { useEffect, useState } from "react";
-  import Moment from "react-moment";
-  import api from "../../utils/api";
-  import { getUserId } from "../../utils/Common";
-  
-  export default function ToApproveRequests() {
-    const [requests, setRequests] = useState([]);
-  
-    useEffect(() => {
-      api
-        .getUserToApproveRequests(getUserId())
-        .then((response) => setRequests(response.data));
-    }, []);
-  
-    function renderStatus(status) {
-      if (status === "Created") {
-        return (
-          <>
-            <PlusCircleIcon
-              className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-              aria-hidden="true"
-            />
-            {status}
-          </>
-        );
-      } else if (status === "Submitted") {
-        return (
-          <>
-            <ClipboardDocumentCheckIcon
-              className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-              aria-hidden="true"
-            />
-            {status}
-          </>
-        );
-      } else if (status === "Passed") {
-        return (
-          <>
-            <FaceSmileIcon
-              className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-              aria-hidden="true"
-            />
-            {status}
-          </>
-        );
-      } else if (status === "Approved") {
-        return (
-          <>
-            <CheckBadgeIcon
-              className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-              aria-hidden="true"
-            />
-            {status}
-          </>
-        );
-      }
+  CheckBadgeIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
+  ClipboardDocumentCheckIcon,
+  EnvelopeIcon,
+  FaceSmileIcon,
+  PlusCircleIcon,
+} from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import Moment from "react-moment";
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common";
+
+export default function ToApproveRequests() {
+  const [requests, setRequests] = useState([]);
+
+  useEffect(() => {
+    api
+      .getUserToApproveRequests(getUserId())
+      .then((response) => setRequests(response.data));
+  }, []);
+
+  function renderStatus(status) {
+    if (status === "Created") {
+      return (
+        <>
+          <PlusCircleIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
+    } else if (status === "Submitted") {
+      return (
+        <>
+          <ClipboardDocumentCheckIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
+    } else if (status === "Passed") {
+      return (
+        <>
+          <FaceSmileIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status} Interview
+        </>
+      );
+    } else if (status === "Approved") {
+      return (
+        <>
+          <CheckBadgeIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
     }
-  
-    return (
-      requests && (
-        <div>
-          <div className="overflow-hidden bg-white shadow sm:rounded-md">
+  }
+
+  return (
+    requests && (
+      <div>
+        <div className="overflow-hidden bg-white shadow sm:rounded-md">
+          {requests.length <= 0 ? (
+            <div className="p-4">
+              <img
+                src={require("../../assets/shiba-thumbs-up.png")}
+                alt="shiba"
+                className="object-contain h-20 w-full"
+              />
+              <h1 className="font-sans font-semibold text-xl">
+                No remaining requests
+              </h1>
+            </div>
+          ) : (
             <ul role="list" className="divide-y divide-gray-200">
               {requests.map((request) => (
                 <li key={request.promotionId}>
@@ -132,9 +144,9 @@ import {
                 </li>
               ))}
             </ul>
-          </div>
+          )}
         </div>
-      )
-    );
-  }
-  
+      </div>
+    )
+  );
+}

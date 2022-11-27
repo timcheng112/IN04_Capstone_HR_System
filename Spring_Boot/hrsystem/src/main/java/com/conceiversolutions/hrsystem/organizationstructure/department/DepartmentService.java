@@ -271,9 +271,10 @@ public class DepartmentService {
     }
 
     public Long isEmployeeDepartmentHead(Long employeeId) {
-        List<Department> allDepartments = getAllDepartment();
+        List<Department> allDepartments = departmentRepository.findAll();
 
         for (Department d : allDepartments) {
+            System.out.println("dept head " + d.getDepartmentHead());
             if (d.getDepartmentHead().getUserId() == employeeId) {
                 return d.getDepartmentId();
             }

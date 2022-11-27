@@ -24,11 +24,10 @@ export default function Processing({ request }) {
   }, []);
 
   function handleSubmit() {
-
     var basicSalary = payInformation.basicSalary;
-    if (!payInformation.basicSalary){
-      console.log('sal');
-      basicSalary = ""
+    if (!payInformation.basicSalary) {
+      console.log("sal");
+      basicSalary = "";
     }
 
     api
@@ -48,7 +47,6 @@ export default function Processing({ request }) {
       .finally(() => {
         history.push("/promotion");
       });
-
   }
 
   return (
@@ -56,9 +54,7 @@ export default function Processing({ request }) {
     payInformation && (
       <>
         <div className="bg-white mx-10">
-          <form
-            className="mt-10 p-10 space-y-8 divide-y divide-gray-200"
-          >
+          <form className="mt-10 p-10 space-y-8 divide-y divide-gray-200">
             <div className="space-y-8 divide-y divide-gray-200">
               <div>
                 <div>
@@ -199,7 +195,7 @@ export default function Processing({ request }) {
                   <div className="sm:col-span-3">
                     <label
                       htmlFor="effectiveFrom"
-                      className="block text-md text-center font-sans font-medium text-gray-900"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
                     >
                       Effective From
                     </label>
@@ -272,17 +268,17 @@ export default function Processing({ request }) {
                   <div>
                     <button
                       type="button"
-                      className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                      onClick={() => handleSubmit()}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      type="button"
                       className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                       onClick={() => setToReject(!toReject)}
                     >
                       Reject
+                    </button>
+                    <button
+                      type="button"
+                      className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                      onClick={() => handleSubmit()}
+                    >
+                      Approve
                     </button>
                   </div>
                 </div>

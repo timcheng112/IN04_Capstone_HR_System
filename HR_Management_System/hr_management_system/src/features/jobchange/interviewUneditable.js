@@ -124,6 +124,26 @@ export default function InterviewUneditable({ request }) {
                       />
                     </div>
                   </div>
+
+                  <div className="sm:col-span-6">
+                    <label
+                      htmlFor="outcome"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      Outcome
+                    </label>
+                    <div className="mt-1">
+                      {request.status === "Failed" ? (
+                        <h1 className="font-sans font-semibold text-left font-medium text-gray-700">
+                          Failed
+                        </h1>
+                      ) : (
+                        <h1 className="font-sans text-left text-gray-700">
+                          Passed
+                        </h1>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
