@@ -81,6 +81,7 @@ public class TeamService {
                 member.setLeaveQuotas(new ArrayList<>());
                 member.setCurrentLeaveQuota(null);
                 member.setTaskListItems(new ArrayList<>());
+                member.setBenefitPlanInstances(new ArrayList<>());
             }
 
             t.getRoster().setTeam(null);
@@ -108,6 +109,7 @@ public class TeamService {
             t.getTeamHead().setLeaves(new ArrayList<>());
             t.getTeamHead().setLeaveQuotas(new ArrayList<>());
             t.getTeamHead().setCurrentLeaveQuota(null);
+            t.getTeamHead().setBenefitPlanInstances(new ArrayList<>());
         }
 
         return teams;
@@ -166,6 +168,7 @@ public class TeamService {
                 member.setLeaveQuotas(new ArrayList<>());
                 member.setCurrentLeaveQuota(null);
                 member.setTaskListItems(new ArrayList<>());
+                member.setBenefitPlanInstances(new ArrayList<>());
             }
 
             t.getRoster().setTeam(null);
@@ -193,6 +196,7 @@ public class TeamService {
             t.getTeamHead().setLeaves(new ArrayList<>());
             t.getTeamHead().setLeaveQuotas(new ArrayList<>());
             t.getTeamHead().setCurrentLeaveQuota(null);
+            t.getTeamHead().setBenefitPlanInstances(new ArrayList<>());
         }
 
         return teamsInDept;
@@ -234,6 +238,7 @@ public class TeamService {
                 member.setLeaveQuotas(new ArrayList<>());
                 member.setCurrentLeaveQuota(null);
                 member.setTaskListItems(new ArrayList<>());
+                member.setBenefitPlanInstances(new ArrayList<>());
             }
 
             t.getRoster().setTeam(null);
@@ -266,6 +271,7 @@ public class TeamService {
             t.getTeamHead().setLeaves(new ArrayList<>());
             t.getTeamHead().setLeaveQuotas(new ArrayList<>());
             t.getTeamHead().setCurrentLeaveQuota(null);
+            t.getTeamHead().setBenefitPlanInstances(new ArrayList<>());
 
             return t;
         } else {
