@@ -314,6 +314,22 @@ public class PayInformation {
         this.user = user;
     }
 
+    public void addAllowance(Allowance allowance) {
+        this.allowance.add(allowance);
+    }
+
+    public void removeAllowance(Allowance allowance) {
+        this.allowance.remove(allowance);
+    }
+
+    public void addDeduction(Deduction deduction) {
+        this.deduction.add(deduction);
+    }
+
+    public void removeDeduction(Deduction deduction) {
+        this.deduction.remove(deduction);
+    }
+
     public void addAllowanceTemplate(AllowanceTemplate allowanceTemplate) {
         this.allowanceTemplates.add(allowanceTemplate);
     }

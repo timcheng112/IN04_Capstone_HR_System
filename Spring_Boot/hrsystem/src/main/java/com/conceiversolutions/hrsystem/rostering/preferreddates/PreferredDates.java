@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.conceiversolutions.hrsystem.user.user.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 

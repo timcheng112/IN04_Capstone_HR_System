@@ -37,6 +37,31 @@ public class ModuleService {
         this.docDataService = docDataService;
     }
 
+    public User breakRelationships(User user) {
+        User u = new User();
+
+        u.setUserId(user.getUserId());
+        u.setFirstName(user.getFirstName());
+        u.setLastName(user.getLastName());
+        u.setWorkEmail(user.getWorkEmail());
+        u.setUserRole(user.getUserRole());
+        u.setProfilePic(user.getProfilePic());
+        u.setIsBlackListed(user.getIsBlackListed());
+        u.setCitizenship(user.getCitizenship());
+        u.setDateJoined(user.getDateJoined());
+        u.setDob(user.getDob());
+        u.setEmail(user.getEmail());
+        u.setGender(user.getGender());
+        u.setIsEnabled(user.getIsEnabled());
+        u.setIsHrEmployee(user.getIsHrEmployee());
+        u.setIsPartTimer(user.getIsPartTimer());
+        u.setPassword(user.getPassword());
+        u.setPhone(user.getPhone());
+        u.setRace(user.getRace());
+
+        return u;
+    }
+
     public List<Module> getModules() {
         List<Module> modules = moduleRepository.findAll();
         for (Module m : modules) {
@@ -84,7 +109,8 @@ public class ModuleService {
             if (optionalUser.isPresent()) {
                 User currentUser = optionalUser.get();
                 if (module.getEmployees().contains(currentUser)) {
-                    newEmployeeList.add(currentUser);
+                    User u = breakRelationships(currentUser);
+                    newEmployeeList.add(u);
                 }
             } else {
                 throw new IllegalStateException("Current user does not exist");
@@ -96,7 +122,8 @@ public class ModuleService {
                 Optional<User> user = userRepository.findById(userId);
                 
                 if (user.isPresent()) {
-                    newEmployeeList.add(user.get());
+                    User u = breakRelationships(user.get());
+                    newEmployeeList.add(u);
                     System.out.println("Employee with id " + userId + " has been found");
                 } else {
                     throw new IllegalStateException("Employee does not exist");
@@ -185,9 +212,19 @@ public class ModuleService {
     }
 
     public List<User> getEmployeesAssignedToModule(Long moduleId) throws Exception {
+        System.out.println("ModuleService.getEmployeesAssignedToModule");
         Optional<Module> optionalModule = moduleRepository.findById(moduleId);
         if (optionalModule.isPresent()) {
-            return optionalModule.get().getEmployees();
+            List<User> employees = optionalModule.get().getEmployees();
+            List<User> assigned = new ArrayList<>();
+
+            for (User u : employees) {
+                User newUser = breakRelationships(u);
+                System.out.println("ASSIGNED " + newUser.getWorkEmail());
+                assigned.add(newUser);
+            }
+
+            return assigned;
         } else {
             throw new IllegalStateException("Module does not exist");
         }
@@ -200,7 +237,12 @@ public class ModuleService {
             allEmployees.remove(assigned);
             System.out.println("Removed user " + assigned.getUserId());
         }
-        return allEmployees;
+        List<User> unassigned = new ArrayList<>();
+        for (User user : allEmployees) {
+            User unassignedUser = breakRelationships(user);
+            unassigned.add(unassignedUser);
+        }
+        return unassigned;
     }
 
     public String getUserProgress(Long moduleId, Long userId) throws Exception {

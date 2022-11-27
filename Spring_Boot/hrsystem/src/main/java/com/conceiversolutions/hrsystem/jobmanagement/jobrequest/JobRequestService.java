@@ -70,6 +70,7 @@ public class JobRequestService {
                 approver.setSwapRequestsReceived(new ArrayList<>());
                 approver.setSwapRequestsRequested(new ArrayList<>());
                 approver.setLeaves(new ArrayList<>());
+                approver.setBenefitPlanInstances(new ArrayList<>());
             }
 
             User requestor = jr.getRequestedBy();
@@ -93,6 +94,7 @@ public class JobRequestService {
                 requestor.setSwapRequestsReceived(new ArrayList<>());
                 requestor.setSwapRequestsRequested(new ArrayList<>());
                 requestor.setLeaves(new ArrayList<>());
+                requestor.setBenefitPlanInstances(new ArrayList<>());
             }
 
             if (jr.getJobRequirements().size() != 0) {
@@ -346,6 +348,7 @@ public class JobRequestService {
                 approver.setPositions(new ArrayList<>());
                 approver.setJobRequests(new ArrayList<>());
                 approver.setLeaves(new ArrayList<>());
+                approver.setBenefitPlanInstances(new ArrayList<>());
             }
 
             User requestor = jr.getRequestedBy();
@@ -369,6 +372,7 @@ public class JobRequestService {
                 requestor.setSwapRequestsReceived(new ArrayList<>());
                 requestor.setSwapRequestsRequested(new ArrayList<>());
                 requestor.setLeaves(new ArrayList<>());
+                requestor.setBenefitPlanInstances(new ArrayList<>());
             }
 
             if (jr.getJobRequirements().size() != 0) {
@@ -472,6 +476,7 @@ public class JobRequestService {
                 approver.setSwapRequestsReceived(new ArrayList<>());
                 approver.setSwapRequestsRequested(new ArrayList<>());
                 approver.setLeaves(new ArrayList<>());
+                approver.setBenefitPlanInstances(new ArrayList<>());
             }
 
             if (jr.getJobRequirements().size() != 0) {
@@ -597,6 +602,7 @@ public class JobRequestService {
                 approver.setSwapRequestsReceived(new ArrayList<>());
                 approver.setSwapRequestsRequested(new ArrayList<>());
                 approver.setLeaves(new ArrayList<>());
+                approver.setBenefitPlanInstances(new ArrayList<>());
             }
 
             User requestor = jr.getRequestedBy();
@@ -620,6 +626,7 @@ public class JobRequestService {
                 requestor.setSwapRequestsReceived(new ArrayList<>());
                 requestor.setSwapRequestsRequested(new ArrayList<>());
                 requestor.setLeaves(new ArrayList<>());
+                requestor.setBenefitPlanInstances(new ArrayList<>());
             }
 
             if (jr.getJobRequirements().size() != 0) {

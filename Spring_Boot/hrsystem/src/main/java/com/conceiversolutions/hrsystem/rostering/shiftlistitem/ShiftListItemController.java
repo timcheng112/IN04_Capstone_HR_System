@@ -68,4 +68,9 @@ public class ShiftListItemController {
         LocalDate dateTemp = LocalDate.parse(date);
         return shiftListItemService.getShiftListItemByDateAndTeam(dateTemp, teamId);
     }
+
+    @GetMapping(path = "/getShiftListItemByTeam")
+    public List<ShiftListItem> getShiftListItemByTeam(@RequestParam("teamId") Long teamId) {
+        return shiftListItemService.getShiftListItemByTeam(teamId);
+    }
 }

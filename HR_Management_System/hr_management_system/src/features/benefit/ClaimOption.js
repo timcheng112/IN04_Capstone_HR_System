@@ -49,7 +49,7 @@ export default function BenefitPlanOption({ claim }) {
           />
           <span className="hidden md:block">View</span>
         </button>
-        {user !== null && user === claim.benefitPlanInstance.planOwner.userId && <button
+        {user !== null && user.userId === claim.benefitPlanInstance.planOwner.userId && <button
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           onClick={() => setTrash(true)}

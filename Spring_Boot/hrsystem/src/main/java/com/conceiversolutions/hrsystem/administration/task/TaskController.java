@@ -83,8 +83,9 @@ public class TaskController {
     @PutMapping(path = "{taskId}")
     public void editTask(@PathVariable("taskId") Long taskId,
             @RequestParam(name = "taskName", required = false) String taskName,
-            @RequestParam(name = "taskDescription", required = false) String taskDescription) {
-        taskService.editTask(taskId, taskName, taskDescription);
+            @RequestParam(name = "taskDescription", required = false) String taskDescription,
+            @RequestParam(name = "autoAssign", required = false) Boolean autoAssign) {
+        taskService.editTask(taskId, taskName, taskDescription, autoAssign);
     }
 
     @PutMapping(path = "/assignTaskToEmployee")

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RefreshControl, SafeAreaView, StatusBar } from "react-native";
 import { Text, Title } from "react-native-paper";
-import TabNavigator from "../../navigation/TabNavigator";
+// import TabNavigator from "../../navigation/TabNavigator";
 import api from "../../utils/api";
 import TaskList from "./TaskList";
 import ViewTaskModal from "./ViewTaskModal";

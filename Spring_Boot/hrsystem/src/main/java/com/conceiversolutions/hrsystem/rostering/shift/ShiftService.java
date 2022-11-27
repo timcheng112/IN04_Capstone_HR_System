@@ -68,29 +68,31 @@ public class ShiftService {
         shift.getRoster().setShifts(new ArrayList<>());
         shift.getRoster().setBlocks(new ArrayList<>());
         shift.getRoster().setTeam(null);
+        System.out.println("SHIFT LIST ITEMS: " + shift.getShiftListItems());
         for (ShiftListItem shiftListItem : shift.getShiftListItems()) {
             shiftListItem.setShift(null);
             // shiftListItem.setUser(null);
-            shiftListItem.getUser().setTeams(new ArrayList<>());
-            shiftListItem.getUser().setQualificationInformation(null);
-            shiftListItem.getUser().setBlocks(new ArrayList<>());
-            shiftListItem.getUser().setShiftListItems(new ArrayList<>());
-            shiftListItem.getUser().setSwapRequestsReceived(new ArrayList<>());
-            shiftListItem.getUser().setSwapRequestsRequested(new ArrayList<>());
-            shiftListItem.getUser().setReactivationRequest(null);
-            shiftListItem.getUser().setAttendances(new ArrayList<>());
-            shiftListItem.getUser().setCurrentPayInformation(null);
-            shiftListItem.getUser().setEmployeeAppraisals(new ArrayList<>());
-            shiftListItem.getUser().setManagerAppraisals(new ArrayList<>());
-            shiftListItem.getUser().setManagerReviews(new ArrayList<>());
-            shiftListItem.getUser().setEmployeeReviews(new ArrayList<>());
-            shiftListItem.getUser().setApplications(new ArrayList<>());
-            shiftListItem.getUser().setGoals(new ArrayList<>());
-            shiftListItem.getUser().setPositions(new ArrayList<>());
-            shiftListItem.getUser().setJobRequests(new ArrayList<>());
-            shiftListItem.getUser().setLeaves(new ArrayList<>());
-            shiftListItem.getUser().setLeaveQuotas(new ArrayList<>());
-            shiftListItem.getUser().setCurrentLeaveQuota(null);
+            // shiftListItem.getUser().setTeams(new ArrayList<>());
+            // shiftListItem.getUser().setQualificationInformation(null);
+            // shiftListItem.getUser().setBlocks(new ArrayList<>());
+            // shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+            // shiftListItem.getUser().setSwapRequestsReceived(new ArrayList<>());
+            // shiftListItem.getUser().setSwapRequestsRequested(new ArrayList<>());
+            // shiftListItem.getUser().setReactivationRequest(null);
+            // shiftListItem.getUser().setAttendances(new ArrayList<>());
+            // shiftListItem.getUser().setCurrentPayInformation(null);
+            // shiftListItem.getUser().setEmployeeAppraisals(new ArrayList<>());
+            // shiftListItem.getUser().setManagerAppraisals(new ArrayList<>());
+            // shiftListItem.getUser().setManagerReviews(new ArrayList<>());
+            // shiftListItem.getUser().setEmployeeReviews(new ArrayList<>());
+            // shiftListItem.getUser().setApplications(new ArrayList<>());
+            // shiftListItem.getUser().setGoals(new ArrayList<>());
+            // shiftListItem.getUser().setPositions(new ArrayList<>());
+            // shiftListItem.getUser().setJobRequests(new ArrayList<>());
+            // shiftListItem.getUser().setLeaves(new ArrayList<>());
+            // shiftListItem.getUser().setLeaveQuotas(new ArrayList<>());
+            // shiftListItem.getUser().setCurrentLeaveQuota(null);
+            shiftListItem.getUser().nullify();
         }
         return shift;
     }
@@ -122,27 +124,28 @@ public class ShiftService {
         shiftRepository.deleteById(shiftId);
     }
 
-    public Shift getShiftByTeamAndTime(Long teamId, LocalDate localDate) {
+    public List<Shift> getShiftsByTeamAndTime(Long teamId, LocalDate localDate) {
         LocalDateTime start = LocalDateTime.of(localDate, LocalTime.of(0, 0));
         LocalDateTime end = LocalDateTime.of(localDate, LocalTime.of(23, 59, 59));
         List<Shift> shiftList = shiftRepository.findShiftByTeamTime(teamId, start, end);
         if (shiftList.isEmpty()) {
             throw new IllegalStateException(
                     "Shift with team ID: " + teamId + " date: " + localDate + "does not exist!");
-        } else if (shiftList.size() > 1) {
-            throw new IllegalStateException("More than 1 Shifts were found at this time!");
         } else {
-
-            Shift shift = shiftList.get(0);
-            shift.getRoster().setShifts(new ArrayList<>());
-            shift.getRoster().setBlocks(new ArrayList<>());
-            shift.getRoster().setTeam(null);
-            for (ShiftListItem shiftListItem : shift.getShiftListItems()) {
-                shiftListItem.setShift(null);
-                shiftListItem.setUser(null);
+            System.out.println("##### getShiftsByTeamAndTime #####");
+            for (Shift shift : shiftList) {
+                shift.getRoster().setShifts(new ArrayList<>());
+                shift.getRoster().setBlocks(new ArrayList<>());
+                shift.getRoster().setTeam(null);
+                System.out.println("shift: " + shift.getShiftTitle());
+                for (ShiftListItem shiftListItem : shift.getShiftListItems()) {
+                    System.out.println("list item: " + shiftListItem.getShiftListItemId());
+                    shiftListItem.setShift(null);
+                    shiftListItem.setUser(null);
+                }
             }
 
-            return shift;
+            return shiftList;
         }
     }
 

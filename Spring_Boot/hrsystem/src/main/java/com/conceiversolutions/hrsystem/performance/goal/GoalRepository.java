@@ -12,4 +12,6 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
     @Query("SELECT g FROM Goal g WHERE g.year = ?1")
     List<Goal> findAllGoalsByYear(String year);
     
+    @Query("SELECT g FROM Goal g WHERE g.employee.userId = ?1")
+    List<Goal> findUserGoals(Long userId);
 }
