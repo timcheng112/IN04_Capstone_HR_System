@@ -310,13 +310,13 @@ const SwapRequestComponent = () => {
                 <DataTable>
                   <DataTable.Header>
                     <DataTable.Title style={{ flex: 1 }}>ID</DataTable.Title>
-                    <DataTable.Title style={{ flex: 3 }}>
+                    <DataTable.Title style={{ flex: 4 }}>
                       My Shift
                     </DataTable.Title>
-                    <DataTable.Title style={{ flex: 3 }}>
+                    <DataTable.Title style={{ flex: 4 }}>
                       Employee's Shift
                     </DataTable.Title>
-                    <DataTable.Title style={{ flex: 2 }}>
+                    <DataTable.Title style={{ flex: 3 }}>
                       Status
                     </DataTable.Title>
                   </DataTable.Header>
@@ -365,7 +365,7 @@ const SwapRequestComponent = () => {
                         <DataTable.Cell style={{ flex: 1 }}>
                           {swapRequest.swapRequestId}
                         </DataTable.Cell>
-                        <DataTable.Cell style={{ flex: 3 }}>
+                        <DataTable.Cell style={{ flex: 4 }}>
                           {swapRequest.requestorShiftListItem.shift.startTime.slice(
                             5,
                             10
@@ -375,7 +375,7 @@ const SwapRequestComponent = () => {
                             ""
                           )}
                         </DataTable.Cell>
-                        <DataTable.Cell style={{ flex: 3 }}>
+                        <DataTable.Cell style={{ flex: 4 }}>
                           {swapRequest.receiverShiftListItem.shift.startTime.slice(
                             5,
                             10
@@ -385,7 +385,7 @@ const SwapRequestComponent = () => {
                             ""
                           )}
                         </DataTable.Cell>
-                        <DataTable.Cell style={{ flex: 2 }}>
+                        <DataTable.Cell style={{ flex: 3 }}>
                           {swapRequest.status}
                         </DataTable.Cell>
                       </DataTable.Row>
@@ -510,13 +510,13 @@ const SwapRequestComponent = () => {
                 <DataTable>
                   <DataTable.Header>
                     <DataTable.Title style={{ flex: 1 }}>ID</DataTable.Title>
-                    <DataTable.Title style={{ flex: 3 }}>
+                    <DataTable.Title style={{ flex: 4 }}>
                       My Shift
                     </DataTable.Title>
-                    <DataTable.Title style={{ flex: 3 }}>
+                    <DataTable.Title style={{ flex: 4 }}>
                       Employee's Shift
                     </DataTable.Title>
-                    <DataTable.Title style={{ flex: 2 }}>
+                    <DataTable.Title style={{ flex: 3 }}>
                       Status/Action
                     </DataTable.Title>
                   </DataTable.Header>
@@ -534,7 +534,7 @@ const SwapRequestComponent = () => {
                       <DataTable.Cell style={{ flex: 1 }}>
                         {swapRequest.swapRequestId}
                       </DataTable.Cell>
-                      <DataTable.Cell style={{ flex: 3 }}>
+                      <DataTable.Cell style={{ flex: 4 }}>
                         {swapRequest.receiverShiftListItem.shift.startTime.slice(
                           5,
                           10
@@ -544,7 +544,7 @@ const SwapRequestComponent = () => {
                           ""
                         )}
                       </DataTable.Cell>
-                      <DataTable.Cell style={{ flex: 3 }}>
+                      <DataTable.Cell style={{ flex: 4 }}>
                         {swapRequest.requestorShiftListItem.shift.startTime.slice(
                           5,
                           10
@@ -555,11 +555,11 @@ const SwapRequestComponent = () => {
                         )}
                       </DataTable.Cell>
                       {swapRequest.status !== "PENDING" ? (
-                        <DataTable.Cell style={{ flex: 2 }}>
+                        <DataTable.Cell style={{ flex: 3 }}>
                           {swapRequest.status}
                         </DataTable.Cell>
                       ) : (
-                        <DataTable.Cell style={{ flex: 2 }}>
+                        <DataTable.Cell style={{ flex: 3 }}>
                           <TouchableOpacity onPress={showViewModal}>
                             <MaterialCommunityIcons
                               name="file-eye-outline"

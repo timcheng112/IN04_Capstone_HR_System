@@ -212,4 +212,17 @@ public class SwapRequestService {
                 deleteSwapRequest(oldSwapRequestId);
                 addNewSwapRequest(reason, receiverShiftListItemId, requesterShiftListItemId);
         }
+
+        public Long getNumberOfPendingIncomingSwapRequestsByUser(Long userId) {
+                User user = userRepository.findById(userId).orElseThrow(
+                                () -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
+                List<SwapRequest> swapRequests = user.getSwapRequestsReceived();
+                Long count = 0L;
+                for (SwapRequest swapRequest : swapRequests) {
+                        if (swapRequest.getStatus() == StatusEnum.PENDING) {
+                                count++;
+                        }
+                }
+                return count;
+        }
 }

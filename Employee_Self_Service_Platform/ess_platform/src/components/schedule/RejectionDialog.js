@@ -18,7 +18,7 @@ const RejectionDialog = ({ hideDialog, visible, swapRequest }) => {
         <Dialog
           visible={visible}
           onDismiss={hideDialog}
-          style={{ borderRadius: 20, padding: 10 }}
+          style={{ borderRadius: 20, padding: 5 }}
         >
           <Dialog.Title
             style={{ textAlign: "center", fontFamily: "Poppins_600SemiBold" }}
@@ -65,7 +65,7 @@ const RejectionDialog = ({ hideDialog, visible, swapRequest }) => {
                 style={{
                   backgroundColor: "#0078fe",
                   padding: 10,
-                  marginLeft: "42%",
+                  marginLeft: "34%",
                   borderRadius: 5,
                   //marginBottom: 15,
                   marginTop: 5,

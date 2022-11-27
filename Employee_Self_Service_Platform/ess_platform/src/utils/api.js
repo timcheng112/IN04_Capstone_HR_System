@@ -222,6 +222,11 @@ const api = {
       `http://${URL}:9191/api/swap_request/counterProposeSwapRequest?reason=${reason}&oldSwapRequestId=${oldSwapRequestId}&receiverShiftListItemId=${receiverShiftListItemId}&requesterShiftListItemId=${requesterShiftListItemId}`
     );
   },
+  getNumberOfPendingIncomingSwapRequestsByUser(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/swap_request/getNumberOfPendingIncomingSwapRequestsByUser?userId=${userId}`
+    );
+  },
 };
 
 export default api;
