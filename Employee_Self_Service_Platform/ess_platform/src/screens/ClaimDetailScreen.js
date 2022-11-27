@@ -107,12 +107,12 @@ const ClaimDetailScreen = ({ navigation}) => {
             onPress={() => navigation.navigate('Claims')}>
             Back
           </Button>
-          <Button
+          {claim.claimStatus === "PENDING" && <Button
             mode="contained"
             color="#ffd700"
             onPress={() => withdraw()}>
             Withdraw
-          </Button>
+          </Button>}
         </View>
       </View>
 

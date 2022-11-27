@@ -53,6 +53,7 @@ const NewClaimScreen = ({ navigation }) => {
   const [fileResponse, setFileResponse] = useState();
   const [userId, setUserId] = useState();
   const [error, setError] = useState();
+  const [benefitPlanInstance, setBenefitPlanInstance] = useState();
   const route = useRoute();
 
   const pickDocument = useCallback(async () => {
@@ -78,56 +79,64 @@ const NewClaimScreen = ({ navigation }) => {
     setAmount(0);
     setRemarks("");
     setFileResponse(null);
+
   }, []);
 
   useEffect(() => {
+    console.log(route.params.plan);
     setUserId(route.params.userId);
+    setBenefitPlanInstance(route.params.plan);
     console.log(route.params.userId);
   }, []);
 
 
 
-  // function newClaim({ navigation }) {
-  //   console.log("submit button pressed");
-  //   let formDataPayload = new FormData();
+   function submitClaim() {
+     console.log("submit button pressed for benefit plance instance id");
+     if(!amount.match(/^([0-9]{1,})?(\.)?([0-9]{1,})?$/)) {
+       console.log("not a number");
+       alert("Claim Amount Provided is invalid. Please Try Again.");
+     } else {
+        let formDataPayload = new FormData();
 
-  //   if (fileResponse != null) {
-  //     let docProperties = {
-  //       uri: fileResponse.uri,
-  //       type: fileResponse.mimeType,
-  //       name: fileResponse.name,
-  //     }
+        if (fileResponse != null) {
+          let docProperties = {
+            uri: fileResponse.uri,
+            type: fileResponse.mimeType,
+            name: fileResponse.name,
+          }
 
-  //     formDataPayload.append('document', {
-  //       uri: docProperties.uri,
-  //       name: docProperties.name,
-  //       type: docProperties.type,
-  //     });
-  //   }
+          formDataPayload.append('file', {
+            uri: docProperties.uri,
+            name: docProperties.name,
+            type: docProperties.type,
+          });
+        }
 
-  //   formDataPayload.append('employeeId', userId);
-  //   console.log(userId);
-  //   formDataPayload.append('leaveType', type);
-  //   console.log(type);
+        formDataPayload.append('benefitPlanInstanceId', benefitPlanInstance.benefitPlanInstanceId);
+        console.log(benefitPlanInstance.benefitPlanInstanceId);
+        formDataPayload.append('claimAmount', amount);
+        console.log(amount);
 
-  //   formDataPayload.append('startDate', startDate.toISOString().slice(0, 10));
-  //   console.log(startDate);
+        formDataPayload.append('claimDate', claimDate.toISOString().slice(0, 10));
+        console.log(claimDate.toISOString().slice(0, 10));
 
-  //   formDataPayload.append('endDate', endDate.toISOString().slice(0, 10));
-  //   console.log(endDate);
+        formDataPayload.append('incidentDate', incidentDate.toISOString().slice(0, 10));
+        console.log(incidentDate.toISOString().slice(0, 10));
 
-  //   formDataPayload.append('remark', remarks);
-  //   console.log(remarks);
-
-  //   api.createLeave(formDataPayload)
-  //     .then(() => {
-  //       console.log("Successfully applied!");
-  //       navigation.navigate('Leave')
-  //     })
-  //     .catch((error) => {
-  //       alert(error.response.data.message);
-  //     });
-  // }
+        formDataPayload.append('remarks', remarks);
+        console.log(remarks);
+          api.createClaim(formDataPayload)
+            .then(() => {
+              console.log("Successfully submitted!");
+              alert("Successfully submited claim");
+              navigation.navigate('Claims')
+            })
+            .catch((error) => {
+              alert(error.response.data.message);
+            });
+     }
+   }
 
 
 
@@ -159,6 +168,7 @@ const NewClaimScreen = ({ navigation }) => {
         <TextInput
           label="Claim Amount"
           mode="outlined"
+          keyboardType = 'numeric'
           value={amount}
           onChangeText={amount => setAmount(amount)}
         />
@@ -194,6 +204,7 @@ const NewClaimScreen = ({ navigation }) => {
           <Button
             mode="contained"
             color="#ffd700"
+            onPress={() => submitClaim()}>
             >
             Submit
           </Button>

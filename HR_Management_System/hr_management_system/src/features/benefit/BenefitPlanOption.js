@@ -49,7 +49,7 @@ export default function BenefitPlanOption({ plan }) {
           />
           <span className="hidden md:block">Detail</span>
         </button>
-        <button
+        {plan.isActive && user !== null && user.hrEmployee && <button
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           onClick={() => setClaim(true)}
@@ -59,7 +59,7 @@ export default function BenefitPlanOption({ plan }) {
             aria-hidden="true"
           />
           <span className="hidden md:block">Assign</span>
-        </button>
+        </button>}
         {plan.isActive && user !== null && user.hrEmployee && <button
           type="button"
           className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"

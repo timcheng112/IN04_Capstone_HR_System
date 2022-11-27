@@ -44,7 +44,7 @@ export default function MyClaims({ navigation, userId }) {
         </DataTable.Header>
 
         {claims.map((claim) => (
-          <DataTable.Row>
+          <DataTable.Row key={claim.claimId}>
             <DataTable.Cell>{claim.benefitPlanInstance.benefitPlan.planName}</DataTable.Cell>
             <DataTable.Cell>$ {claim.claimAmount}</DataTable.Cell>
             <DataTable.Cell>{claim.claimStatus}</DataTable.Cell>

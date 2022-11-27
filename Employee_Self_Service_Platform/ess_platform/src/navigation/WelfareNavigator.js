@@ -25,7 +25,7 @@ const WelfareNavigator = () => {
 //          tabBarLabel: "Benefits",
           title: "Benefits",
           headerTitle: "Benefits",
-//          unmountOnBlur: true,
+          unmountOnBlur: true,
         }}
       />
       <WelfareStack.Screen
@@ -35,7 +35,7 @@ const WelfareNavigator = () => {
 //          tabBarLabel: "Claims",
           title: "Claims",
           headerTitle: "Claims",
-//          unmountOnBlur: true,
+          unmountOnBlur: true,
         }}
       />
       <WelfareStack.Screen

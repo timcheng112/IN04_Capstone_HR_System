@@ -22,35 +22,35 @@ const WelfareDrawerNavigator = () => {
         options={{
           title: "Benefits",
           headerTitle: "Benefits",
-//          unmountOnBlur: true,
+          unmountOnBlur: true,
         }}
       />
       <WelfareDrawer.Screen name="Claims" component={ClaimScreen}
         options={{
           title: "Claims",
           headerTitle: "Claims",
-//          unmountOnBlur: true,
+          unmountOnBlur: true,
         }}
       />
       <WelfareDrawer.Screen name="PlanDetail" component={PlanDetailScreen}
        options={{
-           title: "PlanDetail",
-           headerTitle: "PlanDetail",
+           title: "Plan Details",
+           headerTitle: "Plan Details",
            unmountOnBlur: true,
          }}
        />
       <WelfareDrawer.Screen name="ClaimDetail" component={ClaimDetailScreen}
         options={{
-           title: "ClaimDetail",
-           headerTitle: "ClaimDetail",
+           title: "Claim Details",
+           headerTitle: "Claim Details",
            unmountOnBlur: true,
          }}
       />
       <WelfareDrawer.Screen name="NewClaim" component={NewClaimScreen}
         options={{
-           title: "NewClaim",
-           headerTitle: "NewClaim",
-//           unmountOnBlur: true,
+           title: "New Claim",
+           headerTitle: "New Claim",
+           unmountOnBlur: true,
          }}
       />
     </WelfareDrawer.Navigator>

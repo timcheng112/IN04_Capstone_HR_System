@@ -71,15 +71,15 @@ const PlanDetailScreen = ({ navigation}) => {
     plan && <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.inline}>
-          <Text style={styles.title}>BenefitPlan Name:    </Text>
+          <Text style={styles.title}>Benefit Plan Name:    </Text>
           <Text>{plan.benefitPlan.planName}</Text>
         </View>
         <View style={styles.inline}>
-          <Text style={styles.title}>BenefitPlan Description:     </Text>
+          <Text style={styles.title}>Description:     </Text>
           <Text>{plan.benefitPlan.description}</Text>
         </View>
         <View style={styles.inline}>
-          <Text style={styles.title}>BenefitPlan Type:    </Text>
+          <Text style={styles.title}>Plan Type:    </Text>
           <Text>{plan.benefitPlan.planType}</Text>
         </View>
         <View style={styles.inline}>
@@ -87,8 +87,12 @@ const PlanDetailScreen = ({ navigation}) => {
           <Text>{plan.remainingAmount}</Text>
         </View>
         <View style={styles.inline}>
-          <Text style={styles.title}>Enroll Date:    </Text>
+          <Text style={styles.title}>Enrolled Date:    </Text>
           <Text>{plan.enrolDate}</Text>
+        </View>
+        <View style={styles.inline}>
+          {plan.isActive &&<Text style={styles.title}>Plan Is Active    </Text>}
+          {!plan.isActive &&<Text style={styles.title}>Plan Is Inactive    </Text>}
         </View>
 
         <View style={styles.button}>
@@ -98,12 +102,12 @@ const PlanDetailScreen = ({ navigation}) => {
             onPress={() => navigation.navigate('Benefits')}>
             Back
           </Button>
-          <Button
+          {plan.isActive === true &&<Button
             mode="contained"
             color="#ffd700"
-            onPress={() => navigation.navigate('NewClaim', { userId })}>
+            onPress={() => navigation.navigate('NewClaim', { userId, plan })}>
             Claim
-          </Button>
+          </Button>}
         </View>
       </View>
 

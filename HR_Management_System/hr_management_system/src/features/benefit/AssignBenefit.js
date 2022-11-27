@@ -193,7 +193,7 @@ export default function AssignBenefit({
                       </div>
                       <div className="overflow-y-scroll w-full border-2 rounded-md">
                         <label className="block text-sm text-gray-700 mt-2 ml-2 font-bold underline-offset-2 underline">
-                          Assigned:
+                          To Assign:
                         </label>
                         <div>
                           <div className="relative mt-1 flex items-center px-2">
