@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.benefitplan;
 
-import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitType;
+import com.conceiversolutions.hrsystem.enums.BenefitTypeEnum;
+import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,14 +18,14 @@ public class BenefitPlanController {
 
     // Benefit Type
     @GetMapping("getAllBenefitTypes")
-    public List<BenefitType> getAllBenefitTypes() {
+    public List<BenefitTypeEnum> getAllBenefitTypes() {
         return benefitPlanService.getAllBenefitTypes();
     }
 
-    @GetMapping("getBenefitType")
-    public BenefitType getBenefitType(@RequestParam("benefitTypeId") Long benefitTypeId) {
-        return benefitPlanService.getBenefitType(benefitTypeId);
-    }
+//    @GetMapping("getBenefitType")
+//    public BenefitType getBenefitType(@RequestParam("benefitTypeId") Long benefitTypeId) {
+//        return benefitPlanService.getBenefitType(benefitTypeId);
+//    }
 
     // Benefit Plan
     @GetMapping("getAllBenefitPlans")
@@ -33,8 +34,8 @@ public class BenefitPlanController {
     }
 
     @GetMapping("getAllBenefitPlansByType")
-    public List<BenefitPlan> getAllBenefitPlansByType(@RequestParam("benefitTypeId") Long benefitTypeId) {
-        return benefitPlanService.getAllBenefitPlansByType(benefitTypeId);
+    public List<BenefitPlan> getAllBenefitPlansByType(@RequestParam("benefitType") String benefitType) {
+        return benefitPlanService.getAllBenefitPlansByType(BenefitTypeEnum.valueOf(benefitType));
     }
 
     @PostMapping("addBenefitPlan")
@@ -43,9 +44,9 @@ public class BenefitPlanController {
                                @RequestParam("planAmount") Float planAmount,
                                @RequestParam("startDate") String startDate,
                                @RequestParam("endDate") String endDate,
-                               @RequestParam("planTypeId") Long planTypeId) {
+                               @RequestParam("planType") String planType) {
         return benefitPlanService.addBenefitPlan(description, planName, BigDecimal.valueOf(planAmount),
-                LocalDate.parse(startDate), LocalDate.parse(endDate), planTypeId);
+                LocalDate.parse(startDate), LocalDate.parse(endDate), BenefitTypeEnum.valueOf(planType));
     }
 
     @GetMapping("getBenefitPlanById")
@@ -80,5 +81,20 @@ public class BenefitPlanController {
     @GetMapping("getAllBenefitPlanInstancesByPlan")
     public List<BenefitPlanInstance> getAllBenefitPlanInstancesByPlan(@RequestParam("benefitPlanId") Long benefitPlanId) {
         return benefitPlanService.getAllBenefitPlanInstancesByPlan(benefitPlanId);
+    }
+
+    @GetMapping("getAllBenefitPlanInstancesByEmployeeId")
+    public List<BenefitPlanInstance> getAllBenefitPlanInstancesByEmployeeId(@RequestParam("employeeId") Long employeeId) {
+        return benefitPlanService.getAllBenefitPlanInstancesByEmployeeId(employeeId);
+    }
+
+    @GetMapping("getEmployeesAssignedToPlan")
+    public List<User> getEmployeesAssignedToPlan(@RequestParam("planId") Long planId) {
+        return benefitPlanService.getEmployeesAssignedToPlan(planId);
+    }
+
+    @GetMapping("getEmployeesUnassignedToPlan")
+    public List<User> getEmployeesUnassignedToPlan(@RequestParam("planId") Long planId) {
+        return benefitPlanService.getEmployeesUnassignedToPlan(planId);
     }
 }

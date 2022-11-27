@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.benefitplan;
 
 import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitType;
+import com.conceiversolutions.hrsystem.enums.BenefitTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,13 +33,15 @@ public class BenefitPlan {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @ManyToOne(optional = false, targetEntity = BenefitType.class, fetch = FetchType.LAZY)
-    private BenefitType planType;
+//    @ManyToOne(optional = false, targetEntity = BenefitType.class, fetch = FetchType.LAZY)
+//    private BenefitType planType;
+    @Enumerated(EnumType.STRING)
+    private BenefitTypeEnum planType;
 
     public BenefitPlan() {
     }
 
-    public BenefitPlan(String description, String planName, BigDecimal planAmount, LocalDate startDate, LocalDate endDate, BenefitType planType) {
+    public BenefitPlan(String description, String planName, BigDecimal planAmount, LocalDate startDate, LocalDate endDate, BenefitTypeEnum planType) {
         this.description = description;
         this.planName = planName;
         this.planAmount = planAmount;

@@ -1,8 +1,8 @@
 package com.conceiversolutions.hrsystem.engagement.benefitplan;
 
-import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitType;
-import com.conceiversolutions.hrsystem.engagement.benefittype.BenefitTypeRepository;
 import com.conceiversolutions.hrsystem.engagement.claim.Claim;
+import com.conceiversolutions.hrsystem.enums.BenefitTypeEnum;
+import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +20,6 @@ import java.util.Optional;
 public class BenefitPlanService {
     private final BenefitPlanRepository benefitPlanRepository;
     private final BenefitPlanInstanceRepository benefitPlanInstanceRepository;
-    private final BenefitTypeRepository benefitTypeRepository;
     private final UserRepository userRepository;
 
     public void checkDates(LocalDate start, LocalDate end) {
@@ -32,21 +33,22 @@ public class BenefitPlanService {
     }
 
     // Benefit Type
-    public List<BenefitType> getAllBenefitTypes() {
+    public List<BenefitTypeEnum> getAllBenefitTypes() {
         System.out.println("BenefitPlanService.getAllBenefitTypes");
-        return benefitTypeRepository.findAll();
+//        return benefitTypeRepository.findAll();
+        return Arrays.stream(BenefitTypeEnum.values()).toList();
     }
 
-    public BenefitType getBenefitType(Long benefitTypeId) {
-        System.out.println("BenefitPlanService.getBenefitType");
-        System.out.println("benefitTypeId = " + benefitTypeId);
-
-        Optional<BenefitType> opt = benefitTypeRepository.findById(benefitTypeId);
-        if (opt.isEmpty()) {
-            throw new IllegalStateException("Benefit Type ID invalid");
-        }
-        return opt.get();
-    }
+//    public BenefitType getBenefitType(Long benefitTypeId) {
+//        System.out.println("BenefitPlanService.getBenefitType");
+//        System.out.println("benefitTypeId = " + benefitTypeId);
+//
+//        Optional<BenefitType> opt = benefitTypeRepository.findById(benefitTypeId);
+//        if (opt.isEmpty()) {
+//            throw new IllegalStateException("Benefit Type ID invalid");
+//        }
+//        return opt.get();
+//    }
 
     // Benefit Plan
     public List<BenefitPlan> getAllBenefitPlans() {
@@ -54,21 +56,21 @@ public class BenefitPlanService {
         return benefitPlanRepository.findAll();
     }
 
-    public List<BenefitPlan> getAllBenefitPlansByType(Long benefitTypeId) {
+    public List<BenefitPlan> getAllBenefitPlansByType(BenefitTypeEnum benefitType) {
         System.out.println("BenefitPlanService.getAllBenefitPlansByType");
-        System.out.println("benefitTypeId = " + benefitTypeId);
-        return benefitPlanRepository.findAllByBenefitTypeId(benefitTypeId);
+        System.out.println("benefitType = " + benefitType);
+        return benefitPlanRepository.findAllByBenefitTypeId(benefitType);
     }
 
-    public Long addBenefitPlan(String description, String planName, BigDecimal planAmount, LocalDate startDate, LocalDate endDate, Long planTypeId) {
+    public Long addBenefitPlan(String description, String planName, BigDecimal planAmount, LocalDate startDate, LocalDate endDate, BenefitTypeEnum planType) {
         System.out.println("BenefitPlanService.addBenefitPlan");
-        System.out.println("description = " + description + ", planName = " + planName + ", planAmount = " + planAmount + ", startDate = " + startDate + ", endDate = " + endDate + ", planTypeId = " + planTypeId);
+        System.out.println("description = " + description + ", planName = " + planName + ", planAmount = " + planAmount + ", startDate = " + startDate + ", endDate = " + endDate + ", planType = " + planType);
 
         checkDates(startDate, endDate); // date is invalid
 
 
-        BenefitType type = getBenefitType(planTypeId);
-        BenefitPlan newPlan = new BenefitPlan(description, planName, planAmount, startDate, endDate, type);
+
+        BenefitPlan newPlan = new BenefitPlan(description, planName, planAmount, startDate, endDate, planType);
         BenefitPlan savedPlan = benefitPlanRepository.saveAndFlush(newPlan);
         return savedPlan.getBenefitPlanId();
     }
@@ -152,8 +154,75 @@ public class BenefitPlanService {
             bpi.setPlanOwner(null);
             for (Claim claim : bpi.getClaims()) {
                 claim.setBenefitPlanInstance(null);
+                if (claim.getSupportingDocument() != null) {
+                    claim.getSupportingDocument().setDocData(new byte[0]);
+                }
             }
         }
         return planInstances;
+    }
+
+    public List<BenefitPlanInstance> getAllBenefitPlanInstancesByEmployeeId(Long employeeId) {
+        System.out.println("BenefitPlanService.getAllBenefitPlanInstancesByEmployeeId");
+        System.out.println("employeeId = " + employeeId);
+
+        List<BenefitPlanInstance> planInstances = benefitPlanInstanceRepository.findAllByEmployeeId(employeeId);
+        for (BenefitPlanInstance bpi : planInstances) {
+            bpi.setPlanOwner(null);
+            for (Claim claim : bpi.getClaims()) {
+                claim.setBenefitPlanInstance(null);
+                if (claim.getSupportingDocument() != null) {
+                    claim.getSupportingDocument().setDocData(new byte[0]);
+                }
+            }
+        }
+        return planInstances;
+    }
+
+    public List<User> getEmployeesAssignedToPlan(Long planId) {
+        System.out.println("BenefitPlanService.getEmployeesAssignedToPlan");
+        System.out.println("planId = " + planId);
+
+        // get all benefit plan instances linked to the plan
+        List<BenefitPlanInstance> planInstances = benefitPlanInstanceRepository.findAllByBenefitPlanId(planId);
+
+        // then get all the users
+        List<User> employees = new ArrayList<>();
+        for (BenefitPlanInstance bpi : planInstances) {
+            User employee = bpi.getPlanOwner();
+            employee.nullify();
+            employees.add(employee);
+        }
+
+        return employees;
+    }
+
+    public List<User> getEmployeesUnassignedToPlan(Long planId) {
+        System.out.println("BenefitPlanService.getEmployeesUnassignedToPlan");
+        System.out.println("planId = " + planId);
+
+        List<User> allEmployees = userRepository.findAllStaff(RoleEnum.MANAGER, RoleEnum.EMPLOYEE);
+        List<Long> unassignedIds = new ArrayList<>();
+        for (User u : allEmployees) { // for all employees
+            if (u.isEnabled() && !u.getIsBlackListed()) { // if employee is valid
+                List<BenefitPlanInstance> planInstances = u.getBenefitPlanInstances();
+                boolean checker = true;
+                for (BenefitPlanInstance bpi : planInstances) {
+                    if (bpi.getBenefitPlan().getBenefitPlanId().equals(planId)) { // means user already has the plan
+                        checker = false;
+                        break;
+                    }
+                }
+                if (checker) { // true means not already assigned
+                    unassignedIds.add(u.getUserId());
+                }
+            }
+        }
+
+        List<User> unassignedEmployees = userRepository.findAllById(unassignedIds);
+        for (User u : unassignedEmployees) {
+            u.nullify();
+        }
+        return unassignedEmployees;
     }
 }

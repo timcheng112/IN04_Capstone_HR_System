@@ -46,9 +46,12 @@ public class Claim {
     private BenefitPlanInstance benefitPlanInstance;
 
     public Claim() {
+        this.lastUpdated = LocalDate.now();
+        this.claimStatus = StatusEnum.PENDING;
     }
 
     public Claim(LocalDate claimDate, LocalDate incidentDate, String remarks, BigDecimal claimAmount, BenefitPlanInstance benefitPlanInstance) {
+        this();
         this.claimDate = claimDate;
         this.incidentDate = incidentDate;
         this.remarks = remarks;

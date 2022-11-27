@@ -9,8 +9,8 @@ import {
 import api from "../utils/api";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
-import LeaveList from "../components/leave/LeaveList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import BenefitPlan from "../components/benefit/BenefitPlan";
 
 const styles = StyleSheet.create({
   container: {
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
 
 
-const LeaveScreen = ({ navigation }) => {
+const BenefitScreen = ({navigation}) => {
 
   const [userId, setUserId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -54,26 +54,19 @@ const LeaveScreen = ({ navigation }) => {
       };
     }
     setId();
-  }, []);
+   }, []);
 
   return (
-    userId &&
+    userId  &&
     <SafeAreaView style={styles.container}>
       <View style={styles.inline}>
-        <Text style={styles.headlines}>Application History</Text>
-        <Button
-          icon="plus"
-          mode="contained"
-          color="#ffd700"
-          onPress={() => navigation.navigate('LeaveApplication', { userId })}>
-          Apply
-        </Button>
-      </View>
-      <LeaveList userId={userId} />
+        <Text style={styles.headlines}>My Benefit Plan</Text>
+
+        </View>
+        <BenefitPlan navigation={navigation} userId={userId} />
 
     </SafeAreaView>
   )
 };
 
-
-export default LeaveScreen;
+export default BenefitScreen;

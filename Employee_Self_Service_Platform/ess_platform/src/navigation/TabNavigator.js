@@ -7,6 +7,8 @@ import AdminDrawerNavigator from "./AdminDrawerNavigator";
 import TrainingNavigator from "./TrainingNavigator";
 import ScheduleNavigator from "./ScheduleNavigator";
 import ScheduleDrawerNavigator from "./ScheduleDrawerNavigator";
+import WelfareDrawerNavigator from "./WelfareDrawerNavigator";
+
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -53,6 +55,15 @@ const TabNavigator = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <Feather name="book" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Welfare"
+        component={WelfareDrawerNavigator}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="smile-circle" size={24} color={color} />
           ),
         }}
       />
