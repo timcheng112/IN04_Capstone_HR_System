@@ -84,4 +84,9 @@ public class SwapRequestController {
         swapRequestService.counterProposeSwapRequest(reason, oldSwapRequestId, receiverShiftListItemId,
                 requesterShiftListItemId);
     }
+
+    @GetMapping(path = "getNumberOfPendingIncomingSwapRequestsByUser")
+    public Long getNumberOfPendingIncomingSwapRequestsByUser(@RequestParam(name = "userId") Long userId) {
+        return swapRequestService.getNumberOfPendingIncomingSwapRequestsByUser(userId);
+    }
 }
