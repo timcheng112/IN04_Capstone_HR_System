@@ -70,6 +70,10 @@ import CurrentPerformancePeriodPage from "./pages/Performance/current";
 import PromotionPage from "./pages/Performance/promotion";
 import PromotionRequestPage from "./pages/Performance/promotionRequest";
 
+import MyBenefitsPage from "./pages/Benefit/index";
+import BenefitsPage from "./pages/Benefit/indexHR";
+import ClaimsPage from "./pages/Benefit/claim";
+
 function App() {
   return (
     <BrowserRouter>
@@ -255,6 +259,10 @@ function App() {
           <PrivateRoute exact path="/promotion/:requestId" component={PromotionRequestPage} />
 
           <PrivateRoute exact path="/payroll" component={PayrollPage} />
+
+          <PrivateRoute exact path="/welfare/mybenefits" component={MyBenefitsPage} />
+          <PrivateRoute exact path="/welfare/benefits" component={BenefitsPage} />
+          <PrivateRoute exact path="/welfare/claims" component={ClaimsPage} />
         </Switch>
       </div>
     </BrowserRouter>

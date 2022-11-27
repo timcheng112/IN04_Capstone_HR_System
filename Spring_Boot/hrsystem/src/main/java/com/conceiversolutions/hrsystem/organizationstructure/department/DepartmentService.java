@@ -74,6 +74,7 @@ public class DepartmentService {
             deptHead.setLeaveQuotas(new ArrayList<>());
             deptHead.setCurrentLeaveQuota(null);
             deptHead.setTaskListItems(new ArrayList<>());
+            deptHead.setBenefitPlanInstances(new ArrayList<>());
 
             List<Team> deptTeams = d.getTeams();
 
@@ -124,6 +125,7 @@ public class DepartmentService {
             deptHead.setLeaveQuotas(new ArrayList<>());
             deptHead.setCurrentLeaveQuota(null);
             deptHead.setTaskListItems(new ArrayList<>());
+            deptHead.setBenefitPlanInstances(new ArrayList<>());
 
             List<Team> deptTeams = d.getTeams();
 
