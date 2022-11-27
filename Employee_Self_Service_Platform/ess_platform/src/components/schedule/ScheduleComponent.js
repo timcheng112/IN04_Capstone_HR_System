@@ -16,7 +16,7 @@ import {
   endOfYear,
   isSameDay,
 } from "date-fns";
-import { Dimensions, FlatList, View } from "react-native";
+import { Dimensions, FlatList, RefreshControl, ScrollView, View } from "react-native";
 import ShiftBlock from "./ShiftBlock";
 import api from "../../utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,9 +24,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import LottieView from "lottie-react-native";
 
 const ScheduleComponent = () => {
   const [userId, setUserId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const [user, setUser] = useState(null);
   const [myShiftListItem, setMyShiftListItem] = useState(null);
   const [shiftListItems, setShiftListItems] = useState(null);
@@ -81,6 +84,7 @@ const ScheduleComponent = () => {
 
   useEffect(() => {
     if (user !== null) {
+      setIsLoading(true);
       if (user.teams.length > 0) {
         setShiftListItems(null);
         setMyShiftListItem(null);
@@ -103,7 +107,6 @@ const ScheduleComponent = () => {
                 break;
               }
             }
-            console.log("Test");
             console.log(
               "FILTER: " +
                 response.data.filter(
@@ -122,22 +125,34 @@ const ScheduleComponent = () => {
             } else {
               setShiftListItems(response.data);
             }
+            setIsLoading(false);
           })
-          .catch((error) =>
+          .catch((error) => {
             console.log(
               "Error retrieving shift list items for date: " +
                 date +
                 " and team ID: " +
                 user.teams[0].teamId
-            )
-          );
+            );
+            setIsLoading(false);
+          });
       }
+      setIsLoading(false);
     }
-  }, [user, userId, date]);
+  }, [user, userId, date, refresh]);
 
   return (
     // <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: "4%" }}>
-    <View style={{ flex: 1, padding: "4%" }}>
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ padding: "4%" }}
+      refreshControl={
+        <RefreshControl
+          refreshing={isLoading}
+          onRefresh={() => setRefresh(!refresh)}
+        />
+      }
+    >
       <Card
         style={{
           margin: "-4%",
@@ -187,6 +202,7 @@ const ScheduleComponent = () => {
         <FlatList
           data={currWeekDates}
           horizontal
+          showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => (
             <View style={{ width: (windowWidth - 40) / 5 }}>
               <Text
@@ -228,7 +244,7 @@ const ScheduleComponent = () => {
             );
           }}
         />
-        <Card.Content>
+        <Card.Content style={{marginTop: "4%"}}>
           <Text style={{ fontFamily: "Poppins_300Light" }}>
             Team:{" "}
             {user && user.teams.length > 0 ? user.teams[0].teamName : "No Team"}
@@ -275,7 +291,19 @@ const ScheduleComponent = () => {
         <Text style={{ marginBottom: "4%", fontFamily: "Poppins_600SemiBold" }}>
           My Shift:{" "}
         </Text>
-        {myShiftListItem !== null ? (
+        {isLoading ? (
+          <LottieView
+            source={require("../../../assets/loading.json")}
+            autoPlay
+            style={{
+              height: "60%",
+              width: "60%",
+              alignSelf: "center",
+              justifyContent: "center",
+            }}
+            resizeMode="contain"
+          />
+        ) : myShiftListItem !== null ? (
           <ShiftBlock user={user} shiftListItem={myShiftListItem} />
         ) : (
           <Card
@@ -325,7 +353,19 @@ const ScheduleComponent = () => {
         <Text style={{ marginBottom: "4%", fontFamily: "Poppins_600SemiBold" }}>
           Team Members' Shifts:{" "}
         </Text>
-        {shiftListItems && shiftListItems.length > 0 ? (
+        {isLoading ? (
+          <LottieView
+            source={require("../../../assets/loading.json")}
+            autoPlay
+            style={{
+              height: "60%",
+              width: "60%",
+              alignSelf: "center",
+              justifyContent: "center",
+            }}
+            resizeMode="contain"
+          />
+        ) : shiftListItems && shiftListItems.length > 0 ? (
           <View>
             <FlatList
               data={shiftListItems}
@@ -373,7 +413,7 @@ const ScheduleComponent = () => {
           </Card>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -7,6 +7,8 @@ import java.time.*;
 import org.springframework.stereotype.Service;
 
 import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 import com.conceiversolutions.hrsystem.rostering.shift.ShiftRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -21,6 +23,7 @@ public class ShiftListItemService {
     private final ShiftListItemRepository shiftListItemRepository;
     private final ShiftRepository shiftRepository;
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     // doesnt really work
     public List<ShiftListItem> getShiftListItems() {
@@ -167,6 +170,21 @@ public class ShiftListItemService {
             }
         }
 
+        return shiftListItems;
+    }
+
+    public List<ShiftListItem> getShiftListItemByTeam(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalStateException("Team with ID: " + teamId + " does not exist!"));
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByTeam(teamId);
+
+        for (ShiftListItem shiftListItem : shiftListItems) {
+            if (shiftListItem != null) {
+                shiftListItem.getShift().setRoster(null);
+                shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+                shiftListItem.getUser().nullify();
+            }
+        }
         return shiftListItems;
     }
 }

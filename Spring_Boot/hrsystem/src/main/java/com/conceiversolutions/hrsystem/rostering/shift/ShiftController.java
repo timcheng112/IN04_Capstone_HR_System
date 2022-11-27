@@ -47,13 +47,13 @@ public class ShiftController {
     }
 
     @GetMapping(path = "/getShiftByTeamAndTime")
-    public Shift getShiftByTeamAndTime(@RequestParam("teamId") Long teamId, @RequestParam("dateString") String date) {
+    public List<Shift> getShiftByTeamAndTime(@RequestParam("teamId") Long teamId, @RequestParam("dateString") String date) {
 
         LocalDate localDate = LocalDate.parse(date);
 
         System.out.println("date for getShiftByTeamAndTime: " + date);
 
-        return shiftService.getShiftByTeamAndTime(teamId, localDate);
+        return shiftService.getShiftsByTeamAndTime(teamId, localDate);
     }
 
     @GetMapping(path = "/getShiftsByTeam")

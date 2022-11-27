@@ -74,6 +74,9 @@ public class PreferredDatesService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
         PreferredDates preferredDates = user.getPreferredDates();
+        if (preferredDates == null) {
+            throw new IllegalStateException("User with ID: " + userId + " does not have preferred dates!");
+        }
         preferredDates.getUser().nullify();
         return preferredDates;
     }
