@@ -398,6 +398,7 @@ public class UserService implements UserDetailsService {
             employee.setLeaveQuotas(new ArrayList<>());
             employee.setCurrentLeaveQuota(null);
             employee.setQualificationInformation(null);
+            employee.setBenefitPlanInstances(new ArrayList<>());
             // List<Team> teams = employee.getTeams();
             // employee.setTeams(new ArrayList<>());
             List<Team> teams = employee.getTeams();
@@ -1606,6 +1607,7 @@ public class UserService implements UserDetailsService {
             e.setLeaves(new ArrayList<>());
             e.setLeaveQuotas(new ArrayList<>());
             e.setCurrentLeaveQuota(null);
+            e.setBenefitPlanInstances(new ArrayList<>());
 
         }
 
