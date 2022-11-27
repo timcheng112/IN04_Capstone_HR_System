@@ -10,6 +10,7 @@ import InfoPanel from "../../components/rostering/InfoPanel.js";
 import { format, isSameDay, isWeekend, parseISO } from "date-fns";
 import { getUserId } from "../../utils/Common.js";
 import EmptyStateRostering from "../../features/rostering/EmptyStateRostering.js";
+import GenerateFixedShiftsModal from "../../features/rostering/GenerateFixedShiftsModal.js";
 
 export default function Roster() {
   const [open, setOpen] = useState(false);
@@ -23,6 +24,7 @@ export default function Roster() {
   const [teamShifts, setTeamShifts] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const [openPublish, setOpenPublish] = useState(false);
+  const [openGenerateShifts, setOpenGenerateShifts] = useState(false);
 
   console.log(shiftsToBeAdded);
 
@@ -56,22 +58,29 @@ export default function Roster() {
   useEffect(() => {
     api
       .getAllTeams()
-      .then((response) => setTeams(response.data))
+      .then((response) => {
+        console.log(response.data);
+        setTeams(response.data);
+      })
       .catch((error) => console.log(error.response.data.message));
   }, []);
 
   useEffect(() => {
     if (user && !user.isHrEmployee && teams) {
-      let tempTeam = user.teams[0];
-      for (let i = 0; i < teams.length; i++) {
-        if (teams[i].teamId === tempTeam.teamId) {
-          tempTeam = teams[i];
-          break;
+      if (user.teams[0] !== null && user.teams[0] !== undefined) {
+        let tempTeam = user.teams[0];
+        for (let i = 0; i < teams.length; i++) {
+          if (teams[i].teamId === tempTeam.teamId) {
+            tempTeam = teams[i];
+            break;
+          }
         }
+        console.log("TEMPTEAM: " + tempTeam);
+        setSelectedTeam(tempTeam);
+        console.log("SELECTED TEAM: " + selectedTeam);
+      } else {
+        console.log("User has no team");
       }
-      console.log("TEMPTEAM: " + tempTeam);
-      setSelectedTeam(tempTeam);
-      console.log("SELECTED TEAM: " + selectedTeam);
     }
   }, [teams, user, selectedTeam]);
 
@@ -112,7 +121,19 @@ export default function Roster() {
         api
           .addNewShift(shiftsToBeAdded[i].shift, selectedTeam.roster.rosterId)
           .then((response) => {
-            addNewShiftListItemHandler(shiftsToBeAdded[i], response.data);
+            if (i === shiftsToBeAdded.length - 1) {
+              addNewShiftListItemHandler(
+                shiftsToBeAdded[i],
+                response.data,
+                true
+              );
+            } else {
+              addNewShiftListItemHandler(
+                shiftsToBeAdded[i],
+                response.data,
+                false
+              );
+            }
           })
           .catch((error) => {
             console.log("Error creating shift for " + shiftsToBeAdded[i].shift);
@@ -131,7 +152,7 @@ export default function Roster() {
     }
   }
 
-  function addNewShiftListItemHandler(shift, shiftId) {
+  function addNewShiftListItemHandler(shift, shiftId, isLastLoop) {
     const shiftListItem = {
       isWeekend: isWeekend(shift.shift.startDate),
       isPhEvent: shift.isPhEvent,
@@ -143,11 +164,14 @@ export default function Roster() {
         console.log(shift.userId[i]);
         api
           .addNewShiftListItem(shiftListItem, shiftId, shift.userId[i])
-          .then(() =>
+          .then(() => {
             console.log(
               "Shift List Item created for User with ID: " + shift.userId[i]
-            )
-          )
+            );
+            if (isLastLoop && i === shift.userId.length - 1)
+              setShiftsToBeAdded([]);
+            setOpenPublish(true);
+          })
           .catch((error) => {
             console.log("Error creating shift list item");
             console.log(error.response.data.message);
@@ -183,22 +207,25 @@ export default function Roster() {
   }
 
   return (
-    <>
+    <div>
       <Navbar />
 
       <div className="px-4 sm:px-6 lg:px-8 mt-3">
         <div className="sm:flex sm:items-center">
           <div className="isolate inline-flex -space-x-px rounded-md shadow-sm mx-4">
-            <ComboBox
-              items={teams}
-              searchParam={"teamName"}
-              selectedItem={selectedTeam}
-              setSelectedItem={setSelectedTeam}
-              placeholder="Search for Team"
-            />
+            {user && (
+              <ComboBox
+                items={teams}
+                searchParam={"teamName"}
+                selectedItem={selectedTeam}
+                setSelectedItem={setSelectedTeam}
+                placeholder="Search for Team"
+                disabled={user.teams[0] === undefined && !user.isHrEmployee}
+              />
+            )}
           </div>
 
-          <div className="sm:flex sm:items-center">
+          {/* <div className="sm:flex sm:items-center">
             <div>
               <nav
                 className="isolate inline-flex -space-x-px rounded-md shadow-sm"
@@ -210,7 +237,6 @@ export default function Roster() {
                 >
                   Day
                 </a>
-                {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
                 <a
                   href="#"
                   className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
@@ -219,7 +245,7 @@ export default function Roster() {
                 </a>
               </nav>
             </div>
-          </div>
+          </div> */}
           <div className="sm:flex-auto">
             {/* <p className="mt-2 text-sm text-gray-700">
               We probably don't need text here.
@@ -228,12 +254,12 @@ export default function Roster() {
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             {user && (user.isHrEmployee || user.userRole === "MANAGER") && (
               <>
-                <button
+                {/* <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                 >
                   Add user
-                </button>
+                </button> */}
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
@@ -242,6 +268,16 @@ export default function Roster() {
                 >
                   View Template Shifts
                 </button>
+                {selectedTeam && selectedTeam.isOffice && (
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
+                    onClick={() => setOpenGenerateShifts(true)}
+                    disabled={selectedTeam === null}
+                  >
+                    Generate Fixed Shifts
+                  </button>
+                )}
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto ml-2 disabled:opacity-75 disabled:hover:bg-indigo-600"
@@ -274,6 +310,36 @@ export default function Roster() {
                   )
                 );
               }}
+              // removeShiftListItemHandler={(employeeId, shiftToBeEdited) => {
+              //   let userIds = []
+              //   let posTypeIndex = 0;
+              //   let posTypes = []
+              //   setShiftsToBeAdded(
+              //     shiftsToBeAdded.map(shift => shift.shift === shiftToBeEdited.shift ? () => {(userIds, index) = shiftToBeEdited.shift.userId.filter(userId => {userId !== employeeId; posTypeIndex = index}); posTypes = shiftToBeEdited.shift.userId.filter()} : console.log())
+              //   )
+              // }}
+              removeShiftListItemHandler={(shiftToBeRemoved, employeeId) => {
+                let positionTypeIndex = 0;
+                let shiftToBeAdded = shiftToBeRemoved;
+                for (let i = 0; i < shiftToBeRemoved.userId.length; i++) {
+                  if (shiftToBeRemoved.userId[i] === employeeId) {
+                    positionTypeIndex = i;
+                    break;
+                  }
+                }
+                shiftToBeAdded.userId = shiftToBeRemoved.userId.filter(
+                  (userId) => userId !== employeeId
+                );
+                shiftToBeAdded.positionType =
+                  shiftToBeRemoved.positionType.splice(positionTypeIndex, 1);
+                console.log(shiftToBeAdded);
+                setShiftsToBeAdded([
+                  ...shiftsToBeAdded.filter(
+                    (shift) => shift !== shiftToBeRemoved
+                  ),
+                  shiftToBeAdded,
+                ]);
+              }}
               checkIfThereExistsShiftOnSameDay={(value) =>
                 checkIfThereExistsShiftOnSameDay(value)
               }
@@ -283,7 +349,7 @@ export default function Roster() {
               refreshKey={refreshKey}
               openPublish={openPublish}
               closePublish={() => setOpenPublish(false)}
-              rosterId={selectedTeam.roster.rosterId}
+              rosterId={selectedTeam && selectedTeam.roster.rosterId}
             />
           </>
         ) : (
@@ -295,7 +361,19 @@ export default function Roster() {
           rosterId={selectedTeam !== null ? selectedTeam.roster.rosterId : ""}
         />
         <AddShiftModal open={open} onClose={() => setOpen(false)} />
+        <GenerateFixedShiftsModal
+          open={openGenerateShifts}
+          onClose={() => setOpenGenerateShifts(false)}
+          rosterId={selectedTeam && selectedTeam.roster.rosterId}
+          team={selectedTeam}
+          checkIfThereExistsShiftOnSameDay={(value) =>
+            checkIfThereExistsShiftOnSameDay(value)
+          }
+          addShiftHandler={(shiftToBeAdded) =>
+            setShiftsToBeAdded(shiftsToBeAdded.concat(shiftToBeAdded))
+          }
+        />
       </div>
-    </>
+    </div>
   );
 }

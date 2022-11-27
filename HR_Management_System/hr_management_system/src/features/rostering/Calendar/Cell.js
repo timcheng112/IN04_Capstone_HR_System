@@ -6,6 +6,7 @@ import {
   isAfter,
   isBefore,
   isToday,
+  isWithinInterval,
   parseISO,
   startOfToday,
 } from "date-fns";
@@ -21,6 +22,7 @@ import ViewCurrentShiftsModal from "../ViewCurrentShiftsModal";
 import ViewTemplateShiftsModal from "../ViewTemplateShiftsModal";
 import { Blocks } from "react-loader-spinner";
 import { getUserId } from "../../../utils/Common";
+import LeaveBlock from "../LeaveBlock";
 
 const Cell = ({
   className,
@@ -31,6 +33,7 @@ const Cell = ({
   person,
   addShiftHandler,
   removeShiftHandler,
+  removeShiftListItemHandler,
   checkIfThereExistsShiftOnSameDay,
   shift,
   setInfoPanelDate,
@@ -50,6 +53,8 @@ const Cell = ({
   const [shiftListItem, setShiftListItem] = useState(null);
   const [isLoading, setIsLoading] = useState(shift ? false : true);
   const [user, setUser] = useState(null);
+  const [leaveBlock, setLeaveBlock] = useState(null);
+  const [preferredDates, setPreferredDates] = useState([]);
 
   useEffect(() => {
     api
@@ -111,20 +116,87 @@ const Cell = ({
     }
   }, [date, person, refreshKey, openDelete, openPublish, openSuccess]);
 
+  useEffect(() => {
+    console.log("FINDING LEAVES");
+    setIsLoading(true);
+    if (date !== undefined) {
+      setLeaveBlock(null);
+      api
+        .getEmployeeLeaves(person.userId)
+        .then((response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            const startDateArr = response.data[i].startDate.split("-");
+            const endDateArr = response.data[i].endDate.split("-");
+            const startDate = new Date(
+              startDateArr[0],
+              Number(startDateArr[1]) - 1,
+              startDateArr[2]
+            );
+            const endDate = new Date(
+              endDateArr[0],
+              Number(endDateArr[1]) - 1,
+              endDateArr[2]
+            );
+            if (
+              isWithinInterval(date, {
+                start: startDate,
+                end: endDate,
+              })
+            ) {
+              setLeaveBlock(response.data[i]);
+              console.log("USER HAS A LEAVE ON THIS DATE");
+              break;
+            }
+          }
+          setIsLoading(false);
+        })
+        .catch(
+          (err) => setIsLoading(false)
+          // no leaves at all
+        );
+    }
+  }, [date, person, openDelete, openPublish, openSuccess]);
+
   const removeShiftAndShiftListItemHandler = (shiftListItem) => {
     api
-      .deleteShiftListItem(shiftListItem.shiftListItemId)
-      .then(() => {
-        api
-          .deleteShift(shiftListItem.shift.shiftId)
-          .then(() => {
-            alert("Successfully deleted!");
-            setOpenDelete(false);
-          })
-          .catch((error) => alert(error.response.data.message));
-      })
-      .catch((error) => alert(error.response.data.message));
+      .getShiftListItemByShiftId(shiftListItem.shift.shiftId)
+      .then((response) => {
+        if (response.data.length > 1) {
+          api
+            .deleteShiftListItem(shiftListItem.shiftListItemId)
+            .then(() => {
+              alert("Successfully deleted!");
+              setOpenDelete(false);
+            })
+            .catch((error) => alert(error.response.data.message));
+        } else {
+          api
+            .deleteShiftListItem(shiftListItem.shiftListItemId)
+            .then(() => {
+              api
+                .deleteShift(shiftListItem.shift.shiftId)
+                .then(() => {
+                  alert("Successfully deleted!");
+                  setOpenDelete(false);
+                })
+                .catch((error) => alert(error.response.data.message));
+            })
+            .catch((error) => alert(error.response.data.message));
+        }
+      });
   };
+
+  useEffect(() => {
+    if (person !== null && person !== undefined) {
+      console.log("TEST 1");
+      api
+        .getPreferredDatesByUserId(person.userId)
+        .then((response) => {
+          setPreferredDates(response.data.dates);
+        })
+        .catch((err) => console.log(err.response.data.message));
+    }
+  }, [person]);
 
   return (
     <div
@@ -134,7 +206,10 @@ const Cell = ({
         (compareAsc(date, dateToday) === -1 && !isToday(date)
           ? " bg-gray-100"
           : " bg-white") +
-        (isToday(date) ? " bg-sky-100" : "")
+        (isToday(date) ? " bg-sky-100" : "") +
+        (date && preferredDates.includes(format(date, "yyyy-MM-dd"))
+          ? " bg-green-100"
+          : "")
       }
       onClick={onClickHandler}
       onMouseOver={handleMouseOver}
@@ -209,7 +284,9 @@ const Cell = ({
         rosterId={rosterId}
       />
       {children}
-      {(shift && shift !== null) || shiftListItem !== null ? (
+      {(shift && shift !== null) ||
+      shiftListItem !== null ||
+      leaveBlock !== null ? (
         <div>
           {shiftListItem !== null && (
             <ShiftBlock
@@ -231,6 +308,7 @@ const Cell = ({
               shiftListItem={shift}
               className="m-auto mb-2 border-green-600 border-2"
               removeShiftHandler={removeShiftHandler}
+              removeShiftListItemHandler={removeShiftListItemHandler}
               willBePersisted={false}
               person={person}
               isUserHrOrManager={
@@ -238,6 +316,7 @@ const Cell = ({
               }
             />
           )}
+          {leaveBlock !== null && <LeaveBlock leave={leaveBlock} />}
         </div>
       ) : !isLoading &&
         date &&

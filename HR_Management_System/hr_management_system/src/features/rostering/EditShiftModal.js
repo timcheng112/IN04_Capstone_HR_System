@@ -20,11 +20,13 @@ const EditShiftModal = ({
     format(shift.endTime, "HH:mm")
   );
   const [salesmanQuotaValue, setSalesmanQuotaValue] = useState(
-    shift.minQuota[0]
+    shift.minQuota && shift.minQuota[0]
   );
-  const [cashierQuotaValue, setCashierQuotaValue] = useState(shift.minQuota[1]);
+  const [cashierQuotaValue, setCashierQuotaValue] = useState(
+    shift.minQuota && shift.minQuota[1]
+  );
   const [storemanagerQuotaValue, setStoremanagerQuotaValue] = useState(
-    shift.minQuota[2]
+    shift.minQuota && shift.minQuota[2]
   );
   const [shiftRemarksValue, setShiftRemarksValue] = useState(shift.remarks);
 
@@ -185,6 +187,7 @@ const EditShiftModal = ({
                       }
                       setShiftRemarks={(value) => setShiftRemarksValue(value)}
                       shift={shift}
+                      isOffice={shift.minQuota ? false : true}
                     />
                   </div>
                 </div>

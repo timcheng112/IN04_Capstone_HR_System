@@ -5,8 +5,8 @@ const URL = "172.31.55.234"; // XINYUE
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"
-
-
+// const URL = "192.168.1.82"; // TIM
+// const URL = "172.17.93.172";
 
 const api = {
   login(workEmail, password) {
@@ -14,7 +14,14 @@ const api = {
       `http://${URL}:9191/api/user/login/loginHRMS?workEmail=${workEmail}&password=${password}`
     );
   },
-
+  getUser(userId) {
+    return axios.get(`http://${URL}:9191/api/user/${userId}`);
+  },
+  getEmployeesByTeam(teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/user/getEmployeesByTeam?teamId=${teamId}`
+    );
+  },
   // onboarding/offboarding
   getTaskListItems() {
     return axios.get(`http://localhost:9191/api/task_list_item`);
@@ -53,68 +60,167 @@ const api = {
     return axios.get(`http://${URL}:9191/api/leaves/getAllPendingLeaves`);
   },
   getLeaveById(leaveId) {
-    return axios.get(`http://${URL}:9191/api/leaves/getLeaveById?leaveId=${leaveId}`);
+    return axios.get(
+      `http://${URL}:9191/api/leaves/getLeaveById?leaveId=${leaveId}`
+    );
   },
   createLeave(formDataPayload) {
-    return axios.post(`http://${URL}:9191/api/leaves/createLeave`, formDataPayload, {headers: {'Content-Type': 'multipart/form-data'}});
+    return axios.post(
+      `http://${URL}:9191/api/leaves/createLeave`,
+      formDataPayload,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
   },
   getEmployeeLeaves(employeeId) {
-    return axios.get(`http://${URL}:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`);
+    return axios.get(
+      `http://${URL}:9191/api/leaves/getEmployeeLeaves?employeeId=${employeeId}`
+    );
   },
   approveLeave(leaveId, approverRemarks) {
-    return axios.put(`http://${URL}:9191/api/leaves/approveLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+    return axios.put(
+      `http://${URL}:9191/api/leaves/approveLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`
+    );
   },
   rejectLeave(leaveId, approverRemarks) {
-    return axios.put(`http://${URL}:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`);
+    return axios.put(
+      `http://${URL}:9191/api/leaves/rejectLeave?leaveId=${leaveId}&approverRemarks=${approverRemarks}`
+    );
   },
   cancelLeave(leaveId) {
-    return axios.put(`http://${URL}:9191/api/leaves/cancelLeave?leaveId=${leaveId}`)
+    return axios.put(
+      `http://${URL}:9191/api/leaves/cancelLeave?leaveId=${leaveId}`
+    );
   },
   getEmployeeInclLeaveQuotas(employeeId) {
-    return axios.get(`http://${URL}:9191/api/user/getEmployeeInclLeaveQuotas?employeeId=${employeeId}`);
+    return axios.get(
+      `http://${URL}:9191/api/user/getEmployeeInclLeaveQuotas?employeeId=${employeeId}`
+    );
   },
   //training
-  getAllModules(){
+  getAllModules() {
     return axios.get(`http://${URL}:9191/api/module`);
   },
-  getUserModules(employeeId){
+  getUserModules(employeeId) {
     return axios.get(`http://${URL}:9191/api/module/user/${employeeId}`);
   },
   getModule(moduleId) {
     return axios.get(`http://${URL}:9191/api/module/${moduleId}`);
   },
   getVideo(videoId) {
-    return axios.get(`http://${URL}:9191/api/video/${videoId}`)
+    return axios.get(`http://${URL}:9191/api/video/${videoId}`);
   },
   getIsVideoWatchedByEmployee(videoId, userId) {
-    return axios.get(`http://${URL}:9191/api/video/${videoId}/user/${userId}`)
+    return axios.get(`http://${URL}:9191/api/video/${videoId}/user/${userId}`);
   },
   getUserProgress(moduleId, userId) {
-    return axios.get(`http://${URL}:9191/api/module/${moduleId}/user/${userId}`)
+    return axios.get(
+      `http://${URL}:9191/api/module/${moduleId}/user/${userId}`
+    );
   },
   getUserCompletedModules(userId) {
-    return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`)
+    return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`);
   },
   markVideoAsWatched(videoId, userId) {
-    return axios.post(`http://${URL}:9191/api/video/${videoId}/user/${userId}`)
+    return axios.post(`http://${URL}:9191/api/video/${videoId}/user/${userId}`);
   },
   getUserCompletedModules(userId) {
-    return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`)
+    return axios.get(`http://${URL}:9191/api/module/user/${userId}/completed`);
   },
   getUserReadNotifications(userId) {
-    return axios.get(`http://${URL}:9191/api/notification/read/${userId}`)
+    return axios.get(`http://${URL}:9191/api/notification/read/${userId}`);
   },
   getUserUnreadNotifications(userId) {
-    return axios.get(`http://${URL}:9191/api/notification/unread/${userId}`)
+    return axios.get(`http://${URL}:9191/api/notification/unread/${userId}`);
   },
   markNotificationAsRead(notificationId, userId) {
-    return axios.post(`http://${URL}:9191/api/notification/${notificationId}/user/${userId}`)
+    return axios.post(
+      `http://${URL}:9191/api/notification/${notificationId}/user/${userId}`
+    );
   },
-  deleteANotification(notificationId, userId){
-    return axios.delete(`http://${URL}:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`)
+  deleteANotification(notificationId, userId) {
+    return axios.delete(
+      `http://${URL}:9191/api/notification/deleteOneNotif?notificationId=${notificationId}&userId=${userId}`
+    );
   },
-  deleteAllNotifications(userId){
-    return axios.delete(`http://${URL}:9191/api/notification/deleteNotifications?userId=${userId}`);
+  deleteAllNotifications(userId) {
+    return axios.delete(
+      `http://${URL}:9191/api/notification/deleteNotifications?userId=${userId}`
+    );
+  },
+  getShiftListItemByDateAndTeam(date, teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
+    );
+  },
+  getShiftListItemByTeam(teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/shift_list_item/getShiftListItemByTeam?teamId=${teamId}`
+    );
+  },
+  getPreferredDatesByUserId(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/preferred_date/getPreferredDatesByUserId?userId=${userId}`
+    );
+  },
+  addNewPreferredDates(dates, userId) {
+    return axios.post(
+      `http://${URL}:9191/api/preferred_date?dates=${dates}&userId=${userId}`,
+      preferredDates
+    );
+  },
+  editPreferredDates(userId, newDates) {
+    return axios.put(
+      `http://${URL}:9191/api/preferred_date/editPreferredDates?userId=${userId}`,
+      newDates
+    );
+  },
+  addNewSwapRequest(reason, receiverShiftListItemId, requesterShiftListItemId) {
+    return axios.post(
+      `http://${URL}:9191/api/swap_request?reason=${reason}&receiverShiftListItemId=${receiverShiftListItemId}&requesterShiftListItemId=${requesterShiftListItemId}`
+    );
+  },
+  getSwapRequestsByUserId(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/swap_request/getSwapRequestsByUserId?userId=${userId}`
+    );
+  },
+  deleteSwapRequestById(swapRequestId) {
+    return axios.delete(`http://${URL}:9191/api/swap_request/${swapRequestId}`);
+  },
+  getSwapRequestsByTeamId(teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/swap_request/getSwapRequestsByTeamId?teamId=${teamId}`
+    );
+  },
+  approveSwapRequest(swapRequestId, responseReason) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/approveSwapRequest?swapRequestId=${swapRequestId}&responseReason=${responseReason}`
+    );
+  },
+  rejectSwapRequest(swapRequestId, responseReason) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/rejectSwapRequest?swapRequestId=${swapRequestId}&responseReason=${responseReason}`
+    );
+  },
+  clearSwapRequest(swapRequestId) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/clearSwapRequest?swapRequestId=${swapRequestId}`
+    );
+  },
+  approvePendingSwapRequest(swapRequestId, responseReason) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/approvePendingSwapRequest?swapRequestId=${swapRequestId}&responseReason=${responseReason}`
+    );
+  },
+  counterProposeSwapRequest(
+    reason,
+    oldSwapRequestId,
+    receiverShiftListItemId,
+    requesterShiftListItemId
+  ) {
+    return axios.post(
+      `http://${URL}:9191/api/swap_request/counterProposeSwapRequest?reason=${reason}&oldSwapRequestId=${oldSwapRequestId}&receiverShiftListItemId=${receiverShiftListItemId}&requesterShiftListItemId=${requesterShiftListItemId}`
+    );
   },
 
   getAllBenefitPlanInstancesByEmployeeId(employeeId) {

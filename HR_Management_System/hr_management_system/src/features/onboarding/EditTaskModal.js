@@ -1,7 +1,11 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Transition, Switch } from "@headlessui/react";
 import { Fragment, useState, useEffect } from "react";
 import api from "../../utils/api";
 /* global BigInt */
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export default function EditTaskModal({
   open,
@@ -12,6 +16,7 @@ export default function EditTaskModal({
   const [user, setUser] = useState(null);
   const [name, setName] = useState(task.name);
   const [description, setDescription] = useState(task.description);
+  const [enabled, setEnabled] = useState(task.autoAssign);
   const [error, setError] = useState(null);
   const [searchParam] = useState([
     "userId",
@@ -24,6 +29,7 @@ export default function EditTaskModal({
   useEffect(() => {
     setName(task.name);
     setDescription(task.description);
+    setEnabled(task.autoAssign);
   }, [open]);
 
   const handleSubmit = () => {
@@ -33,7 +39,7 @@ export default function EditTaskModal({
 
   function editTask() {
     api
-      .editTask(task.taskId, name, description)
+      .editTask(task.taskId, name, description,enabled)
       .then(() => {
         alert("Successfully edited task.");
         onClose();
@@ -127,6 +133,33 @@ export default function EditTaskModal({
                             onChange={(e) => setDescription(e.target.value)}
                           />
                         </div>
+                        <div className="inline-flex space-x-4 items-center">
+                          <label
+                            htmlFor="category-name"
+                            className="block text-sm font-medium text-gray-700 mt-2"
+                          >
+                            Auto assign
+                          </label>
+                          <div className="mt-3.5">
+                          <Switch
+                            checked={enabled}
+                            onChange={setEnabled}
+                            className={classNames(
+                              enabled ? 'bg-indigo-600' : 'bg-gray-200',
+                              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+                            )}
+                          >
+                            <span className="sr-only">Use setting</span>
+                            <span
+                              aria-hidden="true"
+                              className={classNames(
+                                enabled ? 'translate-x-5' : 'translate-x-0',
+                                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                              )}
+                            />
+                          </Switch>
+                          </div>
+                          </div>
                       </form>
                     </div>
                   </div>
