@@ -1,18 +1,29 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { RefreshControl, SafeAreaView, ScrollView, View } from "react-native";
+import {
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import {
   AnimatedFAB,
   Button,
   DataTable,
   Provider,
   Text,
+  ToggleButton,
 } from "react-native-paper";
 import api from "../../utils/api";
 import SwapRequestModal from "./SwapRequestModal";
 import { Feather } from "@expo/vector-icons";
 import DeleteRequestModal from "./DeleteRequestModal";
 import LottieView from "lottie-react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ViewRequestModal from "./ViewRequestModal";
+import RejectionDialog from "./RejectionDialog";
+import CounterProposingModal from "./CounterProposingModal";
 
 const SwapRequestComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,13 +34,32 @@ const SwapRequestComponent = () => {
   const [users, setUsers] = useState(null);
   const [shiftListItems, setShiftListItems] = useState(null);
   const [mySwapRequests, setMySwapRequests] = useState([]);
+  const [myCompletedSwapRequests, setMyCompletedSwapRequests] = useState([]);
+  const [incomingSwapRequests, setIncomingSwapRequests] = useState([]);
+  const [teamSwapRequests, setTeamSwapRequests] = useState([]);
+
+  const [viewModalVisible, setViewModalVisible] = useState(false);
+  const showViewModal = () => setViewModalVisible(true);
+  const hideViewModal = () => setViewModalVisible(false);
+
+  const [counterProposingModalVisible, setCounterProposingModalVisible] =
+    useState(false);
+  const showCounterProposingModal = () => setCounterProposingModalVisible(true);
+  const hideCounterProposingModal = () =>
+    setCounterProposingModalVisible(false);
+
+  const [value, setValue] = useState("My Requests");
+
   const [isDeleteVisible, setIsDeleteVisible] = useState({});
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
   const showDeleteModal = () => setDeleteModalVisible(true);
   const hideDeleteModal = () => setDeleteModalVisible(false);
 
-  const [isExtended, setIsExtended] = React.useState(true);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const showDialog = () => setDialogVisible(true);
+  const hideDialog = () => setDialogVisible(false);
+
+  const [isExtended, setIsExtended] = useState(true);
 
   const isIOS = Platform.OS === "ios";
 
@@ -45,6 +75,7 @@ const SwapRequestComponent = () => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
+  // TO RETRIEVE LOGGED IN USER's ID
   useEffect(() => {
     const setId = async () => {
       try {
@@ -57,6 +88,7 @@ const SwapRequestComponent = () => {
     setId();
   }, []);
 
+  // TO RETRIEVE LOGGED IN USER
   useEffect(() => {
     if (userId !== null) {
       api
@@ -70,6 +102,7 @@ const SwapRequestComponent = () => {
     }
   }, [userId]);
 
+  // TO RETRIEVE EMPLOYEES IN LOGGED IN USER's TEAM
   useEffect(() => {
     if (user !== null && user.teams.length > 0) {
       api
@@ -84,6 +117,7 @@ const SwapRequestComponent = () => {
     }
   }, [user]);
 
+  // TO RETRIEVE SHIFT LIST ITEMS OF LOGGED IN USER's TEAM
   useEffect(() => {
     if (user !== null && user.teams.length > 0) {
       api
@@ -96,13 +130,38 @@ const SwapRequestComponent = () => {
     }
   }, [user]);
 
+  // TO RETRIEVE SWAP REQUESTS OF LOGGED IN USER's TEAM
   useEffect(() => {
-    if (userId !== null) {
+    if (user !== null) {
       setIsLoading(true);
       api
-        .getSwapRequestsByUserId(userId)
+        .getSwapRequestsByTeamId(user.teams[0].teamId)
         .then((response) => {
-          setMySwapRequests(response.data);
+          const pendingSwapRequests = response.data.filter(
+            (item) => item.status === "PENDING"
+          );
+          const tempTeamSwapRequests = pendingSwapRequests.filter(
+            (item) => item.requestor.userId !== user.userId
+          );
+          const tempAllMySwapRequests = response.data.filter(
+            (item) => item.requestor.userId === user.userId
+          );
+          const tempReviewingSwapRequests = response.data.filter(
+            (item) => item.status === "REVIEWING"
+          );
+          const tempMyCurrentSwapRequests = tempAllMySwapRequests.filter(
+            (item) => item.status !== "COMPLETED"
+          );
+          const tempMyCompletedSwapRequests = tempAllMySwapRequests.filter(
+            (item) => item.status === "COMPLETED"
+          );
+          const tempIncomingSwapRequests = response.data.filter(
+            (item) => item.receiver.userId === user.userId
+          );
+          setTeamSwapRequests(tempReviewingSwapRequests);
+          setMySwapRequests(tempMyCurrentSwapRequests);
+          setMyCompletedSwapRequests(tempMyCompletedSwapRequests);
+          setIncomingSwapRequests(tempIncomingSwapRequests);
           setIsLoading(false);
         })
         .catch((error) => {
@@ -110,19 +169,34 @@ const SwapRequestComponent = () => {
           setIsLoading(false);
         });
     }
-  }, [userId, deleteModalVisible, visible, retrevingSwapRequests]);
+  }, [user, retrevingSwapRequests]);
 
   const clearSwapRequestHandler = (swapRequestId) => {
     api
-      .deleteSwapRequestById(swapRequestId)
+      .clearSwapRequest(swapRequestId)
       .then((response) => {
         alert(
           "Successfully cleared Swap Request with ID: " + swapRequestId + "!"
         );
-        hideDeleteModal();
+        setRetrievingSwapRequests(!retrevingSwapRequests);
       })
       .catch((err) => {
         alert("Error in clearing Swap Request with ID: " + swapRequestId + "!");
+      });
+  };
+
+  const deleteSwapRequestHandler = (swapRequestId) => {
+    api
+      .deleteSwapRequestById(swapRequestId)
+      .then((response) => {
+        alert(
+          "Successfully deleted Swap Request with ID: " + swapRequestId + "!"
+        );
+        setRetrievingSwapRequests(!retrevingSwapRequests);
+        hideDeleteModal();
+      })
+      .catch((err) => {
+        alert("Error in deleting Swap Request with ID: " + swapRequestId + "!");
       });
   };
 
@@ -140,6 +214,55 @@ const SwapRequestComponent = () => {
             />
           }
         >
+          <View
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "4%",
+            }}
+          >
+            <ToggleButton.Row
+              onValueChange={(value) => setValue(value)}
+              style={{ width: "96%" }}
+            >
+              <ToggleButton
+                icon={() => <Feather name="user" size={24} color="black" />}
+                value="My Requests"
+                style={[
+                  { width: "50%", borderRadius: 20, borderWidth: 1 },
+                  value === "My Requests" && { backgroundColor: "#818cf8" },
+                ]}
+              />
+              {user && user.userRole === "EMPLOYEE" ? (
+                <ToggleButton
+                  icon={() => (
+                    <MaterialCommunityIcons
+                      name="history"
+                      size={24}
+                      color="black"
+                    />
+                  )}
+                  value="History"
+                  style={[
+                    { width: "50%", borderRadius: 20, borderWidth: 1 },
+                    value === "History" && { backgroundColor: "#818cf8" },
+                  ]}
+                />
+              ) : (
+                <ToggleButton
+                  icon={() => <Feather name="users" size={24} color="black" />}
+                  value="Employees' Requests"
+                  style={[
+                    { width: "50%", borderRadius: 20, borderWidth: 1 },
+                    value === "Employees' Requests" && {
+                      backgroundColor: "#818cf8",
+                    },
+                  ]}
+                />
+              )}
+            </ToggleButton.Row>
+          </View>
           {shiftListItems && users && (
             <SwapRequestModal
               visible={visible}
@@ -147,6 +270,9 @@ const SwapRequestComponent = () => {
               users={users}
               shiftListItems={shiftListItems}
               user={user}
+              onRefresh={() =>
+                setRetrievingSwapRequests(!retrevingSwapRequests)
+              }
             />
           )}
 
@@ -162,6 +288,363 @@ const SwapRequestComponent = () => {
               }}
               resizeMode="contain"
             />
+          ) : value === "My Requests" ? (
+            <>
+              <View
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 20,
+                  marginTop: "4%",
+                  marginBottom: "4%",
+                  marginLeft: "2%",
+                  marginRight: "2%",
+                  elevation: 10,
+                  paddingBottom: "4%",
+                }}
+              >
+                <Text
+                  style={{ fontFamily: "Poppins_600SemiBold", margin: "4%" }}
+                >
+                  My Swap Requests
+                </Text>
+                <DataTable>
+                  <DataTable.Header>
+                    <DataTable.Title style={{ flex: 1 }}>ID</DataTable.Title>
+                    <DataTable.Title style={{ flex: 3 }}>
+                      My Shift
+                    </DataTable.Title>
+                    <DataTable.Title style={{ flex: 3 }}>
+                      Employee's Shift
+                    </DataTable.Title>
+                    <DataTable.Title style={{ flex: 2 }}>
+                      Status
+                    </DataTable.Title>
+                  </DataTable.Header>
+                  {mySwapRequests.map((swapRequest, index) =>
+                    !isDeleteVisible[index] ? (
+                      <DataTable.Row
+                        key={index}
+                        onPress={
+                          swapRequest.status === "APPROVED" ||
+                          swapRequest.status === "REJECTED" ||
+                          swapRequest.status === "REVIEWING"
+                            ? showDialog
+                            : () => console.log("")
+                        }
+                        onLongPress={() => {
+                          setIsDeleteVisible({
+                            ...isDeleteVisible,
+                            [index]: true,
+                          });
+                        }}
+                      >
+                        <RejectionDialog
+                          hideDialog={hideDialog}
+                          visible={dialogVisible}
+                          swapRequest={swapRequest}
+                        />
+                        <DeleteRequestModal
+                          visible={deleteModalVisible}
+                          hideDeleteModal={hideDeleteModal}
+                          swapRequestId={swapRequest.swapRequestId}
+                          onRefresh={() =>
+                            setRetrievingSwapRequests(!retrevingSwapRequests)
+                          }
+                        />
+                        <CounterProposingModal
+                          visible={counterProposingModalVisible}
+                          hideModal={hideCounterProposingModal}
+                          users={users}
+                          shiftListItems={shiftListItems}
+                          user={user}
+                          onRefresh={() =>
+                            setRetrievingSwapRequests(!retrevingSwapRequests)
+                          }
+                          counterProposingSwapRequest={swapRequest}
+                        />
+                        <DataTable.Cell style={{ flex: 1 }}>
+                          {swapRequest.swapRequestId}
+                        </DataTable.Cell>
+                        <DataTable.Cell style={{ flex: 3 }}>
+                          {swapRequest.requestorShiftListItem.shift.startTime.slice(
+                            5,
+                            10
+                          )}{" "}
+                          {swapRequest.requestorShiftListItem.shift.shiftTitle.replace(
+                            " Shift",
+                            ""
+                          )}
+                        </DataTable.Cell>
+                        <DataTable.Cell style={{ flex: 3 }}>
+                          {swapRequest.receiverShiftListItem.shift.startTime.slice(
+                            5,
+                            10
+                          )}{" "}
+                          {swapRequest.receiverShiftListItem.shift.shiftTitle.replace(
+                            " Shift",
+                            ""
+                          )}
+                        </DataTable.Cell>
+                        <DataTable.Cell style={{ flex: 2 }}>
+                          {swapRequest.status}
+                        </DataTable.Cell>
+                      </DataTable.Row>
+                    ) : (
+                      <DataTable.Row style={{ padding: 4 }} key={index}>
+                        {swapRequest.status === "REJECTED" && (
+                          <DataTable.Cell
+                            style={{
+                              backgroundColor: "#fdba74",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              borderRadius: 20,
+                              marginRight: 5,
+                              flex: 2,
+                              elevation: 6,
+                            }}
+                            // onPress={}
+                          >
+                            <TouchableOpacity
+                              onPress={() => {
+                                showCounterProposingModal();
+                                setIsDeleteVisible({
+                                  ...isDeleteVisible,
+                                  [index]: false,
+                                });
+                              }}
+                            >
+                              <Text style={{ fontFamily: "Poppins_500Medium" }}>
+                                Counter Propose
+                              </Text>
+                            </TouchableOpacity>
+                          </DataTable.Cell>
+                        )}
+                        <DataTable.Cell
+                          style={{
+                            backgroundColor: "#fca5a5",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: 20,
+                            marginRight: 5,
+                            elevation: 6,
+                          }}
+                        >
+                          <TouchableOpacity
+                            onPress={
+                              swapRequest.status !== "APPROVED"
+                                ? () => {
+                                    showDeleteModal();
+                                    setIsDeleteVisible({
+                                      ...isDeleteVisible,
+                                      [index]: false,
+                                    });
+                                  }
+                                : () => {
+                                    setIsDeleteVisible({
+                                      ...isDeleteVisible,
+                                      [index]: false,
+                                    });
+                                    clearSwapRequestHandler(
+                                      swapRequest.swapRequestId
+                                    );
+                                  }
+                            }
+                          >
+                            <Text style={{ fontFamily: "Poppins_500Medium" }}>
+                              {swapRequest.status !== "APPROVED"
+                                ? "Delete"
+                                : "Clear"}
+                            </Text>
+                          </TouchableOpacity>
+                          {/* <Feather name="trash" size={18} color="black" /> */}
+                        </DataTable.Cell>
+                        <DataTable.Cell
+                          style={{
+                            display: "flex",
+                            //   flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginLeft: 5,
+                            borderRadius: 20,
+                            backgroundColor: "#d6d3d1",
+                            elevation: 6,
+                          }}
+                        >
+                          <TouchableOpacity
+                            onPress={() =>
+                              setIsDeleteVisible({
+                                ...isDeleteVisible,
+                                [index]: false,
+                              })
+                            }
+                          >
+                            {/* <Feather name="x-circle" size={16} color="black" /> */}
+                            <Text style={{ fontFamily: "Poppins_500Medium" }}>
+                              Cancel
+                            </Text>
+                          </TouchableOpacity>
+                        </DataTable.Cell>
+                      </DataTable.Row>
+                    )
+                  )}
+                </DataTable>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 20,
+                  marginBottom: "4%",
+                  marginLeft: "2%",
+                  marginRight: "2%",
+                  elevation: 10,
+                  paddingBottom: "4%",
+                }}
+              >
+                <Text
+                  style={{ fontFamily: "Poppins_600SemiBold", margin: "4%" }}
+                >
+                  Received Swap Requests
+                </Text>
+                <DataTable>
+                  <DataTable.Header>
+                    <DataTable.Title style={{ flex: 1 }}>ID</DataTable.Title>
+                    <DataTable.Title style={{ flex: 3 }}>
+                      My Shift
+                    </DataTable.Title>
+                    <DataTable.Title style={{ flex: 3 }}>
+                      Employee's Shift
+                    </DataTable.Title>
+                    <DataTable.Title style={{ flex: 2 }}>
+                      Status/Action
+                    </DataTable.Title>
+                  </DataTable.Header>
+                  {incomingSwapRequests.map((swapRequest, index) => (
+                    <DataTable.Row key={index}>
+                      <ViewRequestModal
+                        visible={viewModalVisible}
+                        hideModal={hideViewModal}
+                        swapRequest={swapRequest}
+                        onRefresh={() =>
+                          setRetrievingSwapRequests(!retrevingSwapRequests)
+                        }
+                        isPending
+                      />
+                      <DataTable.Cell style={{ flex: 1 }}>
+                        {swapRequest.swapRequestId}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={{ flex: 3 }}>
+                        {swapRequest.receiverShiftListItem.shift.startTime.slice(
+                          5,
+                          10
+                        )}{" "}
+                        {swapRequest.receiverShiftListItem.shift.shiftTitle.replace(
+                          " Shift",
+                          ""
+                        )}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={{ flex: 3 }}>
+                        {swapRequest.requestorShiftListItem.shift.startTime.slice(
+                          5,
+                          10
+                        )}{" "}
+                        {swapRequest.requestorShiftListItem.shift.shiftTitle.replace(
+                          " Shift",
+                          ""
+                        )}
+                      </DataTable.Cell>
+                      {swapRequest.status !== "PENDING" ? (
+                        <DataTable.Cell style={{ flex: 2 }}>
+                          {swapRequest.status}
+                        </DataTable.Cell>
+                      ) : (
+                        <DataTable.Cell style={{ flex: 2 }}>
+                          <TouchableOpacity onPress={showViewModal}>
+                            <MaterialCommunityIcons
+                              name="file-eye-outline"
+                              size={24}
+                              color="black"
+                            />
+                          </TouchableOpacity>
+                        </DataTable.Cell>
+                      )}
+                    </DataTable.Row>
+                  ))}
+                </DataTable>
+              </View>
+            </>
+          ) : value === "Employees' Requests" ? (
+            <View
+              style={{
+                backgroundColor: "white",
+                borderRadius: 20,
+                marginTop: "4%",
+                marginBottom: "4%",
+                marginLeft: "2%",
+                marginRight: "2%",
+                elevation: 10,
+                paddingBottom: "4%",
+              }}
+            >
+              <Text style={{ fontFamily: "Poppins_600SemiBold", margin: "4%" }}>
+                Employee's Swap Requests
+              </Text>
+              <DataTable>
+                <DataTable.Header>
+                  <DataTable.Title>ID</DataTable.Title>
+                  <DataTable.Title style={{ flex: 2 }}>
+                    Requestor's Shift
+                  </DataTable.Title>
+                  <DataTable.Title style={{ flex: 2 }}>
+                    Receiver's Shift
+                  </DataTable.Title>
+                  <DataTable.Title numeric>Actions</DataTable.Title>
+                </DataTable.Header>
+                {teamSwapRequests.map((swapRequest, index) => (
+                  <DataTable.Row key={index}>
+                    <ViewRequestModal
+                      visible={viewModalVisible}
+                      hideModal={hideViewModal}
+                      swapRequest={swapRequest}
+                      onRefresh={() =>
+                        setRetrievingSwapRequests(!retrevingSwapRequests)
+                      }
+                    />
+                    <DataTable.Cell>{swapRequest.swapRequestId}</DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 2 }}>
+                      {swapRequest.requestorShiftListItem.shift.startTime.slice(
+                        5,
+                        10
+                      )}{" "}
+                      {swapRequest.requestorShiftListItem.shift.shiftTitle.replace(
+                        " Shift",
+                        ""
+                      )}
+                    </DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 2 }}>
+                      {swapRequest.receiverShiftListItem.shift.startTime.slice(
+                        5,
+                        10
+                      )}{" "}
+                      {swapRequest.receiverShiftListItem.shift.shiftTitle.replace(
+                        " Shift",
+                        ""
+                      )}
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <TouchableOpacity onPress={showViewModal}>
+                        <MaterialCommunityIcons
+                          name="file-eye-outline"
+                          size={24}
+                          color="black"
+                        />
+                      </TouchableOpacity>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                ))}
+              </DataTable>
+            </View>
           ) : (
             <View
               style={{
@@ -176,7 +659,7 @@ const SwapRequestComponent = () => {
               }}
             >
               <Text style={{ fontFamily: "Poppins_600SemiBold", margin: "4%" }}>
-                My Swap Requests
+                Swap Request History
               </Text>
               <DataTable>
                 <DataTable.Header>
@@ -187,109 +670,70 @@ const SwapRequestComponent = () => {
                   <DataTable.Title style={{ flex: 2 }}>
                     Employee's Shift
                   </DataTable.Title>
-                  <DataTable.Title>Status</DataTable.Title>
+                  <DataTable.Title numeric>Actions</DataTable.Title>
                 </DataTable.Header>
-                {mySwapRequests.map((swapRequest, index) =>
-                  !isDeleteVisible[index] ? (
-                    <DataTable.Row
-                      key={index}
-                      onPress={() => {
-                        setIsDeleteVisible({
-                          ...isDeleteVisible,
-                          [index]: true,
-                        });
-                      }}
-                    >
-                      <DeleteRequestModal
-                        visible={deleteModalVisible}
-                        hideDeleteModal={hideDeleteModal}
-                        swapRequestId={swapRequest.swapRequestId}
-                      />
-                      <DataTable.Cell>
-                        {swapRequest.swapRequestId}
-                      </DataTable.Cell>
-                      <DataTable.Cell style={{ flex: 2 }}>
-                        {swapRequest.requestorShiftListItem.shift.startTime.slice(
-                          5,
-                          10
-                        )}{" "}
-                        {swapRequest.requestorShiftListItem.shift.shiftTitle.replace(
-                          " Shift",
-                          ""
-                        )}
-                      </DataTable.Cell>
-                      <DataTable.Cell style={{ flex: 2 }}>
-                        {swapRequest.receiverShiftListItem.shift.startTime.slice(
-                          5,
-                          10
-                        )}{" "}
-                        {swapRequest.receiverShiftListItem.shift.shiftTitle.replace(
-                          " Shift",
-                          ""
-                        )}
-                      </DataTable.Cell>
-                      <DataTable.Cell>
-                        {swapRequest.status[0] +
-                          swapRequest.status.slice(1).toLowerCase()}
-                      </DataTable.Cell>
-                    </DataTable.Row>
-                  ) : (
-                    <DataTable.Row>
-                      <DataTable.Cell
-                        style={{
-                          backgroundColor: "#fca5a5",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          borderRadius: 20,
-                          marginRight: 5,
+                {myCompletedSwapRequests.map((swapRequest, index) => (
+                  <DataTable.Row key={index}>
+                    <ViewRequestModal
+                      visible={viewModalVisible}
+                      hideModal={hideViewModal}
+                      swapRequest={swapRequest}
+                      onRefresh={() =>
+                        setRetrievingSwapRequests(!retrevingSwapRequests)
+                      }
+                      isCompleted
+                    />
+                    <DeleteRequestModal
+                      visible={deleteModalVisible}
+                      hideDeleteModal={hideDeleteModal}
+                      swapRequestId={swapRequest.swapRequestId}
+                      onRefresh={() =>
+                        setRetrievingSwapRequests(!retrevingSwapRequests)
+                      }
+                    />
+                    <DataTable.Cell>{swapRequest.swapRequestId}</DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 2 }}>
+                      {swapRequest.requestorShiftListItem.shift.startTime.slice(
+                        5,
+                        10
+                      )}{" "}
+                      {swapRequest.requestorShiftListItem.shift.shiftTitle.replace(
+                        " Shift",
+                        ""
+                      )}
+                    </DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 2 }}>
+                      {swapRequest.receiverShiftListItem.shift.startTime.slice(
+                        5,
+                        10
+                      )}{" "}
+                      {swapRequest.receiverShiftListItem.shift.shiftTitle.replace(
+                        " Shift",
+                        ""
+                      )}
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <TouchableOpacity onPress={showViewModal}>
+                        <MaterialCommunityIcons
+                          name="file-eye-outline"
+                          size={24}
+                          color="black"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => {
+                          deleteSwapRequestHandler(swapRequest.swapRequestId);
                         }}
-                        onPress={
-                          swapRequest.status !== "APPROVED" ||
-                          swapRequest.status !== "REJECTED"
-                            ? () => {
-                                showDeleteModal();
-                                setIsDeleteVisible({
-                                  ...isDeleteVisible,
-                                  [index]: false,
-                                });
-                              }
-                            : clearSwapRequestHandler
-                        }
                       >
-                        <Feather name="trash" size={18} color="black" />
-                        <Text style={{ fontFamily: "Poppins_500Medium" }}>
-                          {swapRequest.status !== "APPROVED" ||
-                          swapRequest.status !== "REJECTED"
-                            ? "Delete"
-                            : "Clear"}
-                        </Text>
-                      </DataTable.Cell>
-                      <DataTable.Cell
-                        style={{
-                          display: "flex",
-                          //   flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          marginLeft: 5,
-                          borderRadius: 20,
-                          backgroundColor: "#d6d3d1",
-                        }}
-                        onPress={() =>
-                          setIsDeleteVisible({
-                            ...isDeleteVisible,
-                            [index]: false,
-                          })
-                        }
-                      >
-                        <Feather name="x-circle" size={16} color="black" />
-                        <Text style={{ fontFamily: "Poppins_500Medium" }}>
-                          Cancel
-                        </Text>
-                      </DataTable.Cell>
-                    </DataTable.Row>
-                  )
-                )}
+                        <MaterialCommunityIcons
+                          name="trash-can-outline"
+                          size={24}
+                          color="black"
+                        />
+                      </TouchableOpacity>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                ))}
               </DataTable>
             </View>
           )}

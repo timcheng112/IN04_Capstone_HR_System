@@ -3,7 +3,12 @@ import { View } from "react-native";
 import { Button, Modal, Portal, Text } from "react-native-paper";
 import api from "../../utils/api";
 
-const DeleteRequestModal = ({ visible, hideDeleteModal, swapRequestId }) => {
+const DeleteRequestModal = ({
+  visible,
+  hideDeleteModal,
+  swapRequestId,
+  onRefresh,
+}) => {
   const containerStyle = {
     backgroundColor: "white",
     padding: 20,
@@ -20,6 +25,7 @@ const DeleteRequestModal = ({ visible, hideDeleteModal, swapRequestId }) => {
         alert(
           "Successfully deleted Swap Request with ID: " + swapRequestId + "!"
         );
+        onRefresh();
         hideDeleteModal();
       })
       .catch((err) => {

@@ -13,7 +13,6 @@ import { Calendar } from "react-native-calendars";
 import { Button, Card, Text } from "react-native-paper";
 import api from "../../utils/api";
 import { Feather } from "@expo/vector-icons";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import LottieView from "lottie-react-native";
 
 const IndicatePreferencesComponent = () => {

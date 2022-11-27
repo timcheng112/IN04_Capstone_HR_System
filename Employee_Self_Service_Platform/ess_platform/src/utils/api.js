@@ -187,6 +187,41 @@ const api = {
   deleteSwapRequestById(swapRequestId) {
     return axios.delete(`http://${URL}:9191/api/swap_request/${swapRequestId}`);
   },
+  getSwapRequestsByTeamId(teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/swap_request/getSwapRequestsByTeamId?teamId=${teamId}`
+    );
+  },
+  approveSwapRequest(swapRequestId, responseReason) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/approveSwapRequest?swapRequestId=${swapRequestId}&responseReason=${responseReason}`
+    );
+  },
+  rejectSwapRequest(swapRequestId, responseReason) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/rejectSwapRequest?swapRequestId=${swapRequestId}&responseReason=${responseReason}`
+    );
+  },
+  clearSwapRequest(swapRequestId) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/clearSwapRequest?swapRequestId=${swapRequestId}`
+    );
+  },
+  approvePendingSwapRequest(swapRequestId, responseReason) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/approvePendingSwapRequest?swapRequestId=${swapRequestId}&responseReason=${responseReason}`
+    );
+  },
+  counterProposeSwapRequest(
+    reason,
+    oldSwapRequestId,
+    receiverShiftListItemId,
+    requesterShiftListItemId
+  ) {
+    return axios.post(
+      `http://${URL}:9191/api/swap_request/counterProposeSwapRequest?reason=${reason}&oldSwapRequestId=${oldSwapRequestId}&receiverShiftListItemId=${receiverShiftListItemId}&requesterShiftListItemId=${requesterShiftListItemId}`
+    );
+  },
 };
 
 export default api;

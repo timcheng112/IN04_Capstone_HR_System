@@ -1,10 +1,13 @@
 package com.conceiversolutions.hrsystem.rostering.swaprequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.conceiversolutions.hrsystem.enums.StatusEnum;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.rostering.shift.Shift;
 import com.conceiversolutions.hrsystem.rostering.shift.ShiftRepository;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
@@ -21,6 +24,7 @@ public class SwapRequestService {
         private final SwapRequestRepository swapRequestRepository;
         private final ShiftListItemRepository shiftListItemRepository;
         private final UserRepository userRepository;
+        private final TeamRepository teamRepository;
 
         public List<SwapRequest> getSwapRequests() {
                 List<SwapRequest> swapRequests = swapRequestRepository.findAll();
@@ -122,5 +126,90 @@ public class SwapRequestService {
                         swapRequest.getRequestor().nullify();
                 }
                 return swapRequests;
+        }
+
+        public List<SwapRequest> getSwapRequestsByTeamId(Long teamId) {
+                Team team = teamRepository.findById(teamId).orElseThrow(
+                                () -> new IllegalStateException("Team with ID: " + teamId + " does not exist!"));
+                List<SwapRequest> teamSwapRequests = new ArrayList<>();
+                for (User user : team.getUsers()) {
+                        List<SwapRequest> swapRequests = user.getSwapRequestsRequested();
+                        for (SwapRequest swapRequest : swapRequests) {
+                                swapRequest.getReceiverShiftListItem().getShift().setRoster(null);
+                                swapRequest.getReceiverShiftListItem().getUser().nullify();
+                                swapRequest.getRequestorShiftListItem().getShift().setRoster(null);
+                                swapRequest.getRequestorShiftListItem().getUser().nullify();
+                                swapRequest.getReceiver().nullify();
+                                swapRequest.getRequestor().nullify();
+                                teamSwapRequests.add(swapRequest);
+                        }
+                }
+                return teamSwapRequests;
+        }
+
+        public void approveSwapRequest(Long swapRequestId, String responseReason) {
+                SwapRequest swapRequest = swapRequestRepository.findById(swapRequestId).orElseThrow(
+                                () -> new IllegalStateException(
+                                                "Swap Request with ID: " + swapRequestId + " does not exist!"));
+
+                swapRequest.setStatus(StatusEnum.APPROVED);
+                swapRequest.setResponseReason(responseReason);
+                swapRequestRepository.save(swapRequest);
+                User receiver = swapRequest.getReceiver();
+                User requestor = swapRequest.getRequestor();
+                ShiftListItem receiverShiftListItem = swapRequest.getReceiverShiftListItem();
+                ShiftListItem requestorShiftListItem = swapRequest.getRequestorShiftListItem();
+
+                receiver.removeShiftListItems(receiverShiftListItem);
+                receiverShiftListItem.setUser(requestor);
+                receiver.addShiftListItems(requestorShiftListItem);
+
+                requestor.removeShiftListItems(requestorShiftListItem);
+                requestorShiftListItem.setUser(receiver);
+                requestor.addShiftListItems(receiverShiftListItem);
+
+                shiftListItemRepository.save(receiverShiftListItem);
+                shiftListItemRepository.save(requestorShiftListItem);
+
+                userRepository.save(receiver);
+                userRepository.save(requestor);
+        }
+
+        public void rejectSwapRequest(Long swapRequestId, String responseReason) {
+                SwapRequest swapRequest = swapRequestRepository.findById(swapRequestId).orElseThrow(
+                                () -> new IllegalStateException(
+                                                "Swap Request with ID: " + swapRequestId + " does not exist!"));
+
+                swapRequest.setStatus(StatusEnum.REJECTED);
+                swapRequest.setResponseReason(responseReason);
+                swapRequestRepository.save(swapRequest);
+        }
+
+        public void clearSwapRequest(Long swapRequestId) {
+                SwapRequest swapRequest = swapRequestRepository.findById(swapRequestId).orElseThrow(
+                                () -> new IllegalStateException(
+                                                "Swap Request with ID: " + swapRequestId + " does not exist!"));
+
+                swapRequest.setStatus(StatusEnum.COMPLETED);
+                swapRequestRepository.save(swapRequest);
+        }
+
+        public void approvePendingSwapRequest(Long swapRequestId, String responseReason) {
+                SwapRequest swapRequest = swapRequestRepository.findById(swapRequestId).orElseThrow(
+                                () -> new IllegalStateException(
+                                                "Swap Request with ID: " + swapRequestId + " does not exist!"));
+
+                swapRequest.setStatus(StatusEnum.REVIEWING);
+                swapRequest.setResponseReason(responseReason);
+                swapRequestRepository.save(swapRequest);
+        }
+
+        public void counterProposeSwapRequest(String reason, Long oldSwapRequestId, Long receiverShiftListItemId,
+                        Long requesterShiftListItemId) {
+                SwapRequest oldSwapRequest = swapRequestRepository.findById(oldSwapRequestId)
+                                .orElseThrow(() -> new IllegalStateException(
+                                                "Swap Request with ID: " + oldSwapRequestId + " does not exist!"));
+                deleteSwapRequest(oldSwapRequestId);
+                addNewSwapRequest(reason, receiverShiftListItemId, requesterShiftListItemId);
         }
 }

@@ -32,7 +32,13 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
-import { Image, ImageBackground, View, Dimensions } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  View,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../login/Context";
 import { Feather } from "@expo/vector-icons";
@@ -142,7 +148,7 @@ const HomeComponent = () => {
         source={require("../../../assets/ess-loading.json")}
         autoPlay
         // style={{ height: height, width: width}}
-        resizeMode='cover'
+        resizeMode="cover"
       />
     );
   }
@@ -253,133 +259,161 @@ const HomeComponent = () => {
             flex: 1,
           }}
         >
-          <Card
+          <TouchableOpacity
             style={{
               elevation: 10,
+              borderRadius: 20,
               shadowColor: "#000000",
               marginBottom: 10,
               marginRight: 5,
               flex: 1,
-              borderRadius: 10,
             }}
             onPress={() => {
               navigation.navigate("Schedule", { screen: "My Schedule" });
             }}
           >
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              <Card.Content>
-                <Feather
-                  name="calendar"
-                  size={40}
-                  color="black"
-                  style={{ textAlign: "center" }}
+            <Card
+              style={{
+                flex: 1,
+                borderRadius: 20,
+              }}
+              // onPress={() => {
+              //   navigation.navigate("Schedule", { screen: "My Schedule" });
+              // }}
+            >
+              <View style={{ flex: 1, justifyContent: "center" }}>
+                <Card.Content>
+                  <Feather
+                    name="calendar"
+                    size={40}
+                    color="black"
+                    style={{ textAlign: "center" }}
+                  />
+                </Card.Content>
+                <Card.Title
+                  title="My Schedule"
+                  titleStyle={{ fontSize: 16, textAlign: "center" }}
+                  subtitle={format(new Date(), "yyyy-MM-dd")}
+                  subtitleStyle={{ textAlign: "center" }}
                 />
-              </Card.Content>
-              <Card.Title
-                title="My Schedule"
-                titleStyle={{ fontSize: 16, textAlign: "center" }}
-                subtitle={format(new Date(), "yyyy-MM-dd")}
-                subtitleStyle={{ textAlign: "center" }}
-              />
-            </View>
-          </Card>
-          <Card
+              </View>
+            </Card>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
               elevation: 10,
+              borderRadius: 20,
               shadowColor: "#000000",
-              // shadowColor: "#52006A",
               marginBottom: 10,
               marginLeft: 5,
               flex: 1,
-              borderRadius: 10,
-              // backgroundColor: "#FBB344"
             }}
             // onPress={() => {
-            //   navigation.navigate("Admin", { screen: "Onboarding" });
+            //   navigation.navigate("Schedule", { screen: "My Schedule" });
             // }}
           >
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              <Card.Content>
-                <Feather
-                  name="dollar-sign"
-                  size={40}
-                  color="black"
-                  style={{ textAlign: "center" }}
+            <Card
+              style={{
+                flex: 1,
+                borderRadius: 20,
+              }}
+            >
+              <View style={{ flex: 1, justifyContent: "center" }}>
+                <Card.Content>
+                  <Feather
+                    name="dollar-sign"
+                    size={40}
+                    color="black"
+                    style={{ textAlign: "center" }}
+                  />
+                </Card.Content>
+                <Card.Title
+                  title="My Pay"
+                  titleStyle={{ fontSize: 16, textAlign: "center" }}
+                  subtitle={format(subDays(new Date(), 7), "MMMM yyyy")}
+                  subtitleStyle={{ textAlign: "center" }}
                 />
-              </Card.Content>
-              <Card.Title
-                title="My Pay"
-                titleStyle={{ fontSize: 16, textAlign: "center" }}
-                subtitle={format(subDays(new Date(), 7), "MMMM yyyy")}
-                subtitleStyle={{ textAlign: "center" }}
-              />
-            </View>
-          </Card>
+              </View>
+            </Card>
+          </TouchableOpacity>
         </View>
         <View style={{ display: "flex", flexDirection: "row", flex: 1 }}>
-          <Card
+          <TouchableOpacity
             style={{
               elevation: 10,
-              // shadowColor: "#52006A",
+              borderRadius: 20,
               shadowColor: "#000000",
               marginBottom: 10,
               marginRight: 5,
               flex: 1,
-              borderRadius: 10,
             }}
             onPress={() => {
               navigation.navigate("Admin", { screen: "Onboarding" });
             }}
           >
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              <Card.Content>
-                <Octicons
-                  name="checklist"
-                  size={40}
-                  color="black"
-                  style={{ textAlign: "center" }}
+            <Card
+              style={{
+                flex: 1,
+                borderRadius: 20,
+              }}
+            >
+              <View style={{ flex: 1, justifyContent: "center" }}>
+                <Card.Content>
+                  <Octicons
+                    name="checklist"
+                    size={40}
+                    color="black"
+                    style={{ textAlign: "center" }}
+                  />
+                </Card.Content>
+                <Card.Title
+                  title="Boarding"
+                  titleStyle={{ fontSize: 16, textAlign: "center" }}
+                  subtitle={
+                    user !== null && user.taskListItems.length + " tasks"
+                  }
+                  subtitleStyle={{ textAlign: "center" }}
                 />
-              </Card.Content>
-              <Card.Title
-                title="Boarding"
-                titleStyle={{ fontSize: 16, textAlign: "center" }}
-                subtitle={user !== null && user.taskListItems.length + " tasks"}
-                subtitleStyle={{ textAlign: "center" }}
-              />
-            </View>
-          </Card>
-          <Card
+              </View>
+            </Card>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
               elevation: 10,
-              // shadowColor: "#52006A",
+              borderRadius: 20,
               shadowColor: "#000000",
               marginBottom: 10,
               marginLeft: 5,
               flex: 1,
-              borderRadius: 10,
             }}
-            // onPress={() => navigation.navigate("Leave")}
             onPress={() => {
               navigation.navigate("Admin", { screen: "Leave" });
             }}
           >
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              <Card.Content>
-                <MaterialCommunityIcons
-                  name="calendar-clock-outline"
-                  size={40}
-                  color="black"
-                  style={{ textAlign: "center" }}
+            <Card
+              style={{
+                flex: 1,
+                borderRadius: 20,
+              }}
+            >
+              <View style={{ flex: 1, justifyContent: "center" }}>
+                <Card.Content>
+                  <MaterialCommunityIcons
+                    name="calendar-clock-outline"
+                    size={40}
+                    color="black"
+                    style={{ textAlign: "center" }}
+                  />
+                </Card.Content>
+                <Card.Title
+                  title="Leaves"
+                  titleStyle={{ fontSize: 16, textAlign: "center" }}
+                  subtitle={user !== null && user.leaves.length + " leaves"}
+                  subtitleStyle={{ textAlign: "center" }}
                 />
-              </Card.Content>
-              <Card.Title
-                title="Leaves"
-                titleStyle={{ fontSize: 16, textAlign: "center" }}
-                subtitle={user !== null && user.leaves.length + " leaves"}
-                subtitleStyle={{ textAlign: "center" }}
-              />
-            </View>
-          </Card>
+              </View>
+            </Card>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={{ flex: 1 }}>
