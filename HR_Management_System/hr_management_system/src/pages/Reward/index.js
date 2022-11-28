@@ -7,6 +7,7 @@ import api from "../../utils/api";
 import { getUserId, setUserSession } from "../../utils/Common";
 import { useHistory } from "react-router-dom";
 import RewardTrackOption from "../../features/reward/RewardTrackOption";
+import AddNewRewardTrack from "../../features/reward/AddNewRewardTrack";
 import {
   EyeIcon,
   PlusIcon,
@@ -17,6 +18,7 @@ export default function Reward() {
   const [user, setUser] = useState(null);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [open, setOpen] = useState(false);
   const tabs = [
     { name: "Reward Tracks", href: "#", current: true },
     {
@@ -61,6 +63,7 @@ export default function Reward() {
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
             type="button"
+            onClick={() => setOpen(true)}
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
           >
             <PlusIcon
@@ -69,6 +72,7 @@ export default function Reward() {
           />
             Add New Reward Track
           </button>
+          <AddNewRewardTrack open={open} setOpen={setOpen}/>
         </div>
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="mt-8 flex flex-col">
