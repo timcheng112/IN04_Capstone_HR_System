@@ -6,6 +6,7 @@ import LeaveScreen from "../screens/LeaveScreen";
 import LeaveApplicationScreen from "../screens/LeaveApplicationScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import DrawerContent from "../components/general/DrawerContent";
+import PayScreen from "../screens/PayScreen";
 
 const AdminDrawerNavigator = () => {
   const AdminDrawer = createDrawerNavigator();
@@ -46,6 +47,15 @@ const AdminDrawerNavigator = () => {
       <AdminDrawer.Screen
         name="LeaveApplication"
         component={LeaveApplicationScreen}
+        options={{
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
+        }}
+      />
+      <AdminDrawer.Screen
+        name="Pay"
+        component={PayScreen}
         options={{
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
