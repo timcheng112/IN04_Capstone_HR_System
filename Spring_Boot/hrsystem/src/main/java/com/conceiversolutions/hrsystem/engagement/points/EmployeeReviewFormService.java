@@ -1,5 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.points;
 
+import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrack;
+import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrackRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
@@ -20,6 +22,7 @@ public class EmployeeReviewFormService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
+    private final RewardTrackRepository rewardTrackRepository;
 
     public Long submitReviewForm(String employeeName, Integer rating, String justification, String departmentName, String teamName) {
         System.out.println("EmployeeReviewFormService.submitReviewForm");
@@ -63,12 +66,20 @@ public class EmployeeReviewFormService {
             throw new IllegalStateException("Review form has already been vetted before");
         }
 
-        int points = 0;
         Department dept = departmentRepository.findById(departmentId).get();
         Team team = teamRepository.findById(teamId).get();
-        // TODO : give points accordingly to the dept.
 
-        employee.setRewardPoints(employee.getRewardPoints() + points);
+
+        // TODO : give points accordingly to the dept.
+        List<RewardTrack> rt = rewardTrackRepository.findActiveByDepartmentName(dept.getDepartmentName());
+        if (rt.isEmpty()) {
+            throw new IllegalStateException("No Active reward tracks for this department");
+        } else if (rt.size() > 1) {
+            throw new IllegalStateException("More than 1 active reward tracks identified. Please ensure only one is active");
+        }
+        double points = rt.get(0).getPointsRatio() * form.getRating();
+
+        employee.setRewardPoints(employee.getRewardPoints() + (int) points);
         User savedEmployee = userRepository.saveAndFlush(employee);
         System.out.println("Employee ID is " + savedEmployee);
         form.setVetted(true);
