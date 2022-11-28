@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const URL = "192.168.10.128"; // MATT
-const URL = "172.31.55.234"; // XINYUE
+ const URL = "172.25.105.44"; // MATT
+//const URL = "172.31.55.234"; // XINYUE
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"
@@ -246,6 +246,11 @@ const api = {
   createClaim(formDataPayload) {
     return axios.post(`http://${URL}:9191/api/claims/makeNewClaim`, formDataPayload, {headers: {'Content-Type': 'multipart/form-data'}});
   },
+  getRewardTrackByEmployee(employeeId) {
+    return axios.get(
+      `http://${URL}:9191/api/rewards/getRewardTrackByEmployee?employeeId=${employeeId}`
+    );
+  }
 };
 
 export default api;

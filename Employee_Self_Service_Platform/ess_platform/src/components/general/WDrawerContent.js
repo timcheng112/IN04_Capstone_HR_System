@@ -46,6 +46,19 @@ const WDrawerContent = (props) => {
                 props.navigation.navigate("Claims");
               }}
             ></DrawerItem>
+            <DrawerItem
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="gift-open-outline"
+                  size={size}
+                  color={color}
+                />
+              )}
+              label="Rewards"
+              onPress={() => {
+                props.navigation.navigate("Rewards");
+              }}
+            ></DrawerItem>
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>

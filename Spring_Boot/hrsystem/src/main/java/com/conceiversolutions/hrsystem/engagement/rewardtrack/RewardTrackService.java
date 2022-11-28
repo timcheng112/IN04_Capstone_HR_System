@@ -114,4 +114,18 @@ public class RewardTrackService {
         rewardTrackRepository.deleteById(rewardTrackId);
         return "Reward Track successfully deleted";
     }
+
+    public RewardTrack getRewardTrackByEmployee(Long employeeId) {
+        System.out.println("RewardTrackService.getRewardTrackByEmployee");
+        System.out.println("employeeId = " + employeeId);
+        Department dept = departmentRepository.findDepartmentByEmployeeId(employeeId).get();
+
+        List<RewardTrack> rt = rewardTrackRepository.findActiveByDepartmentId(dept.getDepartmentId());
+        if (rt.isEmpty()) {
+            throw new IllegalStateException("No Active reward tracks for this department");
+        } else if (rt.size() > 1) {
+            throw new IllegalStateException("More than 1 active reward tracks identified. Please ensure only one is active");
+        }
+        return rt.get(0);
+    }
 }

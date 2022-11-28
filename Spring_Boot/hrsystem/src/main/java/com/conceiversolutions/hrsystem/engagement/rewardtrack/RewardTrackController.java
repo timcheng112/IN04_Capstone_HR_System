@@ -112,4 +112,23 @@ public class RewardTrackController {
     public String deleteRewardTrack(@RequestParam("rewardTrackId") Long rewardTrackId) {
         return rewardTrackService.deleteRewardTrack(rewardTrackId);
     }
+
+    @GetMapping("/getRewardTrackByEmployee")
+    public RewardTrack getRewardTrackByEmployee(@RequestParam("employeeId") Long employeeId) {
+        RewardTrack rt = rewardTrackService.getRewardTrackByEmployee(employeeId);
+        for (Reward reward : rt.getRewards()) {
+            reward.setRewardInstances(new ArrayList<>());
+//            if (reward.getImage() != null) {
+//                reward.getImage().setDocData(new byte[0]);
+//            }
+            reward.setRewardTrack(null);
+        }
+        rt.getRewards().sort((r1, r2) -> {
+            return r1.getPointsRequired() - r2.getPointsRequired();
+        });
+        rt.getDepartment().setOrganization(null);
+        rt.getDepartment().setDepartmentHead(null);
+        rt.getDepartment().setTeams(new ArrayList<>());
+        return rt;
+    }
 }
