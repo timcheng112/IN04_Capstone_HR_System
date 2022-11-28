@@ -153,6 +153,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -207,6 +208,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -260,6 +262,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -310,6 +313,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -356,6 +360,7 @@ public class UserService implements UserDetailsService {
             employee.setReactivationRequest(null);
             employee.setAttendances(new ArrayList<>());
             employee.setCurrentPayInformation(null);
+            employee.setPayslips(new ArrayList<>());
             employee.setEmployeeAppraisals(new ArrayList<>());
             employee.setManagerAppraisals(new ArrayList<>());
             employee.setManagerReviews(new ArrayList<>());
@@ -399,6 +404,7 @@ public class UserService implements UserDetailsService {
             employee.setReactivationRequest(null);
             employee.setAttendances(new ArrayList<>());
             employee.setCurrentPayInformation(null);
+            employee.setPayslips(new ArrayList<>());
             employee.setEmployeeAppraisals(new ArrayList<>());
             employee.setManagerAppraisals(new ArrayList<>());
             employee.setManagerReviews(new ArrayList<>());
@@ -1245,6 +1251,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(null);
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -1357,6 +1364,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -1408,6 +1416,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -1451,6 +1460,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -1572,6 +1582,7 @@ public class UserService implements UserDetailsService {
                 u.setReactivationRequest(null);
                 u.setAttendances(new ArrayList<>());
                 u.setCurrentPayInformation(null);
+                u.setPayslips(new ArrayList<>());
                 u.setEmployeeAppraisals(new ArrayList<>());
                 u.setManagerAppraisals(new ArrayList<>());
                 u.setManagerReviews(new ArrayList<>());
@@ -1627,6 +1638,7 @@ public class UserService implements UserDetailsService {
             e.setReactivationRequest(null);
             e.setAttendances(new ArrayList<>());
             e.setCurrentPayInformation(null);
+            e.setPayslips(new ArrayList<>());
             e.setEmployeeAppraisals(new ArrayList<>());
             e.setManagerAppraisals(new ArrayList<>());
             e.setManagerReviews(new ArrayList<>());
@@ -2104,6 +2116,7 @@ public class UserService implements UserDetailsService {
         u.setReactivationRequest(null);
         u.setAttendances(new ArrayList<>());
         u.setCurrentPayInformation(null);
+        u.setPayslips(new ArrayList<>());
         u.setEmployeeAppraisals(new ArrayList<>());
         u.setManagerAppraisals(new ArrayList<>());
         u.setManagerReviews(new ArrayList<>());
@@ -2417,6 +2430,7 @@ public class UserService implements UserDetailsService {
             user.setReactivationRequest(null);
             user.setAttendances(new ArrayList<>());
             user.setCurrentPayInformation(null);
+            user.setPayslips(new ArrayList<>());
             user.setEmployeeAppraisals(new ArrayList<>());
 
             user.setManagerAppraisals(new ArrayList<>());
@@ -2494,6 +2508,7 @@ public class UserService implements UserDetailsService {
             employee.setTaskListItems(new ArrayList<>());
             employee.setTeams(new ArrayList<>());
             employee.setCurrentPayInformation(null);
+            employee.setPayslips(new ArrayList<>());
             employee.setReactivationRequest(null);
             employee.setPreferredDates(null);
             employee.setBlocks(new ArrayList<>());
