@@ -54,6 +54,8 @@ const HomeComponent = () => {
   const [userId, setUserId] = useState(null);
   const [user, setUser] = useState(null);
   const { signOut } = React.useContext(AuthContext);
+  const [leaves, setLeaves] = useState(null);
+  const [tasks, setTasks] = useState(null);
 
   const leftContent = (props) => (
     <Avatar.Icon
@@ -130,6 +132,24 @@ const HomeComponent = () => {
 
     prepare();
   }, []);
+
+  useEffect(() => {
+    if (userId !== null) {
+      api
+        .getEmployeeLeaves(userId)
+        .then((response) => setLeaves(response.data))
+        .catch((error) => console.log("Error retrieving leaves!"));
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId !== null) {
+      api
+        .getTaskListItemsByEmployee(userId)
+        .then((response) => setTasks(response.data))
+        .catch((error) => console.log("Error retrieving tasks!"));
+    }
+  }, [userId]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
@@ -308,9 +328,9 @@ const HomeComponent = () => {
               marginLeft: 5,
               flex: 1,
             }}
-            // onPress={() => {
-            //   navigation.navigate("Schedule", { screen: "My Schedule" });
-            // }}
+            onPress={() => {
+              navigation.navigate("Admin", { screen: "Pay" });
+            }}
           >
             <Card
               style={{
@@ -370,7 +390,11 @@ const HomeComponent = () => {
                   title="Boarding"
                   titleStyle={{ fontSize: 16, textAlign: "center" }}
                   subtitle={
-                    user !== null && user.taskListItems.length + " tasks"
+                    tasks !== null
+                      ? tasks.length > 0
+                        ? tasks.length + " tasks"
+                        : tasks.length + " task"
+                      : " 0 tasks"
                   }
                   subtitleStyle={{ textAlign: "center" }}
                 />
@@ -408,7 +432,13 @@ const HomeComponent = () => {
                 <Card.Title
                   title="Leaves"
                   titleStyle={{ fontSize: 16, textAlign: "center" }}
-                  subtitle={user !== null && user.leaves.length + " leaves"}
+                  subtitle={
+                    leaves !== null
+                      ? leaves.length > 1
+                        ? leaves.length + " leaves"
+                        : leaves.length + " leave"
+                      : "0 leaves"
+                  }
                   subtitleStyle={{ textAlign: "center" }}
                 />
               </View>
