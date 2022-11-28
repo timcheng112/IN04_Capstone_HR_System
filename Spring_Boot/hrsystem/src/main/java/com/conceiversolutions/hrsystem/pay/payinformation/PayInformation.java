@@ -84,6 +84,10 @@ public class PayInformation {
         this.inPayroll = inPayroll;
         this.hasCommission = hasCommission;
         this.user = user;
+        this.allowance = new ArrayList<>();
+        this.deduction = new ArrayList<>();
+        this.allowanceTemplates = new ArrayList<>();
+        this.deductionTemplates = new ArrayList<>();
     }
 
     public PayInformation(String payType, BigDecimal basicSalary, BigDecimal basicHourlyPay,
@@ -106,6 +110,7 @@ public class PayInformation {
         this.allowanceTemplates = allowanceTemplates;
         this.deductionTemplates = deductionTemplates;
         this.user = user;
+
     }
 
     public PayInformation(BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay,
@@ -154,6 +159,7 @@ public class PayInformation {
         this.allowance = allowance;
         this.deduction = deduction;
         this.user = employee;
+
     }
 
     public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay,

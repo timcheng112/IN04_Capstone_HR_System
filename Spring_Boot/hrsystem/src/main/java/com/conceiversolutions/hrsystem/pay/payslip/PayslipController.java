@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.pay.payslip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -97,4 +98,18 @@ public class PayslipController {
     // public List<Payslip> getPayslipsByMonth(Integer monthIndex) {
     //     return payslipService.getPayslipsByMonth(monthIndex);
     // }
+
+    @GetMapping(path = "/findUserPayslipByMonth")
+    public Payslip findUserPayslipByMonth(@RequestParam("userId") Long userId, @RequestParam("dateString") String date){
+        LocalDate localDate = LocalDate.parse(date);
+        System.out.println("date for findUserPayslipByMonth: " + localDate);
+        return payslipService.findUserPayslipByMonth(userId, localDate);
+    }
+
+    @GetMapping(path = "/findPayslipByMonth")
+    public List<Payslip> findPayslipByMonth(@RequestParam("dateString") String date){
+        LocalDate localDate = LocalDate.parse(date);
+        System.out.println("date for findPayslipByMonth: " + localDate);
+        return payslipService.findPayslipByMonth(localDate);
+    }
 }

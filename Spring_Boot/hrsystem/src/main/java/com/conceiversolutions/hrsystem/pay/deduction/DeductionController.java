@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.pay.deduction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -43,5 +44,19 @@ public class DeductionController {
     @DeleteMapping
     public void deleteAllDeductions(){
         deductionService.deleteAllDeductions();
+    }
+
+    @GetMapping(path = "/findUserDeductionByMonth")
+    public List<Deduction> findUserDeductionByMonth(@RequestParam("userId") Long userId, @RequestParam("dateString") String date){
+        LocalDate localDate = LocalDate.parse(date);
+        System.out.println("date for findUserDeductionByMonth: " + localDate);
+        return deductionService.findUserDeductionByMonth(userId, localDate);
+    }
+
+    @GetMapping(path = "/findDeductionByMonth")
+    public List<Deduction> findDeductionByMonth(@RequestParam("dateString") String date){
+        LocalDate localDate = LocalDate.parse(date);
+        System.out.println("date for findDeductionByMonth: " + localDate);
+        return deductionService.findDeductionByMonth(localDate);
     }
 }

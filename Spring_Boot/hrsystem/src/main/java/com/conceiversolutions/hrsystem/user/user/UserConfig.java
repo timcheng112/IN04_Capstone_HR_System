@@ -13,10 +13,16 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationService;
 import com.conceiversolutions.hrsystem.organizationstructure.outlet.OutletService;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamService;
+import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
+import com.conceiversolutions.hrsystem.pay.deduction.Deduction;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
+import com.conceiversolutions.hrsystem.pay.payslip.PayslipRepository;
+import com.conceiversolutions.hrsystem.pay.payslip.PayslipService;
 import com.conceiversolutions.hrsystem.skillset.skillset.SkillsetService;
 import com.conceiversolutions.hrsystem.user.position.Position;
+
+import net.bytebuddy.asm.Advice.Local;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +39,7 @@ public class UserConfig {
         CommandLineRunner userCommandLineRunner(UserRepository userRepository, UserService userService,
                                                 OrganizationService organizationService, DepartmentService departmentService,
                                                 AddressService addressService, OutletService outletService,
-                                                TeamService teamService, SkillsetService skillsetService, BenefitTypeRepository benefitTypeRepository) {
+                                                TeamService teamService, SkillsetService skillsetService, BenefitTypeRepository benefitTypeRepository, PayslipService payslipService) {
                 // User Init for test data
                 return args -> {
                         if (!userRepository.existsById(1L)) {
@@ -58,21 +64,47 @@ public class UserConfig {
                                                 null);
                                 admin1.setCurrentPayInformation(
                                                 new PayInformation(new BigDecimal(2000), true, false, admin1));
+                                List<Allowance> allowanceTemp = admin1.getCurrentPayInformation().getAllowance();
+                                allowanceTemp.add(new Allowance("this is a test allowance!", LocalDate.of(2022, 11, 27)));
+                                List<Deduction> deductionTemp = admin1.getCurrentPayInformation().getDeduction();
+                                deductionTemp.add(new Deduction("this is a test deduction!", LocalDate.of(2022, 11, 1)));
+                                admin1.getCurrentPayInformation().setAllowance(allowanceTemp);
+                                admin1.getCurrentPayInformation().setDeduction(deductionTemp);
                                 admin1.setWorkEmail("simj@libro.com");
                                 admin1.setEnabled(true);
                                 admin1.setCurrentPosition(adminPosition);
                                 admin1.setBankName("DBS Bank");
                                 admin1.setBankAccNo("0052312891");
+
                                 Payslip augPayslipAdmin1 = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1800), LocalDate.of(2022, 8, 31));
                                 Payslip sepPayslipAdmin1 = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1800), LocalDate.of(2022, 9, 30));
                                 Payslip octPayslipAdmin1 = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1800), LocalDate.of(2022, 10, 31));
+                                //note: good chance this is scuffed because its not properly setting up payinfo - payslip relationship.
+                                Payslip futurePayslipAdmin1 = new Payslip(10, 2023, LocalDate.of(2023, 10, 30), new BigDecimal(1800), LocalDate.of(2023, 10, 30));
                                 List<Payslip> payslipsAdmin1 = new ArrayList<>();
                                 payslipsAdmin1.add(augPayslipAdmin1);
                                 payslipsAdmin1.add(sepPayslipAdmin1);
                                 payslipsAdmin1.add(octPayslipAdmin1);
+                                payslipsAdmin1.add(futurePayslipAdmin1);
                                 admin1.setPayslips(payslipsAdmin1);
                                 userService.initAdmin(admin1);
+                                //persist payslips too to set other side of r/s
+                                augPayslipAdmin1.setEmployee(admin1);
+                                augPayslipAdmin1.setPayInformation(admin1.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipAdmin1);
+                                
+                                sepPayslipAdmin1.setEmployee(admin1);
+                                sepPayslipAdmin1.setPayInformation(admin1.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipAdmin1);
 
+                                octPayslipAdmin1.setEmployee(admin1);
+                                octPayslipAdmin1.setPayInformation(admin1.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipAdmin1);
+
+                                futurePayslipAdmin1.setEmployee(admin1);
+                                futurePayslipAdmin1.setPayInformation(admin1.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(futurePayslipAdmin1);
+                                
                                 User admin2 = new User(
                                                 "Aloysius",
                                                 "Yap",
@@ -103,6 +135,18 @@ public class UserConfig {
                                 payslipsAdmin2.add(octPayslipAdmin2);
                                 admin2.setPayslips(payslipsAdmin2);
                                 userService.initAdmin(admin2);
+                                augPayslipAdmin2.setEmployee(admin2);
+                                augPayslipAdmin2.setPayInformation(admin2.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipAdmin2);
+                                
+                                sepPayslipAdmin2.setEmployee(admin2);
+                                sepPayslipAdmin2.setPayInformation(admin2.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipAdmin2);
+
+                                octPayslipAdmin2.setEmployee(admin2);
+                                octPayslipAdmin2.setPayInformation(admin2.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipAdmin2);
+                                
 
                                 User ceo = new User(
                                                 "Jeremy",
@@ -136,6 +180,19 @@ public class UserConfig {
                                 payslipsCeo.add(octPayslipCeo);
                                 ceo.setPayslips(payslipsCeo);
                                 userService.initAdmin(ceo);
+                                
+                                augPayslipCeo.setEmployee(ceo);
+                                augPayslipCeo.setPayInformation(ceo.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipCeo);
+                                
+                                sepPayslipCeo.setEmployee(ceo);
+                                sepPayslipCeo.setPayInformation(ceo.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipCeo);
+
+                                octPayslipCeo.setEmployee(ceo);
+                                octPayslipCeo.setPayInformation(ceo.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipCeo);
+
                                 Long ceoId = 3L;
                                 organizationService.addNewOrganization("Libro", ceoId);
 
@@ -173,6 +230,18 @@ public class UserConfig {
                                 payslipsMatthewManager.add(octPayslipMatthewManager);
                                 matthewManager.setPayslips(payslipsMatthewManager);
                                 userService.initAdmin(matthewManager);
+
+                                augPayslipMatthewManager.setEmployee(matthewManager);
+                                augPayslipMatthewManager.setPayInformation(matthewManager.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipMatthewManager);
+                                
+                                sepPayslipMatthewManager.setEmployee(matthewManager);
+                                sepPayslipMatthewManager.setPayInformation(matthewManager.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipMatthewManager);
+
+                                octPayslipMatthewManager.setEmployee(matthewManager);
+                                octPayslipMatthewManager.setPayInformation(matthewManager.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipMatthewManager);
                                 Long matthewId = 4L;
 
                                 // Add 1 department
@@ -225,6 +294,19 @@ public class UserConfig {
                                 payslipsXueqiManager.add(octPayslipXueqiManager);
                                 xueqiManager.setPayslips(payslipsXueqiManager);
                                 userService.initAdmin(xueqiManager);
+
+                                augPayslipXueqiManager.setEmployee(matthewManager);
+                                augPayslipXueqiManager.setPayInformation(matthewManager.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipXueqiManager);
+                                
+                                sepPayslipXueqiManager.setEmployee(xueqiManager);
+                                sepPayslipXueqiManager.setPayInformation(xueqiManager.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipXueqiManager);
+
+                                octPayslipXueqiManager.setEmployee(xueqiManager);
+                                octPayslipXueqiManager.setPayInformation(xueqiManager.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipXueqiManager);
+
                                 Long xueqiId = 5L;
                                 teamService.addNewTeam("West Mall Team A", xueqiId.intValue(), wmId.intValue(), false,
                                                 1);
@@ -261,6 +343,17 @@ public class UserConfig {
                                 payslipsShihanManager.add(octPayslipShihanManager);
                                 shihanManager.setPayslips(payslipsShihanManager);
                                 userService.initAdmin(shihanManager);
+                                augPayslipShihanManager.setEmployee(shihanManager);
+                                augPayslipShihanManager.setPayInformation(shihanManager.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipShihanManager);
+                                
+                                sepPayslipShihanManager.setEmployee(shihanManager);
+                                sepPayslipShihanManager.setPayInformation(shihanManager.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipShihanManager);
+
+                                octPayslipShihanManager.setEmployee(shihanManager);
+                                octPayslipShihanManager.setPayInformation(shihanManager.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipShihanManager);
                                 Long shihanId = 6L;
                                 teamService.addNewTeam("NEX Team A", shihanId.intValue(), nexId.intValue(), false, 1);
                                 Long nexTeamId = 2L;
@@ -300,6 +393,19 @@ public class UserConfig {
                                 payslipsXinyueEmployee.add(octPayslipXinyueEmployee);
                                 xinyueEmployee.setPayslips(payslipsXinyueEmployee);
                                 userService.initAdmin(xinyueEmployee);
+
+                                augPayslipXinyueEmployee.setEmployee(xinyueEmployee);
+                                augPayslipXinyueEmployee.setPayInformation(xinyueEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipXinyueEmployee);
+                                
+                                sepPayslipXinyueEmployee.setEmployee(xinyueEmployee);
+                                sepPayslipXinyueEmployee.setPayInformation(xinyueEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipXinyueEmployee);
+
+                                octPayslipXinyueEmployee.setEmployee(xinyueEmployee);
+                                octPayslipXinyueEmployee.setPayInformation(xinyueEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipXinyueEmployee);
+
                                 Long xinyueId = 7L;
 
                                 // Add HR department
@@ -349,6 +455,19 @@ public class UserConfig {
                                 payslipsAlisonEmployee.add(octPayslipAlisonEmployee);
                                 alisonEmployee.setPayslips(payslipsAlisonEmployee);
                                 userService.initAdmin(alisonEmployee);
+
+                                augPayslipAlisonEmployee.setEmployee(alisonEmployee);
+                                augPayslipAlisonEmployee.setPayInformation(alisonEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipAlisonEmployee);
+                                
+                                sepPayslipAlisonEmployee.setEmployee(alisonEmployee);
+                                sepPayslipAlisonEmployee.setPayInformation(alisonEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipAlisonEmployee);
+
+                                octPayslipAlisonEmployee.setEmployee(alisonEmployee);
+                                octPayslipAlisonEmployee.setPayInformation(alisonEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipAlisonEmployee);
+
                                 Long alisonId = 8L;
                                 teamService.addNewTeam("HR Team", alisonId.intValue(), hrOffice.intValue(), true, 2);
                                 Long hrTeamId = 3L;
@@ -388,6 +507,18 @@ public class UserConfig {
                                 payslipsTimEmployee.add(octPayslipTimEmployee);
                                 timEmployee.setPayslips(payslipsTimEmployee);
                                 userService.initAdmin(timEmployee);
+
+                                augPayslipTimEmployee.setEmployee(timEmployee);
+                                augPayslipTimEmployee.setPayInformation(timEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipTimEmployee);
+                                
+                                sepPayslipTimEmployee.setEmployee(timEmployee);
+                                sepPayslipTimEmployee.setPayInformation(timEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipTimEmployee);
+
+                                octPayslipTimEmployee.setEmployee(timEmployee);
+                                octPayslipTimEmployee.setPayInformation(timEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipTimEmployee);
                                 Long timId = 9L;
                                 teamService.addMemberToTeam(hrTeamId.intValue(), timId.intValue());
 
@@ -422,6 +553,19 @@ public class UserConfig {
                                 payslipsHedgehogEmployee.add(octPayslipHedgehogEmployee);
                                 hedgehogEmployee.setPayslips(payslipsHedgehogEmployee);
                                 userService.initAdmin(hedgehogEmployee);
+
+                                augPayslipHedgehogEmployee.setEmployee(hedgehogEmployee);
+                                augPayslipHedgehogEmployee.setPayInformation(hedgehogEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipXinyueEmployee);
+                                
+                                sepPayslipHedgehogEmployee.setEmployee(hedgehogEmployee);
+                                sepPayslipHedgehogEmployee.setPayInformation(hedgehogEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipHedgehogEmployee);
+
+                                octPayslipHedgehogEmployee.setEmployee(hedgehogEmployee);
+                                octPayslipHedgehogEmployee.setPayInformation(hedgehogEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipHedgehogEmployee);
+
                                 Long hedgehogId = 10L;
                                 teamService.addMemberToTeam(hrTeamId.intValue(), hedgehogId.intValue());
 
@@ -461,6 +605,19 @@ public class UserConfig {
                                 payslipsBruceEmployee.add(octPayslipBruceEmployee);
                                 bruceEmployee.setPayslips(payslipsBruceEmployee);
                                 userService.initAdmin(bruceEmployee);
+
+                                augPayslipBruceEmployee.setEmployee(bruceEmployee);
+                                augPayslipBruceEmployee.setPayInformation(bruceEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipBruceEmployee);
+                                
+                                sepPayslipBruceEmployee.setEmployee(bruceEmployee);
+                                sepPayslipBruceEmployee.setPayInformation(bruceEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipBruceEmployee);
+
+                                octPayslipBruceEmployee.setEmployee(bruceEmployee);
+                                octPayslipBruceEmployee.setPayInformation(bruceEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipBruceEmployee);
+
                                 Long bruceId = 11L;
                                 teamService.addMemberToTeam(wmTeamId.intValue(), bruceId.intValue());
 
@@ -496,6 +653,19 @@ public class UserConfig {
                                 payslipsBarryEmployee.add(octPayslipBarryEmployee);
                                 barryEmployee.setPayslips(payslipsBarryEmployee);
                                 userService.initAdmin(barryEmployee);
+
+                                augPayslipBarryEmployee.setEmployee(barryEmployee);
+                                augPayslipBarryEmployee.setPayInformation(barryEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipBarryEmployee);
+                                
+                                sepPayslipBarryEmployee.setEmployee(barryEmployee);
+                                sepPayslipBarryEmployee.setPayInformation(barryEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipBarryEmployee);
+
+                                octPayslipBarryEmployee.setEmployee(barryEmployee);
+                                octPayslipBarryEmployee.setPayInformation(barryEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipBarryEmployee);
+
                                 Long barryId = 12L;
                                 teamService.addMemberToTeam(nexTeamId.intValue(), barryId.intValue());
 
@@ -534,6 +704,19 @@ public class UserConfig {
                                 payslipsDianaEmployee.add(octPayslipDianaEmployee);
                                 dianaEmployee.setPayslips(payslipsDianaEmployee);
                                 userService.initAdmin(dianaEmployee);
+
+                                augPayslipDianaEmployee.setEmployee(dianaEmployee);
+                                augPayslipDianaEmployee.setPayInformation(dianaEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipDianaEmployee);
+                                
+                                sepPayslipDianaEmployee.setEmployee(dianaEmployee);
+                                sepPayslipDianaEmployee.setPayInformation(dianaEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipDianaEmployee);
+
+                                octPayslipDianaEmployee.setEmployee(dianaEmployee);
+                                octPayslipDianaEmployee.setPayInformation(dianaEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipDianaEmployee);
+
                                 Long dianaId = 13L;
                                 teamService.addMemberToTeam(wmTeamId.intValue(), dianaId.intValue());
 
@@ -569,6 +752,19 @@ public class UserConfig {
                                 payslipsClarkEmployee.add(octPayslipClarkEmployee);
                                 clarkEmployee.setPayslips(payslipsClarkEmployee);
                                 userService.initAdmin(clarkEmployee);
+
+                                augPayslipClarkEmployee.setEmployee(clarkEmployee);
+                                augPayslipClarkEmployee.setPayInformation(clarkEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(augPayslipClarkEmployee);
+                                
+                                sepPayslipClarkEmployee.setEmployee(clarkEmployee);
+                                sepPayslipClarkEmployee.setPayInformation(clarkEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(sepPayslipClarkEmployee);
+
+                                octPayslipClarkEmployee.setEmployee(clarkEmployee);
+                                octPayslipClarkEmployee.setPayInformation(clarkEmployee.getCurrentPayInformation());
+                                payslipService.addNewPayslipFlush(octPayslipClarkEmployee);
+
                                 Long clarkId = 14L;
                                 teamService.addMemberToTeam(nexTeamId.intValue(), clarkId.intValue());
 

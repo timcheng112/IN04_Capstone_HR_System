@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,5 +72,33 @@ public class AllowanceService {
     //admin
     public void deleteAllAllowances(){
         allowanceRepository.deleteAll();
+    }
+
+    public List<Allowance> findUserAllowanceByMonth(Long userId, LocalDate month) {
+        LocalDateTime start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 1), LocalTime.of(0,0));
+        LocalDateTime end = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), month.lengthOfMonth()), LocalTime.of(23, 59, 59));
+
+        List<Allowance> allowanceList = allowanceRepository.findUserAllowanceByMonth(userId, start, end);
+
+        if (allowanceList.isEmpty()) {
+            throw new IllegalStateException(
+                    "Cannot find allowances for user with id:" + userId + "in the month of " + month
+            );
+        }
+        return allowanceList;
+    }
+
+    public List<Allowance> findAllowanceByMonth(LocalDate month){
+        LocalDateTime start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 1), LocalTime.of(0,0));
+        LocalDateTime end = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), month.lengthOfMonth()), LocalTime.of(23, 59, 59));
+
+        List<Allowance> allowanceList = allowanceRepository.findAllowanceByMonth(start, end);
+
+        if (allowanceList.isEmpty()) {
+            throw new IllegalStateException(
+                    "Cannot find allowances in the month of " + month
+            );
+        }
+        return allowanceList;
     }
 }

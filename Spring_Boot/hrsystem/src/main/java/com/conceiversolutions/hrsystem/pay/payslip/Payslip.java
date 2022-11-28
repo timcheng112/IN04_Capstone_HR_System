@@ -23,6 +23,14 @@ public class Payslip {
     private LocalDate dateOfPayment;
     @Column(name="gross_salary")
     private BigDecimal grossSalary;
+
+    @Column(name="basic_salary")
+    private BigDecimal basicSalary;
+    @Column(name="allowance")
+    private BigDecimal allowance;
+    @Column(name="deduction")
+    private BigDecimal deduction;
+
     @Column(name="date_generated")
     private LocalDate dateGenerated;
     //we cant handle blob yet, null - true
@@ -35,6 +43,8 @@ public class Payslip {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userId")
     private User employee;
+
+
 
 
     public Payslip() {
@@ -59,6 +69,17 @@ public class Payslip {
         this.payslipPDF = payslipPDF;
         this.payInformation = payInformation;
         this.employee = employee;
+    }
+
+    public Payslip(LocalDate dateOfPayment, BigDecimal grossSalary, BigDecimal basicSalary, BigDecimal allowance, BigDecimal deduction, LocalDate dateGenerated) {
+        monthOfPayment = dateOfPayment.getMonthValue();
+        yearOfPayslip = dateOfPayment.getYear();
+        this.dateOfPayment = dateOfPayment;
+        this.grossSalary = grossSalary;
+        this.basicSalary = basicSalary;
+        this.allowance = allowance;
+        this.deduction = deduction;
+        this.dateGenerated = dateGenerated;
     }
 
     //with id, static offline testing
@@ -168,6 +189,30 @@ public class Payslip {
         this.employee = employee;
     }
 
+    public BigDecimal getBasicSalary() {
+        return basicSalary;
+    }
+
+    public void setBasicSalary(BigDecimal basicSalary) {
+        this.basicSalary = basicSalary;
+    }
+
+    public BigDecimal getAllowance() {
+        return allowance;
+    }
+
+    public void setAllowance(BigDecimal allowance) {
+        this.allowance = allowance;
+    }
+
+    public BigDecimal getDeduction() {
+        return deduction;
+    }
+
+    public void setDeduction(BigDecimal deduction) {
+        this.deduction = deduction;
+    }
+
     @Override
     public String toString() {
         return "Payslip{" +
@@ -176,7 +221,13 @@ public class Payslip {
                 ", yearOfPayslip=" + yearOfPayslip +
                 ", dateOfPayment=" + dateOfPayment +
                 ", grossSalary=" + grossSalary +
+                ", basicSalary=" + basicSalary +
+                ", allowance=" + allowance +
+                ", deduction=" + deduction +
                 ", dateGenerated=" + dateGenerated +
+                ", payslipPDF=" + payslipPDF +
+                ", payInformation=" + payInformation +
+                ", employee=" + employee +
                 '}';
     }
 }

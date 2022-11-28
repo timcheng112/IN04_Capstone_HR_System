@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +48,10 @@ public class PayslipService {
         payslipRepository.save(payslip);
     }
 
+    public void addNewPayslipFlush(Payslip payslip) {
+        payslipRepository.saveAndFlush(payslip);
+    }
+
 
     public void updatePayslip(Payslip payslip, Long payslipId){
         Optional<Payslip> payslipByIdOptional = payslipRepository.findById(payslip.getPayslipId());
@@ -81,4 +89,58 @@ public class PayslipService {
         
     //     return null;
     // }
+    public Payslip findUserPayslipByMonth(Long userId, LocalDate month) {
+//        LocalDateTime start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 1), LocalTime.of(0,0));
+//        LocalDateTime end = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), month.lengthOfMonth()), LocalTime.of(23, 59, 59));
+        LocalDate start = LocalDate.of(month.getYear(), month.getMonthValue(), 1);
+        System.out.println(start);
+        LocalDate end = LocalDate.of(month.getYear(), month.getMonthValue(), month.lengthOfMonth());
+        System.out.println("END !!!!!!: " + end);
+        List<Payslip> payslips = payslipRepository.findUserPayslipByMonth(userId, start, end);
+
+        if (payslips.isEmpty()) {
+            throw new IllegalStateException(
+                    "Cannot find payslip for user with id:" + userId + "in the month of " + month
+            );
+        } else if (payslips.size() > 1) {
+            throw new IllegalStateException(
+                    "More than 1 payslip for user with id:" + userId + "in the month of " + month
+            );
+        }
+        Payslip payslip = payslips.get(0);
+        payslip.getPayInformation().setUser(null);
+        payslip.getPayInformation().setAllowance(new ArrayList<>());
+        payslip.getPayInformation().setAllowanceTemplates(new ArrayList<>());
+        payslip.getPayInformation().setDeduction(new ArrayList<>());
+        payslip.getPayInformation().setDeductionTemplates(new ArrayList<>());
+        System.out.println(payslip.getDateOfPayment());
+
+        payslip.getEmployee().nullify();
+
+        return payslip;
+    }
+
+    public List<Payslip> findPayslipByMonth(LocalDate month){
+        LocalDateTime start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 1), LocalTime.of(0,0));
+        LocalDateTime end = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), month.lengthOfMonth()), LocalTime.of(23, 59, 59));
+        System.out.println("END !!!!!!: " + end);
+
+        List<Payslip> payslips = payslipRepository.findPayslipsByMonth(start, end);
+
+        if (payslips.isEmpty()) {
+            throw new IllegalStateException(
+                    "Cannot find payslips in the month of " + month
+            );
+        }
+        for (Payslip payslip : payslips) {
+            payslip.getPayInformation().setUser(null);
+            payslip.getPayInformation().setAllowance(new ArrayList<>());
+            payslip.getPayInformation().setAllowanceTemplates(new ArrayList<>());
+            payslip.getPayInformation().setDeduction(new ArrayList<>());
+            payslip.getPayInformation().setDeductionTemplates(new ArrayList<>());
+
+            payslip.getEmployee().nullify();
+        }
+        return payslips;
+    }
 }

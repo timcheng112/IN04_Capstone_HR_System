@@ -728,6 +728,36 @@ const api = {
       `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
     );
   },
+  findUserAllowanceByMonth(userId, dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/allowance/findUserAllowanceByMonth?userId=${userId}&dateString=${dateString}`
+    );
+  },
+  findAllowanceByMonth(dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/allowance/findUserAllowanceByMonth?dateString=${dateString}`
+    );
+  },
+  findUserDeductionByMonth(userId, dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/deduction/findUserDeductionByMonth?userId=${userId}&dateString=${dateString}`
+    );
+  },
+  findDeductionByMonth(dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/deduction/findDeductionByMonth?dateString=${dateString}`
+    );
+  },
+  findUserPayslipByMonth(userId, dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/payslip/findUserPayslipByMonth?userId=${userId}&dateString=${dateString}`
+    );
+  },
+  findPayslipByMonth(dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/payslip/findPayslipByMonth?dateString=${dateString}`
+    );
+  },
   setUserStatus(email) {
     return axios.get(
       `http://localhost:9191/api/user/setUserStatus?workEmail=${email}`
