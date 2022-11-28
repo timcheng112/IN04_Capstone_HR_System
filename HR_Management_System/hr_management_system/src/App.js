@@ -75,6 +75,7 @@ import BenefitsPage from "./pages/Benefit/indexHR";
 import ClaimsPage from "./pages/Benefit/claim";
 import RewardTrackPage from "./pages/Reward/index"
 import RewardTrackDetailPage from "./pages/Reward/TrackDetail"
+import ReviewFormPage from "./pages/Reward/review"
 
 function App() {
   return (
@@ -267,6 +268,7 @@ function App() {
           <PrivateRoute exact path="/welfare/claims" component={ClaimsPage} />
           <PrivateRoute exact path="/welfare/rewardtrack" component={RewardTrackPage} />
           <PrivateRoute exact path="/welfare/rewardtrackdetail" component={RewardTrackDetailPage} />
+          <PrivateRoute exact path="/welfare/reviewform" component={ReviewFormPage} />
         </Switch>
       </div>
     </BrowserRouter>
