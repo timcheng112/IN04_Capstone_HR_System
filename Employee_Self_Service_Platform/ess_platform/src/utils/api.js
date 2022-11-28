@@ -243,13 +243,30 @@ const api = {
       `http://${URL}:9191/api/claims/withdrawClaim?claimId=${claimId}`
     );
   },
-  makeNewClaim(claimDate, incidentDate, remarks, claimAmount, benefitPlanInstanceId, file) {
+  makeNewClaim(
+    claimDate,
+    incidentDate,
+    remarks,
+    claimAmount,
+    benefitPlanInstanceId,
+    file
+  ) {
     return axios.post(
       `http://${URL}:9191/api/claims/makeNewClaim?file=&claimDate=${claimDate}&incidentDate=${incidentDate}&remarks=${remarks}&claimAmount=${claimAmount}&benefitPlanInstanceId=${benefitPlanInstanceId}`,
-    file);
+      file
+    );
   },
   createClaim(formDataPayload) {
-    return axios.post(`http://${URL}:9191/api/claims/makeNewClaim`, formDataPayload, {headers: {'Content-Type': 'multipart/form-data'}});
+    return axios.post(
+      `http://${URL}:9191/api/claims/makeNewClaim`,
+      formDataPayload,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+  },
+  getPayslipByUserId(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/pay/payslip/getPayslipByUserId?userId=${userId}`
+    );
   },
 };
 

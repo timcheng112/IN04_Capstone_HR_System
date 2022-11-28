@@ -96,20 +96,26 @@ public class PayslipController {
 
     // @GetMapping(path = "/getPayslipsByMonth")
     // public List<Payslip> getPayslipsByMonth(Integer monthIndex) {
-    //     return payslipService.getPayslipsByMonth(monthIndex);
+    // return payslipService.getPayslipsByMonth(monthIndex);
     // }
 
     @GetMapping(path = "/findUserPayslipByMonth")
-    public Payslip findUserPayslipByMonth(@RequestParam("userId") Long userId, @RequestParam("dateString") String date){
+    public Payslip findUserPayslipByMonth(@RequestParam("userId") Long userId,
+            @RequestParam("dateString") String date) {
         LocalDate localDate = LocalDate.parse(date);
         System.out.println("date for findUserPayslipByMonth: " + localDate);
         return payslipService.findUserPayslipByMonth(userId, localDate);
     }
 
     @GetMapping(path = "/findPayslipByMonth")
-    public List<Payslip> findPayslipByMonth(@RequestParam("dateString") String date){
+    public List<Payslip> findPayslipByMonth(@RequestParam("dateString") String date) {
         LocalDate localDate = LocalDate.parse(date);
         System.out.println("date for findPayslipByMonth: " + localDate);
         return payslipService.findPayslipByMonth(localDate);
+    }
+
+    @GetMapping(path = "/getPayslipByUserId")
+    public List<Payslip> getPayslipByUserId(@RequestParam("userId") Long userId) {
+        return payslipService.getPayslipByUserId(userId);
     }
 }
