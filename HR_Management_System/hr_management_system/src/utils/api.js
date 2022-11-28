@@ -1237,15 +1237,15 @@ const api = {
       `http://localhost:9191/api/rewards/getReward?rewardId=${rewardId}`
     );
   },
-  addNewReward(name, description, pointsRequired, expiryDate, rewardTrackId, file) {
+  addNewReward(name, description, pointsRequired, expiryDate, rewardTrackId) {
     return axios.post(
-      `http://localhost:9191/api/rewards/addNewReward?file=&name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardTrackId=${rewardTrackId}`
-      , file);
+      `http://localhost:9191/api/rewards/addNewReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardTrackId=${rewardTrackId}`
+      );
   },
-  editReward(name, description, pointsRequired, expiryDate, rewardId, file) {
+  editReward(name, description, pointsRequired, expiryDate, rewardId) {
     return axios.put(
-      `http://localhost:9191/api/rewards/addNewRewardeditReward?file=&name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardId=${rewardId}`
-      , file);
+      `http://localhost:9191/api/rewards/addNewRewardeditReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardId=${rewardId}`
+      );
   },
   deleteReward(rewardId) {
     return axios.delete(

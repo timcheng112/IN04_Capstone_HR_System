@@ -35,7 +35,7 @@ public class RewardService {
         return rewards;
     }
 
-    public Long addNewReward(String name, String description, Integer pointsRequired, LocalDate expiryDate, Long rewardTrackId, DocData image) {
+    public Long addNewReward(String name, String description, Integer pointsRequired, LocalDate expiryDate, Long rewardTrackId) {
         System.out.println("RewardService.addNewReward");
         System.out.println("name = " + name + ", description = " + description + ", pointsRequired = " + pointsRequired + ", expiryyDate = " + expiryDate + ", rewardTrackId = " + rewardTrackId);
         RewardTrack rt = rewardTrackService.getRewardTrack(rewardTrackId);
@@ -50,7 +50,7 @@ public class RewardService {
             }
         }
 
-        Reward newReward = new Reward(name, description, pointsRequired, expiryDate, image, rt);
+        Reward newReward = new Reward(name, description, pointsRequired, expiryDate, rt);
         Reward savedReward = rewardRepository.saveAndFlush(newReward);
 
         return savedReward.getRewardId();
@@ -67,7 +67,7 @@ public class RewardService {
         return reward.get();
     }
 
-    public Long editReward(String name, String description, Integer pointsRequired, LocalDate expiryDate, Long rewardId, DocData image) {
+    public Long editReward(String name, String description, Integer pointsRequired, LocalDate expiryDate, Long rewardId) {
         System.out.println("RewardService.editReward");
         System.out.println("name = " + name + ", description = " + description + ", pointsRequired = " + pointsRequired + ", expiryDate = " + expiryDate + ", rewardId = " + rewardId);
 
@@ -88,7 +88,7 @@ public class RewardService {
         reward.setDescription(description);
         reward.setPointsRequired(pointsRequired);
         reward.setExpiryDate(expiryDate);
-        reward.setImage(image);
+//        reward.setImage(image);
 
         rewardRepository.save(reward);
         return null;

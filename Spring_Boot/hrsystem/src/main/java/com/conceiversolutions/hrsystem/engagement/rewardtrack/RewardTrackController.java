@@ -24,9 +24,9 @@ public class RewardTrackController {
         for (RewardTrack rt : rewardTracks) {
             for (Reward reward : rt.getRewards()) {
                 reward.setRewardInstances(new ArrayList<>());
-                if (reward.getImage() != null) {
-                    reward.getImage().setDocData(new byte[0]);
-                }
+//                if (reward.getImage() != null) {
+//                    reward.getImage().setDocData(new byte[0]);
+//                }
                 reward.setRewardTrack(null);
             }
             rt.getRewards().sort((r1, r2) -> {
@@ -44,9 +44,9 @@ public class RewardTrackController {
         RewardTrack rt = rewardTrackService.getRewardTrack(rewardTrackId);
         for (Reward reward : rt.getRewards()) {
             reward.setRewardInstances(new ArrayList<>());
-            if (reward.getImage() != null) {
-                reward.getImage().setDocData(new byte[0]);
-            }
+//            if (reward.getImage() != null) {
+//                reward.getImage().setDocData(new byte[0]);
+//            }
             reward.setRewardTrack(null);
         }
         rt.getRewards().sort((r1, r2) -> {
@@ -94,9 +94,9 @@ public class RewardTrackController {
         RewardTrack rt = rewardTrackService.getRewardTrackByDepartment(departmentId);
         for (Reward reward : rt.getRewards()) {
             reward.setRewardInstances(new ArrayList<>());
-            if (reward.getImage() != null) {
-                reward.getImage().setDocData(new byte[0]);
-            }
+//            if (reward.getImage() != null) {
+//                reward.getImage().setDocData(new byte[0]);
+//            }
             reward.setRewardTrack(null);
         }
         rt.getRewards().sort((r1, r2) -> {
