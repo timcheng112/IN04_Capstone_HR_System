@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class BenefitPlanInstance {
     private BigDecimal remainingAmount;
     @Column(name = "is_active")
     private Boolean isActive;
+    @Column(name = "enrol_date")
+    private LocalDate enrolDate;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = BenefitPlan.class, optional = false)
     private BenefitPlan benefitPlan;
@@ -35,6 +38,7 @@ public class BenefitPlanInstance {
 
     public BenefitPlanInstance() {
         this.claims = new ArrayList<>();
+        this.enrolDate = LocalDate.now();
     }
 
     public BenefitPlanInstance(BigDecimal remainingAmount, BenefitPlan benefitPlan, User planOwner) {

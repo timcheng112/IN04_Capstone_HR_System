@@ -22,6 +22,7 @@ const AdminDrawerNavigator = () => {
         options={{
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
         }}
       />
       <AdminDrawer.Screen
@@ -30,6 +31,7 @@ const AdminDrawerNavigator = () => {
         options={{
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
         }}
       />
       <AdminDrawer.Screen
@@ -38,6 +40,7 @@ const AdminDrawerNavigator = () => {
         options={{
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
         }}
       />
       <AdminDrawer.Screen
@@ -46,6 +49,7 @@ const AdminDrawerNavigator = () => {
         options={{
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
         }}
       />
     </AdminDrawer.Navigator>

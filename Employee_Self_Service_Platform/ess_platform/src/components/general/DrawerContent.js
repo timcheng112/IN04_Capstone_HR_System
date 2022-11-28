@@ -8,6 +8,9 @@ import { AuthContext } from "../login/Context";
 
 const DrawerContent = (props) => {
   const { signOut } = React.useContext(AuthContext);
+  const { state } = props;
+  const { routes, index } = state;
+  const focusedRoute = routes[index].name;
 
   return (
     <View
@@ -33,9 +36,16 @@ const DrawerContent = (props) => {
                 <MaterialCommunityIcons
                   name="seatbelt"
                   size={size}
-                  color={color}
+                  color={focusedRoute === "Onboarding" ? "black" : color}
                 />
               )}
+              style={
+                focusedRoute === "Onboarding" && {
+                  backgroundColor: "#c4b5fd",
+                  borderRadius: 20,
+                }
+              }
+              labelStyle={focusedRoute === "Onboarding" && { color: "black" }}
               label="Onboarding"
               onPress={() => {
                 props.navigation.navigate("Onboarding");
@@ -46,9 +56,16 @@ const DrawerContent = (props) => {
                 <MaterialCommunityIcons
                   name="seat-outline"
                   size={size}
-                  color={color}
+                  color={focusedRoute === "Offboarding" ? "black" : color}
                 />
               )}
+              style={
+                focusedRoute === "Offboarding" && {
+                  backgroundColor: "#c4b5fd",
+                  borderRadius: 20,
+                }
+              }
+              labelStyle={focusedRoute === "Offboarding" && { color: "black" }}
               label="Offboarding"
               onPress={() => {
                 props.navigation.navigate("Offboarding");
@@ -56,8 +73,19 @@ const DrawerContent = (props) => {
             ></DrawerItem>
             <DrawerItem
               icon={({ color, size }) => (
-                <AntDesign name="flag" size={size} color={color} />
+                <AntDesign
+                  name="flag"
+                  size={size}
+                  color={focusedRoute === "Leave" ? "black" : color}
+                />
               )}
+              style={
+                focusedRoute === "Leave" && {
+                  backgroundColor: "#c4b5fd",
+                  borderRadius: 20,
+                }
+              }
+              labelStyle={focusedRoute === "Leave" && { color: "black" }}
               label="Leave"
               onPress={() => {
                 props.navigation.navigate("Leave");

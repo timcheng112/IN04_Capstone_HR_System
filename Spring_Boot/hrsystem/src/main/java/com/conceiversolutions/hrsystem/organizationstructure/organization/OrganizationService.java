@@ -56,6 +56,7 @@ public class OrganizationService {
             org.getOrganizationHead().setLeaveQuotas(new ArrayList<>());
             org.getOrganizationHead().setCurrentLeaveQuota(null);
             org.getOrganizationHead().setTaskListItems(new ArrayList<>());
+            org.getOrganizationHead().setBenefitPlanInstances(new ArrayList<>());
 
             for (Department d : departments) {
                 d.setOrganization(null);
@@ -81,6 +82,7 @@ public class OrganizationService {
                 d.getDepartmentHead().setLeaveQuotas(new ArrayList<>());
                 d.getDepartmentHead().setCurrentLeaveQuota(null);
                 d.getDepartmentHead().setTaskListItems(new ArrayList<>());
+                d.getDepartmentHead().setBenefitPlanInstances(new ArrayList<>());
             }
         }
 
@@ -118,6 +120,7 @@ public class OrganizationService {
         org.getOrganizationHead().setLeaves(new ArrayList<>());
         org.getOrganizationHead().setLeaveQuotas(new ArrayList<>());
         org.getOrganizationHead().setCurrentLeaveQuota(null);
+        org.getOrganizationHead().setBenefitPlanInstances(new ArrayList<>());
 
         // come back and add relationship - S&A
         for (Department d : departments) {
@@ -144,6 +147,7 @@ public class OrganizationService {
             d.getDepartmentHead().setLeaveQuotas(new ArrayList<>());
             d.getDepartmentHead().setCurrentLeaveQuota(null);
             d.getDepartmentHead().setTaskListItems(new ArrayList<>());
+            d.getDepartmentHead().setBenefitPlanInstances(new ArrayList<>());
         }
 
         return org;
@@ -208,17 +212,14 @@ public class OrganizationService {
         return Long.valueOf(-1);
     }
 
-    public List<User> getOrganizationHeads() {
-        System.out.println("OrganizationService.getOrganizationHeads");
-        List<User> heads = new ArrayList<>();
+    public User getOrganizationHead() throws Exception {
+        System.out.println("OrganizationService.getOrganizationHead");
 
-        List<Organization> allOrganizations = organizationRepository.findAll();
+        Optional<Organization> organization = organizationRepository.findOrgByName("Libro");
+        System.out.println(organization);
 
-        for (Organization o : allOrganizations) {
-            System.out.println("o head " + o.getOrganizationHead());
-            heads.add(o.getOrganizationHead());
-        }
-
-        return heads;
+        return new User();
     }
+
+    
 }

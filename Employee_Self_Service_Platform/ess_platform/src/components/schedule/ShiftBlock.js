@@ -72,9 +72,11 @@ const ShiftBlock = ({ user, shiftListItem }) => {
           <View style={{ marginLeft: 10 }}>
             <Text style={{ fontFamily: "Poppins_700Bold", fontSize: 16 }}>
               {user !== null && user.firstName + " " + user.lastName}
+              {"\n"}
+              <Text style={{fontFamily: "Poppins_500Medium", fontSize: 14}}>{shiftListItem && shiftListItem.shift.shiftTitle}</Text>
             </Text>
-            <Text style={{ fontFamily: "Poppins_600SemiBold", fontSize: 14 }}>
-              {shiftListItem && shiftListItem.shift.shiftTitle}
+            <Text style={{ fontFamily: "Poppins_300Light", fontSize: 12 }}>
+              {shiftListItem && shiftListItem.positionType}
             </Text>
             <Text style={{ fontFamily: "Poppins_300Light", fontSize: 12 }}>
               {shiftListItem &&

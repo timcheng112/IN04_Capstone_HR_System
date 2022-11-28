@@ -74,6 +74,7 @@ public class DepartmentService {
             deptHead.setLeaveQuotas(new ArrayList<>());
             deptHead.setCurrentLeaveQuota(null);
             deptHead.setTaskListItems(new ArrayList<>());
+            deptHead.setBenefitPlanInstances(new ArrayList<>());
 
             List<Team> deptTeams = d.getTeams();
 
@@ -124,6 +125,7 @@ public class DepartmentService {
             deptHead.setLeaveQuotas(new ArrayList<>());
             deptHead.setCurrentLeaveQuota(null);
             deptHead.setTaskListItems(new ArrayList<>());
+            deptHead.setBenefitPlanInstances(new ArrayList<>());
 
             List<Team> deptTeams = d.getTeams();
 
@@ -253,7 +255,7 @@ public class DepartmentService {
             List<Team> deptTeams = d.getTeams();
 
             for (Team t : deptTeams) {
-                System.out.println("for each team " + t.getTeamName());
+                //System.out.println("for each team " + t.getTeamName());
                 t.setRoster(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
@@ -294,20 +296,25 @@ public class DepartmentService {
 
             System.out.println("Department id " + d.getDepartmentId());
             User user = d.getDepartmentHead();
-            User u = new User();
+            user.nullify();
 
-            u.setUserId(user.getUserId());
-            u.setFirstName(user.getFirstName());
-            u.setLastName(user.getLastName());
-            u.setWorkEmail(user.getWorkEmail());
-            u.setUserRole(user.getUserRole());
-            u.setProfilePic(user.getProfilePic());
-            u.setIsBlackListed(user.getIsBlackListed());
-
-            System.out.println("department head " + u);
+            System.out.println("department head " + user);
             
-            allDepartmentHeads.add(u);
+            allDepartmentHeads.add(user);
         }
         return allDepartmentHeads;
+    }
+
+    public User getDepartmentHeadByEmployee(Long employeeId) throws Exception {
+        Optional<Department> optionalDepartment = departmentRepository.findDepartmentByEmployeeId(employeeId);
+        if (optionalDepartment.isPresent()) {
+            Department department = optionalDepartment.get();
+            
+            User departmentHead = department.getDepartmentHead().nullify();
+
+            return departmentHead;
+        } else {
+            throw new IllegalStateException("Unable to find department");
+        }
     }
 }

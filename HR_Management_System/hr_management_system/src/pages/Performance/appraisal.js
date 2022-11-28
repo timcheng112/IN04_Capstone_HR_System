@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import PerformanceSidebar from "../../components/Sidebar/Performance";
 import api from "../../utils/api";
-import { Switch } from "@headlessui/react";
+import { Listbox, Switch, Transition } from "@headlessui/react";
 import { useHistory } from "react-router";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -23,6 +24,9 @@ export default function Appraisal() {
   const [overdue, setOverdue] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [canPromote, setCanPromote] = useState(0);
+
+  const [positions, setPositions] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const history = useHistory();
 
@@ -51,6 +55,12 @@ export default function Appraisal() {
             //console.log(response.data.endDate);
           }
         });
+
+      api
+        .getEligibleForPromotion(response.data.employee.userId)
+        .then((response) => {
+          setCanPromote(response.data);
+        });
     });
   }, []);
 
@@ -78,6 +88,11 @@ export default function Appraisal() {
             //console.log(response.data.endDate);
           }
         });
+      api
+        .getEligibleForPromotion(response.data.employee.userId)
+        .then((response) => {
+          setCanPromote(response.data);
+        });
     });
   }, [refresh]);
 
@@ -101,15 +116,21 @@ export default function Appraisal() {
     e.preventDefault();
 
     if (strengths && weaknesses && rating !== "Select") {
-      var confirm;
-      if (overdue) {
-        confirm = window.confirm(
-          "Are you sure you want to submit? You will not be able to update the appraisal after submission."
+      if (promote && canPromote === 1 && rating !== "1 - Outstanding") {
+        alert(
+          "If you want to promote this employee, you will have to give them a rating of 1."
         );
       } else {
-        confirm = window.confirm(
-          "Are you sure you want to submit? You will not be able to update the appraisal without deleting after submission."
-        );
+        var confirm;
+        if (overdue) {
+          confirm = window.confirm(
+            "Are you sure you want to submit? You will not be able to update the appraisal after submission."
+          );
+        } else {
+          confirm = window.confirm(
+            "Are you sure you want to submit? You will not be able to update the appraisal without deleting after submission."
+          );
+        }
       }
 
       if (confirm) {
@@ -484,37 +505,77 @@ export default function Appraisal() {
                           <label className="block text-md text-left font-medium font-sans text-gray-900">
                             Promotion
                           </label>
-                          <Switch.Group
-                            as="div"
-                            className="flex items-center justify-between"
-                          >
-                            <span className="flex flex-grow flex-col">
-                              <Switch.Description
-                                as="span"
-                                className="text-sm text-left text-gray-500"
+                          {canPromote >= 1 ? (
+                            <>
+                              <Switch.Group
+                                as="div"
+                                className="flex items-center justify-between"
                               >
-                                You will be required to complete a promotion
-                                request by recommending this employee for
-                                promotion
-                              </Switch.Description>
-                            </span>
-                            <Switch
-                              checked={promote}
-                              onChange={setPromote}
-                              className={classNames(
-                                promote ? "bg-indigo-600" : "bg-gray-200",
-                                "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                              )}
-                            >
-                              <span
-                                aria-hidden="true"
-                                className={classNames(
-                                  promote ? "translate-x-5" : "translate-x-0",
-                                  "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                                )}
-                              />
-                            </Switch>
-                          </Switch.Group>
+                                <span className="flex flex-grow flex-col">
+                                  {canPromote > 1 ? (
+                                    <Switch.Description
+                                      as="span"
+                                      className="font-sans text-md text-left text-indigo-800"
+                                    >
+                                      This employee has received the 1 -
+                                      Outstanding rating for {canPromote}{" "}
+                                      consecutive year(s) and is eligible for
+                                      promotion.
+                                    </Switch.Description>
+                                  ) : (
+                                    <Switch.Description
+                                      as="span"
+                                      className="font-sans text-md text-left text-indigo-800"
+                                    >
+                                      This employee has received the 1 -
+                                      Outstanding rating for {canPromote}{" "}
+                                      consecutive year(s) and will be eligible
+                                      for promotion if they receive this rating
+                                      in this appraisal.
+                                    </Switch.Description>
+                                  )}
+                                  <Switch.Description
+                                    as="span"
+                                    className="font-sans text-sm text-left text-gray-700"
+                                  >
+                                    You will be required to complete a promotion
+                                    request by recommending this employee for
+                                    promotion.
+                                  </Switch.Description>
+                                </span>
+                                <Switch
+                                  checked={promote}
+                                  onChange={setPromote}
+                                  className={classNames(
+                                    promote ? "bg-indigo-600" : "bg-gray-200",
+                                    "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                  )}
+                                >
+                                  <span
+                                    aria-hidden="true"
+                                    className={classNames(
+                                      promote
+                                        ? "translate-x-5"
+                                        : "translate-x-0",
+                                      "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                                    )}
+                                  />
+                                </Switch>
+                              </Switch.Group>
+                            </>
+                          ) : (
+                            <>
+                              <h1 className="text-left font-sans">
+                                An employee can only be promoted if they have
+                                achieved the 1 - Outstanding rating for 2
+                                consecutive years.
+                              </h1>
+                              <h1 className="text-left font-sans text-indigo-700">
+                                This employee has received the 1 - Outstanding
+                                rating for {canPromote} consecutive year(s).
+                              </h1>
+                            </>
+                          )}
                         </div>
 
                         <div>
@@ -523,7 +584,7 @@ export default function Appraisal() {
                               {" "}
                               <label
                                 htmlFor="justification"
-                                className="block text-md text-left font-sans font-medium text-gray-900"
+                                className="block mt-5 text-md text-left font-sans font-medium text-gray-900"
                               >
                                 Promotion Justification
                               </label>

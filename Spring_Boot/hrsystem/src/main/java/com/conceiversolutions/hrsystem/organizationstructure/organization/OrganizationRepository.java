@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
+import com.conceiversolutions.hrsystem.user.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,5 +20,8 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 
     @Query("SELECT o FROM Organization o WHERE o.organizationHead.userId =?1")
     Optional<Organization> findOrganizationByHead(Long userId);
+
+    @Query("SELECT o.organizationHead FROM Organization o WHERE o.organizationId = ?1")
+    Optional<User> findOrganizationHead(Long organizationId);
 
 }

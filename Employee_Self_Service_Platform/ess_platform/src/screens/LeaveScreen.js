@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
 
 
-const LeaveScreen = ({navigation}) => {
+const LeaveScreen = ({ navigation }) => {
 
   const [userId, setUserId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -54,10 +54,10 @@ const LeaveScreen = ({navigation}) => {
       };
     }
     setId();
-   }, []);
-    
+  }, []);
+
   return (
-    userId  &&
+    userId &&
     <SafeAreaView style={styles.container}>
       <View style={styles.inline}>
         <Text style={styles.headlines}>Application History</Text>
@@ -65,12 +65,12 @@ const LeaveScreen = ({navigation}) => {
           icon="plus"
           mode="contained"
           color="#ffd700"
-          onPress={() => navigation.navigate('LeaveApplication',{userId})}>
-          Apply 
+          onPress={() => navigation.navigate('LeaveApplication', { userId })}>
+          Apply
         </Button>
-        </View>
-        <LeaveList userId = {userId}/>
-      
+      </View>
+      <LeaveList userId={userId} />
+
     </SafeAreaView>
   )
 };

@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View, Alert, Image,Text } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  View,
+  Alert,
+  Image,
+  Text,
+} from "react-native";
 import {
   Badge,
   Button,
@@ -10,20 +17,19 @@ import {
 } from "react-native-paper";
 import api from "../../utils/api";
 
-
 function TaskList({
   taskListItems,
   showModal,
   setTaskListItem,
   onRefresh,
-  refreshing
+  refreshing,
 }) {
   const [selectedTask, setSelectedTask] = useState([]);
   const [open, setOpen] = useState(false);
 
   function onClickHandler() {
-    console.log(selectedTask)
-    selectedTask.map((taskListItem) => (
+    console.log(selectedTask);
+    selectedTask.map((taskListItem) =>
       api
         .markTaskListItemAsComplete(taskListItem.taskListItemId)
         .then(() => {
@@ -32,7 +38,8 @@ function TaskList({
         })
         .catch((error) => {
           alert(error.response.data.message);
-        })));
+        })
+    );
   }
   const showAlert = () =>
     Alert.alert(
@@ -40,7 +47,7 @@ function TaskList({
       "Are you sure you have finished all the selected tasks?",
       [
         {
-          text: "Cancel"
+          text: "Cancel",
         },
         {
           text: "Yes",
@@ -49,21 +56,26 @@ function TaskList({
       ]
     );
 
-
   return (
     <ScrollView
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {(taskListItems !== undefined && taskListItems.length === 0) ? (
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Image
-            source={require("../../../assets/puddingdog.png")}
-          />
-          <Text style={{fontSize: 20}}>
-            No remaining tasks
-          </Text>
+      {taskListItems !== undefined && taskListItems.length === 0 ? (
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "white",
+            margin: "4%",
+            elevation: 10,
+            borderRadius: 20,
+            paddingBottom: "4%"
+          }}
+        >
+          <Image source={require("../../../assets/puddingdog.png")} />
+          <Text style={{ fontSize: 20, fontFamily: "Poppins_500Medium" }}>No remaining tasks</Text>
         </View>
       ) : (
         taskListItems.map((taskListItem, index) => (
@@ -82,11 +94,22 @@ function TaskList({
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Checkbox
-                status={(selectedTask.includes(taskListItem) || taskListItem.isDone) ? "checked" : "unchecked"}
+                status={
+                  selectedTask.includes(taskListItem) || taskListItem.isDone
+                    ? "checked"
+                    : "unchecked"
+                }
                 value={taskListItem.taskListItemId}
                 onPress={(e) => {
-                  if (e.target.status === "checked" && !taskListItem.isDone) { setSelectedTask([...selectedTask, taskListItem]); e.target.status = "unchecked" }
-                  else { setSelectedTask(selectedTask.filter((p) => p !== taskListItem)); e.target.status = "checked" }
+                  if (e.target.status === "checked" && !taskListItem.isDone) {
+                    setSelectedTask([...selectedTask, taskListItem]);
+                    e.target.status = "unchecked";
+                  } else {
+                    setSelectedTask(
+                      selectedTask.filter((p) => p !== taskListItem)
+                    );
+                    e.target.status = "checked";
+                  }
                 }}
                 disabled={taskListItem.isDone}
               />
@@ -109,17 +132,17 @@ function TaskList({
               </View>
             </View>
           </Card>
-        )))}
-      {taskListItems !== undefined && taskListItems.length !== 0 &&
-        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-          <Button
-            mode="contained"
-            color="#ffd700"
-            onPress={() => showAlert()}
-          >
+        ))
+      )}
+      {taskListItems !== undefined && taskListItems.length !== 0 && (
+        <View
+          style={{ justifyContent: "center", flex: 1, alignItems: "center" }}
+        >
+          <Button mode="contained" color="#ffd700" onPress={() => showAlert()}>
             Check selected tasks
           </Button>
-        </View>}
+        </View>
+      )}
     </ScrollView>
   );
 }

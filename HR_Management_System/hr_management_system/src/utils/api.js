@@ -806,6 +806,9 @@ const api = {
       `http://localhost:9191/api/goal/${year}/type/${type}/user/${userId}`
     );
   },
+  getEmployeeGoals(userId) {
+    return axios.get(`http://localhost:9191/api/goal/employee/${userId}`);
+  },
   getAllUserGoals(year) {
     return axios.get(`http://localhost:9191/api/goal/users/${year}`);
   },
@@ -891,6 +894,21 @@ const api = {
       `http://localhost:9191/api/appraisal/${appraisalId}?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}`
     );
   },
+  getAllEmployeeAppraisals(userId) {
+    return axios.get(`http://localhost:9191/api/appraisal/employee/${userId}`);
+  },
+  saveAppraisal(
+    appraisalId,
+    strengths,
+    weaknesses,
+    rating,
+    promotion,
+    promotionJustification
+  ) {
+    return axios.put(
+      `http://localhost:9191/api/appraisal/${appraisalId}?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}&promotion=${promotion}&promotionJustification=${promotionJustification}`
+    );
+  },
   submitAppraisal(
     appraisalId,
     strengths,
@@ -905,6 +923,9 @@ const api = {
   },
   deleteAppraisal(appraisalId) {
     return axios.delete(`http://localhost:9191/api/appraisal/${appraisalId}`);
+  },
+  getEligibleForPromotion(userId) {
+    return axios.get(`http://localhost:9191/api/appraisal/promotion/${userId}`);
   },
   // activateUser(email){
   //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
@@ -1000,11 +1021,6 @@ const api = {
   getAnAppraisal(appraisalId) {
     return axios.get(`http://localhost:9191/api/appraisal/get/${appraisalId}`);
   },
-  addAppraisal(appraisal) {
-    return axios.post(
-      `http://localhost:9191/api/appraisal/addAppraisal/${appraisal}`
-    );
-  },
   editAppraisal(appraisal) {
     return axios.put(
       `http://localhost:9191/api/appraisal/editAppraisal/${appraisal}`
@@ -1042,6 +1058,137 @@ const api = {
     return axios.put(
       `http://localhost:9191/api/user/payroll/editUserPayrollInformation?userId=${userId}&bankName=${bankName}&bankAccNo=${bankAccNo}`,
       temp
+    );
+  },
+  broadcastMessage(title, description) {
+    return axios.post(
+      `http://localhost:9191/api/notification/broadcastMessage?title=${title}&description=${description}`
+    );
+  },
+
+  //promotion
+  getAllPositions() {
+    return axios.get(`http://localhost:9191/api/position`);
+  },
+  getUserActiveRequests(userId) {
+    return axios.get(`http://localhost:9191/api/promotion/active/${userId}`);
+  },
+  getUserRequestHistory(userId) {
+    return axios.get(`http://localhost:9191/api/promotion/history/${userId}`);
+  },
+  getPromotionRequest(promotionId) {
+    return axios.get(`http://localhost:9191/api/promotion/${promotionId}`);
+  },
+  submitPromotionRequest(
+    promotionId,
+    promotionJustification,
+    positionId,
+    withdrawRemarks
+  ) {
+    return axios.put(
+      `http://localhost:9191/api/promotion/submit/${promotionId}/?promotionJustification=${promotionJustification}&positionId=${positionId}&withdrawRemarks=${withdrawRemarks}`
+    );
+  },
+  getPreferredDatesByUserId(userId) {
+    return axios.get(
+      `http://localhost:9191/api/preferred_date/getPreferredDatesByUserId?userId=${userId}`
+    );
+  },
+  
+  // Welfare Claims
+  getAllBenefitTypes() {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllBenefitTypes`
+    );
+  },
+  addBenefitPlan(description, planName, planAmount, startDate, endDate, planType) {
+    return axios.post(
+      `http://localhost:9191/api/claims/addBenefitPlan?description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}&planType=${planType}`
+    );
+  },
+  getAllBenefitPlans() {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllBenefitPlans`
+    );
+  },
+  getAllBenefitPlansByType(benefitType) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllBenefitPlansByType?benefitType=${benefitType}`
+    );
+  },
+  getBenefitPlanById(benefitPlanId) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getBenefitPlanById?benefitPlanId=${benefitPlanId}`
+    );
+  },
+  editBenefitPlan(planId, description, planName, planAmount, startDate, endDate) {
+    return axios.put(
+      `http://localhost:9191/api/claims/editBenefitPlan?planId=${planId}&description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}`
+    );
+  },
+  terminateBenefitPlan(planId) {
+    return axios.put(
+      `http://localhost:9191/api/claims/terminateBenefitPlan?planId=${planId}`
+    );
+  },
+  addBenefitPlanInstance(planId, employeeId) {
+    return axios.post(
+      `http://localhost:9191/api/claims/addBenefitPlanInstance?planId=${planId}&employeeId=${employeeId}`
+    );
+  },
+  getAllBenefitPlanInstancesByPlan() {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllBenefitPlanInstancesByPlan?`
+    );
+  },
+  getAllBenefitPlanInstancesByEmployeeId(employeeId) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllBenefitPlanInstancesByEmployeeId?employeeId=${employeeId}`
+    );
+  },
+  getEmployeeClaims(employeeId) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getEmployeeClaims?employeeId=${employeeId}`
+    );
+  },
+  makeNewClaim(claimDate, incidentDate, remarks, claimAmount, benefitPlanInstanceId, file) {
+    return axios.post(
+      `http://localhost:9191/api/claims/makeNewClaim?file=&claimDate=${claimDate}&incidentDate=${incidentDate}&remarks=${remarks}&claimAmount=${claimAmount}&benefitPlanInstanceId=${benefitPlanInstanceId}`,
+    file);
+  },
+  getAllClaims() {
+    return axios.get(
+      `http://localhost:9191/api/claims/getAllClaims`
+    );
+  },
+  getClaim(claimId) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getClaim?claimId=${claimId}`
+    );
+  },
+  approveClaim(claimId) {
+    return axios.put(
+      `http://localhost:9191/api/claims/approveClaim?claimId=${claimId}`
+    );
+  },
+  rejectClaim(claimId) {
+    return axios.put(
+      `http://localhost:9191/api/claims/rejectClaim?claimId=${claimId}`
+    );
+  },
+  withdrawClaim(claimId) {
+    return axios.delete(
+      `http://localhost:9191/api/claims/withdrawClaim?claimId=${claimId}`
+    );
+  },
+  getEmployeesAssignedToPlan(planId) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getEmployeesAssignedToPlan?planId=${planId}`
+    );
+  },
+  getEmployeesUnassignedToPlan(planId) {
+    return axios.get(
+      `http://localhost:9191/api/claims/getEmployeesUnassignedToPlan?planId=${planId}`
     );
   },
 };

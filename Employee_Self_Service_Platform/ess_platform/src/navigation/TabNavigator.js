@@ -6,6 +6,9 @@ import { Feather } from "@expo/vector-icons";
 import AdminDrawerNavigator from "./AdminDrawerNavigator";
 import TrainingNavigator from "./TrainingNavigator";
 import ScheduleNavigator from "./ScheduleNavigator";
+import ScheduleDrawerNavigator from "./ScheduleDrawerNavigator";
+import WelfareDrawerNavigator from "./WelfareDrawerNavigator";
+
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -15,8 +18,8 @@ const TabNavigator = () => {
       initialRouteName="Home"
       // activeColor="#101820FF"
       activeColor="white"
-      shifting={true}
-      sceneAnimationEnabled={true}
+      shifting={false}
+      // sceneAnimationEnabled={true}
       barStyle={{ backgroundColor: "#3949ab", elevation: 8 }}
     >
       <Tab.Screen
@@ -30,7 +33,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Schedule"
-        component={ScheduleNavigator}
+        component={ScheduleDrawerNavigator}
         options={{
           tabBarIcon: ({ color }) => (
             <Feather name="calendar" size={24} color={color} />
@@ -52,6 +55,15 @@ const TabNavigator = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <Feather name="book" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Welfare"
+        component={WelfareDrawerNavigator}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="smile-circle" size={24} color={color} />
           ),
         }}
       />

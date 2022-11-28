@@ -1,12 +1,12 @@
 import axios from "axios";
 
 // const URL = "192.168.10.128"; // MATT
-// const URL = "172.25.99.137"; // XINYUE
+// const URL = "172.31.55.234"; // XINYUE
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"
 const URL = "192.168.1.82"; // TIM
-// const URL = "10.249.73.251";
+// const URL = "172.17.93.172";
 
 const api = {
   login(workEmail, password) {
@@ -16,6 +16,11 @@ const api = {
   },
   getUser(userId) {
     return axios.get(`http://${URL}:9191/api/user/${userId}`);
+  },
+  getEmployeesByTeam(teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/user/getEmployeesByTeam?teamId=${teamId}`
+    );
   },
   // onboarding/offboarding
   getTaskListItems() {
@@ -146,6 +151,105 @@ const api = {
     return axios.get(
       `http://${URL}:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
     );
+  },
+  getShiftListItemByTeam(teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/shift_list_item/getShiftListItemByTeam?teamId=${teamId}`
+    );
+  },
+  getPreferredDatesByUserId(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/preferred_date/getPreferredDatesByUserId?userId=${userId}`
+    );
+  },
+  addNewPreferredDates(dates, userId) {
+    return axios.post(
+      `http://${URL}:9191/api/preferred_date?dates=${dates}&userId=${userId}`,
+      preferredDates
+    );
+  },
+  editPreferredDates(userId, newDates) {
+    return axios.put(
+      `http://${URL}:9191/api/preferred_date/editPreferredDates?userId=${userId}`,
+      newDates
+    );
+  },
+  addNewSwapRequest(reason, receiverShiftListItemId, requesterShiftListItemId) {
+    return axios.post(
+      `http://${URL}:9191/api/swap_request?reason=${reason}&receiverShiftListItemId=${receiverShiftListItemId}&requesterShiftListItemId=${requesterShiftListItemId}`
+    );
+  },
+  getSwapRequestsByUserId(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/swap_request/getSwapRequestsByUserId?userId=${userId}`
+    );
+  },
+  deleteSwapRequestById(swapRequestId) {
+    return axios.delete(`http://${URL}:9191/api/swap_request/${swapRequestId}`);
+  },
+  getSwapRequestsByTeamId(teamId) {
+    return axios.get(
+      `http://${URL}:9191/api/swap_request/getSwapRequestsByTeamId?teamId=${teamId}`
+    );
+  },
+  approveSwapRequest(swapRequestId, responseReason) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/approveSwapRequest?swapRequestId=${swapRequestId}&responseReason=${responseReason}`
+    );
+  },
+  rejectSwapRequest(swapRequestId, responseReason) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/rejectSwapRequest?swapRequestId=${swapRequestId}&responseReason=${responseReason}`
+    );
+  },
+  clearSwapRequest(swapRequestId) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/clearSwapRequest?swapRequestId=${swapRequestId}`
+    );
+  },
+  approvePendingSwapRequest(swapRequestId, responseReason) {
+    return axios.put(
+      `http://${URL}:9191/api/swap_request/approvePendingSwapRequest?swapRequestId=${swapRequestId}&responseReason=${responseReason}`
+    );
+  },
+  counterProposeSwapRequest(
+    reason,
+    oldSwapRequestId,
+    receiverShiftListItemId,
+    requesterShiftListItemId
+  ) {
+    return axios.post(
+      `http://${URL}:9191/api/swap_request/counterProposeSwapRequest?reason=${reason}&oldSwapRequestId=${oldSwapRequestId}&receiverShiftListItemId=${receiverShiftListItemId}&requesterShiftListItemId=${requesterShiftListItemId}`
+    );
+  },
+  getNumberOfPendingIncomingSwapRequestsByUser(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/swap_request/getNumberOfPendingIncomingSwapRequestsByUser?userId=${userId}`
+    );
+  },
+
+  getAllBenefitPlanInstancesByEmployeeId(employeeId) {
+    return axios.get(
+      `http://${URL}:9191/api/claims/getAllBenefitPlanInstancesByEmployeeId?employeeId=${employeeId}`
+    );
+  },
+  getEmployeeClaims(employeeId) {
+    return axios.get(
+      `http://${URL}:9191/api/claims/getEmployeeClaims?employeeId=${employeeId}`
+    );
+  },
+  withdrawClaim(claimId) {
+    return axios.delete(
+      `http://${URL}:9191/api/claims/withdrawClaim?claimId=${claimId}`
+    );
+  },
+  makeNewClaim(claimDate, incidentDate, remarks, claimAmount, benefitPlanInstanceId, file) {
+    return axios.post(
+      `http://${URL}:9191/api/claims/makeNewClaim?file=&claimDate=${claimDate}&incidentDate=${incidentDate}&remarks=${remarks}&claimAmount=${claimAmount}&benefitPlanInstanceId=${benefitPlanInstanceId}`,
+    file);
+  },
+  createClaim(formDataPayload) {
+    return axios.post(`http://${URL}:9191/api/claims/makeNewClaim`, formDataPayload, {headers: {'Content-Type': 'multipart/form-data'}});
   },
 };
 

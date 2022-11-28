@@ -163,6 +163,7 @@ public class UserService implements UserDetailsService {
             u.setJobRequests(new ArrayList<>());
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
+            u.setBenefitPlanInstances(new ArrayList<>());
             if (u.getCurrentLeaveQuota() != null) { // first layer
                 if (u.getCurrentLeaveQuota().getPreviousLeaveQuota() != null) { // second layer
                     u.getCurrentLeaveQuota().getPreviousLeaveQuota().setPreviousLeaveQuota(null); // third layer don't
@@ -217,6 +218,8 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setPreferredDates(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
 
             return u;
         } else {
@@ -268,6 +271,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
             return u;
         } else {
             throw new IllegalStateException("User does not exist.");
@@ -317,6 +321,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
             return u;
         } else {
             throw new IllegalStateException("Employee does not exist.");
@@ -406,6 +411,7 @@ public class UserService implements UserDetailsService {
             employee.setLeaveQuotas(new ArrayList<>());
             employee.setCurrentLeaveQuota(null);
             employee.setQualificationInformation(null);
+            employee.setBenefitPlanInstances(new ArrayList<>());
             // List<Team> teams = employee.getTeams();
             // employee.setTeams(new ArrayList<>());
             List<Team> teams = employee.getTeams();
@@ -1250,6 +1256,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
         }
 
         return managers;
@@ -1361,6 +1368,7 @@ public class UserService implements UserDetailsService {
             u.setJobRequests(new ArrayList<>());
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
+            u.setBenefitPlanInstances(new ArrayList<>());
             for (LeaveQuota lq : u.getLeaveQuotas()) {
                 u.getCurrentLeaveQuota().setPreviousLeaveQuota(null);
             }
@@ -1411,6 +1419,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
         }
 
         return employees;
@@ -1453,6 +1462,7 @@ public class UserService implements UserDetailsService {
             u.setLeaves(new ArrayList<>());
             u.setLeaveQuotas(new ArrayList<>());
             u.setCurrentLeaveQuota(null);
+            u.setBenefitPlanInstances(new ArrayList<>());
         }
 
         return applicants;
@@ -1573,7 +1583,7 @@ public class UserService implements UserDetailsService {
                 u.setLeaves(new ArrayList<>());
                 u.setLeaveQuotas(new ArrayList<>());
                 u.setCurrentLeaveQuota(null);
-
+                u.setBenefitPlanInstances(new ArrayList<>());
                 availManagers.add(u);
             }
         }
@@ -1628,6 +1638,7 @@ public class UserService implements UserDetailsService {
             e.setLeaves(new ArrayList<>());
             e.setLeaveQuotas(new ArrayList<>());
             e.setCurrentLeaveQuota(null);
+            e.setBenefitPlanInstances(new ArrayList<>());
 
         }
 
@@ -2104,6 +2115,7 @@ public class UserService implements UserDetailsService {
         u.setJobRequests(new ArrayList<>());
         u.setLeaves(new ArrayList<>());
         u.setLeaveQuotas(new ArrayList<>());
+        u.setBenefitPlanInstances(new ArrayList<>());
         for (LeaveQuota lq : u.getLeaveQuotas()) {
             u.getCurrentLeaveQuota().setPreviousLeaveQuota(null);
         }
@@ -2425,29 +2437,30 @@ public class UserService implements UserDetailsService {
     public List<User> getEmployeesByTeam(Long teamId) {
         List<User> users = userRepository.getEmployeesByTeam(teamId);
         for (User user : users) {
-            user.setTeams(new ArrayList<>());
-            user.setQualificationInformation(null);
-            user.setBlocks(new ArrayList<>());
-            user.setShiftListItems(new ArrayList<>());
-            user.setSwapRequestsReceived(new ArrayList<>());
+            // user.setTeams(new ArrayList<>());
+            // user.setQualificationInformation(null);
+            // user.setBlocks(new ArrayList<>());
+            // user.setShiftListItems(new ArrayList<>());
+            // user.setSwapRequestsReceived(new ArrayList<>());
 
-            user.setSwapRequestsRequested(new ArrayList<>());
-            user.setReactivationRequest(null);
-            user.setAttendances(new ArrayList<>());
-            user.setCurrentPayInformation(null);
-            user.setEmployeeAppraisals(new ArrayList<>());
+            // user.setSwapRequestsRequested(new ArrayList<>());
+            // user.setReactivationRequest(null);
+            // user.setAttendances(new ArrayList<>());
+            // user.setCurrentPayInformation(null);
+            // user.setEmployeeAppraisals(new ArrayList<>());
 
-            user.setManagerAppraisals(new ArrayList<>());
-            user.setManagerReviews(new ArrayList<>());
-            user.setEmployeeReviews(new ArrayList<>());
-            user.setApplications(new ArrayList<>());
-            user.setPositions(new ArrayList<>());
+            // user.setManagerAppraisals(new ArrayList<>());
+            // user.setManagerReviews(new ArrayList<>());
+            // user.setEmployeeReviews(new ArrayList<>());
+            // user.setApplications(new ArrayList<>());
+            // user.setPositions(new ArrayList<>());
 
-            user.setJobRequests(new ArrayList<>());
-            user.setLeaves(new ArrayList<>());
-            user.setLeaveQuotas(new ArrayList<>());
-            user.setCurrentLeaveQuota(null);
-            user.setTaskListItems(new ArrayList<>());
+            // user.setJobRequests(new ArrayList<>());
+            // user.setLeaves(new ArrayList<>());
+            // user.setLeaveQuotas(new ArrayList<>());
+            // user.setCurrentLeaveQuota(null);
+            // user.setTaskListItems(new ArrayList<>());
+            user.nullify();
         }
         return users;
     }
