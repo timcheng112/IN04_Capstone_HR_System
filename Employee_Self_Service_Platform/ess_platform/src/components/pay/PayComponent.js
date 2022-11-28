@@ -19,6 +19,7 @@ const PayComponent = () => {
   const [toggleValue, setToggleValue] = useState("My Pay Information");
   const [userId, setUserId] = useState(null);
   const [user, setUser] = useState(null);
+  const [payslips, setPayslips] = useState(null);
 
   // TO RETRIEVE USERID OF LOGGED IN USER
   useEffect(() => {
@@ -43,6 +44,20 @@ const PayComponent = () => {
         })
         .catch((error) =>
           console.log("Error retrieving user with ID: " + userId)
+        );
+    }
+  }, [userId]);
+
+  // TO RETRIEVE LOGGED IN USER's PAYSLIPS
+  useEffect(() => {
+    if (userId !== null) {
+      api
+        .getPayslipByUserId(userId)
+        .then((response) => {
+          setPayslips(response.data);
+        })
+        .catch((error) =>
+          console.log("Error retrieving payslips for user with ID: " + userId)
         );
     }
   }, [userId]);
@@ -136,8 +151,8 @@ const PayComponent = () => {
               </DataTable.Title>
               <DataTable.Title style={{ flex: 2 }}>Action</DataTable.Title>
             </DataTable.Header>
-            {user &&
-              user.payslips.map((payslip, index) => {
+            {payslips &&
+              payslips.map((payslip, index) => {
                 return (
                   <DataTable.Row key={index}>
                     <DataTable.Cell style={{ flex: 1 }}>
