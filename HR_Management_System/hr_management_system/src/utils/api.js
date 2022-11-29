@@ -1034,7 +1034,6 @@ const api = {
       temp
     );
   },
-
   broadcastMessage(title, description) {
     return axios.post(
       `http://localhost:9191/api/notification/broadcastMessage?title=${title}&description=${description}`
