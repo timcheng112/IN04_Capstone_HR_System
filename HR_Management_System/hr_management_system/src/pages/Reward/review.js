@@ -37,7 +37,7 @@ export default function Review() {
   }, []);
   useEffect(() => {
     api
-      .getAllReviewForms()
+      .getReviewFormByDepartmentHead(getUserId())
       .then((response) => {
         setReviews(response.data);
       })

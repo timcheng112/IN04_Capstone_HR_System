@@ -22,7 +22,8 @@ export default function NewReviewForm() {
   const [team, setTeam] = useState("");
 
   function submit(){
-    api.submitReviewForm(name, rate, justification, department, team) 
+    console.log(department)
+    api.submitReviewForm(name, rate, justification, department.departmentName, team) 
     .then(() => {alert("Successfully submit.");})
     .catch((error) => setError(error));
     history.push("/")

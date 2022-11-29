@@ -37,6 +37,8 @@ export default function ViewReward({ open, setOpen, reward }) {
     api.editReward(name, description, points, helpexpiryDate.trim(), reward.rewardId)
     .then(() => { alert("Successfully saved."); })
     .catch((error) => setError(error));
+
+    setOpen(false);
   };
 
 

@@ -1275,7 +1275,7 @@ const api = {
   },
   editReward(name, description, pointsRequired, expiryDate, rewardId) {
     return axios.put(
-      `http://localhost:9191/api/rewards/addNewRewardeditReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardId=${rewardId}`
+      `http://localhost:9191/api/rewards/editReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardId=${rewardId}`
       );
   },
   deleteReward(rewardId) {

@@ -22,6 +22,7 @@ export default function TrackDetail() {
   const [name, setName] = useState('');
   const [ratio, setRatio] = useState(null);
   const [track, setTrack] = useState(null);
+  const [department, setDepartment] = useState(null)
   const history = useHistory();
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
@@ -46,26 +47,73 @@ export default function TrackDetail() {
     setEndDate(new Date(location.state.track.endDate));
   }, []);
 
-  // const handleSubmit = (evt) => {
-  //   evt.preventDefault();
-  //   var result = 0;
-  //   if (useState.button === 1) {
-  //     result = saveRequest();
-  //   }
-  //   if (useState.button === 2) {
-  //     result = submitRequest();
-  //   }
-  //   if (result === 0) {
-  //     user !== null && user.hrEmployee ? (history.push("/hiring/jobrequesthr")) : (history.push("/hiring/jobrequest"))
-  //   }
-  // };
+  useEffect(() => {
+    api
+      .getDepartmentByEmployeeId(getUserId())
+      .then((response) => {
+        setDepartment(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    var result = 0;
+    if (useState.button === 1) {
+      result = save();
+    }
+    if (useState.button === 2) {
+      result = submit();
+    }
+    if (result === 0) {
+      history.push("/welfare/rewardtrack");
+    }
+  };
+
+  function save() {
+    var date = startDate.getDate()
+    if (startDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = startDate.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + (month);
+    }
+    var helpstartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
+
+    var edate = endDate.getDate()
+    if (endDate.getDate() < 10) {
+      edate = "0" + edate;
+    }
+    var emonth = endDate.getMonth() + 1;
+    if (emonth < 10) {
+      emonth = "0" + (emonth);
+    }
+
+    var helpendDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
+
+    api.saveRewardTrack(name, helpstartDate.trim(), helpendDate.trim(), department.departmentId, ratio, track.rewardTrackId)
+      .then(() => { alert("Successfully saved."); })
+      .catch((error) => setError(error));
+
+    return 0;
+  }
+
+  function submit() {
+
+    api.publishRewardTrack(track.rewardTrackId)
+      .then(() => { alert("Successfully published."); })
+      .catch((error) => setError(error));
+
+    return 0;
+  }
 
 
   return (
     track && <div className="">
       <Navbar />
       <div className="py-5"></div>
-      <form className="space-y-8 divide-y divide-gray-200" >
+      <form className="space-y-8 divide-y divide-gray-200" onSubmit={handleSubmit}>
         <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
           <div className="space-y-6 sm:space-y-5">
             <div>
@@ -130,7 +178,7 @@ export default function TrackDetail() {
                   Rewards
                 </label>
                 <div className="flex space-x-8">
-                  <RewardList track ={track}/>
+                  <RewardList track={track} />
                   <button
                     type="button"
                     onClick={() => setOpen(true)}
@@ -142,7 +190,7 @@ export default function TrackDetail() {
                     />
                     Add
                   </button>
-                  <AddNewReward open={open} setOpen={setOpen} track ={track}/>
+                  <AddNewReward open={open} setOpen={setOpen} track={track} />
                 </div>
               </div>
             </div>
@@ -161,16 +209,16 @@ export default function TrackDetail() {
             <button
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            //onClick={() => (useState.button = 1)}
+              onClick={() => (useState.button = 1)}
             >
               Save
             </button>
             <button
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            //onClick={() => (useState.button = 2)}
+              onClick={() => (useState.button = 2)}
             >
-              Submit
+              Publish
             </button>
           </div>
         </div>

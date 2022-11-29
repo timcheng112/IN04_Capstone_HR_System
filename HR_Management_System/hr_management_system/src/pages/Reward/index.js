@@ -45,7 +45,7 @@ export default function Reward() {
 
   useEffect(() => {
     api
-      .getRewardTrackByEmployee(getUserId()) 
+      .getRewardTrackByDepartmentHead(getUserId()) 
       .then((response) => {
         setTracks(response.data);
       })
