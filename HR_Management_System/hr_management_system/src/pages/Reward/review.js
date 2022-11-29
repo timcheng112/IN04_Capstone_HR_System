@@ -7,10 +7,7 @@ import api from "../../utils/api";
 import { getUserId, setUserSession } from "../../utils/Common";
 import { useHistory } from "react-router-dom";
 import ReviewFormOption from "../../features/reward/ReviewFormOption";
-import {
-  EyeIcon,
-  PlusIcon,
-} from "@heroicons/react/20/solid";
+
 
 export default function Review() {
   const [error, setError] = useState(null);
