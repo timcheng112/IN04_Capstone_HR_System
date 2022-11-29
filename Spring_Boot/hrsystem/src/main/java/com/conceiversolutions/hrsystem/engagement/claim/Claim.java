@@ -1,131 +1,64 @@
 package com.conceiversolutions.hrsystem.engagement.claim;
 
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.conceiversolutions.hrsystem.engagement.benefitplan.BenefitPlanInstance;
 import com.conceiversolutions.hrsystem.engagement.claimtype.ClaimType;
 import com.conceiversolutions.hrsystem.enums.StatusEnum;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.user.User;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table
+@Getter
+@Setter
+@Table(name = "claims")
 public class Claim {
 
-    //note: when creating a claim, need to ensure the new claim doesn't break the claim limit.
-
-    //attributes
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
     )
-    @Column(name="claim_id")
+    @Column(name = "claim_id")
     private Long claimId;
-    @Column(name="claim_date")
+    @Column(name = "claim_date")
     private LocalDate claimDate;
-    @Column(name="claim_description")
-    private String description;
-    @Column(name="claim_remarks")
+    @Column(name = "incident_date")
+    private LocalDate incidentDate;
+    @Column(name = "remarks")
     private String remarks;
-    @Column(name="claim_supporting_docs")
-    private Blob supportingDocs;
-    @Column(name="approval_status")
+    @Column(name = "last_updated")
+    private LocalDate lastUpdated;
+    @Column(name = "claim_status")
     @Enumerated(EnumType.STRING)
-    private StatusEnum statusEnum;
-    @Column(name="approval_remarks")
-    private String approvalRemarks;
+    private StatusEnum claimStatus;
+    @Column(name = "claim_amount")
+    private BigDecimal claimAmount;
 
-    //relationships
-    @OneToOne
-    @JoinColumn(name="claim_type")
-    private ClaimType claimType;
-
-    //constructors
+    @OneToOne(targetEntity = DocData.class, fetch = FetchType.LAZY)
+    private DocData supportingDocument;
+    @ManyToOne(targetEntity = BenefitPlanInstance.class, optional = false, fetch = FetchType.LAZY)
+    private BenefitPlanInstance benefitPlanInstance;
 
     public Claim() {
     }
 
-    public Claim(LocalDate claimDate, String description, String remarks, Blob supportingDocs, StatusEnum statusEnum, String approvalRemarks) {
+    public Claim(LocalDate claimDate, LocalDate incidentDate, String remarks, BigDecimal claimAmount, BenefitPlanInstance benefitPlanInstance) {
         this.claimDate = claimDate;
-        this.description = description;
+        this.incidentDate = incidentDate;
         this.remarks = remarks;
-        this.supportingDocs = supportingDocs;
-        this.statusEnum = statusEnum;
-        this.approvalRemarks = approvalRemarks;
+        this.claimAmount = claimAmount;
+        this.benefitPlanInstance = benefitPlanInstance;
     }
 
-    public Claim(LocalDate claimDate, String description, String remarks, Blob supportingDocs) {
-        this.claimDate = claimDate;
-        this.description = description;
-        this.remarks = remarks;
-        this.supportingDocs = supportingDocs;
-    }
-
-    //getters and setters
-
-    public Long getClaimId() {
-        return claimId;
-    }
-
-    public void setClaimId(Long claimId) {
-        this.claimId = claimId;
-    }
-
-    public LocalDate getClaimDate() {
-        return claimDate;
-    }
-
-    public void setClaimDate(LocalDate claimDate) {
-        this.claimDate = claimDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public Blob getSupportingDocs() {
-        return supportingDocs;
-    }
-
-    public void setSupportingDocs(Blob supportingDocs) {
-        this.supportingDocs = supportingDocs;
-    }
-
-    public StatusEnum getClaimStatus() {
-        return statusEnum;
-    }
-
-    public void setClaimStatus(StatusEnum statusEnum) {
-        this.statusEnum = statusEnum;
-    }
-
-    public String getApprovalRemarks() {
-        return approvalRemarks;
-    }
-
-    public void setApprovalRemarks(String approvalRemarks) {
-        this.approvalRemarks = approvalRemarks;
+    public Claim(LocalDate claimDate, LocalDate incidentDate, String remarks, BigDecimal claimAmount, BenefitPlanInstance benefitPlanInstance, DocData supportingDocument) {
+        this(claimDate, incidentDate, remarks, claimAmount, benefitPlanInstance);
+        this.supportingDocument = supportingDocument;
     }
 
     @Override
@@ -133,11 +66,11 @@ public class Claim {
         return "Claim{" +
                 "claimId=" + claimId +
                 ", claimDate=" + claimDate +
-                ", description='" + description + '\'' +
+                ", incidentDate=" + incidentDate +
                 ", remarks='" + remarks + '\'' +
-                ", supportingDocs=" + supportingDocs +
-                ", claimStatus=" + statusEnum +
-                ", approvalRemarks='" + approvalRemarks + '\'' +
+                ", lastUpdated=" + lastUpdated +
+                ", claimStatus=" + claimStatus +
+                ", claimAmount=" + claimAmount +
                 '}';
     }
 }

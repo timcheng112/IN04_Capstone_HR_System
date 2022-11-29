@@ -1,23 +1,31 @@
 package com.conceiversolutions.hrsystem.user.position;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/position")
-@AllArgsConstructor
 public class PositionController {
 
     private final PositionService positionService;
 
-    @GetMapping(path= "/GetAllPositions")
-    public List<Position> getAllPositions(){
-        return getAllPositions();
+    public PositionController(PositionService positionService) {
+        this.positionService = positionService;
+    }
+    
+    @GetMapping
+    public List<Position> getAllPositions() {
+        return positionService.getAllPositions();
+    }
+
+    @GetMapping(path = "{userId}")
+    public Position getUserCurrentPosition(@PathVariable("userId") Long userId) throws Exception {
+        return positionService.getUserCurrentPosition(userId);
     }
 }

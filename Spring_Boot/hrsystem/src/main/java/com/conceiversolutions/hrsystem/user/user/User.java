@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.user.user;
 
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.engagement.benefitplan.BenefitPlanInstance;
 import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.enums.CitizenshipEnum;
@@ -178,6 +179,10 @@ public class User implements UserDetails {
     @JoinColumn(name = "read_notifications")
     private List<Notification> notificationsRead;
 
+    @Column(name = "reward_points")
+    private Integer rewardPoints;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = BenefitPlanInstance.class, mappedBy = "planOwner")
+    private List<BenefitPlanInstance> benefitPlanInstances;
 
     private String cardId;
 
@@ -206,6 +211,8 @@ public class User implements UserDetails {
         this.notificationsRead = new ArrayList<>();
         this.notificationsUnread = new ArrayList<>();
         this.isDisabled = false;
+        this.rewardPoints = 0;
+        this.benefitPlanInstances = new ArrayList<>();
     }
 
     public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RaceEnum race, CitizenshipEnum citizenship, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed, Boolean isEnabled, Boolean isDisabled, LocalDate dateJoined, DocData profilePic, List<Position> positions, Position currentPosition, QualificationInformation qualificationInformation, List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances, List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<ManagerReview> managerReviews, List<ManagerReview> employeeReviews, List<Goal> goals, List<TaskListItem> taskListItems, List<Team> teams, PayInformation currentPayInformation, ReactivationRequest reactivationRequest, PreferredDates preferredDates, List<Block> blocks, List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested, List<SwapRequest> swapRequestsReceived, LeaveQuota currentLeaveQuota, List<LeaveQuota> leaveQuotas, List<Leave> leaves, String bankAccNo, String bankName, List<Notification> notificationsUnread, List<Notification> notificationsRead, String cardId) {
@@ -638,8 +645,8 @@ public class User implements UserDetails {
         this.currentLeaveQuota = currentLeaveQuota;
         this.leaveQuotas = leaveQuotas;
         this.leaves = leaves;
-        this.notificationsUnread = new ArrayList<>();
-        this.notificationsRead = new ArrayList<>();
+//        this.notificationsUnread = new ArrayList<>();
+//        this.notificationsRead = new ArrayList<>();
     }
 
     @Override
@@ -860,7 +867,7 @@ public class User implements UserDetails {
         this.setLeaves(new ArrayList<>());
         this.setLeaveQuotas(new ArrayList<>());
         this.setCurrentLeaveQuota(null);
-
+        this.setBenefitPlanInstances(new ArrayList<>());
         return this;
     }
 }

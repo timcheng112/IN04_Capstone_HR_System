@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Image,
   SafeAreaView,
@@ -14,6 +14,7 @@ function LoginComponent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const windowHeight = useWindowDimensions().height;
+  const passwordRef = useRef();
 
   const { signIn } = React.useContext(AuthContext);
 
@@ -51,13 +52,20 @@ function LoginComponent() {
               label="Email"
               value={email}
               onChangeText={(email) => setEmail(email)}
+              returnKeyType={"next"}
+              onSubmitEditing={() => {
+                passwordRef.current.focus();
+              }}
+              blurOnSubmit={false}
             />
             <Text
               style={{
                 textAlign: "center",
                 textAlignVertical: "center",
                 borderColor: "#738A9B",
-                borderWidth: 1,
+                borderTopWidth: 1,
+                borderRightWidth: 1,
+                borderBottomWidth: 1,
                 borderTopRightRadius: 4,
                 borderBottomRightRadius: 4,
                 width: "40%",
@@ -82,7 +90,12 @@ function LoginComponent() {
             }}
             label="Password"
             value={password}
+            ref={passwordRef}
+            returnKeyType={"done"}
             onChangeText={(password) => setPassword(password)}
+            onSubmitEditing={() => {
+              signIn(email, password);
+            }}
           />
           <Button
             style={{ margin: 10, backgroundColor: "#FBB344" }}

@@ -1,6 +1,10 @@
 package com.conceiversolutions.hrsystem.user.user;
 
+import com.conceiversolutions.hrsystem.administration.task.Task;
+import com.conceiversolutions.hrsystem.administration.task.TaskRepository;
 import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItem;
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItemRepository;
+import com.conceiversolutions.hrsystem.administration.tasklistitem.TaskListItemService;
 import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
 import com.conceiversolutions.hrsystem.engagement.leave.Leave;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
@@ -17,9 +21,11 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
+import com.conceiversolutions.hrsystem.pay.allowance.AllowanceRepository;
 import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplate;
 import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplateRepository;
 import com.conceiversolutions.hrsystem.pay.deduction.Deduction;
+import com.conceiversolutions.hrsystem.pay.deduction.DeductionRepository;
 import com.conceiversolutions.hrsystem.pay.deductionTemplate.DeductionTemplate;
 import com.conceiversolutions.hrsystem.pay.deductionTemplate.DeductionTemplateRepository;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
@@ -78,9 +84,14 @@ public class UserService implements UserDetailsService {
     private final RosterRepository rosterRepository;
     private final QualificationService qualificationService;
     private final PayInformationRepository payInformationRepository;
+    private final AllowanceRepository allowanceRepository;
+    private final DeductionRepository deductionRepository;
     private final AllowanceTemplateRepository allowanceTemplateRepository;
     private final DeductionTemplateRepository deductionTemplateRepository;
     private final PayslipRepository payslipRepository;
+    private final TaskRepository taskRepository;
+    private final TaskListItemService taskListItemService;
+    private final TaskListItemRepository taskListItemRepository;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -478,6 +489,24 @@ public class UserService implements UserDetailsService {
         // positionRepository.saveAll(newPositions);
 
         User newUser = userRepository.saveAndFlush(user);
+
+        // Add auto assigned tasks
+        if (!newUser.getUserRole().equals(RoleEnum.APPLICANT)) {
+            List<Task> tasks = taskRepository.findTaskByAutoAssign(true);
+            for (Task task : tasks) {
+                TaskListItem taskListItem = new TaskListItem(false);
+                taskListItem.setUser(newUser);
+                taskListItem.setTask(task);
+                TaskListItem savedTaskListItem = taskListItemRepository.saveAndFlush(taskListItem);
+
+                task.addTaskListItem(savedTaskListItem);
+                taskRepository.save(task);
+
+                newUser.addTaskListItem(savedTaskListItem);
+            }
+        }
+
+        // userRepository.save(newUser);
 
         // Sending confirmation TOKEN to set user's isEnabled
         String token = UUID.randomUUID().toString();
@@ -2666,8 +2695,8 @@ public class UserService implements UserDetailsService {
     }
 
     public void editUserPayrollInformation(Long userId, String bankName, String bankAccNo,
-            List<AllowanceTemplate> allowances,
-            List<DeductionTemplate> deductions) {
+            List<Allowance> allowances,
+            List<Deduction> deductions) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
         if (user.getBankName() != bankName) {
@@ -2677,15 +2706,36 @@ public class UserService implements UserDetailsService {
             user.setBankAccNo(bankAccNo);
         }
 
-        for (AllowanceTemplate allowance : allowances) {
-            AllowanceTemplate savedAllowance = allowanceTemplateRepository.saveAndFlush(allowance);
-            user.getCurrentPayInformation().addAllowanceTemplate(savedAllowance);
-        }
-        for (DeductionTemplate deduction : deductions) {
-            DeductionTemplate savedDeduction = deductionTemplateRepository.saveAndFlush(deduction);
-            user.getCurrentPayInformation().addDeductionTemplate(savedDeduction);
+        // for (AllowanceTemplate allowance : allowances) {
+        // AllowanceTemplate savedAllowance =
+        // allowanceTemplateRepository.saveAndFlush(allowance);
+        // user.getCurrentPayInformation().addAllowanceTemplate(savedAllowance);
+        // }
+        // for (DeductionTemplate deduction : deductions) {
+        // DeductionTemplate savedDeduction =
+        // deductionTemplateRepository.saveAndFlush(deduction);
+        // user.getCurrentPayInformation().addDeductionTemplate(savedDeduction);
+        // }
+        System.out.println("*******ALLOWANCES: " + allowances + " *******");
+        System.out.println("*******DEDUCTIONS: " + deductions + " *******");
+        for (Allowance allowance : allowances) {
+            System.out.println("*******ALLOWANCE: " + allowance + " *******");
+            AllowanceTemplate savedAllowanceTemplate = allowanceTemplateRepository
+                    .saveAndFlush(allowance.getTemplate());
+            Allowance savedAllowance = allowanceRepository.saveAndFlush(allowance);
+            user.getCurrentPayInformation().addAllowance(savedAllowance);
+            user.getCurrentPayInformation().addAllowanceTemplate(savedAllowanceTemplate);
         }
 
+        for (Deduction deduction : deductions) {
+            System.out.println("*******DEDUCTION: " + deduction + " *******");
+            DeductionTemplate savedDeductionTemplate = deductionTemplateRepository
+                    .saveAndFlush(deduction.getTemplate());
+            Deduction savedDeduction = deductionRepository.saveAndFlush(deduction);
+            user.getCurrentPayInformation().addDeduction(savedDeduction);
+            user.getCurrentPayInformation().addDeductionTemplate(savedDeductionTemplate);
+        }
+        payInformationRepository.save(user.getCurrentPayInformation());
         user.getCurrentPayInformation().setInPayroll(true);
         userRepository.save(user);
     }

@@ -10,7 +10,7 @@ const TrainingNavigator = () => {
   return (
     <TrainingStack.Navigator>
       <TrainingStack.Screen
-        name="Training"
+        name="My Training"
         component={TrainingScreen}
         options={{
           tabBarLabel: "Training",

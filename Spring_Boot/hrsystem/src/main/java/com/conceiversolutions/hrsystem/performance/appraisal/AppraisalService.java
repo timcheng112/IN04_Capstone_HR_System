@@ -1,5 +1,8 @@
 package com.conceiversolutions.hrsystem.performance.appraisal;
 
+import com.conceiversolutions.hrsystem.jobchange.promotionrequest.PromotionRepository;
+import com.conceiversolutions.hrsystem.jobchange.promotionrequest.PromotionRequest;
+import com.conceiversolutions.hrsystem.jobchange.promotionrequest.PromotionService;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.Organization;
@@ -23,36 +26,24 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 @Service
+@AllArgsConstructor
 public class AppraisalService {
 
-    @Autowired
     private final AppraisalRepository appraisalRepository;
 
-    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     private final TeamRepository teamRepository;
 
-    @Autowired
     private final AppraisalPeriodRepository appraisalPeriodRepository;
 
-    @Autowired
     private final DepartmentRepository departmentRepository;
 
-    @Autowired
     private final OrganizationRepository organizationRepository;
 
-    public AppraisalService(AppraisalRepository appraisalRepository, UserRepository userRepository,
-            TeamRepository teamRepository, AppraisalPeriodRepository appraisalPeriodRepository,
-            DepartmentRepository departmentRepository, OrganizationRepository organizationRepository) {
-        this.appraisalRepository = appraisalRepository;
-        this.userRepository = userRepository;
-        this.teamRepository = teamRepository;
-        this.appraisalPeriodRepository = appraisalPeriodRepository;
-        this.departmentRepository = departmentRepository;
-        this.organizationRepository = organizationRepository;
-    }
+    private final PromotionService promotionService;
+
+    private final PromotionRepository promotionRepository;
 
     public User breakRelationships(User user) {
         User u = new User();
@@ -64,6 +55,19 @@ public class AppraisalService {
         u.setUserRole(user.getUserRole());
         u.setProfilePic(user.getProfilePic());
         u.setIsBlackListed(user.getIsBlackListed());
+        u.setCitizenship(user.getCitizenship());
+        u.setDateJoined(user.getDateJoined());
+        u.setDob(user.getDob());
+        u.setEmail(user.getEmail());
+        u.setGender(user.getGender());
+        u.setIsEnabled(user.getIsEnabled());
+        u.setIsHrEmployee(user.getIsHrEmployee());
+        u.setIsPartTimer(user.getIsPartTimer());
+        u.setPassword(user.getPassword());
+        u.setPhone(user.getPhone());
+        u.setRace(user.getRace());
+        u.setCurrentPosition(user.getCurrentPosition());
+        u.setCurrentLeaveQuota(user.getCurrentLeaveQuota());
 
         return u;
     }
@@ -79,25 +83,11 @@ public class AppraisalService {
 
             User employee = employeeOptional.get();
 
-            User user = new User();
-
-            user.setUserId(employee.getUserId());
-            user.setFirstName(employee.getFirstName());
-            user.setLastName(employee.getLastName());
-            user.setWorkEmail(employee.getWorkEmail());
-            user.setUserRole(employee.getUserRole());
-            user.setIsBlackListed(employee.getBlackListed());
+            User user = breakRelationships(employee);
 
             User manager = managerOptional.get();
 
-            User ro = new User();
-
-            ro.setUserId(manager.getUserId());
-            ro.setFirstName(manager.getFirstName());
-            ro.setLastName(manager.getLastName());
-            ro.setWorkEmail(manager.getWorkEmail());
-            ro.setUserRole(manager.getUserRole());
-            ro.setIsBlackListed(manager.getBlackListed());
+            User ro = breakRelationships(manager);
 
             Appraisal appraisal = new Appraisal(appraisalYear, status, strengths, weaknesses, rating, promotion,
                     promotionJustification, submitted, user, ro);
@@ -169,7 +159,7 @@ public class AppraisalService {
                 if (u.getUserId() != userId) {
                     Optional<Appraisal> optionalAppraisal = appraisalRepository.findAppraisalByEmployeeManager(
                             u.getUserId(),
-                            userId);
+                            userId, year);
                     if (optionalAppraisal.isPresent()) {
                         Appraisal appraisal = optionalAppraisal.get();
 
@@ -191,9 +181,9 @@ public class AppraisalService {
                     } else {
                         // appraisals not created yet, creates a blank appraisal for each member
                         // of their team
-                        Appraisal appraisal = new Appraisal(LocalDate.now().getYear() + "", "Incomplete", "", "", null,
+                        Appraisal appraisal = new Appraisal(year + "", "Incomplete", "", "", null,
                                 false, "", null, null, null);
-                        appraisal.setAppraisalYear(LocalDate.now().getYear() + "");
+                        appraisal.setAppraisalYear(year + "");
 
                         if (LocalDate.now().isAfter(appraisalPeriod.getEndDate())
                                 && !appraisal.getStatus().equals("Completed")) {
@@ -202,20 +192,13 @@ public class AppraisalService {
                             appraisal.setStatus("Incomplete");
                         }
 
-                        appraisal.setEmployee(u);
+                        appraisal.setEmployee(breakRelationships(u));
 
                         Optional<User> optionalManager = userRepository.findById(userId);
                         if (optionalManager.isPresent()) {
                             User manager = optionalManager.get();
 
-                            User m = new User();
-
-                            m.setUserId(manager.getUserId());
-                            m.setFirstName(manager.getFirstName());
-                            m.setLastName(manager.getLastName());
-                            m.setWorkEmail(manager.getWorkEmail());
-                            m.setUserRole(manager.getUserRole());
-                            m.setIsBlackListed(manager.getIsBlackListed());
+                            User m = breakRelationships(manager);                          
 
                             appraisal.setManagerAppraising(m);
 
@@ -290,6 +273,12 @@ public class AppraisalService {
                 if (promotion) {
                     appraisal.setPromotion(promotion);
                     appraisal.setPromotionJustification(promotionJustification);
+
+                    System.out.println("employee id " + appraisal.getEmployee().getUserId());
+                    System.out.println("manager id " + appraisal.getManagerAppraising().getUserId());
+
+                    promotionService.createPromotionRequest(LocalDate.now(), appraisalId, appraisal.getEmployee().getUserId(), appraisal.getManagerAppraising().getUserId(), 
+                    promotionJustification, "");
                 } else {
                     appraisal.setPromotionJustification("");
                 }
@@ -322,7 +311,7 @@ public class AppraisalService {
                 System.out.println("Team head: " + t.getTeamHead().getFirstName());
 
                 Optional<Appraisal> optionalAppraisal = appraisalRepository
-                        .findAppraisalByEmployeeManager(t.getTeamHead().getUserId(), userId);
+                        .findAppraisalByEmployeeManager(t.getTeamHead().getUserId(), userId, year);
 
                 if (optionalAppraisal.isPresent()) {
                     Appraisal appraisal = optionalAppraisal.get();
@@ -341,10 +330,10 @@ public class AppraisalService {
                     managerAppraisals.add(appraisal);
 
                 } else {
-                    Appraisal appraisal = new Appraisal(LocalDate.now().getYear() + "", "Incomplete", "", "", null,
+                    Appraisal appraisal = new Appraisal(year + "", "Incomplete", "", "", null,
                             false, "", null, null, null);
 
-                    appraisal.setAppraisalYear(LocalDate.now().getYear() + "");
+                    appraisal.setAppraisalYear(year + "");
 
                     if (LocalDate.now().isAfter(appraisalPeriod.getEndDate())
                             && !appraisal.getStatus().equals("Completed")) {
@@ -397,7 +386,7 @@ public class AppraisalService {
 
             for (Department d : departments) {
                 Optional<Appraisal> optionalAppraisal = appraisalRepository
-                        .findAppraisalByEmployeeManager(d.getDepartmentHead().getUserId(), userId);
+                        .findAppraisalByEmployeeManager(d.getDepartmentHead().getUserId(), userId, year);
 
                 if (optionalAppraisal.isPresent()) {
 
@@ -418,10 +407,10 @@ public class AppraisalService {
 
                 } else {
 
-                    Appraisal appraisal = new Appraisal(LocalDate.now().getYear() + "", "Incomplete", "", "", null,
+                    Appraisal appraisal = new Appraisal(year + "", "Incomplete", "", "", null,
                             false, " ", null, null, null);
 
-                    appraisal.setAppraisalYear(LocalDate.now().getYear() + "");
+                    appraisal.setAppraisalYear(year + "");
 
                     if (LocalDate.now().isAfter(appraisalPeriod.getEndDate())
                             && !appraisal.getStatus().equals("Completed")) {
@@ -467,6 +456,14 @@ public class AppraisalService {
             appraisal.setPromotionJustification("");
             appraisal.setSubmitted(false);
             appraisal.setStatus("Incomplete");
+
+            Optional<PromotionRequest> optionalPromotionRequest = promotionRepository.findPromotionRequestByAppraisal(appraisalId);
+
+            if (optionalPromotionRequest.isPresent()) {
+                PromotionRequest pr = optionalPromotionRequest.get();
+                promotionRepository.deleteById(pr.getPromotionId());
+            }
+
             return "Appraisal for " + appraisal.getEmployee().getFirstName() + " "
                     + appraisal.getEmployee().getLastName() + " has been deleted";
         } else {
@@ -484,6 +481,50 @@ public class AppraisalService {
         } else {
             throw new IllegalStateException("Appraisal not found");
         }
+    }
+
+    public Integer eligibleForPromotion(Long userId) {
+
+        System.out.println("AppraisalService.eligibleForPromotion");
+
+        List<Appraisal> appraisals = appraisalRepository.findEligibleForPromotion(userId);
+
+        System.out.println("Recommended for promotion " + appraisals.size());
+
+        // Integer consecutiveCount = 0;
+        // Integer year = 0;
+
+        // for (Appraisal a : appraisals) {
+        //     // System.out.println("Year " + a.getAppraisalYear());
+        //     if (year == 0) {
+        //         year = Integer.parseInt(a.getAppraisalYear());
+        //         consecutiveCount++;
+        //     } else {
+
+        //         if (Integer.parseInt(a.getAppraisalYear()) + 1 == year) {
+        //             consecutiveCount++;
+        //             year = Integer.parseInt(a.getAppraisalYear());
+        //             // System.out.println("Next year " + year);
+        //         } else {
+        //             break;
+        //         }
+        //     }
+        // }
+        return appraisals.size();
+    }
+
+    public List<Appraisal> getAllEmployeeAppraisals(Long userId) {
+        List<Appraisal> appraisals = appraisalRepository.findAllEmployeeAppraisals(userId);
+
+        for (Appraisal a : appraisals) {
+            User employee = a.getEmployee();
+        
+            a.setEmployee(breakRelationships(employee));
+            
+            User manager = a.getManagerAppraising();
+            a.setManagerAppraising(breakRelationships(manager));
+        }
+        return appraisals;
     }
 
 }

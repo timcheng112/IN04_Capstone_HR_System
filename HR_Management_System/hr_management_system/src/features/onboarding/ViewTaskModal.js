@@ -1,9 +1,13 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Transition, Switch } from "@headlessui/react";
 import { Fragment, useRef, useState, useEffect } from "react";
 import {
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import api from "../../utils/api";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export default function ViewTaskModal({ open, onClose, task, refreshKeyHandler }) {
   const tabs = [
@@ -12,6 +16,7 @@ export default function ViewTaskModal({ open, onClose, task, refreshKeyHandler }
   ];
 
   const [tabId, setTabId] = useState(0);
+  const [enabled, setEnabled] = useState(task.autoAssign);
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
@@ -172,6 +177,32 @@ export default function ViewTaskModal({ open, onClose, task, refreshKeyHandler }
                             >
                               {task.description}
                             </text>
+                          </div>
+                          <div className="inline-flex space-x-4 items-center">
+                            <label
+                              htmlFor="category-name"
+                              className="block text-sm font-medium text-gray-700 mt-2"
+                            >
+                              Auto assign
+                            </label>
+                            <div className="mt-3.5">
+                              <Switch
+                                checked={enabled}
+                                className={classNames(
+                                  enabled ? 'bg-indigo-600' : 'bg-gray-200',
+                                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+                                )}
+                              >
+                                <span className="sr-only">Use setting</span>
+                                <span
+                                  aria-hidden="true"
+                                  className={classNames(
+                                    enabled ? 'translate-x-5' : 'translate-x-0',
+                                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                                  )}
+                                />
+                              </Switch>
+                            </div>
                           </div>
                         </form>
                       </div>

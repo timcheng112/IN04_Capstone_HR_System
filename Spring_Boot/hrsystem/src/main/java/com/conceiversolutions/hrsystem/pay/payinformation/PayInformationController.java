@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/pay/payinfo")
 public class PayInformationController {
@@ -39,4 +40,10 @@ public class PayInformationController {
     public void deletePayslip(@PathVariable("payslipId") Long id){
         payInformationService.deletePayInformation(id);
     }
+
+    @GetMapping(path = "/user/{userId}")
+    public PayInformation getUserPayInformation(@PathVariable("userId") Long userId) throws Exception {
+        return payInformationService.getUserPayInformation(userId);
+    }
+
 }

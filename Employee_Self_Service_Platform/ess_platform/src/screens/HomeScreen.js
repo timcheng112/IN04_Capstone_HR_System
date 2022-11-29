@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { IconButton, Text } from "react-native-paper";
+import HomeComponent from "../components/home/HomeComponent";
 
 export default function HomeScreen({ navigation }) {
   useEffect(() => {
@@ -8,13 +9,14 @@ export default function HomeScreen({ navigation }) {
         <IconButton
           icon="bell"
           size={25}
+          color="white"
           onPress={() => {
-            navigation.navigate("Notifications")
+            navigation.navigate("Notifications");
           }}
         />
       ),
     });
   }, [navigation]);
 
-  return <Text>HomeScreen</Text>;
+  return <HomeComponent />;
 }

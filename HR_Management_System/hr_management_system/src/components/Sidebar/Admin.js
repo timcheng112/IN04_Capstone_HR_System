@@ -5,7 +5,8 @@ import {
   FolderIcon,
   UsersIcon,
   XMarkIcon,
-  ClockIcon
+  ClockIcon,
+  ArrowLeftOnRectangleIcon
 } from "@heroicons/react/24/outline";
 import { Fragment, useState, useEffect } from "react";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
@@ -14,7 +15,7 @@ import api from "../../utils/api";
 
 const navigationhr = [
   { name: "Users", href: "/admin/users", icon: UsersIcon, current: false },
-  { name: "Onboarding", href: "/admin/onboarding", icon: UsersIcon, current: false },
+  { name: "Onboarding", href: "/admin/onboarding", icon: ArrowLeftOnRectangleIcon, current: false },
   { name: "Offboarding", href: "/admin/offboarding", icon: FolderIcon, current: false },
   { name: "Leaves", href: "/admin/leaves", icon: ClockIcon, current: false },
 ];

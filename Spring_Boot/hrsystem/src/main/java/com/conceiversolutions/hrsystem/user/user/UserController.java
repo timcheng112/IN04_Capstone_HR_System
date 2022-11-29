@@ -72,7 +72,8 @@ public class UserController {
             @RequestParam("citizenship") String citizenship) {
         System.out.println("UserController.registerNewAccountJMP");
         User newApplicant = new User(firstName, lastName, password, phone, email, LocalDate.parse(dob),
-                GenderEnum.valueOf(gender), RaceEnum.valueOf(race), CitizenshipEnum.valueOf(citizenship),RoleEnum.APPLICANT, false, false, null);
+                GenderEnum.valueOf(gender), RaceEnum.valueOf(race), CitizenshipEnum.valueOf(citizenship),
+                RoleEnum.APPLICANT, false, false, null);
         // System.out.println("newApplicant = " + newApplicant.toString());
         try {
             Long applicantId = userService.addNewUser(newApplicant);
@@ -386,7 +387,8 @@ public class UserController {
             @RequestParam("citizenship") String citizenship,
             @RequestParam("race") String race,
             @RequestParam("languages") List<String> languages) {
-        return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear,citizenship,race,
+        return userService.updateUserDetails(userId, firstName, lastName, aboutMe, educationLevel, schoolName, gradYear,
+                citizenship, race,
                 languages);
     }
 
@@ -400,7 +402,10 @@ public class UserController {
     public void editUserPayrollInformation(@RequestParam("userId") Long userId,
             @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo,
             @RequestBody PayInformation payInformation) {
-        userService.editUserPayrollInformation(userId, bankName, bankAccNo, payInformation.getAllowanceTemplates(),
-                payInformation.getDeductionTemplates());
+        // userService.editUserPayrollInformation(userId, bankName, bankAccNo,
+        // payInformation.getAllowanceTemplates(),
+        // payInformation.getDeductionTemplates());
+        userService.editUserPayrollInformation(userId, bankName, bankAccNo, payInformation.getAllowance(),
+                payInformation.getDeduction());
     }
 }
