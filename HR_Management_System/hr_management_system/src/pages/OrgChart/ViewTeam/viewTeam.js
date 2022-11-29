@@ -8,6 +8,7 @@ import MoveUserModal from "./moveUserModal.js";
 import { getUserId } from "../../../utils/Common.js";
 import DeleteTeamModal from "../ViewDepartment/deleteTeamModal.js";
 import RemoveMemberFromTeamModal from "./removeMemberFromTeam.js";
+import shiba from "../../../assets/shiba-thumbs-up.png";
 
 //import axios from 'axios';
 
@@ -46,6 +47,7 @@ export default function ViewTeam() {
   const [openRemove, setOpenRemove] = useState(false);
   // const [newTeam, setNewTeam] = useState(-1);
   const [toRemove, setToRemove] =useState(0);
+  const [headPic, setHeadPic] = useState(shiba);
 
   useEffect(() => {
     console.log("use effect!");
@@ -60,6 +62,21 @@ export default function ViewTeam() {
       console.log(team);
     });
   }, [teamId, refreshKey]);
+
+  useEffect(() => {
+    console.log("setting pic");
+    console.log(teamId);
+    api.getTeam(teamId.current).then(response => {
+        console.log(response.data);
+        console.log(response.data.teamHead.profilePic)
+        if (response.data.teamHead.profilePic !== null) {
+            api.getDocById(response.data.teamHead.profilePic.docId).then((response) => {
+                  const url = window.URL.createObjectURL(response.data);
+                  setHeadPic(url);
+              })
+        }
+    })
+  })
 
   // useEffect(() => {
 
@@ -204,11 +221,11 @@ export default function ViewTeam() {
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                               <div className="flex items-center">
                                 <div className="h-10 w-10 flex-shrink-0">
-                                  {/* <img
-                             className="h-10 w-10 rounded-full"
-                             src={team.teamHead.profilePic}
-                             alt=""
-                           /> */}
+                                   <img
+                                     className="h-10 w-10 rounded-full"
+                                     src={headPic}
+                                     alt=""
+                                   />
                                 </div>
                                 <div className="ml-4">
                                   <div className="font-medium text-gray-900">

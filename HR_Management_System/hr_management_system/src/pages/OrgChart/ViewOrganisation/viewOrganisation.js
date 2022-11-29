@@ -9,6 +9,7 @@ import DeleteDeptModal from "./deleteDeptModal.js";
 
 import ChangeOrgHeadModal from "./changeOrgHeadModal.js";
 import { getUserId } from "../../../utils/Common.js";
+import shiba from "../../../assets/shiba-thumbs-up.png";
 
 /* Requires Tailwind CSS v2.0+ */
 //TODO: fix org.organization.Head.positions & department, status active
@@ -25,12 +26,21 @@ export default function ViewOrganisation() {
   const history = useHistory();
   const [toDelete, setToDelete] = useState(0);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [headPic, setHeadPic] = useState(shiba);
 
   useEffect(() => {
     api.getOrganization().then((response) => {
       setOrg(response.data);
       //console.log(org);
       //console.log(response.data.departments[0].departmentId);
+
+      console.log(response.data.organizationHead);
+      if (response.data.organizationHead.profilePic !== null) {
+        api.getDocById(response.data.organizationHead.profilePic.docId).then((response) => {
+            const url = window.URL.createObjectURL(response.data);
+            setHeadPic(url);
+        })
+      }
     });
   }, [refreshKey]);
   //what is this [org] for?
@@ -164,13 +174,12 @@ export default function ViewOrganisation() {
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                               <div className="flex items-center">
                                 <div className="h-10 w-10 flex-shrink-0">
-                                  {/*}
+
                                   <img
                                     className="h-10 w-10 rounded-full"
-                                    src={org.organizationHead.profilePic}
-                                    alt="img"
+                                    src={headPic}
+                                    alt=""
                                   />
-      */}
                                 </div>
                                 <div className="ml-4">
                                   <div className="font-medium text-gray-900">

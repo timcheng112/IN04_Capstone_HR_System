@@ -2,6 +2,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import "../../utils/Common.js";
 import Navbar from "../../components/Navbar.js";
+import shiba from "../../assets/shiba-thumbs-up.png";
 //import SideProfile from './sideprofile.js'
 import {
   CalendarIcon,
@@ -79,7 +80,7 @@ export default function ProfilePage(props) {
   const [fileName, setfileName] = useState("");
   const [docId, setDocId] = useState(null);
   const [error, setError] = useState(null);
-  const [profilePic, setProfilePic] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80")
+  const [profilePic, setProfilePic] = useState(shiba);
   // console.log(userId);
   // console.log(email)
 
@@ -90,10 +91,13 @@ export default function ProfilePage(props) {
         setUserInfo(response.data);
         console.log(response.data);
         console.log(response.data.profilePic.docData);
-        api.getDocById(response.data.profilePic.docId).then((response) => {
-            const url = window.URL.createObjectURL(response.data);
-            setProfilePic(url);
-        })
+        if (response.data.profilePic.docData !== null) {
+            api.getDocById(response.data.profilePic.docId).then((response) => {
+                const url = window.URL.createObjectURL(response.data);
+                setProfilePic(url);
+            })
+        }
+
       });
     }
     getUserInfo();
