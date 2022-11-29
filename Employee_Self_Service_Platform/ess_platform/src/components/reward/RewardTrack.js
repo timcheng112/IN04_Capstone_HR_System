@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View, StyleSheet, Text, SafeAreaView, SectionList, StatusBar } from "react-native";
+import { RefreshControl, ScrollView, View, StyleSheet, Text, SafeAreaView, SectionList, StatusBar, Image } from "react-native";
 import {
   Divider,
   DataTable,
@@ -59,12 +59,15 @@ export default function RewardTrack({ navigation, userId }) {
           padding: 10,
         },
       footer: {
-          textAlign: 'center',
-          fontWeight: '600',
-          fontSize: 20,
-          color: 'rgba(0, 0, 0, 1)',
-          padding: 15,
-        },
+            textAlign: 'center',
+            fontWeight: '600',
+            fontSize: 16,
+            backgroundColor: "white",
+            margin: "4%",
+            elevation: 10,
+            borderRadius: 15,
+            padding:15,
+          },
       sectionHeader: {
         fontWeight: '1',
         fontSize: 1,
@@ -122,25 +125,49 @@ export default function RewardTrack({ navigation, userId }) {
   ];
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Text style={styles.header}>{track.name}</Text>
-        <SectionList
-          contentContainerStyle={{ paddingHorizontal: 10 }}
-          stickySectionHeadersEnabled={false}
-          sections={SECTIONS}
-          renderSectionHeader={({ section }) => (
-            <Text style={styles.sectionHeader}>{section.title}</Text>
-          )}
-          renderItem={({ item }) => {
-            return <ListItem item={item} />;
-          }}
-          showsVerticalScrollIndicator={true}
-        />
-        <Text style={styles.footer}>You have {user.rewardPoints} reward points</Text>
-        <Text style={styles.footer}>include some bar design to show like completion</Text>
-      </SafeAreaView>
-    </View>
+    userId && (
+        <>
+            {track.length === 0 ? (
+                <>
+                    <View
+                      style={{
+                        flex:1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "white",
+                        margin: "4%",
+                        elevation: 10,
+                        borderRadius: 20,
+                        paddingBottom: "4%"
+                      }}
+                    >
+                      <Image style={{flex:1, width:200}} resizeMode="contain" source={require("../../../assets/shiba-cant-find-documents.png")} />
+                      <Text style={{ fontSize: 20, fontFamily: "Poppins_500Medium" }}>No Active Reward Track</Text>
+                    </View>
+                </>
+            ) : (
+                <View style={styles.container}>
+                  <SafeAreaView style={{ flex: 1 }}>
+                    <Text style={styles.header}>{track.name}</Text>
+                    <SectionList
+                      contentContainerStyle={{ paddingHorizontal: 10 }}
+                      stickySectionHeadersEnabled={false}
+                      sections={SECTIONS}
+                      renderSectionHeader={({ section }) => (
+                        <Text style={styles.sectionHeader}>{section.title}</Text>
+                      )}
+                      renderItem={({ item }) => {
+                        return <ListItem item={item} />;
+                      }}
+                      showsVerticalScrollIndicator={true}
+                    />
+                    <Text style={styles.footer}>You have {user.rewardPoints} reward points</Text>
+                  </SafeAreaView>
+                </View>
+            )}
+        </>
+    )
+
 
   );
 }
