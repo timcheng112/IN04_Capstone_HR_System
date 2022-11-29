@@ -1,17 +1,43 @@
-import { useEffect, useState } from "react";
+import { Listbox, Switch, Transition } from "@headlessui/react";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { Fragment, useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import AddTeamModal from "../../pages/OrgChart/ViewDepartment/addTeamModal";
+import AddDepartmentModal from "../../pages/OrgChart/ViewOrganisation/addDeptModal";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
+import PromotionAddTeam from "./promotionAddTeam";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 export default function Processing({ request }) {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [payInformation, setPayInformation] = useState(null);
+  const [newPay, setNewPay] = useState(null);
   const [effectiveFrom, setEffectiveFrom] = useState("");
   const [toReject, setToReject] = useState(false);
   const [rejectRemarks, setRejectRemarks] = useState("");
+  const [isTeam, setIsTeam] = useState(false);
+  const [newDepartment, setNewDepartment] = useState(null);
+  const [groups, setGroups] = useState([]);
+
+  //new team
+  const [teamName, setTeamName] = useState("");
+  const [departmentId, setDepartmentId] = useState(0);
+  const [outlet, setOutletId] = useState("");
+  const [inOffice, setInOffice] = useState(false);
+  const [outlets, setOutlets] = useState([]);
+  const [selectedOutlet, setSelectedOutlet] = useState({
+    outletName: "Select",
+  });
+
   const history = useHistory();
 
   useEffect(() => {
+    console.log(request);
+
     api.getUserCurrentPosition(request.employee.userId).then((response) => {
       //console.log(response.data);
       setCurrentPosition(response.data);
@@ -21,14 +47,41 @@ export default function Processing({ request }) {
       console.log(response.data);
       setPayInformation(response.data);
     });
+
+    api
+      .getPositionPayInformation(request.newPosition.positionId)
+      .then((response) => {
+        console.log(response.data);
+        setNewPay(response.data);
+      });
+
+    api.getPositionGroup(request.newPosition.positionId).then((response) => {
+      //console.log(response.data);
+      if (response.data === "Team") {
+        setIsTeam(true);
+        
+      }
+    });
+
+    api.getAllOutlets().then((response) => {
+      console.log(response.data);
+      setOutlets(response.data);
+    });
+
+    api.getDepartmentByEmployeeId(request.employee.userId).then((response) => {
+      console.log(response.data.departmentId);
+      setDepartmentId(response.data.departmentId);
+    });
   }, []);
 
   function handleSubmit() {
     var basicSalary = payInformation.basicSalary;
     if (!payInformation.basicSalary) {
-      console.log("sal");
+      
       basicSalary = "";
     }
+
+    console.log()
 
     api
       .processPromotionRequest(
@@ -39,19 +92,24 @@ export default function Processing({ request }) {
         payInformation.basicHourlyPay,
         payInformation.weekendHourlyPay,
         payInformation.eventPhHourlyPay,
-        getUserId()
+        getUserId(),
+        teamName,
+        selectedOutlet.outletId,
+        inOffice,
+        departmentId
       )
       .then((response) => {
         alert(response.data);
       })
-      .finally(() => {
-        history.push("/promotion");
-      });
+      // .finally(() => {
+      //   history.push("/promotion");
+      // });
   }
 
   return (
     currentPosition &&
-    payInformation && (
+    payInformation &&
+    newPay && (
       <>
         <div className="bg-white mx-10">
           <form className="mt-10 p-10 space-y-8 divide-y divide-gray-200">
@@ -79,7 +137,7 @@ export default function Processing({ request }) {
                         id="position"
                         defaultValue={currentPosition.positionName}
                         disabled
-                        className="block w-full min-w-0 flex-1 p-3 rounded-md border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
                       />
                     </div>
                   </div>
@@ -98,9 +156,173 @@ export default function Processing({ request }) {
                         id="newPosition"
                         defaultValue={request.newPosition.positionName}
                         disabled
-                        className="block w-full min-w-0 flex-1 p-3 rounded-md border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
                       />
                     </div>
+                  </div>
+
+                  <div className="sm:col-span-3">
+                    {isTeam ? (
+                      <>
+                        <label
+                          htmlFor="newPosition"
+                          className="block text-md text-left font-sans font-medium text-gray-700"
+                        >
+                          New Team
+                        </label>
+                        <div className="mt-1">
+                          <>
+                            <div className="col-span-6 sm:col-span-3">
+                              <label
+                                htmlFor="teamName"
+                                className="block mt-4 text-sm font-bold text-gray-700 text-start"
+                              >
+                                Team Name
+                              </label>
+                              <input
+                                type="text"
+                                name="teamName"
+                                id="teamName"
+                                autoComplete="teamName"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                                value={teamName}
+                                onChange={(e) => setTeamName(e.target.value)}
+                              />
+                            </div>
+                            <div className="col-span-6 sm:col-span-3">
+                              <label
+                                htmlFor="outletName"
+                                className="block mt-4 text-sm font-bold text-gray-700 text-start"
+                              >
+                                Outlet
+                              </label>
+                              <Listbox
+                                value={selectedOutlet}
+                                onChange={setSelectedOutlet}
+                              >
+                                {({ open }) => (
+                                  <>
+                                    <div className="relative mt-1">
+                                      <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                                        <span className="block truncate">
+                                          {selectedOutlet.outletName}
+                                        </span>
+                                        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                          <ChevronUpDownIcon
+                                            className="h-5 w-5 text-gray-400"
+                                            aria-hidden="true"
+                                          />
+                                        </span>
+                                      </Listbox.Button>
+
+                                      <Transition
+                                        show={open}
+                                        as={Fragment}
+                                        leave="transition ease-in duration-100"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                      >
+                                        <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                          {outlets.map((outlet) => (
+                                            <Listbox.Option
+                                              key={outlet.outletId}
+                                              className={({ active }) =>
+                                                classNames(
+                                                  active
+                                                    ? "text-white bg-indigo-600"
+                                                    : "text-gray-900",
+                                                  "relative cursor-default select-none py-2 pl-3 pr-9"
+                                                )
+                                              }
+                                              value={outlet}
+                                            >
+                                              {({ selected, active }) => (
+                                                <>
+                                                  <span
+                                                    className={classNames(
+                                                      selected
+                                                        ? "font-semibold"
+                                                        : "font-normal",
+                                                      "block truncate"
+                                                    )}
+                                                  >
+                                                    {outlet.outletName}
+                                                  </span>
+
+                                                  {selected ? (
+                                                    <span
+                                                      className={classNames(
+                                                        active
+                                                          ? "text-white"
+                                                          : "text-indigo-600",
+                                                        "absolute inset-y-0 right-0 flex items-center pr-4"
+                                                      )}
+                                                    >
+                                                      <CheckIcon
+                                                        className="h-5 w-5"
+                                                        aria-hidden="true"
+                                                      />
+                                                    </span>
+                                                  ) : null}
+                                                </>
+                                              )}
+                                            </Listbox.Option>
+                                          ))}
+                                        </Listbox.Options>
+                                      </Transition>
+                                    </div>
+                                  </>
+                                )}
+                              </Listbox>
+                            </div>
+                            <div className="col-span-6 sm:col-span-3">
+                              <label
+                                htmlFor="inOffice"
+                                className="block mt-4 text-sm font-bold text-gray-700 text-start"
+                              >
+                                In Office
+                              </label>
+                              <Switch.Group
+                                as="div"
+                                className="mt-2 flex items-center justify-start"
+                              >
+                                <span className=""></span>
+                                <Switch
+                                  checked={inOffice}
+                                  onChange={setInOffice}
+                                  className={classNames(
+                                    inOffice ? "bg-indigo-600" : "bg-gray-200",
+                                    "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                  )}
+                                >
+                                  <span
+                                    aria-hidden="true"
+                                    className={classNames(
+                                      inOffice
+                                        ? "translate-x-5"
+                                        : "translate-x-0",
+                                      "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                                    )}
+                                  />
+                                </Switch>
+                              </Switch.Group>
+                            </div>
+                          </>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <label
+                          htmlFor="newPosition"
+                          className="block text-md text-left font-sans font-medium text-gray-700"
+                        >
+                          New Department
+                        </label>
+                        <div className="mt-1">
+                          {newDepartment ? <></> : <></>}
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div className="sm:col-span-6">
@@ -108,7 +330,7 @@ export default function Processing({ request }) {
                       htmlFor="comments"
                       className="block text-md text-left font-sans font-medium text-gray-700"
                     >
-                      Pay Information
+                      Current Pay Information
                     </label>
                   </div>
 
@@ -184,6 +406,95 @@ export default function Processing({ request }) {
                           id="event-ph-hourly-pay"
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
                           defaultValue={payInformation.eventPhHourlyPay.toLocaleString(
+                            "en-US"
+                          )}
+                          disabled
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  <div className="sm:col-span-6">
+                    <label
+                      htmlFor="comments"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      New Pay Information
+                    </label>
+                  </div>
+
+                  {newPay.basicSalary ? (
+                    <div className="col-span-6 sm:col-span-6">
+                      <label
+                        htmlFor="salary-amount"
+                        className="block text-sm font-bold text-gray-700 text-start"
+                      >
+                        Basic Salary Amount
+                      </label>
+                      <input
+                        type="text"
+                        name="salary-amount"
+                        id="salary-amount"
+                        autoComplete="family-name"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                        defaultValue={newPay.basicSalary.toLocaleString(
+                          "en-US"
+                        )}
+                        disabled
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <div className="col-span-6 sm:col-span-6">
+                        <label
+                          htmlFor="salary-amount"
+                          className="block text-sm font-sans font-semibold text-gray-700 text-start"
+                        >
+                          Basic Hourly Pay
+                        </label>
+                        <input
+                          type="text"
+                          name="salary-amount"
+                          id="salary-amount"
+                          autoComplete="family-name"
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                          defaultValue={newPay.basicHourlyPay.toLocaleString(
+                            "en-US"
+                          )}
+                          disabled
+                        />
+                      </div>
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="weekend-hourly-salary"
+                          className="block text-sm font-semibold font-sans text-gray-700 text-start"
+                        >
+                          Weekend Hourly Salary
+                        </label>
+                        <input
+                          type="text"
+                          name="weekend-hourly-salary"
+                          id="weekend-hourly-salary"
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                          defaultValue={newPay.weekendHourlyPay.toLocaleString(
+                            "en-US"
+                          )}
+                          disabled
+                        />
+                      </div>
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="event-ph-hourly-pay"
+                          className="block text-sm font-semibold font-sans text-gray-700 text-start"
+                        >
+                          Event or Public Holiday Hourly Salary
+                        </label>
+                        <input
+                          type="text"
+                          name="event-ph-hourly-pay"
+                          id="event-ph-hourly-pay"
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                          defaultValue={newPay.eventPhHourlyPay.toLocaleString(
                             "en-US"
                           )}
                           disabled

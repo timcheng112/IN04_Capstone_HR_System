@@ -85,12 +85,13 @@ export default function Nomination({ request }) {
       if (request.newPosition) {
         setSelectedPosition(request.newPosition);
       }
-
     }
     api.getAllPositions().then((response) => {
       setPositions(response.data);
     });
   }, []);
+
+  useEffect(() => {}, [selectedPosition]);
 
   const submitRequest = (evt) => {
     evt.preventDefault();
@@ -327,6 +328,7 @@ export default function Nomination({ request }) {
                         )}
                       </Listbox>
                     </div>
+                    
                     <div className="sm:col-span-6">
                       <label
                         htmlFor="scheduled"

@@ -78,7 +78,7 @@ export default function ActiveRequests() {
                 className="object-contain h-20 w-full"
               />
               <h1 className="font-sans font-semibold text-xl">
-                No remaining requests
+                No Remaining Requests
               </h1>
             </div>
           ) : (

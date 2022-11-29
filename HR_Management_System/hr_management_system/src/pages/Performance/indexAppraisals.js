@@ -866,7 +866,7 @@ export default function Appraisals() {
                 </>
               ) : (
                 <>
-                  <h1 className="text-3xl font-semibold text-gray-900 mb-10">
+                  <h1 className="text-3xl font-sans font-semibold text-gray-900 mb-10">
                     Appraisals
                   </h1>
                   <div>

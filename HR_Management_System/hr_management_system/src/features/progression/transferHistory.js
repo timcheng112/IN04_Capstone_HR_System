@@ -1,86 +1,84 @@
 import {
-  CheckBadgeIcon,
-  CheckCircleIcon,
-  ChevronRightIcon,
-  ClipboardDocumentCheckIcon,
-  EnvelopeIcon,
-  FaceSmileIcon,
-  PlusCircleIcon,
-} from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import Moment from "react-moment";
-import api from "../../utils/api";
-import { getUserId } from "../../utils/Common";
-
-export default function ToApproveRequests() {
-  const [requests, setRequests] = useState([]);
-
-  useEffect(() => {
-    api
-      .getUserToApproveRequests(getUserId())
-      .then((response) => setRequests(response.data));
-  }, []);
-
-  function renderStatus(status) {
-    if (status === "Created") {
-      return (
-        <>
-          <PlusCircleIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-            aria-hidden="true"
-          />
-          {status}
-        </>
-      );
-    } else if (status === "Submitted") {
-      return (
-        <>
-          <ClipboardDocumentCheckIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-            aria-hidden="true"
-          />
-          {status}
-        </>
-      );
-    } else if (status === "Passed") {
-      return (
-        <>
-          <FaceSmileIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-            aria-hidden="true"
-          />
-          {status} Interview
-        </>
-      );
-    } else if (status === "Approved") {
-      return (
-        <>
-          <CheckBadgeIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-            aria-hidden="true"
-          />
-          {status}
-        </>
-      );
+    ArrowLeftOnRectangleIcon,
+    CheckBadgeIcon,
+    ChevronRightIcon,
+    EnvelopeIcon,
+    FaceFrownIcon,
+    XCircleIcon,
+  } from "@heroicons/react/24/outline";
+  import { useEffect, useState } from "react";
+  import Moment from "react-moment";
+  import api from "../../utils/api";
+  import { getUserId } from "../../utils/Common";
+  
+  export default function TransferHistory() {
+    const [requests, setRequests] = useState([]);
+  
+    useEffect(() => {
+      api.getUserRequestHistory(getUserId()).then((response) => {
+        console.log(response.data);
+        setRequests(response.data);
+      });
+    }, []);
+  
+    function renderStatus(status) {
+      if (status === "Withdrawn") {
+        return (
+          <>
+            <ArrowLeftOnRectangleIcon
+              className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+              aria-hidden="true"
+            />
+            {status}
+          </>
+        );
+      } else if (status === "Failed") {
+        return (
+          <>
+            <FaceFrownIcon
+              className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+              aria-hidden="true"
+            />
+            {status} {"Interview"}
+          </>
+        );
+      } else if (status === "Rejected") {
+        return (
+          <>
+            <XCircleIcon
+              className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+              aria-hidden="true"
+            />
+            {"Rejected"}
+          </>
+        );
+      } else if (status === "Approved") {
+        return (
+          <>
+            <CheckBadgeIcon
+              className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+              aria-hidden="true"
+            />
+            {status}
+          </>
+        );
+      }
     }
-  }
-
-  return (
-    requests && (
-      <div>
-        <div className="overflow-hidden bg-white shadow sm:rounded-md">
-          {requests.length <= 0 ? (
-            <div className="p-4">
-              <img
-                src={require("../../assets/shiba-thumbs-up.png")}
-                alt="shiba"
-                className="object-contain h-20 w-full"
-              />
-              <h1 className="font-sans font-semibold text-xl">
-                No Remaining Requests
-              </h1>
-            </div>
-          ) : (
+  
+    return (
+      <>
+        <div className="mt-10">
+          <div className="overflow-hidden bg-white shadow sm:rounded-md">
+            {requests.length <= 0 ? (<div className="p-4">
+                {/* <img
+                  src={require("../../assets/shiba-thumbs-up.png")}
+                  alt="shiba"
+                  className="object-contain h-20 w-full"
+                /> */}
+                <h1 className="font-sans font-semibold text-xl">
+                  No Previous Requests
+                </h1>
+              </div>) : (<></>)}
             <ul role="list" className="divide-y divide-gray-200">
               {requests.map((request) => (
                 <li key={request.promotionId}>
@@ -116,7 +114,7 @@ export default function ToApproveRequests() {
                           <div className="hidden md:block">
                             <div>
                               <p className="text-sm text-left text-gray-900">
-                                Created {""}
+                                Created on{" "}
                                 <Moment
                                   parse="YYYY-MM-DD"
                                   className=" text-sm text-gray-500"
@@ -144,9 +142,9 @@ export default function ToApproveRequests() {
                 </li>
               ))}
             </ul>
-          )}
+          </div>
         </div>
-      </div>
-    )
-  );
-}
+      </>
+    );
+  }
+  

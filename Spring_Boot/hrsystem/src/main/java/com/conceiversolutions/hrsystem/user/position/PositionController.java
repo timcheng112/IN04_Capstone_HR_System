@@ -28,4 +28,6 @@ public class PositionController {
     public Position getUserCurrentPosition(@PathVariable("userId") Long userId) throws Exception {
         return positionService.getUserCurrentPosition(userId);
     }
+
+    
 }

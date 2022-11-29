@@ -54,7 +54,6 @@ import AddTemplateChecklist from "./pages/Onboarding/AddTemplateChecklist";
 import ChecklistDetail from "./pages/Onboarding/ChecklistDetail";
 // import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 
-import TransferPage from "./pages/Progression/indexTransfer";
 import GoalsPage from "./pages/Performance/indexGoals";
 import AppraisalsPage from "./pages/Performance/indexAppraisals";
 import AppraisalPage from "./pages/Performance/appraisal";
@@ -71,6 +70,10 @@ import PromotionPage from "./pages/Performance/promotion";
 import PromotionRequestPage from "./pages/Performance/promotionRequest";
 import NFC from "./pages/Attendance/nfc";
 import PromotionRequestIndex from "./pages/Performance/indexPromotions";
+import TransferPage from "./pages/Progression/transfer";
+import ReviewsPage from "./pages/Performance/indexReviews";
+import ReviewPage from "./pages/Performance/review";
+import TransferRequestPage from "./pages/Progression/transferRequest";
 
 function App() {
   return (
@@ -258,13 +261,15 @@ function App() {
             path="/attendance/"
             component={NFC}
           />
-          <PrivateRoute
-            exact
-            path="/promotion/"
-            component={PromotionRequestIndex}
-          />
+          
+          <PrivateRoute exact path="/performance/reviews" component={ReviewsPage} />
+          <PrivateRoute exact path="/performance/review/:reviewId" component={ReviewPage} />
+          
           <PrivateRoute exact path="/promotion" component={PromotionPage} />
           <PrivateRoute exact path="/promotion/:requestId" component={PromotionRequestPage} />
+
+          <PrivateRoute exact path="/transfer" component={TransferPage} />
+          <PrivateRoute exact path="/transfer/:requestId" component={TransferRequestPage} />
 
           <PrivateRoute exact path="/payroll" component={PayrollPage} />
         </Switch>

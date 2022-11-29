@@ -623,4 +623,19 @@ public class TeamService {
         System.out.println("Managers = " + managers);
         return managers;
     }
+
+    public Long getTeamByEmployee(Long userId) throws Exception {
+        List<Team> teams = teamRepository.findAll();
+
+        for (Team t : teams) {
+            for (User u : t.getUsers()) {
+                if (u.getUserId() == userId) {
+                    System.out.println("team id " + t.getTeamId());
+                    return t.getTeamId();
+                }
+            }
+        }
+
+        throw new IllegalStateException("User does not belong to any team");
+    }
 }

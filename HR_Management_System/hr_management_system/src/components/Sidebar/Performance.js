@@ -38,7 +38,7 @@ const navigationhr = [
   },
   {
     name: "Reviews",
-    href: "/performance/appraisals",
+    href: "/performance/reviews",
     icon: DocumentTextIcon,
     current: false,
   },
@@ -50,7 +50,7 @@ const navigationhr = [
   },
   {
     name: "Transfers",
-    href: "/promotion",
+    href: "/transfer",
     icon: InboxStackIcon,
     current: false,
   },
@@ -76,7 +76,7 @@ const navigation = [
   },
   {
     name: "Reviews",
-    href: "/performance/appraisals",
+    href: "/performance/reviews",
     icon: DocumentTextIcon,
     current: false,
   },
@@ -88,7 +88,7 @@ const navigation = [
   },
   {
     name: "Transfers",
-    href: "/promotion",
+    href: "/transfer",
     icon: InboxStackIcon,
     current: false,
   },

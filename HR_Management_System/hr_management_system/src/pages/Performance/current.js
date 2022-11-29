@@ -14,7 +14,7 @@ import RepeatIcon from "@mui/icons-material/Repeat";
 import Typography from "@mui/material/Typography";
 import Flag from "@mui/icons-material/Flag";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 
 export default function CurrentPerformancePeriod() {
   return (
@@ -37,7 +37,9 @@ export default function CurrentPerformancePeriod() {
             <h1 className="text-2xl font-bold font-sans text-indigo-800 mt-10">
               Current Performance Period
             </h1>
-            <h1 className="text-2xl font-bold font-sans text-indigo-800 mb-10">{new Date().getFullYear()}</h1>
+            <h1 className="text-2xl font-bold font-sans text-indigo-800 mb-10">
+              {new Date().getFullYear()}
+            </h1>
             <div>
               <Timeline>
                 <TimelineItem>
@@ -53,7 +55,7 @@ export default function CurrentPerformancePeriod() {
                   <TimelineContent>
                     <div className="px-5">
                       <h1 className="text-xl font-semibold font-sans">
-                        Goal-setting
+                        Goal-setting Period
                       </h1>
                       <h2>0 Financial Goal(s)</h2>
                       <h2>0 Business Goal(s)</h2>
@@ -76,9 +78,12 @@ export default function CurrentPerformancePeriod() {
                     <TimelineConnector />
                   </TimelineSeparator>
                   <TimelineContent>
-                    <h1 className="text-xl px-8 font-semibold font-sans">
-                      Add Achievements
-                    </h1>
+                    <div className="px-5">
+                      <h1 className="text-xl font-semibold font-sans">
+                        Add Achievements
+                      </h1>
+                      <h2>0 achievement(s)</h2>
+                    </div>
                   </TimelineContent>
                 </TimelineItem>
                 <TimelineItem>
@@ -102,9 +107,9 @@ export default function CurrentPerformancePeriod() {
                   <TimelineContent>
                     <div className="px-5">
                       <h1 className="text-xl font-semibold font-sans">
-                        Appraisal Period
+                        Review Period
                       </h1>
-                      <h2>0 appraisal(s)</h2>
+                      <h2>0 review(s)</h2>
                     </div>
                   </TimelineContent>
                 </TimelineItem>
@@ -129,9 +134,29 @@ export default function CurrentPerformancePeriod() {
                   <TimelineContent>
                     <div className="px-5">
                       <h1 className="text-xl font-semibold font-sans">
-                        Appraisal Review Period
+                        Appraisal Period
                       </h1>
                       <h2>0 appraisal(s)</h2>
+                    </div>
+                  </TimelineContent>
+                </TimelineItem>
+                <TimelineItem>
+                  <TimelineOppositeContent>
+                    16 December - 31 December
+                  </TimelineOppositeContent>
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                    <TimelineDot>
+                      <SupervisorAccountIcon />
+                    </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent>
+                    <div className="px-5">
+                      <h1 className="text-xl font-semibold font-sans">
+                        Promotion Period
+                      </h1>
+                      <h2>0 promotion request(s)</h2>
                     </div>
                   </TimelineContent>
                 </TimelineItem>

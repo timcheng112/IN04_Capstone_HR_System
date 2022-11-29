@@ -1,6 +1,8 @@
 package com.conceiversolutions.hrsystem.jobchange.promotionrequest;
 
-import lombok.AllArgsConstructor;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+
+import lombok.AllArgsConstructor;
 
 @CrossOrigin("*")
 @RestController
@@ -60,10 +62,14 @@ public class PromotionController {
             @RequestParam("basicHourlyPay") String basicHourlyPay,
             @RequestParam("weekendHourlyPay") String weekendHourlyPay,
             @RequestParam("eventPay") String eventPay,
-            @RequestParam("processedBy") Long processedById)
+            @RequestParam("processedBy") Long processedById,
+            @RequestParam("teamName") String teamName,
+            @RequestParam("outletId") Long outletId,
+            @RequestParam("inOffice") Boolean inOffice,
+            @RequestParam("departmentId") Long departmentId)
             throws Exception {
         return promotionService.processPromotionRequest(promotionId, effectiveFrom, rejectRemarks, basicSalary,
-                basicHourlyPay, weekendHourlyPay, eventPay, processedById);
+                basicHourlyPay, weekendHourlyPay, eventPay, processedById, teamName, outletId, inOffice, departmentId);
     }
 
     @GetMapping(path = "/active/{userId}")
@@ -94,6 +100,24 @@ public class PromotionController {
 //    public String addAPromotionRequest(@PathVariable("userInQuestion") Long employeeId, @PathVariable("userId") Long managerId, @PathVariable("departmentId")  Long departmentId,@PathVariable("assigned") Long processedBy, @RequestParam("interviewComments") String interviewComments ){
 //        return promotionService.addAPromotionRequest(employeeId,managerId, departmentId, processedBy, interviewComments);
 //    }
+    @GetMapping(path = "/position/{positionId}")
+    public String getPositionGroup(@PathVariable("positionId") Long positionId) throws Exception {
+        return promotionService.getPositionGroup(positionId);
+    }
 
+    // @PostMapping(path = "/team")
+    // public Long addNewTeamPromotion(@RequestParam("teamName") String teamName,
+    // @RequestParam("teamHeadId") Integer teamHeadId,
+    // @RequestParam("outletId") Integer outletId,
+    // @RequestParam("isOffice") Boolean isOffice,
+    // @RequestParam("deptId") Integer deptId) {
+    // return promotionService.addNewTeamPromotion(teamName, teamHeadId, outletId,
+    // isOffice, deptId);
+    // }
+
+    @GetMapping(path = "/team/{userId}")
+    public Team getNewTeamPromotion(@PathVariable("userId") Long userId) throws Exception {
+        return promotionService.getNewTeamPromotion(userId);
+    }
 
 }

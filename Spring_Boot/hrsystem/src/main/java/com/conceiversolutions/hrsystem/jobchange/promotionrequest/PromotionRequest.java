@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
+import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -38,6 +40,14 @@ public class PromotionRequest {
     @OneToOne
     @JoinColumn(name = "new_position", nullable = true)
     private Position newPosition;
+
+    @OneToOne
+    @JoinColumn(name = "new_team", nullable = true)
+    private Team newTeam;
+
+    @OneToOne
+    @JoinColumn(name = "new_department", nullable = true)
+    private Department newDepartment;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "processed_by", nullable = true)
@@ -79,9 +89,9 @@ public class PromotionRequest {
     }
 
     public PromotionRequest(LocalDate created, Appraisal appraisal, User employee, User manager, User interviewer,
-            Position newPosition, User processedBy, String status, String promotionJustification,
-            String withdrawRemarks, LocalDate interviewDate, String interviewRemarks, LocalDate effectiveFrom,
-            String rejectRemarks) {
+                            Position newPosition, User processedBy, String status, String promotionJustification,
+                            String withdrawRemarks, LocalDate interviewDate, String interviewRemarks, LocalDate effectiveFrom,
+                            String rejectRemarks) {
         this.created = created;
         this.appraisal = appraisal;
         this.employee = employee;
@@ -265,6 +275,22 @@ public class PromotionRequest {
         return newPosition;
     }
 
+    public Team getNewTeam() {
+        return newTeam;
+    }
+
+    public void setNewTeam(Team newTeam) {
+        this.newTeam = newTeam;
+    }
+
+    public Department getNewDepartment() {
+        return newDepartment;
+    }
+
+    public void setNewDepartment(Department newDepartment) {
+        this.newDepartment = newDepartment;
+    }
+
     public void setNewPosition(Position newPosition) {
         this.newPosition = newPosition;
     }
@@ -287,6 +313,8 @@ public class PromotionRequest {
                 ", manager=" + manager +
                 ", interviewer=" + interviewer +
                 ", newPosition=" + newPosition +
+                ", newTeam=" + newTeam +
+                ", newDepartment=" + newDepartment +
                 ", processedBy=" + processedBy +
                 ", status='" + status + '\'' +
                 ", promotionJustification='" + promotionJustification + '\'' +
@@ -297,4 +325,5 @@ public class PromotionRequest {
                 ", rejectRemarks='" + rejectRemarks + '\'' +
                 '}';
     }
+
 }

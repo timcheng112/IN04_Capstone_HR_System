@@ -16,13 +16,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
+import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
+import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentService;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationService;
+import com.conceiversolutions.hrsystem.organizationstructure.outlet.Outlet;
+import com.conceiversolutions.hrsystem.organizationstructure.outlet.OutletService;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
+import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamService;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformationService;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.appraisal.AppraisalRepository;
+import com.conceiversolutions.hrsystem.rostering.roster.Roster;
+import com.conceiversolutions.hrsystem.rostering.roster.RosterRepository;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
 
@@ -50,6 +58,14 @@ public class PromotionService {
     private final PayInformationService payInformationService;
 
     private final PromotionRepository promotionRepository;
+
+    private final TeamRepository teamRepository;
+
+    private final RosterRepository rosterRepository;
+
+    private final DepartmentRepository departmentRepository;
+
+    private final OutletService outletService;
 
     public User breakRelationships(User user) {
         User u = new User();
@@ -79,7 +95,7 @@ public class PromotionService {
     }
 
     // public List<PromotionRequest> getAllPromotionRequests() {
-    //     return promotionRepository.findAll();
+    // return promotionRepository.findAll();
     // }
 
     public String createPromotionRequest(LocalDate created, Long appraisalId, Long employeeId, Long managerId,
@@ -113,11 +129,11 @@ public class PromotionService {
                     // System.out.println("Department head is user with id " +
                     // departmentHead.getUserId());
                 } else if (departmentService.isEmployeeDepartmentHead(managerId) > -1) {
-                   
+
                     User organizationHead = organizationService.getOrganizationHead();
                     System.out.println("organizationHead " + organizationHead);
                     interviewerId = organizationHead.getUserId();
-                    
+
                 } else if (organizationService.isEmployeeOrganizationHead(managerId) > -1) {
                     interviewerId = managerId;
                 }
@@ -173,8 +189,8 @@ public class PromotionService {
             // pr.getProcessedBy().nullify();
         }
 
-        System.out.print("Active requests ");
-        System.out.println(activeRequests);
+        //System.out.print("Active requests ");
+        //System.out.println(activeRequests);
         return activeRequests;
     }
 
@@ -317,7 +333,7 @@ public class PromotionService {
     @Transactional
     public String processPromotionRequest(Long promotionId, String effectiveFrom, String rejectRemarks,
             String basicSalary, String basicHourlyPay, String weekendHourlyPay, String eventPay,
-            Long processedById) throws Exception {
+            Long processedById, String teamName, Long outletId, Boolean inOffice, Long departmentId) throws Exception {
 
         Optional<PromotionRequest> optionalRequest = promotionRepository.findById(promotionId);
         Optional<User> optionalProcessed = userRepository.findById(processedById);
@@ -368,6 +384,10 @@ public class PromotionService {
                 pr.setManager(breakRelationships(pr.getManager()));
                 pr.setInterviewer(breakRelationships(pr.getInterviewer()));
 
+                if (teamName != null && !teamName.isEmpty()) {
+                    addNewTeamPromotion(teamName, employee.getUserId(), outletId, inOffice, departmentId);
+                }
+
                 return "Promotion request for " + pr.getEmployee().getFirstName() + " " + pr.getEmployee().getLastName()
                         + " has been " + pr.getStatus().toLowerCase();
 
@@ -415,8 +435,132 @@ public class PromotionService {
         return promotionRequests;
     }
 
+    public List<PromotionRequest> getAllPromotionRequests() {
+        List<PromotionRequest> requests = promotionRepository.findAll();
+        for (PromotionRequest pr : requests) {
+            pr.setEmployee(breakRelationships(pr.getEmployee()));
+            pr.setManager(breakRelationships(pr.getManager()));
+            if (pr.getInterviewer() != null) {
+                pr.setInterviewer(breakRelationships(pr.getInterviewer()));
+            }
 
-//    public String addAPromotionRequest(Long employeeId, Long managerId, Long departmentId, Long processedBy, String interviewComments ){
+            if (pr.getProcessedBy() != null) {
+                pr.setProcessedBy(breakRelationships(pr.getProcessedBy()));
+            }
+
+            pr.setNewTeam(null);
+            pr.setNewDepartment(null);
+
+        }
+        return requests;
+    }
+
+    public String getPositionGroup(Long positionId) throws Exception {
+        User user = userRepository.findUsersWithPosition(positionId).get(0);
+
+        List<User> managers = teamService.getManagers();
+        for (User m : managers) {
+            if (m.getUserId() == user.getUserId()) {
+                return "Team";
+            }
+        }
+
+        List<User> departmentHeads = departmentService.getDepartmentHeads();
+        for (User d : departmentHeads) {
+            if (d.getUserId() == user.getUserId()) {
+                return "Department";
+            }
+        }
+
+        throw new IllegalStateException("Unable to find position group");
+
+    }
+
+    public Long addNewTeamPromotion(String teamName, Long teamHeadId, Long outletId, Boolean isOffice,
+            Long deptId) throws Exception {
+        System.out.println("TeamService.addNewTeam");
+        System.out.println("teamName = " + teamName + ", teamHeadId = " + teamHeadId + ", outletId = " + outletId
+                + ", isOffice = " + isOffice + ", deptId = " + deptId);
+
+        Long oldTeamId = teamService.getTeamByEmployee(teamHeadId);
+
+        Optional<Team> oldTeamOptional = teamRepository.findById(oldTeamId);
+        Optional<User> optionalUser = userRepository.findById(teamHeadId);
+
+        if (oldTeamOptional.isPresent()) {
+            Team oldTeam = oldTeamOptional.get();
+
+            if (optionalUser.isPresent()) {
+                User teamHead = optionalUser.get();
+                oldTeam.getUsers().remove(teamHead);
+            }
+
+        } else {
+            throw new IllegalStateException("Unable to find old team");
+        }
+
+
+        Outlet outlet = outletService.getOutletById(outletId);
+
+        Optional<Department> d = departmentRepository.findById(deptId);
+        if (d.isEmpty()) {
+            throw new IllegalStateException("Department does not exist.");
+        }
+
+        Department dept = d.get();
+        User teamHead = userRepository.findById(teamHeadId).get();
+        // User teamHead = userService.getUser(Long.valueOf(teamHeadId));
+
+        if (!teamHead.isEnabled()) {
+            throw new IllegalStateException(
+                    "Manager selected is not an active employee, please appoint an active employee instead");
+        }
+
+        List<User> teamMembers = List.of(teamHead);
+
+        Roster tempRoster = new Roster("temp");
+        Roster emptyRoster = rosterRepository.saveAndFlush(tempRoster);
+
+        Team newTeam = new Team(teamName, outlet, isOffice, dept, emptyRoster, teamMembers, teamHead);
+
+        Team savedTeam = teamRepository.saveAndFlush(newTeam);
+
+        List<Team> tempTeams = teamHead.getTeams();
+        tempTeams.add(savedTeam);
+        teamHead.setTeams(tempTeams);
+        userRepository.saveAndFlush(teamHead);
+
+        dept.addTeam(savedTeam);
+        departmentRepository.saveAndFlush(dept);
+
+        emptyRoster.setTeam(savedTeam);
+        rosterRepository.saveAndFlush(emptyRoster);
+
+        return savedTeam.getTeamId();
+    }
+
+    public Team getNewTeamPromotion(Long userId) {
+        return null;
+    }
+
+    // public String addAPromotionRequest(Long employeeId, Long managerId, Long
+    // departmentId, Long processedBy, String interviewComments ){
+
+    // User employeePromotion = userRepository.findById(employeeId)
+    // .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId +
+    // " does not exist!"));
+
+    // PromotionRequest p = new PromotionRequest(LocalDate.now(), employeeId,
+    // managerId, null, null, interviewComments, null,departmentId,
+    // processedBy,StatusEnum.PENDING, employeePromotion);
+    // // promotion.setStatus(StatusEnum.PENDING);
+    // // promotion.setCreated(LocalDate.now());
+    // promotionRepository.saveAndFlush(p);
+    // return "Promotion Request is successfully created for employee: " +
+    // employeePromotion.getFirstName();
+    // }
+
+    //    public String addAPromotionRequest(Long employeeId, Long managerId, Long departmentId, Long processedBy, String interviewComments ){
 //
 //        User employeePromotion = userRepository.findById(employeeId)
 //                .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId + " does not exist!"));
@@ -427,7 +571,5 @@ public class PromotionService {
 //        promotionRepository.saveAndFlush(p);
 //        return "Promotion Request is successfully created for employee: " + employeePromotion.getFirstName();
 //    }
-
-
 
 }

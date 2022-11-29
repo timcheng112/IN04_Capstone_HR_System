@@ -71,10 +71,10 @@ const api = {
     );
   },
 
-  getAllManagers(){
+  getAllManagers() {
     return axios.get(`http://localhost:9191/api/user/getAllManagers`);
   },
-  
+
   changePassword(workEmail, password) {
     return axios.get(
       `http://localhost:9191/api/user/login/changePasswordHRMS?workEmail=${workEmail}&password=${password}`
@@ -901,6 +901,49 @@ const api = {
   getEligibleForPromotion(userId) {
     return axios.get(`http://localhost:9191/api/appraisal/promotion/${userId}`);
   },
+  addReviewPeriod(reviewPeriod) {
+    return axios.post(`http://localhost:9191/api/reviewPeriod`, reviewPeriod);
+  },
+  updateReviewPeriod(startDate, endDate) {
+    return axios.put(
+      `http://localhost:9191/api/reviewPeriod?startDate=${startDate}&endDate=${endDate}`
+    );
+  },
+  getReviewPeriodByYear(year) {
+    return axios.get(`http://localhost:9191/api/reviewPeriod/${year}`);
+  },
+  getAllReviewsByYear(year) {
+    return axios.get(`http://localhost:9191/api/review/${year}/all`);
+  },
+  getAllReviewPeriods() {
+    return axios.get(`http://localhost:9191/api/reviewPeriod`);
+  },
+  getEmployeeReviewsByYear(year, employeeId) {
+    return axios.get(
+      `http://localhost:9191/api/review/${year}/employee/${employeeId}`
+    );
+  },
+  getManagerReviewsByYear(year, managerId) {
+    return axios.get(
+      `http://localhost:9191/api/review/${year}/manager/${managerId}`
+    );
+  },
+  getReviewById(reviewId) {
+    return axios.get(`http://localhost:9191/api/review/${reviewId}`);
+  },
+  saveReview(reviewId, strengths, weaknesses, rating) {
+    return axios.put(
+      `http://localhost:9191/api/review/save/${reviewId}/?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}`
+    );
+  },
+  submitReview(reviewId, strengths, weaknesses, rating) {
+    return axios.put(
+      `http://localhost:9191/api/review/submit/${reviewId}/?strengths=${strengths}&weaknesses=${weaknesses}&rating=${rating}`
+    );
+  },
+  deleteReview(reviewId) {
+    return axios.put(`http://localhost:9191/api/review/delete/${reviewId}`);
+  },
   // activateUser(email){
   //   return axios.get(`http://localhost:9191/api/user/activateUser/?workEmail=${email}`);
   // },
@@ -1039,17 +1082,25 @@ const api = {
       `http://localhost:9191/api/notification/broadcastMessage?title=${title}&description=${description}`
     );
   },
-  callNFC(){
+  callNFC() {
     return axios.get(`http://localhost:9191/api/attendance/nfc`);
   },
-  getAllHREmployees(){
+  getAllHREmployees() {
     return axios.get(`http://localhost:9191/api/user/getAllHREmployees`);
   },
-  getAllOpenPosts(){
+  getAllOpenPosts() {
     return axios.get(`http://localhost:9191/api/jobposting/getAllOpenPosts`);
   },
-  createPromotionRequest(userInQuestion, userId, newDeptId, assigned, interviewComments){
-    return axios.post(`http://localhost:9191/api/promotion/createPromotionRequest?`);
+  createPromotionRequest(
+    userInQuestion,
+    userId,
+    newDeptId,
+    assigned,
+    interviewComments
+  ) {
+    return axios.post(
+      `http://localhost:9191/api/promotion/createPromotionRequest?`
+    );
   },
 
   //promotion
@@ -1093,6 +1144,24 @@ const api = {
   getUserPayInformation(userId) {
     return axios.get(`http://localhost:9191/api/pay/payinfo/user/${userId}`);
   },
+  getPositionPayInformation(positionId) {
+    return axios.get(
+      `http://localhost:9191/api/pay/payinfo/position/${positionId}`
+    );
+  },
+  getPositionGroup(positionId) {
+    return axios.get(
+      `http://localhost:9191/api/promotion/position/${positionId}`
+    );
+  },
+  addTeamPromotion(teamName, teamHeadId, outletId, isOffice, deptId) {
+    return axios.post(
+      `http://localhost:9191/api/promotion/team/?teamHeadId=${teamHeadId}&teamName=${teamName}&outletId=${outletId}&isOffice=${isOffice}&deptId=${deptId}`
+    );
+  },
+  getNewTeamPromotion(userId) {
+    return axios.get(`http://localhost:9191/api/promotion/team/${userId}`);
+  },
   processPromotionRequest(
     promotionId,
     effectiveFrom,
@@ -1101,10 +1170,42 @@ const api = {
     basicHourlyPay,
     weekendHourlyPay,
     eventPay,
-    processedById
+    processedById,
+    teamName,
+    outletId,
+    inOffice,
+    departmentId
   ) {
     return axios.put(
-      `http://localhost:9191/api/promotion/process/${promotionId}?effectiveFrom=${effectiveFrom}&rejectRemarks=${rejectRemarks}&basicSalary=${basicSalary}&basicHourlyPay=${basicHourlyPay}&weekendHourlyPay=${weekendHourlyPay}&eventPay=${eventPay}&processedBy=${processedById}`
+      `http://localhost:9191/api/promotion/process/${promotionId}?effectiveFrom=${effectiveFrom}&rejectRemarks=${rejectRemarks}&basicSalary=${basicSalary}&basicHourlyPay=${basicHourlyPay}&weekendHourlyPay=${weekendHourlyPay}&eventPay=${eventPay}&processedBy=${processedById}&teamName=${teamName}&outletId=${outletId}&inOffice=${inOffice}&departmentId=${departmentId}`
+    );
+  },
+  getTransferrableEmployees(userId) {
+    return axios.get(`http://localhost:9191/api/transfer/employees/${userId}`);
+  },
+  getPositionsToTransfer(managerId, role, positionId) {
+    return axios.get(
+      `http://localhost:9191/api/transfer/positions/${managerId}?role=${role}&positionId=${positionId}`
+    );
+  },
+  getNewDepartment(positionId) {
+    return axios.get(
+      `http://localhost:9191/api/transfer/department/${positionId}`
+    );
+  },
+  getNewTeam(managerId) {
+    return axios.get(`http://localhost:9191/api/transfer/team/${managerId}`);
+  },
+  createTransferRequest(
+    managerId,
+    employeeId,
+    positionId,
+    departmentId,
+    teamId,
+    interviewDate
+  ) {
+    return axios.post(
+      `http://localhost:9191/api/transfer?managerId=${managerId}&employeeId=${employeeId}&positionId=${positionId}&departmentId=${departmentId}&teamId=${teamId}&interviewDate=${interviewDate}`
     );
   },
 };

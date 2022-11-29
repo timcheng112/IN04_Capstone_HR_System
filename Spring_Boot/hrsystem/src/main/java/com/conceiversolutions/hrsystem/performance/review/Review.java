@@ -8,44 +8,37 @@ import com.conceiversolutions.hrsystem.user.user.User;
 
 @Entity
 @Table(name = "reviews")
-public class ManagerReview {
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long reviewId;
+    @Column(name = "review_year")
     private String reviewYear;
-    @Column(name = "start_date")
-    private LocalDate startDate;
-    @Column(name = "end_date")
-    private LocalDate endDate;
+    //INCOMPLETE -> IN PROGRESS -> COMPLETED
+    private String status;
     private String strengths;
     private String weaknesses;
     private Integer rating;
-    private Boolean promotion;
-    @Column(name = "promotion_justification")
-    private String promotionJustification;
     private Boolean submitted;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "employeeReviewing")
     private User employeeReviewing;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "manager")
     private User manager;
 
-    public ManagerReview() {
+    public Review() {
 
     }
 
-    public ManagerReview(String reviewYear, LocalDate startDate, LocalDate endDate, String strengths, String weaknesses, Integer rating, Boolean promotion, String promotionJustification, Boolean submitted, User employeeReviewing, User manager) {
+    public Review(String reviewYear, String status, String strengths, String weaknesses, Integer rating, Boolean submitted, User employeeReviewing, User manager) {
         this.reviewYear = reviewYear;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.status = status;
         this.strengths = strengths;
         this.weaknesses = weaknesses;
         this.rating = rating;
-        this.promotion = promotion;
-        this.promotionJustification = promotionJustification;
         this.submitted = submitted;
         this.employeeReviewing = employeeReviewing;
         this.manager = manager;
@@ -65,22 +58,6 @@ public class ManagerReview {
 
     public void setReviewYear(String reviewYear) {
         this.reviewYear = reviewYear;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
     }
 
     public String getStrengths() {
@@ -107,22 +84,6 @@ public class ManagerReview {
         this.rating = rating;
     }
 
-    public Boolean getPromotion() {
-        return promotion;
-    }
-
-    public void setPromotion(Boolean promotion) {
-        this.promotion = promotion;
-    }
-
-    public String getPromotionJustification() {
-        return promotionJustification;
-    }
-
-    public void setPromotionJustification(String promotionJustification) {
-        this.promotionJustification = promotionJustification;
-    }
-
     public Boolean getSubmitted() {
         return submitted;
     }
@@ -147,18 +108,23 @@ public class ManagerReview {
         this.manager = manager;
     }
 
-    @Override
-    public String toString() {
-        return "ManagerReview{" +
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Review{" +
                 "reviewId=" + reviewId +
                 ", reviewYear='" + reviewYear + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
+                ", status='" + status + '\'' +
                 ", strengths='" + strengths + '\'' +
                 ", weaknesses='" + weaknesses + '\'' +
                 ", rating=" + rating +
-                ", promotion=" + promotion +
-                ", promotionJustification='" + promotionJustification + '\'' +
                 ", submitted=" + submitted +
                 ", employeeReviewing=" + employeeReviewing +
                 ", manager=" + manager +

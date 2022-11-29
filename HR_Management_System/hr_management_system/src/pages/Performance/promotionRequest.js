@@ -82,8 +82,14 @@ export default function PromotionRequest() {
         .map((step) => (step.status = "complete"));
 
       const date = new Date();
+      var day = date.getDate() + "";
+      
+      if (day.length < 2) {
+        day = "0" + date.getDate() + "";
+      }
+
       const today =
-        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + day;
 
       console.log(today);
       console.log(interviewDate);

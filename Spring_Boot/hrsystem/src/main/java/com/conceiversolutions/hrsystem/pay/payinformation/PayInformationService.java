@@ -140,4 +140,27 @@ public class PayInformationService {
             throw new IllegalStateException("Unable to find pay information");
         }
     }
+
+    public PayInformation getPositionPayInformation(Long positionId) throws Exception {
+        User samePosition = userRepository.findUsersWithPosition(positionId).get(0);
+
+        Optional<PayInformation> payInformation = payInformationRepository
+                .findUserPayInformation(samePosition.getUserId());
+        if (payInformation.isPresent()) {
+            PayInformation pi = payInformation.get();
+
+            User employee = pi.getUser();
+            Position currentPosition = employee.getCurrentPosition();
+            LeaveQuota quota = employee.getCurrentLeaveQuota();
+
+            employee.nullify();
+
+            employee.setCurrentPosition(currentPosition);
+            employee.setCurrentLeaveQuota(quota);
+            
+            return pi;
+        } else {
+            throw new IllegalStateException("Unable to find pay information for user");
+        }
+    }
 }

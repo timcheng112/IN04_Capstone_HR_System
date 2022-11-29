@@ -17,7 +17,7 @@ import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.goal.Goal;
-import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
+import com.conceiversolutions.hrsystem.performance.review.Review;
 import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
@@ -123,12 +123,12 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Appraisal.class, mappedBy = "managerAppraising")
     @Column(name = "appraised_by")
     private List<Appraisal> managerAppraisals;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "manager")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Review.class, mappedBy = "manager")
     @Column(name = "manager_reviews")
-    private List<ManagerReview> managerReviews;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "employeeReviewing")
+    private List<Review> managerReviews;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Review.class, mappedBy = "employeeReviewing")
     @Column(name = "reviewed_by")
-    private List<ManagerReview> employeeReviews;
+    private List<Review> employeeReviews;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
@@ -215,7 +215,7 @@ public class User implements UserDetails {
         this.benefitPlanInstances = new ArrayList<>();
     }
 
-    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RaceEnum race, CitizenshipEnum citizenship, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed, Boolean isEnabled, Boolean isDisabled, LocalDate dateJoined, DocData profilePic, List<Position> positions, Position currentPosition, QualificationInformation qualificationInformation, List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances, List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<ManagerReview> managerReviews, List<ManagerReview> employeeReviews, List<Goal> goals, List<TaskListItem> taskListItems, List<Team> teams, PayInformation currentPayInformation, ReactivationRequest reactivationRequest, PreferredDates preferredDates, List<Block> blocks, List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested, List<SwapRequest> swapRequestsReceived, LeaveQuota currentLeaveQuota, List<LeaveQuota> leaveQuotas, List<Leave> leaves, String bankAccNo, String bankName, List<Notification> notificationsUnread, List<Notification> notificationsRead, String cardId) {
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RaceEnum race, CitizenshipEnum citizenship, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed, Boolean isEnabled, Boolean isDisabled, LocalDate dateJoined, DocData profilePic, List<Position> positions, Position currentPosition, QualificationInformation qualificationInformation, List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances, List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<Review> managerReviews, List<Review> employeeReviews, List<Goal> goals, List<TaskListItem> taskListItems, List<Team> teams, PayInformation currentPayInformation, ReactivationRequest reactivationRequest, PreferredDates preferredDates, List<Block> blocks, List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested, List<SwapRequest> swapRequestsReceived, LeaveQuota currentLeaveQuota, List<LeaveQuota> leaveQuotas, List<Leave> leaves, String bankAccNo, String bankName, List<Notification> notificationsUnread, List<Notification> notificationsRead, String cardId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -596,8 +596,8 @@ public class User implements UserDetails {
             DocData profilePic, List<Position> positions, Position currentPosition,
             QualificationInformation qualificationInformation, List<JobApplication> applications,
             List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances,
-            List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<ManagerReview> managerReviews,
-            List<ManagerReview> employeeReviews, List<Module> modules, List<Goal> goals,
+            List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<Review> managerReviews,
+            List<Review> employeeReviews, List<Module> modules, List<Goal> goals,
             List<TaskListItem> taskListItems, List<Team> teams, PayInformation currentPayInformation,
             ReactivationRequest reactivationRequest, PreferredDates preferredDates, List<Block> blocks,
             List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested,

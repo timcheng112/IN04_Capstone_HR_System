@@ -46,4 +46,9 @@ public class PayInformationController {
         return payInformationService.getUserPayInformation(userId);
     }
 
+    @GetMapping(path = "position/{positionId}")
+    public PayInformation getPositionPayInformation(@PathVariable("positionId") Long positionId) throws Exception {
+        return payInformationService.getPositionPayInformation(positionId);
+    }
+
 }
