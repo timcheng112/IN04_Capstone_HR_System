@@ -39,6 +39,8 @@ import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepository;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemService;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.docdata.DocDataService;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationService;
@@ -56,8 +58,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -92,6 +96,7 @@ public class UserService implements UserDetailsService {
     private final TaskRepository taskRepository;
     private final TaskListItemService taskListItemService;
     private final TaskListItemRepository taskListItemRepository;
+    private final DocDataService docDataService;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -1180,6 +1185,23 @@ public class UserService implements UserDetailsService {
         user.setGender(gender);
 
         return "Update of user was successful";
+    }
+
+    public String updateProfilePic(Long userId, MultipartFile file) throws IOException {
+        System.out.println("UserService.updateProfilePic");
+        User employee = userRepository.findById(userId).get();
+
+        DocData profilePic = null;
+        if (null != file) { // if file is uploaded, will set.
+            if (!file.isEmpty()) {
+                System.out.println("Profile Pic is being uploaded");
+                profilePic = docDataService.uploadDoc(file);
+            }
+        }
+        employee.setProfilePic(profilePic);
+        userRepository.save(employee);
+
+        return "Profile pic updated for " + userId + " with " + profilePic.getName();
     }
 
     public Long getUserFromEmail(String email) {

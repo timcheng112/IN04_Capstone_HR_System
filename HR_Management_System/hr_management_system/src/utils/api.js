@@ -230,6 +230,12 @@ const api = {
       `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
     );
   },
+  updateProfilePic(file, userId) {
+      return axios.post(
+        `http://localhost:9191/api/user/updateProfilePic?file=&userId=${userId}`,
+        file
+      );
+    },
   addPayInformation(userId, payInformation) {
     return axios.post(
       `http://localhost:9191/api/pay/payinfo/addPayInformation?userId=${userId}`,
