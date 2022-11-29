@@ -44,7 +44,10 @@ public class RewardTrackController {
     public RewardTrack getRewardTrack(@RequestParam("rewardTrackId") Long rewardTrackId) {
         RewardTrack rt = rewardTrackService.getRewardTrack(rewardTrackId);
         for (Reward reward : rt.getRewards()) {
-            reward.setRewardInstances(new ArrayList<>());
+            for (RTRewardInstance instance : reward.getRewardInstances()) {
+                instance.setReward(null);
+                instance.getRecipient().nullify();
+            }
 //            if (reward.getImage() != null) {
 //                reward.getImage().setDocData(new byte[0]);
 //            }
@@ -94,7 +97,10 @@ public class RewardTrackController {
     public RewardTrack getRewardTrackByDepartment(@RequestParam("departmentId") Long departmentId) {
         RewardTrack rt = rewardTrackService.getRewardTrackByDepartment(departmentId);
         for (Reward reward : rt.getRewards()) {
-            reward.setRewardInstances(new ArrayList<>());
+            for (RTRewardInstance instance : reward.getRewardInstances()) {
+                instance.setReward(null);
+                instance.getRecipient().nullify();
+            }
 //            if (reward.getImage() != null) {
 //                reward.getImage().setDocData(new byte[0]);
 //            }
@@ -135,5 +141,29 @@ public class RewardTrackController {
         rt.getDepartment().setDepartmentHead(null);
         rt.getDepartment().setTeams(new ArrayList<>());
         return rt;
+    }
+
+    @GetMapping("getRewardTrackByDepartmentHead")
+    public List<RewardTrack> getRewardTracksByDepartmentHead(@RequestParam("userId") Long userId) {
+        List<RewardTrack> rewardTracks = rewardTrackService.getRewardTracksByDepartmentHead(userId);
+        for (RewardTrack rt : rewardTracks) {
+            for (Reward reward : rt.getRewards()) {
+                for (RTRewardInstance instance : reward.getRewardInstances()) {
+                    instance.setReward(null);
+                    instance.getRecipient().nullify();
+                }
+//                if (reward.getImage() != null) {
+//                    reward.getImage().setDocData(new byte[0]);
+//                }
+                reward.setRewardTrack(null);
+            }
+            rt.getRewards().sort((r1, r2) -> {
+                return r1.getPointsRequired() - r2.getPointsRequired();
+            });
+            rt.getDepartment().setOrganization(null);
+            rt.getDepartment().setDepartmentHead(null);
+            rt.getDepartment().setTeams(new ArrayList<>());
+        }
+        return rewardTracks;
     }
 }

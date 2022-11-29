@@ -24,11 +24,12 @@ public class EmployeeReviewFormService {
     private final TeamRepository teamRepository;
     private final RewardTrackRepository rewardTrackRepository;
 
-    public Long submitReviewForm(String employeeName, Integer rating, String justification, String departmentName, String teamName) {
+    public Long submitReviewForm(String employeeName, Integer rating, String justification, Long departmentId, String teamName) {
         System.out.println("EmployeeReviewFormService.submitReviewForm");
-        System.out.println("employeeName = " + employeeName + ", rating = " + rating + ", justification = " + justification + ", departmentName = " + departmentName + ", teamName = " + teamName);
+        System.out.println("employeeName = " + employeeName + ", rating = " + rating + ", justification = " + justification + ", departmentId = " + departmentId + ", teamName = " + teamName);
 
-        EmployeeReviewForm newForm = new EmployeeReviewForm(employeeName, rating, LocalDate.now(), justification, departmentName, teamName);
+        Department dept = departmentRepository.findById(departmentId).get();
+        EmployeeReviewForm newForm = new EmployeeReviewForm(employeeName, rating, LocalDate.now(), justification, dept, teamName);
         EmployeeReviewForm savedForm = employeeReviewFormRepository.saveAndFlush(newForm);
 
         return savedForm.getReviewFormId();
@@ -102,5 +103,12 @@ public class EmployeeReviewFormService {
         System.out.println("reviewFormId = " + reviewFormId);
         employeeReviewFormRepository.deleteById(reviewFormId);
         return "Employee Review Form Id " + reviewFormId + "has been voided";
+    }
+
+    public List<EmployeeReviewForm> getReviewFormByDepartmentHead(Long userId) {
+        System.out.println("EmployeeReviewFormService.getReviewFormByDepartmentHead");
+        System.out.println("userId = " + userId);
+        Department dept = departmentRepository.findDepartmentByEmployeeId(userId).get();
+        return employeeReviewFormRepository.findByDepartmentId(dept.getDepartmentId());
     }
 }

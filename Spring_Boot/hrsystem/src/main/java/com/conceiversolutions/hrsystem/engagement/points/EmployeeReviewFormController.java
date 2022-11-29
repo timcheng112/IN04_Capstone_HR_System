@@ -19,9 +19,9 @@ public class EmployeeReviewFormController {
     public Long submitReviewForm(@RequestParam("employeeName") String employeeName,
                                @RequestParam("rating") Integer rating,
                                @RequestParam("justification") String justification,
-                               @RequestParam("departmentName") String departmentName,
+                               @RequestParam("departmentId") Long departmentId,
                                @RequestParam("teamName") String teamName) {
-        return employeeReviewFormService.submitReviewForm(employeeName, rating, justification, departmentName, teamName);
+        return employeeReviewFormService.submitReviewForm(employeeName, rating, justification, departmentId, teamName);
     }
 
     @GetMapping("getAllReviewForms")
@@ -73,6 +73,18 @@ public class EmployeeReviewFormController {
             form.getEmployee().nullify();
         }
 
+        return forms;
+    }
+
+    @GetMapping("getReviewFormByDepartmentHead")
+    public List<EmployeeReviewForm> getReviewFormByDepartmentHead(@RequestParam("userId") Long userId) {
+        List<EmployeeReviewForm> forms = employeeReviewFormService.getReviewFormByDepartmentHead(userId);
+        for (EmployeeReviewForm form : forms) {
+            if (form.getEmployee() != null) {
+                form.getEmployee().nullify();
+            }
+            form.setDepartment(null);
+        }
         return forms;
     }
 }

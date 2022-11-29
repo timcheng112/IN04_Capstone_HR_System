@@ -128,4 +128,17 @@ public class RewardTrackService {
         }
         return rt.get(0);
     }
+
+    public List<RewardTrack> getRewardTracksByDepartmentHead(Long userId) {
+        System.out.println("RewardTrackService.getRewardTracksByDepartmentHead");
+        System.out.println("userId = " + userId);
+
+        Department dept = departmentRepository.findDepartmentByEmployeeId(userId).get();
+
+        List<RewardTrack> rt = rewardTrackRepository.findByDepartmentId(dept.getDepartmentId());
+        if (rt.isEmpty()) {
+            throw new IllegalStateException("No Reward Tracks for this department");
+        }
+        return rt;
+    }
 }

@@ -1188,6 +1188,11 @@ const api = {
       `http://localhost:9191/api/rewards/getRewardTrackByEmployee?employeeId=${employeeId}`
     );
   },
+  getRewardTrackByDepartmentHead(userId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrackByDepartmentHead?userId=${userId}`
+    );
+  },
   saveRewardTrack(name, startDate, endDate, departmentId, pointsRatio, rewardTrackId) {
     return axios.post(
       `http://localhost:9191/api/rewards/saveRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&departmentId=${departmentId}&pointsRatio=${pointsRatio}&rewardTrackId=${rewardTrackId}`
@@ -1246,6 +1251,11 @@ const api = {
   getEmployeeReviewForms(employeeId) {
     return axios.get(
       `http://localhost:9191/api/rewards/getEmployeeReviewForms?employeeId=${employeeId}`
+    );
+  },
+  getReviewFormByDepartmentHead(userId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getReviewFormByDepartmentHead?userId=${userId}`
     );
   },
   getRewardTrackRewards(rewardTrackId) {

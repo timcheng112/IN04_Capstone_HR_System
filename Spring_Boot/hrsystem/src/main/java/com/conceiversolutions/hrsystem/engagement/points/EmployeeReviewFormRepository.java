@@ -10,4 +10,7 @@ import java.util.List;
 public interface EmployeeReviewFormRepository extends JpaRepository<EmployeeReviewForm, Long> {
     @Query("SELECT erf FROM EmployeeReviewForm erf WHERE erf.employee.userId =?1")
     List<EmployeeReviewForm> findByEmployeeId(Long employeeId);
+
+    @Query("SELECT erf FROM EmployeeReviewForm erf WHERE erf.department.departmentId =?1")
+    List<EmployeeReviewForm> findByDepartmentId(Long departmentId);
 }
