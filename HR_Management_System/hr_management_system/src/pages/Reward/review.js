@@ -15,6 +15,7 @@ export default function Review() {
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
   const [open, setOpen] = useState(false);
+  const [reviews, setReviews] = useState([])
   const tabs = [
     { name: "Reward Tracks", href: "/welfare/rewardtrack", current: false },
     {
@@ -24,15 +25,21 @@ export default function Review() {
     },
   ];
 
-  const reviews =[{employeeName:'xinyue', rating: 1,date:'2022-11-10',teamName:'hr',vetted:true},
-  {employeeName:'matthew', rating: 2,date:'2022-11-10',teamName:'hr',vetted:true},
-  {employeeName:'timothy', rating: 3,date:'2022-11-10',teamName:'hr',vetted:false},]
+  
 
   useEffect(() => {
     api
       .getUser(getUserId())
       .then((response) => {
         setUser(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+  useEffect(() => {
+    api
+      .getAllReviewForms()
+      .then((response) => {
+        setReviews(response.data);
       })
       .catch((error) => setError(error));
   }, []);
