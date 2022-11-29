@@ -609,7 +609,8 @@ export default function AddFinancialGoalModal({ open, onClose }) {
     createPromotionRequest();
     onClose();
     alert("Promotion request has been successfully added.");
-    window.location.reload();
+    // window.location.reload();
+    onClose()
   };
 
   function createPromotionRequest(){

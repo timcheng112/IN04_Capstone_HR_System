@@ -982,9 +982,10 @@ const api = {
   getAllOpenPosts(){
     return axios.get(`http://localhost:9191/api/jobposting/getAllOpenPosts`);
   },
-  createPromotionRequest(req){
-    return axios.post(`http://localhost:9191/api/promotion/createPromotionRequest`);
+  createPromotionRequest(userInQuestion, userId, newDeptId, assigned, interviewComments){
+    return axios.post(`http://localhost:9191/api/promotion/createPromotionRequest?`);
   },
+
 };
 
 export default api;
