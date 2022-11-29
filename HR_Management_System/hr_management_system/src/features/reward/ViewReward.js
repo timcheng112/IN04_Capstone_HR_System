@@ -23,6 +23,22 @@ export default function ViewReward({ open, setOpen, reward }) {
     setExpiryDate(new Date(reward.expiryDate));
   }, [open]);
 
+  function save(){
+    var date = expiryDate.getDate()
+    if (expiryDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = expiryDate.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + (month);
+    }
+    var helpexpiryDate = (expiryDate.getYear() + 1900) + "-" + month + "-" + date;
+
+    api.editReward(name, description, points, helpexpiryDate.trim(), reward.rewardId)
+    .then(() => { alert("Successfully saved."); })
+    .catch((error) => setError(error));
+  };
+
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -134,7 +150,7 @@ export default function ViewReward({ open, setOpen, reward }) {
                       </button>
                       <button
                         type="button"
-                        //onClick={()=>save()}
+                        onClick={()=> save()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save

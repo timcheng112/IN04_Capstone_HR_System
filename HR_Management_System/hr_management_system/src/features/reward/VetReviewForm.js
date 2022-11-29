@@ -32,7 +32,7 @@ export default function VetReviewForm({ open, setOpen, review }) {
 
   function vet() {
     api.vetReviewForm(employee.userId, review.reviewFormId, department.departmentId, team.teamId)
-      .then(() => { alert("Successfully void."); })
+      .then(() => { alert("Successfully vet."); })
       .catch((error) => setError(error));
   }
 

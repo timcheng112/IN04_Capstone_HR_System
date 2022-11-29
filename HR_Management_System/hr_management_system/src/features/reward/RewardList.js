@@ -1,33 +1,44 @@
 
 import { Fragment, useState, useEffect } from 'react'
 import RewardListOption from './RewardListOption'
+import api from "../../utils/api";
 
-const rewards = [
-  {
-    name: 'reward 1',
-    pointsRequired: '30',
-    expiryDate: '2022-12-30',
-  },
-  {
-    name: 'reward 2',
-    pointsRequired: '60',
-    expiryDate: '2022-12-30',
+// const rewards = [
+//   {
+//     name: 'reward 1',
+//     pointsRequired: '30',
+//     expiryDate: '2022-12-30',
+//   },
+//   {
+//     name: 'reward 2',
+//     pointsRequired: '60',
+//     expiryDate: '2022-12-30',
    
-  }, {
-    name: 'reward 3',
-    pointsRequired: '90',
-    expiryDate: '2022-12-30',
+//   }, {
+//     name: 'reward 3',
+//     pointsRequired: '90',
+//     expiryDate: '2022-12-30',
    
-  }, {
-    name: 'reward 4',
-    pointsRequired: '30',
-    expiryDate: '2022-12-30',
+//   }, {
+//     name: 'reward 4',
+//     pointsRequired: '30',
+//     expiryDate: '2022-12-30',
    
-  }, 
-]
+//   }, 
+// ]
 
-export default function RewardList() {
-  
+export default function RewardList({track}) {
+  const [rewards, setRewards] = useState([]);
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    api
+      .getRewardTrackRewards(track.rewardTrackId)
+      .then((response) => {
+        setRewards(response.data);
+      })
+      .catch((error) => setError(error));
+    }, []);
 
   return (
     <div class="scrollbar-thin scrollbar-thumb-blue-700 scrollbar-track-blue-300 h-50 w-full overflow-x-scroll">

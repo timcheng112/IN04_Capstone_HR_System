@@ -1,9 +1,17 @@
 import ViewReward from './ViewReward'
 import { EyeIcon, TrashIcon } from '@heroicons/react/20/solid'
 import { Fragment, useState, useEffect } from 'react'
+import api from "../../utils/api";
 
 export default function RewardListOption({ reward }) {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState();
+
+  function delet() {
+    api.deleteReward(reward.rewardId)
+      .then(() => { alert("Successfully delete."); })
+      .catch((error) => setError(error));
+  }
 
   return (
     <div>
@@ -22,6 +30,7 @@ export default function RewardListOption({ reward }) {
         <div className="-ml-px flex w-0 flex-1">
           <button
             type="button"
+            onClick={() =>delet()}
             className="relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
           >
             <TrashIcon className="h-4 w-4 text-red-400" aria-hidden="true" />

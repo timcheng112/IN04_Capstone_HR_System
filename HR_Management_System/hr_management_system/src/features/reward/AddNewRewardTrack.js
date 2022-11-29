@@ -15,6 +15,7 @@ export default function AddNewRewardTrack({ open, setOpen }) {
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [department, setDepartment] = useState(null)
   const [name, setName] = useState('');
   const [ratio, setRatio] = useState(null);
   const [user, setUser] = useState(getUserId());
@@ -29,6 +30,43 @@ export default function AddNewRewardTrack({ open, setOpen }) {
     }
     //    console.log(plan);
   }, [open])
+  useEffect(() => {
+    api
+      .getDepartmentByEmployeeId(getUserId())
+      .then((response) => {
+        setDepartment(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+
+  function add() {
+    var date = startDate.getDate()
+    if (startDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = startDate.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + (month);
+    }
+    var helpstartDate = (startDate.getYear() + 1900) + "-" + month + "-" + date;
+
+    var edate = endDate.getDate()
+    if (endDate.getDate() < 10) {
+      edate = "0" + edate;
+    }
+    var emonth = endDate.getMonth() + 1;
+    if (emonth < 10) {
+      emonth = "0" + (emonth);
+    }
+
+    var helpendDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
+
+    api.addRewardTrack(name, helpstartDate.trim(), helpendDate.trim(), department.departmentId, ratio)
+      .then(() => { alert("Successfully add new reward track."); })
+      .catch((error) => setError(error));
+
+      setOpen(false);
+  }
 
 
   return (
@@ -137,7 +175,7 @@ export default function AddNewRewardTrack({ open, setOpen }) {
                       </button>
                       <button
                         type="button"
-                        //onClick={() => add()}
+                        onClick={() => add()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save

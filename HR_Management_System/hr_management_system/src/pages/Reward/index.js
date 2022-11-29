@@ -18,7 +18,9 @@ export default function Reward() {
   const [user, setUser] = useState(null);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [department, setDepartment] = useState(null)
   const [open, setOpen] = useState(false);
+  const [tracks, setTracks] = useState([])
   const tabs = [
     { name: "Reward Tracks", href: "#", current: true },
     {
@@ -28,9 +30,9 @@ export default function Reward() {
     },
   ];
 
-  const tracks =[{name:'track1', startDate:'2022-11-3',endDate:'2022-11-10',pointsRatio:'1.5',isActive:true},
-  {name:'track2', startDate:'2022-11-3',endDate:'2022-11-10',pointsRatio:'1.5',isActive:true},
-  {name:'track3', startDate:'2022-11-3',endDate:'2022-11-10',pointsRatio:'1.5',isActive:false},]
+  // const tracks =[{name:'track1', startDate:'2022-11-3',endDate:'2022-11-10',pointsRatio:'1.5',isActive:true},
+  // {name:'track2', startDate:'2022-11-3',endDate:'2022-11-10',pointsRatio:'1.5',isActive:true},
+  // {name:'track3', startDate:'2022-11-3',endDate:'2022-11-10',pointsRatio:'1.5',isActive:false},]
 
   useEffect(() => {
     api
@@ -41,6 +43,14 @@ export default function Reward() {
       .catch((error) => setError(error));
   }, []);
 
+  useEffect(() => {
+    api
+      .getRewardTrackByEmployee(getUserId()) 
+      .then((response) => {
+        setTracks(response.data);
+      })
+      .catch((error) => setError(error));
+    }, []);
 
   return (
     <div className="">

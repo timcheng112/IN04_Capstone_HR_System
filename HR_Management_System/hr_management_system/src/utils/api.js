@@ -1183,9 +1183,19 @@ const api = {
       `http://localhost:9191/api/rewards/getRewardTrackByDepartment?departmentId=${departmentId}`
     );
   },
+  getRewardTrackByEmployee(employeeId){
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrackByEmployee?employeeId=${employeeId}`
+    );
+  },
   saveRewardTrack(name, startDate, endDate, departmentId, pointsRatio, rewardTrackId) {
     return axios.post(
       `http://localhost:9191/api/rewards/saveRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&departmentId=${departmentId}&pointsRatio=${pointsRatio}&rewardTrackId=${rewardTrackId}`
+    );
+  },
+  addRewardTrack(name, startDate, endDate, departmentId, pointsRatio) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/saveRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&departmentId=${departmentId}&pointsRatio=${pointsRatio}`
     );
   },
   editRewardTrack(name, startDate, endDate, pointsRatio, rewardTrackId) {

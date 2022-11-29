@@ -11,7 +11,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AddNewReward({ open, setOpen }) {
+export default function AddNewReward({ open, setOpen,track }) {
 
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
@@ -30,8 +30,22 @@ export default function AddNewReward({ open, setOpen }) {
     //    console.log(plan);
   }, [open])
 
+  function add(){
+    var date = expiryDate.getDate()
+    if (expiryDate.getDate() < 10) {
+      date = "0" + date;
+    }
+    var month = expiryDate.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + (month);
+    }
+    var helpexpiryDate = (expiryDate.getYear() + 1900) + "-" + month + "-" + date;
 
-
+    api.addNewReward(name, description, points, helpexpiryDate.trim(), track.rewardTrackId)
+    .then(() => {alert("Successfully add.");})
+    .catch((error) => setError(error));
+    setOpen(false);
+  }
 
 
   return (
@@ -147,7 +161,7 @@ export default function AddNewReward({ open, setOpen }) {
                       </button>
                       <button
                         type="button"
-                        //onClick={() => add()}
+                        onClick={() => add()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Submit

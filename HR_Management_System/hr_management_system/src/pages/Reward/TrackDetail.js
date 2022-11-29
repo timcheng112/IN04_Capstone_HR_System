@@ -21,6 +21,7 @@ export default function TrackDetail() {
   const [endDate, setEndDate] = useState(new Date());
   const [name, setName] = useState('');
   const [ratio, setRatio] = useState(null);
+  const [track, setTrack] = useState(null);
   const history = useHistory();
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
@@ -38,6 +39,7 @@ export default function TrackDetail() {
   }, []);
 
   useEffect(() => {
+    setTrack(location.state.track);
     setName(location.state.track.name);
     setRatio(location.state.track.pointsRatio);
     setStartDate(new Date(location.state.track.startDate));
@@ -60,7 +62,7 @@ export default function TrackDetail() {
 
 
   return (
-    <div className="">
+    track && <div className="">
       <Navbar />
       <div className="py-5"></div>
       <form className="space-y-8 divide-y divide-gray-200" >
@@ -128,7 +130,7 @@ export default function TrackDetail() {
                   Rewards
                 </label>
                 <div className="flex space-x-8">
-                  <RewardList />
+                  <RewardList track ={track}/>
                   <button
                     type="button"
                     onClick={() => setOpen(true)}
@@ -140,14 +142,11 @@ export default function TrackDetail() {
                     />
                     Add
                   </button>
-                  <AddNewReward open={open} setOpen={setOpen}/>
+                  <AddNewReward open={open} setOpen={setOpen} track ={track}/>
                 </div>
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         <div className="pt-5">
