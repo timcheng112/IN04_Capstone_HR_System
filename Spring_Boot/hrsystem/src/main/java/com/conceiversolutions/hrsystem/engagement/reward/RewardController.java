@@ -46,7 +46,7 @@ public class RewardController {
     }
 
     @PutMapping("editReward")
-    public Long editReward(@RequestParam("name") String name,
+    public String editReward(@RequestParam("name") String name,
                              @RequestParam("description") String description,
                              @RequestParam("pointsRequired") Integer pointsRequired,
                              @RequestParam("expiryDate") String expiryDate,
@@ -74,5 +74,11 @@ public class RewardController {
             instance.setReward(null);
         }
         return reward;
+    }
+
+    @PostMapping("redeemReward")
+    public String redeemReward(@RequestParam("employeeId") Long employeeId,
+                               @RequestParam("rewardId") Long rewardId) {
+        return rewardService.redeemReward(employeeId, rewardId);
     }
 }

@@ -1,9 +1,15 @@
 package com.conceiversolutions.hrsystem.engagement.reward;
 
+import com.conceiversolutions.hrsystem.emailhandler.EmailSender;
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuotaRepository;
 import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrack;
 import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrackRepository;
 import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrackService;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.user.User;
+import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +26,10 @@ public class RewardService {
     private final RewardRepository rewardRepository;
     private final RewardTrackRepository rewardTrackRepository;
     private final RewardTrackService rewardTrackService;
+    private final UserRepository userRepository;
+    private final RTRewardInstanceRepository rtRewardInstanceRepository;
+    private final LeaveQuotaRepository leaveQuotaRepository;
+    private final EmailSender emailSender;
 
     public List<Reward> getRewardTrackRewards(Long rewardTrackId) {
         System.out.println("RewardService.getRewardTrackRewards");
@@ -67,7 +77,7 @@ public class RewardService {
         return reward.get();
     }
 
-    public Long editReward(String name, String description, Integer pointsRequired, LocalDate expiryDate, Long rewardId) {
+    public String editReward(String name, String description, Integer pointsRequired, LocalDate expiryDate, Long rewardId) {
         System.out.println("RewardService.editReward");
         System.out.println("name = " + name + ", description = " + description + ", pointsRequired = " + pointsRequired + ", expiryDate = " + expiryDate + ", rewardId = " + rewardId);
 
@@ -79,7 +89,7 @@ public class RewardService {
         RewardTrack rt = reward.getRewardTrack();
 
         for (Reward r : rt.getRewards()) {
-            if (Objects.equals(r.getPointsRequired(), pointsRequired)) {
+            if (Objects.equals(r.getPointsRequired(), pointsRequired) && !rewardId.equals(r.getRewardId())) {
                 throw new IllegalStateException("A reward with the same Points Required already exists. Please de-conflict");
             }
         }
@@ -91,7 +101,7 @@ public class RewardService {
 //        reward.setImage(image);
 
         rewardRepository.save(reward);
-        return null;
+        return reward.getName() + " " + reward.getDescription() + " saved";
     }
 
     public String deleteReward(Long rewardId) {
@@ -109,5 +119,131 @@ public class RewardService {
         rewardTrackRepository.save(rt);
         rewardRepository.deleteById(reward.getRewardId());
         return "Reward has been deleted successfully";
+    }
+
+    public String redeemReward(Long employeeId, Long rewardId) {
+        System.out.println("RewardService.redeemReward");
+        System.out.println("employeeId = " + employeeId + ", rewardId = " + rewardId);
+
+        User employee = userRepository.findById(employeeId).get();
+        Reward reward = getReward(rewardId);
+
+        for (RTRewardInstance instances : reward.getRewardInstances()) {
+            if (instances.getRecipient().getUserId().equals(employeeId)) {
+                System.out.println("Employee already redeemed before");
+                throw new IllegalStateException("Employee has redeemed this before");
+            }
+        }
+
+        if (employee.getRewardPoints() < reward.getPointsRequired()) {
+            System.out.println("Points not enough");
+            throw new IllegalStateException("Employee does not have the sufficient amount of reward points required");
+        }
+
+        RTRewardInstance rewardInstance = new RTRewardInstance(reward, employee);
+        System.out.println("Reward name is " + reward.getName());
+        String output = "";
+        // award reward
+        if (reward.getName().contains("Leave")) { // leave
+            // get user leave quota and add
+            LeaveQuota lq = employee.getCurrentLeaveQuota();
+            int current = lq.getANL();
+            lq.setANL(current + 1);
+            leaveQuotaRepository.save(lq);
+            System.out.println("Leave credited from " + current + " to " + lq.getANL());
+            output ="Leave credited from " + current + " to " + lq.getANL();
+        } else if (reward.getName().contains("Voucher")) { // voucher
+            // send an email to ask them to take it from there
+            System.out.println("Voucher for " + reward.getDescription() + " sent to email");
+            output = "Voucher for " + reward.getDescription() + " sent to email";
+            emailSender.send(employee.getWorkEmail(), buildVoucherEmail(employee.getFirstName(), reward), "Reward Redemption");
+        }
+
+        // save
+        RTRewardInstance savedInstance = rtRewardInstanceRepository.saveAndFlush(rewardInstance);
+        List<RTRewardInstance> instances = reward.getRewardInstances();
+        instances.add(savedInstance);
+        reward.setRewardInstances(instances);
+        rewardRepository.save(reward);
+        return output;
+    }
+
+    private String buildVoucherEmail(String name, Reward reward) {
+        return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
+                "\n" +
+                "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
+                "\n" +
+                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n"
+                +
+                "    <tbody><tr>\n" +
+                "      <td width=\"100%\" height=\"53\" bgcolor=\"#0b0c0c\">\n" +
+                "        \n" +
+                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n"
+                +
+                "          <tbody><tr>\n" +
+                "            <td width=\"70\" bgcolor=\"#0b0c0c\" valign=\"middle\">\n" +
+                "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n"
+                +
+                "                  <tbody><tr>\n" +
+                "                    <td style=\"padding-left:10px\">\n" +
+                "                  \n" +
+                "                    </td>\n" +
+                "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n"
+                +
+                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Reward Redemption</span>\n"
+                +
+                "                    </td>\n" +
+                "                  </tr>\n" +
+                "                </tbody></table>\n" +
+                "              </a>\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "        </tbody></table>\n" +
+                "        \n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table>\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
+                "    <tbody><tr>\n" +
+                "      <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
+                "      <td>\n" +
+                "        \n" +
+                "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n"
+                +
+                "                  <tbody><tr>\n" +
+                "                    <td bgcolor=\"#1D70B8\" width=\"100%\" height=\"10\"></td>\n" +
+                "                  </tr>\n" +
+                "                </tbody></table>\n" +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\" height=\"10\"></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n"
+                +
+                "    <tbody><tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n"
+                +
+                "        \n" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name
+                + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> You have redeemed the reward : </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> " + reward.getDescription()+"</p></blockquote>\n Please show this email to your Manager to obtain the physical voucher. <p>Grow with Libro</p>" +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
+                "\n" +
+                "</div></div>";
     }
 }
