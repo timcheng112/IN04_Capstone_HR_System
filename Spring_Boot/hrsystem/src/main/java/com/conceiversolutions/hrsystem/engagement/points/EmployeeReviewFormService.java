@@ -96,4 +96,11 @@ public class EmployeeReviewFormService {
 
         return employeeReviewFormRepository.findByEmployeeId(employeeId);
     }
+
+    public String voidReviewForm(Long reviewFormId) {
+        System.out.println("EmployeeReviewFormService.voidReviewForm");
+        System.out.println("reviewFormId = " + reviewFormId);
+        employeeReviewFormRepository.deleteById(reviewFormId);
+        return "Employee Review Form Id " + reviewFormId + "has been voided";
+    }
 }

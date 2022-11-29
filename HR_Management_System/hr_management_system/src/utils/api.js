@@ -1228,6 +1228,11 @@ const api = {
       `http://localhost:9191/api/rewards/vetReviewForm?employeeId=${employeeId}&reviewFormId=${reviewFormId}&departmentId=${departmentId}&teamId=${teamId}`
     );
   },
+  voidReviewForm(reviewFormId) {
+    return axios.delete(
+      `http://localhost:9191/api/rewards/voidReviewForm?reviewFormId=${reviewFormId}`
+    );
+  },
   getEmployeeReviewForms(employeeId) {
     return axios.get(
       `http://localhost:9191/api/rewards/getEmployeeReviewForms?employeeId=${employeeId}`
@@ -1256,6 +1261,11 @@ const api = {
   deleteReward(rewardId) {
     return axios.delete(
       `http://localhost:9191/api/rewards/deleteReward?rewardId=${rewardId}`
+    );
+  },
+  toggleDummyData() {
+    return axios.put(
+      `http://localhost:9191/api/rewards/toggleDummyData`
     );
   },
 };

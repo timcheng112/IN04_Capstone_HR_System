@@ -60,6 +60,11 @@ public class EmployeeReviewFormController {
         return employeeReviewFormService.vetReviewForm(employeeId, reviewFormId, departmentId, teamId);
     }
 
+    @PostMapping("voidReviewForm")
+    public String voidReviewForm(@RequestParam("reviewFormId") Long reviewFormId) {
+        return employeeReviewFormService.voidReviewForm(reviewFormId);
+    }
+
     @GetMapping("getEmployeeReviewForms")
     public List<EmployeeReviewForm> getEmployeeReviewForms(@RequestParam("employeeId") Long employeeId) {
         List<EmployeeReviewForm> forms = employeeReviewFormService.getEmployeeReviewForms(employeeId);
