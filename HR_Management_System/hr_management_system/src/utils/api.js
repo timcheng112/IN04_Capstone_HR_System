@@ -1223,9 +1223,9 @@ const api = {
       `http://localhost:9191/api/rewards/toggleDummyData`
     );
   },
-  submitReviewForm(employeeName, rating, justification, departmentName, teamName) {
+  submitReviewForm(employeeName, rating, justification, departmentId, teamName) {
     return axios.post(
-      `http://localhost:9191/api/rewards/submitReviewForm?employeeName=${employeeName}&rating=${rating}&justification=${justification}&departmentName=${departmentName}&teamName=${teamName}`
+      `http://localhost:9191/api/rewards/submitReviewForm?employeeName=${employeeName}&rating=${rating}&justification=${justification}&departmentId=${departmentId}&teamName=${teamName}`
     );
   },
   getAllReviewForms() {
@@ -1238,9 +1238,9 @@ const api = {
       `http://localhost:9191/api/rewards/getAllUnvettedReviewForms`
     );
   },
-  vetReviewForm(employeeId, reviewFormId, departmentId, teamId) {
+  vetReviewForm(employeeId, reviewFormId, teamId) {
     return axios.post(
-      `http://localhost:9191/api/rewards/vetReviewForm?employeeId=${employeeId}&reviewFormId=${reviewFormId}&departmentId=${departmentId}&teamId=${teamId}`
+      `http://localhost:9191/api/rewards/vetReviewForm?employeeId=${employeeId}&reviewFormId=${reviewFormId}&teamId=${teamId}`
     );
   },
   voidReviewForm(reviewFormId) {

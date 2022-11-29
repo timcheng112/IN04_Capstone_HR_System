@@ -55,9 +55,8 @@ public class EmployeeReviewFormController {
     @PostMapping("vetReviewForm")
     public String vetReviewForm(@RequestParam("employeeId") Long employeeId,
                                  @RequestParam("reviewFormId") Long reviewFormId,
-                                 @RequestParam("departmentId") Long departmentId,
                                  @RequestParam("teamId") Long teamId) {
-        return employeeReviewFormService.vetReviewForm(employeeId, reviewFormId, departmentId, teamId);
+        return employeeReviewFormService.vetReviewForm(employeeId, reviewFormId, teamId);
     }
 
     @PostMapping("voidReviewForm")

@@ -52,9 +52,9 @@ public class EmployeeReviewFormService {
         return opt.get();
     }
 
-    public String vetReviewForm(Long employeeId, Long reviewFormId, Long departmentId, Long teamId) {
+    public String vetReviewForm(Long employeeId, Long reviewFormId, Long teamId) {
         System.out.println("EmployeeReviewFormService.vetReviewForm");
-        System.out.println("employeeId = " + employeeId + ", reviewFormId = " + reviewFormId + ", departmentId = " + departmentId + ", teamId = " + teamId);
+        System.out.println("employeeId = " + employeeId + ", reviewFormId = " + reviewFormId + ", teamId = " + teamId);
 
         User employee = userRepository.findById(employeeId).get();
         if (employee.getIsBlackListed() || !employee.isEnabled() || employee.getIsDisabled()) {
@@ -67,7 +67,7 @@ public class EmployeeReviewFormService {
             throw new IllegalStateException("Review form has already been vetted before");
         }
 
-        Department dept = departmentRepository.findById(departmentId).get();
+        Department dept = form.getDepartment();
         Team team = teamRepository.findById(teamId).get();
 
 
