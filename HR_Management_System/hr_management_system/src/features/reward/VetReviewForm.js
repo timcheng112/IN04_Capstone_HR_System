@@ -34,6 +34,7 @@ export default function VetReviewForm({ open, setOpen, review }) {
     api.vetReviewForm(employee.userId, review.reviewFormId, department.departmentId, team.teamId)
       .then(() => { alert("Successfully vet."); })
       .catch((error) => setError(error));
+    setOpen(false)
   }
 
 

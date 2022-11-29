@@ -1244,7 +1244,7 @@ const api = {
     );
   },
   voidReviewForm(reviewFormId) {
-    return axios.delete(
+    return axios.post(
       `http://localhost:9191/api/rewards/voidReviewForm?reviewFormId=${reviewFormId}`
     );
   },

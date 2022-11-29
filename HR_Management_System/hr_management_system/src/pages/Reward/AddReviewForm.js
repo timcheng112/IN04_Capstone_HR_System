@@ -23,7 +23,7 @@ export default function NewReviewForm() {
 
   function submit(){
     console.log(department)
-    api.submitReviewForm(name, rate, justification, department.departmentName, team) 
+    api.submitReviewForm(name, rate, justification, department.departmentId, team) 
     .then(() => {alert("Successfully submit.");})
     .catch((error) => setError(error));
     history.push("/")
