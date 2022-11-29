@@ -406,6 +406,7 @@ const Payroll = () => {
         <PayrollHistory
           openSummaryReport={() => setIsSummaryReportOpen(true)}
           closeSummaryReport={() => setIsSummaryReportOpen(false)}
+          employees={{ filteredEmployees }}
         />
       )}
       {!isPayslipOpen &&

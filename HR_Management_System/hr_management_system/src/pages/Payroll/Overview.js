@@ -4,8 +4,9 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/outline";
 import { format, subDays } from "date-fns";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RunPayRollDialog from "../../features/payroll/RunPayrollDialog";
+import api from "../../utils/api";
 import EditPayInformationForm from "./EditPayInformationForm";
 
 function classNames(...classes) {
@@ -21,9 +22,86 @@ const Overview = ({
   onChangeHandler,
 }) => {
   const date = format(subDays(new Date(), 7), "MMMM yyyy");
+  const todayStr = format(new Date(), "yyyy-MM-dd");
   const [selectedEmployee, setSelectedEmployee] = useState();
   const [isRunPayrollDialogOpen, setIsRunPayrollDialogOpen] = useState(false);
 
+  const [totalAllowance, setTotalAllowance] = useState(0);
+
+  // function findTotalAllowance(userId, dateString) {
+  //   api
+  //     .findUserAllowanceByMonth(userId, dateString)
+  //     .then((res) => {
+  //       if (res.data != null) {
+  //         let allowances = res.data;
+  //         let total = 0;
+  //         for (let i = 0; i < allowances.length; i++) {
+  //           console.log("getAmount: " + allowances[i].getAmount);
+  //           total += allowances[i].amount;
+  //         }
+  //         console.log("total: " + total);
+  //         return total;
+  //       } else {
+  //         console.info("No allowances found.");
+  //         return 0;
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       let message = error.request.response;
+  //       console.log(message);
+  //       if (message.includes("annot find allowance")) {
+  //         console.log("no allowances.");
+  //         return 0;
+  //       } else {
+  //         console.error("unknown error occured in find allowance by month.");
+  //         return 0;
+  //       }
+  //     });
+  // }
+
+  // useEffect(() => {
+  //   let val = findTotalAllowance(1, "2022-11-11");
+  //   console.log("use effect called in overview. val =" + val);
+  //   setTotalAllowance(val);
+  // });
+  function calculateUserMonthlyAllowance(employee, dateString) {
+    let allowanceList = employee.currentPayInformation.allowance;
+    let subString = dateString.substring(0, 8);
+    let sum = 0;
+    for (let i = 0; i < allowanceList.length; i++) {
+      if (allowanceList[i].date.includes(subString)) {
+        sum += allowanceList[i].amount;
+      }
+    }
+    return sum;
+  }
+
+  function calculateUserMonthlyDeduction(employee, dateString) {
+    let deductionList = employee.currentPayInformation.deduction;
+    let subString = dateString.substring(0, 8);
+    let sum = 0;
+    for (let i = 0; i < deductionList.length; i++) {
+      //   console.log("deduction found!");
+      //   console.log("deduction date:" + deductionList[i].date);
+      //   console.log("substring: " + subString);
+      if (deductionList[i].date.includes(subString)) {
+        sum += deductionList[i].amount;
+      }
+    }
+    return sum;
+  }
+
+  function employeeStatusForMonth(employee, dateString) {
+    let payslipList = employee.payslips;
+    let subString = dateString.substring(0, 8);
+    for (let i = 0; i < payslipList.length; i++) {
+      if (payslipList[i].dateOfPayment.includes(subString)) {
+        //found payslip for month
+        return "PAID";
+      }
+    }
+    return "UNPAID";
+  }
   return (
     <div>
       {isRunPayrollDialogOpen && (
@@ -89,7 +167,7 @@ const Overview = ({
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
-                          Net Salary
+                          Net Salary*
                         </th>
                         <th
                           scope="col"
@@ -124,22 +202,48 @@ const Overview = ({
                           <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
                             {/* $10,310.00 */}$
                             {employee.currentPayInformation.basicSalary
-                              ? employee.currentPayInformation.basicSalary.toLocaleString("en-US") +
-                                "/mth"
-                              : employee.currentPayInformation.basicHourlyPay.toLocaleString("en-US") +
-                                "/hr"}
+                              ? employee.currentPayInformation.basicSalary.toLocaleString(
+                                  "en-US"
+                                ) + "/mth"
+                              : employee.currentPayInformation.basicHourlyPay.toLocaleString(
+                                  "en-US"
+                                ) + "/hr"}
                             {/* {employee.gross} */}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-green-600">
-                            +$0
+                            {/* +$0 */}
+                            +$
+                            {calculateUserMonthlyAllowance(employee, todayStr)}
                             {/* {employee.allowances} */}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-red-600">
-                            -$100.31
+                            {/* -$100.31 */}
+                            -$
+                            {calculateUserMonthlyDeduction(employee, todayStr)}
                             {/* {employee.deductions} */}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                            $10,209.69
+                            {/* $10,209.69 */}$
+                            {employee.currentPayInformation.basicSalary
+                              ? employee.currentPayInformation.basicSalary +
+                                calculateUserMonthlyAllowance(
+                                  employee,
+                                  todayStr
+                                ) -
+                                calculateUserMonthlyDeduction(
+                                  employee,
+                                  todayStr
+                                )
+                              : employee.currentPayInformation.basicHourlyPay *
+                                  243 +
+                                calculateUserMonthlyAllowance(
+                                  employee,
+                                  todayStr
+                                ) -
+                                calculateUserMonthlyDeduction(
+                                  employee,
+                                  todayStr
+                                )}
                             {/* {employee.net} */}
                           </td>
                           <td
@@ -147,17 +251,19 @@ const Overview = ({
                             className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500"
                           >
                             <div
+                              id="paidStatus"
                               className={classNames(
-                                "rounded-xl w-1/2 text-center font-bold bg-green-200 text-green-700",
-                                employee.status === "PAID" &&
-                                  "bg-green-200 text-green-700",
-                                employee.status === "PENDING" &&
-                                  "bg-yellow-200 text-yellow-700",
-                                employee.status === "UNPAID" &&
-                                  "bg-red-200 text-red-700"
+                                "rounded-xl w-1/2 text-center font-bold",
+                                employeeStatusForMonth(employee, todayStr) ===
+                                  "PAID" && "bg-green-200 text-green-700",
+                                employeeStatusForMonth(employee, todayStr) ===
+                                  "PENDING" && "bg-yellow-200 text-yellow-700",
+                                employeeStatusForMonth(employee, todayStr) ===
+                                  "UNPAID" && "bg-red-200 text-red-700"
                               )}
                             >
-                              PAID
+                              {/* PAID */}
+                              {employeeStatusForMonth(employee, todayStr)}
                               {/* {employee.status} */}
                             </div>
                           </td>
@@ -194,6 +300,11 @@ const Overview = ({
                     </tbody>
                   </table>
                 </div>
+                <p className="text-gray-500 float-right text-xs mt-4 mb-3 mr-5">
+                  *please note that for employees paid hourly, net salary is
+                  only an <br />
+                  estimate considering a 5 day work week with 8 hours a day.
+                </p>
               </div>
             </div>
           </div>

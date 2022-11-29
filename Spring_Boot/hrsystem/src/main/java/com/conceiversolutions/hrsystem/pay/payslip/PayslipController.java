@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/pay/payslip")
 public class PayslipController {
@@ -25,7 +26,7 @@ public class PayslipController {
     // ));
     // }
 
-    @GetMapping
+    @GetMapping(path="/getPayslips")
     public List<Payslip> getPayslips() {
         return payslipService.getPayslips();
     }
@@ -117,5 +118,10 @@ public class PayslipController {
     @GetMapping(path = "/getPayslipByUserId")
     public List<Payslip> getPayslipByUserId(@RequestParam("userId") Long userId) {
         return payslipService.getPayslipByUserId(userId);
+    }
+
+    @GetMapping(path = "/findUserPayslip")
+    public List<Payslip> findUserPayslip(@RequestParam("userId") Long userId) {
+        return payslipService.findUserPayslip(userId);
     }
 }

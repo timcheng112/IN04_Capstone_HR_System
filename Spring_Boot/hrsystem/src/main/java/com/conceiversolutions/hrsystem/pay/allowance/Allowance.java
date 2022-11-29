@@ -18,12 +18,19 @@ public class Allowance {
     @Column(name="allowance_id", nullable = false)
     private Long allowanceId;
 
+    @Column(name="name", nullable = false)
+    private String allowanceName;
+
+    @Column(name="amount", nullable = false)
+    private BigDecimal amount;
+
     @Column(nullable = false)
     private String remarks;
 
     @Column(name = "date")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Singapore")
     private LocalDate date;
+
 
     @OneToOne(fetch = FetchType.LAZY, optional = true, targetEntity = AllowanceTemplate.class)
     private AllowanceTemplate template;
@@ -32,6 +39,13 @@ public class Allowance {
     }
 
     public Allowance(String remarks, LocalDate date) {
+        this.remarks = remarks;
+        this.date = date;
+    }
+
+    public Allowance(String allowanceName, BigDecimal amount, String remarks, LocalDate date) {
+        this.allowanceName = allowanceName;
+        this.amount = amount;
         this.remarks = remarks;
         this.date = date;
     }
@@ -60,13 +74,12 @@ public class Allowance {
         this.date = date;
     }
 
-    @Override
-    public String toString() {
-        return "Allowance{" +
-                "allowanceId=" + allowanceId +
-                ", remarks='" + remarks + '\'' +
-                ", date=" + date +
-                '}';
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     public AllowanceTemplate getTemplate() {
@@ -75,5 +88,25 @@ public class Allowance {
 
     public void setTemplate(AllowanceTemplate template) {
         this.template = template;
+    }
+
+    public String getAllowanceName() {
+        return allowanceName;
+    }
+
+    public void setAllowanceName(String allowanceName) {
+        this.allowanceName = allowanceName;
+    }
+
+    @Override
+    public String toString() {
+        return "Allowance{" +
+                "allowanceId=" + allowanceId +
+                ", allowanceName='" + allowanceName + '\'' +
+                ", amount=" + amount +
+                ", remarks='" + remarks + '\'' +
+                ", date=" + date +
+                ", template=" + template +
+                '}';
     }
 }

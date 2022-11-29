@@ -1,9 +1,11 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getUserId, setUserSession } from "../../utils/Common";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import Tab from "../../features/jobrequest/Tab";
+import api from "../../utils/api";
 
 const tabs = [
   { name: "Overview", href: "/payroll", current: false },
@@ -30,50 +32,110 @@ const departments = [
     teams: [{ name: "Finance Team A" }, { name: "Finance Team B" }],
   },
 ];
-const months = [
-  {
-    month: "January",
-    gross: "$10,310.00",
-    allowances: "+$0",
-    deductions: "-$100.31",
-    net: "$10,209.69",
-    status: "PAID",
-    payslipAvailable: true,
-  },
-  {
-    month: "Febuary",
-    gross: "$5,210.00",
-    allowances: "+$0",
-    deductions: "-$521.00",
-    net: "$4,689.99",
-    status: "PENDING",
-    payslipAvailable: false,
-  },
-  {
-    month: "March",
-    gross: "$3,120.00",
-    allowances: "+$0",
-    deductions: "-$936.00",
-    net: "$2,184.00",
-    status: "PAID",
-    payslipAvailable: true,
-  },
-  {
-    month: "April",
-    gross: "$7,500.00",
-    allowances: "+$0",
-    deductions: "-$2,250.00",
-    net: "$5250.00",
-    status: "UNPAID",
-    payslipAvailable: false,
-  },
-];
+
+// const months = [
+//   {
+//     month: "January",
+//     gross: "$10,310.00",
+//     allowances: "+$0",
+//     deductions: "-$100.31",
+//     net: "$10,209.69",
+//     status: "PAID",
+//     payslipAvailable: true,
+//   },
+//   {
+//     month: "Febuary",
+//     gross: "$5,210.00",
+//     allowances: "+$0",
+//     deductions: "-$521.00",
+//     net: "$4,689.99",
+//     status: "PENDING",
+//     payslipAvailable: false,
+//   },
+//   {
+//     month: "March",
+//     gross: "$3,120.00",
+//     allowances: "+$0",
+//     deductions: "-$936.00",
+//     net: "$2,184.00",
+//     status: "PAID",
+//     payslipAvailable: true,
+//   },
+//   {
+//     month: "April",
+//     gross: "$7,500.00",
+//     allowances: "+$0",
+//     deductions: "-$2,250.00",
+//     net: "$5250.00",
+//     status: "UNPAID",
+//     payslipAvailable: false,
+//   },
+// ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 const EmployeePayrollHistory = () => {
+  const userId = getUserId();
+  const [months, setMonths] = useState([]);
+
+  useEffect(() => {
+    console.log("personal payroll history sorting stuff");
+    api.findUserPayslip(userId).then((res) => {
+      if (res.data != null) {
+        let payslips = res.data;
+        payslips.sort(function (a, b) {
+          return new Date(b.dateGenerated) - new Date(a.dateGenerated);
+        });
+        let months = [];
+        for (let i = 0; i < payslips.length; i++) {
+          let payslip = payslips[i];
+          let monthList = [
+            "",
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ];
+          let monthStr = monthList[payslip.monthOfPayment];
+          let allowancesStr = "+$0";
+          if (payslip.allowance != null) {
+            allowancesStr = "+$" + payslip.allowance;
+          }
+          let deductionsStr = "-$0";
+          if (payslip.deduction != null) {
+            deductionsStr = "-$" + payslip.deduction;
+          }
+          let basicStr = "$0";
+          if (payslip.basicSalary != null) {
+            basicStr = "$" + payslip.basicSalary;
+          }
+
+          let month = {
+            month: monthStr,
+            gross: basicStr,
+            allowances: allowancesStr,
+            deductions: deductionsStr,
+            net: "$" + payslip.grossSalary,
+            status: "PAID",
+            payslipAvailable: true,
+          };
+
+          months.push(month);
+        }
+        setMonths(months);
+      }
+    });
+  }, [userId]);
 
   return (
     <div>
@@ -130,8 +192,8 @@ const EmployeePayrollHistory = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {months.map((month) => (
-                      <tr>
+                    {months.map((month, index) => (
+                      <tr key={index}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
                           {month.month}
                         </td>

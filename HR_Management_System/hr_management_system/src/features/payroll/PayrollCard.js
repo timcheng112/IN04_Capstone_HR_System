@@ -52,7 +52,7 @@ export default function PayrollCard({ info, openSummaryReport }) {
         </div>
         <div className="text-start text-gray-900 text-lg pt-3">
           <p>{info.numOfEmployees} Employees</p>
-          <p>{info.gross} Gross</p>
+          <p>${info.gross} Net</p>
         </div>
       </div>
     </div>

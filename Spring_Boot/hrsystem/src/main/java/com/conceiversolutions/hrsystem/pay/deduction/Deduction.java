@@ -19,6 +19,12 @@ public class Deduction {
     @Column(name = "deduction_id", nullable = false)
     private Long deductionId;
 
+    @Column(nullable = false, name ="name")
+    private String deductionName;
+
+    @Column(nullable = false, name="amount")
+    private BigDecimal amount;
+
     @Column(nullable = false)
     private String remarks;
 
@@ -33,6 +39,13 @@ public class Deduction {
     }
 
     public Deduction(String remarks, LocalDate date) {
+        this.remarks = remarks;
+        this.date = date;
+    }
+
+    public Deduction(String deductionName, BigDecimal amount, String remarks, LocalDate date) {
+        this.deductionName = deductionName;
+        this.amount = amount;
         this.remarks = remarks;
         this.date = date;
     }
@@ -69,12 +82,31 @@ public class Deduction {
         this.date = date;
     }
 
+    public String getDeductionName() {
+        return deductionName;
+    }
+
+    public void setDeductionName(String deductionName) {
+        this.deductionName = deductionName;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
     @Override
     public String toString() {
         return "Deduction{" +
                 "deductionId=" + deductionId +
+                ", deductionName='" + deductionName + '\'' +
+                ", amount=" + amount +
                 ", remarks='" + remarks + '\'' +
                 ", date=" + date +
+                ", template=" + template +
                 '}';
     }
 }

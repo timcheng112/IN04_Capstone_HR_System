@@ -753,10 +753,18 @@ const api = {
       `http://localhost:9191/api/pay/payslip/findUserPayslipByMonth?userId=${userId}&dateString=${dateString}`
     );
   },
+  findUserPayslip(userId) {
+    return axios.get(
+      `http://localhost:9191/api/pay/payslip/findUserPayslip?userId=${userId}`
+    );
+  },
   findPayslipByMonth(dateString) {
     return axios.get(
       `http://localhost:9191/api/pay/payslip/findPayslipByMonth?dateString=${dateString}`
     );
+  },
+  getAllPayslips() {
+    return axios.get(`http://localhost:9191/api/pay/payslip/getPayslips`);
   },
   setUserStatus(email) {
     return axios.get(
@@ -1094,22 +1102,25 @@ const api = {
       `http://localhost:9191/api/preferred_date/getPreferredDatesByUserId?userId=${userId}`
     );
   },
-  
+
   // Welfare Claims
   getAllBenefitTypes() {
-    return axios.get(
-      `http://localhost:9191/api/claims/getAllBenefitTypes`
-    );
+    return axios.get(`http://localhost:9191/api/claims/getAllBenefitTypes`);
   },
-  addBenefitPlan(description, planName, planAmount, startDate, endDate, planType) {
+  addBenefitPlan(
+    description,
+    planName,
+    planAmount,
+    startDate,
+    endDate,
+    planType
+  ) {
     return axios.post(
       `http://localhost:9191/api/claims/addBenefitPlan?description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}&planType=${planType}`
     );
   },
   getAllBenefitPlans() {
-    return axios.get(
-      `http://localhost:9191/api/claims/getAllBenefitPlans`
-    );
+    return axios.get(`http://localhost:9191/api/claims/getAllBenefitPlans`);
   },
   getAllBenefitPlansByType(benefitType) {
     return axios.get(
@@ -1121,7 +1132,14 @@ const api = {
       `http://localhost:9191/api/claims/getBenefitPlanById?benefitPlanId=${benefitPlanId}`
     );
   },
-  editBenefitPlan(planId, description, planName, planAmount, startDate, endDate) {
+  editBenefitPlan(
+    planId,
+    description,
+    planName,
+    planAmount,
+    startDate,
+    endDate
+  ) {
     return axios.put(
       `http://localhost:9191/api/claims/editBenefitPlan?planId=${planId}&description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}`
     );
@@ -1151,15 +1169,21 @@ const api = {
       `http://localhost:9191/api/claims/getEmployeeClaims?employeeId=${employeeId}`
     );
   },
-  makeNewClaim(claimDate, incidentDate, remarks, claimAmount, benefitPlanInstanceId, file) {
+  makeNewClaim(
+    claimDate,
+    incidentDate,
+    remarks,
+    claimAmount,
+    benefitPlanInstanceId,
+    file
+  ) {
     return axios.post(
       `http://localhost:9191/api/claims/makeNewClaim?file=&claimDate=${claimDate}&incidentDate=${incidentDate}&remarks=${remarks}&claimAmount=${claimAmount}&benefitPlanInstanceId=${benefitPlanInstanceId}`,
-    file);
+      file
+    );
   },
   getAllClaims() {
-    return axios.get(
-      `http://localhost:9191/api/claims/getAllClaims`
-    );
+    return axios.get(`http://localhost:9191/api/claims/getAllClaims`);
   },
   getClaim(claimId) {
     return axios.get(
