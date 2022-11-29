@@ -62,10 +62,10 @@ const WelfareDrawerNavigator = () => {
            unmountOnBlur: true,
          }}
       />
-      <WelfareDrawer.Screen name="RewardDetai" component={RewardDetailScreen}
+      <WelfareDrawer.Screen name="RewardDetail" component={RewardDetailScreen}
         options={{
-           title: "Reward Detai",
-           headerTitle: "Reward Detai",
+           title: "Reward Details",
+           headerTitle: "Reward Details",
            unmountOnBlur: true,
          }}
       />

@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.engagement.rewardtrack;
 
 import com.conceiversolutions.hrsystem.engagement.points.DummyData;
+import com.conceiversolutions.hrsystem.engagement.reward.RTRewardInstance;
 import com.conceiversolutions.hrsystem.engagement.reward.Reward;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,7 +118,11 @@ public class RewardTrackController {
     public RewardTrack getRewardTrackByEmployee(@RequestParam("employeeId") Long employeeId) {
         RewardTrack rt = rewardTrackService.getRewardTrackByEmployee(employeeId);
         for (Reward reward : rt.getRewards()) {
-            reward.setRewardInstances(new ArrayList<>());
+//            reward.setRewardInstances(new ArrayList<>());
+            for (RTRewardInstance instance : reward.getRewardInstances()) {
+                instance.setReward(null);
+                instance.getRecipient().nullify();
+            }
 //            if (reward.getImage() != null) {
 //                reward.getImage().setDocData(new byte[0]);
 //            }

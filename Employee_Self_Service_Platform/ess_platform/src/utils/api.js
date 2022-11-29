@@ -250,7 +250,12 @@ const api = {
     return axios.get(
       `http://${URL}:9191/api/rewards/getRewardTrackByEmployee?employeeId=${employeeId}`
     );
-  }
+  },
+  redeemReward(rewardId, employeeId) {
+    return axios.post(
+      `http://${URL}:9191/api/rewards/redeemReward?rewardId=${rewardId}&employeeId=${employeeId}`
+    );
+  },
 };
 
 export default api;

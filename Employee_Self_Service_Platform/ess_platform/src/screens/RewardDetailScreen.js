@@ -55,17 +55,44 @@ const RewardDetailScreen = ({ navigation}) => {
   const route = useRoute();
   const [userId, setUserId] = useState();
   const [reward, setReward] = useState();
-
+  const [userClaimed, setUserClaimed] = useState(false);
+  const [claimDate, setClaimDate] = useState();
 
   useEffect(() => {
+    console.log("Reward Detail Screen");
     setUserId(route.params.userId);
-    setReward(route.params.reward);
-    console.log(route.params.reward);
-  }, []);
-  useEffect(() => {
-    console.log(route.params);
+    setReward(route.params.item);
+    console.log(route.params.item);
+    console.log("Instances");
+    console.log(route.params.item.rewardInstances);
+    console.log(route.params.userId)
+    route.params.item.rewardInstances.forEach((instance) => {
+        console.log("instance");
+        console.log(instance.recipient.userId);
+        if (route.params.userId == instance.recipient.userId) {
+            console.log("REDEEMED");
+            setUserClaimed(true);
+            setClaimDate(instance.dateClaimed);
+        }
+    });
   }, []);
 
+  function redeemReward() {
+    console.log("REDEEM REWARD");
+    console.log(reward.name);
+
+    api.redeemReward(reward.rewardId, userId)
+        .then((response) => {
+            console.log("response data");
+            console.log(response.data);
+            alert(response.data);
+            navigation.navigate('Rewards')
+        })
+        .catch((error) => {
+            console.log(error.response.data.message);
+            alert(error.response.data.message);
+        })
+  }
 
   return (
     reward && <SafeAreaView style={styles.container}>
@@ -82,11 +109,14 @@ const RewardDetailScreen = ({ navigation}) => {
           <Text style={styles.title}>Points Required:     </Text>
           <Text>{reward.pointsRequired}</Text>
         </View>
-        <View style={styles.inline}>
+        {!reward.name.includes("Leave") &&<View style={styles.inline}>
           <Text style={styles.title}>Expiry Date:    </Text>
           <Text>{reward.expiryDate}</Text>
-        </View>
-
+        </View>}
+        {userClaimed===true &&<View style={styles.inline}>
+          <Text style={styles.title}>Redeemed On:    </Text>
+          <Text>{claimDate}</Text>
+        </View>}
         <View style={styles.button}>
           <Button
             mode="contained"
@@ -94,10 +124,10 @@ const RewardDetailScreen = ({ navigation}) => {
             onPress={() => navigation.navigate('Rewards')}>
             Back
           </Button>
-          {plan.isActive === true &&<Button
+          {userClaimed===false &&<Button
             mode="contained"
             color="#0000cd"
-            onPress>
+            onPress={() => redeemReward()}>
             Redeem
           </Button>}
         </View>
