@@ -54,7 +54,6 @@ import AddTemplateChecklist from "./pages/Onboarding/AddTemplateChecklist";
 import ChecklistDetail from "./pages/Onboarding/ChecklistDetail";
 // import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 
-import PromotionPage from "./pages/Progression";
 import TransferPage from "./pages/Progression/indexTransfer";
 import GoalsPage from "./pages/Performance/indexGoals";
 import AppraisalsPage from "./pages/Performance/indexAppraisals";
@@ -67,6 +66,13 @@ import PayrollHistoryPage from "./pages/Payroll/PayrollHistory";
 import EmployeesNotInPayrollPage from "./pages/Payroll/EmployeesNotInPayroll";
 import AddToPayrollFormPage from "./pages/Payroll/AddToPayrollForm";
 import EmployeePayrollHistory from "./pages/Payroll/ViewEmployeesPayHistory";
+import CurrentPerformancePeriodPage from "./pages/Performance/current";
+import PromotionPage from "./pages/Performance/promotion";
+import PromotionRequestPage from "./pages/Performance/promotionRequest";
+
+import MyBenefitsPage from "./pages/Benefit/index";
+import BenefitsPage from "./pages/Benefit/indexHR";
+import ClaimsPage from "./pages/Benefit/claim";
 
 function App() {
   return (
@@ -239,6 +245,7 @@ function App() {
             component={TransferPage}
           />
           <PrivateRoute exact path="/performance" component={PerformancePage} />
+          <PrivateRoute exact path="/myperformance" component={CurrentPerformancePeriodPage} />
           <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
           <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
           <PrivateRoute exact path="/performance/appraisal/:appraisalId" component={AppraisalPage} />
@@ -248,8 +255,14 @@ function App() {
             path="/performance/appraisals"
             component={AppraisalsPage}
           />
+          <PrivateRoute exact path="/promotion" component={PromotionPage} />
+          <PrivateRoute exact path="/promotion/:requestId" component={PromotionRequestPage} />
 
           <PrivateRoute exact path="/payroll" component={PayrollPage} />
+
+          <PrivateRoute exact path="/welfare/mybenefits" component={MyBenefitsPage} />
+          <PrivateRoute exact path="/welfare/benefits" component={BenefitsPage} />
+          <PrivateRoute exact path="/welfare/claims" component={ClaimsPage} />
         </Switch>
       </div>
     </BrowserRouter>

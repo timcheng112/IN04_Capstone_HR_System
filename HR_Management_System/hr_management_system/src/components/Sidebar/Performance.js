@@ -5,6 +5,8 @@ import {
   ChartBarSquareIcon,
   ChartPieIcon,
   FolderIcon,
+  InboxStackIcon,
+  PresentationChartLineIcon,
   UserGroupIcon,
   UsersIcon,
   XMarkIcon,
@@ -17,7 +19,7 @@ import PerformanceBreadcrumb from "../Breadcrumb/PerformanceBreadcrumb";
 const navigationhr = [
   {
     name: "Current",
-    href: "/performance",
+    href: "/myperformance",
     icon: ChartBarSquareIcon,
     current: false,
   },
@@ -31,13 +33,25 @@ const navigationhr = [
     name: "Appraisals",
     href: "/performance/appraisals",
     icon: UserGroupIcon,
+    current: false,
+  },
+  {
+    name: "Promotions",
+    href: "/promotion",
+    icon: PresentationChartLineIcon,
+    current: false,
+  },
+  {
+    name: "Transfers",
+    href: "/promotion",
+    icon: InboxStackIcon,
     current: false,
   },
 ];
 const navigation = [
   {
     name: "Current",
-    href: "/performance",
+    href: "/myperformance",
     icon: ChartBarSquareIcon,
     current: false,
   },
@@ -51,6 +65,18 @@ const navigation = [
     name: "Appraisals",
     href: "/performance/appraisals",
     icon: UserGroupIcon,
+    current: false,
+  },
+  {
+    name: "Promotions",
+    href: "/promotion",
+    icon: PresentationChartLineIcon,
+    current: false,
+  },
+  {
+    name: "Transfers",
+    href: "/promotion",
+    icon: InboxStackIcon,
     current: false,
   },
 ];

@@ -76,6 +76,7 @@ public class JobApplicationService {
             applicant.setLeaves(new ArrayList<>());
             applicant.setLeaveQuotas(new ArrayList<>());
             applicant.setCurrentLeaveQuota(null);
+            applicant.setBenefitPlanInstances(new ArrayList<>());
 
             JobPosting jp = ja.getJobPosting();
             if (jp.getJobPostRequirements().size() != 0) {

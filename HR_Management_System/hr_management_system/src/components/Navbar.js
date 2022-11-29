@@ -23,23 +23,21 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const navigation = [
-    { name: "Dashboard", path: "/" },
-    { name: "Admin", path: "/admin/onboarding" },
-    { name: "Company", path: "/vieworg" },
-    { name: "Career", path: "/career/promotion" },
-    { name: "Welfare", path: "/register" },
+    { name: "Administrative", path: "/admin/onboarding" },
+    { name: "Organisation ", path: "/vieworg" },
+    { name: "Career ", path: "/career/promotion" },
+    { name: "Welfare", path: "/welfare/mybenefits" },
     { name: "Hiring", path: "/hiring/jobrequest" },
     { name: "Reports", path: "/reports" },
     { name: "Rostering", path: "/rostering" },
     { name: "Payroll", path: "/payroll" },
   ];
   const navigationHR = [
-    { name: "Dashboard", path: "/" },
-    { name: "Admin", path: "/admin/onboarding" },
-    { name: "Company", path: "/vieworg" },
-    { name: "Career", path: "/career/promotion" },
+    { name: "Administrative", path: "/admin/onboarding" },
+    { name: "Organisation ", path: "/vieworg" },
+    { name: "Career ", path: "/career/promotion" },
+    { name: "Welfare", path: "/welfare/benefits" },
     { name: "Training", path: "/mytraining" },
-    { name: "Welfare", path: "/register" },
     { name: "Hiring", path: "/hiring/jobrequesthr" },
     { name: "Reports", path: "/reports" },
     { name: "Rostering", path: "/rostering" },
@@ -154,7 +152,7 @@ export default function Navbar() {
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="#"
+                              href="/profile"
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
@@ -164,16 +162,31 @@ export default function Navbar() {
                             </a>
                           )}
                         </Menu.Item>
+                        {user !== null &&
+                          user.hrEmployee && <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="/register"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Registration
+                              </a>
+                            )}
+                          </Menu.Item>}
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="#"
+                              href="/"
+                              onClick={() => deleteUser()}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
                               )}
                             >
-                              Logout
+                              Log out
                             </a>
                           )}
                         </Menu.Item>

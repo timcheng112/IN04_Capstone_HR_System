@@ -138,7 +138,7 @@ export default function Notifications() {
     return dt;
   }
 
-  
+
 
   return (
     read &&
@@ -166,7 +166,7 @@ export default function Notifications() {
 
         {/* getAllNotifications */}
         {/* {user.userRole === "ADMIN"  ? (
-                          
+
                             <div className="flex justify-end mt-4 ml-auto mr-6">
                               <div>
                                 <>
@@ -238,7 +238,7 @@ export default function Notifications() {
                   {message.notifTime}
                 </Moment>
 
-                
+
               </div>
               <div className="mt-1"></div>
             </li> </>

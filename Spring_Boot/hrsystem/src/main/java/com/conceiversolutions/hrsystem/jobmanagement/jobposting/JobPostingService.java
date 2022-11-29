@@ -59,6 +59,7 @@ public class JobPostingService {
                 poster.setLeaves(new ArrayList<>());
                 poster.setLeaveQuotas(new ArrayList<>());
                 poster.setCurrentLeaveQuota(null);
+                poster.setBenefitPlanInstances(new ArrayList<>());
             }
 
             if (jp.getJobPostRequirements().size() != 0) {
@@ -196,6 +197,7 @@ public class JobPostingService {
                 poster.setLeaves(new ArrayList<>());
                 poster.setLeaveQuotas(new ArrayList<>());
                 poster.setCurrentLeaveQuota(null);
+                poster.setBenefitPlanInstances(new ArrayList<>());
             }
 
             if (jp.getJobPostRequirements().size() != 0) {

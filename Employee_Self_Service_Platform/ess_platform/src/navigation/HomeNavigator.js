@@ -11,13 +11,16 @@ const HomeNavigator = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="HomeScreen"
+        name="ESS"
         component={HomeScreen}
         options={{
           tabBarLabel: "Home",
           headerRight: () => {
             <IconButton icon="bell" size={25} />;
           },
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          unmountOnBlur: true,
         }}
       />
       {/* <HomeStack.Screen name="Profile" component={ProfileScreen} /> */}

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.conceiversolutions.hrsystem.user.user.User;
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/appraisal")
@@ -94,5 +92,16 @@ public class AppraisalController {
     public String deleteAppraisal(@PathVariable("appraisalId") Long appraisalId) throws Exception {
         return appraisalService.deleteAppraisal(appraisalId);
     }
+
+    @GetMapping(path = "/promotion/{userId}")
+    public Integer eligibleForPromotion(@PathVariable("userId") Long userId) {
+        return appraisalService.eligibleForPromotion(userId);
+    }
+
+    @GetMapping(path = "employee/{userId}")
+    public List<Appraisal> getAllEmployeeAppraisals(@PathVariable("userId") Long userId) {
+        return appraisalService.getAllEmployeeAppraisals(userId);
+    }
+    
 
 }

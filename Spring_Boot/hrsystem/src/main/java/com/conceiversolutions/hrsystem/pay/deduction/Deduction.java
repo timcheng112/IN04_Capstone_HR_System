@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.pay.deduction;
 
 import com.conceiversolutions.hrsystem.enums.AllowanceTypeEnum;
 import com.conceiversolutions.hrsystem.enums.DeductionTypeEnum;
+import com.conceiversolutions.hrsystem.pay.deductionTemplate.DeductionTemplate;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,13 +11,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name= "deduction")
+@Table(name = "deduction")
 public class Deduction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "deduction_id", nullable = false)
-    private Long  deductionId;
+    @Column(name = "deduction_id", nullable = false)
+    private Long deductionId;
 
     @Column(nullable = false)
     private String remarks;
@@ -25,12 +26,23 @@ public class Deduction {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Singapore")
     private LocalDate date;
 
+    @OneToOne(fetch = FetchType.LAZY, optional = true, targetEntity = DeductionTemplate.class)
+    private DeductionTemplate template;
+
     public Deduction() {
     }
 
     public Deduction(String remarks, LocalDate date) {
         this.remarks = remarks;
         this.date = date;
+    }
+
+    public DeductionTemplate getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(DeductionTemplate template) {
+        this.template = template;
     }
 
     public Long getDeductionId() {

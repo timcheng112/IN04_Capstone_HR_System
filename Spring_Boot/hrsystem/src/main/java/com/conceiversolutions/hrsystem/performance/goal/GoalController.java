@@ -84,4 +84,10 @@ public class GoalController {
     public String addBusinessReminderToUser(@PathVariable("userId") Long userId){
         return goalService.addBusinessReminderToUser(userId);
     }
+
+    @GetMapping(path = "/employee/{userId}")
+    public List<Goal> getUserGoals(@PathVariable("userId") Long userId) {
+        return goalService.getUserGoals(userId);
+    }
+    
 }

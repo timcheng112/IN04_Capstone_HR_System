@@ -68,13 +68,9 @@ public class AppraisalPeriodService {
                 appraisalService.getDepartmentAppraisals(appraisalPeriod.getYear(), u.getUserId());
             }
 
-            List<User> organizationHeads = organizationService.getOrganizationHeads();
+            User organizationHead = organizationService.getOrganizationHead();
 
-            for (User u : organizationHeads) {
-                appraisalService.getOrganizationAppraisals(appraisalPeriod.getYear(), u.getUserId());
-            }
-
-            
+            appraisalService.getOrganizationAppraisals(appraisalPeriod.getYear(), organizationHead.getUserId());
 
             return ap.getAppraisalPeriodId();
         }
