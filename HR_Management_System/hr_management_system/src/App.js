@@ -77,6 +77,7 @@ import RewardTrackPage from "./pages/Reward/index"
 import RewardTrackDetailPage from "./pages/Reward/TrackDetail"
 import ReviewFormPage from "./pages/Reward/review"
 import AddReviewFormPage from "./pages/Reward/AddReviewForm"
+import EmployeeRewardPage from "./pages/Reward/EmployeeReward";
 
 function App() {
   return (
@@ -270,6 +271,7 @@ function App() {
           <PrivateRoute exact path="/welfare/rewardtrack" component={RewardTrackPage} />
           <PrivateRoute exact path="/welfare/rewardtrackdetail" component={RewardTrackDetailPage} />
           <PrivateRoute exact path="/welfare/reviewform" component={ReviewFormPage} />
+          <PrivateRoute exact path="/welfare/myrewardtrack" component={EmployeeRewardPage} />
           <PublicRoute exact path="/reviewform" component={AddReviewFormPage} />
         </Switch>
       </div>
