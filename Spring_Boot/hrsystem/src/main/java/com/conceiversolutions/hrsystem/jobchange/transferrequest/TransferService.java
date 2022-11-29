@@ -279,37 +279,120 @@ public class TransferService {
     @Transactional
     public String processTransferRequest(Long transferId, String rejectRemarks, String basicSalary,
             String basicHourlyPay, String weekendHourlyPay, String eventPay, Long processedById) throws Exception {
-                Optional<TransferRequest> request = transferRepository.findById(transferId);
-                Optional<User> optionalProcessedBy = userRepository.findById(processedById);
+        Optional<TransferRequest> request = transferRepository.findById(transferId);
+        Optional<User> optionalProcessedBy = userRepository.findById(processedById);
 
-                if (request.isPresent() && optionalProcessedBy.isPresent()) {
-                    TransferRequest tr = request.get();
+        if (request.isPresent() && optionalProcessedBy.isPresent()) {
+            TransferRequest tr = request.get();
 
-                    User processedBy = optionalProcessedBy.get();
+            User processedBy = optionalProcessedBy.get();
 
-                    tr.setProcessedBy(processedBy);
+            tr.setProcessedBy(processedBy);
 
-                    if (rejectRemarks.isEmpty()) {
+            if (rejectRemarks.isEmpty()) {
 
-                        PayInformation pi = payInformationService.getUserPayInformation(tr.getEmployee().getUserId());
+                PayInformation pi = payInformationService.getUserPayInformation(tr.getEmployee().getUserId());
 
-                        if (!basicSalary.isEmpty()) {
-                            pi.setBasicSalary(new BigDecimal(basicSalary));
-                        } else {
-                            pi.setBasicHourlyPay(new BigDecimal(basicHourlyPay));
-                            pi.setWeekendHourlyPay(new BigDecimal(weekendHourlyPay));
-                            pi.setEventPhHourlyPay(new BigDecimal(eventPay));
-                        }
-
-                        tr.setStatus("Approved");
-
-                    } else {
-                        tr.setStatus("Rejected");
-                        tr.setRejectRemarks(rejectRemarks);
-                    }
-                    return "Transfer request for " + tr.getEmployee().getFirstName() + " " + tr.getEmployee().getLastName() + " has been " + tr.getStatus().toLowerCase() + ".";
+                if (!basicSalary.isEmpty()) {
+                    pi.setBasicSalary(new BigDecimal(basicSalary));
                 } else {
-                    throw new IllegalStateException("Unable to find transfer request");
+                    pi.setBasicHourlyPay(new BigDecimal(basicHourlyPay));
+                    pi.setWeekendHourlyPay(new BigDecimal(weekendHourlyPay));
+                    pi.setEventPhHourlyPay(new BigDecimal(eventPay));
                 }
+
+                tr.setStatus("Approved");
+
+            } else {
+                tr.setStatus("Rejected");
+                tr.setRejectRemarks(rejectRemarks);
+            }
+            return "Transfer request for " + tr.getEmployee().getFirstName() + " " + tr.getEmployee().getLastName()
+                    + " has been " + tr.getStatus().toLowerCase() + ".";
+        } else {
+            throw new IllegalStateException("Unable to find transfer request");
+        }
+    }
+
+    public List<TransferRequest> getActiveRequests(Long userId) {
+        List<TransferRequest> active = transferRepository.findUserActiveRequests(userId);
+
+        for (TransferRequest t : active) {
+            t.setEmployee(breakRelationships(t.getEmployee()));
+            t.setManager(breakRelationships(t.getManager()));
+
+            if (t.getInterviewer() != null) {
+                t.setInterviewer(breakRelationships(t.getInterviewer()));
+            }
+
+            if (t.getProcessedBy() != null) {
+                t.setProcessedBy(breakRelationships(t.getProcessedBy()));
+            }
+            t.setNewDepartment(null);
+            t.setNewTeam(null);
+            
+        }
+
+        return active;
+    }
+
+    public List<TransferRequest> getInterviewRequests(Long userId) {
+        List<TransferRequest> toInterview = transferRepository.findUserToInterviewRequests(userId);
+
+        for (TransferRequest t : toInterview) {
+            t.setEmployee(breakRelationships(t.getEmployee()));
+            t.setManager(breakRelationships(t.getManager()));
+
+            if (t.getInterviewer() != null) {
+                t.setInterviewer(breakRelationships(t.getInterviewer()));
+            }
+
+            if (t.getProcessedBy() != null) {
+                t.setProcessedBy(breakRelationships(t.getProcessedBy()));
+            }
+            t.setNewDepartment(null);
+            t.setNewTeam(null);
+        }
+        return toInterview;
+    }
+
+    public List<TransferRequest> getApproveRequests(Long userId) {
+        List<TransferRequest> toApprove = transferRepository.findUserToApproveRequests(userId);
+
+        for (TransferRequest t : toApprove) {
+            t.setEmployee(breakRelationships(t.getEmployee()));
+            t.setManager(breakRelationships(t.getManager()));
+
+            if (t.getInterviewer() != null) {
+                t.setInterviewer(breakRelationships(t.getInterviewer()));
+            }
+
+            if (t.getProcessedBy() != null) {
+                t.setProcessedBy(breakRelationships(t.getProcessedBy()));
+            }
+            t.setNewDepartment(null);
+            t.setNewTeam(null);
+        }
+        return toApprove;
+    }
+
+    public List<TransferRequest> getRequestHistory(Long userId) {
+        List<TransferRequest> history = transferRepository.findUserRequestHistory(userId);
+
+        for (TransferRequest t : history) {
+            t.setEmployee(breakRelationships(t.getEmployee()));
+            t.setManager(breakRelationships(t.getManager()));
+
+            if (t.getInterviewer() != null) {
+                t.setInterviewer(breakRelationships(t.getInterviewer()));
+            }
+
+            if (t.getProcessedBy() != null) {
+                t.setProcessedBy(breakRelationships(t.getProcessedBy()));
+            }
+            t.setNewDepartment(null);
+            t.setNewTeam(null);
+        }
+        return history;
     }
 }

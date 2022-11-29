@@ -16,10 +16,11 @@ import {
     const [requests, setRequests] = useState([]);
   
     useEffect(() => {
-      api.getUserActiveRequests(getUserId()).then((response) => {
+
+      api.getActiveTransfers(getUserId()).then(response => {
         console.log(response.data);
         setRequests(response.data);
-      });
+      })
     }, []);
   
     function renderStatus(status) {
@@ -85,9 +86,9 @@ import {
               <>
                 <ul role="list" className="divide-y divide-gray-200">
                   {requests.map((request) => (
-                    <li key={request.promotionId}>
+                    <li key={request.transferId}>
                       <a
-                        href={`/promotion/${request.promotionId}`}
+                        href={`/transfer/${request.transferId}`}
                         className="block hover:bg-gray-50"
                       >
                         <div className="flex items-center px-4 py-4 sm:px-6">

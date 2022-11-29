@@ -86,4 +86,23 @@ public class TransferController {
                 basicHourlyPay, weekendHourlyPay, eventPay, processedById);
     }
 
+    @GetMapping(path = "/active/{userId}")
+    public List<TransferRequest> getActiveRequests(@PathVariable("userId") Long userId) throws Exception {
+        return transferService.getActiveRequests(userId);
+    }
+
+    @GetMapping(path = "/interview/{userId}")
+    public List<TransferRequest> getInterviewRequests(@PathVariable("userId") Long userId) throws Exception {
+        return transferService.getInterviewRequests(userId);
+    }
+
+    @GetMapping(path = "/approve/{userId}")
+    public List<TransferRequest> getApproveRequests(@PathVariable("userId") Long userId) throws Exception {
+        return transferService.getApproveRequests(userId);
+    }
+
+    @GetMapping(path = "/history/{userId}")
+    public List<TransferRequest> getRequestHistory(@PathVariable("userId") Long userId) throws Exception {
+        return transferService.getRequestHistory(userId);
+    }
 }

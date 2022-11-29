@@ -1209,10 +1209,12 @@ const api = {
     );
   },
   getTransferRequest(requestId) {
-    return axios.get(`http://localhost:9191/api/transfer/${requestId}`)
+    return axios.get(`http://localhost:9191/api/transfer/${requestId}`);
   },
   conductTransferInterview(requestId, remarks, status) {
-    return axios.put(`http://localhost:9191/api/transfer/interview/${requestId}?comments=${remarks}&status=${status}`)
+    return axios.put(
+      `http://localhost:9191/api/transfer/interview/${requestId}?comments=${remarks}&status=${status}`
+    );
   },
   processTransferRequest(
     transferId,
@@ -1223,7 +1225,21 @@ const api = {
     eventPay,
     processedById
   ) {
-    return axios.put(`http://localhost:9191/api/transfer/process/${transferId}?&rejectRemarks=${rejectRemarks}&basicSalary=${basicSalary}&basicHourlyPay=${basicHourlyPay}&weekendHourlyPay=${weekendHourlyPay}&eventPay=${eventPay}&processedBy=${processedById}`)
+    return axios.put(
+      `http://localhost:9191/api/transfer/process/${transferId}?&rejectRemarks=${rejectRemarks}&basicSalary=${basicSalary}&basicHourlyPay=${basicHourlyPay}&weekendHourlyPay=${weekendHourlyPay}&eventPay=${eventPay}&processedBy=${processedById}`
+    );
+  },
+  getActiveTransfers(userId) {
+    return axios.get(`http://localhost:9191/api/transfer/active/${userId}`);
+  },
+  getInterviewRequests(userId) {
+    return axios.get(`http://localhost:9191/api/transfer/interview/${userId}`);
+  },
+  getApproveRequests(userId) {
+    return axios.get(`http://localhost:9191/api/transfer/approve/${userId}`);
+  },
+  getRequestHistory(userId) {
+    return axios.get(`http://localhost:9191/api/transfer/history/${userId}`);
   },
 };
 
