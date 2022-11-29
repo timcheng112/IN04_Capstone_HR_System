@@ -22,9 +22,9 @@ public class PromotionController {
 
     private final PromotionService promotionService;
 
-    public List<PromotionRequest> getAllPromotionRequests() {
-        return promotionService.getAllPromotionRequests();
-    }
+//    public List<PromotionRequest> getAllPromotionRequests() {
+//        return promotionService.getAllPromotionRequests();
+//    }
 
     @PostMapping
     public String createPromotionRequest(@RequestParam("created") LocalDate created,
@@ -91,9 +91,9 @@ public class PromotionController {
         return promotionService.getPromotionRequest(promotionId);
     }
 
-    public String addAPromotionRequest(@PathVariable("userInQuestion") Long employeeId, @PathVariable("userId") Long managerId, @PathVariable("departmentId")  Long departmentId,@PathVariable("assigned") Long processedBy, @RequestParam("interviewComments") String interviewComments ){
-        return promotionService.addAPromotionRequest(employeeId,managerId, departmentId, processedBy, interviewComments);
-    }
+//    public String addAPromotionRequest(@PathVariable("userInQuestion") Long employeeId, @PathVariable("userId") Long managerId, @PathVariable("departmentId")  Long departmentId,@PathVariable("assigned") Long processedBy, @RequestParam("interviewComments") String interviewComments ){
+//        return promotionService.addAPromotionRequest(employeeId,managerId, departmentId, processedBy, interviewComments);
+//    }
 
 
 }

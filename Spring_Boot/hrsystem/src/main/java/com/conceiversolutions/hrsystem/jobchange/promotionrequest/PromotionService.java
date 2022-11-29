@@ -25,6 +25,7 @@ import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.appraisal.AppraisalRepository;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
+
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
@@ -47,6 +48,8 @@ public class PromotionService {
     private final AppraisalRepository appraisalRepository;
 
     private final PayInformationService payInformationService;
+
+    private final PromotionRepository promotionRepository;
 
     public User breakRelationships(User user) {
         User u = new User();
@@ -413,17 +416,17 @@ public class PromotionService {
     }
 
 
-    public String addAPromotionRequest(Long employeeId, Long managerId, Long departmentId, Long processedBy, String interviewComments ){
-
-        User employeePromotion = userRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId + " does not exist!"));
-
-        PromotionRequest p = new PromotionRequest(LocalDate.now(), employeeId, managerId, null, null, interviewComments, null,departmentId, processedBy,StatusEnum.PENDING, employeePromotion);
-//        promotion.setStatus(StatusEnum.PENDING);
-//        promotion.setCreated(LocalDate.now());
-        promotionRepository.saveAndFlush(p);
-        return "Promotion Request is successfully created for employee: " + employeePromotion.getFirstName();
-    }
+//    public String addAPromotionRequest(Long employeeId, Long managerId, Long departmentId, Long processedBy, String interviewComments ){
+//
+//        User employeePromotion = userRepository.findById(employeeId)
+//                .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId + " does not exist!"));
+//
+//        PromotionRequest p = new PromotionRequest(LocalDate.now(), employeeId, managerId, null, null, interviewComments, null,departmentId, processedBy,StatusEnum.PENDING, employeePromotion);
+////        promotion.setStatus(StatusEnum.PENDING);
+////        promotion.setCreated(LocalDate.now());
+//        promotionRepository.saveAndFlush(p);
+//        return "Promotion Request is successfully created for employee: " + employeePromotion.getFirstName();
+//    }
 
 
 
