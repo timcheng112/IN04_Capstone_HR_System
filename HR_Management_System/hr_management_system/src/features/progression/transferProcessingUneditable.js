@@ -6,32 +6,18 @@ import AddTeamModal from "../../pages/OrgChart/ViewDepartment/addTeamModal";
 import AddDepartmentModal from "../../pages/OrgChart/ViewOrganisation/addDeptModal";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
-import PromotionAddTeam from "./promotionAddTeam";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Processing({ request }) {
+export default function TransferProcessingUneditable({ request }) {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [payInformation, setPayInformation] = useState(null);
   const [newPay, setNewPay] = useState(null);
-  const [effectiveFrom, setEffectiveFrom] = useState("");
   const [toReject, setToReject] = useState(false);
   const [rejectRemarks, setRejectRemarks] = useState("");
-  const [isTeam, setIsTeam] = useState(false);
-  const [newDepartment, setNewDepartment] = useState(null);
-  const [groups, setGroups] = useState([]);
-
-  //new team
-  const [teamName, setTeamName] = useState("");
-  const [departmentId, setDepartmentId] = useState(0);
-  const [outlet, setOutletId] = useState("");
-  const [inOffice, setInOffice] = useState(false);
-  const [outlets, setOutlets] = useState([]);
-  const [selectedOutlet, setSelectedOutlet] = useState({
-    outletName: "Select",
-  });
+  const [user, setUser] = useState(null);
 
   const history = useHistory();
 
@@ -55,21 +41,9 @@ export default function Processing({ request }) {
         setNewPay(response.data);
       });
 
-    api.getPositionGroup(request.newPosition.positionId).then((response) => {
-      //console.log(response.data);
-      if (response.data === "Team") {
-        setIsTeam(true);
-      }
-    });
-
-    api.getAllOutlets().then((response) => {
+    api.getUser(request.employee.userId).then((response) => {
       console.log(response.data);
-      setOutlets(response.data);
-    });
-
-    api.getDepartmentByEmployeeId(request.employee.userId).then((response) => {
-      console.log(response.data.departmentId);
-      setDepartmentId(response.data.departmentId);
+      setUser(response.data);
     });
   }, []);
 
@@ -79,35 +53,28 @@ export default function Processing({ request }) {
       basicSalary = "";
     }
 
-    console.log();
-
     api
-      .processPromotionRequest(
-        request.promotionId,
-        effectiveFrom,
+      .processTransferRequest(
+        request.transferId,
         rejectRemarks,
         basicSalary,
         payInformation.basicHourlyPay,
         payInformation.weekendHourlyPay,
         payInformation.eventPhHourlyPay,
-        getUserId(),
-        teamName,
-        selectedOutlet.outletId,
-        inOffice,
-        departmentId
+        getUserId()
       )
-      .then((response) => {
-        alert(response.data);
-      })
+      .then((response) => alert(response.data))
       .finally(() => {
-        history.push("/promotion");
+        history.push("/transfer");
       });
   }
 
   return (
     currentPosition &&
     payInformation &&
-    newPay && (
+    newPay &&
+    request &&
+    user && (
       <>
         <div className="bg-white mx-10">
           <form className="mt-10 p-10 space-y-8 divide-y divide-gray-200">
@@ -115,7 +82,7 @@ export default function Processing({ request }) {
               <div>
                 <div>
                   <h3 className="text-lg font-sans font-medium leading-6 text-gray-900">
-                    Promotion Request for {request.employee.firstName}{" "}
+                    Transfer Request for {request.employee.firstName}{" "}
                     {request.employee.lastName}
                   </h3>
                 </div>
@@ -161,26 +128,59 @@ export default function Processing({ request }) {
 
                   <div className="sm:col-span-3">
                     <label
-                      htmlFor="department"
-                      className="block text-md text-center font-sans font-medium text-gray-900"
+                      htmlFor="currentTeam"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      Current Team
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        name="currentTeam"
+                        id="currentTeam"
+                        defaultValue={user.teams[0].teamName}
+                        disabled
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="newTeam"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      New Team
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        name="newTeam"
+                        id="newTeam"
+                        defaultValue={request.newTeam.teamName}
+                        disabled
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="newDepartment"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
                     >
                       New Department
                     </label>
-
-                    <>
-                      {newDepartment && (
-                        <div className="mt-1">
-                          <input
-                            type="text"
-                            name="department"
-                            id="department"
-                            disabled
-                            className="block w-full text-center min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-800 "
-                            defaultValue={newDepartment.departmentName}
-                          />
-                        </div>
-                      )}
-                    </>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        name="newDepartment"
+                        id="newDepartment"
+                        defaultValue={request.newDepartment.departmentName}
+                        disabled
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                      />
+                    </div>
                   </div>
 
                   <div className="sm:col-span-6">
@@ -361,25 +361,6 @@ export default function Processing({ request }) {
                     </>
                   )}
 
-                  <div className="sm:col-span-3">
-                    <label
-                      htmlFor="effectiveFrom"
-                      className="block text-md text-left font-sans font-medium text-gray-700"
-                    >
-                      Effective From
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="date"
-                        name="effectiveFrom"
-                        id="effectiveFrom"
-                        className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        value={effectiveFrom}
-                        onChange={(e) => setEffectiveFrom(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
                   {toReject && (
                     <>
                       <div className="sm:col-span-6">
@@ -391,7 +372,7 @@ export default function Processing({ request }) {
                         </label>
                         <p className="mt-2 text-sm text-left text-gray-500">
                           Explain why this employee has been rejected for a
-                          promotion.
+                          transfer.
                         </p>
                         <div className="mt-1">
                           <textarea
@@ -409,52 +390,9 @@ export default function Processing({ request }) {
                 </div>
               </div>
             </div>
-
-            {toReject ? (
-              <div className="pt-5">
-                <div className="flex justify-end">
-                  <div>
-                    <button
-                      type="button"
-                      className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick={() => handleSubmit()}
-                    >
-                      Confirm
-                    </button>
-                    <button
-                      type="button"
-                      className="ml-3 rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick={() => setToReject(!toReject)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="pt-5">
-                <div className="flex justify-end">
-                  <div>
-                    <button
-                      type="button"
-                      className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                      onClick={() => setToReject(!toReject)}
-                    >
-                      Reject
-                    </button>
-                    <button
-                      type="button"
-                      className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                      onClick={() => handleSubmit()}
-                    >
-                      Approve
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
           </form>
         </div>
+        <div className="mt-10"></div>
       </>
     )
   );

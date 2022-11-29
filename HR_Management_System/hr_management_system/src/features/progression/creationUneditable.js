@@ -61,7 +61,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function CreationUneditable({request}) {
+export default function CreationUneditable({ request }) {
   const [positions, setPositions] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState({
     positionId: 0,
@@ -79,19 +79,18 @@ export default function CreationUneditable({request}) {
   const history = useHistory();
 
   useEffect(() => {
-
     console.log(request);
-    
-    api.getTransferrableEmployees(getUserId()).then((response) => {
+
+    api.getTransferrableEmployees(request.manager.userId).then((response) => {
       console.log(response.data);
       setEmployees(response.data);
     });
 
-    api.getDepartmentByEmployeeId(getUserId()).then((response) => {
+    api.getDepartmentByEmployeeId(request.manager.userId).then((response) => {
       setNewDepartment(response.data);
     });
 
-    api.getNewTeam(getUserId()).then((response) => {
+    api.getNewTeam(request.manager.userId).then((response) => {
       console.log(response.data);
       setNewTeam(response.data);
     });
@@ -133,15 +132,22 @@ export default function CreationUneditable({request}) {
         )
         .then((response) => {
           console.log(response.data);
-          history.push(`/transfer/${response.data}`)
-          alert("Transfer request for " + selectedEmployee.firstName + " " + selectedEmployee.lastName + " has been submitted");
-        })
+          history.push(`/transfer/${response.data}`);
+          alert(
+            "Transfer request for " +
+              selectedEmployee.firstName +
+              " " +
+              selectedEmployee.lastName +
+              " has been submitted"
+          );
+        });
     } else {
       alert("Please ensure all fields are filled before submitting");
     }
   };
 
   return (
+    request &&
     newTeam && (
       <div className="">
         <div>
@@ -162,91 +168,25 @@ export default function CreationUneditable({request}) {
                   <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-6">
                       <label
-                        htmlFor="newPosition"
-                        className="block text-sm font-medium text-gray-700"
-                      ></label>
-                      <Listbox
-                        value={selectedEmployee}
-                        onChange={setSelectedEmployee}
+                        htmlFor="employee"
+                        className="block text-md text-center font-sans font-medium text-gray-900"
                       >
-                        {({ open }) => (
-                          <>
-                            <Listbox.Label className="block text-md text-center font-sans font-medium text-gray-900">
-                              Employee To Transfer
-                            </Listbox.Label>
-                            <div className="relative mt-1">
-                              <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                                <span className="block truncate text-center">
-                                  {selectedEmployee.firstName}{" "}
-                                  {selectedEmployee.lastName}
-                                </span>
-                                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                  <ChevronUpDownIcon
-                                    className="h-5 w-5 text-gray-400"
-                                    aria-hidden="true"
-                                  />
-                                </span>
-                              </Listbox.Button>
-
-                              <Transition
-                                show={open}
-                                as={Fragment}
-                                leave="transition ease-in duration-100"
-                                leaveFrom="opacity-100"
-                                leaveTo="opacity-0"
-                              >
-                                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                  {employees.map((person) => (
-                                    <Listbox.Option
-                                      key={person.userId}
-                                      className={({ active }) =>
-                                        classNames(
-                                          active
-                                            ? "text-white bg-indigo-600"
-                                            : "text-gray-900",
-                                          "relative cursor-default select-none py-2 pl-3 pr-9"
-                                        )
-                                      }
-                                      value={person}
-                                    >
-                                      {({ selected, active }) => (
-                                        <>
-                                          <span
-                                            className={classNames(
-                                              selected
-                                                ? "font-semibold"
-                                                : "font-normal",
-                                              "block truncate"
-                                            )}
-                                          >
-                                            {person.firstName} {person.lastName}
-                                          </span>
-
-                                          {selected ? (
-                                            <span
-                                              className={classNames(
-                                                active
-                                                  ? "text-white"
-                                                  : "text-indigo-600",
-                                                "absolute inset-y-0 right-0 flex items-center pr-4"
-                                              )}
-                                            >
-                                              <CheckIcon
-                                                className="h-5 w-5"
-                                                aria-hidden="true"
-                                              />
-                                            </span>
-                                          ) : null}
-                                        </>
-                                      )}
-                                    </Listbox.Option>
-                                  ))}
-                                </Listbox.Options>
-                              </Transition>
-                            </div>
-                          </>
+                        Employee To Transfer
+                      </label>
+                      <>
+                        {request.employee && (
+                          <div className="mt-1">
+                            <input
+                              type="text"
+                              name="employee"
+                              id="employee"
+                              disabled
+                              className="block w-full text-center min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-800 "
+                              defaultValue={`${request.employee.firstName} ${request.employee.lastName}`}
+                            />
+                          </div>
                         )}
-                      </Listbox>
+                      </>
                     </div>
 
                     <div className="sm:col-span-6">
@@ -296,103 +236,26 @@ export default function CreationUneditable({request}) {
                     </div>
 
                     <div className="sm:col-span-6">
-                      {selectedEmployee.userId === 0 ? (
-                        <>
-                          <label
-                            htmlFor="newPosition"
-                            className="block text-md text-center font-sans font-medium text-gray-900"
-                          >
-                            New Position
-                          </label>
-                          <h1 className="font-sans">
-                            Please select an employee
-                          </h1>
-                        </>
-                      ) : (
-                        <>
-                          <Listbox
-                            value={selectedPosition}
-                            onChange={setSelectedPosition}
-                          >
-                            {({ open }) => (
-                              <>
-                                <Listbox.Label className="block text-md text-center font-sans font-medium text-gray-900">
-                                  New Position
-                                </Listbox.Label>
-                                <div className="relative mt-1">
-                                  <Listbox.Button className="relative w-full text-center cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                                    <span className="block truncate">
-                                      {selectedPosition.positionName}
-                                    </span>
-                                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                      <ChevronUpDownIcon
-                                        className="h-5 w-5 text-gray-400"
-                                        aria-hidden="true"
-                                      />
-                                    </span>
-                                  </Listbox.Button>
-
-                                  <Transition
-                                    show={open}
-                                    as={Fragment}
-                                    leave="transition ease-in duration-100"
-                                    leaveFrom="opacity-100"
-                                    leaveTo="opacity-0"
-                                  >
-                                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                      {positions.map((person) => (
-                                        <Listbox.Option
-                                          key={person.positionId}
-                                          className={({ active }) =>
-                                            classNames(
-                                              active
-                                                ? "text-white bg-indigo-600"
-                                                : "text-gray-900",
-                                              "relative cursor-default select-none py-2 pl-3 pr-9"
-                                            )
-                                          }
-                                          value={person}
-                                        >
-                                          {({ selected, active }) => (
-                                            <>
-                                              <span
-                                                className={classNames(
-                                                  selected
-                                                    ? "font-semibold"
-                                                    : "font-normal",
-                                                  "block truncate"
-                                                )}
-                                              >
-                                                {person.positionName}
-                                              </span>
-
-                                              {selected ? (
-                                                <span
-                                                  className={classNames(
-                                                    active
-                                                      ? "text-white"
-                                                      : "text-indigo-600",
-                                                    "absolute inset-y-0 right-0 flex items-center pr-4"
-                                                  )}
-                                                >
-                                                  <CheckIcon
-                                                    className="h-5 w-5"
-                                                    aria-hidden="true"
-                                                  />
-                                                </span>
-                                              ) : null}
-                                            </>
-                                          )}
-                                        </Listbox.Option>
-                                      ))}
-                                    </Listbox.Options>
-                                  </Transition>
-                                </div>
-                              </>
-                            )}
-                          </Listbox>
-                        </>
-                      )}
+                      <label
+                        htmlFor="newPosition"
+                        className="block text-md text-center font-sans font-medium text-gray-900"
+                      >
+                        New Position
+                      </label>
+                      <>
+                        {request.newPosition && (
+                          <div className="mt-1">
+                            <input
+                              type="text"
+                              name="newPosition"
+                              id="newPosition"
+                              disabled
+                              className="block w-full text-center min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-800 "
+                              defaultValue={request.newPosition.positionName}
+                            />
+                          </div>
+                        )}
+                      </>
                     </div>
 
                     <div className="sm:col-span-6">
@@ -402,22 +265,23 @@ export default function CreationUneditable({request}) {
                       >
                         Interview Date
                       </label>
+
                       <div className="mt-1">
                         <input
                           type="date"
                           name="scheduled"
                           id="scheduled"
-                          className="block w-full min-w-0 text-center flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          value={interviewDate}
-                          onChange={(e) => setInterviewDate(e.target.value)}
+                          disabled
+                          className="block w-full min-w-0 text-center flex-1 rounded-md border-gray-300 disabled:cursor-not-allowed focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          defaultValue={request.interviewDate}
                         />
                       </div>
                     </div>
+
+                    <div className="p-5 sm:col-span-6"></div>
                   </div>
                 </div>
               </div>
-
-             
             </form>
           </div>
         </div>

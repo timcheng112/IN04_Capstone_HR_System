@@ -10,15 +10,20 @@ import com.conceiversolutions.hrsystem.organizationstructure.department.Departme
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformationService;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +38,8 @@ public class TransferService {
     private final DepartmentRepository departmentRepository;
 
     private final TeamRepository teamRepository;
+
+    private final PayInformationService payInformationService;
 
     private User breakRelationships(User user) {
         User u = new User();
@@ -217,5 +224,92 @@ public class TransferService {
             }
         }
         throw new IllegalStateException("Unable to find team");
+    }
+
+    public TransferRequest getTransferRequest(Long requestId) throws Exception {
+        Optional<TransferRequest> optionalTR = transferRepository.findById(requestId);
+
+        if (optionalTR.isPresent()) {
+            TransferRequest request = optionalTR.get();
+
+            request.setEmployee(breakRelationships(request.getEmployee()));
+            request.setManager(breakRelationships(request.getManager()));
+            request.setInterviewer(breakRelationships(request.getInterviewer()));
+
+            if (request.getProcessedBy() != null) {
+                request.setProcessedBy(breakRelationships(request.getProcessedBy()));
+            }
+
+            Department department = new Department();
+            department.setDepartmentId(request.getNewDepartment().getDepartmentId());
+            department.setDepartmentName(request.getNewDepartment().getDepartmentName());
+            request.setNewDepartment(department);
+
+            Team team = new Team();
+            team.setTeamId(request.getNewTeam().getTeamId());
+            team.setTeamName(request.getNewTeam().getTeamName());
+            request.setNewTeam(team);
+
+            return request;
+
+        } else {
+            throw new IllegalStateException("Unable to find transfer request");
+        }
+    }
+
+    @Transactional
+    public String conductInterview(Long transferId, String comments, String status) throws Exception {
+
+        Optional<TransferRequest> optionalTransfer = transferRepository.findById(transferId);
+
+        if (optionalTransfer.isPresent()) {
+            TransferRequest transferRequest = optionalTransfer.get();
+
+            transferRequest.setInterviewRemarks(comments);
+            transferRequest.setStatus(status);
+
+            return "" + transferRequest.getEmployee().getFirstName() + " " + transferRequest.getEmployee().getLastName()
+                    + " has " + transferRequest.getStatus().toLowerCase() + " the transfer interview.";
+        } else {
+            throw new IllegalStateException("Unable to find transfer request");
+        }
+
+    }
+
+    @Transactional
+    public String processTransferRequest(Long transferId, String rejectRemarks, String basicSalary,
+            String basicHourlyPay, String weekendHourlyPay, String eventPay, Long processedById) throws Exception {
+                Optional<TransferRequest> request = transferRepository.findById(transferId);
+                Optional<User> optionalProcessedBy = userRepository.findById(processedById);
+
+                if (request.isPresent() && optionalProcessedBy.isPresent()) {
+                    TransferRequest tr = request.get();
+
+                    User processedBy = optionalProcessedBy.get();
+
+                    tr.setProcessedBy(processedBy);
+
+                    if (rejectRemarks.isEmpty()) {
+
+                        PayInformation pi = payInformationService.getUserPayInformation(tr.getEmployee().getUserId());
+
+                        if (!basicSalary.isEmpty()) {
+                            pi.setBasicSalary(new BigDecimal(basicSalary));
+                        } else {
+                            pi.setBasicHourlyPay(new BigDecimal(basicHourlyPay));
+                            pi.setWeekendHourlyPay(new BigDecimal(weekendHourlyPay));
+                            pi.setEventPhHourlyPay(new BigDecimal(eventPay));
+                        }
+
+                        tr.setStatus("Approved");
+
+                    } else {
+                        tr.setStatus("Rejected");
+                        tr.setRejectRemarks(rejectRemarks);
+                    }
+                    return "Transfer request for " + tr.getEmployee().getFirstName() + " " + tr.getEmployee().getLastName() + " has been " + tr.getStatus().toLowerCase() + ".";
+                } else {
+                    throw new IllegalStateException("Unable to find transfer request");
+                }
     }
 }

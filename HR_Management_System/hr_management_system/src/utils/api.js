@@ -1208,6 +1208,23 @@ const api = {
       `http://localhost:9191/api/transfer?managerId=${managerId}&employeeId=${employeeId}&positionId=${positionId}&departmentId=${departmentId}&teamId=${teamId}&interviewDate=${interviewDate}`
     );
   },
+  getTransferRequest(requestId) {
+    return axios.get(`http://localhost:9191/api/transfer/${requestId}`)
+  },
+  conductTransferInterview(requestId, remarks, status) {
+    return axios.put(`http://localhost:9191/api/transfer/interview/${requestId}?comments=${remarks}&status=${status}`)
+  },
+  processTransferRequest(
+    transferId,
+    rejectRemarks,
+    basicSalary,
+    basicHourlyPay,
+    weekendHourlyPay,
+    eventPay,
+    processedById
+  ) {
+    return axios.put(`http://localhost:9191/api/transfer/process/${transferId}?&rejectRemarks=${rejectRemarks}&basicSalary=${basicSalary}&basicHourlyPay=${basicHourlyPay}&weekendHourlyPay=${weekendHourlyPay}&eventPay=${eventPay}&processedBy=${processedById}`)
+  },
 };
 
 export default api;

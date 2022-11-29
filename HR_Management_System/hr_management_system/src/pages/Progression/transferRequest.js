@@ -10,6 +10,10 @@ import Processing from "../../features/jobchange/processing";
 import ProcessingUneditable from "../../features/jobchange/processingUneditable";
 import Creation from "../../features/progression/creation";
 import CreationUneditable from "../../features/progression/creationUneditable";
+import TransferInterview from "../../features/progression/transferInterview";
+import TransferInterviewUneditable from "../../features/progression/transferInterviewUneditable";
+import TransferProcessing from "../../features/progression/transferProcessing";
+import TransferProcessingUneditable from "../../features/progression/transferProcessingUneditable";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 
@@ -44,12 +48,12 @@ function classNames(...classes) {
 export default function TransferRequest() {
   const [request, setRequest] = useState(null);
   const [selectedStep, setSelectedStep] = useState(steps[0]);
-  const requestId = window.location.href.substring(32);
+  const requestId = window.location.href.substring(31);
 
   useEffect(() => {
     //console.log(requestId);
     if (requestId > 0) {
-      api.getPromotionRequest(requestId).then((response) => {
+      api.getTransferRequest(requestId).then((response) => {
         setRequest(response.data);
 
         const status = response.data.status;
@@ -77,12 +81,11 @@ export default function TransferRequest() {
         //console.log(response.data.isHrEmployee);
         renderSelectedStep("Created", response.data.isHrEmployee, null, "");
       });
-      
     }
   }, []);
 
   function renderSelectedStep(status, isHR, interviewer, interviewDate) {
-    //console.log(status);
+    console.log(status);
     if (status === "Created" || status === "Withdrawn") {
       setSelectedStep(steps[0]);
     } else if (status === "Submitted") {
@@ -162,7 +165,7 @@ export default function TransferRequest() {
     } else if (selectedStep.id === "02") {
       if (request.status === "Submitted") {
         if (request.interviewer.userId + "" === getUserId()) {
-          return <Interview request={request} />;
+          return <TransferInterview request={request} />;
         }
       } else if (
         request.status === "Passed" ||
@@ -170,16 +173,16 @@ export default function TransferRequest() {
         request.status === "Approved" ||
         request.status === "Rejected"
       ) {
-        return <InterviewUneditable request={request} />;
+        return <TransferInterviewUneditable request={request} />;
       }
     } else if (selectedStep.id === "03") {
       if (request.status === "Passed") {
-        return <Processing request={request} />;
+        return <TransferProcessing request={request} />;
       } else if (
         request.status === "Approved" ||
         request.status === "Rejected"
       ) {
-        return <ProcessingUneditable request={request} />;
+        return <TransferProcessingUneditable request={request} />;
       }
     } else {
       return <h1>Error</h1>;
