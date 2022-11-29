@@ -8,6 +8,7 @@ import NewClaimScreen from "../screens/NewClaimScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import WDrawerContent from "../components/general/WDrawerContent";
 import RewardScreen from "../screens/RewardScreen"
+import RewardDetailScreen from "../screens/RewardDetailScreen"
 
 
 const WelfareDrawerNavigator = () => {
@@ -58,6 +59,13 @@ const WelfareDrawerNavigator = () => {
         options={{
            title: "New Claim",
            headerTitle: "New Claim",
+           unmountOnBlur: true,
+         }}
+      />
+      <WelfareDrawer.Screen name="RewardDetai" component={RewardDetailScreen}
+        options={{
+           title: "Reward Detai",
+           headerTitle: "Reward Detai",
            unmountOnBlur: true,
          }}
       />

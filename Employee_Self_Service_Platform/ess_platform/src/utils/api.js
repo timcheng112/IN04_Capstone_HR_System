@@ -1,7 +1,7 @@
 import axios from "axios";
 
- const URL = "172.25.105.44"; // MATT
-//const URL = "172.31.55.234"; // XINYUE
+ //const URL = "172.25.105.44"; // MATT
+const URL = "10.100.0.142"; // XINYUE
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"

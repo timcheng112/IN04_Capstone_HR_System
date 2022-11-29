@@ -12,8 +12,35 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function RewardTrack({ navigation, userId }) {
   const [track, setTrack] = useState([]);
   const [refreshing, setRefreshing] = useState(true);
-  const [rewards, setRewards] = useState([]);
+  //const [rewards, setRewards] = useState([]);
   const [user, setUser] = useState("");
+  const rewards = [
+    {
+      rewardId: 1,
+      name: 'reward 1',
+      pointsRequired: '30',
+      expiryDate: '2022-12-30',
+    },
+    {
+      rewardId: 2,
+      name: 'reward 2',
+      pointsRequired: '60',
+      expiryDate: '2022-12-30',
+     
+    }, {
+      rewardId: 3,
+      name: 'reward 3',
+      pointsRequired: '90',
+      expiryDate: '2022-12-30',
+     
+    }, {
+      rewardId: 4,
+      name: 'reward 4',
+      pointsRequired: '30',
+      expiryDate: '2022-12-30',
+     
+    }, 
+  ]
 
   useEffect(() => {
     loadRewardTrack();
@@ -41,7 +68,7 @@ export default function RewardTrack({ navigation, userId }) {
         console.log(response.data);
         setRefreshing(false);
         setTrack(response.data);
-        setRewards(response.data.rewards);
+        //setRewards(response.data.rewards);
         console.log("Successfully fetched Employee Reward Track");
       })
       .catch(() => console.log("Error trying to fetch Employee Reward Track"));
@@ -107,7 +134,7 @@ export default function RewardTrack({ navigation, userId }) {
               icon="eye"
               mode="outlined"
               color="rgba(0, 0, 0, 8)"
-              onPress={() => console.log("Clicked Reward " + item.rewardId)}>
+              onPress={() => navigation.navigate('RewardDetail', { item})}>
               Learn More
           </Button>
         </View>
@@ -123,7 +150,6 @@ export default function RewardTrack({ navigation, userId }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="light" />
       <SafeAreaView style={{ flex: 1 }}>
         <Text style={styles.header}>{track.name}</Text>
         <SectionList
