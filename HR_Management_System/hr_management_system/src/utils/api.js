@@ -971,6 +971,11 @@ const api = {
       `http://localhost:9191/api/jobapplications/getOfferedApplications?postingId=${postingId}`
     );
   },
+  getJobOffersWithinAMonth() {
+    return axios.get(
+      `http://localhost:9191/api/jobapplications/getJobOffersWithinAMonth`
+    );
+  },
   getRejectedApplications(postingId) {
     return axios.get(
       `http://localhost:9191/api/jobapplications/getRejectedApplications?postingId=${postingId}`
