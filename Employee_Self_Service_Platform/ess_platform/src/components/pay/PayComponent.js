@@ -292,10 +292,12 @@ const PayComponent = () => {
             resizeMode="contain"
           />
         ) : toggleValue === "My Pay Information" ? (
-          <PayInformationComponent
-            user={user && user}
-            userPayInfo={userPayInfo && userPayInfo}
-          />
+          user && (
+            <PayInformationComponent
+              user={user && user}
+              userPayInfo={userPayInfo && userPayInfo}
+            />
+          )
         ) : (
           <View
             style={{
