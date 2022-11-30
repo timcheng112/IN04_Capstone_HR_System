@@ -1,3 +1,55 @@
+package com.conceiversolutions.hrsystem.nfc;
+
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.user.User;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.sql.SQLOutput;
+import java.util.List;
+import javax.crypto.spec.PSource;
+import javax.persistence.*;
+import javax.smartcardio.*;
+
+@Entity
+@Table(name="smartCardReader")
+@Getter
+@Setter
+@EqualsAndHashCode
+public class SmartCardReader {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "card_id")
+    private Long cardId;
+
+    @Column(name="check")
+    private boolean check;
+
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
+    public SmartCardReader() {
+    }
+
+    public SmartCardReader(Long cardId, boolean check) {
+        this.cardId = cardId;
+        this.check = check;
+    }
+
+    @Override
+    public String toString() {
+        return "SmartCardReader{" +
+                "cardId=" + cardId +
+                ", check=" + check +
+                '}';
+    }
+}
+
+
+
 //package com.conceiversolutions.hrsystem.nfc;
 //
 //import java.sql.SQLOutput;

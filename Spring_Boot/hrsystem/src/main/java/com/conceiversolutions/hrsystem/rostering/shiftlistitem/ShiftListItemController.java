@@ -73,4 +73,14 @@ public class ShiftListItemController {
     public List<ShiftListItem> getShiftListItemByTeam(@RequestParam("teamId") Long teamId) {
         return shiftListItemService.getShiftListItemByTeam(teamId);
     }
+
+    @GetMapping(path="/getUserShiftItemsMonthly")
+    public List<ShiftListItem> getUserShiftItemsMonthly(@RequestParam("userId") Long userId){
+        return shiftListItemService.getUserShiftsListItemsMonth(userId);
+    }
+
+    @GetMapping(path="/getUserAttendedShiftsMonthly")
+    public int getUserAttendedShiftsMonthly(@RequestParam("userId")Long userId){
+        return shiftListItemService.getUserAttendedShiftsMonthly(userId);
+    }
 }

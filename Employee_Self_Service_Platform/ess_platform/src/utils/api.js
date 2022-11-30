@@ -7,7 +7,7 @@ import axios from "axios";
 // const URL = "172.31.54.163"
 //const URL = "192.168.1.82"; // TIM
 // const URL = "172.17.93.172";
-//const URL = "10.120.13.83"
+const URL = "172.17.174.178"
 
 
 const api = {
@@ -18,6 +18,9 @@ const api = {
   },
   getUser(userId) {
     return axios.get(`http://${URL}:9191/api/user/${userId}`);
+  },
+  updateProfile(userId, email, phoneNo, bankAcc){
+    return axios.get(`http://${URL}:9191/api/user/updateProfileESS?userId=${userId}&email=${email}&phone=${phoneNo}&bankAccNo=${bankAcc}`);
   },
   getEmployeesByTeam(teamId) {
     return axios.get(
@@ -253,6 +256,12 @@ const api = {
   createClaim(formDataPayload) {
     return axios.post(`http://${URL}:9191/api/claims/makeNewClaim`, formDataPayload, {headers: {'Content-Type': 'multipart/form-data'}});
   },
+  checkin(userId){
+    return axios.post(`http://${URL}:9191/api/user/attendance/checkIn?userId=${userId}`);
+  },
+  checkout(userId){
+    return axios.post(`http://${URL}:9191/api/user/attendance/checkOut?userId=${userId}`);
+  } 
 };
 
 export default api;

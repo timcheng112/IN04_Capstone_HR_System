@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { IconButton, Text } from "react-native-paper";
+import { IconButton, Text , TextInput} from "react-native-paper";
 import { View, StyleSheet, Image, ImageBackground } from "react-native";
 import { Card, Button, Title, Paragraph } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import api from "../utils/api";
+import api from "../../utils/api";
 
-export default function ProfileScreen({ navigation }) {
-  const [userId, setUserId] = useState(0);
+export default function UpdateProfile({ navigation, userId }) {
+//   const [userId, setUserId] = useState(0);
+  const [email, setEmail] = useState(null);
+  const [phoneNo, setPhoneNo] = useState(-1);
+  const [bankAcc, setBankAcc] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [user, setUser] = useState(null);
   const { text, image } =
     ("test",
     "https://www.worldfuturecouncil.org/wp-content/uploads/2020/06/blank-profile-picture-973460_1280-1-705x705.png");
 
-  const uId = async () => {
-    setRefreshing(true);
-    const userId = await AsyncStorage.getItem("userId");
-    // console.log("userId " + userId);
-    setUserId(userId);
-  };
+//   const uId = async () => {
+//     setRefreshing(true);
+//     const userId = await AsyncStorage.getItem("userId");
+//     // console.log("userId " + userId);
+//     setUserId(userId);
+//   };
 
-  useEffect(() => {
-    uId().catch(console.error);
-    // userInfo().catch(console.error);
-  }, []);
+//   useEffect(() => {
+//     uId().catch(console.error);
+//     // userInfo().catch(console.error);
+//   }, []);
 
   useEffect(() => {
     const userInfo = async () => {
@@ -33,11 +36,24 @@ export default function ProfileScreen({ navigation }) {
         .then((response) => {
           console.log(response.data);
           setUser(response.data);
+          console.log(response.data.phone);
+          console.log(response.data.email);
+          console.log(response.data.bankAccNo);
+          setPhoneNo(response.data.phone);
+          setEmail(response.data.email);
+          setBankAcc(response.data.bankAccNo);
         })
         .catch(console.error);
     };
     userInfo();
   }, []);
+
+
+  function updateProfile(email, phone, bankAcc){
+    api.updateProfile(userId, email, phoneNo, bankAcc).then( (response) => {console.log(response.data); navigation.navigate("Profile");})
+
+  }
+
 
   const Styles = StyleSheet.create({
     // container: {
@@ -57,7 +73,7 @@ export default function ProfileScreen({ navigation }) {
     // },
     container: {
       width: "100%",
-      height: 200,
+      height: 100,
       marginTop: 25,
       marginBottom: 15,
       borderRadius: 15,
@@ -99,7 +115,7 @@ export default function ProfileScreen({ navigation }) {
     },
   });
   return (
-    user && (
+    user &&  email && phoneNo && bankAcc && (
       <>
         {/* <View style={Styles.profileImage}>
         <Image
@@ -126,7 +142,7 @@ export default function ProfileScreen({ navigation }) {
         >
           
           <Card style={Styles.container}>
-          <Card.Title title={"Libro "} subtitle={"Company Card"} style={Styles.menuItemHeader}/>
+          <Card.Title title={"Update Profile "} subtitle={"Update your personal information"} style={Styles.menuItemHeader}/>
           {/* <Card.Cover style={Styles.photo} 
           source={{
             uri: "https://www.worldfuturecouncil.org/wp-content/uploads/2020/06/blank-profile-picture-973460_1280-1-705x705.png",
@@ -134,19 +150,36 @@ export default function ProfileScreen({ navigation }) {
         /> */}
     
           <Card.Content>
-           <Image style={Styles.photo} source={{
-                uri: "https://www.worldfuturecouncil.org/wp-content/uploads/2020/06/blank-profile-picture-973460_1280-1-705x705.png",
-              }}></Image>
-              {/* <Card.Image source={require('../../assets/profile-picture.png')} /> */}
-          <Paragraph>Name: {user.firstName} {user.lastName}</Paragraph>
-          <Paragraph>Position Level: {user.userRole}</Paragraph>
-          <Paragraph>Email: {user.workEmail}</Paragraph>
+            
           </Card.Content>
 
           
           </Card>
           <Card>
-          
+          {/* <TextInput
+          label="Phone"
+          mode="outlined"
+          value={phone}
+          onChangeText=)}
+        /> */}
+        <TextInput
+          label="Phone"
+          mode="outlined"
+          value={phoneNo}
+          onChangeText={phoneNo => setPhoneNo(phoneNo)}
+        />
+        <TextInput
+          label="Email"
+          mode="outlined"
+          value={email}
+          onChangeText={email => setEmail(email)}
+        />
+        <TextInput
+          label="Bank Account"
+          mode="outlined"
+          value={bankAcc}
+          onChangeText={bankAcc => setBankAcc(bankAcc)}
+        />
           <Button 
             icon="account"
             mode="contained"
@@ -154,7 +187,7 @@ export default function ProfileScreen({ navigation }) {
             onPress={() => {
               // action
               console.log("Clicked");
-              navigation.navigate("Update Profile", { userId });
+              updateProfile(email, phoneNo, bankAcc)
             }}
           >
             Update profile

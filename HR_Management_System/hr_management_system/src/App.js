@@ -105,7 +105,7 @@ function App() {
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart} />
           <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam} />
           <PrivateRoute exact path="/mytraining" component={TrainingPage} />
-
+          <PrivateRoute exact path="/attendance" component={Attendance} />
           <PrivateRoute
             exact
             path="/viewDept/:deptId"

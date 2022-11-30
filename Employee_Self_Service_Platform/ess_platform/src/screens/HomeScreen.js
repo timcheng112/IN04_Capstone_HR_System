@@ -17,8 +17,9 @@ export default function HomeScreen({ navigation }) {
           } } />
 
           <IconButton
-            icon="human"
+            icon="account-outline"
             size={25}
+            color="white"
             onPress={() => {
               navigation.navigate("Profile");
             } } />

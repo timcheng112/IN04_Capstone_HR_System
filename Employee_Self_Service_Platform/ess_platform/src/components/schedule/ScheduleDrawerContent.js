@@ -127,6 +127,27 @@ const DrawerContent = (props) => {
                 </View>
               )}
             />
+            <Drawer.Item
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="account-box"
+                  size={size}
+                  color={focusedRoute === "Leave" ? "black" : color}
+                />
+              )}
+              style={
+                focusedRoute === "Clock in/out" && {
+                  backgroundColor: "#c4b5fd",
+                  borderRadius: 20,
+                }
+              }
+              labelStyle={focusedRoute === "Clock in/out" && { color: "black" }}
+              label="Clock in/out"
+              onPress={() => {
+                props.navigation.navigate("Clock in/out");
+              }}
+             
+            />
             {/* <Drawer.Item
               style={
                 focusedRoute === "Swap Request" && {

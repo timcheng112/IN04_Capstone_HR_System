@@ -34,6 +34,8 @@ public interface ShiftListItemRepository extends JpaRepository<ShiftListItem, Lo
 
     @Query("SELECT s FROM ShiftListItem s JOIN s.user u JOIN u.teams t WHERE t.teamId = ?1")
     List<ShiftListItem> findShiftListItemByTeam(Long teamId);
+    @Query("SELECT s FROM ShiftListItem s WHERE s.user.userId =?1 ")
+    List<ShiftListItem> findShiftListItemByUserId(Long userId);
 
     // //manager?
     // @Query("SELECT s FROM ShiftListItem s WHERE userId = ?1")

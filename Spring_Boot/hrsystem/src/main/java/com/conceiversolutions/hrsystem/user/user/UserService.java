@@ -56,12 +56,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.persistence.Transient;
 import javax.persistence.criteria.CriteriaBuilder;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -92,6 +91,8 @@ public class UserService implements UserDetailsService {
     private final TaskRepository taskRepository;
     private final TaskListItemService taskListItemService;
     private final TaskListItemRepository taskListItemRepository;
+
+    private final ShiftListItemRepository shiftListItemRepository;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -1179,6 +1180,22 @@ public class UserService implements UserDetailsService {
         user.setEmail(email);
         user.setGender(gender);
 
+        return "Update of user was successful";
+    }
+
+
+    public String updateUserESS(Long userId, String email, Integer phone, String bankAccNo) {
+        System.out.println("UserService.updateUser");
+        // System.out.println(.getUserRole());
+
+        User user = getUser(userId);
+
+        user.setPhone(phone);
+        user.setEmail(email);
+        user.setBankAccNo(bankAccNo);
+//        userRepository.saveAndFlush(user);
+        user.nullify();
+//        userRepository.saveAndFlush(user);
         return "Update of user was successful";
     }
 
@@ -2465,6 +2482,90 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
+
+    public ShiftListItem checkInEmployee(Long userId){
+        System.out.println("userService.checkInEmployee");
+        LocalDateTime checkInTime = LocalDateTime.now();
+        LocalDate ld = checkInTime.toLocalDate();
+
+        LocalDateTime start = LocalDateTime.of(ld, LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(ld, LocalTime.of(23, 59, 59));
+        ShiftListItem shiftListItem = null;
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByDateAndUserId(start, end,
+                userId);
+        if (shiftListItems.size() == 0) {
+            // failtofind
+            throw new IllegalStateException("No shiftListItems found for specified date and userId");
+        } else if (shiftListItems.size() > 1) {
+            // unexpected found more than 1 shiftListItem for user on specified date.
+            throw new IllegalStateException("Found more than 1 shiftListItem for specified date and userId");
+        } else {
+            // default
+            shiftListItem = shiftListItems.get(0);
+        }
+
+
+
+//        ShiftListItem shiftListItem = shiftListItemService.getShiftListItemByDateAndUserId(ld, userId);
+        if(shiftListItem.getCheckInTiming() == null){
+            shiftListItem.setCheckInTiming(checkInTime);
+        }
+
+        shiftListItemRepository.saveAndFlush(shiftListItem);
+        System.out.println(shiftListItem.getCheckInTiming());
+
+
+        if (shiftListItem != null) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().nullify();
+        }
+        return shiftListItem;
+
+    }
+
+    public ShiftListItem checkOutEmployee(Long userId){
+        System.out.println("userService.checkOutEmployee");
+        LocalDateTime checkOutTime = LocalDateTime.now();
+        LocalDate ld = checkOutTime.toLocalDate();
+//        ShiftListItem s = shiftListItemService.getShiftListItemByDateAndUserId(ld, userId);
+
+        LocalDateTime start = LocalDateTime.of(ld, LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(ld, LocalTime.of(23, 59, 59));
+        ShiftListItem shiftListItem = null;
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByDateAndUserId(start, end,
+                userId);
+        if (shiftListItems.size() == 0) {
+            // failtofind
+            throw new IllegalStateException("No shiftListItems found for specified date and userId");
+        } else if (shiftListItems.size() > 1) {
+            // unexpected found more than 1 shiftListItem for user on specified date.
+            throw new IllegalStateException("Found more than 1 shiftListItem for specified date and userId");
+        } else {
+            // default
+            shiftListItem = shiftListItems.get(0);
+        }
+
+//        if(s.getCheckOutTiming() == null & s.getCheckInTiming() != null){
+//        if(shiftListItem.getCheckOutTiming() == null){
+        if(shiftListItem.getCheckInTiming() != null){
+            shiftListItem.setCheckOutTiming(checkOutTime);
+        }
+        shiftListItemRepository.saveAndFlush(shiftListItem);
+        System.out.println(shiftListItem.getCheckOutTiming());
+
+        if (shiftListItem != null) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().nullify();
+        }
+
+        return shiftListItem;
+
+    }
+
     public List<User> getEmployeesByRosterAndDate(Long rosterId, LocalDate localDate) {
         Roster roster = rosterRepository.findById(rosterId)
                 .orElseThrow(() -> new IllegalStateException("Roster with ID: " + rosterId + " does not exist!"));
@@ -2557,6 +2658,7 @@ public class UserService implements UserDetailsService {
             emailSender.send(email, buildPayslipEmail(tempUser.getFirstName(), payslipMonth));
         }
     }
+
 
     public String buildPayslipEmail(String name, String payslipMonth) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -2684,4 +2786,59 @@ public class UserService implements UserDetailsService {
         user.getCurrentPayInformation().setInPayroll(true);
         userRepository.save(user);
     }
+
+
+    public HashMap<String, Integer> attendanceTest() {
+        // int totalHours = 0;
+        // cumulative
+        Integer ot = 0;
+        int shiftAttended = 0;
+
+        // Basic Monthly Rate, Overtime Hourly Pay
+        HashMap<String, Integer> attendance = new HashMap<String, Integer>();
+
+        attendance.put("attendance", Integer.valueOf(0));
+        return attendance;
+    }
+
+    public HashMap<String, Integer> attendanceUser(Long userId) {
+        // int totalHours = 0;
+        // cumulative
+        Integer ot = 0;
+        int shiftAttended = 0;
+
+        // Basic Monthly Rate, Overtime Hourly Pay
+        HashMap<String, Integer> attendance = new HashMap<String, Integer>();
+
+        if (attendance.get("clockedMonth") == null) {
+            // means never had it before
+            // int clockedMonth = 0;
+            attendance.put("clockedMonth", 0);
+        }
+        int clockedMonth = attendance.get("clockedMonth");
+
+        User u1 = getUser(userId);
+        List<ShiftListItem> sli = u1.getShiftListItems();
+        System.out.println("size: " + sli.size());
+        Integer absent = 0;
+
+        attendance.put("attendance", Integer.valueOf(0));
+        System.out.println(attendance.size());
+        return attendance;
+    }
+
+    public User assignCard(Long userId, String cardUUID){
+        User u1 = getUser(userId);
+
+//        u1.setCardUUID(cardUUID);
+//        userRepository.saveAndFlush(u1);
+//        u1.nullify();
+
+        return u1;
+    }
+
+//    public List<ShiftListItem> userSLI(Long userId){
+//
+//    }
+
 }
