@@ -1,12 +1,15 @@
 package com.conceiversolutions.hrsystem.performance.goal;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.conceiversolutions.hrsystem.notification.Notification;
+import com.conceiversolutions.hrsystem.notification.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +35,16 @@ public class GoalService {
     @Autowired
     private final TeamRepository teamRepository;
 
+    @Autowired
+    private final NotificationRepository notificationRepository;
+
     public GoalService(GoalRepository goalRepository, UserRepository userRepository,
-            AchievementRepository achievementRepository, TeamRepository teamRepository) {
+            AchievementRepository achievementRepository, TeamRepository teamRepository, NotificationRepository notificationRepository) {
         this.goalRepository = goalRepository;
         this.userRepository = userRepository;
         this.achievementRepository = achievementRepository;
         this.teamRepository = teamRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public User breakRelationships(User user) {
@@ -269,6 +276,52 @@ public class GoalService {
         } else {
             throw new IllegalStateException("Team does not exist");
         }
+    }
+
+    public String addFinanceReminderToUser(Long userId){
+        User u1 = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "User with id" + userId + "does not exist"));
+
+        String title = "Reminder for Goals Setting";
+        String description = "Please be reminded to fill in your Financial goals by the goal period for your manager to review.";
+
+        Notification n = new Notification(LocalDateTime.now(), title, description);
+
+
+        u1.getNotificationsUnread().add(n);
+        System.out.println(u1.getNotificationsUnread());
+        notificationRepository.saveAndFlush(n);
+        userRepository.saveAndFlush(u1);
+        System.out.println("unread");
+        System.out.println(u1.getNotificationsUnread());
+        System.out.println("read");
+        System.out.println(u1.getNotificationsRead());
+        return "Notification added successfully to: " + u1.getFirstName() + " " + u1.getLastName() ;
+
+    }
+
+    public String addBusinessReminderToUser(Long userId){
+        User u1 = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "User with id" + userId + "does not exist"));
+
+        String title = "Reminder for Goals Setting";
+        String description = "Please be reminded to fill in your Business goals by the end of goal period for your manager to review.";
+
+        Notification n = new Notification(LocalDateTime.now(), title, description);
+
+
+        u1.getNotificationsUnread().add(n);
+        System.out.println(u1.getNotificationsUnread());
+        notificationRepository.saveAndFlush(n);
+        userRepository.saveAndFlush(u1);
+        System.out.println("unread");
+        System.out.println(u1.getNotificationsUnread());
+        System.out.println("read");
+        System.out.println(u1.getNotificationsRead());
+        return "Notification added successfully to: " + u1.getFirstName() + " " + u1.getLastName() ;
+
     }
 
 }

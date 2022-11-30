@@ -75,4 +75,13 @@ public class GoalController {
         return goalService.getTeamGoals(teamId, year);
     }
 
+    @GetMapping(path ="/financeReminder/{userId}")
+    public String addFinanceReminderToUser(@PathVariable("userId") Long userId){
+        return goalService.addFinanceReminderToUser(userId);
+    }
+
+    @GetMapping(path ="/businessReminder/{userId}")
+    public String addBusinessReminderToUser(@PathVariable("userId") Long userId){
+        return goalService.addBusinessReminderToUser(userId);
+    }
 }
