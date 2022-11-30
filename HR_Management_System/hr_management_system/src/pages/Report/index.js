@@ -11,11 +11,12 @@ import ReactEcharts from "echarts-for-react";;
 export default function Report() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
-  const [employee, setEmployee] = useState(0);
+  const [employee, setEmployee] = useState(null);
   const [departments, setDepartments] = useState([]);
   const [teams, setTeams] = useState([]);
   const [departmentCount, setDepartmentCount] = useState([]);
   const [offers, setOffers] = useState(0);
+  const [salary, setSalary] = useState(null);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
   const [option1, setOption1] = useState(null);
@@ -78,8 +79,17 @@ export default function Report() {
         team(response.data);
       })
       .catch((error) => setError(error));
-
   }, []);
+
+  useEffect(() => {
+    api
+      .getEmployeesAverageSalary()
+      .then((response) => {
+        setSalary(response.data);
+      })
+      .catch((error) => setError(error));
+  }, []);
+ 
 
   function department(depts) {
     let helpList = [];
@@ -285,7 +295,7 @@ export default function Report() {
 
 
   return (
-    option1 && option2 && option3 && <div className="">
+    option1 && option2 && option3 && salary && employee && <div className="">
       <Navbar />
       <div className="py-10">
         <main className="flex-1">
@@ -306,7 +316,7 @@ export default function Report() {
               </div>
               <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt className="truncate text-sm font-medium text-gray-500">Monthly Salary</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">$ 5000</dd>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">$ {salary}</dd>
               </div>
             </dl>
             <div className="flex py-8 px-5 space-x-12" >
