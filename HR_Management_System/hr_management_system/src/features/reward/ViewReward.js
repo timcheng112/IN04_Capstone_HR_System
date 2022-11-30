@@ -144,6 +144,11 @@ export default function ViewReward({ open, setOpen, reward }) {
                                   className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                               </div>
                             </div>
+                            {rewardImg !== null && <div>
+                                <label className="block text-sm font-medium text-gray-900">
+                                    Reward Image
+                                  </label>
+                            </div>}
                             {rewardImg !== null && <div className="flex justify-center mt-24">
                                 <img
                                   src={rewardImg}

@@ -93,7 +93,10 @@ export default function TrackDetail() {
     var helpendDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
 
     api.saveRewardTrack(name, helpstartDate.trim(), helpendDate.trim(), department.departmentId, ratio, track.rewardTrackId)
-      .then(() => { alert("Successfully saved."); })
+      .then(() => {
+        alert("Successfully saved.");
+        setTimeout(() => {  setRefreshKey((oldKey) => oldKey + 1); }, 500);
+      })
       .catch((error) => setError(error));
 
     return 0;
@@ -102,7 +105,11 @@ export default function TrackDetail() {
   function submit() {
 
     api.publishRewardTrack(track.rewardTrackId)
-      .then(() => { alert("Successfully published."); })
+      .then(() => {
+        alert("Successfully published.");
+        setTimeout(() => {  setRefreshKey((oldKey) => oldKey + 1); }, 500);
+
+      })
       .catch((error) => alert(error.response.data.message));
 
     return 0;
