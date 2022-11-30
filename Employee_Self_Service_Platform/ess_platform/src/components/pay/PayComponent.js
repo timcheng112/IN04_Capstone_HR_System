@@ -76,7 +76,7 @@ const PayComponent = () => {
           )
         );
     }
-  });
+  }, [userId]);
 
   // TO RETRIEVE LOGGED IN USER's PAYSLIPS
   useEffect(() => {

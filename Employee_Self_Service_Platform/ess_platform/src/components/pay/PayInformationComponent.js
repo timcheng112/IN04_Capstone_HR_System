@@ -8,7 +8,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import api from "../../utils/api";
 
-const PayInformationComponent = ({ user }) => {
+const PayInformationComponent = ({ user, userPayInfo }) => {
   const [img, setImg] = useState("");
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const PayInformationComponent = ({ user }) => {
           subtitle={
             user && user.currentPosition
               ? user.currentPosition.positionName
-              : user.userRole !== null
+              : user.userRole !== null || user.userRole !== undefined
               ? user.userRole
               : ""
           }
@@ -177,7 +177,7 @@ const PayInformationComponent = ({ user }) => {
           />
           <Card.Title
             title="Commission per sale"
-            subtitle="20%"
+            subtitle={userPayInfo.basicSalary ? "-" : "20%"}
             titleStyle={{ fontSize: 12, fontFamily: "Poppins_400Regular" }}
             subtitleStyle={{
               fontSize: 16,
