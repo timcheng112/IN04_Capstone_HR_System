@@ -22,8 +22,8 @@ const WDrawerContent = (props) => {
           <Drawer.Section style={{ marginTop: 15 }}>
             <DrawerItem
               icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="seatbelt"
+                <AntDesign
+                  name="bank"
                   size={size}
                   color={color}
                 />
@@ -35,8 +35,8 @@ const WDrawerContent = (props) => {
             ></DrawerItem>
             <DrawerItem
               icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="seat-outline"
+                <AntDesign
+                  name="edit"
                   size={size}
                   color={color}
                 />

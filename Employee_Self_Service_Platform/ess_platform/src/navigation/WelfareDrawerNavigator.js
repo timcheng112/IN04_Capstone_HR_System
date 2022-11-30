@@ -22,22 +22,25 @@ const WelfareDrawerNavigator = () => {
     >
       <WelfareDrawer.Screen name="Benefits" component={BenefitScreen}
         options={{
-          title: "Benefits",
-          headerTitle: "Benefits",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
           unmountOnBlur: true,
         }}
       />
       <WelfareDrawer.Screen name="Claims" component={ClaimScreen}
         options={{
-          title: "Claims",
-          headerTitle: "Claims",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
           unmountOnBlur: true,
         }}
       />
       <WelfareDrawer.Screen name="Rewards" component={RewardScreen}
         options={{
-          title: "Rewards",
-          headerTitle: "Rewards",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
           unmountOnBlur: true,
         }}
       />
@@ -50,22 +53,25 @@ const WelfareDrawerNavigator = () => {
        />
       <WelfareDrawer.Screen name="ClaimDetail" component={ClaimDetailScreen}
         options={{
-           title: "Claim Details",
-           headerTitle: "Claim Details",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
            unmountOnBlur: true,
          }}
       />
       <WelfareDrawer.Screen name="NewClaim" component={NewClaimScreen}
         options={{
-           title: "New Claim",
-           headerTitle: "New Claim",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
            unmountOnBlur: true,
          }}
       />
       <WelfareDrawer.Screen name="RewardDetail" component={RewardDetailScreen}
         options={{
-           title: "Reward Details",
-           headerTitle: "Reward Details",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
            unmountOnBlur: true,
          }}
       />

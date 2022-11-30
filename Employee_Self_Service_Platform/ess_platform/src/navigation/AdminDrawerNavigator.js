@@ -51,6 +51,7 @@ const AdminDrawerNavigator = () => {
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
           headerTintColor: "white",
+          unmountOnBlur: true,
         }}
       />
       <AdminDrawer.Screen
@@ -60,6 +61,7 @@ const AdminDrawerNavigator = () => {
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
           headerTintColor: "white",
+          unmountOnBlur: true,
         }}
       />
     </AdminDrawer.Navigator>
