@@ -107,4 +107,9 @@ public class JobApplicationController {
                               @RequestParam("postingId") Long postingId) {
         return jobApplicationService.acceptApplicantOffer(userId, postingId);
     }
+
+    @GetMapping("/getJobOffersWithinAMonth")
+    public List<JobApplication> getJobOffersWithinAMonth() {
+        return jobApplicationService.getJobOffersWithinAMonth();
+    }
 }

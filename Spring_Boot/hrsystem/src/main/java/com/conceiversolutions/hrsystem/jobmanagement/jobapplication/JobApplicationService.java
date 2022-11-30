@@ -531,4 +531,21 @@ public class JobApplicationService {
 //        jobApplicationRepository.save(application);
         return "Applicant Rejected Offer Successfully";
     }
+
+    public List<JobApplication> getJobOffersWithinAMonth() {
+        System.out.println("JobApplicationService.getJobOffersWithinAMonth");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("now is " + now);
+        LocalDateTime last = now.minusMonths(1);
+        System.out.println("last is " + last);
+        List<JobApplication> applications = jobApplicationRepository.findWithinMonth(now, last, JobStatusEnum.OFFERED);
+
+        for (JobApplication ja : applications) {
+            ja.setJobPosting(null);
+            ja.getApplicant().nullify();
+            ja.setUserSkills(new ArrayList<>());
+        }
+
+        return applications;
+    }
 }
