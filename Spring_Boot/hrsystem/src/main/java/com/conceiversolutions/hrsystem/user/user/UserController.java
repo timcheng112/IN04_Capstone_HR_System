@@ -403,4 +403,9 @@ public class UserController {
         userService.editUserPayrollInformation(userId, bankName, bankAccNo, payInformation.getAllowance(),
                 payInformation.getDeduction());
     }
+
+    @PutMapping(path = "/updateUserBankInfo")
+    public Boolean updateUserBankInfo(@RequestParam("userId") Long userId, @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo){
+        return userService.updateUserBankInfo(userId, bankName, bankAccNo);
+    }
 }

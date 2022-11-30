@@ -65,9 +65,9 @@ public class UserConfig {
                                 admin1.setCurrentPayInformation(
                                                 new PayInformation(new BigDecimal(2000), true, false, admin1));
                                 List<Allowance> allowanceTemp = admin1.getCurrentPayInformation().getAllowance();
-                                allowanceTemp.add(new Allowance("this is a test allowance!", LocalDate.of(2022, 11, 27)));
+                                allowanceTemp.add(new Allowance("allowance1", new BigDecimal(100),"this is a test allowance!", LocalDate.of(2022, 11, 27), "BONUS"));
                                 List<Deduction> deductionTemp = admin1.getCurrentPayInformation().getDeduction();
-                                deductionTemp.add(new Deduction("this is a test deduction!", LocalDate.of(2022, 11, 1)));
+                                deductionTemp.add(new Deduction("deduction1", new BigDecimal(50),"this is a test deduction!", LocalDate.of(2022, 11, 1), "OTHERS"));
                                 admin1.getCurrentPayInformation().setAllowance(allowanceTemp);
                                 admin1.getCurrentPayInformation().setDeduction(deductionTemp);
                                 admin1.setWorkEmail("simj@libro.com");
@@ -76,11 +76,11 @@ public class UserConfig {
                                 admin1.setBankName("DBS Bank");
                                 admin1.setBankAccNo("0052312891");
 
-                                Payslip augPayslipAdmin1 = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1800), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipAdmin1 = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1800), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipAdmin1 = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1800), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipAdmin1 = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(1800), new BigDecimal(0), new BigDecimal(100), new BigDecimal(1900), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipAdmin1 = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(1800), new BigDecimal(0), new BigDecimal(100), new BigDecimal(1900), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipAdmin1 = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(1800), new BigDecimal(0), new BigDecimal(100), new BigDecimal(1900), LocalDate.of(2022, 10, 31));
                                 //note: good chance this is scuffed because its not properly setting up payinfo - payslip relationship.
-                                Payslip futurePayslipAdmin1 = new Payslip(10, 2023, LocalDate.of(2023, 10, 30), new BigDecimal(1800), LocalDate.of(2023, 10, 30));
+                                Payslip futurePayslipAdmin1 = new Payslip(LocalDate.of(2023, 8, 31), new BigDecimal(1813), new BigDecimal(13), new BigDecimal(100), new BigDecimal(1900), LocalDate.of(2023, 8, 31));
                                 List<Payslip> payslipsAdmin1 = new ArrayList<>();
                                 payslipsAdmin1.add(augPayslipAdmin1);
                                 payslipsAdmin1.add(sepPayslipAdmin1);
@@ -126,9 +126,9 @@ public class UserConfig {
                                 admin2.setCurrentPosition(adminPosition);
                                 admin2.setBankName("UOB Singapore");
                                 admin2.setBankAccNo("0062312891");
-                                Payslip augPayslipAdmin2 = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(2300), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipAdmin2 = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(2300), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipAdmin2 = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(2300), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipAdmin2 = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(2300), new BigDecimal(0), new BigDecimal(100), new BigDecimal(2400), LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipAdmin2 = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(2300), new BigDecimal(0), new BigDecimal(100), new BigDecimal(2400), LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipAdmin2 = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(2300), new BigDecimal(0), new BigDecimal(100), new BigDecimal(2400), LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsAdmin2 = new ArrayList<>();
                                 payslipsAdmin2.add(augPayslipAdmin2);
                                 payslipsAdmin2.add(sepPayslipAdmin2);
@@ -164,6 +164,12 @@ public class UserConfig {
                                                 null);
                                 ceo.setCurrentPayInformation(
                                                 new PayInformation(new BigDecimal(10000), true, false, ceo));
+                                List<Allowance> allowanceCeo = ceo.getCurrentPayInformation().getAllowance();
+                                allowanceCeo.add(new Allowance("allowanceCeo", new BigDecimal(100),"Travel Allowance", LocalDate.of(2022, 11, 27), "LIFESTYLE"));
+                                List<Deduction> deductionCeo = ceo.getCurrentPayInformation().getDeduction();
+                                deductionCeo.add(new Deduction("deductionCeo", new BigDecimal(50),"Housing Costs", LocalDate.of(2022, 11, 1), "DAMAGES"));
+                                ceo.getCurrentPayInformation().setAllowance(allowanceCeo);
+                                ceo.getCurrentPayInformation().setDeduction(deductionCeo);
                                 ceo.setWorkEmail("ongj@libro.com");
                                 ceo.setEnabled(true);
                                 ceo.setCurrentPosition(
@@ -171,9 +177,9 @@ public class UserConfig {
                                                                 PositionTypeEnum.EXECUTIVE));
                                 ceo.setBankName("Citibank Singapore");
                                 ceo.setBankAccNo("0072312891");
-                                Payslip augPayslipCeo = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(8200), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipCeo = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(8200), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipCeo = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(8200), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipCeo = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(8369),  new BigDecimal(9000),  new BigDecimal(69), new BigDecimal(700),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipCeo = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(8369),  new BigDecimal(9000),  new BigDecimal(69), new BigDecimal(700),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipCeo = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(8369),  new BigDecimal(9000),  new BigDecimal(69), new BigDecimal(700),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsCeo = new ArrayList<>();
                                 payslipsCeo.add(augPayslipCeo);
                                 payslipsCeo.add(sepPayslipCeo);
@@ -221,9 +227,9 @@ public class UserConfig {
                                 matthewManager.setCurrentPosition(SOMPosition);
                                 matthewManager.setBankName("Maybank Singapore");
                                 matthewManager.setBankAccNo("0082316891");
-                                Payslip augPayslipMatthewManager = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(3800), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipMatthewManager = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(3800), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipMatthewManager = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(3800), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipMatthewManager = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(3870),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(3800),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipMatthewManager = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(3870),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(3800),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipMatthewManager = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(3870),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(3800),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsMatthewManager = new ArrayList<>();
                                 payslipsMatthewManager.add(augPayslipMatthewManager);
                                 payslipsMatthewManager.add(sepPayslipMatthewManager);
@@ -285,9 +291,9 @@ public class UserConfig {
                                 xueqiManager.setCurrentPosition(managerPosition);
                                 xueqiManager.setBankName("Standard Chartered Singapore");
                                 xueqiManager.setBankAccNo("0022386891");
-                                Payslip augPayslipXueqiManager = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(4100), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipXueqiManager = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(4100), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipXueqiManager = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(4100), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipXueqiManager = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(4070),  new BigDecimal(70),  new BigDecimal(100), new BigDecimal(4100),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipXueqiManager = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(3999),  new BigDecimal(99),  new BigDecimal(200), new BigDecimal(4100),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipXueqiManager = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(4070),  new BigDecimal(70),  new BigDecimal(100), new BigDecimal(4100),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsXueqiManager = new ArrayList<>();
                                 payslipsXueqiManager.add(augPayslipXueqiManager);
                                 payslipsXueqiManager.add(sepPayslipXueqiManager);
@@ -334,9 +340,9 @@ public class UserConfig {
                                 shihanManager.setCurrentPosition(managerPosition);
                                 shihanManager.setBankName("DBS Bank");
                                 shihanManager.setBankAccNo("0069316891");
-                                Payslip augPayslipShihanManager = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(3600), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipShihanManager = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(3600), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipShihanManager = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(3600), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipShihanManager = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(3530),  new BigDecimal(70),  new BigDecimal(100), new BigDecimal(3600),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipShihanManager = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(3600),  new BigDecimal(0),  new BigDecimal(0), new BigDecimal(3600),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipShihanManager = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(3530),  new BigDecimal(70),  new BigDecimal(100), new BigDecimal(3600),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsShihanManager = new ArrayList<>();
                                 payslipsShihanManager.add(augPayslipShihanManager);
                                 payslipsShihanManager.add(sepPayslipShihanManager);
@@ -384,9 +390,9 @@ public class UserConfig {
                                 xinyueEmployee.setCurrentPosition(hrDirector);
                                 xinyueEmployee.setBankName("DBS Bank");
                                 xinyueEmployee.setBankAccNo("0059386891");
-                                Payslip augPayslipXinyueEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(5900), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipXinyueEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(5900), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipXinyueEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(5900), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipXinyueEmployee = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(3530),  new BigDecimal(70),  new BigDecimal(100), new BigDecimal(5900),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipXinyueEmployee = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(5830),  new BigDecimal(70),  new BigDecimal(100), new BigDecimal(5900),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipXinyueEmployee = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(5830),  new BigDecimal(70),  new BigDecimal(100), new BigDecimal(5900),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsXinyueEmployee = new ArrayList<>();
                                 payslipsXinyueEmployee.add(augPayslipXinyueEmployee);
                                 payslipsXinyueEmployee.add(sepPayslipXinyueEmployee);
@@ -446,9 +452,9 @@ public class UserConfig {
                                 alisonEmployee.setCurrentPosition(hrManager);
                                 alisonEmployee.setBankName("DBS Bank");
                                 alisonEmployee.setBankAccNo("0049316891");
-                                Payslip augPayslipAlisonEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(3000), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipAlisonEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(3000), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipAlisonEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(3000), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipAlisonEmployee = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(3070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(3000),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipAlisonEmployee = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(3070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(3000),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipAlisonEmployee = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(3070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(3000),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsAlisonEmployee = new ArrayList<>();
                                 payslipsAlisonEmployee.add(augPayslipAlisonEmployee);
                                 payslipsAlisonEmployee.add(sepPayslipAlisonEmployee);
@@ -498,9 +504,9 @@ public class UserConfig {
                                 timEmployee.setCurrentPosition(hrEmployee);
                                 timEmployee.setBankName("DBS Bank");
                                 timEmployee.setBankAccNo("0089812891");
-                                Payslip augPayslipTimEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1100), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipTimEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1100), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipTimEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1100), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipTimEmployee = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(2070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(2000),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipTimEmployee = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(2070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(2000),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipTimEmployee = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(2070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(2000),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsTimEmployee = new ArrayList<>();
                                 payslipsTimEmployee.add(augPayslipTimEmployee);
                                 payslipsTimEmployee.add(sepPayslipTimEmployee);
@@ -544,9 +550,9 @@ public class UserConfig {
                                 hedgehogEmployee.setCurrentPosition(hrEmployee);
                                 hedgehogEmployee.setBankName("DBS Bank");
                                 hedgehogEmployee.setBankAccNo("0015812891");
-                                Payslip augPayslipHedgehogEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1200), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipHedgehogEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1200), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipHedgehogEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1200), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipHedgehogEmployee = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(1070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(1000),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipHedgehogEmployee = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(1070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(1000),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipHedgehogEmployee = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(1070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(1000),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsHedgehogEmployee = new ArrayList<>();
                                 payslipsHedgehogEmployee.add(augPayslipHedgehogEmployee);
                                 payslipsHedgehogEmployee.add(sepPayslipHedgehogEmployee);
@@ -596,9 +602,9 @@ public class UserConfig {
                                 bruceEmployee.setCurrentPosition(cashierEmployee);
                                 bruceEmployee.setBankName("UOB Singapore");
                                 bruceEmployee.setBankAccNo("0035812891");
-                                Payslip augPayslipBruceEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1000), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipBruceEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1200), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipBruceEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1100), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipBruceEmployee = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(1270),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(1200),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipBruceEmployee = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(1270),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(1200),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipBruceEmployee = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(1270),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(1200),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsBruceEmployee = new ArrayList<>();
                                 payslipsBruceEmployee.add(augPayslipBruceEmployee);
                                 payslipsBruceEmployee.add(sepPayslipBruceEmployee);
@@ -644,9 +650,9 @@ public class UserConfig {
                                 barryEmployee.setCurrentPosition(cashierEmployee);
                                 barryEmployee.setBankName("DBS Bank");
                                 barryEmployee.setBankAccNo("0062112891");
-                                Payslip augPayslipBarryEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1300), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipBarryEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(900), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipBarryEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(1250), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipBarryEmployee = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(970),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(900),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipBarryEmployee = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(970),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(900),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipBarryEmployee = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(970),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(900),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsBarryEmployee = new ArrayList<>();
                                 payslipsBarryEmployee.add(augPayslipBarryEmployee);
                                 payslipsBarryEmployee.add(sepPayslipBarryEmployee);
@@ -695,9 +701,9 @@ public class UserConfig {
                                 dianaEmployee.setCurrentPosition(salesmanEmployee);
                                 dianaEmployee.setBankName("Maybank Singapore");
                                 dianaEmployee.setBankAccNo("0095212891");
-                                Payslip augPayslipDianaEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(900), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipDianaEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(870), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipDianaEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(930), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipDianaEmployee = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(6070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(6000),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipDianaEmployee = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(6070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(6000),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipDianaEmployee = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(6070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(6000),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsDianaEmployee = new ArrayList<>();
                                 payslipsDianaEmployee.add(augPayslipDianaEmployee);
                                 payslipsDianaEmployee.add(sepPayslipDianaEmployee);
@@ -743,9 +749,9 @@ public class UserConfig {
                                 clarkEmployee.setCurrentPosition(salesmanEmployee);
                                 clarkEmployee.setBankName("Standard Chartered Singapore");
                                 clarkEmployee.setBankAccNo("0071647423");
-                                Payslip augPayslipClarkEmployee = new Payslip(8, 2022, LocalDate.of(2022, 8, 31), new BigDecimal(1340), LocalDate.of(2022, 8, 31));
-                                Payslip sepPayslipClarkEmployee = new Payslip(9, 2022, LocalDate.of(2022, 9, 30), new BigDecimal(1125), LocalDate.of(2022, 9, 30));
-                                Payslip octPayslipClarkEmployee = new Payslip(10, 2022, LocalDate.of(2022, 10, 31), new BigDecimal(880), LocalDate.of(2022, 10, 31));
+                                Payslip augPayslipClarkEmployee = new Payslip(LocalDate.of(2022, 8, 31), new BigDecimal(4070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(4000),  LocalDate.of(2022, 8, 31));
+                                Payslip sepPayslipClarkEmployee = new Payslip(LocalDate.of(2022, 9, 30), new BigDecimal(4070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(4000),  LocalDate.of(2022, 9, 30));
+                                Payslip octPayslipClarkEmployee = new Payslip(LocalDate.of(2022, 10, 31), new BigDecimal(4070),  new BigDecimal(70),  new BigDecimal(0), new BigDecimal(4000),  LocalDate.of(2022, 10, 31));
                                 List<Payslip> payslipsClarkEmployee = new ArrayList<>();
                                 payslipsClarkEmployee.add(augPayslipClarkEmployee);
                                 payslipsClarkEmployee.add(sepPayslipClarkEmployee);

@@ -26,4 +26,6 @@ List<Payslip> findUserPayslipByMonth(@Param("userId") Long userId, @Param("start
 @Query("SELECT p FROM Payslip p WHERE DATE(p.dateOfPayment) BETWEEN DATE(?1) AND DATE(?2)")
 List<Payslip> findPayslipsByMonth(LocalDateTime start, LocalDateTime end);
 
+@Query("SELECT p FROM Payslip p WHERE p.employee.userId =:userId")
+List<Payslip> findUserPayslip(@Param("userId") Long userId);
 }

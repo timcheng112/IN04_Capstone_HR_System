@@ -27,7 +27,23 @@ public class PayslipService {
     private final DocDataService docDataService;
 
     public List<Payslip> getPayslips() {
-        return payslipRepository.findAll();
+
+        List<Payslip> payslips = payslipRepository.findAll();
+
+        if (payslips.isEmpty()) {
+            throw new IllegalStateException(
+                    "Cannot find payslips.");
+        }
+        for (Payslip payslip : payslips) {
+            payslip.getPayInformation().setUser(null);
+            payslip.getPayInformation().setAllowance(new ArrayList<>());
+            payslip.getPayInformation().setAllowanceTemplates(new ArrayList<>());
+            payslip.getPayInformation().setDeduction(new ArrayList<>());
+            payslip.getPayInformation().setDeductionTemplates(new ArrayList<>());
+
+            payslip.getEmployee().nullify();
+        }
+        return payslips;
     }
 
     public Payslip getPayslip(Long id) {
@@ -242,5 +258,24 @@ public class PayslipService {
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage());
         }
+    }
+
+    public List<Payslip> findUserPayslip(Long userId) {
+        List<Payslip> payslips = payslipRepository.findUserPayslip(userId);
+
+        if (payslips.isEmpty()) {
+            throw new IllegalStateException(
+                    "Cannot find payslips for user:" + userId);
+        }
+        for (Payslip payslip : payslips) {
+            payslip.getPayInformation().setUser(null);
+            payslip.getPayInformation().setAllowance(new ArrayList<>());
+            payslip.getPayInformation().setAllowanceTemplates(new ArrayList<>());
+            payslip.getPayInformation().setDeduction(new ArrayList<>());
+            payslip.getPayInformation().setDeductionTemplates(new ArrayList<>());
+
+            payslip.getEmployee().nullify();
+        }
+        return payslips;
     }
 }

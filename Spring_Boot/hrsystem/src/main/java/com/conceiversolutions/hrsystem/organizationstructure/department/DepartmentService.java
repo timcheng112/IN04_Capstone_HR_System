@@ -62,6 +62,7 @@ public class DepartmentService {
             deptHead.setReactivationRequest(null);
             deptHead.setAttendances(new ArrayList<>());
             deptHead.setCurrentPayInformation(null);
+            deptHead.setPayslips(new ArrayList<>());
             deptHead.setEmployeeAppraisals(new ArrayList<>());
             deptHead.setManagerAppraisals(new ArrayList<>());
             deptHead.setManagerReviews(new ArrayList<>());
@@ -113,6 +114,7 @@ public class DepartmentService {
             deptHead.setReactivationRequest(null);
             deptHead.setAttendances(new ArrayList<>());
             deptHead.setCurrentPayInformation(null);
+            deptHead.setPayslips(new ArrayList<>());
             deptHead.setEmployeeAppraisals(new ArrayList<>());
             deptHead.setManagerAppraisals(new ArrayList<>());
             deptHead.setManagerReviews(new ArrayList<>());

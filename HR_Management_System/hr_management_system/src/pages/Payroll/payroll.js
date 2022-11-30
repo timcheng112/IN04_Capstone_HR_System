@@ -209,7 +209,7 @@ const Payroll = () => {
       .getAllDepartments()
       .then((response) => setDepartments(response.data))
       .catch((error) => console.log(error.response.data.message));
-  }, [isPayrollFormOpen]);
+  }, [isPayrollFormOpen, isEditPayInformationFormOpen]);
 
   const filterByDepartment = () => {
     setFilteredEmployees([
@@ -301,7 +301,11 @@ const Payroll = () => {
                   <input
                     id="search"
                     name="search"
-                    className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:border-indigo-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                    className={
+                      "block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:border-indigo-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" +
+                      ((isPayrollHistoryOpen || isPersonalPayrollOpen) &&
+                        " bg-gray-200")
+                    }
                     placeholder="Search"
                     type="search"
                     value={query}
@@ -309,6 +313,7 @@ const Payroll = () => {
                       setQuery(e.target.value);
                       console.log(e.target.value);
                     }}
+                    disabled={isPayrollHistoryOpen || isPersonalPayrollOpen}
                   />
                 </div>
               </div>
@@ -463,6 +468,7 @@ const Payroll = () => {
             openSummaryReport={() => setIsSummaryReportOpen(true)}
             closeSummaryReport={() => setIsSummaryReportOpen(false)}
             viewSummaryReportHandler={viewSummaryReportHandler}
+            employees={{ filteredEmployees }}
           />
         )}
       {user &&

@@ -110,6 +110,7 @@ public class TeamService {
                 member.setReactivationRequest(null);
                 member.setAttendances(new ArrayList<>());
                 member.setCurrentPayInformation(null);
+                member.setPayslips(new ArrayList<>());
                 member.setEmployeeAppraisals(new ArrayList<>());
 
                 member.setManagerAppraisals(new ArrayList<>());
@@ -141,6 +142,7 @@ public class TeamService {
             t.getTeamHead().setReactivationRequest(null);
             t.getTeamHead().setAttendances(new ArrayList<>());
             t.getTeamHead().setCurrentPayInformation(null);
+            t.getTeamHead().setPayslips(new ArrayList<>());
             t.getTeamHead().setEmployeeAppraisals(new ArrayList<>());
             t.getTeamHead().setManagerAppraisals(new ArrayList<>());
             t.getTeamHead().setManagerReviews(new ArrayList<>());
@@ -180,6 +182,7 @@ public class TeamService {
                 member.setReactivationRequest(null);
                 member.setAttendances(new ArrayList<>());
                 member.setCurrentPayInformation(null);
+                member.setPayslips(new ArrayList<>());
                 member.setEmployeeAppraisals(new ArrayList<>());
 
                 member.setManagerAppraisals(new ArrayList<>());
@@ -216,6 +219,7 @@ public class TeamService {
             t.getTeamHead().setSwapRequestsRequested(new ArrayList<>());
             t.getTeamHead().setAttendances(new ArrayList<>());
             t.getTeamHead().setCurrentPayInformation(null);
+            t.getTeamHead().setPayslips(new ArrayList<>());
             t.getTeamHead().setEmployeeAppraisals(new ArrayList<>());
             t.getTeamHead().setManagerAppraisals(new ArrayList<>());
             t.getTeamHead().setManagerReviews(new ArrayList<>());

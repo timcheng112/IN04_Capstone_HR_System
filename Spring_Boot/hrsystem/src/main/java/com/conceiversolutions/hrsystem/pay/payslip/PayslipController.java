@@ -27,7 +27,7 @@ public class PayslipController {
     // ));
     // }
 
-    @GetMapping
+    @GetMapping(path="/getPayslips")
     public List<Payslip> getPayslips() {
         return payslipService.getPayslips();
     }
@@ -134,5 +134,10 @@ public class PayslipController {
             throws Exception {
         System.out.println("*********** CONTROLLER FILE: " + file + " *****************");
         return payslipService.uploadPayslipPdf(file, payslipId);
+    }
+
+    @GetMapping(path = "/findUserPayslip")
+    public List<Payslip> findUserPayslip(@RequestParam("userId") Long userId) {
+        return payslipService.findUserPayslip(userId);
     }
 }

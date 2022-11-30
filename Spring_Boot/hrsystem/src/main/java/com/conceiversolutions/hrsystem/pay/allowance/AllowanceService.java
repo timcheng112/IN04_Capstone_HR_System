@@ -1,5 +1,8 @@
 package com.conceiversolutions.hrsystem.pay.allowance;
 
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.pay.payinformation.PayInformationRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,18 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class AllowanceService {
     private final AllowanceRepository allowanceRepository;
-
-    @Autowired
-    public AllowanceService(AllowanceRepository allowanceRepository) {
-        this.allowanceRepository = allowanceRepository;
-    }
-
+    private final PayInformationRepository payInformationRepository;
 
     public List<Allowance> getAllAllowances(){
         return allowanceRepository.findAll();
@@ -100,5 +100,62 @@ public class AllowanceService {
             );
         }
         return allowanceList;
+    }
+
+    public Boolean createAllowances(List<Allowance> allowances, Long userId) {
+        System.out.println("AllowanceService.createAllowances");
+        System.out.println("allowances = " + allowances);
+        Optional<PayInformation> payInformation = payInformationRepository.findPayInformationByUserId(userId);
+        PayInformation payInfo = payInformation.get();
+        List<Allowance> piAllowanceList = payInfo.getAllowance();
+        for (Allowance allowance : allowances) {
+            //set relationships:
+            piAllowanceList.add(allowance);
+        }
+        payInfo.setAllowance(piAllowanceList);
+        allowanceRepository.saveAll(allowances);
+        return true;
+    }
+    public Boolean deleteAllowanceList(List<Long> idList) {
+        System.out.println("AllowanceService.deleteAllowanceList");
+        System.out.println("idList = " + idList);
+        for (Long id : idList) {
+
+            //first: remove relationship from payinfo to allowance.
+            Optional<PayInformation> payInformation = payInformationRepository.findPayInformationByAllowanceId(id);
+
+            if (payInformation.isPresent()) {
+                //check if found allowance
+                PayInformation payinfo = payInformation.get();
+                List<Allowance> allowances = payinfo.getAllowance();
+//                List<Allowance> newList = new ArrayList<>();
+
+                //remove allowance from payinfo
+                for (Allowance allowance: allowances) {
+//                    if (!allowance.getAllowanceId().equals(id)) {
+//                        newList.add(allowance);
+//                    }
+                    if (allowance.getAllowanceId().equals(id)){
+                        allowances.remove(allowance);
+                        break;
+                    }
+                }
+//                allowanceRepository.deleteById(id);
+                payinfo.setAllowance(allowances);
+                payInformationRepository.saveAndFlush(payinfo);
+            } else {
+                //pay info not found
+                throw new IllegalStateException(
+                        "Could not find pay information associated with allowance with id:" + id
+                );
+            }
+
+            //we are not using templates so no need to care about that r/s.
+
+            //delete payinfo
+//            allowanceRepository.deleteById(id);
+        }
+//        allowanceRepository.deleteAllById(idList);
+        return true;
     }
 }
