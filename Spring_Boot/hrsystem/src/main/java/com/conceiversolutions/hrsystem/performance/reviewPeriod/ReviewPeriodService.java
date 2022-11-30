@@ -56,8 +56,10 @@ public class ReviewPeriodService {
         for (User departmentHead : departmentHeads) {
             List<Team> department = departmentRepository.findTeamsByDepartmentHead(departmentHead.getUserId());
             for (Team team : department) {
-                reviewService.createManagerReviews(newPeriod.getYear(), team.getTeamHead().getUserId(),
+                if (team.getTeamHead() != null) {
+                    reviewService.createManagerReviews(newPeriod.getYear(), team.getTeamHead().getUserId(),
                         departmentHead.getUserId());
+                }   
             }
         }
 

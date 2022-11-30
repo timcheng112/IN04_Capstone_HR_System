@@ -1322,10 +1322,9 @@ public class UserService implements UserDetailsService {
         return employees;
     }
 
-
     public List<User> getAllHREmployees() {
         List<User> employees = userRepository.findAllHREmployees();
-//        employees.addAll(userRepository.findAllByRole(RoleEnum.MANAGER));
+        // employees.addAll(userRepository.findAllByRole(RoleEnum.MANAGER));
         System.out.println("size of employees list is " + employees.size());
         for (User u : employees) {
             List<Team> teams = u.getTeams();
@@ -1600,7 +1599,10 @@ public class UserService implements UserDetailsService {
         List<Team> allTeams = teamRepository.findAll();
         List<Long> teamHeadIds = new ArrayList<>();
         for (Team t : allTeams) {
-            teamHeadIds.add(t.getTeamHead().getUserId());
+            if (t.getTeamHead() != null) {
+                teamHeadIds.add(t.getTeamHead().getUserId());
+            }
+
         }
 
         List<User> managers = userRepository.findAllByRole(RoleEnum.MANAGER);
@@ -2740,18 +2742,15 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public String setNfcUUID(String hexString, Long userId){
+    public String setNfcUUID(String hexString, Long userId) {
         User u1 = getUser(userId);
 
-        if(u1.getCardId() == null){
+        if (u1.getCardId() == null) {
             u1.setCardId(hexString);
         }
 
         userRepository.saveAndFlush(u1);
         return "NFC is assigned to user Id";
     }
-
-
-
 
 }

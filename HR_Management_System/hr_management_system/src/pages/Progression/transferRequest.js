@@ -58,11 +58,12 @@ export default function TransferRequest() {
 
         const status = response.data.status;
         const toInterview = response.data.interviewer;
+        const manager = response.data.manager;
         const interviewDate = response.data.interviewDate;
 
         console.log(response.data);
 
-        renderSelectedStep(status, false, toInterview, interviewDate);
+        renderSelectedStep(status, false, toInterview, manager, interviewDate);
 
         api.getUser(getUserId()).then((response) => {
           //console.log(response.data.isHrEmployee);
@@ -70,6 +71,7 @@ export default function TransferRequest() {
             status,
             response.data.isHrEmployee,
             toInterview,
+            manager,
             interviewDate
           );
         });
@@ -84,7 +86,7 @@ export default function TransferRequest() {
     }
   }, []);
 
-  function renderSelectedStep(status, isHR, interviewer, interviewDate) {
+  function renderSelectedStep(status, isHR, interviewer, manager, interviewDate) {
     console.log(status);
     if (status === "Created" || status === "Withdrawn") {
       setSelectedStep(steps[0]);
@@ -125,7 +127,7 @@ export default function TransferRequest() {
         .filter((s) => s.id === "02")
         .map((step) => (step.status = "complete"));
 
-      if (isHR) {
+      if (isHR && manager.userId + "" !== getUserId() + "") {
         steps
           .filter((s) => s.id === "03")
           .map((step) => (step.status = "current"));

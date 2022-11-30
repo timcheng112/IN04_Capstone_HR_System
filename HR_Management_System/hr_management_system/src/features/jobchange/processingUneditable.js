@@ -6,7 +6,6 @@ import { getUserId } from "../../utils/Common";
 export default function ProcessingUneditable({ request }) {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [payInformation, setPayInformation] = useState(null);
-  const [effectiveFrom, setEffectiveFrom] = useState(request.effectiveFrom);
   const [toReject, setToReject] = useState(false);
   const [rejectRemarks, setRejectRemarks] = useState("");
   const history = useHistory();
@@ -37,7 +36,6 @@ export default function ProcessingUneditable({ request }) {
     api
       .processPromotionRequest(
         request.promotionId,
-        effectiveFrom,
         rejectRemarks,
         basicSalary,
         payInformation.basicHourlyPay,
@@ -207,25 +205,6 @@ export default function ProcessingUneditable({ request }) {
                       </div>
                     </>
                   )}
-
-                  <div className="sm:col-span-3">
-                    <label
-                      htmlFor="effectiveFrom"
-                      className="block text-md text-left font-sans font-medium text-gray-900"
-                    >
-                      Effective From
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="date"
-                        name="effectiveFrom"
-                        id="effectiveFrom"
-                        disabled
-                        className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
-                        defaultValue={effectiveFrom}
-                      />
-                    </div>
-                  </div>
 
                   {toReject && (
                     <>

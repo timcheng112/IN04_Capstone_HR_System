@@ -2,11 +2,13 @@ package com.conceiversolutions.hrsystem.jobchange.promotionrequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.enums.StatusEnum;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
@@ -145,6 +147,7 @@ public class PromotionService {
                 if (optionalInterviewer.isPresent()) {
 
                     User interviewer = breakRelationships(optionalInterviewer.get());
+
                     PromotionRequest promotionRequest = new PromotionRequest(created, appraisal, employee, manager,
                             interviewer, "Created", promotionJustification, "");
 
@@ -186,11 +189,25 @@ public class PromotionService {
                 pr.setProcessedBy(breakRelationships(pr.getProcessedBy()));
             }
 
+            if (pr.getNewDepartment() != null) {
+                Department d = new Department();
+                d.setDepartmentId(pr.getNewDepartment().getDepartmentId());
+                d.setDepartmentName(pr.getNewDepartment().getDepartmentName());
+                pr.setNewDepartment(d);
+            }
+
+            if (pr.getNewTeam() != null) {
+                Team t = new Team();
+                t.setTeamId(t.getTeamId());
+                t.setTeamName(t.getTeamName());
+                pr.setNewTeam(t);
+            }
+
             // pr.getProcessedBy().nullify();
         }
 
-        //System.out.print("Active requests ");
-        //System.out.println(activeRequests);
+        // System.out.print("Active requests ");
+        // System.out.println(activeRequests);
         return activeRequests;
     }
 
@@ -222,6 +239,21 @@ public class PromotionService {
                 promotionRequest.setProcessedBy(breakRelationships(promotionRequest.getProcessedBy()));
             }
 
+            if (promotionRequest.getNewDepartment() != null) {
+                Department d = new Department();
+                d.setDepartmentId(promotionRequest.getNewDepartment().getDepartmentId());
+                d.setDepartmentName(promotionRequest.getNewDepartment().getDepartmentName());
+                promotionRequest.setNewDepartment(d);
+
+            }
+
+            if (promotionRequest.getNewTeam() != null) {
+                Team t = new Team();
+                t.setTeamId(promotionRequest.getNewTeam().getTeamId());
+                t.setTeamName(promotionRequest.getNewTeam().getTeamName());
+                promotionRequest.setNewTeam(t);
+            }
+
             return promotionRequest;
         } else {
             throw new IllegalStateException("Unable to find promotion request");
@@ -239,6 +271,23 @@ public class PromotionService {
         if (optionalRequest.isPresent()) {
 
             PromotionRequest promotionRequest = optionalRequest.get();
+
+            Optional<Department> newDepartment = departmentRepository
+                    .findDepartmentByEmployeeId(promotionRequest.getEmployee().getUserId());
+
+            System.out.println("new dept " + newDepartment);
+
+            if (newDepartment.isPresent()) {
+                Department d = newDepartment.get();
+                promotionRequest.setNewDepartment(d);
+            }
+
+            Long newTeamId = teamService.getTeamByEmployee(promotionRequest.getEmployee().getUserId());
+            Optional<Team> optionalTeam = teamRepository.findById(newTeamId);
+            if (optionalTeam.isPresent()) {
+                Team newTeam = optionalTeam.get();
+                promotionRequest.setNewTeam(newTeam);
+            }
 
             if (withdrawRemarks.isEmpty()) {
 
@@ -302,6 +351,20 @@ public class PromotionService {
                 User processedBy = pr.getProcessedBy();
                 pr.setProcessedBy(breakRelationships(processedBy));
             }
+
+            if (pr.getNewDepartment() != null) {
+                Department d = new Department();
+                d.setDepartmentId(pr.getNewDepartment().getDepartmentId());
+                d.setDepartmentName(pr.getNewDepartment().getDepartmentName());
+                pr.setNewDepartment(d);
+            }
+
+            if (pr.getNewTeam() != null) {
+                Team t = new Team();
+                t.setTeamId(t.getTeamId());
+                t.setTeamName(t.getTeamName());
+                pr.setNewTeam(t);
+            }
         }
         return requests;
     }
@@ -331,9 +394,10 @@ public class PromotionService {
     }
 
     @Transactional
-    public String processPromotionRequest(Long promotionId, String effectiveFrom, String rejectRemarks,
+    public String processPromotionRequest(Long promotionId, String rejectRemarks,
             String basicSalary, String basicHourlyPay, String weekendHourlyPay, String eventPay,
-            Long processedById, String teamName, Long outletId, Boolean inOffice, Long departmentId) throws Exception {
+            Long processedById, Boolean newTeam, String teamName, Long outletId, Boolean inOffice, Long departmentId)
+            throws Exception {
 
         Optional<PromotionRequest> optionalRequest = promotionRepository.findById(promotionId);
         Optional<User> optionalProcessed = userRepository.findById(processedById);
@@ -363,8 +427,6 @@ public class PromotionService {
 
                 if (rejectRemarks.isEmpty()) {
 
-                    pr.setEffectiveFrom(LocalDate.parse(effectiveFrom));
-
                     if (!basicSalary.isEmpty()) {
                         pi.setBasicSalary(new BigDecimal(basicSalary));
                     } else {
@@ -384,8 +446,30 @@ public class PromotionService {
                 pr.setManager(breakRelationships(pr.getManager()));
                 pr.setInterviewer(breakRelationships(pr.getInterviewer()));
 
-                if (teamName != null && !teamName.isEmpty()) {
+                if (newTeam) {
                     addNewTeamPromotion(teamName, employee.getUserId(), outletId, inOffice, departmentId);
+                } else {
+                    Long oldTeamId = teamService.getTeamByEmployee(employee.getUserId());
+
+                    Optional<Team> oldTeamOptional = teamRepository.findById(oldTeamId);
+                    Optional<User> optionalUser = userRepository.findById(employee.getUserId());
+
+                    if (oldTeamOptional.isPresent()) {
+                        Team oldTeam = oldTeamOptional.get();
+
+                        if (optionalUser.isPresent()) {
+                            User user = optionalUser.get();
+                            oldTeam.getUsers().remove(user);
+
+                            Team team = pr.getNewTeam();
+                            team.setTeamHead(user);
+                            team.getUsers().add(user);
+                        }
+
+                    } else {
+                        throw new IllegalStateException("Unable to find old team");
+                    }
+                    
                 }
 
                 return "Promotion request for " + pr.getEmployee().getFirstName() + " " + pr.getEmployee().getLastName()
@@ -414,6 +498,21 @@ public class PromotionService {
             if (p.getProcessedBy() != null) {
                 p.setProcessedBy(breakRelationships(p.getProcessedBy()));
             }
+
+            if (p.getNewDepartment() != null) {
+                Department d = new Department();
+                d.setDepartmentId(p.getNewDepartment().getDepartmentId());
+                d.setDepartmentName(p.getNewDepartment().getDepartmentName());
+                p.setNewDepartment(d);
+            }
+
+            if (p.getNewTeam() != null) {
+                Team t = new Team();
+                t.setTeamId(t.getTeamId());
+                t.setTeamName(t.getTeamName());
+                p.setNewTeam(t);
+            }
+
         }
 
         return toInterview;
@@ -431,6 +530,21 @@ public class PromotionService {
             if (p.getProcessedBy() != null) {
                 p.setProcessedBy(breakRelationships(p.getProcessedBy()));
             }
+
+            if (p.getNewDepartment() != null) {
+                Department d = new Department();
+                d.setDepartmentId(p.getNewDepartment().getDepartmentId());
+                d.setDepartmentName(p.getNewDepartment().getDepartmentName());
+                p.setNewDepartment(d);
+            }
+
+            if (p.getNewTeam() != null) {
+                Team t = new Team();
+                t.setTeamId(t.getTeamId());
+                t.setTeamName(t.getTeamName());
+                p.setNewTeam(t);
+            }
+
         }
         return promotionRequests;
     }
@@ -458,6 +572,7 @@ public class PromotionService {
     public String getPositionGroup(Long positionId) throws Exception {
         User user = userRepository.findUsersWithPosition(positionId).get(0);
 
+        System.out.println("position group " + user.getUserId());
         List<User> managers = teamService.getManagers();
         for (User m : managers) {
             if (m.getUserId() == user.getUserId()) {
@@ -492,13 +607,13 @@ public class PromotionService {
 
             if (optionalUser.isPresent()) {
                 User teamHead = optionalUser.get();
+                teamHead.setUserRole(RoleEnum.MANAGER);
                 oldTeam.getUsers().remove(teamHead);
             }
 
         } else {
             throw new IllegalStateException("Unable to find old team");
         }
-
 
         Outlet outlet = outletService.getOutletById(outletId);
 
@@ -543,6 +658,36 @@ public class PromotionService {
         return null;
     }
 
+    public List<Team> getTeamEmptyHead(Long departmentId) {
+        List<Team> teams = new ArrayList<>();
+
+        List<Team> allTeams = teamRepository.findAll();
+
+        for (Team t : allTeams) {
+            System.out.println(" null team head " + t.getTeamHead());
+            if (t.getTeamHead() != null) {
+
+            } else {
+
+                if (t.getDepartment().getDepartmentId() == departmentId) {
+                    Team newTeam = new Team();
+                    newTeam.setTeamId(t.getTeamId());
+                    newTeam.setTeamName(t.getTeamName());
+
+                    Outlet o = new Outlet();
+                    o.setOutletId(t.getOutlet().getOutletId());
+                    newTeam.setOutlet(o);
+
+                    newTeam.setIsOffice(t.getIsOffice());
+
+                    teams.add(newTeam);
+
+                }
+            }
+        }
+        return teams;
+    }
+
     // public String addAPromotionRequest(Long employeeId, Long managerId, Long
     // departmentId, Long processedBy, String interviewComments ){
 
@@ -560,16 +705,21 @@ public class PromotionService {
     // employeePromotion.getFirstName();
     // }
 
-    //    public String addAPromotionRequest(Long employeeId, Long managerId, Long departmentId, Long processedBy, String interviewComments ){
-//
-//        User employeePromotion = userRepository.findById(employeeId)
-//                .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId + " does not exist!"));
-//
-//        PromotionRequest p = new PromotionRequest(LocalDate.now(), employeeId, managerId, null, null, interviewComments, null,departmentId, processedBy,StatusEnum.PENDING, employeePromotion);
-////        promotion.setStatus(StatusEnum.PENDING);
-////        promotion.setCreated(LocalDate.now());
-//        promotionRepository.saveAndFlush(p);
-//        return "Promotion Request is successfully created for employee: " + employeePromotion.getFirstName();
-//    }
+    // public String addAPromotionRequest(Long employeeId, Long managerId, Long
+    // departmentId, Long processedBy, String interviewComments ){
+    //
+    // User employeePromotion = userRepository.findById(employeeId)
+    // .orElseThrow(() -> new IllegalStateException("User with ID: " + employeeId +
+    // " does not exist!"));
+    //
+    // PromotionRequest p = new PromotionRequest(LocalDate.now(), employeeId,
+    // managerId, null, null, interviewComments, null,departmentId,
+    // processedBy,StatusEnum.PENDING, employeePromotion);
+    //// promotion.setStatus(StatusEnum.PENDING);
+    //// promotion.setCreated(LocalDate.now());
+    // promotionRepository.saveAndFlush(p);
+    // return "Promotion Request is successfully created for employee: " +
+    // employeePromotion.getFirstName();
+    // }
 
 }

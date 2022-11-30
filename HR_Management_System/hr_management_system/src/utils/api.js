@@ -1164,20 +1164,20 @@ const api = {
   },
   processPromotionRequest(
     promotionId,
-    effectiveFrom,
     rejectRemarks,
     basicSalary,
     basicHourlyPay,
     weekendHourlyPay,
     eventPay,
     processedById,
+    newTeam,
     teamName,
     outletId,
     inOffice,
     departmentId
   ) {
     return axios.put(
-      `http://localhost:9191/api/promotion/process/${promotionId}?effectiveFrom=${effectiveFrom}&rejectRemarks=${rejectRemarks}&basicSalary=${basicSalary}&basicHourlyPay=${basicHourlyPay}&weekendHourlyPay=${weekendHourlyPay}&eventPay=${eventPay}&processedBy=${processedById}&teamName=${teamName}&outletId=${outletId}&inOffice=${inOffice}&departmentId=${departmentId}`
+      `http://localhost:9191/api/promotion/process/${promotionId}?&rejectRemarks=${rejectRemarks}&basicSalary=${basicSalary}&basicHourlyPay=${basicHourlyPay}&weekendHourlyPay=${weekendHourlyPay}&eventPay=${eventPay}&processedBy=${processedById}&newTeam=${newTeam}&teamName=${teamName}&outletId=${outletId}&inOffice=${inOffice}&departmentId=${departmentId}`
     );
   },
   getTransferrableEmployees(userId) {
@@ -1240,6 +1240,12 @@ const api = {
   },
   getRequestHistory(userId) {
     return axios.get(`http://localhost:9191/api/transfer/history/${userId}`);
+  },
+  getPossibleTeams(departmentId) {
+    return axios.get(`http://localhost:9191/api/transfer/team/department/${departmentId}`)
+  },
+  getTeamEmptyHead(departmentId) {
+    return axios.get(`http://localhost:9191/api/promotion/team/department/${departmentId}`)
   },
 };
 

@@ -31,7 +31,7 @@ export default function ViewTeam() {
   //             fetch()
   //
   //         }
-// ali 27/10/22 ask sh why viewteams keep refreshing
+  // ali 27/10/22 ask sh why viewteams keep refreshing
   //shihan 3/10/2022
   // const [teamId, setTeamId] = useState(1);
   const teamId = useRef(-1);
@@ -45,7 +45,7 @@ export default function ViewTeam() {
   const [empInQuestion, setEmpInQuestion] = useState(-1);
   const [openRemove, setOpenRemove] = useState(false);
   // const [newTeam, setNewTeam] = useState(-1);
-  const [toRemove, setToRemove] =useState(0);
+  const [toRemove, setToRemove] = useState(0);
 
   useEffect(() => {
     console.log("use effect!");
@@ -78,30 +78,27 @@ export default function ViewTeam() {
   //     // console.log(response.data);
   //   });
 
-
   // }, [refreshKey, teamId]);
 
-  function removeMemberFromTeam(){
+  function removeMemberFromTeam() {
     console.log("remove member " + empInQuestion);
-    api.removeMemberFromTeam(empInQuestion, oldTeam).then((response) => {
-      console.log("removed? " + response.data);
+    api
+      .removeMemberFromTeam(empInQuestion, oldTeam)
+      .then((response) => {
+        console.log("removed? " + response.data);
 
-      setEmpInQuestion("")
-      window.location.reload();
-    })
-    .then(() => {
-      alert("Team member is successfully removed.");
-    })
-    .catch((error) => {
-
-      var message = error.request.response;
-      if (message.includes("Cannot remove team member"))
-        console.log(message);
-      alert("Member cannot be removed. check console for error.");
-    });
+        setEmpInQuestion("");
+        window.location.reload();
+      })
+      .then(() => {
+        alert("Team member is successfully removed.");
+      })
+      .catch((error) => {
+        var message = error.request.response;
+        if (message.includes("Cannot remove team member")) console.log(message);
+        alert("Member cannot be removed. check console for error.");
+      });
   }
-
-
 
   return (
     <>
@@ -200,43 +197,45 @@ export default function ViewTeam() {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
-                          <tr key={team.teamHead.firstName}>
-                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                              <div className="flex items-center">
-                                <div className="h-10 w-10 flex-shrink-0">
-                                  {/* <img
+                          {team.teamHead && (
+                            <tr key={team.teamHead.firstName}>
+                              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                <div className="flex items-center">
+                                  <div className="h-10 w-10 flex-shrink-0">
+                                    {/* <img
                              className="h-10 w-10 rounded-full"
                              src={team.teamHead.profilePic}
                              alt=""
                            /> */}
-                                </div>
-                                <div className="ml-4">
-                                  <div className="font-medium text-gray-900">
-                                    {team.teamHead.firstName +
-                                      " " +
-                                      team.teamHead.lastName}
                                   </div>
-                                  <div className="text-gray-500">
-                                    {team.teamHead.workEmail}
+                                  <div className="ml-4">
+                                    <div className="font-medium text-gray-900">
+                                      {team.teamHead.firstName +
+                                        " " +
+                                        team.teamHead.lastName}
+                                    </div>
+                                    <div className="text-gray-500">
+                                      {team.teamHead.workEmail}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {/* <div className="text-gray-900">
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {/* <div className="text-gray-900">
                            {team.teamHead.position}
                          </div> */}
-                              {/* <div className="text-gray-500">
+                                {/* <div className="text-gray-500">
                            {team.teamHead.department}
                          </div> */}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {/* <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
+                                {team.teamHead.userRole}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {/* <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                                 Active
                               </span> */}
-                            </td>
-                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              {/* <a
+                              </td>
+                              <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                {/* <a
                                 href="https://www.google.com"
                                 className="text-indigo-600 hover:text-indigo-900"
                               >
@@ -245,19 +244,20 @@ export default function ViewTeam() {
                                   , {team.teamHead.firstName}
                                 </span>
                               </a> */}
-                              <button
-                                onClick={() => {
-                                  setOpenChange(true);
-                                }}
-                                className="text-indigo-600 hover:text-indigo-900"
-                              >
-                                Change
-                                <span className="sr-only">
-                                  , {team.teamHead.firstName}
-                                </span>
-                              </button>
-                            </td>
-                          </tr>
+                                <button
+                                  onClick={() => {
+                                    setOpenChange(true);
+                                  }}
+                                  className="text-indigo-600 hover:text-indigo-900"
+                                >
+                                  Change
+                                  <span className="sr-only">
+                                    , {team.teamHead.firstName}
+                                  </span>
+                                </button>
+                              </td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
                     </div>
@@ -352,24 +352,31 @@ export default function ViewTeam() {
                                 {/* <span className="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">
                                   Delete
                                 </span> */}
-                                {(person.userRole === "ADMINISTRATOR" | person.userRole === "MANAGER") && team.teamHead.userId !== person.userId ?
-                                <button
-                                  onClick={() => {
-                                    setOpenRemove(true);
-                                    console.log(team.teamId);
-                                    setOldteam(team.teamId);
-                                    setToRemove(person.userId);
-                                    setEmpInQuestion(person.userId);
-                                  }}
-                                  className="text-indigo-600 hover:text-indigo-900"
-                                >
-                                  Delete
-                                  <span className="sr-only">
-                                    , {team.teamId}
-                                  </span>
-                                </button>
-                                : ""}
-                              {console.log(person.userId  + " " + person.firstName)}
+                                {(person.userRole === "ADMINISTRATOR") |
+                                  (person.userRole === "MANAGER") &&
+                                team.teamHead &&
+                                team.teamHead.userId !== person.userId ? (
+                                  <button
+                                    onClick={() => {
+                                      setOpenRemove(true);
+                                      console.log(team.teamId);
+                                      setOldteam(team.teamId);
+                                      setToRemove(person.userId);
+                                      setEmpInQuestion(person.userId);
+                                    }}
+                                    className="text-indigo-600 hover:text-indigo-900"
+                                  >
+                                    Delete
+                                    <span className="sr-only">
+                                      , {team.teamId}
+                                    </span>
+                                  </button>
+                                ) : (
+                                  ""
+                                )}
+                                {console.log(
+                                  person.userId + " " + person.firstName
+                                )}
                                 <RemoveMemberFromTeamModal
                                   teamId={team.teamId}
                                   empInQuestion={empInQuestion}
@@ -378,7 +385,6 @@ export default function ViewTeam() {
                                   onClose={() => setOpenRemove(false)}
                                   onConfirm={removeMemberFromTeam}
                                 />
-
                               </td>
 
                               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
@@ -404,34 +410,35 @@ export default function ViewTeam() {
                                 <span className="sr-only">, {team.name}</span>
                               </a> */}
 
-
-
                                 {/* should not be able move team head */}
-                                {team.teamHead.userId !== person.userId ?
-                                <button
-                                  onClick={() => {
-                                    setOpenMove(true);
-                                    console.log(team.teamId);
-                                    setOldteam(team.teamId);
-                                    setEmpInQuestion(person.userId);
-                                  }}
-                                  className="text-indigo-600 hover:text-indigo-900"
-                                >
-                                  Move An Employee
-                                  <span className="sr-only">
-                                    , {team.teamId}
-                                  </span>
-                                </button>
-                                : ""}
-                              {console.log(person.userId  + " " + person.firstName)}
+                                {team.teamHead &&
+                                team.teamHead.userId !== person.userId ? (
+                                  <button
+                                    onClick={() => {
+                                      setOpenMove(true);
+                                      console.log(team.teamId);
+                                      setOldteam(team.teamId);
+                                      setEmpInQuestion(person.userId);
+                                    }}
+                                    className="text-indigo-600 hover:text-indigo-900"
+                                  >
+                                    Move An Employee
+                                    <span className="sr-only">
+                                      , {team.teamId}
+                                    </span>
+                                  </button>
+                                ) : (
+                                  ""
+                                )}
+                                {console.log(
+                                  person.userId + " " + person.firstName
+                                )}
                                 <MoveUserModal
                                   teamId={team.teamId}
-                                
                                   empInQuestion={empInQuestion}
                                   open={openMove}
                                   onClose={() => setOpenMove(false)}
                                 />
-                                
                               </td>
                             </tr>
                           ))}

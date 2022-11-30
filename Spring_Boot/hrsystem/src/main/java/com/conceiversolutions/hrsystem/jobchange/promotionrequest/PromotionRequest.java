@@ -68,8 +68,6 @@ public class PromotionRequest {
     @Column(name = "interview_remarks", nullable = true)
     private String interviewRemarks;
 
-    @Column(name = "effective_from", nullable = true)
-    private LocalDate effectiveFrom;
     @Column(name = "reject_remarks", nullable = true)
     private String rejectRemarks;
 
@@ -89,9 +87,23 @@ public class PromotionRequest {
     }
 
     public PromotionRequest(LocalDate created, Appraisal appraisal, User employee, User manager, User interviewer,
-                            Position newPosition, User processedBy, String status, String promotionJustification,
-                            String withdrawRemarks, LocalDate interviewDate, String interviewRemarks, LocalDate effectiveFrom,
-                            String rejectRemarks) {
+            String status, String promotionJustification, String withdrawRemarks, Team newTeam, Department newDepartment) {
+        this.created = created;
+        this.appraisal = appraisal;
+        this.employee = employee;
+        this.manager = manager;
+        this.interviewer = interviewer;
+        this.status = status;
+        this.promotionJustification = promotionJustification;
+        this.withdrawRemarks = withdrawRemarks;
+        this.newTeam = newTeam;
+        this.newDepartment = newDepartment;
+    }
+
+    public PromotionRequest(LocalDate created, Appraisal appraisal, User employee, User manager, User interviewer,
+            Position newPosition, User processedBy, String status, String promotionJustification,
+            String withdrawRemarks, LocalDate interviewDate, String interviewRemarks,
+            String rejectRemarks) {
         this.created = created;
         this.appraisal = appraisal;
         this.employee = employee;
@@ -104,68 +116,29 @@ public class PromotionRequest {
         this.withdrawRemarks = withdrawRemarks;
         this.interviewDate = interviewDate;
         this.interviewRemarks = interviewRemarks;
-        this.effectiveFrom = effectiveFrom;
         this.rejectRemarks = rejectRemarks;
     }
 
-    // public PromotionRequest(Long promotionId, LocalDate created, Long employeeId, Long managerId, Long approvedBy, String interviewComments, Long newPositionId, Long newDepartmentId, Long processedBy, StatusEnum status, User employee) {
-    //     this.promotionId = promotionId;
-    //     this.created = created;
-    //     this.employeeId = employeeId;
-    //     this.managerId = managerId;
-    //     this.approvedBy = approvedBy;
-    //     this.interviewComments = interviewComments;
-    //     this.newPositionId = newPositionId;
-    //     this.newDepartmentId = newDepartmentId;
-    //     this.processedBy = processedBy;
-    //     this.status = status;
-    //     this.employee = employee;
-    // }
-
-    // public PromotionRequest(LocalDate created, Long employeeId, Long managerId, Long approvedBy, String interviewComments, Long newPositionId, Long newDepartmentId, Long processedBy, StatusEnum status, User employee) {
-    //     this.created = created;
-    //     this.employeeId = employeeId;
-    //     this.managerId = managerId;
-    //     this.approvedBy = approvedBy;
-    //     this.interviewComments = interviewComments;
-    //     this.newPositionId = newPositionId;
-    //     this.newDepartmentId = newDepartmentId;
-    //     this.processedBy = processedBy;
-    //     this.status = status;
-    //     this.promotionJustification = promotionJustification;
-    //     this.withdrawRemarks = withdrawRemarks;
-    //     this.interviewDate = interviewDate;
-    //     this.interviewRemarks = interviewRemarks;
-    //     this.effectiveFrom = effectiveFrom;
-    //     this.rejectRemarks = rejectRemarks;
-    // }
-
-    // public PromotionRequest(Long promotionId, LocalDate created, Long employeeId, Long managerId, Long approvedBy, String interviewComments, Long newPositionId, Long newDepartmentId, Long processedBy, StatusEnum status, User employee) {
-    //     this.promotionId = promotionId;
-    //     this.created = created;
-    //     this.employeeId = employeeId;
-    //     this.managerId = managerId;
-    //     this.approvedBy = approvedBy;
-    //     this.interviewComments = interviewComments;
-    //     this.newPositionId = newPositionId;
-    //     this.newDepartmentId = newDepartmentId;
-    //     this.processedBy = processedBy;
-    //     this.status = status;
-    //     this.employee = employee;
-    // }
-
-    // public PromotionRequest(LocalDate created, Long employeeId, Long managerId, Long approvedBy, String interviewComments, Long newPositionId, Long newDepartmentId, Long processedBy, StatusEnum status, User employee) {
-    //     this.created = created;
-    //     this.employeeId = employeeId;
-    //     this.managerId = managerId;
-    //     this.approvedBy = approvedBy;
-    //     this.interviewComments = interviewComments;
-    //     this.newPositionId = newPositionId;
-    //     this.newDepartmentId = newDepartmentId;
-    //     this.processedBy = processedBy;
-    //     this.status = status;
-    //     this.employee = employee;
-    // }
+    public PromotionRequest(LocalDate created, Appraisal appraisal, User employee, User manager, User interviewer,
+            Position newPosition, Team newTeam, Department newDepartment, User processedBy, String status,
+            String promotionJustification, String withdrawRemarks, LocalDate interviewDate, String interviewRemarks,
+            String rejectRemarks) {
+        this.created = created;
+        this.appraisal = appraisal;
+        this.employee = employee;
+        this.manager = manager;
+        this.interviewer = interviewer;
+        this.newPosition = newPosition;
+        this.newTeam = newTeam;
+        this.newDepartment = newDepartment;
+        this.processedBy = processedBy;
+        this.status = status;
+        this.promotionJustification = promotionJustification;
+        this.withdrawRemarks = withdrawRemarks;
+        this.interviewDate = interviewDate;
+        this.interviewRemarks = interviewRemarks;
+        this.rejectRemarks = rejectRemarks;
+    }
 
     public Long getPromotionId() {
         return promotionId;
@@ -221,14 +194,6 @@ public class PromotionRequest {
 
     public void setInterviewRemarks(String interviewRemarks) {
         this.interviewRemarks = interviewRemarks;
-    }
-
-    public LocalDate getEffectiveFrom() {
-        return effectiveFrom;
-    }
-
-    public void setEffectiveFrom(LocalDate effectiveFrom) {
-        this.effectiveFrom = effectiveFrom;
     }
 
     public String getRejectRemarks() {
@@ -321,7 +286,6 @@ public class PromotionRequest {
                 ", withdrawRemarks='" + withdrawRemarks + '\'' +
                 ", interviewDate=" + interviewDate +
                 ", interviewRemarks='" + interviewRemarks + '\'' +
-                ", effectiveFrom=" + effectiveFrom +
                 ", rejectRemarks='" + rejectRemarks + '\'' +
                 '}';
     }

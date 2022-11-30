@@ -76,6 +76,12 @@ export default function Creation() {
   const [interviewDate, setInterviewDate] = useState("");
   const [newDepartment, setNewDepartment] = useState(null);
   const [newTeam, setNewTeam] = useState(null);
+  const [isTeamHead, setIsTeamHead] = useState(true);
+  const [possibleTeams, setPossibleTeams] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState({
+    teamId: 0,
+    teamName: "Select",
+  });
   const history = useHistory();
 
   useEffect(() => {
@@ -86,12 +92,22 @@ export default function Creation() {
 
     api.getDepartmentByEmployeeId(getUserId()).then((response) => {
       setNewDepartment(response.data);
+      api.getPossibleTeams(response.data.departmentId).then((response) => {
+        console.log(response.data);
+        setPossibleTeams(response.data);
+      });
     });
 
-    api.getNewTeam(getUserId()).then((response) => {
-      console.log(response.data);
-      setNewTeam(response.data);
-    });
+    api
+      .getNewTeam(getUserId())
+      .then((response) => {
+        console.log(response.data);
+        setNewTeam(response.data);
+      })
+      .catch((error) => {
+        setIsTeamHead(false);
+        //console.log("not team head");
+      });
   }, []);
 
   useEffect(() => {
@@ -116,6 +132,8 @@ export default function Creation() {
 
     if (newTeam) {
       newTeamId = newTeam.teamId;
+    } else if (selectedTeam.teamId !== 0) {
+      newTeamId = selectedTeam.teamId;
     }
 
     if (
@@ -283,29 +301,125 @@ export default function Creation() {
                     </>
                   </div>
 
-                  {newTeam && (
-                    <div className="sm:col-span-6">
-                      <label
-                        htmlFor="team"
-                        className="block text-md text-center font-sans font-medium text-gray-900"
-                      >
-                        New Team
-                      </label>
-
+                  <>
+                    {isTeamHead ? (
                       <>
-                        <div className="mt-1">
-                          <input
-                            type="text"
-                            name="team"
-                            id="team"
-                            disabled
-                            className="block w-full text-center min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-800 "
-                            defaultValue={newTeam.teamName}
-                          />
+                        {newTeam && (
+                          <div className="sm:col-span-6">
+                            <label
+                              htmlFor="team"
+                              className="block text-md text-center font-sans font-medium text-gray-900"
+                            >
+                              New Team
+                            </label>
+
+                            <>
+                              <div className="mt-1">
+                                <input
+                                  type="text"
+                                  name="team"
+                                  id="team"
+                                  disabled
+                                  className="block w-full text-center min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-800 "
+                                  defaultValue={newTeam.teamName}
+                                />
+                              </div>
+                            </>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <div className="sm:col-span-6">
+                          <label
+                            htmlFor="newPosition"
+                            className="block text-sm font-medium text-gray-700"
+                          ></label>
+                          <Listbox
+                            value={selectedTeam}
+                            onChange={setSelectedTeam}
+                          >
+                            {({ open }) => (
+                              <>
+                                <Listbox.Label className="block text-md text-center font-sans font-medium text-gray-900">
+                                  New Team
+                                </Listbox.Label>
+                                <div className="relative mt-1">
+                                  <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                                    <span className="block truncate text-center">
+                                      {selectedTeam.teamName}
+                                    </span>
+                                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                      <ChevronUpDownIcon
+                                        className="h-5 w-5 text-gray-400"
+                                        aria-hidden="true"
+                                      />
+                                    </span>
+                                  </Listbox.Button>
+
+                                  <Transition
+                                    show={open}
+                                    as={Fragment}
+                                    leave="transition ease-in duration-100"
+                                    leaveFrom="opacity-100"
+                                    leaveTo="opacity-0"
+                                  >
+                                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                      {possibleTeams.map((person) => (
+                                        <Listbox.Option
+                                          key={person.teamId}
+                                          className={({ active }) =>
+                                            classNames(
+                                              active
+                                                ? "text-white bg-indigo-600"
+                                                : "text-gray-900",
+                                              "relative cursor-default select-none py-2 pl-3 pr-9"
+                                            )
+                                          }
+                                          value={person}
+                                        >
+                                          {({ selected, active }) => (
+                                            <>
+                                              <span
+                                                className={classNames(
+                                                  selected
+                                                    ? "font-semibold"
+                                                    : "font-normal",
+                                                  "block truncate"
+                                                )}
+                                              >
+                                                {person.teamName}
+                                              </span>
+
+                                              {selected ? (
+                                                <span
+                                                  className={classNames(
+                                                    active
+                                                      ? "text-white"
+                                                      : "text-indigo-600",
+                                                    "absolute inset-y-0 right-0 flex items-center pr-4"
+                                                  )}
+                                                >
+                                                  <CheckIcon
+                                                    className="h-5 w-5"
+                                                    aria-hidden="true"
+                                                  />
+                                                </span>
+                                              ) : null}
+                                            </>
+                                          )}
+                                        </Listbox.Option>
+                                      ))}
+                                    </Listbox.Options>
+                                  </Transition>
+                                </div>
+                              </>
+                            )}
+                          </Listbox>
                         </div>
                       </>
-                    </div>
-                  )}
+                    )}
+                  </>
 
                   <div className="sm:col-span-6">
                     {selectedEmployee.userId === 0 ? (

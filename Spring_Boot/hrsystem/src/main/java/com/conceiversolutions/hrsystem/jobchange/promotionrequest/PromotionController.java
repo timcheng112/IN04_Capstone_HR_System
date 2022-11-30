@@ -24,9 +24,9 @@ public class PromotionController {
 
     private final PromotionService promotionService;
 
-//    public List<PromotionRequest> getAllPromotionRequests() {
-//        return promotionService.getAllPromotionRequests();
-//    }
+    // public List<PromotionRequest> getAllPromotionRequests() {
+    // return promotionService.getAllPromotionRequests();
+    // }
 
     @PostMapping
     public String createPromotionRequest(@RequestParam("created") LocalDate created,
@@ -56,20 +56,20 @@ public class PromotionController {
 
     @PutMapping(path = "/process/{promotionId}")
     public String processPromotionRequest(@PathVariable("promotionId") Long promotionId,
-            @RequestParam("effectiveFrom") String effectiveFrom,
             @RequestParam("rejectRemarks") String rejectRemarks,
             @RequestParam("basicSalary") String basicSalary,
             @RequestParam("basicHourlyPay") String basicHourlyPay,
             @RequestParam("weekendHourlyPay") String weekendHourlyPay,
             @RequestParam("eventPay") String eventPay,
             @RequestParam("processedBy") Long processedById,
+            @RequestParam("newTeam") Boolean newTeam,
             @RequestParam("teamName") String teamName,
             @RequestParam("outletId") Long outletId,
             @RequestParam("inOffice") Boolean inOffice,
             @RequestParam("departmentId") Long departmentId)
             throws Exception {
-        return promotionService.processPromotionRequest(promotionId, effectiveFrom, rejectRemarks, basicSalary,
-                basicHourlyPay, weekendHourlyPay, eventPay, processedById, teamName, outletId, inOffice, departmentId);
+        return promotionService.processPromotionRequest(promotionId, rejectRemarks, basicSalary,
+                basicHourlyPay, weekendHourlyPay, eventPay, processedById, newTeam, teamName, outletId, inOffice, departmentId);
     }
 
     @GetMapping(path = "/active/{userId}")
@@ -97,9 +97,14 @@ public class PromotionController {
         return promotionService.getPromotionRequest(promotionId);
     }
 
-//    public String addAPromotionRequest(@PathVariable("userInQuestion") Long employeeId, @PathVariable("userId") Long managerId, @PathVariable("departmentId")  Long departmentId,@PathVariable("assigned") Long processedBy, @RequestParam("interviewComments") String interviewComments ){
-//        return promotionService.addAPromotionRequest(employeeId,managerId, departmentId, processedBy, interviewComments);
-//    }
+    // public String addAPromotionRequest(@PathVariable("userInQuestion") Long
+    // employeeId, @PathVariable("userId") Long managerId,
+    // @PathVariable("departmentId") Long departmentId,@PathVariable("assigned")
+    // Long processedBy, @RequestParam("interviewComments") String interviewComments
+    // ){
+    // return promotionService.addAPromotionRequest(employeeId,managerId,
+    // departmentId, processedBy, interviewComments);
+    // }
     @GetMapping(path = "/position/{positionId}")
     public String getPositionGroup(@PathVariable("positionId") Long positionId) throws Exception {
         return promotionService.getPositionGroup(positionId);
@@ -118,6 +123,11 @@ public class PromotionController {
     @GetMapping(path = "/team/{userId}")
     public Team getNewTeamPromotion(@PathVariable("userId") Long userId) throws Exception {
         return promotionService.getNewTeamPromotion(userId);
+    }
+
+    @GetMapping(path = "/team/department/{departmentId}")
+    public List<Team> getTeamEmptyHead(@PathVariable("departmentId") Long departmentId) throws Exception {
+        return promotionService.getTeamEmptyHead(departmentId);
     }
 
 }

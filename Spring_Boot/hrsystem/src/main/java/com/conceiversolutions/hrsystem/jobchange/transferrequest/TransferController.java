@@ -105,4 +105,9 @@ public class TransferController {
     public List<TransferRequest> getRequestHistory(@PathVariable("userId") Long userId) throws Exception {
         return transferService.getRequestHistory(userId);
     }
+
+    @GetMapping(path = "/team/department/{departmentId}")
+    public List<Team> getPossibleTeams(@PathVariable("departmentId") Long departmentId) throws Exception {
+        return transferService.getPossibleTeams(departmentId);
+    }
 }

@@ -112,12 +112,16 @@ public class TransferService {
         } else {
             List<Team> teams = departmentRepository.findTeamsByDepartmentHead(userId);
 
+            
+
             List<User> possible = new ArrayList<>();
             for (User u : allUsers) {
                 boolean inTeam = false;
                 for (Team t : teams) {
-                    if (u.getUserId() == t.getTeamHead().getUserId()) {
-                        inTeam = true;
+                    if (t.getTeamHead() != null) {
+                        if (u.getUserId() == t.getTeamHead().getUserId()) {
+                            inTeam = true;
+                        }
                     }
                 }
                 if (!inTeam && !u.getWorkEmail().equals("ongj@libro.com")
@@ -145,20 +149,20 @@ public class TransferService {
                     positions.add(p);
                 }
             }
-        }
+        } else {
+            List<Team> teams = departmentRepository.findTeamsByDepartmentHead(managerId);
 
-        List<Team> teams = departmentRepository.findTeamsByDepartmentHead(managerId);
+            for (Team t : teams) {
 
-        for (Team t : teams) {
-
-            for (User u : t.getUsers()) {
-                Position p = u.getCurrentPosition();
-                System.out.println(u.getFirstName());
-                if (p.getPositionId() != positionId && !positions.contains(p)) {
-                    positions.add(p);
+                for (User u : t.getUsers()) {
+                    Position p = u.getCurrentPosition();
+                    System.out.println(u.getFirstName());
+                    if (p.getPositionId() != positionId && !positions.contains(p)) {
+                        positions.add(p);
+                    }
                 }
-            }
 
+            }
         }
 
         // RoleEnum role = RoleEnum.EMPLOYEE;
@@ -338,6 +342,15 @@ public class TransferService {
                     if (optionalUser.isPresent()) {
                         User user = optionalUser.get();
                         oldTeam.getUsers().remove(user);
+                        if (teamService.isEmployeeTeamHead(user.getUserId()) > -1) {
+                            oldTeam.setTeamHead(null);
+                        }
+                        RoleEnum newRole = userRepository.findUsersWithPosition(tr.getNewPosition().getPositionId())
+                                .get(0).getUserRole();
+                        user.setUserRole(newRole);
+                        user.getPositions().add(user.getCurrentPosition());
+                        user.setCurrentPosition(tr.getNewPosition());
+                        
                         team.addUser(user);
                     }
 
