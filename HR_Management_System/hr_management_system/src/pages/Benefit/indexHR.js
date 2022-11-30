@@ -44,7 +44,7 @@ export default function BenefitsHR() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
   useEffect(() => {
     api
       .getAllBenefitPlansByType('DENTAL')
@@ -53,7 +53,7 @@ export default function BenefitsHR() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
   useEffect(() => {
     api
       .getAllBenefitPlansByType('LIFE')
@@ -62,7 +62,7 @@ export default function BenefitsHR() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
   useEffect(() => {
     api
       .getAllBenefitPlansByType('ACCIDENT')
@@ -71,7 +71,7 @@ export default function BenefitsHR() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
 
   return (
@@ -92,13 +92,13 @@ export default function BenefitsHR() {
             <Tab tabs={tabs} />
           </div>
           <div className="py-3"></div>
-          <BenefitPlanList type = 'Medical' plans = {medical} />
+          <BenefitPlanList type = 'Medical' plans = {medical} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} />
           <div className="py-3"></div>
-          <BenefitPlanList type = 'Dental' plans = {dental} />
+          <BenefitPlanList type = 'Dental' plans = {dental} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} />
           <div className="py-3"></div>
-          <BenefitPlanList type = 'Life Insurance' plans = {life} />
+          <BenefitPlanList type = 'Life Insurance' plans = {life} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} />
           <div className="py-3"></div>
-          <BenefitPlanList type = 'Accident Insurance' plans = {accident} />
+          <BenefitPlanList type = 'Accident Insurance' plans = {accident} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} />
         </main>
       </div>
     </div>

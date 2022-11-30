@@ -10,7 +10,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AddNewPlan({ open, setOpen }) {
+export default function AddNewPlan({ open, setOpen, refreshKeyHandler }) {
 
   const [name, setName] = useState("")
   const [amount, setAmount] = useState(0)
@@ -57,7 +57,10 @@ export default function AddNewPlan({ open, setOpen }) {
     var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
 
     api.addBenefitPlan(description, name, amount, helpStartDate.trim(), helpEndDate.trim(), type)
-    .then(() => {alert("Successfully added.");})
+    .then(() => {
+        alert("Successfully added.");
+        refreshKeyHandler();
+    })
     .catch((error) => setError(error));
     setOpen(false);
   }

@@ -10,7 +10,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ViewClaim({ open, setOpen, claim }) {
+export default function ViewClaim({ open, setOpen, claim, refreshKeyHandler }) {
   const [user, setUser] = useState(getUserId());
   const [error, setError] = useState(null);
   
@@ -28,6 +28,7 @@ export default function ViewClaim({ open, setOpen, claim }) {
     api.approveClaim(claim.claimId)
       .then(() => {
         alert("Successfully approved.");
+        refreshKeyHandler();
         setOpen(false);
         })
     .catch((error) => setError(error));
@@ -36,6 +37,7 @@ export default function ViewClaim({ open, setOpen, claim }) {
     api.rejectClaim(claim.claimId)
       .then(() => {
         alert("Successfully rejected.");
+        refreshKeyHandler();
         setOpen(false);
         })
     .catch((error) => setError(error));
@@ -44,6 +46,7 @@ export default function ViewClaim({ open, setOpen, claim }) {
     api.withdrawClaim(claim.claimId)
       .then(() => {
         alert("Successfully withdrawn.");
+        refreshKeyHandler();
         setOpen(false);
         })
     .catch((error) => setError(error));
