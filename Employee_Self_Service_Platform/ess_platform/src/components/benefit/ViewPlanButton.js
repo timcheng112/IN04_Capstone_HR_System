@@ -19,7 +19,7 @@ export default function ViewPlanButton({ navigation, plan, userId }) {
       <Button
         icon="eye"
         mode="outlined"
-        color="#daa520"
+        color="#1e90ff"
         onPress={() => navigation.navigate('PlanDetail', { plan, userId })}>
         Detail
       </Button>
