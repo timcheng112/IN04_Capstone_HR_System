@@ -28,7 +28,7 @@ export default function TrackDetail() {
   const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
   const location = useLocation();
-
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     api
@@ -45,7 +45,7 @@ export default function TrackDetail() {
     setRatio(location.state.track.pointsRatio);
     setStartDate(new Date(location.state.track.startDate));
     setEndDate(new Date(location.state.track.endDate));
-  }, []);
+  }, [refreshKey]);
 
   useEffect(() => {
     api
@@ -54,7 +54,7 @@ export default function TrackDetail() {
         setDepartment(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -178,7 +178,7 @@ export default function TrackDetail() {
                   Rewards
                 </label>
                 <div className="flex space-x-8">
-                  <RewardList track={track} />
+                  <RewardList track={track} refreshKey={refreshKey} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                   <button
                     type="button"
                     onClick={() => setOpen(true)}
@@ -190,7 +190,7 @@ export default function TrackDetail() {
                     />
                     Add
                   </button>
-                  <AddNewReward open={open} setOpen={setOpen} track={track} />
+                  <AddNewReward open={open} setOpen={setOpen} track={track} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                 </div>
               </div>
             </div>

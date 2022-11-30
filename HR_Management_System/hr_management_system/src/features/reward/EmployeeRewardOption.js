@@ -8,12 +8,13 @@ import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 import { useHistory } from 'react-router-dom';
 
-export default function EmployeeRewardOption({ reward }) {
+export default function EmployeeRewardOption({ reward, refreshKey, refreshKeyHandler }) {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [claimDate, setClaimDate] = useState();
   const [uId, setUId] = useState(getUserId());
   const [userClaimed, setUserClaimed] = useState(false);
+  const [refreshKey2, setRefreshKey2] = useState(0);
 
   useEffect(() => {
     api
@@ -29,6 +30,9 @@ export default function EmployeeRewardOption({ reward }) {
     api.redeemReward(reward.rewardId, getUserId())
         .then((response) => {
             alert(response.data);
+            refreshKeyHandler();
+
+            setTimeout(() => {  setRefreshKey2((oldKey) => oldKey + 1); }, 500);
         })
         .catch((error) => {
             console.log(error.response.data.message);
@@ -46,7 +50,7 @@ export default function EmployeeRewardOption({ reward }) {
             setClaimDate(instance.dateClaimed);
         }
     });
-  }, []);
+  }, [refreshKey2]);
 
   return (
     <div>

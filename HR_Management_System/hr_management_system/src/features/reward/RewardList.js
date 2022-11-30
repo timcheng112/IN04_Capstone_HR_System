@@ -3,7 +3,7 @@ import { Fragment, useState, useEffect } from 'react'
 import RewardListOption from './RewardListOption'
 import api from "../../utils/api";
 
-export default function RewardList({track}) {
+export default function RewardList({track, refreshKey, refreshKeyHandler}) {
   const [rewards, setRewards] = useState([]);
   const [error, setError] = useState();
 
@@ -14,7 +14,7 @@ export default function RewardList({track}) {
         setRewards(response.data);
       })
       .catch((error) => setError(error));
-    }, []);
+    }, [refreshKey]);
 
   return (
     <div class="scrollbar-thin scrollbar-thumb-blue-700 scrollbar-track-blue-300 h-50 w-full overflow-x-scroll">
@@ -32,7 +32,7 @@ export default function RewardList({track}) {
               {!reward.name.includes("Leave") &&<p className="mt-1 truncate text-sm text-gray-500">{reward.expiryDate}</p>}
             </div>
           </div>
-          <RewardListOption reward={reward}/>
+          <RewardListOption reward={reward} refreshKeyHandler={refreshKeyHandler}/>
         </li>
       ))}
     </ul>

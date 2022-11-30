@@ -3,13 +3,16 @@ import { EyeIcon, TrashIcon } from '@heroicons/react/20/solid'
 import { Fragment, useState, useEffect } from 'react'
 import api from "../../utils/api";
 
-export default function RewardListOption({ reward }) {
+export default function RewardListOption({ reward, refreshKeyHandler }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState();
 
   function delet() {
     api.deleteReward(reward.rewardId)
-      .then(() => { alert("Successfully delete."); })
+      .then(() => {
+        alert("Successfully delete.");
+        refreshKeyHandler();
+      })
       .catch((error) => setError(error));
   }
 

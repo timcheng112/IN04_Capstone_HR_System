@@ -51,7 +51,7 @@ export default function Reward() {
         setTracks(response.data);
       })
       .catch((error) => setError(error));
-    }, []);
+    }, [refreshKey]);
 
   return (
     <div className="">
@@ -83,7 +83,7 @@ export default function Reward() {
           />
             Add New Reward Track
           </button>
-          <AddNewRewardTrack open={open} setOpen={setOpen}/>
+          <AddNewRewardTrack open={open} setOpen={setOpen} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
         </div>
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="mt-8 flex flex-col">
@@ -131,7 +131,7 @@ export default function Reward() {
                               </span>}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <RewardTrackOption track={track}/>
+                              <RewardTrackOption track={track} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                             </td>
                           </tr>
                         ))}

@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 import ViewReview from "./ViewReview";
 import VetReviewForm from "./VetReviewForm";
 
-export default function ReviewFormOption({ review }) {
+export default function ReviewFormOption({ review, refreshKeyHandler }) {
   const history = useHistory();
   const [vet, setVet] = useState(false);
   const [open, setOpen] = useState(false);
@@ -31,7 +31,10 @@ export default function ReviewFormOption({ review }) {
 
   function reject(){
     api.voidReviewForm(review.reviewFormId)
-    .then(() => {alert("Successfully Voided");})
+    .then(() => {
+        alert("Successfully Voided");
+        refreshKeyHandler();
+    })
     .catch((error) => alert(error.response.data.message));
   }
   
@@ -72,7 +75,7 @@ export default function ReviewFormOption({ review }) {
           <span className="hidden md:block">Void</span>
         </button>}
         <ViewReview open={open} setOpen={setOpen} review={review}/>
-        <VetReviewForm open={vet} setOpen={setVet} review={review}/>
+        <VetReviewForm open={vet} setOpen={setVet} review={review} refreshKeyHandler={refreshKeyHandler}/>
       </div>
 
     </div>
