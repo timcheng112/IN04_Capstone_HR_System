@@ -112,4 +112,19 @@ public class JobApplicationController {
     public List<JobApplication> getJobOffersWithinAMonth() {
         return jobApplicationService.getJobOffersWithinAMonth();
     }
+
+    @GetMapping("/getAllPendingApplicationsWithinMonth")
+    public List<JobApplication> getAllPendingApplicationsWithinMonth() {
+        return jobApplicationService.getAllPendingApplicationsWithinMonth();
+    }
+
+    @GetMapping("/getAllShortlistedApplicationsWithinMonth")
+    public List<JobApplication> getAllShortlistedApplicationsWithinMonth() {
+        return jobApplicationService.getAllShortlistedApplicationsWithinMonth();
+    }
+
+    @GetMapping("/getAllRejectedApplicationsWithinMonth")
+    public List<JobApplication> getAllRejectedApplicationsWithinMonth() {
+        return jobApplicationService.getAllRejectedApplicationsWithinMonth();
+    }
 }

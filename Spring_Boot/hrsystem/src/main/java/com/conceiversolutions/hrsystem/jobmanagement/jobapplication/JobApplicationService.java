@@ -548,4 +548,55 @@ public class JobApplicationService {
 
         return applications;
     }
+
+    public List<JobApplication> getAllPendingApplicationsWithinMonth() {
+        System.out.println("JobApplicationService.getAllPendingApplicationsWithinMonth");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("now is " + now);
+        LocalDateTime last = now.minusMonths(1);
+        System.out.println("last is " + last);
+
+        List<JobApplication> applications = jobApplicationRepository.findWithinMonth(now, last, JobStatusEnum.PENDING);
+        for (JobApplication ja : applications) {
+            ja.setJobPosting(null);
+            ja.getApplicant().nullify();
+            ja.setUserSkills(new ArrayList<>());
+        }
+
+        return applications;
+    }
+
+    public List<JobApplication> getAllShortlistedApplicationsWithinMonth() {
+        System.out.println("JobApplicationService.getAllShortlistedApplicationsWithinMonth");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("now is " + now);
+        LocalDateTime last = now.minusMonths(1);
+        System.out.println("last is " + last);
+
+        List<JobApplication> applications = jobApplicationRepository.findWithinMonth(now, last, JobStatusEnum.SHORTLISTED);
+        for (JobApplication ja : applications) {
+            ja.setJobPosting(null);
+            ja.getApplicant().nullify();
+            ja.setUserSkills(new ArrayList<>());
+        }
+
+        return applications;
+    }
+
+    public List<JobApplication> getAllRejectedApplicationsWithinMonth() {
+        System.out.println("JobApplicationService.getAllRejectedApplicationsWithinMonth");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("now is " + now);
+        LocalDateTime last = now.minusMonths(1);
+        System.out.println("last is " + last);
+
+        List<JobApplication> applications = jobApplicationRepository.findWithinMonth(now, last, JobStatusEnum.REJECTED);
+        for (JobApplication ja : applications) {
+            ja.setJobPosting(null);
+            ja.getApplicant().nullify();
+            ja.setUserSkills(new ArrayList<>());
+        }
+
+        return applications;
+    }
 }

@@ -976,6 +976,21 @@ const api = {
       `http://localhost:9191/api/jobapplications/getJobOffersWithinAMonth`
     );
   },
+  getAllPendingApplicationsWithinMonth() {
+    return axios.get(
+      `http://localhost:9191/api/jobapplications/getAllPendingApplicationsWithinMonth`
+    );
+  },
+  getAllShortlistedApplicationsWithinMonth() {
+    return axios.get(
+      `http://localhost:9191/api/jobapplications/getAllShortlistedApplicationsWithinMonth`
+    );
+  },
+  getAllRejectedApplicationsWithinMonth() {
+    return axios.get(
+      `http://localhost:9191/api/jobapplications/getAllRejectedApplicationsWithinMonth`
+    );
+  },
   getRejectedApplications(postingId) {
     return axios.get(
       `http://localhost:9191/api/jobapplications/getRejectedApplications?postingId=${postingId}`
