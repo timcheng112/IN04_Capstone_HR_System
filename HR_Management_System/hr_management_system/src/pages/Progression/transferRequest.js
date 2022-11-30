@@ -143,13 +143,13 @@ export default function TransferRequest() {
       steps.map((s) => (s.status = "complete"));
       setSelectedStep(steps[0]);
     } else if (status === "Rejected") {
-      steps.map((s) => (s.status = "upcoming"));
-      steps
-        .filter((s) => s.id === "01")
-        .map((step) => (step.status = "complete"));
-      steps
-        .filter((s) => s.id === "02")
-        .map((step) => (step.status = "complete"));
+      steps.map((s) => (s.status = "complete"));
+      // steps
+      //   .filter((s) => s.id === "01")
+      //   .map((step) => (step.status = "complete"));
+      // steps
+      //   .filter((s) => s.id === "02")
+      //   .map((step) => (step.status = "complete"));
       setSelectedStep(steps[0]);
     }
   }
@@ -157,7 +157,6 @@ export default function TransferRequest() {
   function renderStep() {
     if (selectedStep.id === "01") {
       if (!request) {
-        console.log("render creation");
         return <Creation />;
       } else {
         return <CreationUneditable request={request} />;

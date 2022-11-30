@@ -134,7 +134,7 @@ export default function InterviewUneditable({ request }) {
                     </label>
                     <div className="mt-1">
                       {request.status === "Failed" ? (
-                        <h1 className="font-sans font-semibold text-left font-medium text-gray-700">
+                        <h1 className="font-sans text-left font-medium text-gray-700">
                           Failed
                         </h1>
                       ) : (

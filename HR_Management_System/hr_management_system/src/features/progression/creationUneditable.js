@@ -147,8 +147,7 @@ export default function CreationUneditable({ request }) {
   };
 
   return (
-    request &&
-    newTeam && (
+    request && (
       <div className="">
         <div>
           <div className="overflow-hidden bg-white mx-10 my-12 shadow sm:rounded-lg">
@@ -213,27 +212,28 @@ export default function CreationUneditable({ request }) {
                       </>
                     </div>
 
-                    <div className="sm:col-span-6">
-                      <label
-                        htmlFor="team"
-                        className="block text-md text-center font-sans font-medium text-gray-900"
-                      >
-                        New Team
-                      </label>
-
-                      <>
-                        <div className="mt-1">
-                          <input
-                            type="text"
-                            name="team"
-                            id="team"
-                            disabled
-                            className="block w-full text-center min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-800 "
-                            defaultValue={newTeam.teamName}
-                          />
-                        </div>
-                      </>
-                    </div>
+                    {newTeam && (
+                      <div className="sm:col-span-6">
+                        <label
+                          htmlFor="team"
+                          className="block text-md text-center font-sans font-medium text-gray-900"
+                        >
+                          New Team
+                        </label>
+                        <>
+                          <div className="mt-1">
+                            <input
+                              type="text"
+                              name="team"
+                              id="team"
+                              disabled
+                              className="block w-full text-center min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-800 "
+                              defaultValue={newTeam.teamName}
+                            />
+                          </div>
+                        </>
+                      </div>
+                    )}
 
                     <div className="sm:col-span-6">
                       <label

@@ -24,6 +24,10 @@ export default function TransferProcessingUneditable({ request }) {
   useEffect(() => {
     console.log(request);
 
+    if (request.status === "Rejected") {
+      setToReject(true);
+    }
+
     api.getUserCurrentPosition(request.employee.userId).then((response) => {
       //console.log(response.data);
       setCurrentPosition(response.data);
@@ -145,24 +149,26 @@ export default function TransferProcessingUneditable({ request }) {
                     </div>
                   </div>
 
-                  <div className="sm:col-span-3">
-                    <label
-                      htmlFor="newTeam"
-                      className="block text-md text-left font-sans font-medium text-gray-700"
-                    >
-                      New Team
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        name="newTeam"
-                        id="newTeam"
-                        defaultValue={request.newTeam.teamName}
-                        disabled
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
-                      />
+                  {request.newTeam && (
+                    <div className="sm:col-span-3">
+                      <label
+                        htmlFor="newTeam"
+                        className="block text-md text-left font-sans font-medium text-gray-700"
+                      >
+                        New Team
+                      </label>
+                      <div className="mt-1">
+                        <input
+                          type="text"
+                          name="newTeam"
+                          id="newTeam"
+                          defaultValue={request.newTeam.teamName}
+                          disabled
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="sm:col-span-3">
                     <label
@@ -376,17 +382,37 @@ export default function TransferProcessingUneditable({ request }) {
                         </p>
                         <div className="mt-1">
                           <textarea
-                            id="rejectionRemarks"
-                            name="rejectionRemarks"
+                            id="comments"
+                            name="comments"
                             rows={3}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            value={rejectRemarks}
-                            onChange={(e) => setRejectRemarks(e.target.value)}
+                            disabled
+                            className="block w-full rounded-md border-gray-300 shadow-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-700 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            defaultValue={request.rejectRemarks}
                           />
                         </div>
                       </div>
                     </>
                   )}
+
+                  <div className="sm:col-span-6">
+                    <label
+                      htmlFor="outcome"
+                      className="block text-md text-left font-sans font-medium text-gray-700"
+                    >
+                      Outcome
+                    </label>
+                    <div className="mt-1">
+                      {request.status === "Rejected" ? (
+                        <h1 className="font-sans text-left font-medium text-gray-700">
+                          Rejected
+                        </h1>
+                      ) : (
+                        <h1 className="font-sans text-left text-gray-700">
+                          Approved
+                        </h1>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -5,11 +5,13 @@ import net.bytebuddy.asm.Advice.Local;
 
 import org.springframework.stereotype.Service;
 
+import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.organizationstructure.team.TeamService;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformationService;
 import com.conceiversolutions.hrsystem.user.position.Position;
@@ -40,6 +42,8 @@ public class TransferService {
     private final TeamRepository teamRepository;
 
     private final PayInformationService payInformationService;
+
+    private final TeamService teamService;
 
     private User breakRelationships(User user) {
         User u = new User();
@@ -106,7 +110,25 @@ public class TransferService {
 
             return users;
         } else {
-            throw new IllegalStateException("Unable to find team");
+            List<Team> teams = departmentRepository.findTeamsByDepartmentHead(userId);
+
+            List<User> possible = new ArrayList<>();
+            for (User u : allUsers) {
+                boolean inTeam = false;
+                for (Team t : teams) {
+                    if (u.getUserId() == t.getTeamHead().getUserId()) {
+                        inTeam = true;
+                    }
+                }
+                if (!inTeam && !u.getWorkEmail().equals("ongj@libro.com")
+                        && !u.getUserRole().equals(RoleEnum.ADMINISTRATOR)
+                        && !u.getUserRole().equals(RoleEnum.APPLICANT)) {
+                    possible.add(breakRelationships(u));
+                }
+            }
+
+            return possible;
+            // throw new IllegalStateException("Unable to find team");
         }
     }
 
@@ -123,6 +145,20 @@ public class TransferService {
                     positions.add(p);
                 }
             }
+        }
+
+        List<Team> teams = departmentRepository.findTeamsByDepartmentHead(managerId);
+
+        for (Team t : teams) {
+
+            for (User u : t.getUsers()) {
+                Position p = u.getCurrentPosition();
+                System.out.println(u.getFirstName());
+                if (p.getPositionId() != positionId && !positions.contains(p)) {
+                    positions.add(p);
+                }
+            }
+
         }
 
         // RoleEnum role = RoleEnum.EMPLOYEE;
@@ -192,13 +228,15 @@ public class TransferService {
         Optional<Department> optionalDepartment = departmentRepository.findById(departmentId);
         Optional<Team> optionalTeam = teamRepository.findById(teamId);
 
-        if (optionalEmployee.isPresent() && optionalPosition.isPresent() && optionalDepartment.isPresent()
-                && optionalTeam.isPresent()) {
+        if (optionalEmployee.isPresent() && optionalPosition.isPresent() && optionalDepartment.isPresent()) {
             User employee = optionalEmployee.get();
             User manager = optionalManager.get();
             Position position = optionalPosition.get();
             Department department = optionalDepartment.get();
-            Team team = optionalTeam.get();
+            Team team = null;
+            if (teamId != 0) {
+                team = optionalTeam.get();
+            }
 
             TransferRequest tr = new TransferRequest(createdDate, "Submitted", employee, manager, manager, null,
                     position, team, department,
@@ -246,9 +284,11 @@ public class TransferService {
             request.setNewDepartment(department);
 
             Team team = new Team();
-            team.setTeamId(request.getNewTeam().getTeamId());
-            team.setTeamName(request.getNewTeam().getTeamName());
-            request.setNewTeam(team);
+            if (request.getNewTeam() != null) {
+                team.setTeamId(request.getNewTeam().getTeamId());
+                team.setTeamName(request.getNewTeam().getTeamName());
+                request.setNewTeam(team);
+            }
 
             return request;
 
@@ -284,6 +324,28 @@ public class TransferService {
 
         if (request.isPresent() && optionalProcessedBy.isPresent()) {
             TransferRequest tr = request.get();
+
+            if (tr.getNewTeam() != null) {
+                Team team = tr.getNewTeam();
+                Long oldTeamId = teamService.getTeamByEmployee(tr.getEmployee().getUserId());
+                Optional<User> optionalUser = userRepository.findById(tr.getEmployee().getUserId());
+
+                Optional<Team> oldTeamOptional = teamRepository.findById(oldTeamId);
+
+                if (oldTeamOptional.isPresent()) {
+                    Team oldTeam = oldTeamOptional.get();
+
+                    if (optionalUser.isPresent()) {
+                        User user = optionalUser.get();
+                        oldTeam.getUsers().remove(user);
+                        team.addUser(user);
+                    }
+
+                } else {
+                    throw new IllegalStateException("Unable to find old team");
+                }
+
+            }
 
             User processedBy = optionalProcessedBy.get();
 
@@ -330,7 +392,7 @@ public class TransferService {
             }
             t.setNewDepartment(null);
             t.setNewTeam(null);
-            
+
         }
 
         return active;

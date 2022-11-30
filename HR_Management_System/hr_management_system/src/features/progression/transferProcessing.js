@@ -145,24 +145,26 @@ export default function TransferProcessing({ request }) {
                     </div>
                   </div>
 
-                  <div className="sm:col-span-3">
-                    <label
-                      htmlFor="newTeam"
-                      className="block text-md text-left font-sans font-medium text-gray-700"
-                    >
-                      New Team
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        name="newTeam"
-                        id="newTeam"
-                        defaultValue={request.newTeam.teamName}
-                        disabled
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
-                      />
+                  {request.newTeam && (
+                    <div className="sm:col-span-3">
+                      <label
+                        htmlFor="newTeam"
+                        className="block text-md text-left font-sans font-medium text-gray-700"
+                      >
+                        New Team
+                      </label>
+                      <div className="mt-1">
+                        <input
+                          type="text"
+                          name="newTeam"
+                          id="newTeam"
+                          defaultValue={request.newTeam.teamName}
+                          disabled
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="sm:col-span-3">
                     <label
