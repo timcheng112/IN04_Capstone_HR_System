@@ -1193,18 +1193,17 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public String updateUserESS(Long userId, String email, Integer phone, String bankAccNo) {
-        System.out.println("UserService.updateUser");
+    public String updateUserESS(Long userId, String email, String phone, String bankName, String bankAccNo) {
+        System.out.println("UserService.updateUserESS");
         // System.out.println(.getUserRole());
 
-        User user = getUser(userId);
+        User user = userRepository.findById(userId).get();
 
-        user.setPhone(phone);
+        user.setPhone(Integer.valueOf(phone));
         user.setEmail(email);
+        user.setBankName(bankName);
         user.setBankAccNo(bankAccNo);
-//        userRepository.saveAndFlush(user);
-        user.nullify();
-//        userRepository.saveAndFlush(user);
+        userRepository.save(user);
         return "Update of user was successful";
     }
     public String updateProfilePic(Long userId, MultipartFile file) throws IOException {

@@ -5,9 +5,8 @@ import axios from "axios";
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"
-const URL = "192.168.1.82"; // TIM
+const URL = "10.100.1.104"; // TIM
 // const URL = "172.17.93.172";
-const URL = "172.17.174.178"
 
 
 const api = {
@@ -19,8 +18,8 @@ const api = {
   getUser(userId) {
     return axios.get(`http://${URL}:9191/api/user/${userId}`);
   },
-  updateProfile(userId, email, phoneNo, bankAcc){
-    return axios.get(`http://${URL}:9191/api/user/updateProfileESS?userId=${userId}&email=${email}&phone=${phoneNo}&bankAccNo=${bankAcc}`);
+  updateProfile(userId, email, phone, bankName, bankAcc){
+    return axios.get(`http://${URL}:9191/api/user/updateProfileESS?userId=${userId}&email=${email}&phone=${phone}&bankName=${bankName}&bankAccNo=${bankAcc}`);
   },
   getEmployeesByTeam(teamId) {
     return axios.get(

@@ -290,9 +290,9 @@ public class UserController {
     @GetMapping(path="/updateProfileESS")
     public String updateProfileESS(@RequestParam("userId") Long userId,
                                 @RequestParam("email") String email,
-                                @RequestParam("phoneNo") String phone, @RequestParam("bankAccNo") String bankAccNo) {
+                                @RequestParam("phone") String phone, @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo) {
         // System.out.println(user.getUserRole());
-        return userService.updateUserESS(userId, email, Integer.valueOf(phone), bankAccNo);
+        return userService.updateUserESS(userId, email, phone, bankName, bankAccNo);
 
     }
 
