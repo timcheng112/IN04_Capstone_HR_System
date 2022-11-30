@@ -52,18 +52,27 @@ const PayInformationComponent = ({ user, userPayInfo }) => {
           textAlign: "center",
         }}
       >
-        <Card.Cover
-          source={{
-            uri: img
-              ? img
-              : "https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-          }}
-          style={{
-            borderRadius: 20,
-            width: "100%",
-            alignSelf: "center",
-          }}
-        />
+        {!img ? (
+          <Card.Cover
+            source={require("../../../assets/shiba-thumbs-up.png")}
+            style={{
+              borderRadius: 20,
+              width: "100%",
+              alignSelf: "center",
+            }}
+          />
+        ) : (
+          <Card.Cover
+            source={{
+              uri: img,
+            }}
+            style={{
+              borderRadius: 20,
+              width: "100%",
+              alignSelf: "center",
+            }}
+          />
+        )}
       </Card>
       <Card
         style={{
