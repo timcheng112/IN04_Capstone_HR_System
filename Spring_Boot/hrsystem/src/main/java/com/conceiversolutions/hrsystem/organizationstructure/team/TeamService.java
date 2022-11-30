@@ -617,4 +617,10 @@ public class TeamService {
         }
         return Long.valueOf(-1);
     }
+
+    public List<User> getManagers() {
+        List<User> managers = teamRepository.findTeamHeads();
+        System.out.println("Managers = " + managers);
+        return managers;
+    }
 }

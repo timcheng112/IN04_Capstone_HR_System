@@ -276,4 +276,38 @@ public class DepartmentService {
         }
         return Long.valueOf(-1);
     }
+
+    public List<User> getDepartmentHeads() {
+        System.out.println("DepartmentService.getDepartmentHeads");
+        List<User> allDepartmentHeads = new ArrayList<>();
+
+        List<Department> allDepartments = departmentRepository.findAll();
+
+        for (Department d : allDepartments) {
+            Optional<Organization> organization = organizationRepository.findById(Long.valueOf(1));
+
+            System.out.println("organization optional " + organization);
+
+            if (organization.isPresent()) {
+                d.setOrganization(organization.get());
+            } 
+
+            System.out.println("Department id " + d.getDepartmentId());
+            User user = d.getDepartmentHead();
+            User u = new User();
+
+            u.setUserId(user.getUserId());
+            u.setFirstName(user.getFirstName());
+            u.setLastName(user.getLastName());
+            u.setWorkEmail(user.getWorkEmail());
+            u.setUserRole(user.getUserRole());
+            u.setProfilePic(user.getProfilePic());
+            u.setIsBlackListed(user.getIsBlackListed());
+
+            System.out.println("department head " + u);
+            
+            allDepartmentHeads.add(u);
+        }
+        return allDepartmentHeads;
+    }
 }

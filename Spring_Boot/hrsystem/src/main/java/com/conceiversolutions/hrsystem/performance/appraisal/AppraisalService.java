@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.performance.appraisal;
 
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.organizationstructure.department.DepartmentRepository;
+import com.conceiversolutions.hrsystem.organizationstructure.organization.Organization;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationRepository;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
@@ -109,11 +110,6 @@ public class AppraisalService {
         }
     }
 
-    public List<User> getTeamAppraisals(String year, Long teamId) {
-
-        return null;
-    }
-
     public List<Appraisal> getAllAppraisalsByYear(String year) {
         List<Appraisal> appraisals = appraisalRepository.findAllAppraisalsByYear(year);
         for (Appraisal a : appraisals) {
@@ -124,6 +120,17 @@ public class AppraisalService {
             a.setEmployee(employee);
         }
         return appraisals;
+    }
+
+    public String deleteAppraisalsByYear(String year) throws Exception {
+        System.out.println("AppraisalService.deleteAppraisalsByYear");
+        List<Appraisal> appraisals = appraisalRepository.findAllAppraisalsByYear(year);
+
+        for (Appraisal a : appraisals) {
+            System.out.println("delete appraisal " + a.getAppraisalId());
+            hardDeleteAppraisal(a.getAppraisalId());
+        }
+        return "";
     }
 
     // returns appraisal that is about the employee
@@ -373,12 +380,16 @@ public class AppraisalService {
     }
 
     public List<Appraisal> getOrganizationAppraisals(String year, Long userId) {
+        System.out.println("AppraisalService.getOrganizationAppraisals");
 
         List<Appraisal> managerAppraisals = new ArrayList<>();
 
         List<Department> departments = organizationRepository.findDepartmentsByOrganizationHead(userId);
 
-        Optional<AppraisalPeriod> optionalAppraisalPeriod = appraisalPeriodRepository.findAppraisalPeriodByYear(year);
+        System.out.println("getOrganizationAppraisals " + departments);
+        System.out.println();
+        Optional<AppraisalPeriod> optionalAppraisalPeriod = appraisalPeriodRepository
+                .findAppraisalPeriodByYear(year);
 
         if (optionalAppraisalPeriod.isPresent()) {
 
@@ -462,6 +473,17 @@ public class AppraisalService {
             throw new IllegalStateException("Appraisal not found");
         }
 
+    }
+
+    public String hardDeleteAppraisal(Long appraisalId) throws Exception {
+        Optional<Appraisal> optionalAppraisal = appraisalRepository.findById(appraisalId);
+
+        if (optionalAppraisal.isPresent()) {
+            appraisalRepository.deleteById(appraisalId);
+            return "Appraisal with id " + appraisalId + " has been deleted";
+        } else {
+            throw new IllegalStateException("Appraisal not found");
+        }
     }
 
 }

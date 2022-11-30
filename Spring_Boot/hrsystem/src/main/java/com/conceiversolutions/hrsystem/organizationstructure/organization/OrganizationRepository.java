@@ -17,4 +17,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     @Query("SELECT o.departments FROM Organization o WHERE o.organizationHead.userId = ?1")
     List<Department> findDepartmentsByOrganizationHead(Long userId);
 
+    @Query("SELECT o FROM Organization o WHERE o.organizationHead.userId =?1")
+    Optional<Organization> findOrganizationByHead(Long userId);
+
 }

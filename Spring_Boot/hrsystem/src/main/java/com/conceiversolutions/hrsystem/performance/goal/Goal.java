@@ -34,7 +34,7 @@ public class Goal {
     @JoinColumn(name = "employee")
     private User employee;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Achievement> achievements;
 
     public Goal() {

@@ -207,4 +207,18 @@ public class OrganizationService {
         }
         return Long.valueOf(-1);
     }
+
+    public List<User> getOrganizationHeads() {
+        System.out.println("OrganizationService.getOrganizationHeads");
+        List<User> heads = new ArrayList<>();
+
+        List<Organization> allOrganizations = getOrganizations();
+
+        for (Organization o : allOrganizations) {
+            System.out.println("o head " + o.getOrganizationHead());
+            heads.add(o.getOrganizationHead());
+        }
+
+        return heads;
+    }
 }

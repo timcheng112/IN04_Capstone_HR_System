@@ -40,10 +40,25 @@ public class GoalService {
         this.teamRepository = teamRepository;
     }
 
+    public User breakRelationships(User user) {
+        User u = new User();
+
+        u.setUserId(user.getUserId());
+        u.setFirstName(user.getFirstName());
+        u.setLastName(user.getLastName());
+        u.setWorkEmail(user.getWorkEmail());
+        u.setUserRole(user.getUserRole());
+        u.setProfilePic(user.getProfilePic());
+        u.setIsBlackListed(user.getIsBlackListed());
+
+        return u;
+    }
+
     public List<Goal> getAllGoalsByYear(String year) {
         List<Goal> goals = goalRepository.findAllGoalsByYear(year);
         for (Goal g : goals) {
             g.setEmployee(null);
+            g.setAchievements(new ArrayList<>());
         }
         return goals;
     }
@@ -59,7 +74,11 @@ public class GoalService {
             goal.setType(type);
             goal.setDescription(description);
             goal.setYear(now.getYear() + "");
-            goal.setEmployee(user.get());
+            
+            User u = breakRelationships(user.get());
+
+            goal.setEmployee(u);
+
             Goal newGoal = goalRepository.save(goal);
             return newGoal.getGoalId();
         } else {

@@ -16,6 +16,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import Moment from "react-moment";
+import { format, getDay, nextDay } from "date-fns";
 
 const people = [
   {
@@ -44,6 +45,7 @@ export default function Appraisals() {
   const [myAppraisals, setMyAppraisals] = useState([]);
   const [organizationHead, setOrganizationHead] = useState(false);
   const [allAppraisals, setAllAppraisals] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -111,28 +113,106 @@ export default function Appraisals() {
 
     api.getAllAppraisalsByYear(new Date().getFullYear()).then((response) => {
       console.log(response.data);
-      const a = response.data.filter((a) => a.employee.userId + "" !== getUserId() + "");
+      const a = response.data.filter(
+        (a) => a.employee.userId + "" !== getUserId() + ""
+      );
       console.log(a);
       setAllAppraisals(a);
     });
   }, []);
 
+  useEffect(() => {
+    //console.log('refresh');
+
+    api.getAllAppraisalPeriods().then((response) => {
+      setAppraisalPeriods(response.data);
+      setSelectedPeriod(response.data[0]);
+      //console.log(response.data[0]);
+    });
+
+    api.getAppraisalPeriodByYear(new Date().getFullYear()).then((response) => {
+      setCurrentPeriod(response.data);
+      setStartDate(response.data.startDate);
+      setEndDate(response.data.endDate);
+      console.log(response.data);
+    });
+
+    api.getIsTeamHead(getUserId()).then((response) => {
+      //console.log(response.data);
+      if (response.data > -1) {
+        setIsManager(true);
+        api
+          .getManagerAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => {
+            setAppraisals(response.data);
+            console.log(response.data);
+          });
+      }
+    });
+
+    api.getIsDepartmentHead(getUserId()).then((response) => {
+      if (response.data > -1) {
+        setIsManager(true);
+        //console.log("department head");
+        api
+          .getDepartmentAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => setAppraisals(response.data));
+      }
+    });
+
+    api.getIsOrganizationHead(getUserId()).then((response) => {
+      if (response.data > -1) {
+        setOrganizationHead(true);
+        setIsManager(true);
+        console.log("organization head");
+        api
+          .getOrganizationAppraisals(new Date().getFullYear(), getUserId())
+          .then((response) => setAppraisals(response.data));
+      }
+    });
+
+    api.getAllAppraisalsByYear(new Date().getFullYear()).then((response) => {
+      console.log(response.data);
+      const a = response.data.filter(
+        (a) => a.employee.userId + "" !== getUserId() + ""
+      );
+      console.log(a);
+      setAllAppraisals(a);
+    });
+  }, [refresh]);
+
   if (error) return `Error`;
 
   const editAppraisalPeriod = (evt) => {
     evt.preventDefault();
+    setEditMode(false);
 
-    api
-      .updateAppraisalPeriod(startDate, endDate)
-      .then((response) => alert(response.data));
+    api.updateAppraisalPeriod(startDate, endDate).then((response) => {
+      alert(response.data);
+      setRefresh(!refresh);
+    });
   };
 
   const deleteAppraisalPeriod = (evt) => {
     evt.preventDefault();
 
-    api
-      .deleteAppraisalPeriod(currentPeriod.startDate.substring(0, 4))
-      .then((response) => alert(response.data));
+    const incomplete = allAppraisals.filter((a) => a.status === "Incomplete");
+    console.log(parseInt(allAppraisals.length) - parseInt(incomplete.length));
+
+    if (incomplete.length === allAppraisals.length) {
+      api
+        .deleteAppraisalPeriod(currentPeriod.startDate.substring(0, 4))
+        .then((response) => {
+          alert(response.data);
+          setRefresh(!refresh);
+        });
+    } else {
+      alert(
+        "There are " +
+          (parseInt(allAppraisals.length) - parseInt(incomplete.length)) +
+          " appraisal(s) that have been started, in progress or completed. Cannot delete appraisal period."
+      );
+    }
   };
 
   function withinCurrentPeriod() {
@@ -164,13 +244,15 @@ export default function Appraisals() {
 
     api
       .addAppraisalPeriod(appraisalPeriod)
-      .then((response) =>
+      .then((response) => {
         alert(
           "Appraisal period for " +
             newStart.substring(0, 4) +
             " has been created"
-        )
-      );
+        );
+        setRefresh(!refresh);
+      })
+      .catch((error) => setRefresh(!refresh));
   };
 
   function renderAppraisalStatus(item) {
@@ -362,7 +444,7 @@ export default function Appraisals() {
       alert(
         "There are " +
           (parseInt(allAppraisals.length) - parseInt(incomplete.length)) +
-          " appraisals that have been started, in progress or completed. Cannot change appraisal period."
+          " appraisal(s) that have been started, in progress or completed. Cannot change appraisal period."
       );
       setEditMode(false);
     }
@@ -438,7 +520,7 @@ export default function Appraisals() {
                                 <div>
                                   <label
                                     htmlFor="start-date"
-                                    className="block text-sm font-sans font-medium text-gray-700"
+                                    className="block text-md font-sans font-medium text-gray-700"
                                   >
                                     Start Date
                                   </label>
@@ -447,6 +529,22 @@ export default function Appraisals() {
                                       type="date"
                                       name="start-date"
                                       id="start-date"
+                                      min={format(
+                                        new Date(
+                                          new Date().getFullYear(),
+                                          new Date().getMonth(),
+                                          new Date().getDate()
+                                        ),
+                                        "yyyy-MM-dd"
+                                      )}
+                                      max={format(
+                                        new Date(
+                                          new Date().getFullYear(),
+                                          12,
+                                          31
+                                        ),
+                                        "yyyy-MM-dd"
+                                      )}
                                       className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                       onChange={(s) =>
                                         setStartDate(s.target.value)
@@ -459,7 +557,7 @@ export default function Appraisals() {
                                 <div>
                                   <label
                                     htmlFor="end-date"
-                                    className="block text-sm font-sans font-medium text-gray-700"
+                                    className="block text-md font-sans font-medium text-gray-700"
                                   >
                                     End Date
                                   </label>
@@ -469,6 +567,22 @@ export default function Appraisals() {
                                       name="end-date"
                                       id="end-date"
                                       className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                      min={format(
+                                        new Date(
+                                          new Date().getFullYear(),
+                                          new Date().getMonth(),
+                                          new Date().getDate()
+                                        ),
+                                        "yyyy-MM-dd"
+                                      )}
+                                      max={format(
+                                        new Date(
+                                          new Date().getFullYear(),
+                                          12,
+                                          31
+                                        ),
+                                        "yyyy-MM-dd"
+                                      )}
                                       onChange={(e) =>
                                         setEndDate(e.target.value)
                                       }
@@ -479,13 +593,13 @@ export default function Appraisals() {
                               </div>
                               <button
                                 type="submit"
-                                className="inline-flex items-center mt-5 px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="inline-flex items-center mt-5 px-4 py-2 border border-transparent text-md font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                               >
                                 Update
                               </button>
                               <button
                                 type="button"
-                                className="inline-flex items-center mt-5 ml-5 px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="inline-flex items-center mt-5 ml-5 px-4 py-2 border border-transparent text-md font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 onClick={() => setEditMode(false)}
                               >
                                 Cancel
@@ -626,15 +740,19 @@ export default function Appraisals() {
                     ) : (
                       <>
                         <form onSubmit={handleSubmit}>
-                          <p className="mt-2 text-sm text-gray-800 mb-5">
+                          <p className="mt-2 text-md text-gray-800 mb-5">
                             The appraisal period has not been created for this
                             year. Please add one.
+                          </p>
+                          <p className="mt-2 text-md text-gray-800 mb-5">
+                            An appraisal period has to be at least 14 days
+                            (inclusive of working days).
                           </p>
                           <div className="flex flex-row justify-center">
                             <div>
                               <label
                                 htmlFor="start-date"
-                                className="block text-sm font-sans font-medium text-gray-700"
+                                className="block text-md font-sans font-medium text-gray-700"
                               >
                                 Start Date
                               </label>
@@ -643,6 +761,18 @@ export default function Appraisals() {
                                   type="date"
                                   name="start-date"
                                   id="start-date"
+                                  min={format(
+                                    new Date(
+                                      new Date().getFullYear(),
+                                      new Date().getMonth(),
+                                      new Date().getDate()
+                                    ),
+                                    "yyyy-MM-dd"
+                                  )}
+                                  max={format(
+                                    new Date(new Date().getFullYear(), 12, 31),
+                                    "yyyy-MM-dd"
+                                  )}
                                   className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                   onChange={(s) => setNewStart(s.target.value)}
                                 />
@@ -652,7 +782,7 @@ export default function Appraisals() {
                             <div>
                               <label
                                 htmlFor="end-date"
-                                className="block text-sm font-sans font-medium text-gray-700"
+                                className="block text-md font-sans font-medium text-gray-700"
                               >
                                 End Date
                               </label>
@@ -661,6 +791,27 @@ export default function Appraisals() {
                                   type="date"
                                   name="end-date"
                                   id="end-date"
+                                  min={format(
+                                    nextDay(
+                                      new Date(
+                                        new Date().getFullYear(),
+                                        new Date().getMonth(),
+                                        new Date().getDate()
+                                      ),
+                                      getDay(
+                                        new Date(
+                                          new Date().getFullYear(),
+                                          new Date().getMonth(),
+                                          new Date().getDate()
+                                        )
+                                      ) + 14
+                                    ),
+                                    "yyyy-MM-dd"
+                                  )}
+                                  max={format(
+                                    new Date(2022, 12, 31),
+                                    "yyyy-MM-dd"
+                                  )}
                                   className="block w-full rounded-full border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                   onChange={(e) => setNewEnd(e.target.value)}
                                 />
@@ -669,7 +820,7 @@ export default function Appraisals() {
                           </div>
                           <button
                             type="submit"
-                            className="inline-flex items-center mt-5 px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className="inline-flex items-center mt-5 px-4 py-2 border border-transparent text-md font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                           >
                             Create
                           </button>
