@@ -19,6 +19,7 @@ const HomeNavigator = () => {
           },
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
+          unmountOnBlur: true,
         }}
       />
       {/* <HomeStack.Screen name="Profile" component={ProfileScreen} /> */}

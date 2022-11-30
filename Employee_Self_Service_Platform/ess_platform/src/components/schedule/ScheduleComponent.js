@@ -15,8 +15,15 @@ import {
   eachDayOfInterval,
   endOfYear,
   isSameDay,
+  isWithinInterval,
 } from "date-fns";
-import { Dimensions, FlatList, RefreshControl, ScrollView, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  RefreshControl,
+  ScrollView,
+  View,
+} from "react-native";
 import ShiftBlock from "./ShiftBlock";
 import api from "../../utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -25,12 +32,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
+import LeaveBlock from "./LeaveBlock";
 
 const ScheduleComponent = () => {
   const [userId, setUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
   const [user, setUser] = useState(null);
+  const [leaves, setLeaves] = useState(null);
+  const [leave, setLeave] = useState(null);
   const [myShiftListItem, setMyShiftListItem] = useState(null);
   const [shiftListItems, setShiftListItems] = useState(null);
   const [date, setDate] = useState(new Date());
@@ -44,7 +54,6 @@ const ScheduleComponent = () => {
   );
 
   const onChange = (event, selectedDate) => {
-    console.log("SELECTED DATE: " + selectedDate);
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
@@ -56,6 +65,7 @@ const ScheduleComponent = () => {
     );
   };
 
+  // TO RETRIEVE USERID OF LOGGED IN USER
   useEffect(() => {
     const setId = async () => {
       try {
@@ -68,12 +78,12 @@ const ScheduleComponent = () => {
     setId();
   }, []);
 
+  // TO RETRIEVE LOGGED IN USER
   useEffect(() => {
     if (userId !== null) {
       api
         .getUser(userId)
         .then((response) => {
-          console.log(response.data);
           setUser(response.data);
         })
         .catch((error) =>
@@ -82,6 +92,7 @@ const ScheduleComponent = () => {
     }
   }, [userId]);
 
+  // TO RETRIEVE SHIFT LIST ITEMS OF TEAM BY DATE
   useEffect(() => {
     if (user !== null) {
       setIsLoading(true);
@@ -94,27 +105,14 @@ const ScheduleComponent = () => {
             user.teams[0].teamId
           )
           .then((response) => {
-            console.log(response.data);
             let myShiftListItemId = null;
             for (let i = 0; i < response.data.length; i++) {
-              console.log("Finding my shift list item");
-              console.log(response.data[i].user.userId === user.userId);
               if (response.data[i].user.userId === user.userId) {
-                console.log("Found my shift list item");
-                console.log("My Shift List Item: " + response.data[i]);
                 setMyShiftListItem(response.data[i]);
                 myShiftListItemId = response.data[i].shiftListItemId;
                 break;
               }
             }
-            console.log(
-              "FILTER: " +
-                response.data.filter(
-                  (shiftListItem) =>
-                    shiftListItem.shiftListItemId !== myShiftListItemId
-                )
-            );
-            console.log("My shift list item: " + myShiftListItem);
             if (myShiftListItemId !== null) {
               setShiftListItems(
                 response.data.filter(
@@ -141,8 +139,56 @@ const ScheduleComponent = () => {
     }
   }, [user, userId, date, refresh]);
 
+  useEffect(() => {
+    if (userId !== null) {
+      api
+        .getEmployeeLeaves(userId)
+        .then((response) => setLeaves(response.data))
+        .catch((error) => console.log(error.response.data.message));
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (leaves !== null) {
+      setLeave(
+        leaves.find((item) => {
+          const startDate = new Date(
+            item.startDate.slice(0, 4),
+            Number(item.startDate.slice(5, 7)) - 1,
+            item.startDate.slice(8)
+          );
+          const endDate = new Date(
+            item.endDate.slice(0, 4),
+            Number(item.endDate.slice(5, 7)) - 1,
+            item.endDate.slice(8)
+          );
+          if (
+            isWithinInterval(date, {
+              start: startDate,
+              end: endDate,
+            })
+          ) {
+            return item;
+          }
+        })
+      );
+    }
+  }, [date]);
+
+  const VirtualizedList = ({ children }) => {
+    return (
+      <FlatList
+        data={[]}
+        keyExtractor={() => "key"}
+        renderItem={null}
+        ListHeaderComponent={<>{children}</>}
+      />
+    );
+  };
+
   return (
     // <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: "4%" }}>
+    // <VirtualizedList>
     <ScrollView
       style={{ flex: 1 }}
       contentContainerStyle={{ padding: "4%" }}
@@ -206,7 +252,10 @@ const ScheduleComponent = () => {
           renderItem={({ item }) => (
             <View style={{ width: (windowWidth - 40) / 5 }}>
               <Text
-                style={{ fontFamily: "Poppins_300Light", textAlign: "center" }}
+                style={{
+                  fontFamily: "Poppins_300Light",
+                  textAlign: "center",
+                }}
               >
                 {format(item, "E")}
               </Text>
@@ -244,7 +293,7 @@ const ScheduleComponent = () => {
             );
           }}
         />
-        <Card.Content style={{marginTop: "4%"}}>
+        <Card.Content style={{ marginTop: "4%" }}>
           <Text style={{ fontFamily: "Poppins_300Light" }}>
             Team:{" "}
             {user && user.teams.length > 0 ? user.teams[0].teamName : "No Team"}
@@ -305,6 +354,8 @@ const ScheduleComponent = () => {
           />
         ) : myShiftListItem !== null ? (
           <ShiftBlock user={user} shiftListItem={myShiftListItem} />
+        ) : leave && leave !== undefined ? (
+          <LeaveBlock user={user} leave={leave} />
         ) : (
           <Card
             style={{
@@ -367,15 +418,23 @@ const ScheduleComponent = () => {
           />
         ) : shiftListItems && shiftListItems.length > 0 ? (
           <View>
-            <FlatList
+            {/* <FlatList
               data={shiftListItems}
               renderItem={({ item }) => (
                 <View style={{ marginBottom: 10 }}>
                   <ShiftBlock user={item.user} shiftListItem={item} />
                 </View>
               )}
+              ListHeaderComponent={() => <View />}
               ListFooterComponent={() => <View style={{ marginBottom: 10 }} />}
-            />
+            /> */}
+            {shiftListItems.map((item, index) => {
+              return (
+                <View style={{ marginBottom: 10 }} key={index}>
+                  <ShiftBlock user={item.user} shiftListItem={item} />
+                </View>
+              );
+            })}
           </View>
         ) : (
           <Card
@@ -414,6 +473,7 @@ const ScheduleComponent = () => {
         )}
       </View>
     </ScrollView>
+    // </VirtualizedList>
   );
 };
 

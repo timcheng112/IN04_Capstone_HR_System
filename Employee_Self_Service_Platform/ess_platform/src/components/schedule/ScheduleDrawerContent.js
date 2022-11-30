@@ -1,11 +1,13 @@
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
-import { Drawer, List, Text } from "react-native-paper";
+import { Badge, Drawer, List, Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { AuthContext } from "../login/Context";
 import { Entypo } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import api from "../../utils/api";
 
 const DrawerContent = (props) => {
   const { signOut } = React.useContext(AuthContext);
@@ -13,6 +15,30 @@ const DrawerContent = (props) => {
   const { routes, index } = state;
   const focusedRoute = routes[index].name;
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [numRequests, setNumRequests] = useState(null);
+  const [userId, setUserId] = useState(null);
+
+  // TO RETRIEVE LOGGED IN USER's ID
+  useEffect(() => {
+    const setId = async () => {
+      try {
+        const response = await AsyncStorage.getItem("userId");
+        setUserId(response);
+      } catch (err) {
+        console.warn(err);
+      }
+    };
+    setId();
+  }, []);
+
+  useEffect(() => {
+    if (userId !== null) {
+      api
+        .getNumberOfPendingIncomingSwapRequestsByUser(userId)
+        .then((response) => setNumRequests(response.data))
+        .catch((error) => console.log(error.response.data.message));
+    }
+  });
 
   return (
     <View
@@ -30,10 +56,10 @@ const DrawerContent = (props) => {
               borderBottomWidth: 1,
             }}
           >
-            <DrawerItem label="Scheduling"></DrawerItem>
+            <Drawer.Item label="Scheduling"></Drawer.Item>
           </Drawer.Section>
           <Drawer.Section {...props} style={{ marginTop: 15 }}>
-            <DrawerItem
+            <Drawer.Item
               {...props}
               icon={({ color, size }) => (
                 <MaterialCommunityIcons
@@ -54,7 +80,7 @@ const DrawerContent = (props) => {
                 props.navigation.navigate("My Schedule");
               }}
             />
-            <DrawerItem
+            <Drawer.Item
               icon={({ color, size }) => (
                 <MaterialCommunityIcons
                   name="calendar-month-outline"
@@ -76,7 +102,7 @@ const DrawerContent = (props) => {
                 props.navigation.navigate("Indicate Preferences");
               }}
             />
-            <DrawerItem
+            <Drawer.Item
               icon={({ color, size }) => (
                 <MaterialCommunityIcons
                   name="swap-horizontal"
@@ -95,6 +121,11 @@ const DrawerContent = (props) => {
               onPress={() => {
                 props.navigation.navigate("Swap Request");
               }}
+              right={() => (
+                <View>
+                  <Badge>{numRequests}</Badge>
+                </View>
+              )}
             />
             {/* <Drawer.Item
               style={
@@ -155,7 +186,7 @@ const DrawerContent = (props) => {
           borderTopWidth: 1,
         }}
       >
-        <DrawerItem
+        <Drawer.Item
           icon={({ color, size }) => (
             <Icon name="exit-to-app" color={color} size={size} />
           )}

@@ -5,7 +5,7 @@ const URL = "10.100.1.104"; // XINYUE
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"
-// const URL = "192.168.1.82"; // TIM
+//const URL = "192.168.1.82"; // TIM
 // const URL = "172.17.93.172";
 
 const api = {
@@ -220,6 +220,11 @@ const api = {
   ) {
     return axios.post(
       `http://${URL}:9191/api/swap_request/counterProposeSwapRequest?reason=${reason}&oldSwapRequestId=${oldSwapRequestId}&receiverShiftListItemId=${receiverShiftListItemId}&requesterShiftListItemId=${requesterShiftListItemId}`
+    );
+  },
+  getNumberOfPendingIncomingSwapRequestsByUser(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/swap_request/getNumberOfPendingIncomingSwapRequestsByUser?userId=${userId}`
     );
   },
 

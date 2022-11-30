@@ -5,6 +5,7 @@ import { View } from "react-native";
 import { Drawer, Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { AuthContext } from "../login/Context";
+import { FontAwesome } from "@expo/vector-icons";
 
 const DrawerContent = (props) => {
   const { signOut } = React.useContext(AuthContext);
@@ -31,7 +32,7 @@ const DrawerContent = (props) => {
             <DrawerItem label="Admin"></DrawerItem>
           </Drawer.Section>
           <Drawer.Section style={{ marginTop: 15 }}>
-            <DrawerItem
+            <Drawer.Item
               icon={({ color, size }) => (
                 <MaterialCommunityIcons
                   name="seatbelt"
@@ -50,8 +51,8 @@ const DrawerContent = (props) => {
               onPress={() => {
                 props.navigation.navigate("Onboarding");
               }}
-            ></DrawerItem>
-            <DrawerItem
+            ></Drawer.Item>
+            <Drawer.Item
               icon={({ color, size }) => (
                 <MaterialCommunityIcons
                   name="seat-outline"
@@ -70,8 +71,8 @@ const DrawerContent = (props) => {
               onPress={() => {
                 props.navigation.navigate("Offboarding");
               }}
-            ></DrawerItem>
-            <DrawerItem
+            ></Drawer.Item>
+            <Drawer.Item
               icon={({ color, size }) => (
                 <AntDesign
                   name="flag"
@@ -90,8 +91,28 @@ const DrawerContent = (props) => {
               onPress={() => {
                 props.navigation.navigate("Leave");
               }}
-            ></DrawerItem>
-            {/* <DrawerItem
+            ></Drawer.Item>
+            <Drawer.Item
+              icon={({ color, size }) => (
+                <FontAwesome
+                  name="money"
+                  size={size}
+                  color={focusedRoute === "Leave" ? "black" : color}
+                />
+              )}
+              style={
+                focusedRoute === "Pay" && {
+                  backgroundColor: "#c4b5fd",
+                  borderRadius: 20,
+                }
+              }
+              labelStyle={focusedRoute === "Pay" && { color: "black" }}
+              label="Pay"
+              onPress={() => {
+                props.navigation.navigate("Pay");
+              }}
+            ></Drawer.Item>
+            {/* <Drawer.Item
               icon={({ color, size }) => (
                 <AntDesign
                   name="flag"
@@ -103,7 +124,7 @@ const DrawerContent = (props) => {
               onPress={() => {
                 props.navigation.navigate("Apply");
               }}
-            ></DrawerItem> */}
+            ></Drawer.Item> */}
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>
@@ -114,13 +135,13 @@ const DrawerContent = (props) => {
           borderTopWidth: 1,
         }}
       >
-        <DrawerItem
+        <Drawer.Item
           icon={({ color, size }) => (
             <Icon name="exit-to-app" color={color} size={size} />
           )}
           label="Sign Out"
           onPress={() => signOut()}
-        ></DrawerItem>
+        ></Drawer.Item>
       </Drawer.Section>
     </View>
   );
