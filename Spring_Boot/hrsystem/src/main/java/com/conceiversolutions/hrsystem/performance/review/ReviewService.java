@@ -248,4 +248,20 @@ public class ReviewService {
         return reviews;
     }
 
+    public List<Review> getManagerReviewsByManager(Long managerId) {
+        List<Review> reviews = reviewRepository.findManagerReviewByManager(managerId);
+
+        for (Review r : reviews) {
+            User employee = r.getEmployeeReviewing();
+            User e = breakRelationships(employee);
+            r.setEmployeeReviewing(e);
+
+            User manager = r.getManager();
+            User m = breakRelationships(manager);
+            r.setManager(m);
+        }
+
+        return reviews;
+    }
+
 }

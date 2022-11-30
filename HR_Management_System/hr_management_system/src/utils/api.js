@@ -1247,6 +1247,9 @@ const api = {
   getTeamEmptyHead(departmentId) {
     return axios.get(`http://localhost:9191/api/promotion/team/department/${departmentId}`)
   },
+  getManagerReviewsByManager(managerId) {
+    return axios.get(`http://localhost:9191/api/review/manager/${managerId}`)
+  },
 };
 
 export default api;

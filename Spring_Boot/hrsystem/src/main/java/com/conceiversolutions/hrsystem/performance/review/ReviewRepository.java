@@ -19,6 +19,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r WHERE r.reviewYear = ?1 AND r.manager.userId = ?2")
     List<Review> findManagerReviewByYear(String year, Long managerId);
 
+    @Query("SELECT r FROM Review r WHERE r.manager.userId = ?1")
+    List<Review> findManagerReviewByManager(Long managerId);
+
     @Query("SELECT r FROM Review r WHERE r.reviewYear = ?1")
     List<Review> findAllReviewsByYear(String year);
     

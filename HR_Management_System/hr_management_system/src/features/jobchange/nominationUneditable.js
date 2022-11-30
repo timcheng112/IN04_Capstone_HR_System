@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { ChevronUpDownIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import GoalList from "../performance/GoalList";
@@ -19,6 +19,7 @@ export default function NominationUneditable({ request }) {
     positionId: 0,
     positionName: "Select A Position",
   });
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     if (request) {
@@ -37,6 +38,10 @@ export default function NominationUneditable({ request }) {
         setAppraisals(response.data);
       });
     }
+    api.getManagerReviewsByManager(request.employee.userId).then((response) => {
+      console.log(response.data);
+      setReviews(response.data);
+    });
   }, []);
 
   return (
@@ -133,6 +138,86 @@ export default function NominationUneditable({ request }) {
                   <dd className="mt-1 text-sm text-gray-900">
                     <GoalList userId={request.employee.userId} />
                   </dd>
+                </div>
+                <div className="col-span-2">
+                  <label
+                    htmlFor="goals"
+                    className="block text-md text-left font-sans font-medium text-gray-900"
+                  >
+                    Reviews
+                  </label>
+                  <div className="mt-5 flex flex-col">
+                    <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                      <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                          <table className="min-w-full divide-y divide-gray-300">
+                            <thead className="bg-gray-50">
+                              <tr>
+                                <th
+                                  scope="col"
+                                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                >
+                                  Employee / Reviewed By
+                                </th>
+                                <th
+                                  scope="col"
+                                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                >
+                                  Manager
+                                </th>
+                                <th
+                                  scope="col"
+                                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                >
+                                  View
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200 bg-white">
+                              {reviews.map((review) => (
+                                <tr key={review.reviewId}>
+                                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-left font-medium text-gray-900 sm:pl-6">
+                                    {review.employeeReviewing.firstName}{" "}
+                                    {review.employeeReviewing.lastName}
+                                    <span className="mt-2 flex items-center text-sm text-gray-500">
+                                      <EnvelopeIcon
+                                        className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                        aria-hidden="true"
+                                      />
+                                      <span className="truncate">
+                                        {review.employeeReviewing.workEmail}
+                                      </span>
+                                    </span>
+                                  </td>
+                                  <td className="whitespace-nowrap px-3 py-4 text-sm text-left text-gray-900">
+                                    {review.manager.firstName}{" "}
+                                    {review.manager.lastName}
+                                    <span className="mt-2 flex items-center text-sm text-gray-500">
+                                      <EnvelopeIcon
+                                        className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                        aria-hidden="true"
+                                      />
+                                      <span className="truncate">
+                                        {review.manager.workEmail}
+                                      </span>
+                                    </span>
+                                  </td>
+                                  <td className="whitespace-nowrap px-3 py-4 text-sm text-left text-gray-500">
+                                    <a
+                                      href={`/performance/review/${review.reviewId}`}
+                                      className="inline-flex items-center rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50"
+                                    >
+                                      View
+                                    </a>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="sm:col-span-2"></div>
               </dl>

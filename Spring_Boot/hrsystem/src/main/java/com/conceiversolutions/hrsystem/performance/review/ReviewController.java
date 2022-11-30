@@ -31,6 +31,11 @@ public class ReviewController {
         return reviewService.getManagerReviewsByYear(year, managerId);
     }
 
+    @GetMapping(path = "manager/{managerId}")
+    public List<Review> getManagerReviewsByManager(@PathVariable("managerId") Long managerId) throws Exception {
+        return reviewService.getManagerReviewsByManager(managerId);
+    }
+
     @GetMapping(path = "{year}/all")
     public List<Review> getAllReviewsByYear(@PathVariable("year") String year) throws Exception {
         return reviewService.getAllReviewsByYear(year);
