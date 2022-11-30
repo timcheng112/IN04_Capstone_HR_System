@@ -113,8 +113,11 @@ const RewardDetailScreen = ({ navigation}) => {
         }
     });
     console.log("DDDD");
-    console.log(route.params.item.image.docId);
-    getImageSource();
+    if (route.params.item.image !== null) {
+        console.log(route.params.item.image.docId);
+        getImageSource();
+    }
+
   }, []);
 
   function redeemReward() {
