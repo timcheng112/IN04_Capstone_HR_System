@@ -54,17 +54,17 @@ public class PayInformation {
     @Enumerated(EnumType.STRING)
     @Column(nullable = true, name = "self_help_group")
     private SelfHelpGroupEnum selfHelpGroup;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     // @JoinColumn(name="allowanceId") mappedBy ^ over here suffice for linkage
     private List<Allowance> allowance;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     // @JoinColumn(name ="deductionId")
     private List<Deduction> deduction;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     // @JoinColumn(name="allowanceId") mappedBy ^ over here suffice for linkage
     private List<AllowanceTemplate> allowanceTemplates;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     // @JoinColumn(name ="deductionId")
     private List<DeductionTemplate> deductionTemplates;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -84,6 +84,10 @@ public class PayInformation {
         this.inPayroll = inPayroll;
         this.hasCommission = hasCommission;
         this.user = user;
+        this.allowance = new ArrayList<>();
+        this.deduction = new ArrayList<>();
+        this.allowanceTemplates = new ArrayList<>();
+        this.deductionTemplates = new ArrayList<>();
     }
 
     public PayInformation(String payType, BigDecimal basicSalary, BigDecimal basicHourlyPay,
@@ -106,6 +110,7 @@ public class PayInformation {
         this.allowanceTemplates = allowanceTemplates;
         this.deductionTemplates = deductionTemplates;
         this.user = user;
+
     }
 
     public PayInformation(BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay,
@@ -154,6 +159,7 @@ public class PayInformation {
         this.allowance = allowance;
         this.deduction = deduction;
         this.user = employee;
+
     }
 
     public PayInformation(String payType, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay,
@@ -176,6 +182,26 @@ public class PayInformation {
     public PayInformation(String monthly, BigDecimal bigDecimal, BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay,
             BigDecimal eventPhHourlyPay, String giro, String cpf, Object selfHelpGroupContributionType,
             Object allowance, Object deduction) {
+    }
+
+    public PayInformation(BigDecimal basicSalary, boolean inPayroll, boolean hasCommission) {
+        this.basicSalary = basicSalary;
+        this.inPayroll = inPayroll;
+        this.hasCommission = hasCommission;
+        this.allowance = new ArrayList<>();
+        this.deduction = new ArrayList<>();
+    }
+
+    public PayInformation(BigDecimal basicHourlyPay, BigDecimal weekendHourlyPay, BigDecimal eventPhHourlyPay,
+            BigDecimal overtimeHourlyPay, Boolean inPayroll, Boolean hasCommission) {
+        this.basicHourlyPay = basicHourlyPay;
+        this.weekendHourlyPay = weekendHourlyPay;
+        this.eventPhHourlyPay = eventPhHourlyPay;
+        this.overtimeHourlyPay = overtimeHourlyPay;
+        this.inPayroll = inPayroll;
+        this.hasCommission = hasCommission;
+        this.allowance = new ArrayList<>();
+        this.deduction = new ArrayList<>();
     }
 
     public Long getPayInformationId() {

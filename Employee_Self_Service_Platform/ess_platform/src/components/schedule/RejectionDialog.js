@@ -119,7 +119,7 @@ const RejectionDialog = ({ hideDialog, visible, swapRequest }) => {
                 alignItems: "flex-end",
               }}
             >
-              <Paragraph>Reviewer</Paragraph>
+              <Paragraph>{swapRequest.receiver.firstName}</Paragraph>
               <View
                 style={{
                   backgroundColor: "#dedede",
@@ -170,6 +170,67 @@ const RejectionDialog = ({ hideDialog, visible, swapRequest }) => {
                 />
               </View>
             </View>
+            {swapRequest.reviewerResponseReason && (
+              <View
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "flex-end",
+                }}
+              >
+                <Paragraph>Reviewer</Paragraph>
+                <View
+                  style={{
+                    backgroundColor: "#dedede",
+                    padding: 10,
+                    borderRadius: 5,
+                    marginTop: 5,
+                    marginLeft: "10%",
+                    maxWidth: "50%",
+                    alignSelf: "flex-start",
+                    //maxWidth: 500,
+                    //padding: 14,
+                    //alignItems:"center",
+                    borderRadius: 20,
+                  }}
+                >
+                  <Paragraph
+                    style={{
+                      fontSize: 16,
+                      color: "#000",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {swapRequest.reviewerResponseReason}
+                  </Paragraph>
+                  <View
+                    style={{
+                      position: "absolute",
+                      backgroundColor: "#dedede",
+                      //backgroundColor:"red",
+                      width: 20,
+                      height: 25,
+                      bottom: 0,
+                      borderBottomRightRadius: 25,
+                      left: -10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      position: "absolute",
+                      backgroundColor: "#fff",
+                      //backgroundColor:"green",
+                      width: 20,
+                      height: 35,
+                      bottom: -6,
+                      borderBottomRightRadius: 18,
+                      left: -20,
+                    }}
+                  />
+                </View>
+              </View>
+            )}
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={hideDialog}>Okay</Button>

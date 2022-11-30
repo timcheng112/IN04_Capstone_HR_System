@@ -15,6 +15,7 @@ export default function EmployeeRewardOption({ reward, refreshKey, refreshKeyHan
   const [uId, setUId] = useState(getUserId());
   const [userClaimed, setUserClaimed] = useState(false);
   const [refreshKey2, setRefreshKey2] = useState(0);
+  const [rewardImg, setRewardImg] = useState(null);
 
   useEffect(() => {
     api
@@ -22,6 +23,12 @@ export default function EmployeeRewardOption({ reward, refreshKey, refreshKeyHan
       .then((response) => {
         setUser(response.data);
         //        console.log(response.data);
+        if (reward.img !== null) {
+            api.getDocById(reward.image.docId).then((response) => {
+                const url = window.URL.createObjectURL(response.data);
+                setRewardImg(url);
+            })
+        }
       })
       .catch((error) => setError(error));
   }, []);
@@ -54,6 +61,12 @@ export default function EmployeeRewardOption({ reward, refreshKey, refreshKeyHan
 
   return (
     <div>
+        {rewardImg !== null && <div className="flex justify-center mt-1 object-scale-down h-36 w-72 pb-2">
+            <img
+              src={rewardImg}
+              alt=""
+            />
+          </div>}
       <div className="space-x-4">
         {!userClaimed && <button
           type="button"

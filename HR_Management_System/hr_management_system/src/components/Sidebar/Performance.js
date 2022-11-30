@@ -4,6 +4,7 @@ import {
   Bars3BottomLeftIcon,
   ChartBarSquareIcon,
   ChartPieIcon,
+  DocumentTextIcon,
   FolderIcon,
   InboxStackIcon,
   PresentationChartLineIcon,
@@ -36,6 +37,12 @@ const navigationhr = [
     current: false,
   },
   {
+    name: "Reviews",
+    href: "/performance/reviews",
+    icon: DocumentTextIcon,
+    current: false,
+  },
+  {
     name: "Promotions",
     href: "/promotion",
     icon: PresentationChartLineIcon,
@@ -43,7 +50,7 @@ const navigationhr = [
   },
   {
     name: "Transfers",
-    href: "/promotion",
+    href: "/transfer",
     icon: InboxStackIcon,
     current: false,
   },
@@ -68,6 +75,12 @@ const navigation = [
     current: false,
   },
   {
+    name: "Reviews",
+    href: "/performance/reviews",
+    icon: DocumentTextIcon,
+    current: false,
+  },
+  {
     name: "Promotions",
     href: "/promotion",
     icon: PresentationChartLineIcon,
@@ -75,7 +88,7 @@ const navigation = [
   },
   {
     name: "Transfers",
-    href: "/promotion",
+    href: "/transfer",
     icon: InboxStackIcon,
     current: false,
   },

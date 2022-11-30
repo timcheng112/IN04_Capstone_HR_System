@@ -1,6 +1,7 @@
 package com.conceiversolutions.hrsystem.organizationstructure.team;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,8 +16,12 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     // Optional<Team> findTeamsByDeptId(Long id);
 
     @Query("SELECT t.users FROM Team t WHERE t.teamHead.userId = ?1")
-    List<User> findTeamByTeamHead(Long userId);
+    List<User> findTeamMembersByTeamHead(Long userId);
+
+    @Query("SELECT t FROM Team t WHERE t.teamHead.userId = ?1")
+    Optional<Team> findTeamByTeamHead(Long userId);
 
     @Query("SELECT t.teamHead FROM Team t")
     List<User> findTeamHeads();
+
 }

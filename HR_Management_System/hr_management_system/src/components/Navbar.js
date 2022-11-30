@@ -29,7 +29,6 @@ export default function Navbar() {
     { name: "Career ", path: "/career/promotion" },
     { name: "Welfare", path: "/welfare/mybenefits" },
     { name: "Hiring", path: "/hiring/jobrequest" },
-    { name: "Reports", path: "/reports" },
     { name: "Rostering", path: "/rostering" },
     { name: "Payroll", path: "/payroll" },
   ];
@@ -40,7 +39,7 @@ export default function Navbar() {
     { name: "Welfare", path: "/welfare/benefits" },
     { name: "Training", path: "/mytraining" },
     { name: "Hiring", path: "/hiring/jobrequesthr" },
-    { name: "Reports", path: "/reports" },
+    { name: "Reports", path: "/report" },
     { name: "Rostering", path: "/rostering" },
     { name: "Payroll", path: "/payroll" },
   ];

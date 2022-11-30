@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.conceiversolutions.hrsystem.user.user.User;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping(path = "api/organization")
@@ -49,5 +51,10 @@ public class OrganizationController {
     @GetMapping(path = "{employeeId}/isHead")
     public Long isEmployeeOrganizationHead(@PathVariable("employeeId") Long employeeId) {
         return organizationService.isEmployeeOrganizationHead(employeeId);
+    }
+
+    @GetMapping(path = "head")
+    public User getOrganizationHead() throws Exception {
+        return organizationService.getOrganizationHead();
     }
 }

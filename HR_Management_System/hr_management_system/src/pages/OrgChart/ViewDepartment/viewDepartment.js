@@ -67,6 +67,7 @@ export default function ViewDepartment() {
 
   // useEffect for getTeam
   useEffect(() => {
+    console.log(deptId);
     api.getAllTeamsInDept(deptId).then((response) => {
       setTeams(response.data);
       console.log("USE EFFECT 2: getAllTeams");
@@ -91,16 +92,12 @@ export default function ViewDepartment() {
         alert("Team is successfully deleted.");
       })
       .catch((error) => {
-        //team will always have members cos of teamHead. just delete unlike department 
+        //team will always have members cos of teamHead. just delete unlike department
         var message = error.request.response;
-        if (message.includes("Cannot delete team"))
-          console.log(message);
+        if (message.includes("Cannot delete team")) console.log(message);
         alert("Teams cannot be deleted");
       });
   }
-
-
-
 
   return (
     dept &&
@@ -228,7 +225,7 @@ export default function ViewDepartment() {
                               </div>
                               <div className="">
                                 <div className="font-medium text-gray-900">
-                                  {deptHead.firstName}{" "} {deptHead.lastName}
+                                  {deptHead.firstName} {deptHead.lastName}
                                 </div>
                                 <div className="text-gray-500">
                                   {deptHead.email}
@@ -323,9 +320,17 @@ export default function ViewDepartment() {
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {team.outlet.outletName}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {team.teamHead.firstName + " " + team.teamHead.lastName}
-                            </td>
+                            {team.teamHead ? (
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {team.teamHead.firstName +
+                                  " " +
+                                  team.teamHead.lastName}
+                              </td>
+                            ) : (
+                              <>
+                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td>
+                              </>
+                            )}
 
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <button
@@ -341,7 +346,6 @@ export default function ViewDepartment() {
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <a
                                 onClick={() => {
-                                 
                                   setOpenDelete(true);
                                   // console.log(team.teamId)
                                   setToDelete(team.teamId);
@@ -353,11 +357,11 @@ export default function ViewDepartment() {
                               </a>
 
                               <DeleteTeamModal
-                                  open={openDelete}
-                                  onConfirm={deleteTeam}
-                                  setOpen={setOpenDelete}
-                                  deptId={team.teamId}
-                                />
+                                open={openDelete}
+                                onConfirm={deleteTeam}
+                                setOpen={setOpenDelete}
+                                deptId={team.teamId}
+                              />
                             </td>
                           </tr>
                         ))}

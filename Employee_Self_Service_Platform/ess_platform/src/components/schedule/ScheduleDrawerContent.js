@@ -36,7 +36,9 @@ const DrawerContent = (props) => {
       api
         .getNumberOfPendingIncomingSwapRequestsByUser(userId)
         .then((response) => setNumRequests(response.data))
-        .catch((error) => console.log(error.response.data.message));
+        .catch((error) =>
+          console.log("Error retrieving pending incoming swap requests")
+        );
     }
   });
 

@@ -20,6 +20,7 @@ import ViewEmployeeGoals from "../../features/performance/ViewEmployeeGoals";
 import { format, getDay, nextDay } from "date-fns";
 import AddFinancialGoalModal from "../../features/performance/AddFinancialGoalModal";
 import AddBusinessGoalModal from "../../features/performance/AddBusinessGoalModal";
+import EditAchievementModal from "../../features/performance/EditAchievementModal";
 
 export default function Goals() {
   const [error, setError] = useState(null);
@@ -42,6 +43,7 @@ export default function Goals() {
   const [openDeleteGoal, setOpenDeleteGoal] = useState(false);
   const [openEditGoal, setOpenEditGoal] = useState(false);
   const [openAddAchievement, setOpenAddAchievement] = useState(false);
+  const [openEditAchievement, setOpenEditAchievement] = useState(false);
   const [openView, setOpenView] = useState(false);
   const [financial, setFinancial] = useState([]);
   const [business, setBusiness] = useState([]);
@@ -253,6 +255,7 @@ export default function Goals() {
     openAddAchievement,
     openView,
     openAddBusinessGoal,
+    openEditAchievement,
   ]);
 
   const handleSubmit = (evt) => {
@@ -388,6 +391,23 @@ export default function Goals() {
         setRefresh(!refresh);
       }
     });
+  }
+
+  function handleDeleteAchievement(achievement) {
+    var confirm;
+    confirm = window.confirm(
+      "Are you sure you want to delete " + achievement.description + "?"
+    );
+    if (confirm) {
+      api
+        .deleteAchievement(achievement.achievementId)
+        .then((response) => {
+          alert(response.data);
+        })
+        .finally(() => {
+          setRefresh(!refresh);
+        });
+    }
   }
 
   if (error) return `Error`;
@@ -1441,42 +1461,70 @@ export default function Goals() {
                                                       </tr>
                                                       {goal?.achievements?.map(
                                                         (achievement) => (
-                                                          <tr
-                                                            key={
-                                                              achievement.achievementId
-                                                            }
-                                                            className=""
-                                                          >
-                                                            <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                              {
-                                                                achievement.description
+                                                          <>
+                                                            <tr
+                                                              key={
+                                                                achievement.achievementId
                                                               }
-                                                            </td>
-                                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
-                                                              {
-                                                                achievement.created
-                                                              }
-                                                            </td>
-                                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
-                                                              {
-                                                                achievement.lastModified
-                                                              }
-                                                            </td>
-                                                            <td className="relative whitespace-nowrap text-left py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                              <a
-                                                                href="#"
-                                                                className="text-indigo-600 font-semibold hover:text-indigo-900"
-                                                              >
-                                                                Edit
-                                                                <span className="sr-only">
-                                                                  ,{" "}
-                                                                  {
-                                                                    achievement.name
+                                                              className=""
+                                                            >
+                                                              <td className="whitespace-nowrap text-left py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                                {
+                                                                  achievement.description
+                                                                }
+                                                              </td>
+                                                              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                                                                {
+                                                                  achievement.created
+                                                                }
+                                                              </td>
+                                                              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                                                                {
+                                                                  achievement.lastModified
+                                                                }
+                                                              </td>
+                                                              <td className="relative whitespace-nowrap text-left py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                                <button
+                                                                  type="button"
+                                                                  className="inline-flex items-center rounded border border-transparent px-2.5 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                                  onClick={() => {
+                                                                    setOpenEditAchievement(
+                                                                      true
+                                                                    );
+                                                                    console.log(
+                                                                      openEditAchievement
+                                                                    );
+                                                                  }}
+                                                                >
+                                                                  Edit
+                                                                </button>
+                                                                <EditAchievementModal
+                                                                  open={
+                                                                    openEditAchievement
                                                                   }
-                                                                </span>
-                                                              </a>
-                                                            </td>
-                                                          </tr>
+                                                                  onClose={() =>
+                                                                    setOpenEditAchievement(
+                                                                      false
+                                                                    )
+                                                                  }
+                                                                  achievement={
+                                                                    achievement
+                                                                  }
+                                                                />
+                                                                <button
+                                                                  type="button"
+                                                                  className="inline-flex items-center rounded border border-transparent px-2.5 py-1.5 text-sm font-medium text-red-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                                  onClick={() => {
+                                                                    handleDeleteAchievement(
+                                                                      achievement
+                                                                    );
+                                                                  }}
+                                                                >
+                                                                  Delete
+                                                                </button>
+                                                              </td>
+                                                            </tr>
+                                                          </>
                                                         )
                                                       )}
                                                     </Fragment>
@@ -1669,18 +1717,44 @@ export default function Goals() {
                                                                   }
                                                                 </td>
                                                                 <td className="relative whitespace-nowrap text-left py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                                  <a
-                                                                    href="#"
-                                                                    className="text-indigo-600 font-semibold hover:text-indigo-900"
+                                                                  <button
+                                                                    type="button"
+                                                                    className="inline-flex items-center rounded border border-transparent px-2.5 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                                    onClick={() => {
+                                                                      setOpenEditAchievement(
+                                                                        true
+                                                                      );
+                                                                      console.log(
+                                                                        openEditAchievement
+                                                                      );
+                                                                    }}
                                                                   >
                                                                     Edit
-                                                                    <span className="sr-only">
-                                                                      ,{" "}
-                                                                      {
-                                                                        achievement.name
-                                                                      }
-                                                                    </span>
-                                                                  </a>
+                                                                  </button>
+                                                                  <EditAchievementModal
+                                                                    open={
+                                                                      openEditAchievement
+                                                                    }
+                                                                    onClose={() =>
+                                                                      setOpenEditAchievement(
+                                                                        false
+                                                                      )
+                                                                    }
+                                                                    achievement={
+                                                                      achievement
+                                                                    }
+                                                                  />
+                                                                  <button
+                                                                    type="button"
+                                                                    className="inline-flex items-center rounded border border-transparent px-2.5 py-1.5 text-sm font-medium text-red-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                                    onClick={() => {
+                                                                      handleDeleteAchievement(
+                                                                        achievement
+                                                                      );
+                                                                    }}
+                                                                  >
+                                                                    Delete
+                                                                  </button>
                                                                 </td>
                                                               </tr>
                                                             )
@@ -1711,9 +1785,7 @@ export default function Goals() {
                                       </span>
                                     </h2>
                                     <div className="mt-8 flex justify-center">
-                                      <div className="inline-flex rounded-md shadow">
-
-                                      </div>
+                                      <div className="inline-flex rounded-md shadow"></div>
                                     </div>
                                   </div>
                                 </div>

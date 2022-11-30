@@ -2,13 +2,17 @@ import axios from "axios";
 
 // const URL = "192.168.10.128"; // MATT
 // const URL = "172.31.55.234"; // XINYUE
+//  const URL = "192.168.10.128"; // MATT
+//const URL = "10.100.1.104"; // XINYUE
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"
 // const URL = "10.100.1.104"; // TIM
 // const URL = "172.17.93.172";
-const URL = "10.249.106.71"
+//const URL = "10.249.106.71" //ALI
 
+//const URL = "192.168.1.82"; // TIM
+const URL = "10.249.249.151";
 
 const api = {
   login(workEmail, password) {
@@ -18,6 +22,11 @@ const api = {
   },
   getUser(userId) {
     return axios.get(`http://${URL}:9191/api/user/${userId}`);
+  },
+  getDocById(docId) {
+    return axios.get(`http://${URL}:9191/api/docData/getDocById?id=${docId}`, {
+      responseType: "blob",
+    });
   },
   updateProfile(userId, email, phone, bankName, bankAcc){
     return axios.get(`http://${URL}:9191/api/user/updateProfileESS?userId=${userId}&email=${email}&phone=${phone}&bankName=${bankName}&bankAccNo=${bankAcc}`);
@@ -248,13 +257,39 @@ const api = {
       `http://${URL}:9191/api/claims/withdrawClaim?claimId=${claimId}`
     );
   },
-  makeNewClaim(claimDate, incidentDate, remarks, claimAmount, benefitPlanInstanceId, file) {
+  makeNewClaim(
+    claimDate,
+    incidentDate,
+    remarks,
+    claimAmount,
+    benefitPlanInstanceId,
+    file
+  ) {
     return axios.post(
       `http://${URL}:9191/api/claims/makeNewClaim?file=&claimDate=${claimDate}&incidentDate=${incidentDate}&remarks=${remarks}&claimAmount=${claimAmount}&benefitPlanInstanceId=${benefitPlanInstanceId}`,
-    file);
+      file
+    );
   },
   createClaim(formDataPayload) {
-    return axios.post(`http://${URL}:9191/api/claims/makeNewClaim`, formDataPayload, {headers: {'Content-Type': 'multipart/form-data'}});
+    return axios.post(
+      `http://${URL}:9191/api/claims/makeNewClaim`,
+      formDataPayload,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+  },
+  getPayslipByUserId(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/pay/payslip/getPayslipByUserId?userId=${userId}`
+    );
+  },
+  downloadDocument(docDataId) {
+    return axios.get(`
+    http://${URL}:9191/api/docData/downloadDocument?id=${docDataId}`);
+  },
+  getDocById(docId) {
+    return axios.get(`http://${URL}:9191/api/docData/getDocById?id=${docId}`, {
+      responseType: "blob",
+    });
   },
   checkin(userId){
     return axios.post(`http://${URL}:9191/api/user/attendance/checkIn?userId=${userId}`);
@@ -265,12 +300,17 @@ const api = {
   getUserAttendedShiftsMonthly(userId){
     return axios.get(`http://${URL}:9191/api/shift_list_item/getUserAttendedShiftsMonthly?userId=${userId}`);
   },
+  redeemReward(rewardId, employeeId) {
+      return axios.post(
+        `http://${URL}:9191/api/rewards/redeemReward?rewardId=${rewardId}&employeeId=${employeeId}`
+      );
+   },
   getUserShiftItemsMonthly(userId){
     return axios.get(`http://${URL}:9191/api/shift_list_item/getUserShiftItemsMonthly?userId=${userId}`);
   },
-
-
-
+  getUserPayInformation(userId) {
+    return axios.get(`http://${URL}:9191/api/pay/payinfo/user/${userId}`);
+  },
 };
 
 export default api;

@@ -2,13 +2,19 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import PerformanceSidebar from "../../components/Sidebar/Performance";
 import ActiveRequests from "../../features/jobchange/activeRequests";
+import AllRequests from "../../features/jobchange/allRequests";
 import RequestHistory from "../../features/jobchange/requestHistory";
+import ToApproveRequests from "../../features/jobchange/toApproveRequests";
+import ToInterviewRequests from "../../features/jobchange/toInterviewRequests";
+import api from "../../utils/api";
+import { getUserId } from "../../utils/Common";
 
 const tabs = [
   { name: "My Active Requests", href: "#", current: true },
   { name: "To Interview", href: "#", current: false },
   { name: "To Approve", href: "#", current: false },
   { name: "My Request History", href: "#", current: false },
+  { name: "All Requests", href: "#", current: false },
 ];
 
 function classNames(...classes) {
@@ -18,6 +24,18 @@ function classNames(...classes) {
 export default function Promotion() {
   const [refresh, setRefresh] = useState(false);
   const [currentTab, setCurrentTab] = useState("My Active Requests");
+  const [tabList, setTabList] = useState(tabs);
+
+  useEffect(() => {
+    api.getUser(getUserId()).then((response) => {
+      if (!response.data.isHrEmployee) {
+        const nonHRtabs = tabs.filter(
+          (t) => t.name !== "To Approve" || t.name !== "All Requests"
+        );
+        setTabList(nonHRtabs);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     console.log("refresh");
@@ -41,13 +59,27 @@ export default function Promotion() {
         </div>
       );
     } else if (currentTab === "To Interview") {
-      return <>to interview wip</>;
+      return (
+        <div className="mt-10">
+          <ToInterviewRequests />
+        </div>
+      );
     } else if (currentTab === "To Approve") {
-      return <>to approve wip</>;
+      return (
+        <div className="mt-10">
+          <ToApproveRequests />
+        </div>
+      );
     } else if (currentTab === "My Request History") {
       return (
         <div>
           <RequestHistory />
+        </div>
+      );
+    } else if (currentTab === "All Requests") {
+      return (
+        <div>
+          <AllRequests />
         </div>
       );
     }
@@ -91,8 +123,8 @@ export default function Promotion() {
               </div>
               <div className="hidden sm:block">
                 <div className="border-b border-gray-200">
-                  <nav className="-mb-px flex" aria-label="Tabs">
-                    {tabs.map((tab) => (
+                  <nav className="-mb-px flex justify-center" aria-label="Tabs">
+                    {tabList.map((tab) => (
                       <button
                         key={tab.name}
                         href={tab.href}

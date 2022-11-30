@@ -31,7 +31,7 @@ public class ShiftListItemService {
         for (ShiftListItem shiftListItem : shiftListItems) {
             shiftListItem.getShift().setRoster(null);
             shiftListItem.getShift().setShiftListItems(new ArrayList<>());
-            shiftListItem.setUser(null);
+            shiftListItem.getUser().nullify();
         }
         return shiftListItems;
     }
@@ -186,6 +186,28 @@ public class ShiftListItemService {
                 shiftListItem.getUser().nullify();
             }
         }
+        return shiftListItems;
+    }
+
+    public List<ShiftListItem> getShiftListItemsByMonth(Long userId, LocalDate month) {
+        LocalDateTime start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 1),
+                LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(
+                LocalDate.of(month.getYear(), month.getMonthValue(), month.lengthOfMonth()), LocalTime.of(23, 59, 59));
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.getShiftListItemsByMonth(userId, start, end);
+
+        if (shiftListItems.isEmpty()) {
+            // throw new IllegalStateException(
+            // "Cannot find payslip for user with id:" + userId + "in the month of " +
+            // month);
+            return new ArrayList<>();
+        }
+        for (ShiftListItem shiftListItem : shiftListItems) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().nullify();
+        }
+
         return shiftListItems;
     }
 

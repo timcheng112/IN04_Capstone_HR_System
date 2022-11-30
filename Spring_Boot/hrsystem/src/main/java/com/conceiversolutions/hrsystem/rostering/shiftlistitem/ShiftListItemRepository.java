@@ -6,12 +6,13 @@ import com.conceiversolutions.hrsystem.administration.category.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.conceiversolutions.hrsystem.enums.PositionTypeEnum;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
+
 import java.util.Optional;
 
 @Repository
@@ -40,6 +41,10 @@ public interface ShiftListItemRepository extends JpaRepository<ShiftListItem, Lo
     @Query("SELECT s FROM ShiftListItem s JOIN s.user WHERE DATE(s.shift.startTime) BETWEEN DATE(?1) AND DATE(?2)")
     List<ShiftListItem> findShiftListItemByDate(LocalDateTime start, LocalDateTime end);
 
+
+    @Query("SELECT s FROM ShiftListItem s WHERE s.user.userId =:userId AND s.shift.startTime BETWEEN :start AND :end")
+    List<ShiftListItem> getShiftListItemsByMonth(@Param("userId") Long userId, @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end);
 
     // //manager?
     // @Query("SELECT s FROM ShiftListItem s WHERE userId = ?1")

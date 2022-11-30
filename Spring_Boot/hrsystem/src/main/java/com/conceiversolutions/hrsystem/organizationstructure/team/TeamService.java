@@ -64,7 +64,10 @@ public class TeamService {
             t.getRoster().setBlocks(new ArrayList<>());
             t.getRoster().setShifts(new ArrayList<>());
 
-            t.getTeamHead().nullify();
+            if (t.getTeamHead() != null) {
+                t.getTeamHead().nullify();
+            }
+
         }
 
         return teams;
@@ -110,6 +113,7 @@ public class TeamService {
                 member.setReactivationRequest(null);
                 member.setAttendances(new ArrayList<>());
                 member.setCurrentPayInformation(null);
+                member.setPayslips(new ArrayList<>());
                 member.setEmployeeAppraisals(new ArrayList<>());
 
                 member.setManagerAppraisals(new ArrayList<>());
@@ -130,28 +134,32 @@ public class TeamService {
             t.getRoster().setBlocks(new ArrayList<>());
             t.getRoster().setShifts(new ArrayList<>());
 
-            t.getTeamHead().setTeams(new ArrayList<>());
-            t.getTeamHead().setQualificationInformation(null);
-            t.getTeamHead().setPositions(new ArrayList<>());
-            t.getTeamHead().setTaskListItems(new ArrayList<>());
-            t.getTeamHead().setShiftListItems(new ArrayList<>());
-            t.getTeamHead().setBlocks(new ArrayList<>());
-            t.getTeamHead().setSwapRequestsReceived(new ArrayList<>());
-            t.getTeamHead().setSwapRequestsRequested(new ArrayList<>());
-            t.getTeamHead().setReactivationRequest(null);
-            t.getTeamHead().setAttendances(new ArrayList<>());
-            t.getTeamHead().setCurrentPayInformation(null);
-            t.getTeamHead().setEmployeeAppraisals(new ArrayList<>());
-            t.getTeamHead().setManagerAppraisals(new ArrayList<>());
-            t.getTeamHead().setManagerReviews(new ArrayList<>());
-            t.getTeamHead().setEmployeeReviews(new ArrayList<>());
-            t.getTeamHead().setApplications(new ArrayList<>());
-            t.getTeamHead().setGoals(new ArrayList<>());
-            t.getTeamHead().setJobRequests(new ArrayList<>());
-            t.getTeamHead().setLeaves(new ArrayList<>());
-            t.getTeamHead().setLeaveQuotas(new ArrayList<>());
-            t.getTeamHead().setCurrentLeaveQuota(null);
-            t.getTeamHead().setBenefitPlanInstances(new ArrayList<>());
+            if (t.getTeamHead() != null) {
+                t.getTeamHead().setTeams(new ArrayList<>());
+                t.getTeamHead().setQualificationInformation(null);
+                t.getTeamHead().setPositions(new ArrayList<>());
+                t.getTeamHead().setTaskListItems(new ArrayList<>());
+                t.getTeamHead().setShiftListItems(new ArrayList<>());
+                t.getTeamHead().setBlocks(new ArrayList<>());
+                t.getTeamHead().setSwapRequestsReceived(new ArrayList<>());
+                t.getTeamHead().setSwapRequestsRequested(new ArrayList<>());
+                t.getTeamHead().setReactivationRequest(null);
+                t.getTeamHead().setAttendances(new ArrayList<>());
+                t.getTeamHead().setCurrentPayInformation(null);
+                t.getTeamHead().setPayslips(new ArrayList<>());
+                t.getTeamHead().setEmployeeAppraisals(new ArrayList<>());
+                t.getTeamHead().setManagerAppraisals(new ArrayList<>());
+                t.getTeamHead().setManagerReviews(new ArrayList<>());
+                t.getTeamHead().setEmployeeReviews(new ArrayList<>());
+                t.getTeamHead().setApplications(new ArrayList<>());
+                t.getTeamHead().setGoals(new ArrayList<>());
+                t.getTeamHead().setJobRequests(new ArrayList<>());
+                t.getTeamHead().setLeaves(new ArrayList<>());
+                t.getTeamHead().setLeaveQuotas(new ArrayList<>());
+                t.getTeamHead().setCurrentLeaveQuota(null);
+                t.getTeamHead().setBenefitPlanInstances(new ArrayList<>());
+            }
+            t.setDepartment(null);
         }
 
         return teamsInDept;
@@ -180,6 +188,7 @@ public class TeamService {
                 member.setReactivationRequest(null);
                 member.setAttendances(new ArrayList<>());
                 member.setCurrentPayInformation(null);
+                member.setPayslips(new ArrayList<>());
                 member.setEmployeeAppraisals(new ArrayList<>());
 
                 member.setManagerAppraisals(new ArrayList<>());
@@ -205,28 +214,31 @@ public class TeamService {
             t.getOutlet().getAddress();
             t.getDepartment().setTeams(new ArrayList<>());
 
-            t.getTeamHead().setReactivationRequest(null);
-            t.getTeamHead().setTeams(new ArrayList<>());
-            t.getTeamHead().setQualificationInformation(null);
-            t.getTeamHead().setPositions(new ArrayList<>());
-            t.getTeamHead().setTaskListItems(new ArrayList<>());
-            t.getTeamHead().setShiftListItems(new ArrayList<>());
-            t.getTeamHead().setBlocks(new ArrayList<>());
-            t.getTeamHead().setSwapRequestsReceived(new ArrayList<>());
-            t.getTeamHead().setSwapRequestsRequested(new ArrayList<>());
-            t.getTeamHead().setAttendances(new ArrayList<>());
-            t.getTeamHead().setCurrentPayInformation(null);
-            t.getTeamHead().setEmployeeAppraisals(new ArrayList<>());
-            t.getTeamHead().setManagerAppraisals(new ArrayList<>());
-            t.getTeamHead().setManagerReviews(new ArrayList<>());
-            t.getTeamHead().setEmployeeReviews(new ArrayList<>());
-            t.getTeamHead().setApplications(new ArrayList<>());
-            t.getTeamHead().setGoals(new ArrayList<>());
-            t.getTeamHead().setJobRequests(new ArrayList<>());
-            t.getTeamHead().setLeaves(new ArrayList<>());
-            t.getTeamHead().setLeaveQuotas(new ArrayList<>());
-            t.getTeamHead().setCurrentLeaveQuota(null);
-            t.getTeamHead().setBenefitPlanInstances(new ArrayList<>());
+            if (t.getTeamHead() != null) {
+                t.getTeamHead().setReactivationRequest(null);
+                t.getTeamHead().setTeams(new ArrayList<>());
+                t.getTeamHead().setQualificationInformation(null);
+                t.getTeamHead().setPositions(new ArrayList<>());
+                t.getTeamHead().setTaskListItems(new ArrayList<>());
+                t.getTeamHead().setShiftListItems(new ArrayList<>());
+                t.getTeamHead().setBlocks(new ArrayList<>());
+                t.getTeamHead().setSwapRequestsReceived(new ArrayList<>());
+                t.getTeamHead().setSwapRequestsRequested(new ArrayList<>());
+                t.getTeamHead().setAttendances(new ArrayList<>());
+                t.getTeamHead().setCurrentPayInformation(null);
+                t.getTeamHead().setPayslips(new ArrayList<>());
+                t.getTeamHead().setEmployeeAppraisals(new ArrayList<>());
+                t.getTeamHead().setManagerAppraisals(new ArrayList<>());
+                t.getTeamHead().setManagerReviews(new ArrayList<>());
+                t.getTeamHead().setEmployeeReviews(new ArrayList<>());
+                t.getTeamHead().setApplications(new ArrayList<>());
+                t.getTeamHead().setGoals(new ArrayList<>());
+                t.getTeamHead().setJobRequests(new ArrayList<>());
+                t.getTeamHead().setLeaves(new ArrayList<>());
+                t.getTeamHead().setLeaveQuotas(new ArrayList<>());
+                t.getTeamHead().setCurrentLeaveQuota(null);
+                t.getTeamHead().setBenefitPlanInstances(new ArrayList<>());
+            }
 
             return t;
         } else {
@@ -570,7 +582,7 @@ public class TeamService {
         List<Team> allTeams = teamRepository.findAll();
 
         for (Team t : allTeams) {
-            if (t.getTeamHead().getUserId() == employeeId) {
+            if (t.getTeamHead() != null && t.getTeamHead().getUserId() == employeeId) {
                 System.out.println("Team head found for team " + t.getTeamId());
                 return t.getTeamId();
             }
@@ -582,5 +594,20 @@ public class TeamService {
         List<User> managers = teamRepository.findTeamHeads();
         System.out.println("Managers = " + managers);
         return managers;
+    }
+
+    public Long getTeamByEmployee(Long userId) throws Exception {
+        List<Team> teams = teamRepository.findAll();
+
+        for (Team t : teams) {
+            for (User u : t.getUsers()) {
+                if (u.getUserId() == userId) {
+                    System.out.println("team id " + t.getTeamId());
+                    return t.getTeamId();
+                }
+            }
+        }
+
+        throw new IllegalStateException("User does not belong to any team");
     }
 }

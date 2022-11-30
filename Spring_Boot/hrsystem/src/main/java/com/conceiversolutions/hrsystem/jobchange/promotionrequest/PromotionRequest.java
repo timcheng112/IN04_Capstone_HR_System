@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
+import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
+import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -39,6 +41,14 @@ public class PromotionRequest {
     @JoinColumn(name = "new_position", nullable = true)
     private Position newPosition;
 
+    @OneToOne
+    @JoinColumn(name = "new_team", nullable = true)
+    private Team newTeam;
+
+    @OneToOne
+    @JoinColumn(name = "new_department", nullable = true)
+    private Department newDepartment;
+
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "processed_by", nullable = true)
     private User processedBy;
@@ -58,9 +68,7 @@ public class PromotionRequest {
     @Column(name = "interview_remarks", nullable = true)
     private String interviewRemarks;
 
-    @Column(name = "effective_from", nullable = true)
-    private LocalDate effectiveFrom;
-    @Column(name = "interview_comments", nullable = true)
+    @Column(name = "reject_remarks", nullable = true)
     private String rejectRemarks;
 
     public PromotionRequest() {
@@ -79,8 +87,22 @@ public class PromotionRequest {
     }
 
     public PromotionRequest(LocalDate created, Appraisal appraisal, User employee, User manager, User interviewer,
+            String status, String promotionJustification, String withdrawRemarks, Team newTeam, Department newDepartment) {
+        this.created = created;
+        this.appraisal = appraisal;
+        this.employee = employee;
+        this.manager = manager;
+        this.interviewer = interviewer;
+        this.status = status;
+        this.promotionJustification = promotionJustification;
+        this.withdrawRemarks = withdrawRemarks;
+        this.newTeam = newTeam;
+        this.newDepartment = newDepartment;
+    }
+
+    public PromotionRequest(LocalDate created, Appraisal appraisal, User employee, User manager, User interviewer,
             Position newPosition, User processedBy, String status, String promotionJustification,
-            String withdrawRemarks, LocalDate interviewDate, String interviewRemarks, LocalDate effectiveFrom,
+            String withdrawRemarks, LocalDate interviewDate, String interviewRemarks,
             String rejectRemarks) {
         this.created = created;
         this.appraisal = appraisal;
@@ -94,7 +116,27 @@ public class PromotionRequest {
         this.withdrawRemarks = withdrawRemarks;
         this.interviewDate = interviewDate;
         this.interviewRemarks = interviewRemarks;
-        this.effectiveFrom = effectiveFrom;
+        this.rejectRemarks = rejectRemarks;
+    }
+
+    public PromotionRequest(LocalDate created, Appraisal appraisal, User employee, User manager, User interviewer,
+            Position newPosition, Team newTeam, Department newDepartment, User processedBy, String status,
+            String promotionJustification, String withdrawRemarks, LocalDate interviewDate, String interviewRemarks,
+            String rejectRemarks) {
+        this.created = created;
+        this.appraisal = appraisal;
+        this.employee = employee;
+        this.manager = manager;
+        this.interviewer = interviewer;
+        this.newPosition = newPosition;
+        this.newTeam = newTeam;
+        this.newDepartment = newDepartment;
+        this.processedBy = processedBy;
+        this.status = status;
+        this.promotionJustification = promotionJustification;
+        this.withdrawRemarks = withdrawRemarks;
+        this.interviewDate = interviewDate;
+        this.interviewRemarks = interviewRemarks;
         this.rejectRemarks = rejectRemarks;
     }
 
@@ -154,14 +196,6 @@ public class PromotionRequest {
         this.interviewRemarks = interviewRemarks;
     }
 
-    public LocalDate getEffectiveFrom() {
-        return effectiveFrom;
-    }
-
-    public void setEffectiveFrom(LocalDate effectiveFrom) {
-        this.effectiveFrom = effectiveFrom;
-    }
-
     public String getRejectRemarks() {
         return rejectRemarks;
     }
@@ -206,6 +240,22 @@ public class PromotionRequest {
         return newPosition;
     }
 
+    public Team getNewTeam() {
+        return newTeam;
+    }
+
+    public void setNewTeam(Team newTeam) {
+        this.newTeam = newTeam;
+    }
+
+    public Department getNewDepartment() {
+        return newDepartment;
+    }
+
+    public void setNewDepartment(Department newDepartment) {
+        this.newDepartment = newDepartment;
+    }
+
     public void setNewPosition(Position newPosition) {
         this.newPosition = newPosition;
     }
@@ -228,14 +278,16 @@ public class PromotionRequest {
                 ", manager=" + manager +
                 ", interviewer=" + interviewer +
                 ", newPosition=" + newPosition +
+                ", newTeam=" + newTeam +
+                ", newDepartment=" + newDepartment +
                 ", processedBy=" + processedBy +
                 ", status='" + status + '\'' +
                 ", promotionJustification='" + promotionJustification + '\'' +
                 ", withdrawRemarks='" + withdrawRemarks + '\'' +
                 ", interviewDate=" + interviewDate +
                 ", interviewRemarks='" + interviewRemarks + '\'' +
-                ", effectiveFrom=" + effectiveFrom +
                 ", rejectRemarks='" + rejectRemarks + '\'' +
                 '}';
     }
+
 }

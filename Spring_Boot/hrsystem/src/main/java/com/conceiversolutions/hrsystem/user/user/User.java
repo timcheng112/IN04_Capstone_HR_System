@@ -17,7 +17,7 @@ import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
 import com.conceiversolutions.hrsystem.pay.payslip.Payslip;
 import com.conceiversolutions.hrsystem.performance.appraisal.Appraisal;
 import com.conceiversolutions.hrsystem.performance.goal.Goal;
-import com.conceiversolutions.hrsystem.performance.review.ManagerReview;
+import com.conceiversolutions.hrsystem.performance.review.Review;
 import com.conceiversolutions.hrsystem.rostering.block.Block;
 import com.conceiversolutions.hrsystem.rostering.preferreddates.PreferredDates;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
@@ -44,7 +44,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-//@EqualsAndHashCode
+// @EqualsAndHashCode
 @Getter
 @Setter
 public class User implements UserDetails {
@@ -123,12 +123,12 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Appraisal.class, mappedBy = "managerAppraising")
     @Column(name = "appraised_by")
     private List<Appraisal> managerAppraisals;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "manager")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Review.class, mappedBy = "manager")
     @Column(name = "manager_reviews")
-    private List<ManagerReview> managerReviews;
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = ManagerReview.class, mappedBy = "employeeReviewing")
+    private List<Review> managerReviews;
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Review.class, mappedBy = "employeeReviewing")
     @Column(name = "reviewed_by")
-    private List<ManagerReview> employeeReviews;
+    private List<Review> employeeReviews;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Goal.class, mappedBy = "employee")
     @Column(name = "goals")
     private List<Goal> goals;
@@ -165,10 +165,11 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Leave.class, mappedBy = "employee")
     private List<Leave> leaves;
-    @Column(name = "bank_acc_no", nullable = true, length = 32)
+
+    @Column(name = "bank_acc_no", nullable = true)
     private String bankAccNo;
 
-    @Column(name= "bank_name", nullable = true)
+    @Column(name = "bank_name", nullable = true)
     private String bankName;
 
     @OneToMany
@@ -215,42 +216,94 @@ public class User implements UserDetails {
         this.benefitPlanInstances = new ArrayList<>();
     }
 
+    public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail, LocalDate dob, GenderEnum gender, RaceEnum race, CitizenshipEnum citizenship, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee, Boolean isBlackListed, Boolean isEnabled, Boolean isDisabled, LocalDate dateJoined, DocData profilePic, List<Position> positions, Position currentPosition, QualificationInformation qualificationInformation, List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances, List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<Review> managerReviews, List<Review> employeeReviews, List<Goal> goals, List<TaskListItem> taskListItems, List<Team> teams, PayInformation currentPayInformation, ReactivationRequest reactivationRequest, PreferredDates preferredDates, List<Block> blocks, List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested, List<SwapRequest> swapRequestsReceived, LeaveQuota currentLeaveQuota, List<LeaveQuota> leaveQuotas, List<Leave> leaves, String bankAccNo, String bankName, List<Notification> notificationsUnread, List<Notification> notificationsRead, String cardId) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phone = phone;
+        this.email = email;
+        this.workEmail = workEmail;
+        this.dob = dob;
+        this.gender = gender;
+        this.race = race;
+        this.citizenship = citizenship;
+        this.userRole = userRole;
+        this.isPartTimer = isPartTimer;
+        this.isHrEmployee = isHrEmployee;
+        this.isBlackListed = isBlackListed;
+        this.isEnabled = isEnabled;
+        this.isDisabled = isDisabled;
+        this.dateJoined = dateJoined;
+        this.profilePic = profilePic;
+        this.positions = positions;
+        this.currentPosition = currentPosition;
+        this.qualificationInformation = qualificationInformation;
+        this.applications = applications;
+        this.jobRequests = jobRequests;
+        this.payslips = payslips;
+        this.attendances = attendances;
+        this.employeeAppraisals = employeeAppraisals;
+        this.managerAppraisals = managerAppraisals;
+        this.managerReviews = managerReviews;
+        this.employeeReviews = employeeReviews;
+        this.goals = goals;
+        this.taskListItems = taskListItems;
+        this.teams = teams;
+        this.currentPayInformation = currentPayInformation;
+        this.reactivationRequest = reactivationRequest;
+        this.preferredDates = preferredDates;
+        this.blocks = blocks;
+        this.shiftListItems = shiftListItems;
+        this.swapRequestsRequested = swapRequestsRequested;
+        this.swapRequestsReceived = swapRequestsReceived;
+        this.currentLeaveQuota = currentLeaveQuota;
+        this.leaveQuotas = leaveQuotas;
+        this.leaves = leaves;
+        this.bankAccNo = bankAccNo;
+        this.bankName = bankName;
+        this.notificationsUnread = notificationsUnread;
+        this.notificationsRead = notificationsRead;
+        this.cardId = cardId;
+    }
+
 
 
     // this should be for making a new applicant's account
-    // public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob,
-    //         GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
-    //         PayInformation currentPayInformation) {
-    //     this();
-    //     this.firstName = firstName;
-    //     this.lastName = lastName;
-    //     this.password = password;
-    //     this.phone = phone;
-    //     this.email = email;
-    //     this.workEmail = "";
-    //     this.dob = dob;
-    //     this.gender = gender;
-    //     this.userRole = userRole;
-    //     this.isPartTimer = isPartTimer;
-    //     this.isHrEmployee = isHrEmployee;
-    //     this.isBlackListed = false;
-    //     this.isEnabled = false; // only change to true after email is confirmed
-    //     this.dateJoined = LocalDate.now();
-    //     this.profilePic = null;
-    //     this.currentPosition = null;
-    //     this.qualificationInformation = null;
-    //     this.applications = new ArrayList<>();
-    //     this.jobRequests = new ArrayList<>();
-    //     this.payslips = new ArrayList<>();
-    //     this.attendances = new ArrayList<>();
-    //     this.employeeAppraisals = new ArrayList<>();
-    //     this.managerAppraisals = new ArrayList<>();
-    //     this.managerReviews = new ArrayList<>();
-    //     this.employeeReviews = new ArrayList<>();
-    //     this.goals = new ArrayList<>();
-    //     this.teams = new ArrayList<>();
-    //     this.taskListItems = new ArrayList<>();
-    //     this.currentPayInformation = currentPayInformation;
+    // public User(String firstName, String lastName, String password, Integer
+    // phone, String email, LocalDate dob,
+    // GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean
+    // isHrEmployee,
+    // PayInformation currentPayInformation) {
+    // this();
+    // this.firstName = firstName;
+    // this.lastName = lastName;
+    // this.password = password;
+    // this.phone = phone;
+    // this.email = email;
+    // this.workEmail = "";
+    // this.dob = dob;
+    // this.gender = gender;
+    // this.userRole = userRole;
+    // this.isPartTimer = isPartTimer;
+    // this.isHrEmployee = isHrEmployee;
+    // this.isBlackListed = false;
+    // this.isEnabled = false; // only change to true after email is confirmed
+    // this.dateJoined = LocalDate.now();
+    // this.profilePic = null;
+    // this.currentPosition = null;
+    // this.qualificationInformation = null;
+    // this.applications = new ArrayList<>();
+    // this.jobRequests = new ArrayList<>();
+    // this.payslips = new ArrayList<>();
+    // this.attendances = new ArrayList<>();
+    // this.employeeAppraisals = new ArrayList<>();
+    // this.managerAppraisals = new ArrayList<>();
+    // this.managerReviews = new ArrayList<>();
+    // this.employeeReviews = new ArrayList<>();
+    // this.goals = new ArrayList<>();
+    // this.teams = new ArrayList<>();
+    // this.taskListItems = new ArrayList<>();
+    // this.currentPayInformation = currentPayInformation;
     // }
 
     // this should be for making a new applicant's account (duplicate with race +
@@ -345,45 +398,49 @@ public class User implements UserDetails {
         this.qualificationInformation = null;
     }
 
-    // public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
-    //         LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
-    //         Boolean isBlackListed,
-    //         Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position> positions,
-    //         Position currentPosition,
-    //         QualificationInformation qualificationInformation,
-    //         List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
-    //         List<Attendance> attendances, PayInformation currentPayInformation) {
-    //     this();
-    //     this.firstName = firstName;
-    //     this.lastName = lastName;
-    //     this.password = password;
-    //     this.phone = phone;
-    //     this.email = email;
-    //     this.workEmail = workEmail;
-    //     this.dob = dob;
-    //     this.gender = gender;
-    //     this.userRole = userRole;
-    //     this.isPartTimer = isPartTimer;
-    //     this.isHrEmployee = isHrEmployee;
-    //     this.isBlackListed = isBlackListed;
-    //     this.isEnabled = isEnabled;
-    //     this.dateJoined = dateJoined;
-    //     this.profilePic = profilePic;
-    //     this.positions = positions;
-    //     this.currentPosition = currentPosition;
-    //     this.qualificationInformation = qualificationInformation;
-    //     this.applications = applications;
-    //     this.jobRequests = jobRequests;
-    //     this.payslips = payslips;
-    //     this.attendances = attendances;
-    //     this.employeeAppraisals = new ArrayList<>();
-    //     this.managerAppraisals = new ArrayList<>();
-    //     this.managerReviews = new ArrayList<>();
-    //     this.employeeReviews = new ArrayList<>();
-    //     this.goals = new ArrayList<>();
-    //     this.teams = new ArrayList<>();
-    //     this.taskListItems = new ArrayList<>();
-    //     this.currentPayInformation = currentPayInformation;
+    // public User(String firstName, String lastName, String password, Integer
+    // phone, String email, String workEmail,
+    // LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer,
+    // Boolean isHrEmployee,
+    // Boolean isBlackListed,
+    // Boolean isEnabled, LocalDate dateJoined, DocData profilePic, List<Position>
+    // positions,
+    // Position currentPosition,
+    // QualificationInformation qualificationInformation,
+    // List<JobApplication> applications, List<JobRequest> jobRequests,
+    // List<Payslip> payslips,
+    // List<Attendance> attendances, PayInformation currentPayInformation) {
+    // this();
+    // this.firstName = firstName;
+    // this.lastName = lastName;
+    // this.password = password;
+    // this.phone = phone;
+    // this.email = email;
+    // this.workEmail = workEmail;
+    // this.dob = dob;
+    // this.gender = gender;
+    // this.userRole = userRole;
+    // this.isPartTimer = isPartTimer;
+    // this.isHrEmployee = isHrEmployee;
+    // this.isBlackListed = isBlackListed;
+    // this.isEnabled = isEnabled;
+    // this.dateJoined = dateJoined;
+    // this.profilePic = profilePic;
+    // this.positions = positions;
+    // this.currentPosition = currentPosition;
+    // this.qualificationInformation = qualificationInformation;
+    // this.applications = applications;
+    // this.jobRequests = jobRequests;
+    // this.payslips = payslips;
+    // this.attendances = attendances;
+    // this.employeeAppraisals = new ArrayList<>();
+    // this.managerAppraisals = new ArrayList<>();
+    // this.managerReviews = new ArrayList<>();
+    // this.employeeReviews = new ArrayList<>();
+    // this.goals = new ArrayList<>();
+    // this.teams = new ArrayList<>();
+    // this.taskListItems = new ArrayList<>();
+    // this.currentPayInformation = currentPayInformation;
     // }
 
     // duplicate with race + citizenship
@@ -548,8 +605,8 @@ public class User implements UserDetails {
             DocData profilePic, List<Position> positions, Position currentPosition,
             QualificationInformation qualificationInformation, List<JobApplication> applications,
             List<JobRequest> jobRequests, List<Payslip> payslips, List<Attendance> attendances,
-            List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<ManagerReview> managerReviews,
-            List<ManagerReview> employeeReviews, List<Module> modules, List<Goal> goals,
+            List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals, List<Review> managerReviews,
+            List<Review> employeeReviews, List<Module> modules, List<Goal> goals,
             List<TaskListItem> taskListItems, List<Team> teams, PayInformation currentPayInformation,
             ReactivationRequest reactivationRequest, PreferredDates preferredDates, List<Block> blocks,
             List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested,
@@ -597,8 +654,8 @@ public class User implements UserDetails {
         this.currentLeaveQuota = currentLeaveQuota;
         this.leaveQuotas = leaveQuotas;
         this.leaves = leaves;
-//        this.notificationsUnread = new ArrayList<>();
-//        this.notificationsRead = new ArrayList<>();
+        // this.notificationsUnread = new ArrayList<>();
+        // this.notificationsRead = new ArrayList<>();
     }
 
     @Override
@@ -734,6 +791,16 @@ public class User implements UserDetails {
 
     public void setCurrentPayInformation(PayInformation currentPayInformation) {
         this.currentPayInformation = currentPayInformation;
+    }
+
+    public List<Payslip> addPayslip(Payslip payslip) {
+        this.payslips.add(payslip);
+        return this.payslips;
+    }
+
+    public List<Payslip> removePayslip(Payslip payslip) {
+        this.payslips.remove(payslip);
+        return this.payslips;
     }
 
     public ReactivationRequest getReactivationRequest() {

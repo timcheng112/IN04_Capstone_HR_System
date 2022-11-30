@@ -19,6 +19,8 @@ export default function AddNewReward({ open, setOpen, track, refreshKeyHandler }
   const [expiryDate, setExpiryDate] = useState(new Date())
   const [user, setUser] = useState(getUserId());
   const [error, setError] = useState();
+  const [file, setFileState] = useState(null);
+  const [fileName, setFileName] = useState(null);
 
   useEffect(() => {
     if (!open) {
@@ -41,7 +43,11 @@ export default function AddNewReward({ open, setOpen, track, refreshKeyHandler }
     }
     var helpexpiryDate = (expiryDate.getYear() + 1900) + "-" + month + "-" + date;
 
-    api.addNewReward(name, description, points, helpexpiryDate.trim(), track.rewardTrackId)
+    let formData = new FormData();
+    if (file) {
+      formData.append("file", file);
+    }
+    api.addNewReward(name, description, points, helpexpiryDate.trim(), track.rewardTrackId, formData)
         .then(() => {
             alert("Successfully added reward to the Reward Track");
             refreshKeyHandler();
@@ -50,6 +56,11 @@ export default function AddNewReward({ open, setOpen, track, refreshKeyHandler }
     setOpen(false);
   }
 
+    function handleFile(e) {
+    //    console.log("Handle File");
+        setFileState(e.target.files[0]);
+        setFileName(e.target.files[0].name);
+      }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -108,7 +119,7 @@ export default function AddNewReward({ open, setOpen, track, refreshKeyHandler }
                             </div>
                             <div>
                               <label htmlFor="description" className="block text-sm font-medium text-gray-900">
-                                Decription
+                                Description
                               </label>
                               <div className="mt-1">
                                 <textarea
@@ -148,7 +159,22 @@ export default function AddNewReward({ open, setOpen, track, refreshKeyHandler }
                                   className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                               </div>
                             </div>
-
+                            <div>
+                              <label className="block text-sm font-medium text-gray-900">
+                                Reward Image
+                              </label>
+                              <div className="mt-1">
+                                <input
+                                      id="file"
+                                      type="file"
+                                      name="file"
+                                      onChange={(e) => handleFile(e)}
+                                  />
+                              </div>
+                              <label className="block text-sm font-small text-gray-500">
+                                  *You can only add an image to a reward once.
+                                </label>
+                            </div>
                           </div>
 
                         </div>

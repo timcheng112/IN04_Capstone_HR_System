@@ -47,6 +47,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { format, subDays } from "date-fns";
 import LottieView from "lottie-react-native";
+import * as FileSystem from "expo-file-system";
 
 const HomeComponent = () => {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -56,6 +57,7 @@ const HomeComponent = () => {
   const { signOut } = React.useContext(AuthContext);
   const [leaves, setLeaves] = useState(null);
   const [tasks, setTasks] = useState(null);
+  const [img, setImg] = useState("");
 
   const leftContent = (props) => (
     <Avatar.Icon
@@ -150,6 +152,37 @@ const HomeComponent = () => {
         .catch((error) => console.log("Error retrieving tasks!"));
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (user !== null && user.profilePic !== null) {
+      api
+        .getDocById(user.profilePic.docId)
+        .then((response) => {
+          console.log("TEST 1");
+          const fr = new FileReader();
+          console.log("TEST 2");
+          fr.onload = async () => {
+            console.log("TEST 3");
+            const fileUri = `${FileSystem.documentDirectory}_ProfilePic.png`;
+            console.log("TEST 4");
+            await FileSystem.writeAsStringAsync(
+              fileUri,
+              fr.result.split(",")[1],
+              {
+                encoding: FileSystem.EncodingType.Base64,
+              }
+            );
+            console.log("TEST 5");
+            setImg(fileUri);
+            console.log(fileUri);
+            // return fileUri;
+          };
+          console.log("TEST 6");
+          fr.readAsDataURL(response.data);
+        })
+        .catch((err) => console.log("Error in downloading"));
+    }
+  }, [user]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
@@ -263,12 +296,14 @@ const HomeComponent = () => {
             alignItems: "flex-end",
           }}
         >
-          <Avatar.Image
-            size={56}
-            source={{
-              uri: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-            }}
-          />
+          {!img ? (
+            <Avatar.Image
+              size={56}
+              source={require("../../../assets/shiba-thumbs-up.png")}
+            />
+          ) : (
+            <Avatar.Image size={56} source={{ uri: img }} />
+          )}
         </View>
       </View>
       <View style={{ flex: 4 }}>
@@ -447,28 +482,51 @@ const HomeComponent = () => {
         </View>
       </View>
       <View style={{ flex: 1 }}>
-        <Card
+        <TouchableOpacity
           style={{
             elevation: 10,
-            // shadowColor: "#52006A",
+            borderRadius: 20,
             shadowColor: "#000000",
-            borderRadius: 10,
+            // marginBottom: 10,
+            // marginLeft: 5,
+            flex: 1,
           }}
-          onPress={() => signOut()}
+          onPress={() => {
+            navigation.navigate("Admin", { screen: "Leave" });
+          }}
         >
-          <View
+          <Card
             style={{
-              // flexDirection: "row",
-              // justifyContent: "center",
-              // alignItems: "center",
-              flexDirection: "row",
-              alignItems: "center",
+              flex: 1,
+              borderRadius: 20,
             }}
+            onPress={() => signOut()}
           >
-            <Avatar.Icon icon="logout" backgroundColor="white" color="black" />
-            <Card.Title title="Sign out" />
-          </View>
-        </Card>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  flex: 1,
+                  alignItems: "center",
+                  // justifyContent: "center"
+                }}
+              >
+                <Avatar.Icon
+                  icon="logout"
+                  backgroundColor="white"
+                  color="black"
+                  style={{ flex: 1.2, alignItems: "flex-end" }}
+                />
+                <Card.Title title="Sign out" style={{ flex: 2 }} />
+              </View>
+            </View>
+          </Card>
+        </TouchableOpacity>
       </View>
     </View>
   );

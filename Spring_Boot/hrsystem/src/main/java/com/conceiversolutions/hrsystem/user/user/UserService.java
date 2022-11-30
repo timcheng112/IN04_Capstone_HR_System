@@ -164,6 +164,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -218,6 +219,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -271,6 +273,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -321,6 +324,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -367,6 +371,7 @@ public class UserService implements UserDetailsService {
             employee.setReactivationRequest(null);
             employee.setAttendances(new ArrayList<>());
             employee.setCurrentPayInformation(null);
+            employee.setPayslips(new ArrayList<>());
             employee.setEmployeeAppraisals(new ArrayList<>());
             employee.setManagerAppraisals(new ArrayList<>());
             employee.setManagerReviews(new ArrayList<>());
@@ -379,7 +384,7 @@ public class UserService implements UserDetailsService {
             employee.setLeaveQuotas(new ArrayList<>());
             employee.setCurrentLeaveQuota(null);
             employee.setQualificationInformation(null);
-
+            employee.setBenefitPlanInstances(new ArrayList<>());
             // employee.setTeams(new ArrayList<>());
 
             // List<Team> teams = employee.getTeams();
@@ -410,6 +415,7 @@ public class UserService implements UserDetailsService {
             employee.setReactivationRequest(null);
             employee.setAttendances(new ArrayList<>());
             employee.setCurrentPayInformation(null);
+            employee.setPayslips(new ArrayList<>());
             employee.setEmployeeAppraisals(new ArrayList<>());
             employee.setManagerAppraisals(new ArrayList<>());
             employee.setManagerReviews(new ArrayList<>());
@@ -1287,6 +1293,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(null);
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -1347,6 +1354,7 @@ public class UserService implements UserDetailsService {
                 for (Payslip payslip : tempPayslips) {
                     payslip.setPayInformation(null);
                     payslip.setEmployee(null);
+                    // payslip.getEmployee().nullify();
                 }
             }
 
@@ -1367,6 +1375,74 @@ public class UserService implements UserDetailsService {
             u.setCurrentPosition(tempPosition);
             u.setPayslips(tempPayslips);
             u.setShiftListItems(tempShiftListItems);
+        }
+        return employees;
+    }
+
+    public List<User> getAllHREmployees() {
+        List<User> employees = userRepository.findAllHREmployees();
+        // employees.addAll(userRepository.findAllByRole(RoleEnum.MANAGER));
+        System.out.println("size of employees list is " + employees.size());
+        for (User u : employees) {
+            List<Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                // t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+                t.getDepartment().setTeams(new ArrayList<>());
+                t.getDepartment().setOrganization(null);
+                t.getDepartment().setDepartmentHead(null);
+            }
+
+            List<TaskListItem> taskListItems = u.getTaskListItems();
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : taskListItems) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+
+            // nullify other side for pay information, allowance & deduction
+            PayInformation tempPayInformation = null;
+            if (u.getCurrentPayInformation() != null) {
+                tempPayInformation = u.getCurrentPayInformation();
+                tempPayInformation.setUser(null);
+            }
+
+            Position tempPosition = null;
+            if (u.getCurrentPosition() != null) {
+                tempPosition = u.getCurrentPosition();
+            }
+
+            List<Payslip> tempPayslips = new ArrayList<>();
+            if (u.getPayslips() != null) {
+                tempPayslips = u.getPayslips();
+                for (Payslip payslip : tempPayslips) {
+                    payslip.setPayInformation(null);
+                    payslip.setEmployee(null);
+                }
+            }
+
+            List<ShiftListItem> tempShiftListItems = new ArrayList<>();
+            if (u.getShiftListItems() != null) {
+                tempShiftListItems = u.getShiftListItems();
+                for (ShiftListItem shiftListItem : tempShiftListItems) {
+                    shiftListItem.setUser(null);
+                    shiftListItem.getShift().setRoster(null);
+                    shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+                }
+            }
+
+            u.nullify();
+            u.setTeams(teams);
+            u.setTaskListItems(taskListItems);
+            u.setCurrentPayInformation(tempPayInformation);
+            u.setCurrentPosition(tempPosition);
+            u.setPayslips(tempPayslips);
+            u.setShiftListItems(tempShiftListItems);
+            u.setBenefitPlanInstances(new ArrayList<>());
         }
         return employees;
     }
@@ -1399,6 +1475,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -1450,6 +1527,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -1493,6 +1571,7 @@ public class UserService implements UserDetailsService {
             u.setReactivationRequest(null);
             u.setAttendances(new ArrayList<>());
             u.setCurrentPayInformation(null);
+            u.setPayslips(new ArrayList<>());
             u.setEmployeeAppraisals(new ArrayList<>());
             u.setManagerAppraisals(new ArrayList<>());
             u.setManagerReviews(new ArrayList<>());
@@ -1546,11 +1625,25 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         positionRepository.save(user.getCurrentPosition());
-        payInformationRepository.save(user.getCurrentPayInformation());
-        for (Payslip payslip : user.getPayslips()) {
-            payslipRepository.save(payslip);
+
+        PayInformation newPayinfo = user.getCurrentPayInformation();
+        for (Allowance allowance : newPayinfo.getAllowance()) {
+            allowanceRepository.save(allowance);
         }
+        for (Deduction deduction : newPayinfo.getDeduction()) {
+            deductionRepository.save(deduction);
+        }
+        PayInformation savedPayinfo = payInformationRepository.saveAndFlush(newPayinfo);
+        user.setCurrentPayInformation(savedPayinfo);
+        // List<Payslip> payslips = new ArrayList<>();
+        // for (Payslip payslip : user.getPayslips()) {
+        // Payslip savedPayslip = payslipRepository.saveAndFlush(payslip);
+        // payslips.add(savedPayslip);
+        // }
+        // user.setPayslips(payslips);
         User newUser = userRepository.saveAndFlush(user);
+        savedPayinfo.setUser(newUser);
+        payInformationRepository.save(savedPayinfo);
         return newUser.getUserId();
     }
 
@@ -1584,7 +1677,10 @@ public class UserService implements UserDetailsService {
         List<Team> allTeams = teamRepository.findAll();
         List<Long> teamHeadIds = new ArrayList<>();
         for (Team t : allTeams) {
-            teamHeadIds.add(t.getTeamHead().getUserId());
+            if (t.getTeamHead() != null) {
+                teamHeadIds.add(t.getTeamHead().getUserId());
+            }
+
         }
 
         List<User> managers = userRepository.findAllByRole(RoleEnum.MANAGER);
@@ -1614,6 +1710,7 @@ public class UserService implements UserDetailsService {
                 u.setReactivationRequest(null);
                 u.setAttendances(new ArrayList<>());
                 u.setCurrentPayInformation(null);
+                u.setPayslips(new ArrayList<>());
                 u.setEmployeeAppraisals(new ArrayList<>());
                 u.setManagerAppraisals(new ArrayList<>());
                 u.setManagerReviews(new ArrayList<>());
@@ -1669,6 +1766,7 @@ public class UserService implements UserDetailsService {
             e.setReactivationRequest(null);
             e.setAttendances(new ArrayList<>());
             e.setCurrentPayInformation(null);
+            e.setPayslips(new ArrayList<>());
             e.setEmployeeAppraisals(new ArrayList<>());
             e.setManagerAppraisals(new ArrayList<>());
             e.setManagerReviews(new ArrayList<>());
@@ -2161,6 +2259,7 @@ public class UserService implements UserDetailsService {
         u.setReactivationRequest(null);
         u.setAttendances(new ArrayList<>());
         u.setCurrentPayInformation(null);
+        u.setPayslips(new ArrayList<>());
         u.setEmployeeAppraisals(new ArrayList<>());
         u.setManagerAppraisals(new ArrayList<>());
         u.setManagerReviews(new ArrayList<>());
@@ -2474,6 +2573,7 @@ public class UserService implements UserDetailsService {
             user.setReactivationRequest(null);
             user.setAttendances(new ArrayList<>());
             user.setCurrentPayInformation(null);
+            user.setPayslips(new ArrayList<>());
             user.setEmployeeAppraisals(new ArrayList<>());
 
             user.setManagerAppraisals(new ArrayList<>());
@@ -2635,6 +2735,7 @@ public class UserService implements UserDetailsService {
             employee.setTaskListItems(new ArrayList<>());
             employee.setTeams(new ArrayList<>());
             employee.setCurrentPayInformation(null);
+            employee.setPayslips(new ArrayList<>());
             employee.setReactivationRequest(null);
             employee.setPreferredDates(null);
             employee.setBlocks(new ArrayList<>());
@@ -2644,6 +2745,7 @@ public class UserService implements UserDetailsService {
             employee.setLeaves(new ArrayList<>());
             employee.setLeaveQuotas(new ArrayList<>());
             employee.setCurrentLeaveQuota(null);
+            employee.setBenefitPlanInstances(new ArrayList<>());
         }
         return filteredEmployees;
     }
@@ -2673,6 +2775,15 @@ public class UserService implements UserDetailsService {
         return "User details updated successfully";
     }
 
+    public Boolean updateUserBankInfo(Long userId, String bankName, String bankAccNo) {
+        User user = userRepository.findById(userId).get();
+        user.setBankName(bankName);
+        user.setBankAccNo(bankAccNo);
+        userRepository.save(user);
+
+        return true;
+    }
+
     private EducationEnum getEduEnum(String educationLevel) {
         System.out.println("UserService.getEduEnum");
         System.out.println("educationLevel = " + educationLevel);
@@ -2695,7 +2806,8 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("User does not exist.");
             }
 
-            emailSender.send(email, buildPayslipEmail(tempUser.getFirstName(), payslipMonth));
+            emailSender.send(email, buildPayslipEmail(tempUser.getFirstName(), payslipMonth),
+                    "Libro Payslip Available for View!");
         }
     }
 
@@ -2807,25 +2919,37 @@ public class UserService implements UserDetailsService {
         System.out.println("*******DEDUCTIONS: " + deductions + " *******");
         for (Allowance allowance : allowances) {
             System.out.println("*******ALLOWANCE: " + allowance + " *******");
-            AllowanceTemplate savedAllowanceTemplate = allowanceTemplateRepository
-                    .saveAndFlush(allowance.getTemplate());
+            // AllowanceTemplate savedAllowanceTemplate = allowanceTemplateRepository
+            // .saveAndFlush(allowance.getTemplate());
             Allowance savedAllowance = allowanceRepository.saveAndFlush(allowance);
             user.getCurrentPayInformation().addAllowance(savedAllowance);
-            user.getCurrentPayInformation().addAllowanceTemplate(savedAllowanceTemplate);
+            // user.getCurrentPayInformation().addAllowanceTemplate(savedAllowanceTemplate);
         }
 
         for (Deduction deduction : deductions) {
             System.out.println("*******DEDUCTION: " + deduction + " *******");
-            DeductionTemplate savedDeductionTemplate = deductionTemplateRepository
-                    .saveAndFlush(deduction.getTemplate());
+            // DeductionTemplate savedDeductionTemplate = deductionTemplateRepository
+            // .saveAndFlush(deduction.getTemplate());
             Deduction savedDeduction = deductionRepository.saveAndFlush(deduction);
             user.getCurrentPayInformation().addDeduction(savedDeduction);
-            user.getCurrentPayInformation().addDeductionTemplate(savedDeductionTemplate);
+            // user.getCurrentPayInformation().addDeductionTemplate(savedDeductionTemplate);
         }
         payInformationRepository.save(user.getCurrentPayInformation());
         user.getCurrentPayInformation().setInPayroll(true);
         userRepository.save(user);
     }
+
+//    public String setNfcUUID(String hexString, Long userId) {
+//        User u1 = getUser(userId);
+//
+//        if (u1.getCardId() == null) {
+//            u1.setCardId(hexString);
+//        }
+//
+//        userRepository.saveAndFlush(u1);
+//        return "NFC is assigned to user Id";
+//    }
+
 
 
     public HashMap<String, Integer> attendanceTest() {

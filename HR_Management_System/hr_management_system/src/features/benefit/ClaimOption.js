@@ -8,7 +8,7 @@ import {
 import { useState, useEffect } from "react";
 import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
-import CheckDialog from "./CheckDialog";
+import CheckDialog from "./CheckDialogWithdraw";
 import { useHistory } from 'react-router-dom';
 import ViewClaim from "./ViewClaim";
 

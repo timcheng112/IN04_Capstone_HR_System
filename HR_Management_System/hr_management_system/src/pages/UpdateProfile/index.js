@@ -16,6 +16,8 @@ export default function ProfilePage(props) {
   const [gender, setGender] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [bankAccNo, setBankAccNo] = useState("");
 
   useEffect(() => {
     api
@@ -26,6 +28,10 @@ export default function ProfilePage(props) {
         setGender(response.data.gender);
         setPhone(response.data.phone);
         setEmail(response.data.email);
+        if (response.data.bankName != null) {
+          setBankName(response.data.bankName);
+          setBankAccNo(response.data.bankAccNo);
+        }
       })
       .then(() => {
         console.log(email);
@@ -39,6 +45,11 @@ export default function ProfilePage(props) {
     // userInfo.gender = gender;
     // userInfo.email = email;
     // userInfo.phone = phone;
+    api.updateUserBankInfo(userId, bankName, bankAccNo).then((res) => {
+      if (res.data == true) {
+        console.log("updated bank info successfully.");
+      }
+    });
     api
       .editUserInfo(userId, gender, email, phone)
       .then((response) => {
@@ -125,6 +136,36 @@ export default function ProfilePage(props) {
                     placeholder="Phone"
                     onChange={(event) => setPhone(event.target.value)}
                     value={phone}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="bankName" className="sr-only">
+                    Bank Name
+                  </label>
+                  <input
+                    type="text"
+                    name="bankName"
+                    id="bankName"
+                    className="block w-full rounded-md border-gray-300 py-3 px-4 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    placeholder="bankName"
+                    onChange={(event) => setBankName(event.target.value)}
+                    value={bankName}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="bankAccNo" className="sr-only">
+                    Bank Account Number
+                  </label>
+                  <input
+                    type="text"
+                    name="bankAccNo"
+                    id="bankAccNo"
+                    className="block w-full rounded-md border-gray-300 py-3 px-4 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    placeholder="Bank Account Number"
+                    onChange={(event) => setBankAccNo(event.target.value)}
+                    value={bankAccNo}
                     required
                   />
                 </div>
