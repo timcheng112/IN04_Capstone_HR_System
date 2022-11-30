@@ -2,12 +2,14 @@ package com.conceiversolutions.hrsystem.performance.goal;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.notification.Notification;
 import com.conceiversolutions.hrsystem.notification.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,15 @@ import com.conceiversolutions.hrsystem.performance.achievement.Achievement;
 import com.conceiversolutions.hrsystem.performance.achievement.AchievementRepository;
 import com.conceiversolutions.hrsystem.performance.appraisalPeriod.AppraisalPeriod;
 import com.conceiversolutions.hrsystem.performance.appraisalPeriod.AppraisalPeriodService;
+import com.conceiversolutions.hrsystem.performance.goalPeriod.GoalPeriod;
 import com.conceiversolutions.hrsystem.performance.goalPeriod.GoalPeriodService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class GoalService {
 
     @Autowired
@@ -43,17 +49,6 @@ public class GoalService {
 
     @Autowired
     private final GoalPeriodService goalPeriodService;
-
-    public GoalService(GoalRepository goalRepository, UserRepository userRepository,
-            AchievementRepository achievementRepository, TeamRepository teamRepository,
-            NotificationRepository notificationRepository, GoalPeriodService goalPeriodService) {
-        this.goalRepository = goalRepository;
-        this.userRepository = userRepository;
-        this.achievementRepository = achievementRepository;
-        this.teamRepository = teamRepository;
-        this.notificationRepository = notificationRepository;
-        this.goalPeriodService = goalPeriodService;
-    }
 
     public User breakRelationships(User user) {
         User u = new User();
@@ -359,5 +354,73 @@ public class GoalService {
         }
         return goals;
     }
+
+    public List<Goal> getAllGoals() {
+        List<Goal> goals = goalRepository.findAll();
+        for (Goal g : goals) {
+            g.setEmployee(breakRelationships(g.getEmployee()));
+            g.setAchievements(new ArrayList<>());
+        }
+        return goals;
+    }
+
+    public List<Integer> getOverdueGoals() {
+        Integer overdueFinancial = 0;
+        Integer overdueBusiness = 0;
+        Integer notFinancial = 0;
+        Integer notBusiness = 0;
+        List<User> allUsers = userRepository.findAll();
+        for (User u : allUsers) {
+            if (u.getUserRole() != RoleEnum.ADMINISTRATOR && u.getUserRole() != RoleEnum.APPLICANT) {
+                List<Goal> financial = getUserGoalsForPeriod(LocalDate.now().getYear() + "", "financial",
+                        u.getUserId());
+                List<Goal> business = getUserGoalsForPeriod(LocalDate.now().getYear() + "", "business", u.getUserId());
+                if (financial.size() > 0) {
+                    notFinancial++;
+                } else {
+                    overdueFinancial++;
+                }
+
+                if (business.size() > 0) {
+                    notBusiness++;
+                } else {
+                    overdueBusiness++;
+                }
+            }
+        }
+        List<Integer> goalStatistics = new ArrayList<>();
+        goalStatistics.add(overdueFinancial);
+        goalStatistics.add(overdueBusiness);
+        goalStatistics.add(notFinancial);
+        goalStatistics.add(notBusiness);
+        
+        return goalStatistics;
+    }
+
+    public List<Integer> getGoalCount(String year) {
+        GoalPeriod gp = goalPeriodService.getGoalPeriodByYear(year);
+        List<Goal> goals = getAllGoalsByYear(year);
+
+        LocalDateTime d = LocalDateTime.of(gp.getStartDate(), LocalTime.now());
+
+        List<Integer> goalCount = new ArrayList<>();
+        
+        while (d.toLocalDate().isBefore(gp.getEndDate()) || d.toLocalDate().isEqual(gp.getEndDate())) {
+            Integer count = 0;
+            for (Goal g : goals) {
+                if (g.getCreated().isEqual(d.toLocalDate())) {
+                    count++;
+                }
+            }
+            goalCount.add(count);
+            
+            d = d.plusDays(1);
+            
+        }
+        
+        return goalCount;
+    }
+
+
 
 }

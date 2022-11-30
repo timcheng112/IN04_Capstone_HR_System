@@ -27,7 +27,7 @@ public class GoalPeriodController {
     public List<GoalPeriod> getGoalPeriods() {
         return goalPeriodService.getGoalPeriods();
     }
-    
+
     @PostMapping
     public Long addGoalPeriod(@RequestBody GoalPeriod goalPeriod) throws Exception {
         return goalPeriodService.addGoalPeriod(goalPeriod);
@@ -47,6 +47,11 @@ public class GoalPeriodController {
     @DeleteMapping(path = "{year}")
     public String deleteGoalPeriod(@PathVariable("year") String year) throws Exception {
         return goalPeriodService.deleteGoalPeriod(year);
+    }
+
+    @GetMapping(path = "{year}/range")
+    public List<String> getGoalPeriodRange(@PathVariable("year") String year) throws Exception {
+        return goalPeriodService.getGoalPeriodRange(year);
     }
 
 }

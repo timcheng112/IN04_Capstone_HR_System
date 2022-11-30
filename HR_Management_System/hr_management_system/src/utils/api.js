@@ -761,8 +761,17 @@ const api = {
   deleteGoalPeriod(year) {
     return axios.delete(`http://localhost:9191/api/goalPeriod/${year}`);
   },
+  getGoalPeriodRange(year) {
+    return axios.get(`http://localhost:9191/api/goalPeriod/${year}/range`)
+  },
+  getAllGoals() {
+    return axios.get(`http://localhost:9191/api/goal`)
+  },
   getAllGoalsByYear(year) {
     return axios.get(`http://localhost:9191/api/goal/all/${year}`);
+  },
+  getGoalCount(year) {
+    return axios.get(`http://localhost:9191/api/goal/${year}/count`)
   },
   addGoal(type, description, userId) {
     return axios.post(
@@ -791,10 +800,19 @@ const api = {
   getTeamGoals(teamId, year) {
     return axios.get(`http://localhost:9191/api/goal/team/${teamId}/${year}`);
   },
+  getOverdueGoals() {
+    return axios.get(`http://localhost:9191/api/goal/overdue`)
+  },
   addAchievement(goalId, description) {
     return axios.post(
       `http://localhost:9191/api/goal/${goalId}/achievement?description=${description}`
     );
+  },
+  getAllAchievements() {
+    return axios.get(`http://localhost:9191/api/achievement`)
+  },
+  getAchievementsByYear(year) {
+    return axios.get(`http://localhost:9191/api/achievement/${year}`)
   },
   addAppraisalPeriod(appraisalPeriod) {
     return axios.post(
@@ -1318,6 +1336,7 @@ const api = {
         `http://localhost:9191/api/pay/payinfo/getEmployeesAverageSalary`
       );
     },
+    
 };
 
 export default api;
