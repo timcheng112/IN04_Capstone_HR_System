@@ -52,7 +52,7 @@ export default function Review() {
         <div className="flex-1">
           <WelfareSidebar currentPage={{
             name: "Rewards",
-            href: "/welfare/rewardtrack",
+            href: "/welfare/myrewardtrack",
             current: true,
           }} />
         </div>
