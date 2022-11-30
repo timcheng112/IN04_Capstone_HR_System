@@ -8,7 +8,7 @@ import api from "../../utils/api";
 import { getUserId } from "../../utils/Common";
 import { useHistory } from 'react-router-dom';
 
-export default function RewardTrackOption({ track }) {
+export default function RewardTrackOption({ track, refreshKeyHandler }) {
   const history = useHistory();
   const [trash, setTrash] = useState(false);
   const [user, setUser] = useState(null);
@@ -26,7 +26,10 @@ export default function RewardTrackOption({ track }) {
 
   function terminate(){
     api.deleteRewardTrack(track.rewardTrackId)
-    .then(() => {alert("Successfully delete.");})
+    .then(() => {
+        alert("Successfully delete.");
+        refreshKeyHandler();
+    })
     .catch((error) => alert(error.response.data.message));
   }
 

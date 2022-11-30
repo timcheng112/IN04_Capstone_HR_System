@@ -37,7 +37,7 @@ export default function EmployeeReward() {
         setTrack(response.data);
         console.log(response.data);
       })
-  }, []);
+  }, [refreshKey]);
 
   useEffect(() => {
     api
@@ -47,7 +47,7 @@ export default function EmployeeReward() {
         get(response.data.departmentId);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
   function get(deptId) {
     api.getDept(deptId)
@@ -132,7 +132,7 @@ export default function EmployeeReward() {
                             <span className="inline-flex items-center rounded-full bg-purple-100 px-3 py-0.5 text-sm font-medium text-purple-800">
                               {reward.pointsRequired} points
                             </span>
-                            <EmployeeRewardOption reward={reward} />
+                            <EmployeeRewardOption reward={reward} refreshKey={refreshKey} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                           </div>
                         </div>
                       </div>

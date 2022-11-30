@@ -12,7 +12,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function VetReviewForm({ open, setOpen, review }) {
+export default function VetReviewForm({ open, setOpen, review, refreshKeyHandler }) {
 
   const [employee, setEmployee] = useState(null)
   const [department, setDepartment] = useState(null)
@@ -35,7 +35,10 @@ export default function VetReviewForm({ open, setOpen, review }) {
         alert("Please select a team")
     } else {
         api.vetReviewForm(employee.userId, review.reviewFormId, department.departmentId, team.teamId)
-          .then(() => { alert("Successfully Vetted"); })
+          .then(() => {
+            alert("Successfully Vetted");
+            refreshKeyHandler();
+          })
           .catch((error) => alert(error.response.data.message));
         setOpen(false)
     }

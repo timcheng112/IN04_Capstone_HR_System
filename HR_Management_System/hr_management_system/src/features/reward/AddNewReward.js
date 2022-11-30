@@ -11,7 +11,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AddNewReward({ open, setOpen,track }) {
+export default function AddNewReward({ open, setOpen, track, refreshKeyHandler }) {
 
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
@@ -42,7 +42,10 @@ export default function AddNewReward({ open, setOpen,track }) {
     var helpexpiryDate = (expiryDate.getYear() + 1900) + "-" + month + "-" + date;
 
     api.addNewReward(name, description, points, helpexpiryDate.trim(), track.rewardTrackId)
-        .then(() => {alert("Successfully added reward to the Reward Track");})
+        .then(() => {
+            alert("Successfully added reward to the Reward Track");
+            refreshKeyHandler();
+        })
         .catch((error) => alert(error.response.data.message));
     setOpen(false);
   }

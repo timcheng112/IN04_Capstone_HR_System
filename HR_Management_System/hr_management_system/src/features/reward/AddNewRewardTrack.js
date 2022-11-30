@@ -11,7 +11,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AddNewRewardTrack({ open, setOpen }) {
+export default function AddNewRewardTrack({ open, setOpen, refreshKeyHandler }) {
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -62,7 +62,10 @@ export default function AddNewRewardTrack({ open, setOpen }) {
     var helpendDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
 
     api.addRewardTrack(name, helpstartDate.trim(), helpendDate.trim(), department.departmentId, ratio)
-      .then(() => { alert("Successfully added new Reward Track."); })
+      .then(() => {
+        alert("Successfully added new Reward Track.");
+        refreshKeyHandler();
+      })
       .catch((error) => alert(error.response.data.message));
 
       setOpen(false);
