@@ -154,8 +154,8 @@ public class TeamService {
                 t.getTeamHead().setJobRequests(new ArrayList<>());
                 t.getTeamHead().setLeaves(new ArrayList<>());
                 t.getTeamHead().setLeaveQuotas(new ArrayList<>());
-                t.getTeamHead().setCurrentLeaveQuota(null);
             }
+            t.setDepartment(null);
         }
 
         return teamsInDept;

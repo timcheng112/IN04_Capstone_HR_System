@@ -564,7 +564,7 @@ public class PromotionService {
 
             pr.setNewTeam(null);
             pr.setNewDepartment(null);
-
+            pr.setAppraisal(null);
         }
         return requests;
     }

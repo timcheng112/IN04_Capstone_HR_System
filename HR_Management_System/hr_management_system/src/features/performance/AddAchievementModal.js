@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/outline";
 
@@ -10,6 +10,12 @@ export default function AddAchievementModal({
 }) {
   const cancelButtonRef = useRef(null);
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    if (!open) {
+      setDescription("");
+    }
+  }, [open]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -44,7 +50,6 @@ export default function AddAchievementModal({
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 <div>
-                  
                   <div className="mt-3 text-center sm:mt-5">
                     <Dialog.Title
                       as="h3"
@@ -52,9 +57,7 @@ export default function AddAchievementModal({
                     >
                       Add Achievement
                     </Dialog.Title>
-                    <div className="mt-2">
-                      
-                    </div>
+                    <div className="mt-2"></div>
                   </div>
                   <div>
                     <label

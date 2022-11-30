@@ -99,6 +99,7 @@ export default function Nomination({ request }) {
       console.log(response.data);
       setReviews(response.data);
     });
+    
   }, []);
 
   useEffect(() => {}, [selectedPosition]);
@@ -454,7 +455,7 @@ export default function Nomination({ request }) {
                             id="withdrawRemarks"
                             name="withdrawRemarks"
                             rows={3}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm "
                             value={withdrawRemarks}
                             onChange={(e) => setWithdrawRemarks(e.target.value)}
                           />
