@@ -18,6 +18,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import logo from "../../assets/libro-transparent-logo.png";
+import shiba from "../../assets/shiba-thumbs-up.png";
 import api from "../../utils/api";
 import { deleteUser, getUserId } from "../../utils/Common";
 import loading from "../../assets/Spinner.svg";
@@ -44,6 +45,8 @@ export default function Home() {
   const history = useHistory();
   const [show, setShow] = useState(true);
   const [showNotification, setShowNotification] = useState(true);
+  const [profilePic, setProfilePic] = useState(shiba);
+
 
   useEffect(() => {
     api
@@ -51,6 +54,13 @@ export default function Home() {
       .then((response) => {
         //console.log(response.data);
         setUser(response.data);
+        if (response.data.profilePic !== null) {
+            api.getDocById(response.data.profilePic.docId).then((response) => {
+                const url = window.URL.createObjectURL(response.data);
+                setProfilePic(url);
+            })
+        }
+
       })
       .catch((error) => {
         history.push("/");
@@ -100,7 +110,7 @@ export default function Home() {
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-8 w-8 rounded-full"
-                                src={user.profilePic}
+                                src={profilePic}
                                 alt=""
                               />
                             </Menu.Button>
@@ -446,7 +456,7 @@ export default function Home() {
                               <div className="flex-shrink-0">
                                 <img
                                   className="mx-auto h-20 w-20 rounded-full"
-                                  src={user.imageUrl}
+                                  src={profilePic}
                                   alt=""
                                 />
                               </div>
@@ -455,7 +465,7 @@ export default function Home() {
                                   Welcome back,
                                 </p>
                                 <p className="text-xl font-bold text-gray-900 sm:text-2xl">
-                                  {user.firstName}
+                                  {user.firstName} {user.lastName}
                                 </p>
                                 <p className="text-sm font-medium text-gray-600">
                                   {user.role}

@@ -4,6 +4,7 @@ import OffboardingScreen from "../screens/OffboardingScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import LeaveScreen from "../screens/LeaveScreen";
 import LeaveApplicationScreen from "../screens/LeaveApplicationScreen";
+import LeaveDetailScreen from "../screens/LeaveDetailScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import DrawerContent from "../components/general/DrawerContent";
 import PayScreen from "../screens/PayScreen";
@@ -51,6 +52,17 @@ const AdminDrawerNavigator = () => {
           headerStyle: { backgroundColor: "#3949ab" },
           headerTitleStyle: { color: "white" },
           headerTintColor: "white",
+          unmountOnBlur: true,
+        }}
+      />
+      <AdminDrawer.Screen
+        name="LeaveDetail"
+        component={LeaveDetailScreen}
+        options={{
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
+          unmountOnBlur: true,
         }}
       />
       <AdminDrawer.Screen

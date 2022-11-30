@@ -22,8 +22,8 @@ const WDrawerContent = (props) => {
           <Drawer.Section style={{ marginTop: 15 }}>
             <DrawerItem
               icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="seatbelt"
+                <AntDesign
+                  name="bank"
                   size={size}
                   color={color}
                 />
@@ -35,8 +35,8 @@ const WDrawerContent = (props) => {
             ></DrawerItem>
             <DrawerItem
               icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="seat-outline"
+                <AntDesign
+                  name="edit"
                   size={size}
                   color={color}
                 />
@@ -44,6 +44,19 @@ const WDrawerContent = (props) => {
               label="Claims"
               onPress={() => {
                 props.navigation.navigate("Claims");
+              }}
+            ></DrawerItem>
+            <DrawerItem
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="gift-open-outline"
+                  size={size}
+                  color={color}
+                />
+              )}
+              label="Rewards"
+              onPress={() => {
+                props.navigation.navigate("Rewards");
               }}
             ></DrawerItem>
           </Drawer.Section>

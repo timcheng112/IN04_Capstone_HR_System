@@ -51,7 +51,7 @@ export default function Benefits() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
   useEffect(() => {
     api
       .getEmployeeClaims(getUserId())
@@ -60,7 +60,7 @@ export default function Benefits() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
 
   return (
@@ -119,7 +119,7 @@ export default function Benefits() {
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.claimStatus}</td>
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.benefitPlanInstance.planOwner.firstName}</td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <ClaimOption claim={claim} />
+                              <ClaimOption claim={claim} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} />
                             </td>
                           </tr>
                         ))}
@@ -132,7 +132,7 @@ export default function Benefits() {
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.claimDate}</td>
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{claim.claimStatus}</td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <ClaimOption claim={claim} />
+                              <ClaimOption claim={claim} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)} />
                             </td>
                           </tr>
                         ))}

@@ -11,7 +11,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AddNewPlan({ open, setOpen, plan }) {
+export default function AddNewPlan({ open, setOpen, plan, refreshKeyHandler }) {
 
   const [amount, setAmount] = useState(0)
   const [remarks, setRemarks] = useState("")
@@ -67,8 +67,10 @@ export default function AddNewPlan({ open, setOpen, plan }) {
 //        console.log(message);
         if (message.includes("Partial Claim")) {
           alert("New Claim has been made with partial amount");
+          refreshKeyHandler();
         } else {
           alert("New Claim Successfully made.");
+          refreshKeyHandler();
         }
       })
       .catch((error) => {

@@ -1,6 +1,5 @@
-package com.conceiversolutions.hrsystem.engagement.rewardtrack;
+package com.conceiversolutions.hrsystem.engagement.reward;
 
-import com.conceiversolutions.hrsystem.engagement.rewardtrack.RTRewardInstance;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

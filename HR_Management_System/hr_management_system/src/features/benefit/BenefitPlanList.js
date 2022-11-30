@@ -2,7 +2,7 @@ import BenefitPlanOption from "./BenefitPlanOption";
 import AddNewPlan from "./AddNewPlan";
 import { useState, useEffect } from "react";
 
-export default function BenefitPlan({ type, plans }) {
+export default function BenefitPlan({ type, plans, refreshKeyHandler }) {
   const [add, setAdd] = useState(false);
 
   return (
@@ -19,7 +19,7 @@ export default function BenefitPlan({ type, plans }) {
           >
             Add New Plan
           </button>
-          <AddNewPlan open ={add} setOpen={setAdd}/>
+          <AddNewPlan open ={add} setOpen={setAdd} refreshKeyHandler={refreshKeyHandler}/>
         </div>}
       </div>
       <div className="mt-8 flex flex-col">
@@ -67,7 +67,7 @@ export default function BenefitPlan({ type, plans }) {
                       </span>}
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <BenefitPlanOption plan ={plan} />
+                        <BenefitPlanOption plan ={plan} refreshKeyHandler={refreshKeyHandler}/>
                       </td>
                     </tr>
                   ))}

@@ -6,6 +6,8 @@ import ClaimScreen from "../screens/ClaimScreen";
 import PlanDetailScreen from "../screens/PlanDetailScreen";
 import ClaimDetailScreen from "../screens/ClaimDetailScreen";
 import NewClaimScreen from "../screens/NewClaimScreen";
+import RewardScreen from "../screens/RewardScreen"
+import RewardDetailScreen from "../screens/RewardDetailScreen"
 
 const WelfareNavigator = () => {
   const theme = useTheme();
@@ -62,6 +64,24 @@ const WelfareNavigator = () => {
         options={{
           title: "NewClaim",
           headerTitle: "NewClaim",
+        }}
+      />
+      <WelfareStack.Screen
+        name="Rewards"
+        component={RewardScreen}
+        options={{
+          title: "Rewards",
+          headerTitle: "Rewards",
+          unmountOnBlur: true,
+        }}
+      />
+      <WelfareStack.Screen
+        name="RewardDetail"
+        component={RewardDetailScreen}
+        options={{
+          title: "RewardDetail",
+          headerTitle: "RewardDetail",
+          unmountOnBlur: true,
         }}
       />
     </WelfareStack.Navigator>

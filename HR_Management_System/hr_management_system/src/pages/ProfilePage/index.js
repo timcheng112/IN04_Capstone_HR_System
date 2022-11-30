@@ -2,6 +2,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import "../../utils/Common.js";
 import Navbar from "../../components/Navbar.js";
+import shiba from "../../assets/shiba-thumbs-up.png";
 //import SideProfile from './sideprofile.js'
 import {
   CalendarIcon,
@@ -79,7 +80,7 @@ export default function ProfilePage(props) {
   const [fileName, setfileName] = useState("");
   const [docId, setDocId] = useState(null);
   const [error, setError] = useState(null);
-
+  const [profilePic, setProfilePic] = useState(shiba);
   // console.log(userId);
   // console.log(email)
 
@@ -88,7 +89,15 @@ export default function ProfilePage(props) {
     async function getUserInfo() {
       await api.getUserInfo(userId).then((response) => {
         setUserInfo(response.data);
-        // console.log(userInfo);
+        console.log(response.data);
+        console.log(response.data.profilePic.docData);
+        if (response.data.profilePic.docData !== null) {
+            api.getDocById(response.data.profilePic.docId).then((response) => {
+                const url = window.URL.createObjectURL(response.data);
+                setProfilePic(url);
+            })
+        }
+
       });
     }
     getUserInfo();
@@ -233,6 +242,27 @@ export default function ProfilePage(props) {
   
     }}}
 
+  function handleProfilePic(e) {
+    console.log(e);
+    e.preventDefault();
+    let formData = new FormData();
+    if (e.target.files[0]) {
+      formData.append("file", e.target.files[0])
+    }
+    api.updateProfilePic(formData, user)
+        .then(response => {
+            console.log(response.data);
+            alert("Uploaded");
+            document.getElementById('profilePic').value= null;
+
+            window.location.reload(false);
+        })
+        .catch(error => {
+            console.log(error.response);
+        })
+
+  }
+
   return (
     <>
       {" "}
@@ -250,10 +280,17 @@ export default function ProfilePage(props) {
               <div className="flex justify-center mt-24">
                 <img
                   className="flex h-24 w-24 max-w-[550px] rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                  src={profilePic}
                   alt=""
                 />
               </div>
+              <label for="profilePic">Change Profile Picture:</label> <br/>
+              <input
+                id="profilePic"
+                type="file"
+                name="profilePic"
+                onChange={(e) => handleProfilePic(e)}
+              />
 
               <span className="">
                 <div className="my-14">

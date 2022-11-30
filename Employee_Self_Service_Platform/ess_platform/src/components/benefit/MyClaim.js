@@ -51,7 +51,7 @@ export default function MyClaims({ navigation, userId }) {
             <DataTable.Cell>
               <Button
                 icon="eye"
-                color="#daa520"
+                color="#1e90ff"
                 onPress={() => navigation.navigate('ClaimDetail', { claim })}>
                 Detail
               </Button>

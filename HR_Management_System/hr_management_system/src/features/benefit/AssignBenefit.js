@@ -8,6 +8,7 @@ export default function AssignBenefit({
   open,
   onClose,
   plan,
+  refreshKeyHandler,
 }) {
   const [searchParam] = useState([
     "userId",
@@ -44,6 +45,7 @@ export default function AssignBenefit({
 
   const handleSubmit = () => {
     assignPlan();
+    refreshKeyHandler();
     onClose();
   };
 

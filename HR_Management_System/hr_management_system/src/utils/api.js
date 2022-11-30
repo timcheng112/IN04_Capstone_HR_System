@@ -230,6 +230,12 @@ const api = {
       `http://localhost:9191/api/user/updateProfile?userId=${userId}&gender=${gender}&email=${email}&phone=${phone}`
     );
   },
+  updateProfilePic(file, userId) {
+      return axios.post(
+        `http://localhost:9191/api/user/updateProfilePic?file=&userId=${userId}`,
+        file
+      );
+    },
   addPayInformation(userId, payInformation) {
     return axios.post(
       `http://localhost:9191/api/pay/payinfo/addPayInformation?userId=${userId}`,
@@ -1159,6 +1165,132 @@ const api = {
   getEmployeesUnassignedToPlan(planId) {
     return axios.get(
       `http://localhost:9191/api/claims/getEmployeesUnassignedToPlan?planId=${planId}`
+    );
+  },
+  // Welfare Rewards
+  getAllRewardTracks() {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getAllRewardTracks`
+    );
+  },
+  getRewardTrack(rewardTrackId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrack?rewardTrackId=${rewardTrackId}`
+    );
+  },
+  getRewardTrackByDepartment(departmentId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrackByDepartment?departmentId=${departmentId}`
+    );
+  },
+  getRewardTrackByEmployee(employeeId){
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrackByEmployee?employeeId=${employeeId}`
+    );
+  },
+  getRewardTrackByDepartmentHead(userId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrackByDepartmentHead?userId=${userId}`
+    );
+  },
+  saveRewardTrack(name, startDate, endDate, departmentId, pointsRatio, rewardTrackId) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/saveRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&departmentId=${departmentId}&pointsRatio=${pointsRatio}&rewardTrackId=${rewardTrackId}`
+    );
+  },
+  addRewardTrack(name, startDate, endDate, departmentId, pointsRatio) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/saveRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&departmentId=${departmentId}&pointsRatio=${pointsRatio}`
+    );
+  },
+  editRewardTrack(name, startDate, endDate, pointsRatio, rewardTrackId) {
+    return axios.put(
+      `http://localhost:9191/api/rewards/editRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&pointsRatio=${pointsRatio}&rewardTrackId=${rewardTrackId}`
+    );
+  },
+  deleteRewardTrack(rewardTrackId) {
+    return axios.delete(
+      `http://localhost:9191/api/rewards/deleteRewardTrack?rewardTrackId=${rewardTrackId}`
+    );
+  },
+  publishRewardTrack(rewardTrackId) {
+    return axios.put(
+      `http://localhost:9191/api/rewards/publishRewardTrack?rewardTrackId=${rewardTrackId}`
+    );
+  },
+  toggleDummyData() {
+    return axios.put(
+      `http://localhost:9191/api/rewards/toggleDummyData`
+    );
+  },
+  submitReviewForm(employeeName, rating, justification, departmentId, teamName) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/submitReviewForm?employeeName=${employeeName}&rating=${rating}&justification=${justification}&departmentId=${departmentId}&teamName=${teamName}`
+    );
+  },
+  getAllReviewForms() {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getAllReviewForms`
+    );
+  },
+  getAllUnvettedReviewForms() {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getAllUnvettedReviewForms`
+    );
+  },
+  vetReviewForm(employeeId, reviewFormId, teamId) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/vetReviewForm?employeeId=${employeeId}&reviewFormId=${reviewFormId}&teamId=${teamId}`
+    );
+  },
+  voidReviewForm(reviewFormId) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/voidReviewForm?reviewFormId=${reviewFormId}`
+    );
+  },
+  getEmployeeReviewForms(employeeId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getEmployeeReviewForms?employeeId=${employeeId}`
+    );
+  },
+  getReviewFormByDepartmentHead(userId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getReviewFormByDepartmentHead?userId=${userId}`
+    );
+  },
+  getRewardTrackRewards(rewardTrackId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getRewardTrackRewards?rewardTrackId=${rewardTrackId}`
+    );
+  },
+  getReward(rewardId) {
+    return axios.get(
+      `http://localhost:9191/api/rewards/getReward?rewardId=${rewardId}`
+    );
+  },
+  addNewReward(name, description, pointsRequired, expiryDate, rewardTrackId) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/addNewReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardTrackId=${rewardTrackId}`
+      );
+  },
+  editReward(name, description, pointsRequired, expiryDate, rewardId) {
+    return axios.put(
+      `http://localhost:9191/api/rewards/editReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardId=${rewardId}`
+      );
+  },
+  deleteReward(rewardId) {
+    return axios.delete(
+      `http://localhost:9191/api/rewards/deleteReward?rewardId=${rewardId}`
+    );
+  },
+  redeemReward(rewardId, employeeId) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/redeemReward?rewardId=${rewardId}&employeeId=${employeeId}`
+    );
+  },
+  toggleDummyData() {
+    return axios.put(
+      `http://localhost:9191/api/rewards/toggleDummyData`
     );
   },
 };

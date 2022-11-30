@@ -1,5 +1,6 @@
 package com.conceiversolutions.hrsystem.engagement.points;
 
+import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
 import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,23 +27,28 @@ public class EmployeeReviewForm {
     private LocalDate date;
     @Column(name = "justification")
     private String justification;
-    @Column(name = "department_name")
-    private String departmentName;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Department.class)
+    private Department department;
     @Column(name = "team_name")
     private String teamName;
+    @Column(name = "vetted")
+    private Boolean vetted;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     private User employee;
 
     public EmployeeReviewForm() {
+        this.vetted = false;
+        this.employee = null;
     }
 
-    public EmployeeReviewForm(String employeeName, Integer rating, LocalDate date, String justification, String departmentName, String teamName) {
+    public EmployeeReviewForm(String employeeName, Integer rating, LocalDate date, String justification, Department dept, String teamName) {
+        this();
         this.employeeName = employeeName;
         this.rating = rating;
         this.date = date;
         this.justification = justification;
-        this.departmentName = departmentName;
+        this.department = dept;
         this.teamName = teamName;
     }
 
@@ -54,7 +60,7 @@ public class EmployeeReviewForm {
                 ", rating=" + rating +
                 ", date=" + date +
                 ", justification='" + justification + '\'' +
-                ", departmentName='" + departmentName + '\'' +
+                ", departmentName='" + department.getDepartmentName() + '\'' +
                 ", teamName='" + teamName + '\'' +
                 '}';
     }

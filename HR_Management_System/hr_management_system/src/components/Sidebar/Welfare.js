@@ -11,7 +11,7 @@ import WelfareBreadcrumb from "../Breadcrumb/WelfareBreadcrumb";
 
 const navigation = [
   { name: "Benefits", href: "/welfare/mybenefits", icon: SparklesIcon, current: false },
-  { name: "Rewards", href: "/welfare/rewards", icon: GiftIcon, current: false },
+  { name: "Rewards", href: "/welfare/myrewardtrack", icon: GiftIcon, current: false },
 ];
 
 function classNames(...classes) {

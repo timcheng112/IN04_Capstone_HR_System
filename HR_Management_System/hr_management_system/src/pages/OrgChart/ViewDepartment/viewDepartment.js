@@ -6,6 +6,7 @@ import AddOutletModal from "./addOutletModal.js";
 import AddTeamModal from "./addTeamModal.js";
 import ChangeDeptHeadModal from "./changeDeptHeadModal.js";
 import DeleteTeamModal from "./deleteTeamModal.js";
+import shiba from "../../../assets/shiba-thumbs-up.png";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
 /* This example requires Tailwind CSS v2.0+ */
@@ -23,6 +24,7 @@ export default function ViewDepartment() {
   const [toDelete, setToDelete] = useState(0);
   const [openDelete, setOpenDelete] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [headPic, setHeadPic] = useState(shiba);
 
   //   function getURL(){
   //     const url = window.location.href;
@@ -50,6 +52,13 @@ export default function ViewDepartment() {
       // setTeams(response.data.teams);
       console.log("USE EFFECT 1: get departmentHead");
       console.log(response.data.departmentHead);
+      if (response.data.departmentHead.profilePic !== null) {
+         api.getDocById(response.data.departmentHead.profilePic.docId).then((response) => {
+                const url = window.URL.createObjectURL(response.data);
+                setHeadPic(url);
+            })
+      }
+
       // console.log("USE EFFECT 1: get teams ");
       // console.log(response.data.teams);
     });
@@ -213,7 +222,7 @@ export default function ViewDepartment() {
                               <div className="h-10 w-10 flex-shrink-0">
                                 <img
                                   className="h-10 w-10 rounded-full"
-                                  src={""}
+                                  src={headPic}
                                   alt=""
                                 />
                               </div>
