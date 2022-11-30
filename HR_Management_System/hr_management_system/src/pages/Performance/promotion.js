@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import PerformanceSidebar from "../../components/Sidebar/Performance";
 import ActiveRequests from "../../features/jobchange/activeRequests";
+import AllRequests from "../../features/jobchange/allRequests";
 import RequestHistory from "../../features/jobchange/requestHistory";
 import ToApproveRequests from "../../features/jobchange/toApproveRequests";
 import ToInterviewRequests from "../../features/jobchange/toInterviewRequests";
@@ -13,6 +14,7 @@ const tabs = [
   { name: "To Interview", href: "#", current: false },
   { name: "To Approve", href: "#", current: false },
   { name: "My Request History", href: "#", current: false },
+  { name: "All Requests", href: "#", current: false },
 ];
 
 function classNames(...classes) {
@@ -27,7 +29,9 @@ export default function Promotion() {
   useEffect(() => {
     api.getUser(getUserId()).then((response) => {
       if (!response.data.isHrEmployee) {
-        const nonHRtabs = tabs.filter((t) => t.name !== "To Approve");
+        const nonHRtabs = tabs.filter(
+          (t) => t.name !== "To Approve" || t.name !== "All Requests"
+        );
         setTabList(nonHRtabs);
       }
     });
@@ -70,6 +74,12 @@ export default function Promotion() {
       return (
         <div>
           <RequestHistory />
+        </div>
+      );
+    } else if (currentTab === "All Requests") {
+      return (
+        <div>
+          <AllRequests />
         </div>
       );
     }

@@ -24,9 +24,10 @@ public class PromotionController {
 
     private final PromotionService promotionService;
 
-    // public List<PromotionRequest> getAllPromotionRequests() {
-    // return promotionService.getAllPromotionRequests();
-    // }
+    @GetMapping
+    public List<PromotionRequest> getAllPromotionRequests() {
+        return promotionService.getAllPromotionRequests();
+    }
 
     @PostMapping
     public String createPromotionRequest(@RequestParam("created") LocalDate created,
@@ -69,7 +70,8 @@ public class PromotionController {
             @RequestParam("departmentId") Long departmentId)
             throws Exception {
         return promotionService.processPromotionRequest(promotionId, rejectRemarks, basicSalary,
-                basicHourlyPay, weekendHourlyPay, eventPay, processedById, newTeam, teamName, outletId, inOffice, departmentId);
+                basicHourlyPay, weekendHourlyPay, eventPay, processedById, newTeam, teamName, outletId, inOffice,
+                departmentId);
     }
 
     @GetMapping(path = "/active/{userId}")
@@ -131,9 +133,9 @@ public class PromotionController {
     }
 
     @GetMapping(path = "/user/{employeeId}")
-    public PromotionRequest getPromotionRequestByEmployee(@PathVariable("employeeId") Long employeeId) throws Exception {
+    public PromotionRequest getPromotionRequestByEmployee(@PathVariable("employeeId") Long employeeId)
+            throws Exception {
         return promotionService.getPromotionRequestByEmployee(employeeId);
     }
-
 
 }

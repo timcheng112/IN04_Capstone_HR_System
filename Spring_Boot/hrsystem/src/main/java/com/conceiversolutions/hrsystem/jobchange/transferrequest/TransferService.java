@@ -470,4 +470,22 @@ public class TransferService {
         }
         return history;
     }
+
+    public List<TransferRequest> getAllRequests() {
+        List<TransferRequest> all = transferRepository.findAll();
+
+        for (TransferRequest t : all) {
+            t.setEmployee(breakRelationships(t.getEmployee()));
+            t.setManager(breakRelationships(t.getManager()));
+            if (t.getInterviewer() != null) {
+                t.setInterviewer(breakRelationships(t.getInterviewer()));
+            }
+            if (t.getProcessedBy() != null) {
+                t.setProcessedBy(breakRelationships(t.getProcessedBy()));
+            }
+            t.setNewDepartment(null);
+            t.setNewTeam(null);
+        }
+        return all;
+    }
 }

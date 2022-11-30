@@ -109,16 +109,20 @@ export default function RequestHistory() {
     <>
       <div className="mt-10">
         <div className="overflow-hidden bg-white shadow sm:rounded-md">
-          {requests.length <= 0 ? (<div className="p-4">
-              {/* <img
+          {requests.length <= 0 ? (
+            <div className="p-4">
+              <img
                 src={require("../../assets/shiba-thumbs-up.png")}
                 alt="shiba"
                 className="object-contain h-20 w-full"
-              /> */}
+              />
               <h1 className="font-sans font-semibold text-xl">
                 No Previous Requests
               </h1>
-            </div>) : (<></>)}
+            </div>
+          ) : (
+            <></>
+          )}
           <ul role="list" className="divide-y divide-gray-200">
             {requests.map((request) => (
               <li key={request.promotionId}>

@@ -1267,6 +1267,12 @@ const api = {
   getPromotionRequestByEmployee(employeeId) {
     return axios.get(`http://localhost:9191/api/promotion/user/${employeeId}`);
   },
+  getAllPromotionRequests() {
+    return axios.get("http://localhost:9191/api/promotion")
+  },
+  getAllTransferRequests() {
+    return axios.get(`http://localhost:9191/api/transfer`)
+  },
 };
 
 export default api;

@@ -41,7 +41,8 @@ public class TransferController {
     }
 
     @GetMapping(path = "/positions/{managerId}")
-    public List<Position> getPositionsToTransfer(@PathVariable("managerId") Long managerId, @RequestParam("role") String role,
+    public List<Position> getPositionsToTransfer(@PathVariable("managerId") Long managerId,
+            @RequestParam("role") String role,
             @RequestParam("positionId") Long positionId) {
         return transferService.getPositionsToTransfer(managerId, role, positionId);
     }
@@ -109,5 +110,10 @@ public class TransferController {
     @GetMapping(path = "/team/department/{departmentId}")
     public List<Team> getPossibleTeams(@PathVariable("departmentId") Long departmentId) throws Exception {
         return transferService.getPossibleTeams(departmentId);
+    }
+
+    @GetMapping
+    public List<TransferRequest> getAllRequests() throws Exception {
+        return transferService.getAllRequests();
     }
 }
