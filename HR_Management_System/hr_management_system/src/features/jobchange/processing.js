@@ -159,29 +159,172 @@ export default function Processing({ request }) {
                     </div>
                   </div>
 
-                  <div className="sm:col-span-3">
-                    <label
-                      htmlFor="department"
-                      className="block text-md text-center font-sans font-medium text-gray-900"
-                    >
-                      New Department
-                    </label>
-
+                  {isTeam ? (
                     <>
-                      {newDepartment && (
-                        <div className="mt-1">
-                          <input
-                            type="text"
-                            name="department"
-                            id="department"
-                            disabled
-                            className="block w-full text-center min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-800 "
-                            defaultValue={newDepartment.departmentName}
-                          />
-                        </div>
-                      )}
+                      <div className="sm:col-span-3">
+                        <label
+                          htmlFor="department"
+                          className="block text-md mb-2 text-left font-sans font-medium text-gray-900"
+                        >
+                          New Team
+                        </label>
+
+                        <label
+                          htmlFor="salary-amount"
+                          className="block text-sm font-bold text-gray-700 text-start"
+                        >
+                          Team Name
+                        </label>
+                        <input
+                          type="text"
+                          name="salary-amount"
+                          id="salary-amount"
+                          autoComplete="family-name"
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-600 disabled:bg-gray-100"
+                          value={teamName}
+                          onChange={(e) => setTeamName(e.target.value)}
+                        />
+                      </div>
+                      <div className="sm:col-span-6">
+                        <Listbox
+                          value={selectedOutlet}
+                          onChange={setSelectedOutlet}
+                        >
+                          {({ open }) => (
+                            <>
+                              <Listbox.Label className="block text-sm font-bold text-gray-700 text-start">
+                                New Outlet
+                              </Listbox.Label>
+                              <div className="relative mt-1">
+                                <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                                  <span className="block truncate">
+                                    {selectedOutlet.outletName}
+                                  </span>
+                                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                    <ChevronUpDownIcon
+                                      className="h-5 w-5 text-gray-400"
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                </Listbox.Button>
+
+                                <Transition
+                                  show={open}
+                                  as={Fragment}
+                                  leave="transition ease-in duration-100"
+                                  leaveFrom="opacity-100"
+                                  leaveTo="opacity-0"
+                                >
+                                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                    {outlets.map((person) => (
+                                      <Listbox.Option
+                                        key={person.outletId}
+                                        className={({ active }) =>
+                                          classNames(
+                                            active
+                                              ? "text-white bg-indigo-600"
+                                              : "text-gray-900",
+                                            "relative cursor-default select-none py-2 pl-3 pr-9"
+                                          )
+                                        }
+                                        value={person}
+                                      >
+                                        {({ selected, active }) => (
+                                          <>
+                                            <span
+                                              className={classNames(
+                                                selected
+                                                  ? "font-semibold"
+                                                  : "font-normal",
+                                                "block truncate"
+                                              )}
+                                            >
+                                              {person.outletName}
+                                            </span>
+
+                                            {selected ? (
+                                              <span
+                                                className={classNames(
+                                                  active
+                                                    ? "text-white"
+                                                    : "text-indigo-600",
+                                                  "absolute inset-y-0 right-0 flex items-center pr-4"
+                                                )}
+                                              >
+                                                <CheckIcon
+                                                  className="h-5 w-5"
+                                                  aria-hidden="true"
+                                                />
+                                              </span>
+                                            ) : null}
+                                          </>
+                                        )}
+                                      </Listbox.Option>
+                                    ))}
+                                  </Listbox.Options>
+                                </Transition>
+                              </div>
+                            </>
+                          )}
+                        </Listbox>
+                      </div>
+                      <div className="sm:col-span-6">
+                        <label
+                          htmlFor="salary-amount"
+                          className="block text-sm font-bold text-gray-700 text-start"
+                        >
+                          In Office
+                        </label>
+                        <Switch.Group
+                          as="div"
+                          className="flex items-center justify-start"
+                        >
+                          <Switch
+                            checked={inOffice}
+                            onChange={setInOffice}
+                            className={classNames(
+                              inOffice ? "bg-indigo-600" : "bg-gray-200",
+                              "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            )}
+                          >
+                            <span
+                              aria-hidden="true"
+                              className={classNames(
+                                inOffice ? "translate-x-5" : "translate-x-0",
+                                "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                              )}
+                            />
+                          </Switch>
+                        </Switch.Group>
+                      </div>
                     </>
-                  </div>
+                  ) : (
+                    <>
+                      <div className="sm:col-span-3">
+                        <label
+                          htmlFor="department"
+                          className="block text-md text-left font-sans font-medium text-gray-900"
+                        >
+                          New Department
+                        </label>
+
+                        <>
+                          {newDepartment && (
+                            <div className="mt-1">
+                              <input
+                                type="text"
+                                name="department"
+                                id="department"
+                                disabled
+                                className="block w-full text-center min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-800 "
+                                defaultValue={newDepartment.departmentName}
+                              />
+                            </div>
+                          )}
+                        </>
+                      </div>
+                    </>
+                  )}
 
                   <div className="sm:col-span-6">
                     <label
