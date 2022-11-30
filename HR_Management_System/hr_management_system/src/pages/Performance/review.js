@@ -67,10 +67,17 @@ export default function Review() {
       }
 
       if (confirm) {
-        api.submitReview(reviewId, strengths, weaknesses, parseInt(rating.substring(0,1))).then(response => {
+        api
+          .submitReview(
+            reviewId,
+            strengths,
+            weaknesses,
+            parseInt(rating.substring(0, 1))
+          )
+          .then((response) => {
             alert(response.data);
             setRefresh(!refresh);
-        })
+          });
       }
     } else {
       alert("Please ensure all fields are not empty before submitting");
@@ -162,12 +169,12 @@ export default function Review() {
                   <h3 className="mt-1 text-md text-gray-600">
                     Review period {review.reviewYear}
                   </h3>
+                  {submitted && (
+                    <span className="inline-flex items-center rounded-full bg-green-100 px-3 mt-1 py-0.5 text-sm font-medium text-green-800">
+                      Submitted
+                    </span>
+                  )}
                 </>
-              )}
-              {submitted && (
-                <span className="inline-flex items-center rounded-full bg-green-100 px-3 mt-1 py-0.5 text-sm font-medium text-green-800">
-                  Submitted
-                </span>
               )}
             </div>
           </div>
@@ -186,7 +193,7 @@ export default function Review() {
               </div>
               {submitted ? (
                 <>
-                <SubmittedReview reviewId={reviewId} />
+                  <SubmittedReview reviewId={reviewId} />
                 </>
               ) : (
                 <>
