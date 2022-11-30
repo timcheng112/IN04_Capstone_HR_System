@@ -263,7 +263,7 @@ public class User implements UserDetails {
         this.bankName = bankName;
         this.notificationsUnread = notificationsUnread;
         this.notificationsRead = notificationsRead;
-        this.cardId = cardId;
+//        this.cardId = cardId;
     }
 
 
