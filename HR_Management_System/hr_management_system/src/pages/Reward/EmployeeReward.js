@@ -14,9 +14,10 @@ export default function EmployeeReward() {
   const [user, setUser] = useState(null);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
-  const [department, setDepartment] = useState(null)
+  const [claimDate, setClaimDate] = useState();
   const [open, setOpen] = useState(false);
   const [track, setTrack] = useState([])
+  const [uId, setUId] = useState(getUserId());
 
   useEffect(() => {
     api
@@ -35,6 +36,8 @@ export default function EmployeeReward() {
       })
       .catch((error) => setError(error));
   }, []);
+
+  
 
   return (
     user && <div className="">

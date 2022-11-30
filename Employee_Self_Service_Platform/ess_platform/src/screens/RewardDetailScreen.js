@@ -59,13 +59,8 @@ const RewardDetailScreen = ({ navigation}) => {
   const [claimDate, setClaimDate] = useState();
 
   useEffect(() => {
-    console.log("Reward Detail Screen");
     setUserId(route.params.userId);
     setReward(route.params.item);
-    console.log(route.params.item);
-    console.log("Instances");
-    console.log(route.params.item.rewardInstances);
-    console.log(route.params.userId)
     route.params.item.rewardInstances.forEach((instance) => {
         console.log("instance");
         console.log(instance.recipient.userId);
@@ -78,8 +73,6 @@ const RewardDetailScreen = ({ navigation}) => {
   }, []);
 
   function redeemReward() {
-    console.log("REDEEM REWARD");
-    console.log(reward.name);
 
     api.redeemReward(reward.rewardId, userId)
         .then((response) => {

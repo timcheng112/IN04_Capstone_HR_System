@@ -1283,6 +1283,11 @@ const api = {
       `http://localhost:9191/api/rewards/deleteReward?rewardId=${rewardId}`
     );
   },
+  redeemReward(rewardId, employeeId) {
+    return axios.post(
+      `http://localhost:9191/api/rewards/redeemReward?rewardId=${rewardId}&employeeId=${employeeId}`
+    );
+  },
   toggleDummyData() {
     return axios.put(
       `http://localhost:9191/api/rewards/toggleDummyData`
