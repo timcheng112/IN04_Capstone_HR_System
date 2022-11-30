@@ -27,7 +27,7 @@ export default function RewardTrackOption({ track }) {
   function terminate(){
     api.deleteRewardTrack(track.rewardTrackId)
     .then(() => {alert("Successfully delete.");})
-    .catch((error) => setError(error));
+    .catch((error) => alert(error.response.data.message));
   }
 
   return (

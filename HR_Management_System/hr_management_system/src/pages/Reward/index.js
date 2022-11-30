@@ -47,6 +47,7 @@ export default function Reward() {
     api
       .getRewardTrackByDepartmentHead(getUserId()) 
       .then((response) => {
+        console.log(response.data);
         setTracks(response.data);
       })
       .catch((error) => setError(error));
@@ -114,7 +115,7 @@ export default function Reward() {
                       </thead>
                       <tbody className="divide-y divide-gray-200 bg-white">
                         {tracks.map((track) => (
-                          <tr key={track.name}>
+                          <tr key={track.rewardTrackId}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-6">
                               {track.name}
                             </td>

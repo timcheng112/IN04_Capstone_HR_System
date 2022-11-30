@@ -103,7 +103,7 @@ export default function TrackDetail() {
 
     api.publishRewardTrack(track.rewardTrackId)
       .then(() => { alert("Successfully published."); })
-      .catch((error) => setError(error));
+      .catch((error) => alert(error.response.data.message));
 
     return 0;
   }

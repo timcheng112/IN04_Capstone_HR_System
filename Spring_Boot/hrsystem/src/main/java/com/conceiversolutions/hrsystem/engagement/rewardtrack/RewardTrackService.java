@@ -78,6 +78,14 @@ public class RewardTrackService {
         System.out.println("rewardTrackId = " + rewardTrackId);
 
         RewardTrack rt = getRewardTrack(rewardTrackId);
+
+        Department dept = rt.getDepartment();
+
+        List<RewardTrack> tracks = rewardTrackRepository.findActiveByDepartmentId(dept.getDepartmentId());
+        if (!tracks.isEmpty()) {
+            throw new IllegalStateException("There is already an Active reward tracks for this department");
+        }
+
         checkDates(rt.getStartDate(), rt.getEndDate());
         rt.setIsActive(true);
         rewardTrackRepository.save(rt);
