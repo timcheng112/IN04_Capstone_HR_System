@@ -1250,6 +1250,12 @@ const api = {
   getManagerReviewsByManager(managerId) {
     return axios.get(`http://localhost:9191/api/review/manager/${managerId}`)
   },
+  deleteAchievement(achievementId) {
+    return axios.delete(`http://localhost:9191/api/achievement/${achievementId}`)
+  },
+  editAchievement(achievementId, description) {
+    return axios.put(`http://localhost:9191/api/achievement/${achievementId}?description=${description}`)
+  }
 };
 
 export default api;

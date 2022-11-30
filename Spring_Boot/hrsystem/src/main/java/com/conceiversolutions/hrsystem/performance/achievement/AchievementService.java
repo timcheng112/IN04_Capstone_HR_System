@@ -2,6 +2,7 @@ package com.conceiversolutions.hrsystem.performance.achievement;
 
 import lombok.AllArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -34,6 +35,7 @@ public class AchievementService {
         if (optionalA.isPresent()) {
             Achievement a = optionalA.get();
             a.setDescription(description);
+            a.setLastModified(LocalDate.now());
             return "Achievement has been successfully edited";
         } else {
             throw new IllegalStateException("Unable to find achievement");
