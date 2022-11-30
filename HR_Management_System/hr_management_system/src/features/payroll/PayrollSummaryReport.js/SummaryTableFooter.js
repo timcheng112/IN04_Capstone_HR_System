@@ -18,15 +18,23 @@ const styles = StyleSheet.create({
   },
 });
 
-const SummaryTableFooter = ({ items }) => {
-  const total = items
-    .map((item) => item.qty * item.rate)
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+const SummaryTableFooter = ({ payslips }) => {
+  // const total = payslips
+  //   .map((item) => item.qty * item.rate)
+  //   .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
   return (
     <View style={styles.row}>
       <Text style={styles.description}></Text>
       <Text style={styles.total}>TOTAL</Text>
-      <Text style={styles.total}>{Number.parseFloat(total).toFixed(2)}</Text>
+      <Text style={styles.total}>
+        {payslips &&
+          "$" +
+            payslips
+              .reduce((accumulator, object) => {
+                return accumulator + object.grossSalary;
+              }, 0)
+              .toLocaleString()}
+      </Text>
     </View>
   );
 };

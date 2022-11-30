@@ -24,6 +24,8 @@ public class SwapRequest {
     private StatusEnum status;
     @Column(name = "response_reason", nullable = true)
     private String responseReason;
+    @Column(name = "reviewer_response_reason", nullable = true)
+    private String reviewerResponseReason;
 
     // @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity =
     // Shift.class)
@@ -54,6 +56,13 @@ public class SwapRequest {
         this.reason = reason;
         this.status = status;
         this.responseReason = responseReason;
+    }
+
+    public SwapRequest(String reason, StatusEnum status, String responseReason, String reviewerResponseReason) {
+        this.reason = reason;
+        this.status = status;
+        this.responseReason = responseReason;
+        this.reviewerResponseReason = reviewerResponseReason;
     }
 
     public Long getSwapRequestId() {
@@ -126,6 +135,14 @@ public class SwapRequest {
                 + ", responseReason=" + responseReason + ", requestorShiftListItem=" + requestorShiftListItem
                 + ", receiverShiftListItem=" + receiverShiftListItem + ", requestor=" + requestor + ", receiver="
                 + receiver + "]";
+    }
+
+    public String getReviewerResponseReason() {
+        return reviewerResponseReason;
+    }
+
+    public void setReviewerResponseReason(String reviewerResponseReason) {
+        this.reviewerResponseReason = reviewerResponseReason;
     }
 
 }

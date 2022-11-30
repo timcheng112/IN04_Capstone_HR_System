@@ -119,6 +119,13 @@ public class PayInformationService {
         payInformationRepository.deleteAll();
     }
 
+    public void removeFromPayroll(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
+        user.getCurrentPayInformation().setInPayroll(false);
+        userRepository.save(user);
+    }
+
     public PayInformation getUserPayInformation(Long userId) throws Exception {
         Optional<PayInformation> optionalPayInformation = payInformationRepository.findUserPayInformation(userId);
 
@@ -157,7 +164,7 @@ public class PayInformationService {
 
             employee.setCurrentPosition(currentPosition);
             employee.setCurrentLeaveQuota(quota);
-            
+
             return pi;
         } else {
             throw new IllegalStateException("Unable to find pay information for user");

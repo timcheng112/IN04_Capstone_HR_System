@@ -46,6 +46,7 @@ public class OrganizationService {
             org.getOrganizationHead().setReactivationRequest(null);
             org.getOrganizationHead().setAttendances(new ArrayList<>());
             org.getOrganizationHead().setCurrentPayInformation(null);
+            org.getOrganizationHead().setPayslips(new ArrayList<>());
             org.getOrganizationHead().setEmployeeAppraisals(new ArrayList<>());
             org.getOrganizationHead().setManagerAppraisals(new ArrayList<>());
             org.getOrganizationHead().setManagerReviews(new ArrayList<>());
@@ -72,6 +73,7 @@ public class OrganizationService {
                 d.getDepartmentHead().setReactivationRequest(null);
                 d.getDepartmentHead().setAttendances(new ArrayList<>());
                 d.getDepartmentHead().setCurrentPayInformation(null);
+                d.getDepartmentHead().setPayslips(new ArrayList<>());
                 d.getDepartmentHead().setEmployeeAppraisals(new ArrayList<>());
                 d.getDepartmentHead().setManagerAppraisals(new ArrayList<>());
                 d.getDepartmentHead().setManagerReviews(new ArrayList<>());
@@ -111,6 +113,7 @@ public class OrganizationService {
         org.getOrganizationHead().setReactivationRequest(null);
         org.getOrganizationHead().setAttendances(new ArrayList<>());
         org.getOrganizationHead().setCurrentPayInformation(null);
+        org.getOrganizationHead().setPayslips(new ArrayList<>());
         org.getOrganizationHead().setEmployeeAppraisals(new ArrayList<>());
         org.getOrganizationHead().setManagerAppraisals(new ArrayList<>());
         org.getOrganizationHead().setManagerReviews(new ArrayList<>());
@@ -137,6 +140,7 @@ public class OrganizationService {
             d.getDepartmentHead().setReactivationRequest(null);
             d.getDepartmentHead().setAttendances(new ArrayList<>());
             d.getDepartmentHead().setCurrentPayInformation(null);
+            d.getDepartmentHead().setPayslips(new ArrayList<>());
             d.getDepartmentHead().setEmployeeAppraisals(new ArrayList<>());
             d.getDepartmentHead().setManagerAppraisals(new ArrayList<>());
             d.getDepartmentHead().setManagerReviews(new ArrayList<>());

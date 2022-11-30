@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, PDFViewer } from "@react-pdf/renderer";
 import PayslipDocument from "./PayslipDocument";
+import PayslipDocumentUrl from "./PayslipDocumentUrl";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -14,7 +15,8 @@ const styles = StyleSheet.create({
 const PayslipDocumentViewer = () => {
   return (
     <PDFViewer style={styles.viewer}>
-      <PayslipDocument />
+      {/* <PayslipDocument /> */}
+      <PayslipDocumentUrl />
     </PDFViewer>
   );
 };

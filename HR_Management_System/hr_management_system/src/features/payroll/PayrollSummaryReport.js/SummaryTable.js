@@ -15,11 +15,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const SummaryTable = ({ invoice }) => (
+const SummaryTable = ({ payslips }) => (
   <View style={styles.tableContainer}>
     <SummaryTableHeader />
-    <SummaryTableRow items={invoice.items} />
-    <SummaryTableFooter items={invoice.items} />
+    <SummaryTableRow payslips={payslips} />
+    <SummaryTableFooter payslips={payslips} />
   </View>
 );
 

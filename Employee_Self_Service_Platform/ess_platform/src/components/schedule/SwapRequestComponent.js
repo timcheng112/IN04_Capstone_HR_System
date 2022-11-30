@@ -133,41 +133,45 @@ const SwapRequestComponent = () => {
   // TO RETRIEVE SWAP REQUESTS OF LOGGED IN USER's TEAM
   useEffect(() => {
     if (user !== null) {
-      setIsLoading(true);
-      api
-        .getSwapRequestsByTeamId(user.teams[0].teamId)
-        .then((response) => {
-          const pendingSwapRequests = response.data.filter(
-            (item) => item.status === "PENDING"
-          );
-          const tempTeamSwapRequests = pendingSwapRequests.filter(
-            (item) => item.requestor.userId !== user.userId
-          );
-          const tempAllMySwapRequests = response.data.filter(
-            (item) => item.requestor.userId === user.userId
-          );
-          const tempReviewingSwapRequests = response.data.filter(
-            (item) => item.status === "REVIEWING"
-          );
-          const tempMyCurrentSwapRequests = tempAllMySwapRequests.filter(
-            (item) => item.status !== "COMPLETED"
-          );
-          const tempMyCompletedSwapRequests = tempAllMySwapRequests.filter(
-            (item) => item.status === "COMPLETED"
-          );
-          const tempIncomingSwapRequests = response.data.filter(
-            (item) => item.receiver.userId === user.userId
-          );
-          setTeamSwapRequests(tempReviewingSwapRequests);
-          setMySwapRequests(tempMyCurrentSwapRequests);
-          setMyCompletedSwapRequests(tempMyCompletedSwapRequests);
-          setIncomingSwapRequests(tempIncomingSwapRequests);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.log("Error in retrieving user's swap requests!");
-          setIsLoading(false);
-        });
+      if (user.teams.length > 0) {
+        setIsLoading(true);
+        api
+          .getSwapRequestsByTeamId(user.teams[0].teamId)
+          .then((response) => {
+            const pendingSwapRequests = response.data.filter(
+              (item) => item.status === "PENDING"
+            );
+            const tempTeamSwapRequests = pendingSwapRequests.filter(
+              (item) => item.requestor.userId !== user.userId
+            );
+            const tempAllMySwapRequests = response.data.filter(
+              (item) => item.requestor.userId === user.userId
+            );
+            const tempReviewingSwapRequests = response.data.filter(
+              (item) => item.status === "REVIEWING"
+            );
+            const tempMyCurrentSwapRequests = tempAllMySwapRequests.filter(
+              (item) => item.status !== "COMPLETED"
+            );
+            const tempMyCompletedSwapRequests = tempAllMySwapRequests.filter(
+              (item) => item.status === "COMPLETED"
+            );
+            const tempIncomingSwapRequests = response.data.filter(
+              (item) => item.receiver.userId === user.userId
+            );
+            setTeamSwapRequests(tempReviewingSwapRequests);
+            setMySwapRequests(tempMyCurrentSwapRequests);
+            setMyCompletedSwapRequests(tempMyCompletedSwapRequests);
+            setIncomingSwapRequests(tempIncomingSwapRequests);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            console.log("Error in retrieving user's swap requests!");
+            setIsLoading(false);
+          });
+      }
+    } else {
+      setIsLoading(false);
     }
   }, [user, retrevingSwapRequests]);
 
@@ -742,7 +746,7 @@ const SwapRequestComponent = () => {
           icon={"plus"}
           label={"Apply"}
           extended={isExtended}
-          onPress={showModal}
+          onPress={users ? showModal : () => alert("You need to be in a team to apply!")}
           visible={!visible}
           animateFrom={"right"}
           iconMode={"static"}
