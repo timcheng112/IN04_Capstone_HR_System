@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.pay.payinformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -56,4 +57,6 @@ public class PayInformationController {
         return payInformationService.getPositionPayInformation(positionId);
     }
 
+    @GetMapping(path = "/getEmployeesAverageSalary")
+    public BigDecimal getEmployeesAverageSalary(){ return payInformationService.getEmployeesAverageSalary(); }
 }

@@ -1,7 +1,5 @@
 package com.conceiversolutions.hrsystem.performance.achievement;
 
-import lombok.AllArgsConstructor;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +46,28 @@ public class AchievementService {
     }
 
    
+    public List<Achievement> getAllAchievements() {
+        List<Achievement> a = achievementRepository.findAll();
+
+        for (Achievement achievement : a) {
+            achievement.setEmployeeGoal(null);
+        }
+        return a;
+    }
+
+    public List<Achievement> getAchievementsByYear(String year) {
+        List<Achievement> achievements = achievementRepository.findAll();
+        List<Achievement> aList = new ArrayList<>();
+
+        for (Achievement a : achievements) {
+            if (a.getEmployeeGoal().getYear().equals(year)) {
+                a.setEmployeeGoal(null);
+                aList.add(a);
+            }
+        }
+        return aList;
+    }
+
 
     
 }

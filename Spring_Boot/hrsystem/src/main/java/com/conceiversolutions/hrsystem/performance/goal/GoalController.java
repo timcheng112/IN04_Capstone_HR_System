@@ -89,5 +89,20 @@ public class GoalController {
     public List<Goal> getUserGoals(@PathVariable("userId") Long userId) {
         return goalService.getUserGoals(userId);
     }
+
+    @GetMapping
+    public List<Goal> getAllGoals() {
+        return goalService.getAllGoals();
+    }
+
+    @GetMapping(path = "/overdue")
+    public List<Integer> getOverdueGoals() {
+        return goalService.getOverdueGoals();
+    }
+
+    @GetMapping(path = "{year}/count")
+    public List<Integer> getGoalCount(@PathVariable("year") String year) throws Exception {
+        return goalService.getGoalCount(year);
+    }
     
 }

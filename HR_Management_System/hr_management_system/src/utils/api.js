@@ -236,11 +236,11 @@ const api = {
     );
   },
   updateProfilePic(file, userId) {
-      return axios.post(
-        `http://localhost:9191/api/user/updateProfilePic?file=&userId=${userId}`,
-        file
-      );
-    },
+    return axios.post(
+      `http://localhost:9191/api/user/updateProfilePic?file=&userId=${userId}`,
+      file
+    );
+  },
   addPayInformation(userId, payInformation) {
     return axios.post(
       `http://localhost:9191/api/pay/payinfo/addPayInformation?userId=${userId}`,
@@ -831,8 +831,17 @@ const api = {
   deleteGoalPeriod(year) {
     return axios.delete(`http://localhost:9191/api/goalPeriod/${year}`);
   },
+  getGoalPeriodRange(year) {
+    return axios.get(`http://localhost:9191/api/goalPeriod/${year}/range`);
+  },
+  getAllGoals() {
+    return axios.get(`http://localhost:9191/api/goal`);
+  },
   getAllGoalsByYear(year) {
     return axios.get(`http://localhost:9191/api/goal/all/${year}`);
+  },
+  getGoalCount(year) {
+    return axios.get(`http://localhost:9191/api/goal/${year}/count`);
   },
   addGoal(type, description, userId) {
     return axios.post(
@@ -861,10 +870,19 @@ const api = {
   getTeamGoals(teamId, year) {
     return axios.get(`http://localhost:9191/api/goal/team/${teamId}/${year}`);
   },
+  getOverdueGoals() {
+    return axios.get(`http://localhost:9191/api/goal/overdue`);
+  },
   addAchievement(goalId, description) {
     return axios.post(
       `http://localhost:9191/api/goal/${goalId}/achievement?description=${description}`
     );
+  },
+  getAllAchievements() {
+    return axios.get(`http://localhost:9191/api/achievement`);
+  },
+  getAchievementsByYear(year) {
+    return axios.get(`http://localhost:9191/api/achievement/${year}`);
   },
   addAppraisalPeriod(appraisalPeriod) {
     return axios.post(
@@ -1082,6 +1100,26 @@ const api = {
   getOfferedApplications(postingId) {
     return axios.get(
       `http://localhost:9191/api/jobapplications/getOfferedApplications?postingId=${postingId}`
+    );
+  },
+  getJobOffersWithinAMonth() {
+    return axios.get(
+      `http://localhost:9191/api/jobapplications/getJobOffersWithinAMonth`
+    );
+  },
+  getAllPendingApplicationsWithinMonth() {
+    return axios.get(
+      `http://localhost:9191/api/jobapplications/getAllPendingApplicationsWithinMonth`
+    );
+  },
+  getAllShortlistedApplicationsWithinMonth() {
+    return axios.get(
+      `http://localhost:9191/api/jobapplications/getAllShortlistedApplicationsWithinMonth`
+    );
+  },
+  getAllRejectedApplicationsWithinMonth() {
+    return axios.get(
+      `http://localhost:9191/api/jobapplications/getAllRejectedApplicationsWithinMonth`
     );
   },
   getRejectedApplications(postingId) {
@@ -1372,9 +1410,7 @@ const api = {
   },
   // Welfare Rewards
   getAllRewardTracks() {
-    return axios.get(
-      `http://localhost:9191/api/rewards/getAllRewardTracks`
-    );
+    return axios.get(`http://localhost:9191/api/rewards/getAllRewardTracks`);
   },
   getRewardTrack(rewardTrackId) {
     return axios.get(
@@ -1386,7 +1422,7 @@ const api = {
       `http://localhost:9191/api/rewards/getRewardTrackByDepartment?departmentId=${departmentId}`
     );
   },
-  getRewardTrackByEmployee(employeeId){
+  getRewardTrackByEmployee(employeeId) {
     return axios.get(
       `http://localhost:9191/api/rewards/getRewardTrackByEmployee?employeeId=${employeeId}`
     );
@@ -1396,7 +1432,14 @@ const api = {
       `http://localhost:9191/api/rewards/getRewardTrackByDepartmentHead?userId=${userId}`
     );
   },
-  saveRewardTrack(name, startDate, endDate, departmentId, pointsRatio, rewardTrackId) {
+  saveRewardTrack(
+    name,
+    startDate,
+    endDate,
+    departmentId,
+    pointsRatio,
+    rewardTrackId
+  ) {
     return axios.post(
       `http://localhost:9191/api/rewards/saveRewardTrack?name=${name}&startDate=${startDate}&endDate=${endDate}&departmentId=${departmentId}&pointsRatio=${pointsRatio}&rewardTrackId=${rewardTrackId}`
     );
@@ -1422,19 +1465,21 @@ const api = {
     );
   },
   toggleDummyData() {
-    return axios.put(
-      `http://localhost:9191/api/rewards/toggleDummyData`
-    );
+    return axios.put(`http://localhost:9191/api/rewards/toggleDummyData`);
   },
-  submitReviewForm(employeeName, rating, justification, departmentId, teamName) {
+  submitReviewForm(
+    employeeName,
+    rating,
+    justification,
+    departmentId,
+    teamName
+  ) {
     return axios.post(
       `http://localhost:9191/api/rewards/submitReviewForm?employeeName=${employeeName}&rating=${rating}&justification=${justification}&departmentId=${departmentId}&teamName=${teamName}`
     );
   },
   getAllReviewForms() {
-    return axios.get(
-      `http://localhost:9191/api/rewards/getAllReviewForms`
-    );
+    return axios.get(`http://localhost:9191/api/rewards/getAllReviewForms`);
   },
   getAllUnvettedReviewForms() {
     return axios.get(
@@ -1471,15 +1516,23 @@ const api = {
       `http://localhost:9191/api/rewards/getReward?rewardId=${rewardId}`
     );
   },
-  addNewReward(name, description, pointsRequired, expiryDate, rewardTrackId,file) {
+  addNewReward(
+    name,
+    description,
+    pointsRequired,
+    expiryDate,
+    rewardTrackId,
+    file
+  ) {
     return axios.post(
-      `http://localhost:9191/api/rewards/addNewReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardTrackId=${rewardTrackId}`
-      , file);
+      `http://localhost:9191/api/rewards/addNewReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardTrackId=${rewardTrackId}`,
+      file
+    );
   },
   editReward(name, description, pointsRequired, expiryDate, rewardId) {
     return axios.put(
       `http://localhost:9191/api/rewards/editReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardId=${rewardId}`
-      );
+    );
   },
   deleteReward(rewardId) {
     return axios.delete(
@@ -1492,9 +1545,7 @@ const api = {
     );
   },
   toggleDummyData() {
-    return axios.put(
-      `http://localhost:9191/api/rewards/toggleDummyData`
-    );
+    return axios.put(`http://localhost:9191/api/rewards/toggleDummyData`);
   },
   conductInterview(promotionId, comments, status) {
     return axios.put(
@@ -1628,10 +1679,15 @@ const api = {
     return axios.get(`http://localhost:9191/api/promotion/user/${employeeId}`);
   },
   getAllPromotionRequests() {
-    return axios.get("http://localhost:9191/api/promotion")
+    return axios.get("http://localhost:9191/api/promotion");
   },
   getAllTransferRequests() {
-    return axios.get(`http://localhost:9191/api/transfer`)
+    return axios.get(`http://localhost:9191/api/transfer`);
+  },
+  getEmployeesAverageSalary() {
+    return axios.get(
+      `http://localhost:9191/api/pay/payinfo/getEmployeesAverageSalary`
+    );
   },
 };
 

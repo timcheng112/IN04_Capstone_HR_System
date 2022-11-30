@@ -378,7 +378,7 @@ public class UserService implements UserDetailsService {
             employee.setLeaveQuotas(new ArrayList<>());
             employee.setCurrentLeaveQuota(null);
             employee.setQualificationInformation(null);
-
+            employee.setBenefitPlanInstances(new ArrayList<>());
             // employee.setTeams(new ArrayList<>());
 
             // List<Team> teams = employee.getTeams();
@@ -1422,6 +1422,7 @@ public class UserService implements UserDetailsService {
             u.setCurrentPosition(tempPosition);
             u.setPayslips(tempPayslips);
             u.setShiftListItems(tempShiftListItems);
+            u.setBenefitPlanInstances(new ArrayList<>());
         }
         return employees;
     }
@@ -2625,6 +2626,7 @@ public class UserService implements UserDetailsService {
             employee.setLeaves(new ArrayList<>());
             employee.setLeaveQuotas(new ArrayList<>());
             employee.setCurrentLeaveQuota(null);
+            employee.setBenefitPlanInstances(new ArrayList<>());
         }
         return filteredEmployees;
     }

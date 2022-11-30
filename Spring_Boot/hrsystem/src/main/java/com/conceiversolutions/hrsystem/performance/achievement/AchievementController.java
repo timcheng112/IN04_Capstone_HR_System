@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,5 +36,15 @@ public class AchievementController {
 
     
     
+
+    @GetMapping
+    public List<Achievement> getAllAchievements() {
+        return achievementService.getAllAchievements();
+    }
+
+    @GetMapping(path = "{year}")
+    public List<Achievement> getAchievementsByYear(@PathVariable("year") String year) {
+        return achievementService.getAchievementsByYear(year);
+    }
 
 }

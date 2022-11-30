@@ -1,6 +1,9 @@
 package com.conceiversolutions.hrsystem.performance.goalPeriod;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,5 +67,26 @@ public class GoalPeriodService {
         goalPeriodRepository.deleteById(gp.getGoalPeriodId());
         return "Goal period for " + gp.getYear() + " has been deleted";
     }
+
+    public List<String> getGoalPeriodRange(String year) {
+        GoalPeriod gp = getGoalPeriodByYear(year);
+        
+        List<String> range = new ArrayList<>();
+        
+        LocalDateTime d = LocalDateTime.of(gp.getStartDate(), LocalTime.now());
+        
+        while (d.toLocalDate().isBefore(gp.getEndDate()) || d.toLocalDate().isEqual(gp.getEndDate())) {
+            String month = d.getMonth().name().toLowerCase();
+            String first = month.substring(0,1).toUpperCase();
+            month = first + month.substring(1);
+            range.add(d.getDayOfMonth() + " " + month);
+            d = d.plusDays(1);
+            System.out.println(range);
+        }
+        
+        return range;
+    }
+
+    
 
 }
