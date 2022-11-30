@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(path = "api/pay/payinfo")
 public class PayInformationController {
