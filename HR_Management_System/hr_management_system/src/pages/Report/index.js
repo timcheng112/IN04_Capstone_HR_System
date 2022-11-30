@@ -13,12 +13,14 @@ export default function Report() {
   const [user, setUser] = useState(null);
   const [employee, setEmployee] = useState(0);
   const [departments, setDepartments] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [departmentCount, setDepartmentCount] = useState([]);
   const [offers, setOffers] = useState(0);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
   const [option1, setOption1] = useState(null);
   const [option2, setOption2] = useState(null);
+  const [option3, setOption3] = useState(null);
 
 
   const tabs = [
@@ -68,6 +70,17 @@ export default function Report() {
 
   }, []);
 
+  useEffect(() => {
+    api
+      .getAllTeams()
+      .then((response) => {
+        setTeams(response.data);
+        team(response.data);
+      })
+      .catch((error) => setError(error));
+
+  }, []);
+
   function department(depts) {
     let helpList = [];
     depts.forEach((d) => {
@@ -81,8 +94,22 @@ export default function Report() {
     console.log(helpList);
     setDepartmentCount(helpList);
     setTimeout(() => { setter(helpList); }, 1000);
-
   }
+
+  function team(teams) {
+    let helpList = [];
+    teams.forEach((t) => {
+      api.getEmployeesByTeam(t.teamId)
+        .then((response) => {
+          console.log(response.data)
+          helpList.push({ "value": response.data.length, "name": t.teamName })
+        })
+        .catch((error) => setError(error));
+    });
+    console.log(helpList);
+    setTimeout(() => { setTeam(helpList); }, 1000);
+  }
+
   function hiring() {
     let helpList = [];
     api.getAllPendingApplicationsWithinMonth()
@@ -114,7 +141,7 @@ export default function Report() {
       })
       .catch((error) => setError(error));
 
-      setTimeout(() => { setHire(helpList); }, 1000);
+    setTimeout(() => { setHire(helpList); }, 1000);
   }
 
   function setHire(list) {
@@ -174,6 +201,9 @@ export default function Report() {
 
   function setter(list) {
     setOption1({
+      title: {
+        text: 'Department'
+      },
       tooltip: {
         trigger: 'item'
       },
@@ -187,6 +217,7 @@ export default function Report() {
           saveAsImage: {}
         }
       },
+      radius: '50%',
       series: [
         {
           name: 'Department Employees',
@@ -204,13 +235,57 @@ export default function Report() {
           },
           data: list,
         }
-      ]
+      ],
+
     });
+
+  }
+
+  function setTeam(list) {
+    setOption3({
+      title: {
+        text: 'Team'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        top: '5%',
+        left: 'center'
+      },
+      toolbox: {
+        feature: {
+          dataView: { readOnly: false },
+          saveAsImage: {}
+        }
+      },
+      radius: '50%',
+      series: [
+        {
+          name: 'Team Employees',
+          type: 'pie',
+          radius: ['30%', '70%'],
+          roseType: 'angle',
+          itemStyle: {
+            borderRadius: [20, 5, 5, 10],
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+
+          label: {
+            show: false
+          },
+          data: list,
+        }
+      ],
+
+    });
+
   }
 
 
   return (
-    option1 && option2 && <div className="">
+    option1 && option2 && option3 && <div className="">
       <Navbar />
       <div className="py-10">
         <main className="flex-1">
@@ -234,8 +309,14 @@ export default function Report() {
                 <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">$ 5000</dd>
               </div>
             </dl>
-            <ReactEcharts option={option1} />
-            <div className="py-3"></div>
+            <div className="flex py-8 px-5 space-x-12" >
+              <div style={{ width: 500, height: 300 }}>
+                <ReactEcharts option={option1} />
+              </div>
+              <div style={{ width: 600, height: 300 }}>
+                <ReactEcharts option={option3} />
+              </div>
+            </div>
             <ReactEcharts option={option2} />
 
           </div>
