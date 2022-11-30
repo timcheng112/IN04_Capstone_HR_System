@@ -2,12 +2,14 @@ package com.conceiversolutions.hrsystem.pay.payslip;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/pay/payslip")
+@CrossOrigin("*")
 public class PayslipController {
     private final PayslipService payslipService;
 
@@ -117,5 +119,20 @@ public class PayslipController {
     @GetMapping(path = "/getPayslipByUserId")
     public List<Payslip> getPayslipByUserId(@RequestParam("userId") Long userId) {
         return payslipService.getPayslipByUserId(userId);
+    }
+
+    @PostMapping(path = "/addPayslipToUser")
+    public Long addPayslipToUser(@RequestParam("userId") Long userId,
+            @RequestBody Payslip payslip) {
+        return payslipService.addPayslipToUser(userId, payslip);
+    }
+
+    @PostMapping(path = "/uploadPayslipPdf")
+    public Long uploadPayslipPdf(
+            @RequestParam("payslipId") Long payslipId,
+            @RequestParam(value = "file", required = false) MultipartFile file)
+            throws Exception {
+        System.out.println("*********** CONTROLLER FILE: " + file + " *****************");
+        return payslipService.uploadPayslipPdf(file, payslipId);
     }
 }

@@ -38,13 +38,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const PayrollHistory = ({ openSummaryReport, closeSummaryReport }) => {
+const PayrollHistory = ({ openSummaryReport, closeSummaryReport, viewSummaryReportHandler }) => {
   return (
     <div>
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="mt-8 grid grid-cols-3 gap-6">
           {pastPayroll.map((payroll) => (
-            <PayrollCard info={payroll} openSummaryReport={openSummaryReport} />
+            <PayrollCard info={payroll} openSummaryReport={openSummaryReport} viewSummaryReportHandler={viewSummaryReportHandler} />
           ))}
         </div>
       </div>

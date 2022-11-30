@@ -3,7 +3,10 @@ package com.conceiversolutions.hrsystem.pay.payslip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.docdata.DocDataService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 
@@ -21,6 +24,7 @@ import java.util.Optional;
 public class PayslipService {
     private final PayslipRepository payslipRepository;
     private final UserRepository userRepository;
+    private final DocDataService docDataService;
 
     public List<Payslip> getPayslips() {
         return payslipRepository.findAll();
@@ -74,19 +78,39 @@ public class PayslipService {
         }
     }
 
+    // public void deletePayslip(@PathVariable("payslipId") Long id) {
+    // // boolean exists = payslipRepository.existsById(id);
+    // // if(!exists){
+    // // throw new IllegalStateException("Payslip with payslip id" + id + " does
+    // not
+    // // exist to be deleted.");
+    // // }else{
+    // // payslipRepository.deleteById(id);
+    // // }
+    // payslipRepository.deleteById(id);
+    // }
+
     public void deletePayslip(@PathVariable("payslipId") Long id) {
-        // boolean exists = payslipRepository.existsById(id);
-        // if(!exists){
-        // throw new IllegalStateException("Payslip with payslip id" + id + " does not
-        // exist to be deleted.");
-        // }else{
-        // payslipRepository.deleteById(id);
-        // }
-        payslipRepository.deleteById(id);
+        Payslip payslip = payslipRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Payslip with ID: " + id + " does not exist!"));
+        payslip.getEmployee().removePayslip(payslip);
+        payslip.setEmployee(null);
+        payslip.setPayInformation(null);
+        payslipRepository.deleteById(payslip.getPayslipId());
     }
 
+    // public void deleteAllPayslips() {
+    // payslipRepository.deleteAll();
+    // }
+
     public void deleteAllPayslips() {
-        payslipRepository.deleteAll();
+        List<Payslip> payslips = payslipRepository.findAll();
+        for (Payslip payslip : payslips) {
+            payslip.getEmployee().removePayslip(payslip);
+            payslip.setEmployee(null);
+            payslip.setPayInformation(null);
+            payslipRepository.deleteById(payslip.getPayslipId());
+        }
     }
 
     // public List<Payslip> getPayslipsByMonth(Integer monthIndex) {
@@ -152,19 +176,71 @@ public class PayslipService {
     public List<Payslip> getPayslipByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
-        List<Payslip> payslips = user.getPayslips();
+        List<Payslip> payslips = getPayslips();
+        // List<Payslip> payslips = user.getPayslips();
+        List<Payslip> userPayslips = new ArrayList<>();
         for (Payslip payslip : payslips) {
-            if (payslip.getPayInformation() != null) {
-                payslip.getPayInformation().setUser(null);
-                payslip.getPayInformation().setAllowance(new ArrayList<>());
-                payslip.getPayInformation().setAllowanceTemplates(new ArrayList<>());
-                payslip.getPayInformation().setDeduction(new ArrayList<>());
-                payslip.getPayInformation().setDeductionTemplates(new ArrayList<>());
-            }
             if (payslip.getEmployee() != null) {
-                payslip.getEmployee().nullify();
+                if (payslip.getEmployee().getUserId() == userId) {
+                    if (payslip.getPayInformation() != null) {
+                        payslip.getPayInformation().setUser(null);
+                        payslip.getPayInformation().setAllowance(new ArrayList<>());
+                        payslip.getPayInformation().setAllowanceTemplates(new ArrayList<>());
+                        payslip.getPayInformation().setDeduction(new ArrayList<>());
+                        payslip.getPayInformation().setDeductionTemplates(new ArrayList<>());
+                    }
+                    payslip.getEmployee().nullify();
+                    userPayslips.add(payslip);
+                }
+            }
+
+        }
+        return userPayslips;
+    }
+
+    public Long addPayslipToUser(Long userId, Payslip payslip) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
+        if (user.getCurrentPayInformation() == null) {
+            throw new IllegalStateException("User with ID: " + userId + " does not have pay information!");
+        }
+        Payslip oldPayslip = null;
+        List<Payslip> payslips = getPayslips();
+        for (Payslip userPayslip : payslips) {
+            if (userPayslip.getEmployee() != null) {
+                if (userPayslip.getMonthOfPayment().equals(payslip.getMonthOfPayment())
+                        && userPayslip.getYearOfPayslip().equals(payslip.getYearOfPayslip())
+                        && userId.equals(userPayslip.getEmployee().getUserId())) {
+                    System.out.println("********OLD PAYSLIP FOUND**********");
+                    oldPayslip = userPayslip;
+                    break;
+                }
             }
         }
-        return payslips;
+        if (oldPayslip != null) {
+            System.out.println("***************DELETING OLD PAYSLIP**************");
+            this.deletePayslip(oldPayslip.getPayslipId());
+        }
+        payslip.setEmployee(user);
+        payslip.setPayInformation(user.getCurrentPayInformation());
+        Payslip savedPayslip = payslipRepository.saveAndFlush(payslip);
+        user.addPayslip(savedPayslip);
+        User savedUser = userRepository.saveAndFlush(user);
+        System.out.println("*************PAYSLIPS: " + savedUser.getPayslips() + " *************");
+        return savedPayslip.getPayslipId();
+    }
+
+    public Long uploadPayslipPdf(MultipartFile file, Long payslipId) throws Exception {
+        try {
+            System.out.println("******************* FILE: " + file + " *******************");
+            DocData doc = docDataService.uploadDoc(file);
+            Payslip payslip = payslipRepository.findById(payslipId)
+                    .orElseThrow(() -> new IllegalStateException("Payslip with ID: " + payslipId + " does not exist!"));
+            payslip.setPayslipPDF(doc);
+            payslipRepository.save(payslip);
+            return doc.getDocId();
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage());
+        }
     }
 }

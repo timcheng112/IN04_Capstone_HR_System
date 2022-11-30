@@ -59,7 +59,13 @@ const PayInformationComponent = ({ user }) => {
         />
         <Card.Title
           title="Position"
-          subtitle={user && user.currentPosition.positionName}
+          subtitle={
+            user && user.currentPosition
+              ? user.currentPosition.positionName
+              : user.userRole !== null
+              ? user.userRole
+              : ""
+          }
           titleStyle={{ fontSize: 12, fontFamily: "Poppins_400Regular" }}
           subtitleStyle={{ fontSize: 16, fontFamily: "Poppins_400Regular" }}
           style={{ marginTop: -10 }}

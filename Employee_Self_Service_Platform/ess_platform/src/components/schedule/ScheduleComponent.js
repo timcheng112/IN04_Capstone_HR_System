@@ -95,46 +95,50 @@ const ScheduleComponent = () => {
   // TO RETRIEVE SHIFT LIST ITEMS OF TEAM BY DATE
   useEffect(() => {
     if (user !== null) {
-      setIsLoading(true);
       if (user.teams.length > 0) {
-        setShiftListItems(null);
-        setMyShiftListItem(null);
-        api
-          .getShiftListItemByDateAndTeam(
-            format(date, "yyyy-MM-dd"),
-            user.teams[0].teamId
-          )
-          .then((response) => {
-            let myShiftListItemId = null;
-            for (let i = 0; i < response.data.length; i++) {
-              if (response.data[i].user.userId === user.userId) {
-                setMyShiftListItem(response.data[i]);
-                myShiftListItemId = response.data[i].shiftListItemId;
-                break;
+        setIsLoading(true);
+        if (user.teams.length > 0) {
+          setShiftListItems(null);
+          setMyShiftListItem(null);
+          api
+            .getShiftListItemByDateAndTeam(
+              format(date, "yyyy-MM-dd"),
+              user.teams[0].teamId
+            )
+            .then((response) => {
+              let myShiftListItemId = null;
+              for (let i = 0; i < response.data.length; i++) {
+                if (response.data[i].user.userId === user.userId) {
+                  setMyShiftListItem(response.data[i]);
+                  myShiftListItemId = response.data[i].shiftListItemId;
+                  break;
+                }
               }
-            }
-            if (myShiftListItemId !== null) {
-              setShiftListItems(
-                response.data.filter(
-                  (shiftListItem) =>
-                    shiftListItem.shiftListItemId !== myShiftListItemId
-                )
+              if (myShiftListItemId !== null) {
+                setShiftListItems(
+                  response.data.filter(
+                    (shiftListItem) =>
+                      shiftListItem.shiftListItemId !== myShiftListItemId
+                  )
+                );
+              } else {
+                setShiftListItems(response.data);
+              }
+              setIsLoading(false);
+            })
+            .catch((error) => {
+              console.log(
+                "Error retrieving shift list items for date: " +
+                  date +
+                  " and team ID: " +
+                  user.teams[0].teamId
               );
-            } else {
-              setShiftListItems(response.data);
-            }
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            console.log(
-              "Error retrieving shift list items for date: " +
-                date +
-                " and team ID: " +
-                user.teams[0].teamId
-            );
-            setIsLoading(false);
-          });
+              setIsLoading(false);
+            });
+        }
+        setIsLoading(false);
       }
+    } else {
       setIsLoading(false);
     }
   }, [user, userId, date, refresh]);
@@ -210,7 +214,7 @@ const ScheduleComponent = () => {
       >
         <Card.Title
           title={format(date, "dd MMMM yyyy")}
-          titleStyle={{ fontFamily: "Poppins_600SemiBold" }}
+          titleStyle={{ fontFamily: "Poppins_600SemiBold", fontSize: 18}}
           // left={(props) => (
           //   <TouchableOpacity onPress={() => setShow(true)}>
           //     <Feather name="calendar" size={24} color="black" />

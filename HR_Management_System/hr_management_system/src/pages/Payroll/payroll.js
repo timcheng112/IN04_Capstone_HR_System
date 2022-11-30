@@ -4,6 +4,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { format, subDays } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
 import ComboBox from "../../components/ComboBox/ComboBox";
 import Navbar from "../../components/Navbar";
@@ -11,9 +12,11 @@ import PayrollSummaryReportDocument from "../../features/payroll/PayrollSummaryR
 import PayrollSummaryReportDocumentViewer from "../../features/payroll/PayrollSummaryReport.js/PayrollSummaryReportDocumentViewer";
 import PayrollTabs from "../../features/payroll/PayrollTabs";
 import PayslipDocument from "../../features/payroll/PayslipDocument/PayslipDocument";
+import PayslipDocumentUrl from "../../features/payroll/PayslipDocument/PayslipDocumentUrl";
 import PayslipDocumentViewer from "../../features/payroll/PayslipDocument/PayslipDocumentViewer";
 import RunPayRollDialog from "../../features/payroll/RunPayrollDialog";
 import api from "../../utils/api";
+import { getUserId } from "../../utils/Common";
 import EmployeesNotInPayroll from "./EmployeesNotInPayroll";
 import Overview from "./Overview";
 import PayrollHistory from "./PayrollHistory";
@@ -36,21 +39,35 @@ const Payroll = () => {
 
   const [isSummaryReportOpen, setIsSummaryReportOpen] = useState(false);
   const [isPayslipOpen, setIsPayslipOpen] = useState(false);
-  const [isOverviewOpen, setIsOverviewOpen] = useState(true);
+  const [isOverviewOpen, setIsOverviewOpen] = useState(false);
   const [isPayrollHistoryOpen, setIsPayrollHistoryOpen] = useState(false);
   const [isEmployeesNotInPayrollOpen, setIsEmployeesNotInPayrollOpen] =
     useState(false);
-  const [isPersonalPayrollOpen, setIsPersonalPayrollOpen] = useState(false);
+  const [isPersonalPayrollOpen, setIsPersonalPayrollOpen] = useState(true);
   const [isPayrollFormOpen, setIsPayrollFormOpen] = useState(false);
   const [isEditPayInformationFormOpen, setIsEditPayInformationFormOpen] =
     useState(false);
 
   const [loadingDocument, setLoadingDocument] = useState(false);
 
+  const [currMonthPayslips, setCurrMonthPayslips] = useState(null);
+
+  const [pdfUrl, setPdfUrl] = useState("");
   const ref = document.getElementById("tabs");
   const [isPayrollTabsGone, setIsPayrollTabsGone] = useState(false);
   const [sticky, setSticky] = useState();
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    api
+      .getUser(getUserId())
+      .then((response) => {
+        setUser(response.data);
+        console.log(user);
+      })
+      .catch((error) => console.log("User not found"));
+  }, []);
 
   const handleScroll = () => {
     const position = window.pageYOffset;
@@ -94,6 +111,13 @@ const Payroll = () => {
       name: "Employees Not In Payroll",
       current: isEmployeesNotInPayrollOpen,
     },
+    {
+      name: "Personal Payroll",
+      current: isPersonalPayrollOpen,
+    },
+  ];
+
+  const nonHrTabs = [
     {
       name: "Personal Payroll",
       current: isPersonalPayrollOpen,
@@ -224,6 +248,20 @@ const Payroll = () => {
     }
   }, [selectedTeam]);
 
+  const exportPdf = () => {
+    let alink = document.createElement("a");
+    alink.href = pdfUrl;
+    alink.download = "SamplePDF.pdf";
+    alink.click();
+  };
+
+  const viewSummaryReportHandler = () => {
+    api
+      .findPayslipByMonth(format(subDays(new Date(), 7), "yyyy-MM-dd")) // change this
+      .then((response) => setCurrMonthPayslips(response.data))
+      .catch((err) => console.log(err.response.data.message));
+  };
+
   return (
     <div>
       <Navbar />
@@ -244,7 +282,10 @@ const Payroll = () => {
               id="tabs"
             >
               <div className="sm:flex-auto">
-                <PayrollTabs tabs={tabs} onChangeHandler={onChangeHandler} />
+                <PayrollTabs
+                  tabs={user && user.isHrEmployee ? tabs : nonHrTabs}
+                  onChangeHandler={onChangeHandler}
+                />
               </div>
               <div className="w-full max-w-lg lg:max-w-xs">
                 <label htmlFor="search" className="sr-only">
@@ -304,10 +345,12 @@ const Payroll = () => {
       </div>
       {isSummaryReportOpen && (
         <div className="flex">
-          <PayrollSummaryReportDocumentViewer />
+          <PayrollSummaryReportDocumentViewer payslips={currMonthPayslips} />
           <div className="grid grid-rows-2 shadow-xl pl-1 mb-2">
             <PDFDownloadLink
-              document={<PayrollSummaryReportDocument />}
+              document={
+                <PayrollSummaryReportDocument payslips={currMonthPayslips} />
+              }
               fileName="Payroll_Summary_Report"
             >
               {({ loading }) =>
@@ -347,19 +390,22 @@ const Payroll = () => {
       )}
       {isPayslipOpen && (
         <div className="flex">
-          <PayslipDocumentViewer />
+          <PayslipDocumentUrl url={pdfUrl} />
           <div className="grid grid-rows-2 shadow-xl pl-1 mb-2">
-            <PDFDownloadLink
+            {/* <PDFDownloadLink
               document={<PayslipDocument />}
+              // document={pdfUrl}
               fileName="Payslip_Document"
-            >
-              {({ loading }) =>
-                loading ? setLoadingDocument(true) : setLoadingDocument(false)
-              }
+            > */}
+            {({ loading }) =>
+              loading ? setLoadingDocument(true) : setLoadingDocument(false)
+            }
+            <div className="flex flex-col">
               <button
                 type="button"
-                className="h-full rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
+                className="col-span-1 rounded-md border border-transparent bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
                 disabled={loadingDocument}
+                onClick={exportPdf}
               >
                 <div className="flex justify-center">
                   <ArrowDownOnSquareIcon
@@ -371,44 +417,57 @@ const Payroll = () => {
                   <p className="text-xl font-bold mt-2">Export</p>
                 </div>
               </button>
-            </PDFDownloadLink>
-            <button
-              type="button"
-              className="col-span-1 mt-2 rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300"
-              // disabled
-              onClick={() => setIsPayslipOpen(false)}
-            >
-              <div className="flex justify-center">
-                <XMarkIcon className="h-8 w-8" aria-hidden="true" />
-              </div>
-              <div className="flex justify-center">
-                <p className="text-xl font-bold mt-2">Close</p>
-              </div>
-            </button>
+              {/* </PDFDownloadLink> */}
+              <button
+                type="button"
+                className="col-span-1 mt-2 rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300"
+                // disabled
+                onClick={() => setIsPayslipOpen(false)}
+              >
+                <div className="flex justify-center">
+                  <XMarkIcon className="h-8 w-8" aria-hidden="true" />
+                </div>
+                <div className="flex justify-center">
+                  <p className="text-xl font-bold mt-2">Close</p>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       )}
-      {!isPayslipOpen && !isSummaryReportOpen && isOverviewOpen && (
-        <Overview
-          searchFilteredEmployees={searchFilteredEmployees}
-          isEditPayInformationFormOpen={isEditPayInformationFormOpen}
-          openEditPayInformationForm={() =>
-            setIsEditPayInformationFormOpen(true)
-          }
-          closeEditPayInformationForm={() =>
-            setIsEditPayInformationFormOpen(false)
-          }
-          openPayslip={() => setIsPayslipOpen(true)}
-          onChangeHandler={onChangeHandler}
-        />
-      )}
-      {!isPayslipOpen && !isSummaryReportOpen && isPayrollHistoryOpen && (
-        <PayrollHistory
-          openSummaryReport={() => setIsSummaryReportOpen(true)}
-          closeSummaryReport={() => setIsSummaryReportOpen(false)}
-        />
-      )}
-      {!isPayslipOpen &&
+      {user &&
+        user.isHrEmployee &&
+        !isPayslipOpen &&
+        !isSummaryReportOpen &&
+        isOverviewOpen && (
+          <Overview
+            searchFilteredEmployees={searchFilteredEmployees}
+            isEditPayInformationFormOpen={isEditPayInformationFormOpen}
+            openEditPayInformationForm={() =>
+              setIsEditPayInformationFormOpen(true)
+            }
+            closeEditPayInformationForm={() =>
+              setIsEditPayInformationFormOpen(false)
+            }
+            openPayslip={() => setIsPayslipOpen(true)}
+            onChangeHandler={onChangeHandler}
+            setPdfUrl={(url) => setPdfUrl(url)}
+          />
+        )}
+      {user &&
+        user.isHrEmployee &&
+        !isPayslipOpen &&
+        !isSummaryReportOpen &&
+        isPayrollHistoryOpen && (
+          <PayrollHistory
+            openSummaryReport={() => setIsSummaryReportOpen(true)}
+            closeSummaryReport={() => setIsSummaryReportOpen(false)}
+            viewSummaryReportHandler={viewSummaryReportHandler}
+          />
+        )}
+      {user &&
+        user.isHrEmployee &&
+        !isPayslipOpen &&
         !isSummaryReportOpen &&
         isEmployeesNotInPayrollOpen && (
           <EmployeesNotInPayroll

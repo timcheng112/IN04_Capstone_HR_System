@@ -8,6 +8,7 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import LibroLogo from "../../../assets/libro-transparent-logo.png";
+import { endOfMonth, format, startOfMonth } from "date-fns";
 
 const styles = StyleSheet.create({
   page: {
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 10
+    marginTop: 10,
   },
   subtitle: {
     fontWeight: "bold",
@@ -93,7 +94,35 @@ const styles = StyleSheet.create({
   },
 });
 
-const PayslipDocument = () => {
+const getMonthFromNumber = (number) => {
+  if (number === 1) {
+    return "January";
+  } else if (number === 2) {
+    return "February";
+  } else if (number === 3) {
+    return "March";
+  } else if (number === 4) {
+    return "April";
+  } else if (number === 5) {
+    return "May";
+  } else if (number === 6) {
+    return "June";
+  } else if (number === 7) {
+    return "July";
+  } else if (number === 8) {
+    return "August";
+  } else if (number === 9) {
+    return "September";
+  } else if (number === 10) {
+    return "October";
+  } else if (number === 11) {
+    return "November";
+  } else {
+    return "December";
+  }
+};
+
+const PayslipDocument = ({ payslipWrapper }) => {
   return (
     <Document>
       {/*render a single page*/}
@@ -116,7 +145,42 @@ const PayslipDocument = () => {
         </View>
 
         <View style={styles.subsection}>
-          <Text>Payslip for *Date*</Text>
+          {/* <Text>
+            Payslip for{" "}
+            {payslipWrapper &&
+              payslipWrapper.payslip !== undefined &&
+              getMonthFromNumber(
+                Number(payslipWrapper.payslip.monthOfPayment)
+              ) +
+                " " +
+                payslipWrapper.payslip.yearOfPayslip}
+          </Text> */}
+          <Text>
+            Payslip for{" "}
+            {payslipWrapper &&
+              payslipWrapper.payslip !== undefined &&
+              format(
+                startOfMonth(
+                  new Date(
+                    payslipWrapper.payslip.yearOfPayslip,
+                    payslipWrapper.payslip.monthOfPayment - 1,
+                    1
+                  )
+                ),
+                "yyyy-MM-dd"
+              ) +
+                " - " +
+                format(
+                  endOfMonth(
+                    new Date(
+                      payslipWrapper.payslip.yearOfPayslip,
+                      payslipWrapper.payslip.monthOfPayment - 1,
+                      1
+                    )
+                  ),
+                  "yyyy-MM-dd"
+                )}
+          </Text>
         </View>
 
         {/* Name of Employer Header */}
@@ -124,7 +188,9 @@ const PayslipDocument = () => {
           <Text>Name of Employer</Text>
         </View> */}
         <View style={styles.innerSubsection}>
-          <Text style={styles.paragraph}>Employer's Name: </Text>
+          <Text style={styles.paragraph}>
+            Employer's Name: Libro Technologies
+          </Text>
         </View>
 
         {/* Name of Employee Header */}
@@ -132,7 +198,14 @@ const PayslipDocument = () => {
           <Text>Name of Employee</Text>
         </View> */}
         <View style={styles.innerSubsection}>
-          <Text style={styles.paragraph}>Employee's Name: </Text>
+          <Text style={styles.paragraph}>
+            Employee's Name:{" "}
+            {payslipWrapper &&
+              payslipWrapper.user !== undefined &&
+              payslipWrapper.user.firstName +
+                " " +
+                payslipWrapper.user.lastName}
+          </Text>
         </View>
 
         {/* Date of Payment */}
@@ -140,7 +213,12 @@ const PayslipDocument = () => {
           <Text>Date of Payment</Text>
         </View> */}
         <View style={styles.innerSubsection}>
-          <Text style={styles.paragraph}>Date: </Text>
+          <Text style={styles.paragraph}>
+            Date:{" "}
+            {payslipWrapper &&
+              payslipWrapper.payslip !== undefined &&
+              payslipWrapper.payslip.dateOfPayment}
+          </Text>
         </View>
 
         {/* Item Table */}
@@ -150,44 +228,75 @@ const PayslipDocument = () => {
         </View>
         <View style={styles.row}>
           <Text style={styles.itemSubHeader}>Basic Salary (A)</Text>
-          <Text style={styles.amount}></Text>
+          <Text style={styles.amount}>
+            {payslipWrapper && "$ " + payslipWrapper.payslip.basicSalary}
+          </Text>
         </View>
         <View style={styles.row}>
           <View style={styles.itemSubHeader}>
-            <Text>Total Allowances (B)</Text>
+            <Text>Total Allowances (B) + Other Additional Payments (C)</Text>
             <Text>(Breakdown shown below)</Text>
           </View>
-          <Text style={styles.amount}></Text>
+          <Text style={styles.amount}>
+            {payslipWrapper && "$ " + payslipWrapper.payslip.allowance}
+          </Text>
         </View>
-        <View style={styles.row}>
+        {payslipWrapper &&
+          payslipWrapper.allowances.map((allowance) => {
+            return (
+              <View style={styles.row}>
+                <Text style={styles.item}>
+                  {allowance.template.allowanceName}
+                </Text>
+                <Text style={styles.amount}>
+                  {"$ " + allowance.template.amount}
+                </Text>
+              </View>
+            );
+          })}
+        {/* <View style={styles.row}>
           <Text style={styles.item}></Text>
           <Text style={styles.amount}></Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.item}></Text>
-          <Text style={styles.amount}></Text>
-        </View>
+        </View> */}
         <View style={styles.row}>
           <View style={styles.itemSubHeader}>
-            <Text>Total Deductions (C)</Text>
+            <Text>Total Deductions (D)</Text>
             <Text>(Breakdown shown below)</Text>
           </View>
-          <Text style={styles.amount}></Text>
+          <Text style={styles.amount}>
+            {payslipWrapper && "$ " + payslipWrapper.payslip.deduction}
+          </Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.item}>CPF Deduction:</Text>
-          <Text style={styles.amount}></Text>
+          <Text style={styles.amount}>
+            {payslipWrapper && "$ " + payslipWrapper.cpf}
+          </Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.item}>SHG Deduction:</Text>
-          <Text style={styles.amount}></Text>
+          <Text style={styles.amount}>
+            {payslipWrapper && "$ " + payslipWrapper.shg}
+          </Text>
         </View>
-        <View style={styles.row}>
+        {payslipWrapper &&
+          payslipWrapper.deductions.map((deduction) => {
+            return (
+              <View style={styles.row}>
+                <Text style={styles.item}>
+                  {deduction.template.deductionName}
+                </Text>
+                <Text style={styles.amount}>
+                  {"$ " + deduction.template.amount}
+                </Text>
+              </View>
+            );
+          })}
+        {/* <View style={styles.row}>
           <Text style={styles.item}></Text>
           <Text style={styles.amount}></Text>
-        </View>
-
-        <View style={styles.row}>
+        </View> */}
+        {/* <View style={styles.row}>
           <Text style={styles.itemSubHeader}>
             Other Additional Payments (D)
           </Text>
@@ -200,7 +309,7 @@ const PayslipDocument = () => {
         <View style={styles.row}>
           <Text style={styles.item}></Text>
           <Text style={styles.amount}></Text>
-        </View>
+        </View> */}
 
         {/* Date of Payment */}
         {/* <View style={styles.subsection}>
@@ -223,20 +332,20 @@ const PayslipDocument = () => {
           <Text style={styles.itemHeader}>Overtime Details</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.itemSubHeader}>Overtime Payment Period(s)</Text>
-          <Text style={styles.amount}></Text>
-        </View>
-        <View style={styles.row}>
           <View style={styles.itemSubHeader}>
             <Text>Overtime Hours Worked</Text>
           </View>
-          <Text style={styles.amount}></Text>
+          <Text style={styles.amount}>
+            {payslipWrapper && payslipWrapper.ot.otHours}
+          </Text>
         </View>
         <View style={styles.row}>
           <View style={styles.itemSubHeader}>
-            <Text>Total Overtime Pay (D)</Text>
+            <Text>Total Overtime Pay (E)</Text>
           </View>
-          <Text style={styles.amount}></Text>
+          <Text style={styles.amount}>
+            {payslipWrapper && "$ " + payslipWrapper.ot.otPay}
+          </Text>
         </View>
 
         {/* Item Table for Additional Payments */}
@@ -266,7 +375,9 @@ const PayslipDocument = () => {
         </View>
         <View style={styles.row}>
           <Text style={styles.itemSubHeader}>Net Pay (A+B-C+D+E)</Text>
-          <Text style={styles.amount}></Text>
+          <Text style={styles.amount}>
+            {payslipWrapper && "$ " + payslipWrapper.payslip.grossSalary}
+          </Text>
         </View>
       </Page>
     </Document>
