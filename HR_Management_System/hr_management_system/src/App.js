@@ -79,6 +79,9 @@ import ReviewFormPage from "./pages/Reward/review"
 import AddReviewFormPage from "./pages/Reward/AddReviewForm"
 import EmployeeRewardPage from "./pages/Reward/EmployeeReward";
 
+import ReportPage from "./pages/Report/index"
+import CareerReportPage from "./pages/Report/career"
+
 function App() {
   return (
     <BrowserRouter>
@@ -273,6 +276,9 @@ function App() {
           <PrivateRoute exact path="/welfare/reviewform" component={ReviewFormPage} />
           <PrivateRoute exact path="/welfare/myrewardtrack" component={EmployeeRewardPage} />
           <PublicRoute exact path="/reviewform" component={AddReviewFormPage} />
+
+          <PrivateRoute exact path="/report" component={ReportPage} />
+          <PrivateRoute exact path="/creport" component={CareerReportPage} />
         </Switch>
       </div>
     </BrowserRouter>
