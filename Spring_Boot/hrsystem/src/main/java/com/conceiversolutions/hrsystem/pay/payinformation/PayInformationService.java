@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -114,5 +116,27 @@ public class PayInformationService {
 
     public void deleteAllPayInformation(){
         payInformationRepository.deleteAll();
+    }
+
+    public BigDecimal getEmployeesAverageSalary() {
+        List<PayInformation> payInformationList = payInformationRepository.findAll();
+        BigDecimal sum = new BigDecimal(0);
+        int numEmployees = payInformationList.size();
+        for (PayInformation payInformation : payInformationList) {
+            if (payInformation.getBasicSalary() != null) {
+                //basic salary
+                sum = sum.add(payInformation.getBasicSalary());
+            } else if (payInformation.getBasicHourlyPay() != null){
+                //basic hourly * average working hours a week * average weeks in a month
+                sum = sum.add( (payInformation.getBasicHourlyPay()).multiply(new BigDecimal(191.19)) );
+            } else {
+                //the person somehow has no salary, we will exclude him.
+                numEmployees --;
+            }
+        }
+        BigDecimal average = sum.divide(new BigDecimal(numEmployees), 2 , RoundingMode.HALF_UP);
+        average = average.setScale(2, RoundingMode.CEILING);
+
+        return average;
     }
 }

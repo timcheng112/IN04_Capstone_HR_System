@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.pay.payinformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -39,4 +40,7 @@ public class PayInformationController {
     public void deletePayslip(@PathVariable("payslipId") Long id){
         payInformationService.deletePayInformation(id);
     }
+
+    @GetMapping(path = "/getEmployeesAverageSalary")
+    public BigDecimal getEmployeesAverageSalary(){ return payInformationService.getEmployeesAverageSalary(); }
 }

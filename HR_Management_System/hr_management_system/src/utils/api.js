@@ -1313,6 +1313,11 @@ const api = {
       `http://localhost:9191/api/rewards/toggleDummyData`
     );
   },
+  getEmployeesAverageSalary() {
+      return axios.get(
+        `http://localhost:9191/api/pay/payinfo/getEmployeesAverageSalary`
+      );
+    },
 };
 
 export default api;
