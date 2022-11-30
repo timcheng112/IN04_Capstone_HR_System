@@ -11,6 +11,7 @@ import { NavLink, useHistory, useRouteMatch } from "react-router-dom";
 import api from "../utils/api";
 import { deleteUser, getUserId } from "../utils/Common";
 import { useState, useEffect } from "react";
+import shiba from "../assets/shiba-thumbs-up.png";
 
 const userNavigation = [
   { name: "Your Profile", href: "/profile" },
@@ -47,6 +48,7 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const history = useHistory();
+  const [profilePic, setProfilePic] = useState(shiba);
 
   useEffect(() => {
     api
@@ -54,6 +56,13 @@ export default function Navbar() {
       .then((response) => {
         setUser(response.data);
         console.log(response.data);
+        if (response.data.profilePic !== null) {
+            api.getDocById(response.data.profilePic.docId).then((response) => {
+                const url = window.URL.createObjectURL(response.data);
+                setProfilePic(url);
+            })
+        }
+
       })
       .catch((error) => setError(error));
   }, []);
@@ -134,7 +143,7 @@ export default function Navbar() {
                       <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 lg:rounded-md lg:p-2 lg:hover:bg-gray-50">
                         <img
                           className="h-8 w-8 rounded-full"
-                          src={user.profilePic}
+                          src={profilePic}
                           alt=""
                         />
                       </Menu.Button>

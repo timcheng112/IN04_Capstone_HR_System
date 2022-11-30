@@ -205,7 +205,7 @@ const NewClaimScreen = ({ navigation }) => {
             mode="contained"
             color="#ffd700"
             onPress={() => submitClaim()}>
-            >
+            
             Submit
           </Button>
         </View>

@@ -1,8 +1,11 @@
 import {
   ArrowLeftOnRectangleIcon,
+  CheckBadgeIcon,
   CheckCircleIcon,
   ChevronRightIcon,
   EnvelopeIcon,
+  FaceFrownIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
@@ -58,10 +61,68 @@ export default function RequestHistory() {
     });
   }, []);
 
+  function renderStatus(status) {
+    if (status === "Withdrawn") {
+      return (
+        <>
+          <ArrowLeftOnRectangleIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
+    } else if (status === "Failed") {
+      return (
+        <>
+          <FaceFrownIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+            aria-hidden="true"
+          />
+          {status} {"Interview"}
+        </>
+      );
+    } else if (status === "Rejected") {
+      return (
+        <>
+          <XCircleIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+            aria-hidden="true"
+          />
+          {"Rejected"}
+        </>
+      );
+    } else if (status === "Approved") {
+      return (
+        <>
+          <CheckBadgeIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          {status}
+        </>
+      );
+    }
+  }
+
   return (
     <>
       <div className="mt-10">
         <div className="overflow-hidden bg-white shadow sm:rounded-md">
+          {requests.length <= 0 ? (
+            <div className="p-4">
+              <img
+                src={require("../../assets/shiba-thumbs-up.png")}
+                alt="shiba"
+                className="object-contain h-20 w-full"
+              />
+              <h1 className="font-sans font-semibold text-xl">
+                No Previous Requests
+              </h1>
+            </div>
+          ) : (
+            <></>
+          )}
           <ul role="list" className="divide-y divide-gray-200">
             {requests.map((request) => (
               <li key={request.promotionId}>
@@ -108,11 +169,7 @@ export default function RequestHistory() {
                               </Moment>
                             </p>
                             <p className="mt-2 flex items-center text-sm text-gray-500">
-                              <ArrowLeftOnRectangleIcon
-                                className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
-                                aria-hidden="true"
-                              />
-                              {request.status}
+                              {renderStatus(request.status)}
                             </p>
                           </div>
                         </div>

@@ -54,7 +54,6 @@ import AddTemplateChecklist from "./pages/Onboarding/AddTemplateChecklist";
 import ChecklistDetail from "./pages/Onboarding/ChecklistDetail";
 // import EmployeeList from "./pages/AccountManagement/ViewEmployeeList/viewEmployeeList";
 
-import TransferPage from "./pages/Progression/indexTransfer";
 import GoalsPage from "./pages/Performance/indexGoals";
 import AppraisalsPage from "./pages/Performance/indexAppraisals";
 import AppraisalPage from "./pages/Performance/appraisal";
@@ -69,10 +68,21 @@ import EmployeePayrollHistory from "./pages/Payroll/ViewEmployeesPayHistory";
 import CurrentPerformancePeriodPage from "./pages/Performance/current";
 import PromotionPage from "./pages/Performance/promotion";
 import PromotionRequestPage from "./pages/Performance/promotionRequest";
+import NFC from "./pages/Attendance/nfc";
+import PromotionRequestIndex from "./pages/Performance/indexPromotions";
+import TransferPage from "./pages/Progression/transfer";
+import ReviewsPage from "./pages/Performance/indexReviews";
+import ReviewPage from "./pages/Performance/review";
+import TransferRequestPage from "./pages/Progression/transferRequest";
 
 import MyBenefitsPage from "./pages/Benefit/index";
 import BenefitsPage from "./pages/Benefit/indexHR";
 import ClaimsPage from "./pages/Benefit/claim";
+import RewardTrackPage from "./pages/Reward/index"
+import RewardTrackDetailPage from "./pages/Reward/TrackDetail"
+import ReviewFormPage from "./pages/Reward/review"
+import AddReviewFormPage from "./pages/Reward/AddReviewForm"
+import EmployeeRewardPage from "./pages/Reward/EmployeeReward";
 
 function App() {
   return (
@@ -244,8 +254,8 @@ function App() {
             path="/career/transfer"
             component={TransferPage}
           />
-          <PrivateRoute exact path="/performance" component={PerformancePage} />
-          <PrivateRoute exact path="/myperformance" component={CurrentPerformancePeriodPage} />
+          <PrivateRoute exact path="/myperformance" component={PerformancePage} />
+          
           <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
           <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
           <PrivateRoute exact path="/performance/appraisal/:appraisalId" component={AppraisalPage} />
@@ -255,14 +265,31 @@ function App() {
             path="/performance/appraisals"
             component={AppraisalsPage}
           />
+          <PrivateRoute
+            exact
+            path="/attendance/"
+            component={NFC}
+          />
+          
+          <PrivateRoute exact path="/performance/reviews" component={ReviewsPage} />
+          <PrivateRoute exact path="/performance/review/:reviewId" component={ReviewPage} />
+          
           <PrivateRoute exact path="/promotion" component={PromotionPage} />
           <PrivateRoute exact path="/promotion/:requestId" component={PromotionRequestPage} />
+
+          <PrivateRoute exact path="/transfer" component={TransferPage} />
+          <PrivateRoute exact path="/transfer/:requestId" component={TransferRequestPage} />
 
           <PrivateRoute exact path="/payroll" component={PayrollPage} />
 
           <PrivateRoute exact path="/welfare/mybenefits" component={MyBenefitsPage} />
           <PrivateRoute exact path="/welfare/benefits" component={BenefitsPage} />
           <PrivateRoute exact path="/welfare/claims" component={ClaimsPage} />
+          <PrivateRoute exact path="/welfare/rewardtrack" component={RewardTrackPage} />
+          <PrivateRoute exact path="/welfare/rewardtrackdetail" component={RewardTrackDetailPage} />
+          <PrivateRoute exact path="/welfare/reviewform" component={ReviewFormPage} />
+          <PrivateRoute exact path="/welfare/myrewardtrack" component={EmployeeRewardPage} />
+          <PublicRoute exact path="/reviewform" component={AddReviewFormPage} />
         </Switch>
       </div>
     </BrowserRouter>

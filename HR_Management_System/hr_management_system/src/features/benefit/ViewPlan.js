@@ -10,7 +10,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function ViewPlan({ open, setOpen, plan, user }) {
+export default function ViewPlan({ open, setOpen, plan, user, refreshKeyHandler }) {
 
   const [name, setName] = useState(plan.planName)
   const [amount, setAmount] = useState(plan.planAmount)
@@ -52,7 +52,10 @@ export default function ViewPlan({ open, setOpen, plan, user }) {
     var helpEndDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
 
     api.editBenefitPlan(plan.benefitPlanId,description, name, amount, helpStartDate.trim(), helpEndDate.trim())
-        .then(() => {alert("Successfully saved.");})
+        .then(() => {
+            alert("Successfully saved.");
+            refreshKeyHandler();
+        })
         .catch((error) => setError(error));
     setOpen(false);
   }

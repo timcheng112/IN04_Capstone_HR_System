@@ -64,12 +64,12 @@ const LeaveScreen = ({ navigation }) => {
         <Button
           icon="plus"
           mode="contained"
-          color="#ffd700"
+          color="#0000cd"
           onPress={() => navigation.navigate('LeaveApplication', { userId })}>
           Apply
         </Button>
       </View>
-      <LeaveList userId={userId} />
+      <LeaveList userId={userId} navigation ={navigation}/>
 
     </SafeAreaView>
   )

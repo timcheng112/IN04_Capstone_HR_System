@@ -1,4 +1,4 @@
-package com.conceiversolutions.hrsystem.engagement.rewardtrack;
+package com.conceiversolutions.hrsystem.engagement.reward;
 
 import com.conceiversolutions.hrsystem.engagement.reward.Reward;
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -23,8 +23,8 @@ public class RTRewardInstance {
     @Column(name="date_claimed")
     private LocalDate dateClaimed;
 
-    @Column(name = "is_claimed")
-    private Boolean isClaimed;
+//    @Column(name = "is_claimed")
+//    private Boolean isClaimed;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Reward.class, optional = false)
     private Reward reward;
@@ -32,11 +32,12 @@ public class RTRewardInstance {
     private User recipient;
 
     public RTRewardInstance() {
+        this.dateClaimed = LocalDate.now();
     }
 
-    public RTRewardInstance(LocalDate dateClaimed, Boolean isClaimed, Reward reward) {
-        this.dateClaimed = dateClaimed;
-        this.isClaimed = isClaimed;
+    public RTRewardInstance(Reward reward, User recipient) {
+        this();
         this.reward = reward;
+        this.recipient = recipient;
     }
 }

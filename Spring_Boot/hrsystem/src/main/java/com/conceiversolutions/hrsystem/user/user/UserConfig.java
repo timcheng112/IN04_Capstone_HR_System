@@ -477,7 +477,7 @@ public class UserConfig {
                                 // Team HR Head
                                 Position hrManager = new Position("HR Manager", "HR Manager position description",
                                                 JobTypeEnum.FULLTIME,
-                                                PositionTypeEnum.EXECUTIVE);
+                                                PositionTypeEnum.STOREMANAGER);
 
                                 // Team HR Head
                                 User alisonEmployee = new User(
@@ -759,7 +759,7 @@ public class UserConfig {
                                 // West Mall Salesman
                                 Position salesmanEmployee = new Position("Salesman Employee",
                                                 "Salesman Employee position description", JobTypeEnum.FULLTIME,
-                                                PositionTypeEnum.CASHIER);
+                                                PositionTypeEnum.SALESMAN);
                                 User dianaEmployee = new User(
                                                 "Diana",
                                                 "Prince",

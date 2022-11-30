@@ -46,4 +46,14 @@ public class PayInformationController {
     public void removeFromPayroll(@RequestParam("userId") Long userId) {
         payInformationService.removeFromPayroll(userId);
     }
+    @GetMapping(path = "/user/{userId}")
+    public PayInformation getUserPayInformation(@PathVariable("userId") Long userId) throws Exception {
+        return payInformationService.getUserPayInformation(userId);
+    }
+
+    @GetMapping(path = "position/{positionId}")
+    public PayInformation getPositionPayInformation(@PathVariable("positionId") Long positionId) throws Exception {
+        return payInformationService.getPositionPayInformation(positionId);
+    }
+
 }

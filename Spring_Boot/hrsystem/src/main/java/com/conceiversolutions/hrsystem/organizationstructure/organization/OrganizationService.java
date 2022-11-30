@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.department.Department;
+import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import com.conceiversolutions.hrsystem.user.user.UserService;
@@ -206,7 +208,7 @@ public class OrganizationService {
     }
 
     public Long isEmployeeOrganizationHead(Long employeeId) {
-        List<Organization> allOrganizations = getOrganizations();
+        List<Organization> allOrganizations = organizationRepository.findAll();
 
         for (Organization o : allOrganizations) {
             if (o.getOrganizationHead().getUserId() == employeeId) {
@@ -219,10 +221,21 @@ public class OrganizationService {
     public User getOrganizationHead() throws Exception {
         System.out.println("OrganizationService.getOrganizationHead");
 
-        Optional<Organization> organization = organizationRepository.findOrgByName("Libro");
-        System.out.println(organization);
+        List<Organization> allOrganizations = organizationRepository.findAll();
 
-        return new User();
+        for (Organization o : allOrganizations) {
+            System.out.println(o.getOrganizationHead());
+            
+            Position currentPosition = o.getOrganizationHead().getCurrentPosition();
+            LeaveQuota quota = o.getOrganizationHead().getCurrentLeaveQuota();
+            User u = o.getOrganizationHead().nullify();
+            u.setCurrentPosition(currentPosition);
+            u.setCurrentLeaveQuota(quota);
+
+            return u;
+        }
+
+        throw new IllegalStateException("Unable to find organization head");
     }
 
     

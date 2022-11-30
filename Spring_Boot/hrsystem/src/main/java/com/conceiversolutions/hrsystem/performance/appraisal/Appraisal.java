@@ -24,6 +24,7 @@ public class Appraisal {
     private Long appraisalId;
     @Column(name = "appraisal_year")
     private String appraisalYear;
+    //INCOMPLETE -> IN PROGRESS -> COMPLETED
     private String status;
     private String strengths;
     private String weaknesses;

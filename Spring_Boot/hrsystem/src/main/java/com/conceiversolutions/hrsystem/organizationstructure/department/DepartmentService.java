@@ -1,11 +1,13 @@
 package com.conceiversolutions.hrsystem.organizationstructure.department;
 
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.Organization;
 import com.conceiversolutions.hrsystem.organizationstructure.organization.OrganizationRepository;
 
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.organizationstructure.team.TeamRepository;
+import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import com.conceiversolutions.hrsystem.user.user.UserService;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 //come back and add relationship - S&A
 @Service
@@ -257,7 +261,7 @@ public class DepartmentService {
             List<Team> deptTeams = d.getTeams();
 
             for (Team t : deptTeams) {
-                //System.out.println("for each team " + t.getTeamName());
+                // System.out.println("for each team " + t.getTeamName());
                 t.setRoster(null);
                 t.setUsers(new ArrayList<>());
                 t.setDepartment(null);
@@ -271,9 +275,10 @@ public class DepartmentService {
     }
 
     public Long isEmployeeDepartmentHead(Long employeeId) {
-        List<Department> allDepartments = getAllDepartment();
+        List<Department> allDepartments = departmentRepository.findAll();
 
         for (Department d : allDepartments) {
+            System.out.println("dept head " + d.getDepartmentHead());
             if (d.getDepartmentHead().getUserId() == employeeId) {
                 return d.getDepartmentId();
             }
@@ -281,29 +286,24 @@ public class DepartmentService {
         return Long.valueOf(-1);
     }
 
+    @Transactional
     public List<User> getDepartmentHeads() {
         System.out.println("DepartmentService.getDepartmentHeads");
         List<User> allDepartmentHeads = new ArrayList<>();
 
-        List<Department> allDepartments = departmentRepository.findAll();
+        List<User> departmentHeadList = departmentRepository.findDepartmentHeads();
 
-        for (Department d : allDepartments) {
-            Optional<Organization> organization = organizationRepository.findById(Long.valueOf(1));
+        for (User u : departmentHeadList) {
+            User user = u;
+            Position p = user.getCurrentPosition();
+            LeaveQuota l = user.getCurrentLeaveQuota();
 
-            System.out.println("organization optional " + organization);
-
-            if (organization.isPresent()) {
-                d.setOrganization(organization.get());
-            } 
-
-            System.out.println("Department id " + d.getDepartmentId());
-            User user = d.getDepartmentHead();
-            user.nullify();
-
-            System.out.println("department head " + user);
-            
-            allDepartmentHeads.add(user);
+            User nullifiedUser = u.nullify();
+            nullifiedUser.setCurrentPosition(p);
+            nullifiedUser.setCurrentLeaveQuota(l);
+            allDepartmentHeads.add(nullifiedUser);
         }
+
         return allDepartmentHeads;
     }
 
@@ -311,10 +311,22 @@ public class DepartmentService {
         Optional<Department> optionalDepartment = departmentRepository.findDepartmentByEmployeeId(employeeId);
         if (optionalDepartment.isPresent()) {
             Department department = optionalDepartment.get();
-            
-            User departmentHead = department.getDepartmentHead().nullify();
 
-            return departmentHead;
+            User user = department.getDepartmentHead();
+
+            Position position = user.getCurrentPosition();
+
+            LeaveQuota quota = user.getCurrentLeaveQuota();
+
+            User head = department.getDepartmentHead().nullify();
+            
+            head.setCurrentPosition(position);
+
+            head.setCurrentLeaveQuota(quota);
+
+            department.setDepartmentHead(head);
+
+            return user;
         } else {
             throw new IllegalStateException("Unable to find department");
         }

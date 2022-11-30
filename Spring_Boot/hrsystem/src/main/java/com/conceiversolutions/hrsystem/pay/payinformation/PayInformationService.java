@@ -1,7 +1,9 @@
 package com.conceiversolutions.hrsystem.pay.payinformation;
 
+import com.conceiversolutions.hrsystem.engagement.leavequota.LeaveQuota;
 import com.conceiversolutions.hrsystem.pay.allowance.Allowance;
 import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplate;
+import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -122,5 +124,50 @@ public class PayInformationService {
                 .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " does not exist!"));
         user.getCurrentPayInformation().setInPayroll(false);
         userRepository.save(user);
+    }
+
+    public PayInformation getUserPayInformation(Long userId) throws Exception {
+        Optional<PayInformation> optionalPayInformation = payInformationRepository.findUserPayInformation(userId);
+
+        if (optionalPayInformation.isPresent()) {
+            PayInformation p = optionalPayInformation.get();
+
+            User user = p.getUser();
+
+            Position position = user.getCurrentPosition();
+            LeaveQuota leaveQuota = user.getCurrentLeaveQuota();
+
+            p.getUser().nullify();
+
+            p.getUser().setCurrentPosition(position);
+            p.getUser().setCurrentLeaveQuota(leaveQuota);
+
+            return p;
+        } else {
+            throw new IllegalStateException("Unable to find pay information");
+        }
+    }
+
+    public PayInformation getPositionPayInformation(Long positionId) throws Exception {
+        User samePosition = userRepository.findUsersWithPosition(positionId).get(0);
+
+        Optional<PayInformation> payInformation = payInformationRepository
+                .findUserPayInformation(samePosition.getUserId());
+        if (payInformation.isPresent()) {
+            PayInformation pi = payInformation.get();
+
+            User employee = pi.getUser();
+            Position currentPosition = employee.getCurrentPosition();
+            LeaveQuota quota = employee.getCurrentLeaveQuota();
+
+            employee.nullify();
+
+            employee.setCurrentPosition(currentPosition);
+            employee.setCurrentLeaveQuota(quota);
+
+            return pi;
+        } else {
+            throw new IllegalStateException("Unable to find pay information for user");
+        }
     }
 }

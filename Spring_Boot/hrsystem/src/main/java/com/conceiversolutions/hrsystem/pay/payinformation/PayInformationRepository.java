@@ -1,5 +1,7 @@
 package com.conceiversolutions.hrsystem.pay.payinformation;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,4 +18,6 @@ public interface PayInformationRepository extends JpaRepository<PayInformation, 
 
     @Query("SELECT p FROM PayInformation p INNER JOIN p.user u WHERE u.userId =?1")
     Optional<PayInformation> findPayInformationByUserId(Long userId);
+    @Query("SELECT p FROM PayInformation p WHERE p.user.userId = ?1")
+    public Optional<PayInformation> findUserPayInformation(Long userId);
 }

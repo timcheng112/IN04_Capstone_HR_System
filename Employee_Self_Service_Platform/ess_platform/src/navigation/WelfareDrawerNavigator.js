@@ -7,6 +7,8 @@ import ClaimDetailScreen from "../screens/ClaimDetailScreen";
 import NewClaimScreen from "../screens/NewClaimScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import WDrawerContent from "../components/general/WDrawerContent";
+import RewardScreen from "../screens/RewardScreen"
+import RewardDetailScreen from "../screens/RewardDetailScreen"
 
 
 const WelfareDrawerNavigator = () => {
@@ -20,15 +22,25 @@ const WelfareDrawerNavigator = () => {
     >
       <WelfareDrawer.Screen name="Benefits" component={BenefitScreen}
         options={{
-          title: "Benefits",
-          headerTitle: "Benefits",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
           unmountOnBlur: true,
         }}
       />
       <WelfareDrawer.Screen name="Claims" component={ClaimScreen}
         options={{
-          title: "Claims",
-          headerTitle: "Claims",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
+          unmountOnBlur: true,
+        }}
+      />
+      <WelfareDrawer.Screen name="Rewards" component={RewardScreen}
+        options={{
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
           unmountOnBlur: true,
         }}
       />
@@ -41,15 +53,25 @@ const WelfareDrawerNavigator = () => {
        />
       <WelfareDrawer.Screen name="ClaimDetail" component={ClaimDetailScreen}
         options={{
-           title: "Claim Details",
-           headerTitle: "Claim Details",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
            unmountOnBlur: true,
          }}
       />
       <WelfareDrawer.Screen name="NewClaim" component={NewClaimScreen}
         options={{
-           title: "New Claim",
-           headerTitle: "New Claim",
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
+           unmountOnBlur: true,
+         }}
+      />
+      <WelfareDrawer.Screen name="RewardDetail" component={RewardDetailScreen}
+        options={{
+          headerStyle: { backgroundColor: "#3949ab" },
+          headerTitleStyle: { color: "white" },
+          headerTintColor: "white",
            unmountOnBlur: true,
          }}
       />

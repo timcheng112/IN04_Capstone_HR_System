@@ -39,6 +39,8 @@ import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepository;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemService;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.docdata.DocDataService;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationService;
@@ -56,8 +58,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -92,6 +96,7 @@ public class UserService implements UserDetailsService {
     private final TaskRepository taskRepository;
     private final TaskListItemService taskListItemService;
     private final TaskListItemRepository taskListItemRepository;
+    private final DocDataService docDataService;
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -1188,6 +1193,23 @@ public class UserService implements UserDetailsService {
         return "Update of user was successful";
     }
 
+    public String updateProfilePic(Long userId, MultipartFile file) throws IOException {
+        System.out.println("UserService.updateProfilePic");
+        User employee = userRepository.findById(userId).get();
+
+        DocData profilePic = null;
+        if (null != file) { // if file is uploaded, will set.
+            if (!file.isEmpty()) {
+                System.out.println("Profile Pic is being uploaded");
+                profilePic = docDataService.uploadDoc(file);
+            }
+        }
+        employee.setProfilePic(profilePic);
+        userRepository.save(employee);
+
+        return "Profile pic updated for " + userId + " with " + profilePic.getName();
+    }
+
     public Long getUserFromEmail(String email) {
         System.out.println("UserService.getUserFromEmail");
         Optional<User> user = userRepository.findUserByEmail(email);
@@ -1313,6 +1335,73 @@ public class UserService implements UserDetailsService {
                     payslip.setPayInformation(null);
                     payslip.setEmployee(null);
                     // payslip.getEmployee().nullify();
+                }
+            }
+
+            List<ShiftListItem> tempShiftListItems = new ArrayList<>();
+            if (u.getShiftListItems() != null) {
+                tempShiftListItems = u.getShiftListItems();
+                for (ShiftListItem shiftListItem : tempShiftListItems) {
+                    shiftListItem.setUser(null);
+                    shiftListItem.getShift().setRoster(null);
+                    shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+                }
+            }
+
+            u.nullify();
+            u.setTeams(teams);
+            u.setTaskListItems(taskListItems);
+            u.setCurrentPayInformation(tempPayInformation);
+            u.setCurrentPosition(tempPosition);
+            u.setPayslips(tempPayslips);
+            u.setShiftListItems(tempShiftListItems);
+        }
+        return employees;
+    }
+
+    public List<User> getAllHREmployees() {
+        List<User> employees = userRepository.findAllHREmployees();
+        // employees.addAll(userRepository.findAllByRole(RoleEnum.MANAGER));
+        System.out.println("size of employees list is " + employees.size());
+        for (User u : employees) {
+            List<Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                // t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+                t.getDepartment().setTeams(new ArrayList<>());
+                t.getDepartment().setOrganization(null);
+                t.getDepartment().setDepartmentHead(null);
+            }
+
+            List<TaskListItem> taskListItems = u.getTaskListItems();
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : taskListItems) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+
+            // nullify other side for pay information, allowance & deduction
+            PayInformation tempPayInformation = null;
+            if (u.getCurrentPayInformation() != null) {
+                tempPayInformation = u.getCurrentPayInformation();
+                tempPayInformation.setUser(null);
+            }
+
+            Position tempPosition = null;
+            if (u.getCurrentPosition() != null) {
+                tempPosition = u.getCurrentPosition();
+            }
+
+            List<Payslip> tempPayslips = new ArrayList<>();
+            if (u.getPayslips() != null) {
+                tempPayslips = u.getPayslips();
+                for (Payslip payslip : tempPayslips) {
+                    payslip.setPayInformation(null);
+                    payslip.setEmployee(null);
                 }
             }
 
@@ -1567,7 +1656,10 @@ public class UserService implements UserDetailsService {
         List<Team> allTeams = teamRepository.findAll();
         List<Long> teamHeadIds = new ArrayList<>();
         for (Team t : allTeams) {
-            teamHeadIds.add(t.getTeamHead().getUserId());
+            if (t.getTeamHead() != null) {
+                teamHeadIds.add(t.getTeamHead().getUserId());
+            }
+
         }
 
         List<User> managers = userRepository.findAllByRole(RoleEnum.MANAGER);
@@ -2723,4 +2815,16 @@ public class UserService implements UserDetailsService {
         user.getCurrentPayInformation().setInPayroll(true);
         userRepository.save(user);
     }
+
+    public String setNfcUUID(String hexString, Long userId) {
+        User u1 = getUser(userId);
+
+        if (u1.getCardId() == null) {
+            u1.setCardId(hexString);
+        }
+
+        userRepository.saveAndFlush(u1);
+        return "NFC is assigned to user Id";
+    }
+
 }

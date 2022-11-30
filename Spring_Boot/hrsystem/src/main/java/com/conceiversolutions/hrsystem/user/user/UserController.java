@@ -16,7 +16,9 @@ import com.conceiversolutions.hrsystem.user.qualificationinformation.Qualificati
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -283,6 +285,12 @@ public class UserController {
 
     }
 
+    @PostMapping(path = "updateProfilePic")
+    public String updateProfilePic(@RequestParam("userId") Long userId,
+                                   @RequestParam("file") MultipartFile file) throws IOException {
+        return userService.updateProfilePic(userId, file);
+    }
+
     @GetMapping(path = "/getAllManagers")
     public List<User> getAllManagers() {
         return userService.getAllManagers();
@@ -311,6 +319,11 @@ public class UserController {
     @GetMapping(path = "/getAllStaff")
     public List<User> getAllStaff() {
         return userService.getAllStaff();
+    }
+
+    @GetMapping(path ="/getAllHREmployees")
+    public List<User> getAllHREmployees() {
+        return userService.getAllHREmployees();
     }
 
     @GetMapping(path = "/getEmployeesNotInGivenTeam")

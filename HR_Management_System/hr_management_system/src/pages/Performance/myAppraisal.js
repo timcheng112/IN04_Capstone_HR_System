@@ -1,5 +1,6 @@
 import { PaperClipIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import Navbar from "../../components/Navbar";
 import PerformanceSidebar from "../../components/Sidebar/Performance";
 import api from "../../utils/api";
@@ -7,6 +8,7 @@ import api from "../../utils/api";
 export default function MyAppraisal() {
   const appraisalId = window.location.href.substring(46);
   const [appraisal, setAppraisal] = useState(null);
+  const history = useHistory();
 
   useEffect(() => {
     console.log(appraisalId);
@@ -30,6 +32,16 @@ export default function MyAppraisal() {
     } else {
       return "Select";
     }
+  }
+
+  function handleViewPromotion(appraisal) {
+    //console.log(appraisal.employee.userId)
+    api
+      .getPromotionRequestByEmployee(appraisal.employee.userId)
+      .then((response) => {
+        //console.log(response.data.promotionId)
+        history.push(`/promotion/${response.data.promotionId}`);
+      });
   }
 
   return (
@@ -98,7 +110,21 @@ export default function MyAppraisal() {
                   Recommended for promotion
                 </dt>
                 <dd className="mt-1 text-md text-gray-900 font-sans sm:col-span-2 sm:mt-0">
-                  {appraisal.promotion ? <>Yes (View more)</> : <>No</>}
+                  {appraisal.promotion ? (
+                    <>
+                      Yes (
+                      <button
+                        type="button"
+                        className="text-indigo-600"
+                        onClick={() => handleViewPromotion(appraisal)}
+                      >
+                        View more
+                      </button>
+                      )
+                    </>
+                  ) : (
+                    <>No</>
+                  )}
                 </dd>
               </div>
               {/* <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">

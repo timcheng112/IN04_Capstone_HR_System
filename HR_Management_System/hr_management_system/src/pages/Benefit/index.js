@@ -54,7 +54,7 @@ export default function Benefits() {
         console.log(response.data);
       })
       .catch((error) => setError(error));
-  }, []);
+  }, [refreshKey]);
 
 
 
@@ -129,7 +129,7 @@ export default function Benefits() {
                                   aria-hidden="true"
                                 />
                                 <span className="hidden md:block">Claim</span>
-                                <AddNewClaim open={claim} setOpen={setClaim} plan={plan}/>
+                                <AddNewClaim open={claim} setOpen={setClaim} plan={plan} refreshKeyHandler={() => setRefreshKey((oldKey) => oldKey + 1)}/>
                               </button>
                             </td>
                           </tr>

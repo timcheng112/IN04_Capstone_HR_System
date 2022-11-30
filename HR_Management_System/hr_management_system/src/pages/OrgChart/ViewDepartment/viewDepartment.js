@@ -6,6 +6,7 @@ import AddOutletModal from "./addOutletModal.js";
 import AddTeamModal from "./addTeamModal.js";
 import ChangeDeptHeadModal from "./changeDeptHeadModal.js";
 import DeleteTeamModal from "./deleteTeamModal.js";
+import shiba from "../../../assets/shiba-thumbs-up.png";
 // TODO: @SHIHAN PLEASE HELP TO CHECK THIS
 
 /* This example requires Tailwind CSS v2.0+ */
@@ -23,6 +24,7 @@ export default function ViewDepartment() {
   const [toDelete, setToDelete] = useState(0);
   const [openDelete, setOpenDelete] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [headPic, setHeadPic] = useState(shiba);
 
   //   function getURL(){
   //     const url = window.location.href;
@@ -50,6 +52,13 @@ export default function ViewDepartment() {
       // setTeams(response.data.teams);
       console.log("USE EFFECT 1: get departmentHead");
       console.log(response.data.departmentHead);
+      if (response.data.departmentHead.profilePic !== null) {
+         api.getDocById(response.data.departmentHead.profilePic.docId).then((response) => {
+                const url = window.URL.createObjectURL(response.data);
+                setHeadPic(url);
+            })
+      }
+
       // console.log("USE EFFECT 1: get teams ");
       // console.log(response.data.teams);
     });
@@ -58,6 +67,7 @@ export default function ViewDepartment() {
 
   // useEffect for getTeam
   useEffect(() => {
+    console.log(deptId);
     api.getAllTeamsInDept(deptId).then((response) => {
       setTeams(response.data);
       console.log("USE EFFECT 2: getAllTeams");
@@ -82,16 +92,12 @@ export default function ViewDepartment() {
         alert("Team is successfully deleted.");
       })
       .catch((error) => {
-        //team will always have members cos of teamHead. just delete unlike department 
+        //team will always have members cos of teamHead. just delete unlike department
         var message = error.request.response;
-        if (message.includes("Cannot delete team"))
-          console.log(message);
+        if (message.includes("Cannot delete team")) console.log(message);
         alert("Teams cannot be deleted");
       });
   }
-
-
-
 
   return (
     dept &&
@@ -213,13 +219,13 @@ export default function ViewDepartment() {
                               <div className="h-10 w-10 flex-shrink-0">
                                 <img
                                   className="h-10 w-10 rounded-full"
-                                  src={""}
+                                  src={headPic}
                                   alt=""
                                 />
                               </div>
                               <div className="">
                                 <div className="font-medium text-gray-900">
-                                  {deptHead.firstName}{" "} {deptHead.lastName}
+                                  {deptHead.firstName} {deptHead.lastName}
                                 </div>
                                 <div className="text-gray-500">
                                   {deptHead.email}
@@ -314,9 +320,17 @@ export default function ViewDepartment() {
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {team.outlet.outletName}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {team.teamHead.firstName + " " + team.teamHead.lastName}
-                            </td>
+                            {team.teamHead ? (
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {team.teamHead.firstName +
+                                  " " +
+                                  team.teamHead.lastName}
+                              </td>
+                            ) : (
+                              <>
+                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td>
+                              </>
+                            )}
 
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <button
@@ -332,7 +346,6 @@ export default function ViewDepartment() {
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <a
                                 onClick={() => {
-                                 
                                   setOpenDelete(true);
                                   // console.log(team.teamId)
                                   setToDelete(team.teamId);
@@ -344,11 +357,11 @@ export default function ViewDepartment() {
                               </a>
 
                               <DeleteTeamModal
-                                  open={openDelete}
-                                  onConfirm={deleteTeam}
-                                  setOpen={setOpenDelete}
-                                  deptId={team.teamId}
-                                />
+                                open={openDelete}
+                                onConfirm={deleteTeam}
+                                setOpen={setOpenDelete}
+                                deptId={team.teamId}
+                              />
                             </td>
                           </tr>
                         ))}

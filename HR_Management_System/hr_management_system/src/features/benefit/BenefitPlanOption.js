@@ -11,7 +11,7 @@ import AssignBenefit from "./AssignBenefit";
 import CheckDialog from "./CheckDialog";
 import { useHistory } from 'react-router-dom';
 
-export default function BenefitPlanOption({ plan }) {
+export default function BenefitPlanOption({ plan, refreshKeyHandler }) {
   const history = useHistory();
   const [open, setOpen] = useState(false);
   const [claim, setClaim] = useState(false);
@@ -31,7 +31,10 @@ export default function BenefitPlanOption({ plan }) {
 
   function terminate(){
     api.terminateBenefitPlan(plan.benefitPlanId)
-    .then(() => {alert("Successfully terminated.");})
+    .then(() => {
+        alert("Successfully terminated.");
+        refreshKeyHandler();
+        })
     .catch((error) => setError(error));
   }
 
@@ -72,8 +75,8 @@ export default function BenefitPlanOption({ plan }) {
           <span className="hidden md:block">Terminate</span>
         </button>}
       </div>
-      <AssignBenefit open={claim} onClose={()=>setClaim(false)} plan={plan}/>
-      <ViewPlan open={open} setOpen={setOpen} plan={plan} user={user}/>
+      <AssignBenefit open={claim} onClose={()=>setClaim(false)} plan={plan} refreshKeyHandler={refreshKeyHandler}/>
+      <ViewPlan open={open} setOpen={setOpen} plan={plan} user={user} refreshKeyHandler={refreshKeyHandler}/>
       <CheckDialog 
           title="Plan"
           item="Plan"

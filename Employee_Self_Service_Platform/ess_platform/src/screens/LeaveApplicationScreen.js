@@ -201,7 +201,7 @@ const LeaveApplicationScreen = ({ navigation }) => {
         <View style={styles.inline}>
           <Button
             mode="contained"
-            color="#ffd700"
+            color="#0000cd"
             onPress={() => setShowStart(true)}>
             Select Start Date
           </Button>
@@ -222,7 +222,7 @@ const LeaveApplicationScreen = ({ navigation }) => {
         <View style={styles.inline}>
           <Button
             mode="contained"
-            color="#ffd700"
+            color="#0000cd"
             onPress={() => setShowEnd(true)}>
             Select End Date
           </Button>
@@ -252,7 +252,7 @@ const LeaveApplicationScreen = ({ navigation }) => {
           <Button
             icon="plus"
             mode="contained"
-            color="#ffd700"
+            color="#0000cd"
             onPress={pickDocument}>
             Upload Document
           </Button>
@@ -263,13 +263,13 @@ const LeaveApplicationScreen = ({ navigation }) => {
         <View style={styles.inline}>
           <Button
             mode="contained"
-            color="#daa520"
+            color="#1e90ff"
             onPress={() => navigation.navigate('Leave')}>
             Back
           </Button>
           <Button
             mode="contained"
-            color="#ffd700"
+            color="#0000cd"
             onPress={() => applyLeave({ navigation })}>
             Submit
           </Button>
