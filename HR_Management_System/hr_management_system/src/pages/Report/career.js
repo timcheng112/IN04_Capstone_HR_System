@@ -308,7 +308,7 @@ export default function Report() {
                 </div>
               </dl>
 
-              <h3 className="mt-5 text-lg font-sans font-medium text-center leading-6 text-gray-900">
+              <h3 className="my-10 text-2xl font-sans font-medium text-center leading-6 text-gray-900">
                 Goals for {new Date().getFullYear()}
               </h3>
 
@@ -321,7 +321,7 @@ export default function Report() {
                 </div>
               </div>
 
-              <h3 className="mt-5 text-lg font-sans font-medium text-center leading-6 text-gray-900">
+              <h3 className="my-10 text-2xl font-sans font-medium text-center leading-6 text-gray-900">
                 Appraisals for {new Date().getFullYear()}
               </h3>
               <div className="flex flex-row items-stretch justify-center">
