@@ -27,6 +27,8 @@ function classNames(...classes) {
 }
 
 const Payroll = () => {
+  const [refreshKey, setRefreshKey] = useState(false);
+
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [employees, setEmployees] = useState([]);
@@ -209,7 +211,7 @@ const Payroll = () => {
       .getAllDepartments()
       .then((response) => setDepartments(response.data))
       .catch((error) => console.log(error.response.data.message));
-  }, [isPayrollFormOpen, isEditPayInformationFormOpen]);
+  }, [isPayrollFormOpen, isEditPayInformationFormOpen, refreshKey]);
 
   const filterByDepartment = () => {
     setFilteredEmployees([
@@ -251,13 +253,14 @@ const Payroll = () => {
   const exportPdf = () => {
     let alink = document.createElement("a");
     alink.href = pdfUrl;
-    alink.download = "SamplePDF.pdf";
+    alink.download = "PDF.pdf";
     alink.click();
   };
 
-  const viewSummaryReportHandler = () => {
+  const viewSummaryReportHandler = (respDate) => {
     api
-      .findPayslipByMonth(format(subDays(new Date(), 7), "yyyy-MM-dd")) // change this
+      // .findPayslipByMonth(format(subDays(respDate, 7), "yyyy-MM-dd")) // change this
+      .findPayslipByMonth(format(respDate, "yyyy-MM-dd")) // change this
       .then((response) => setCurrMonthPayslips(response.data))
       .catch((err) => console.log(err.response.data.message));
   };
@@ -457,6 +460,7 @@ const Payroll = () => {
             openPayslip={() => setIsPayslipOpen(true)}
             onChangeHandler={onChangeHandler}
             setPdfUrl={(url) => setPdfUrl(url)}
+            refreshKeyHandler={() => setRefreshKey(!refreshKey)}
           />
         )}
       {user &&
@@ -467,7 +471,9 @@ const Payroll = () => {
           <PayrollHistory
             openSummaryReport={() => setIsSummaryReportOpen(true)}
             closeSummaryReport={() => setIsSummaryReportOpen(false)}
-            viewSummaryReportHandler={viewSummaryReportHandler}
+            viewSummaryReportHandler={(respDate) =>
+              viewSummaryReportHandler(respDate)
+            }
             employees={{ filteredEmployees }}
           />
         )}
@@ -484,7 +490,10 @@ const Payroll = () => {
           />
         )}
       {!isPayslipOpen && !isSummaryReportOpen && isPersonalPayrollOpen && (
-        <EmployeePayrollHistory />
+        <EmployeePayrollHistory
+          openPayslip={() => setIsPayslipOpen(true)}
+          setPdfUrl={(url) => setPdfUrl(url)}
+        />
       )}
     </div>
   );

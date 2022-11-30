@@ -1312,6 +1312,7 @@ public class UserService implements UserDetailsService {
                 for (Payslip payslip : tempPayslips) {
                     payslip.setPayInformation(null);
                     payslip.setEmployee(null);
+                    // payslip.getEmployee().nullify();
                 }
             }
 
@@ -1514,11 +1515,25 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         positionRepository.save(user.getCurrentPosition());
-        payInformationRepository.save(user.getCurrentPayInformation());
-        for (Payslip payslip : user.getPayslips()) {
-            payslipRepository.save(payslip);
+
+        PayInformation newPayinfo = user.getCurrentPayInformation();
+        for (Allowance allowance : newPayinfo.getAllowance()) {
+            allowanceRepository.save(allowance);
         }
+        for (Deduction deduction : newPayinfo.getDeduction()) {
+            deductionRepository.save(deduction);
+        }
+        PayInformation savedPayinfo = payInformationRepository.saveAndFlush(newPayinfo);
+        user.setCurrentPayInformation(savedPayinfo);
+        // List<Payslip> payslips = new ArrayList<>();
+        // for (Payslip payslip : user.getPayslips()) {
+        // Payslip savedPayslip = payslipRepository.saveAndFlush(payslip);
+        // payslips.add(savedPayslip);
+        // }
+        // user.setPayslips(payslips);
         User newUser = userRepository.saveAndFlush(user);
+        savedPayinfo.setUser(newUser);
+        payInformationRepository.save(savedPayinfo);
         return newUser.getUserId();
     }
 
@@ -2689,20 +2704,20 @@ public class UserService implements UserDetailsService {
         System.out.println("*******DEDUCTIONS: " + deductions + " *******");
         for (Allowance allowance : allowances) {
             System.out.println("*******ALLOWANCE: " + allowance + " *******");
-            AllowanceTemplate savedAllowanceTemplate = allowanceTemplateRepository
-                    .saveAndFlush(allowance.getTemplate());
+            // AllowanceTemplate savedAllowanceTemplate = allowanceTemplateRepository
+            //         .saveAndFlush(allowance.getTemplate());
             Allowance savedAllowance = allowanceRepository.saveAndFlush(allowance);
             user.getCurrentPayInformation().addAllowance(savedAllowance);
-            user.getCurrentPayInformation().addAllowanceTemplate(savedAllowanceTemplate);
+            // user.getCurrentPayInformation().addAllowanceTemplate(savedAllowanceTemplate);
         }
 
         for (Deduction deduction : deductions) {
             System.out.println("*******DEDUCTION: " + deduction + " *******");
-            DeductionTemplate savedDeductionTemplate = deductionTemplateRepository
-                    .saveAndFlush(deduction.getTemplate());
+            // DeductionTemplate savedDeductionTemplate = deductionTemplateRepository
+            //         .saveAndFlush(deduction.getTemplate());
             Deduction savedDeduction = deductionRepository.saveAndFlush(deduction);
             user.getCurrentPayInformation().addDeduction(savedDeduction);
-            user.getCurrentPayInformation().addDeductionTemplate(savedDeductionTemplate);
+            // user.getCurrentPayInformation().addDeductionTemplate(savedDeductionTemplate);
         }
         payInformationRepository.save(user.getCurrentPayInformation());
         user.getCurrentPayInformation().setInPayroll(true);

@@ -251,6 +251,7 @@ const EditPayInformationForm = ({ employee, closeEditPayInformationForm }) => {
       .then((res) => {
         if (res.data == true) {
           console.log("successfully updated bank info!");
+          alert("Updated Bank Information!")
         }
       });
   };
@@ -262,11 +263,11 @@ const EditPayInformationForm = ({ employee, closeEditPayInformationForm }) => {
 
     for (let i = 0; i < allowances.length; i++) {
       let allowance = allowances[i];
-      if (allowance.deleted == true && allowance.id != null) {
+      if (allowance.deleted === true && allowance.id != null) {
         //add to deleteAllowance list
         deleteAllowance.push(Number(allowance.id));
         console.log(typeof deleteAllowance[0]);
-      } else if (allowance.id == null) {
+      } else if (allowance.id === null && allowance.deleted === false) {
         //create new allowance
         createAllowance.push({
           allowanceName: allowance.name,
@@ -283,11 +284,11 @@ const EditPayInformationForm = ({ employee, closeEditPayInformationForm }) => {
 
     for (let i = 0; i < deductions.length; i++) {
       let deduction = deductions[i];
-      if (deduction.deleted == true && deduction.id != null) {
-        //add to deleteAllowance list
+      if (deduction.deleted === true && deduction.id != null) {
+        //add to deleteDedu list
         deleteDeduction.push(Number(deduction.id));
-      } else if (deduction.id == null) {
-        //create new allowance
+      } else if (deduction.id === null && deduction.deleted === false) {
+        //create new deduction
         createDeduction.push({
           deductionName: deduction.name,
           amount: deduction.amount,

@@ -10,11 +10,9 @@ export default function PayrollCard({
   const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
 
   const sendPayslipEmailsHandler = (emails, payslipMonth) => {
+    console.log(info.emails)
     api
-      .sendPayslipEmails(
-        ["ongj@libro.com", "matthew@libro.com", "simj@libro.com"],
-        info.date
-      )
+      .sendPayslipEmails(info.emails, info.date)
       .then(() => alert("Emails have been successfully sent!"))
       .catch((error) => alert(error.response.data.message));
   };

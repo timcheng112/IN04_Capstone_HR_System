@@ -1095,6 +1095,11 @@ const api = {
       temp
     );
   },
+  removeFromPayroll(userId) {
+    return axios.put(
+      `http://localhost:9191/api/pay/payinfo/removeFromPayroll?userId=${userId}`
+    );
+  },
   broadcastMessage(title, description) {
     return axios.post(
       `http://localhost:9191/api/notification/broadcastMessage?title=${title}&description=${description}`
@@ -1242,10 +1247,25 @@ const api = {
       `http://localhost:9191/api/claims/getEmployeesUnassignedToPlan?planId=${planId}`
     );
   },
-  addPayslipToUser(userId, payslip) {
+  // addPayslipToUser(userId, payslip) {
+  //   return axios.post(
+  //     `http://localhost:9191/api/pay/payslip/addPayslipToUser?userId=${userId}`,
+  //     payslip
+  //   );
+  // },
+  addPayslipToUser(
+    userId,
+    monthOfPayment,
+    yearOfPayslip,
+    dateOfPayment,
+    grossSalary,
+    basicSalary,
+    allowance,
+    deduction,
+    dateGenerated
+  ) {
     return axios.post(
-      `http://localhost:9191/api/pay/payslip/addPayslipToUser?userId=${userId}`,
-      payslip
+      `http://localhost:9191/api/pay/payslip/addPayslipToUser?userId=${userId}&monthOfPayment=${monthOfPayment}&yearOfPayslip=${yearOfPayslip}&dateOfPayment=${dateOfPayment}&grossSalary=${grossSalary}&basicSalary=${basicSalary}&allowance=${allowance}&deduction=${deduction}&dateGenerated=${dateGenerated}`
     );
   },
   uploadPayslipPdf(file, payslipId) {

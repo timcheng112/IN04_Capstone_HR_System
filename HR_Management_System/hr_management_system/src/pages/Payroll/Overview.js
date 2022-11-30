@@ -2,8 +2,17 @@ import {
   Cog8ToothIcon,
   DocumentMagnifyingGlassIcon,
   PencilIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
-import { differenceInHours, format, parseISO, subDays } from "date-fns";
+import {
+  addDays,
+  differenceInHours,
+  endOfMonth,
+  format,
+  parseISO,
+  startOfMonth,
+  subDays,
+} from "date-fns";
 import React, { useEffect, useState } from "react";
 import RunPayRollDialog from "../../features/payroll/RunPayrollDialog";
 import api from "../../utils/api";
@@ -24,6 +33,7 @@ const Overview = ({
   openPayslip,
   onChangeHandler,
   setPdfUrl,
+  refreshKeyHandler,
 }) => {
   const date = format(subDays(new Date(), 7), "MMMM yyyy");
   const todayStr = format(new Date(), "yyyy-MM-dd");
@@ -115,7 +125,17 @@ const Overview = ({
 
     try {
       api
-        .addPayslipToUser(payslipWrapper.user.userId, payslipWrapper.payslip)
+        .addPayslipToUser(
+          payslipWrapper.user.userId,
+          payslipWrapper.payslip.monthOfPayment,
+          payslipWrapper.payslip.yearOfPayslip,
+          payslipWrapper.payslip.dateOfPayment,
+          payslipWrapper.payslip.grossSalary,
+          payslipWrapper.payslip.basicSalary,
+          payslipWrapper.payslip.allowance,
+          payslipWrapper.payslip.deduction,
+          payslipWrapper.payslip.dateGenerated
+        )
         .then((response) => {
           api
             .uploadPayslipPdf(formData, response.data)
@@ -150,7 +170,8 @@ const Overview = ({
     api
       .findUserPayslipByMonth(
         employee.userId,
-        format(subDays(new Date(), 7), "yyyy-MM-dd")
+        // format(addDays(new Date(), 7), "yyyy-MM-dd")
+        format(new Date(), "yyyy-MM-dd")
       )
       .then((response) => {
         api.getDocById(response.data.payslipPDF.docId).then((response) => {
@@ -193,11 +214,11 @@ const Overview = ({
           const deductions = employees[i].currentPayInformation.deduction;
           let allowanceTotalAmount = 0;
           for (let i = 0; i < allowances.length; i++) {
-            allowanceTotalAmount += allowances[i].template.amount;
+            allowanceTotalAmount += allowances[i].amount;
           }
           let deductionTotalAmount = 0;
           for (let i = 0; i < deductions.length; i++) {
-            deductionTotalAmount += deductions[i].template.amount;
+            deductionTotalAmount += deductions[i].amount;
           }
 
           // ********************************************************************** //
@@ -814,8 +835,8 @@ const Overview = ({
               }
 
               const payslip = {
-                monthOfPayment: format(subDays(new Date(), 7), "MM"),
-                yearOfPayslip: format(subDays(new Date(), 7), "yyyy"),
+                monthOfPayment: Number(format(subDays(new Date(), 7), "MM")),
+                yearOfPayslip: Number(format(subDays(new Date(), 7), "yyyy")),
                 dateOfPayment: format(new Date(), "yyyy-MM-dd"),
                 grossSalary:
                   basicSalary +
@@ -826,9 +847,10 @@ const Overview = ({
                   shg, // calculate as net
                 basicSalary: basicSalary,
                 allowance: allowanceTotalAmount,
-                deduction: deductionTotalAmount,
+                deduction: deductionTotalAmount + cpf,
                 dateGenerated: format(new Date(), "yyyy-MM-dd"),
               };
+              console.log(payslip);
               payslips.push({
                 payslip: payslip,
                 allowances: allowances,
@@ -951,42 +973,237 @@ const Overview = ({
   // });
   function calculateUserMonthlyAllowance(employee, dateString) {
     let allowanceList = employee.currentPayInformation.allowance;
-    let subString = dateString.substring(0, 8);
-    let sum = 0;
-    for (let i = 0; i < allowanceList.length; i++) {
-      if (allowanceList[i].date.includes(subString)) {
-        sum += allowanceList[i].amount;
-      }
-    }
-    return sum;
-  }
+    // 2022-05-22
+    let daySubString = dateString.substring(8);
+    let dayNum = Number(daySubString);
 
+    let subString = dateString.substring(0, 8);
+    if (dayNum < 7) {
+      //change subString to the previous month
+      let monthSubString = dateString.substring(5, 7);
+      let endMonthNum = Number(monthSubString);
+      let startMonthNum;
+      let yearSubString = dateString.substring(0, 4);
+      let endYearNum = Number(yearSubString);
+      let startYearNum = endYearNum;
+
+      if (endMonthNum === 1) {
+        startMonthNum = 12;
+        startYearNum--;
+      } else {
+        startMonthNum = endMonthNum - 1;
+      }
+      const startDate = new Date(startYearNum, startMonthNum - 1, 7);
+      const endDate = new Date(endYearNum, endMonthNum - 1, 7);
+
+      let sum = 0;
+      for (let i = 0; i < allowanceList.length; i++) {
+        const allowanceDate = new Date(allowanceList[i].date);
+        if (allowanceDate > startDate && allowanceDate < endDate) {
+          sum += allowanceList[i].amount;
+        }
+      }
+      return sum;
+    } else {
+      let monthSubString = dateString.substring(5, 7);
+      let monthNum = Number(monthSubString);
+      let yearSubString = dateString.substring(0, 4);
+      let yearNum = Number(yearSubString);
+      const startDate = startOfMonth(new Date(yearNum, monthNum - 1, 1));
+      const endDate = endOfMonth(new Date(yearNum, monthNum - 1, 1));
+      let sum = 0;
+      for (let i = 0; i < allowanceList.length; i++) {
+        const allowanceDate = new Date(allowanceList[i].date);
+        if (allowanceDate > startDate && allowanceDate < endDate) {
+          sum += allowanceList[i].amount;
+        }
+      }
+      return sum;
+    }
+  }
+  
   function calculateUserMonthlyDeduction(employee, dateString) {
+    // let deductionList = employee.currentPayInformation.deduction;
+    // let daySubString = dateString.substring(8);
+    // let dayNum = Number(daySubString);
+
+    // let subString = dateString.substring(0, 8);
+    // if (dayNum < 7) {
+    //   //change subString to the previous month
+    //   let monthSubString = dateString.substring(5, 7);
+    //   let monthNum = Number(monthSubString);
+    //   let yearSubString = dateString.substring(0, 4);
+    //   let yearNum = Number(yearSubString);
+
+    //   if (monthNum === 1) {
+    //     monthNum = 12;
+    //     yearNum--;
+    //   } else {
+    //     monthNum--;
+    //   }
+    //   subString = format(new Date(yearNum, monthNum - 1, 1), "yyyy-MM");
+    // }
+
+    // let sum = 0;
+    // for (let i = 0; i < deductionList.length; i++) {
+    //   //   console.log("deduction found!");
+    //   //   console.log("deduction date:" + deductionList[i].date);
+    //   //   console.log("substring: " + subString);
+    //   if (deductionList[i].date.includes(subString)) {
+    //     sum += deductionList[i].amount;
+    //   }
+    // }
+    // return sum;
+
     let deductionList = employee.currentPayInformation.deduction;
+    // 2022-05-22
+    let daySubString = dateString.substring(8);
+    let dayNum = Number(daySubString);
+
     let subString = dateString.substring(0, 8);
-    let sum = 0;
-    for (let i = 0; i < deductionList.length; i++) {
-      //   console.log("deduction found!");
-      //   console.log("deduction date:" + deductionList[i].date);
-      //   console.log("substring: " + subString);
-      if (deductionList[i].date.includes(subString)) {
-        sum += deductionList[i].amount;
+    if (dayNum < 7) {
+      //change subString to the previous month
+      let monthSubString = dateString.substring(5, 7);
+      let endMonthNum = Number(monthSubString);
+      let startMonthNum;
+      let yearSubString = dateString.substring(0, 4);
+      let endYearNum = Number(yearSubString);
+      let startYearNum = endYearNum;
+
+      if (endMonthNum === 1) {
+        startMonthNum = 12;
+        startYearNum--;
+      } else {
+        startMonthNum = endMonthNum - 1;
       }
+      const startDate = new Date(startYearNum, startMonthNum - 1, 7);
+      const endDate = new Date(endYearNum, endMonthNum - 1, 7);
+
+      let sum = 0;
+      for (let i = 0; i < deductionList.length; i++) {
+        const deductionDate = new Date(deductionList[i].date);
+        if (deductionDate > startDate && deductionDate < endDate) {
+          sum += deductionList[i].amount;
+        }
+      }
+      return sum;
+    } else {
+      let monthSubString = dateString.substring(5, 7);
+      let monthNum = Number(monthSubString);
+      let yearSubString = dateString.substring(0, 4);
+      let yearNum = Number(yearSubString);
+      const startDate = startOfMonth(new Date(yearNum, monthNum - 1, 1));
+      const endDate = endOfMonth(new Date(yearNum, monthNum - 1, 1));
+      let sum = 0;
+      for (let i = 0; i < deductionList.length; i++) {
+        const deductionDate = new Date(deductionList[i].date);
+        if (deductionDate > startDate && deductionDate < endDate) {
+          sum += deductionList[i].amount;
+        }
+      }
+      return sum;
     }
-    return sum;
   }
 
+  //GENIUSMETHOD
   function employeeStatusForMonth(employee, dateString) {
-    let payslipList = employee.payslips;
-    let subString = dateString.substring(0, 8);
-    for (let i = 0; i < payslipList.length; i++) {
-      if (payslipList[i].dateOfPayment.includes(subString)) {
-        //found payslip for month
-        return "PAID";
-      }
-    }
-    return "UNPAID";
+    // api
+    //   .findUserAllowanceByMonth(employee.getUserId, dateString)
+    //   .then((res) => {
+    //     if (res.data != null) {
+    //       return "PAID";
+    //     } else {
+    //       return "UNPAID";
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     return "UNPAID";
+    //   });
   }
+
+  //OG METHOD
+  // function employeeStatusForMonth(employee, dateString) {
+  //   console.log("employee payslips:" + employee.payslips);
+  //   let payslipList = employee.payslips;
+
+  //   let subString = dateString.substring(0, 8);
+  //   console.log("employee month of payment:" + subString);
+  //   for (let i = 0; i < payslipList.length; i++) {
+  //     console.log("date generated: " + payslipList[i].dateGenerated);
+  //     if (payslipList[i].dateGenerated.includes(subString)) {
+  //       //found payslip for month
+  //       return "PAID";
+  //     }
+  //   }
+  //   return "UNPAID";
+  // }
+
+  const [employeesWithPayslip, setEmployeesWithPayslip] = useState([]);
+
+  //SUB GENIUS METHOD
+  useEffect(() => {
+    api.findPayslipByMonth(todayStr).then((response) => {
+      console.log("response found");
+      for (let i = 0; i < response.data.length; i++) {
+        if (
+          searchFilteredEmployees.some(
+            (user) => user.userId === response.data[i].employee.userId
+          )
+        ) {
+          if (
+            !employeesWithPayslip.some(
+              (user) => user.userId === response.data[i].employee.userId
+            )
+          ) {
+            employeesWithPayslip.push(
+              ...searchFilteredEmployees.filter(
+                (employee) =>
+                  employee.userId === response.data[i].employee.userId
+              )
+            );
+          }
+          console.log(employeesWithPayslip);
+        }
+      }
+    });
+  }, [searchFilteredEmployees, isRunPayrollDialogOpen]);
+
+  // const [employeeStatuses, setEmployeeStatuses] = useState([]);
+
+  // useEffect(() => {
+  //   for (let i = 0; i < searchFilteredEmployees.length; i++) {
+  //     api
+  //       .findUserPayslipByMonth(searchFilteredEmployees[i].userId, todayStr)
+  //       .then((response) => {
+  //         setEmployeeStatuses(...employeeStatuses, {
+  //           userId: searchFilteredEmployees[i].userId,
+  //           status: "PAID",
+  //         });
+  //       })
+  //       .catch((err) => {
+  //         setEmployeeStatuses(...employeeStatuses, {
+  //           userId: searchFilteredEmployees[i].userId,
+  //           status: "UNPAID",
+  //         });
+  //       });
+  //   }
+  // }, [searchFilteredEmployees]);
+
+  const removeFromPayrollHandler = (user) => {
+    api
+      .removeFromPayroll(user.userId)
+      .then((response) => {
+        alert(
+          "Successfully removed " +
+            user.firstName +
+            " " +
+            user.lastName +
+            " from payroll!"
+        );
+        refreshKeyHandler();
+      })
+      .catch((err) => alert(err.response.data.message));
+  };
 
   return (
     <div>
@@ -1072,7 +1289,7 @@ const Overview = ({
                         />
                         <th
                           scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 text-center"
                         >
                           Actions
                         </th>
@@ -1146,20 +1363,41 @@ const Overview = ({
                               id="paidStatus"
                               className={classNames(
                                 "rounded-xl w-1/2 text-center font-bold",
-                                employeeStatusForMonth(employee, todayStr) ===
-                                  "PAID" && "bg-green-200 text-green-700",
-                                employeeStatusForMonth(employee, todayStr) ===
-                                  "PENDING" && "bg-yellow-200 text-yellow-700",
-                                employeeStatusForMonth(employee, todayStr) ===
-                                  "UNPAID" && "bg-red-200 text-red-700"
+                                (employeesWithPayslip.some(
+                                  (user) => user.userId === employee.userId
+                                )
+                                  ? "PAID"
+                                  : "UNPAID") === "PAID" &&
+                                  "bg-green-200 text-green-700",
+                                (employeesWithPayslip.some(
+                                  (user) => user.userId === employee.userId
+                                )
+                                  ? "PAID"
+                                  : "UNPAID") === "PENDING" &&
+                                  "bg-yellow-200 text-yellow-700",
+                                (employeesWithPayslip.some(
+                                  (user) => user.userId === employee.userId
+                                )
+                                  ? "PAID"
+                                  : "UNPAID") === "UNPAID" &&
+                                  "bg-red-200 text-red-700"
                               )}
                             >
                               {/* PAID */}
-                              {employeeStatusForMonth(employee, todayStr)}
+                              {employeesWithPayslip.some(
+                                (user) => user.userId === employee.userId
+                              )
+                                ? "PAID"
+                                : "UNPAID"}
+                              {/* {employeeStatusForMonth(employee, todayStr)} */}
+                              {/* {employeeStatuses.find(
+                                (element) => element[0] === employee.userId
+                              )} */}
+                              {/* {employeeStatuses[userId] === employee.userId && employeeStatuses} */}
                               {/* {employee.status} */}
                             </div>
                           </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 text-center">
                             <button
                               type="button"
                               className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
@@ -1177,7 +1415,11 @@ const Overview = ({
                             <button
                               type="button"
                               className="ml-2 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
-                              // disabled
+                              disabled={
+                                !employeesWithPayslip.some(
+                                  (user) => user.userId === employee.userId
+                                )
+                              }
                               onClick={() => {
                                 viewPayslipHandler(employee);
                                 openPayslip();
@@ -1188,6 +1430,19 @@ const Overview = ({
                                 aria-hidden="true"
                               />
                               View Payslip
+                            </button>
+                            <button
+                              type="button"
+                              className="ml-2 inline-flex items-center rounded-md border border-transparent bg-pink-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 disabled:bg-pink-300"
+                              onClick={() => {
+                                removeFromPayrollHandler(employee);
+                              }}
+                            >
+                              <TrashIcon
+                                className="-ml-1 mr-2 h-5 w-5"
+                                aria-hidden="true"
+                              />
+                              Remove
                             </button>
                           </td>
                         </tr>

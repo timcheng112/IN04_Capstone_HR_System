@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class PayslipController {
     // ));
     // }
 
-    @GetMapping(path="/getPayslips")
+    @GetMapping(path = "/getPayslips")
     public List<Payslip> getPayslips() {
         return payslipService.getPayslips();
     }
@@ -121,9 +122,24 @@ public class PayslipController {
         return payslipService.getPayslipByUserId(userId);
     }
 
+    // @PostMapping(path = "/addPayslipToUser")
+    // public Long addPayslipToUser(@RequestParam("userId") Long userId,
+    // @RequestBody Payslip payslip) {
+    // return payslipService.addPayslipToUser(userId, payslip);
+    // }
     @PostMapping(path = "/addPayslipToUser")
     public Long addPayslipToUser(@RequestParam("userId") Long userId,
-            @RequestBody Payslip payslip) {
+            @RequestParam("monthOfPayment") Integer monthOfPayment,
+            @RequestParam("yearOfPayslip") Integer yearOfPayslip,
+            @RequestParam("dateOfPayment") String dateOfPayment, @RequestParam("grossSalary") Float grossSalary,
+            @RequestParam("basicSalary") Float basicSalary, @RequestParam("allowance") Float allowance,
+            @RequestParam("deduction") Float deduction, @RequestParam("dateGenerated") String dateGenerated) {
+                
+        LocalDate localDateOfPayment = LocalDate.parse(dateOfPayment);
+        LocalDate localDateGenerated = LocalDate.parse(dateGenerated);
+        Payslip payslip = new Payslip(monthOfPayment, yearOfPayslip, localDateOfPayment,
+                BigDecimal.valueOf(grossSalary), BigDecimal.valueOf(basicSalary),
+                BigDecimal.valueOf(allowance), BigDecimal.valueOf(deduction), localDateGenerated);
         return payslipService.addPayslipToUser(userId, payslip);
     }
 

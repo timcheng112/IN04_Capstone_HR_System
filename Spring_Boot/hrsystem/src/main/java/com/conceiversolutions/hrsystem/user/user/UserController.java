@@ -393,6 +393,16 @@ public class UserController {
         userService.sendPayslipEmails(emails, payslipMonth);
     }
 
+    // @PutMapping(path = "/payroll/editUserPayrollInformation")
+    // public void editUserPayrollInformation(@RequestParam("userId") Long userId,
+    //         @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo,
+    //         @RequestBody PayInformation payInformation) {
+    //     // userService.editUserPayrollInformation(userId, bankName, bankAccNo,
+    //     // payInformation.getAllowanceTemplates(),
+    //     // payInformation.getDeductionTemplates());
+    //     userService.editUserPayrollInformation(userId, bankName, bankAccNo, payInformation.getAllowance(),
+    //             payInformation.getDeduction());
+    // }
     @PutMapping(path = "/payroll/editUserPayrollInformation")
     public void editUserPayrollInformation(@RequestParam("userId") Long userId,
             @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo,

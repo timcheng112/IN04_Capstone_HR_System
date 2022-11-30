@@ -1,4 +1,8 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownOnSquareIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { getUserId, setUserSession } from "../../utils/Common";
 import ComboBox from "../../components/ComboBox/ComboBox";
@@ -6,6 +10,8 @@ import Navbar from "../../components/Navbar";
 import AdminSidebar from "../../components/Sidebar/Admin";
 import Tab from "../../features/jobrequest/Tab";
 import api from "../../utils/api";
+import { format, subDays } from "date-fns";
+import PayslipDocumentUrl from "../../features/payroll/PayslipDocument/PayslipDocumentUrl";
 
 const tabs = [
   { name: "Overview", href: "/payroll", current: false },
@@ -76,9 +82,22 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const EmployeePayrollHistory = () => {
+const EmployeePayrollHistory = ({ openPayslip, setPdfUrl }) => {
   const userId = getUserId();
   const [months, setMonths] = useState([]);
+  // const [pdfUrl, setPdfUrl] = useState("");
+  const [isPayslipOpen, setIsPayslipOpen] = useState(false);
+
+  const viewPayslipHandler = (month) => {
+    console.log(month.date.substring(0, 4));
+    let dateString = String(month.date);
+    api.findUserPayslipByMonth(userId, dateString).then((response) => {
+      api.getDocById(response.data.payslipPDF.docId).then((response) => {
+        const url = window.URL.createObjectURL(response.data);
+        setPdfUrl(url);
+      });
+    });
+  };
 
   useEffect(() => {
     console.log("personal payroll history sorting stuff");
@@ -122,12 +141,13 @@ const EmployeePayrollHistory = () => {
 
           let month = {
             month: monthStr,
+            date: payslip.dateGenerated,
             gross: basicStr,
             allowances: allowancesStr,
             deductions: deductionsStr,
             net: "$" + payslip.grossSalary,
             status: "PAID",
-            payslipAvailable: true,
+            payslipAvailable: payslip.payslipPDF,
           };
 
           months.push(month);
@@ -226,12 +246,15 @@ const EmployeePayrollHistory = () => {
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
                           {month.payslipAvailable ? (
-                            <a
+                            <button
                               className="text-indigo-500"
-                              href="/employee-payslip"
+                              onClick={() => {
+                                viewPayslipHandler(month);
+                                openPayslip();
+                              }}
                             >
                               View Payslip
-                            </a>
+                            </button>
                           ) : (
                             <p className="text-gray-400">View Payslip</p>
                           )}

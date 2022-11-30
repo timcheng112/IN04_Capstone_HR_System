@@ -75,8 +75,31 @@ public class AllowanceService {
     }
 
     public List<Allowance> findUserAllowanceByMonth(Long userId, LocalDate month) {
-        LocalDateTime start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 1), LocalTime.of(0,0));
-        LocalDateTime end = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), month.lengthOfMonth()), LocalTime.of(23, 59, 59));
+        LocalDateTime start;
+        LocalDateTime end;
+        // day is after 7th
+        if (month.getDayOfMonth() >= 7) {
+            start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 7),
+                    LocalTime.of(0, 0));
+            if (month.getMonthValue() == 12) {
+                end = LocalDateTime.of(
+                        LocalDate.of(month.getYear() + 1, 1, 6), LocalTime.of(23, 59, 59));
+
+            } else {
+                end = LocalDateTime.of(
+                        LocalDate.of(month.getYear(), month.getMonthValue() + 1, 6), LocalTime.of(23, 59, 59));
+            }
+        } else { //day is before the 7th, which means its still last month
+            if (month.getMonthValue() == 1) {
+                start = LocalDateTime.of(LocalDate.of(month.getYear() - 1, 12, 7),
+                    LocalTime.of(0, 0));
+            } else {
+                start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue() - 1, 7),
+                    LocalTime.of(0, 0));
+            }
+            end = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 6),
+                    LocalTime.of(23, 59, 59));
+        }
 
         List<Allowance> allowanceList = allowanceRepository.findUserAllowanceByMonth(userId, start, end);
 
@@ -89,9 +112,31 @@ public class AllowanceService {
     }
 
     public List<Allowance> findAllowanceByMonth(LocalDate month){
-        LocalDateTime start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 1), LocalTime.of(0,0));
-        LocalDateTime end = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), month.lengthOfMonth()), LocalTime.of(23, 59, 59));
+        LocalDateTime start;
+        LocalDateTime end;
+        // day is after 7th
+        if (month.getDayOfMonth() >= 7) {
+            start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 7),
+                    LocalTime.of(0, 0));
+            if (month.getMonthValue() == 12) {
+                end = LocalDateTime.of(
+                        LocalDate.of(month.getYear() + 1, 1, 6), LocalTime.of(23, 59, 59));
 
+            } else {
+                end = LocalDateTime.of(
+                        LocalDate.of(month.getYear(), month.getMonthValue() + 1, 6), LocalTime.of(23, 59, 59));
+            }
+        } else { //day is before the 7th, which means its still last month
+            if (month.getMonthValue() == 1) {
+                start = LocalDateTime.of(LocalDate.of(month.getYear() - 1, 12, 7),
+                    LocalTime.of(0, 0));
+            } else {
+                start = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue() - 1, 7),
+                    LocalTime.of(0, 0));
+            }
+            end = LocalDateTime.of(LocalDate.of(month.getYear(), month.getMonthValue(), 6),
+                    LocalTime.of(23, 59, 59));
+        }
         List<Allowance> allowanceList = allowanceRepository.findAllowanceByMonth(start, end);
 
         if (allowanceList.isEmpty()) {

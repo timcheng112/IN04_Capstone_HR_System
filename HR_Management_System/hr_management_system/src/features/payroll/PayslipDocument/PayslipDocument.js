@@ -229,7 +229,8 @@ const PayslipDocument = ({ payslipWrapper }) => {
         <View style={styles.row}>
           <Text style={styles.itemSubHeader}>Basic Salary (A)</Text>
           <Text style={styles.amount}>
-            {payslipWrapper && "$ " + payslipWrapper.payslip.basicSalary}
+            {payslipWrapper &&
+              "$ " + payslipWrapper.payslip.basicSalary.toLocaleString()}
           </Text>
         </View>
         <View style={styles.row}>
@@ -238,18 +239,17 @@ const PayslipDocument = ({ payslipWrapper }) => {
             <Text>(Breakdown shown below)</Text>
           </View>
           <Text style={styles.amount}>
-            {payslipWrapper && "$ " + payslipWrapper.payslip.allowance}
+            {payslipWrapper &&
+              "$ " + payslipWrapper.payslip.allowance.toLocaleString()}
           </Text>
         </View>
         {payslipWrapper &&
           payslipWrapper.allowances.map((allowance) => {
             return (
               <View style={styles.row}>
-                <Text style={styles.item}>
-                  {allowance.template.allowanceName}
-                </Text>
+                <Text style={styles.item}>{allowance.allowanceName}</Text>
                 <Text style={styles.amount}>
-                  {"$ " + allowance.template.amount}
+                  {"$ " + allowance.amount.toLocaleString()}
                 </Text>
               </View>
             );
@@ -264,30 +264,29 @@ const PayslipDocument = ({ payslipWrapper }) => {
             <Text>(Breakdown shown below)</Text>
           </View>
           <Text style={styles.amount}>
-            {payslipWrapper && "$ " + payslipWrapper.payslip.deduction}
+            {payslipWrapper &&
+              "$ " + payslipWrapper.payslip.deduction.toLocaleString()}
           </Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.item}>CPF Deduction:</Text>
           <Text style={styles.amount}>
-            {payslipWrapper && "$ " + payslipWrapper.cpf}
+            {payslipWrapper && "$ " + payslipWrapper.cpf.toLocaleString()}
           </Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.item}>SHG Deduction:</Text>
           <Text style={styles.amount}>
-            {payslipWrapper && "$ " + payslipWrapper.shg}
+            {payslipWrapper && "$ " + payslipWrapper.shg.toLocaleString()}
           </Text>
         </View>
         {payslipWrapper &&
           payslipWrapper.deductions.map((deduction) => {
             return (
               <View style={styles.row}>
-                <Text style={styles.item}>
-                  {deduction.template.deductionName}
-                </Text>
+                <Text style={styles.item}>{deduction.deductionName}</Text>
                 <Text style={styles.amount}>
-                  {"$ " + deduction.template.amount}
+                  {"$ " + deduction.amount.toLocaleString()}
                 </Text>
               </View>
             );
@@ -344,7 +343,7 @@ const PayslipDocument = ({ payslipWrapper }) => {
             <Text>Total Overtime Pay (E)</Text>
           </View>
           <Text style={styles.amount}>
-            {payslipWrapper && "$ " + payslipWrapper.ot.otPay}
+            {payslipWrapper && "$ " + payslipWrapper.ot.otPay.toLocaleString()}
           </Text>
         </View>
 
@@ -376,7 +375,8 @@ const PayslipDocument = ({ payslipWrapper }) => {
         <View style={styles.row}>
           <Text style={styles.itemSubHeader}>Net Pay (A+B-C+D+E)</Text>
           <Text style={styles.amount}>
-            {payslipWrapper && "$ " + payslipWrapper.payslip.grossSalary}
+            {payslipWrapper &&
+              "$ " + payslipWrapper.payslip.grossSalary.toLocaleString()}
           </Text>
         </View>
       </Page>
