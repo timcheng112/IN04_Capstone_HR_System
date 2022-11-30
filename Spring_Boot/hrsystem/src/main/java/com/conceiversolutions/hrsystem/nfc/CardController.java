@@ -1,9 +1,7 @@
 package com.conceiversolutions.hrsystem.nfc;
 
 
-import com.conceiversolutions.hrsystem.user.user.User;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
@@ -15,8 +13,18 @@ public class CardController {
     private final CardService cardService;
 
     @GetMapping(path= "/nfc")
-    public String NFC(boolean check){
-        return cardService.NFC(check);
+    public String NFC(){
+        return cardService.NFC();
+    }
+
+    @PutMapping("toggleAttendance")
+    public String toggleAttendance(@RequestParam("toggle") Boolean toggle) {
+        return cardService.toggleAttendance(toggle);
+    }
+
+    @PutMapping("assignCardtoUser")
+    public String assignCardtoUser(@RequestParam("userId") Long userId ) {
+        return cardService.assignCardtoUser(userId);
     }
 
 //    @PostMapping(path="/assignCard")

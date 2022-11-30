@@ -73,6 +73,7 @@ import PromotionRequestPage from "./pages/Performance/promotionRequest";
 import MyBenefitsPage from "./pages/Benefit/index";
 import BenefitsPage from "./pages/Benefit/indexHR";
 import ClaimsPage from "./pages/Benefit/claim";
+import ToggleNFC from "./pages/NFC/ToggleNFC";
 
 function App() {
   return (
@@ -263,6 +264,7 @@ function App() {
           <PrivateRoute exact path="/welfare/mybenefits" component={MyBenefitsPage} />
           <PrivateRoute exact path="/welfare/benefits" component={BenefitsPage} />
           <PrivateRoute exact path="/welfare/claims" component={ClaimsPage} />
+          <PrivateRoute exact path="/attendance/NFC" component={ToggleNFC}/>
         </Switch>
       </div>
     </BrowserRouter>

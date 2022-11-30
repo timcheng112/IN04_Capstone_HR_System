@@ -199,25 +199,7 @@ export default function ProfileScreen({ navigation }) {
         </View></ImageBackground>
 
 
-    
-        {/* <Card style={Styles.container}>
-        <Card.Content>
-          <Title>Company Card</Title>
-        </Card.Content>
-        <Card.Cover 
-          source={{
-            uri: "https://www.worldfuturecouncil.org/wp-content/uploads/2020/06/blank-profile-picture-973460_1280-1-705x705.png",
-        }}
-        />
-        <>
-          <Card.Content>
-            <Paragraph>{user.firstName}</Paragraph>
-          </Card.Content>
-          <Card.Actions>
-           
-          </Card.Actions>
-        </>
-      </Card> */}
+
       </>
     )
   );

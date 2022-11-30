@@ -194,63 +194,14 @@ export default function UpdateProfile({ navigation, userId }) {
           </Button>
           
           </Card>
-          {/* <View style={Styles.textContainer}>
-          <Button
-            icon="account"
-            mode="contained"
-            buttonColor="blue"
-            onPress={() => {
-              // actionCheckIn()
-              console.log("Clock-in");
-
-            }}
-          >
-            Update profile
-          </Button>
-       
-            </View> */}
+   
 
           <View style={Styles.textContainer}>
               <Text style={Styles.text}>Leaving scanning space for NFC/QR</Text>
-              {/* <Image style={Styles.image} source={{
-                uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/800px-QR_code_for_mobile_English_Wikipedia.svg.png",
-              }}></Image> */}
+             
             </View>
-
-          {/* <View style={Styles.container}>
-            <Image
-              style={Styles.image}
-              source={{
-                uri: "https://www.worldfuturecouncil.org/wp-content/uploads/2020/06/blank-profile-picture-973460_1280-1-705x705.png",
-              }}
-            />
-
-            <View style={Styles.textContainer}>
-              <Text style={Styles.text}></Text>
-            </View>
-          </View> */}
         </View></ImageBackground>
 
-
-    
-        {/* <Card style={Styles.container}>
-        <Card.Content>
-          <Title>Company Card</Title>
-        </Card.Content>
-        <Card.Cover 
-          source={{
-            uri: "https://www.worldfuturecouncil.org/wp-content/uploads/2020/06/blank-profile-picture-973460_1280-1-705x705.png",
-        }}
-        />
-        <>
-          <Card.Content>
-            <Paragraph>{user.firstName}</Paragraph>
-          </Card.Content>
-          <Card.Actions>
-           
-          </Card.Actions>
-        </>
-      </Card> */}
       </>
     )
   );

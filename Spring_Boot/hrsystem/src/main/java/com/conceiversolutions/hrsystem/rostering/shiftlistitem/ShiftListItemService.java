@@ -244,4 +244,21 @@ public class ShiftListItemService {
     public List<ShiftListItem> getUserShiftListItems(Long userId){
         return shiftListItemRepository.findShiftListItemByUserId(userId);
     }
+
+    public List<ShiftListItem> getShiftsListItemsToday(){
+        LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
+        ShiftListItem shiftListItem = null;
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByDate(start, end);
+
+        for (ShiftListItem s : shiftListItems) {
+            if (s != null) {
+                s.getShift().setRoster(null);
+                s.getShift().setShiftListItems(new ArrayList<>());
+                s.getUser().nullify();
+            }
+        }
+        return shiftListItems;
+    }
 }

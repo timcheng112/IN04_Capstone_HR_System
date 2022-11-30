@@ -183,6 +183,9 @@ public class User implements UserDetails {
     private Integer rewardPoints;
     @OneToMany(fetch = FetchType.LAZY, targetEntity = BenefitPlanInstance.class, mappedBy = "planOwner")
     private List<BenefitPlanInstance> benefitPlanInstances;
+
+    @Column(name="card_UUID")
+    private String cardUUID;
     // TODO add on other relationships to other classes
 
     public User() {
@@ -211,6 +214,8 @@ public class User implements UserDetails {
         this.rewardPoints = 0;
         this.benefitPlanInstances = new ArrayList<>();
     }
+
+
 
     // this should be for making a new applicant's account
     // public User(String firstName, String lastName, String password, Integer phone, String email, LocalDate dob,

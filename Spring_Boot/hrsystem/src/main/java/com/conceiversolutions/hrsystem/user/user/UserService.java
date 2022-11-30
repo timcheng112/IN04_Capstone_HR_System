@@ -94,6 +94,7 @@ public class UserService implements UserDetailsService {
 
     private final ShiftListItemRepository shiftListItemRepository;
 
+
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
     // emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -1740,7 +1741,9 @@ public class UserService implements UserDetailsService {
         int clockedMonth = attendance.get("clockedMonth");
 
         User u1 = getUser(userId);
-        List<ShiftListItem> sli = u1.getShiftListItems();
+//        List<ShiftListItem> sli = u1.getShiftListItems();
+        List<ShiftListItem> sli = shiftListItemService.getUserShiftsListItemsMonth(userId);
+
         Integer absent = 0;
         if (!sli.isEmpty()) {
 
@@ -1749,27 +1752,39 @@ public class UserService implements UserDetailsService {
                 int totalHours = 0;
                 // tim said even if they are absent, they will still have sli...
                 // so i have to check if check in time is there
-                if (!i.getCheckInTiming().equals(null)) {
+                if (i.getCheckInTiming() !=null ) {
                     shiftAttended += 1;
                     LocalDateTime dt1 = i.getCheckInTiming();
-                    LocalDateTime dt2 = i.getCheckOutTiming();
+//                    Long h = ChronoUnit.HOURS.between (i.getCheckInTiming(), LocalDateTime.now());
+                    if (i.getCheckOutTiming() == null || i.getCheckInTiming().toLocalDate().isBefore(LocalDate.now())) {
+                        LocalDateTime start = i.getShift().getStartTime();
+                        LocalDateTime end = i.getShift().getEndTime();
+                        Long hours = ChronoUnit.HOURS.between(start, end);
+                        totalHours += hours.intValue();
+                    } else {
+                        //if it is not null, get the checkout timing
+                        LocalDateTime dt2 = i.getCheckOutTiming();
+//                        LocalDateTime start = i.getShift().getStartTime();
+//                        LocalDateTime end = i.getShift().getEndTime();
+                        Long hours = ChronoUnit.HOURS.between(dt1, dt2);
+                        totalHours += hours.intValue();
+                    }
+                    System.out.println("hours:" + totalHours);
+//                }
 
-                    // LocalDateTime timeWorked = dt2 - dt1;
-                    // Chronos hours return Long
-                    // lunch break included
-                    // https://stackoverflow.com/questions/25747499/java-8-difference-between-two-localdatetime-in-multiple-units
-                    // https://docs.oracle.com/javase/tutorial/datetime/iso/period.html
-                    // dont use minus(). gives u back 1 LDT and u have to translate again :(
+//                    LocalDateTime start = i.getShift().getStartTime();
+//                    LocalDateTime end = i.getShift().getEndTime();
+//                    Long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), dt2);
 
-                    Long hours = ChronoUnit.HOURS.between(dt1, dt2);
+
+
+//                    if(dt1 != null) if not null, add the shifts hours
+//                    Long hours = ChronoUnit.HOURS.between(dt1, dt2);
+
+
                     // Integer clocked = hours.intValue() - 1;
-                    totalHours = hours.intValue();
-                    // need to check with shift which kind of shift is it. event or normal for
-                    // payroll.
-                    // normal employee so monthly. no need to care.
-                    // if (totalHours > 8) {
-                    // ot = totalHours - 8;
-                    // }
+//                    totalHours = hours.intValue();
+
 
                     // count for days in month
                     String monthOfName = "";
@@ -1797,12 +1812,12 @@ public class UserService implements UserDetailsService {
                     // clockedMonth += forOneMonth;
                     clockedMonth += totalHours;
 
-                    // attendance.put("OT", ot);
+                    // attendance.put("OT", ot)vr;
                     // attendance.put("totalHours", totalHours);
 
                 } else {
                     // absent so total hours =0
-                    absent += 1;
+//                    absent += 1; =-------- maybe it is cos it is not time yet?
                     // Integer totalHoursinInteger = totalHours;
                     // attendance.put("totalHours", totalHoursinInteger);
 
@@ -1866,6 +1881,7 @@ public class UserService implements UserDetailsService {
                     shiftAttended += 1;
                     LocalDateTime dt1 = i.getCheckInTiming();
                     LocalDateTime dt2 = i.getCheckOutTiming();
+
 
                     // LocalDateTime timeWorked = dt2 - dt1;
                     // Chronos hours return Long
