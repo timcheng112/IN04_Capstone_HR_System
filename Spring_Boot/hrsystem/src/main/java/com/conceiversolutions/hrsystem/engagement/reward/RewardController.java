@@ -38,11 +38,9 @@ public class RewardController {
                              @RequestParam("description") String description,
                              @RequestParam("pointsRequired") Integer pointsRequired,
                              @RequestParam("expiryDate") String expiryDate,
-                             @RequestParam("rewardTrackId") Long rewardTrackId
-//                             @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-                                ) throws IOException {
-//        DocData image = docDataService.uploadDoc(file);
-        return rewardService.addNewReward(name, description, pointsRequired, LocalDate.parse(expiryDate), rewardTrackId);
+                             @RequestParam("rewardTrackId") Long rewardTrackId,
+                             @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        return rewardService.addNewReward(name, description, pointsRequired, LocalDate.parse(expiryDate), rewardTrackId, file);
     }
 
     @PutMapping("editReward")

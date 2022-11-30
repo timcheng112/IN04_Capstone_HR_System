@@ -36,21 +36,21 @@ public class Reward {
     @ManyToOne
     @JoinColumn(name="reward_track_id")
     private RewardTrack rewardTrack;
-//    @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
-//    @JoinColumn(name="reward_image")
-//    private DocData image;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = DocData.class)
+    @JoinColumn(name="reward_image")
+    private DocData image;
     @OneToMany(targetEntity = RTRewardInstance.class, fetch = FetchType.LAZY, mappedBy = "reward")
     private List<RTRewardInstance> rewardInstances;
 
     //constructors
-    public Reward(String name, String description, Integer pointsRequired, LocalDate expiryDate, RewardTrack rewardTrack) {
+    public Reward(String name, String description, Integer pointsRequired, LocalDate expiryDate, RewardTrack rewardTrack, DocData img) {
         this();
         this.name = name;
         this.description = description;
         this.expiryDate = expiryDate;
         this.rewardTrack = rewardTrack;
         this.pointsRequired = pointsRequired;
-
+        this.image = img;
     }
 
     public Reward() {
