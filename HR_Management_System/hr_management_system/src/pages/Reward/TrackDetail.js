@@ -151,7 +151,7 @@ export default function TrackDetail() {
                       id="title"
                       required
                       placeholder="0.00"
-                      value={ratio}
+                      value={ratio.toFixed(2)}
                       className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       onChange={(e) => setRatio(e.target.value)}
                     />
@@ -185,7 +185,7 @@ export default function TrackDetail() {
                     className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-10"
                   >
                     <PlusIcon
-                      className="md:-ml-0.5 md:mr-2 h-4 w-4"
+                      className="md:-ml-2 md:mr-2 h-4 w-4"
                       aria-hidden="true"
                     />
                     Add

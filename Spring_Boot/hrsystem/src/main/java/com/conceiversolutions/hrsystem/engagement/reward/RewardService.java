@@ -50,8 +50,8 @@ public class RewardService {
         System.out.println("name = " + name + ", description = " + description + ", pointsRequired = " + pointsRequired + ", expiryyDate = " + expiryDate + ", rewardTrackId = " + rewardTrackId);
         RewardTrack rt = rewardTrackService.getRewardTrack(rewardTrackId);
 
-        if (expiryDate.isBefore(LocalDate.now())) {
-            throw new IllegalStateException("Expiry Date has past");
+        if (expiryDate.isBefore(rt.getEndDate())) {
+            throw new IllegalStateException("Can't add a reward that will expire before the end of the Reward Track");
         }
 
         for (Reward r : rt.getRewards()) {
@@ -81,12 +81,12 @@ public class RewardService {
         System.out.println("RewardService.editReward");
         System.out.println("name = " + name + ", description = " + description + ", pointsRequired = " + pointsRequired + ", expiryDate = " + expiryDate + ", rewardId = " + rewardId);
 
-        if (expiryDate.isBefore(LocalDate.now())) {
-            throw new IllegalStateException("Expiry Date has past");
-        }
-
         Reward reward = getReward(rewardId);
         RewardTrack rt = reward.getRewardTrack();
+
+        if (expiryDate.isBefore(rt.getEndDate())) {
+            throw new IllegalStateException("Can't add a reward that will expire before the end of the Reward Track");
+        }
 
         for (Reward r : rt.getRewards()) {
             if (Objects.equals(r.getPointsRequired(), pointsRequired) && !rewardId.equals(r.getRewardId())) {
@@ -152,10 +152,10 @@ public class RewardService {
             leaveQuotaRepository.save(lq);
             System.out.println("Leave credited from " + current + " to " + lq.getANL());
             output ="Leave credited from " + current + " to " + lq.getANL();
-        } else if (reward.getName().contains("Voucher")) { // voucher
+        } else { // voucher
             // send an email to ask them to take it from there
-            System.out.println("Voucher for " + reward.getDescription() + " sent to email");
-            output = "Voucher for " + reward.getDescription() + " sent to email";
+            System.out.println(reward.getDescription() + " sent to email");
+            output = reward.getDescription() + " has been sent to email";
             emailSender.send(employee.getWorkEmail(), buildVoucherEmail(employee.getFirstName(), reward), "Reward Redemption");
         }
 

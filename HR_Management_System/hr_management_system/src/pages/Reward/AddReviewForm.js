@@ -17,14 +17,14 @@ export default function NewReviewForm() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
-  const [rate, setRate] = useState(1);
+  const [rate, setRate] = useState(3);
   const [justification, setJustification] = useState("");
   const [team, setTeam] = useState("");
 
   function submit(){
     console.log(department)
     api.submitReviewForm(name, rate, justification, department.departmentId, team) 
-    .then(() => {alert("Successfully submit.");})
+    .then(() => {alert("Thank you, Employee Review Form has been Successfully Submitted!");})
     .catch((error) => setError(error));
     history.push("/")
   }
@@ -42,7 +42,7 @@ export default function NewReviewForm() {
             <div className="space-y-6 sm:space-y-5">
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="justification" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                  Employee Name
+                  Employee Name*
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
                   <input
@@ -57,15 +57,15 @@ export default function NewReviewForm() {
                 </div>
               </div>
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                <label htmlFor="justification" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                  Rate
+                <label htmlFor="rating" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                  Rating (0 to 5)*
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
                   <input
-                    id="justification"
-                    name="justification"
+                    id="rating"
+                    name="rating"
                     type='number'
-                    min='1'
+                    min='0'
                     max='5'
                     required
                     value={rate}
@@ -94,7 +94,7 @@ export default function NewReviewForm() {
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="department" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                  Department
+                  Department*
                 </label>
                 <Department selectedDepartment={department} setSelectedDepartment={setDepartment}/>
               </div>
@@ -102,7 +102,7 @@ export default function NewReviewForm() {
 
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label htmlFor="department" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                  Team
+                  Team (Optional)
                 </label>
                 <div className="mt-1 sm:col-span-2 sm:mt-0">
                   <input

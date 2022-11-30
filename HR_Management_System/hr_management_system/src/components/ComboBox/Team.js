@@ -56,6 +56,7 @@ export default function Team({department,selectedTeam, setSelectedTeam}) {
               <Combobox.Option
                 key={team.teamName}
                 value={team}
+                required
                 className={({ active }) =>
                   classNames(
                     'relative cursor-default select-none py-2 pl-3 pr-9',

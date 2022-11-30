@@ -62,8 +62,8 @@ export default function AddNewRewardTrack({ open, setOpen }) {
     var helpendDate = (endDate.getYear() + 1900) + "-" + emonth + "-" + edate;
 
     api.addRewardTrack(name, helpstartDate.trim(), helpendDate.trim(), department.departmentId, ratio)
-      .then(() => { alert("Successfully add new reward track."); })
-      .catch((error) => setError(error));
+      .then(() => { alert("Successfully added new Reward Track."); })
+      .catch((error) => alert(error.response.data.message));
 
       setOpen(false);
   }

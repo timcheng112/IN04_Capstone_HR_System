@@ -42,8 +42,8 @@ export default function AddNewReward({ open, setOpen,track }) {
     var helpexpiryDate = (expiryDate.getYear() + 1900) + "-" + month + "-" + date;
 
     api.addNewReward(name, description, points, helpexpiryDate.trim(), track.rewardTrackId)
-    .then(() => {alert("Successfully add.");})
-    .catch((error) => setError(error));
+        .then(() => {alert("Successfully added reward to the Reward Track");})
+        .catch((error) => alert(error.response.data.message));
     setOpen(false);
   }
 
@@ -164,7 +164,7 @@ export default function AddNewReward({ open, setOpen,track }) {
                         onClick={() => add()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
-                        Submit
+                        Add
                       </button>
                     </div>
                   </form>

@@ -60,7 +60,7 @@ export default function Employee({department,selectedEmployee, setSelectedEmploy
               >
                 {({ active, selected }) => (
                   <>
-                    <span className={classNames('block truncate', selected && 'font-semibold')}>{employee.firstName}</span>
+                    <span className={classNames('block truncate', selected && 'font-semibold')}>{employee.firstName} {employee.lastName}</span>
 
                     {selected && (
                       <span

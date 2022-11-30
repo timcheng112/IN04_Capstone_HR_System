@@ -31,10 +31,14 @@ export default function VetReviewForm({ open, setOpen, review }) {
 
 
   function vet() {
-    api.vetReviewForm(employee.userId, review.reviewFormId, department.departmentId, team.teamId)
-      .then(() => { alert("Successfully vet."); })
-      .catch((error) => setError(error));
-    setOpen(false)
+    if (team === null) {
+        alert("Please select a team")
+    } else {
+        api.vetReviewForm(employee.userId, review.reviewFormId, department.departmentId, team.teamId)
+          .then(() => { alert("Successfully Vetted"); })
+          .catch((error) => alert(error.response.data.message));
+        setOpen(false)
+    }
   }
 
 
@@ -128,7 +132,7 @@ export default function VetReviewForm({ open, setOpen, review }) {
                         onClick={() => vet()}
                         className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
-                        Vet
+                        Vet Form
                       </button>
                     </div>
                   </form>

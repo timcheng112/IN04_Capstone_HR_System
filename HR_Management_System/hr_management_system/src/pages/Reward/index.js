@@ -24,7 +24,7 @@ export default function Reward() {
   const tabs = [
     { name: "Reward Tracks", href: "#", current: true },
     {
-      name: "Review Forms",
+      name: "Department Review Forms",
       href: "/welfare/reviewform",
       current: false,
     },
@@ -121,7 +121,7 @@ export default function Reward() {
                             </td>
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{track.startDate}</td>
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{track.endDate}</td>
-                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{track.pointsRatio}</td>
+                            <td className=" whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">{track.pointsRatio.toFixed(2)}</td>
                             <td className=" whitespace-nowrap px-3 py-4 text-left text-sm">
                               {track.isActive && <span className=" whitespace-nowrap inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800">
                                 Active

@@ -31,8 +31,8 @@ export default function ReviewFormOption({ review }) {
 
   function reject(){
     api.voidReviewForm(review.reviewFormId)
-    .then(() => {alert("Successfully void.");})
-    .catch((error) => setError(error));
+    .then(() => {alert("Successfully Voided");})
+    .catch((error) => alert(error.response.data.message));
   }
   
   return (

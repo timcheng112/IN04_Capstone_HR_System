@@ -19,7 +19,7 @@ export default function Review() {
   const tabs = [
     { name: "Reward Tracks", href: "/welfare/rewardtrack", current: false },
     {
-      name: "Review Forms",
+      name: "Department Review Forms",
       href: "#",
       current: true,
     },
