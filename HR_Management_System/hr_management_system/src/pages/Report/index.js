@@ -12,32 +12,12 @@ export default function Report() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [employee, setEmployee] = useState(0);
-  const [claim, setClaim] = useState(false);
+  const [departments, setDepartments] = useState([]);
+  const [departmentCount, setDepartmentCount] = useState([]);
   const history = useHistory();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [option1, setOption1]= useState(null);
 
-
-  const option1 = {
-    series: [
-      {
-        type: 'pie',
-        data: [
-          {
-            value: 335,
-            name: 'Department 1',
-          },
-          {
-            value: 234,
-            name: 'Department 2'
-          },
-          {
-            value: 1548,
-            name: 'Department 3'
-          }
-        ],
-      }
-    ]
-  };
 
   const option2 = {
     xAxis: {
@@ -84,10 +64,63 @@ export default function Report() {
       })
       .catch((error) => setError(error));
   }, []);
+  useEffect(() => {
+    api
+      .getAllDepartments()
+      .then((response) => {
+        setDepartments(response.data);
+        department(response.data);
+      })
+      .catch((error) => setError(error));
+    
+  }, []);
+
+  function department(depts){
+    let helpList = [];
+    depts.forEach((d) =>{
+      api.getEmployeesByDepartment(d.departmentId)
+      .then((response) => {
+        console.log(response.data)
+        helpList.push({"value": response.data.length,"name": d.departmentName})
+      })
+      .catch((error) => setError(error));
+    });
+    console.log(helpList);
+    setDepartmentCount(helpList);
+    setOption1({
+      series: [
+        {
+          type: 'pie',
+          data: helpList,
+        }
+      ]
+    });  
+  }
+  // const option1 = {
+  //   series: [
+  //     {
+  //       type: 'pie',
+  //       data: [
+  //         {
+  //           value: 335,
+  //           name: 'Department 1',
+  //         },
+  //         {
+  //           value: 234,
+  //           name: 'Department 2'
+  //         },
+  //         {
+  //           value: 1548,
+  //           name: 'Department 3'
+  //         }
+  //       ],
+  //     }
+  //   ]
+  // };
 
 
   return (
-    <div className="">
+    option1 && <div className="">
       <Navbar />
       <div className="py-10">
         <main className="flex-1">
