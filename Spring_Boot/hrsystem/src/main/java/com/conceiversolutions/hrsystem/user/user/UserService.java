@@ -2685,7 +2685,8 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("User does not exist.");
             }
 
-            emailSender.send(email, buildPayslipEmail(tempUser.getFirstName(), payslipMonth));
+            emailSender.send(email, buildPayslipEmail(tempUser.getFirstName(), payslipMonth),
+                    "Libro Payslip Available for View!");
         }
     }
 
@@ -2797,7 +2798,7 @@ public class UserService implements UserDetailsService {
         for (Allowance allowance : allowances) {
             System.out.println("*******ALLOWANCE: " + allowance + " *******");
             // AllowanceTemplate savedAllowanceTemplate = allowanceTemplateRepository
-            //         .saveAndFlush(allowance.getTemplate());
+            // .saveAndFlush(allowance.getTemplate());
             Allowance savedAllowance = allowanceRepository.saveAndFlush(allowance);
             user.getCurrentPayInformation().addAllowance(savedAllowance);
             // user.getCurrentPayInformation().addAllowanceTemplate(savedAllowanceTemplate);
@@ -2806,7 +2807,7 @@ public class UserService implements UserDetailsService {
         for (Deduction deduction : deductions) {
             System.out.println("*******DEDUCTION: " + deduction + " *******");
             // DeductionTemplate savedDeductionTemplate = deductionTemplateRepository
-            //         .saveAndFlush(deduction.getTemplate());
+            // .saveAndFlush(deduction.getTemplate());
             Deduction savedDeduction = deductionRepository.saveAndFlush(deduction);
             user.getCurrentPayInformation().addDeduction(savedDeduction);
             // user.getCurrentPayInformation().addDeductionTemplate(savedDeductionTemplate);

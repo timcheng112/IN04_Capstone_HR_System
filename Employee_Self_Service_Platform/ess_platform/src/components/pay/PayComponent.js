@@ -36,6 +36,7 @@ const PayComponent = () => {
   const [refresh, setRefresh] = useState(false);
   const [viewPdf, setViewPdf] = useState(false);
   const [pdfUri, setPdfUri] = useState("");
+  const [userPayInfo, setUserPayInfo] = useState(null);
 
   // TO RETRIEVE USERID OF LOGGED IN USER
   useEffect(() => {
@@ -63,6 +64,19 @@ const PayComponent = () => {
         );
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (userId !== null) {
+      api
+        .getUserPayInformation(userId)
+        .then((response) => setUserPayInfo(response.data))
+        .catch((err) =>
+          console.log(
+            "Error in fetching user pay information for userID: " + userId
+          )
+        );
+    }
+  });
 
   // TO RETRIEVE LOGGED IN USER's PAYSLIPS
   useEffect(() => {
@@ -278,7 +292,10 @@ const PayComponent = () => {
             resizeMode="contain"
           />
         ) : toggleValue === "My Pay Information" ? (
-          <PayInformationComponent user={user && user} />
+          <PayInformationComponent
+            user={user && user}
+            userPayInfo={userPayInfo && userPayInfo}
+          />
         ) : (
           <View
             style={{

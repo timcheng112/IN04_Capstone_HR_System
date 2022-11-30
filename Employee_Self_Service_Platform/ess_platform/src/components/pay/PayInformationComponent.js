@@ -6,7 +6,7 @@ import { Entypo } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const PayInformationComponent = ({ user }) => {
+const PayInformationComponent = ({ user, userPayInfo }) => {
   return (
     <View style={{ marginTop: "4%" }}>
       <Card
@@ -85,14 +85,22 @@ const PayInformationComponent = ({ user }) => {
         />
         <Card.Title
           title="Basic Monthly Salary"
-          subtitle="$10,000"
+          subtitle={
+            userPayInfo && userPayInfo.basicSalary
+              ? "$" + userPayInfo.basicSalary
+              : "-"
+          }
           titleStyle={{ fontSize: 12, fontFamily: "Poppins_400Regular" }}
           subtitleStyle={{ fontSize: 16, fontFamily: "Poppins_400Regular" }}
         />
         <View style={{ display: "flex", flexDirection: "row", marginTop: -10 }}>
           <Card.Title
             title="Basic Hourly"
-            subtitle="$14"
+            subtitle={
+              userPayInfo && userPayInfo.basicHourlyPay
+                ? "$" + userPayInfo.basicHourlyPay
+                : "-"
+            }
             titleStyle={{ fontSize: 12, fontFamily: "Poppins_400Regular" }}
             subtitleStyle={{
               fontSize: 16,
@@ -102,7 +110,11 @@ const PayInformationComponent = ({ user }) => {
           />
           <Card.Title
             title="Weekend/PH Hourly"
-            subtitle="$28"
+            subtitle={
+              userPayInfo && userPayInfo.basicHourlyPay
+                ? "$" + userPayInfo.basicHourlyPay * 1.5
+                : "-"
+            }
             titleStyle={{ fontSize: 12, fontFamily: "Poppins_400Regular" }}
             subtitleStyle={{
               fontSize: 16,
@@ -114,7 +126,11 @@ const PayInformationComponent = ({ user }) => {
         <View style={{ display: "flex", flexDirection: "row", marginTop: -10 }}>
           <Card.Title
             title="OT Hourly"
-            subtitle="$28"
+            subtitle={
+              userPayInfo && userPayInfo.basicHourlyPay
+                ? "$" + userPayInfo.basicHourlyPay * 1.5
+                : "-"
+            }
             titleStyle={{ fontSize: 12, fontFamily: "Poppins_400Regular" }}
             subtitleStyle={{
               fontSize: 16,
@@ -124,7 +140,7 @@ const PayInformationComponent = ({ user }) => {
           />
           <Card.Title
             title="Commission per sale"
-            subtitle="$5"
+            subtitle="20%"
             titleStyle={{ fontSize: 12, fontFamily: "Poppins_400Regular" }}
             subtitleStyle={{
               fontSize: 16,
