@@ -373,7 +373,7 @@ public class UserService implements UserDetailsService {
             employee.setLeaveQuotas(new ArrayList<>());
             employee.setCurrentLeaveQuota(null);
             employee.setQualificationInformation(null);
-
+            employee.setBenefitPlanInstances(new ArrayList<>());
             // employee.setTeams(new ArrayList<>());
 
             // List<Team> teams = employee.getTeams();
@@ -1347,6 +1347,7 @@ public class UserService implements UserDetailsService {
             u.setCurrentPosition(tempPosition);
             u.setPayslips(tempPayslips);
             u.setShiftListItems(tempShiftListItems);
+            u.setBenefitPlanInstances(new ArrayList<>());
         }
         return employees;
     }
@@ -2429,29 +2430,30 @@ public class UserService implements UserDetailsService {
     public List<User> getEmployeesByDepartment(Long departmentId) {
         List<User> users = userRepository.getEmployeesByDepartment(departmentId);
         for (User user : users) {
-            user.setTeams(new ArrayList<>());
-            user.setQualificationInformation(null);
-            user.setBlocks(new ArrayList<>());
-            user.setShiftListItems(new ArrayList<>());
-            user.setSwapRequestsReceived(new ArrayList<>());
-
-            user.setSwapRequestsRequested(new ArrayList<>());
-            user.setReactivationRequest(null);
-            user.setAttendances(new ArrayList<>());
-            user.setCurrentPayInformation(null);
-            user.setEmployeeAppraisals(new ArrayList<>());
-
-            user.setManagerAppraisals(new ArrayList<>());
-            user.setManagerReviews(new ArrayList<>());
-            user.setEmployeeReviews(new ArrayList<>());
-            user.setApplications(new ArrayList<>());
-            user.setPositions(new ArrayList<>());
-
-            user.setJobRequests(new ArrayList<>());
-            user.setLeaves(new ArrayList<>());
-            user.setLeaveQuotas(new ArrayList<>());
-            user.setCurrentLeaveQuota(null);
-            user.setTaskListItems(new ArrayList<>());
+//            user.setTeams(new ArrayList<>());
+//            user.setQualificationInformation(null);
+//            user.setBlocks(new ArrayList<>());
+//            user.setShiftListItems(new ArrayList<>());
+//            user.setSwapRequestsReceived(new ArrayList<>());
+//
+//            user.setSwapRequestsRequested(new ArrayList<>());
+//            user.setReactivationRequest(null);
+//            user.setAttendances(new ArrayList<>());
+//            user.setCurrentPayInformation(null);
+//            user.setEmployeeAppraisals(new ArrayList<>());
+//
+//            user.setManagerAppraisals(new ArrayList<>());
+//            user.setManagerReviews(new ArrayList<>());
+//            user.setEmployeeReviews(new ArrayList<>());
+//            user.setApplications(new ArrayList<>());
+//            user.setPositions(new ArrayList<>());
+//
+//            user.setJobRequests(new ArrayList<>());
+//            user.setLeaves(new ArrayList<>());
+//            user.setLeaveQuotas(new ArrayList<>());
+//            user.setCurrentLeaveQuota(null);
+//            user.setTaskListItems(new ArrayList<>());
+            user.nullify();
         }
         return users;
     }
@@ -2525,6 +2527,7 @@ public class UserService implements UserDetailsService {
             employee.setLeaves(new ArrayList<>());
             employee.setLeaveQuotas(new ArrayList<>());
             employee.setCurrentLeaveQuota(null);
+            employee.setBenefitPlanInstances(new ArrayList<>());
         }
         return filteredEmployees;
     }
