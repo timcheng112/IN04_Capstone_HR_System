@@ -50,68 +50,69 @@ const styles = StyleSheet.create({
   }
 });
 
-const ClaimDetailScreen = ({ navigation}) => {
+const LeaveDetailScreen = ({ navigation}) => {
 
   const route = useRoute();
   const [userId, setUserId] = useState();
-  const [claim, setClaim] = useState();
+  const [leave, setLeave] = useState();
 
 
   useEffect(() => {
-    setClaim(route.params.claim);
-    console.log(route.params.claim);
+    setLeave(route.params.leave);
+    console.log(route.params.leave);
   }, []);
 
-  function withdraw(){
-    api.withdrawClaim(claim.claimId)
+  function cancel(){
+    api.cancelLeave(leave.leaveId)
       .then(() => {
-        alert("Successfully withdrawn.");
+        alert("Successfully cancel.");
         setOpen(false);
         })
     .catch((error) => setError(error));
+    navigation.navigate('Leave');
   }
 
 
   return (
-    claim && <SafeAreaView style={styles.container}>
+    leave && <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.inline}>
-          <Text style={styles.title}>BenefitPlan Name:    </Text>
-          <Text>{claim.benefitPlanInstance.benefitPlan.planName}</Text>
+          <Text style={styles.title}>Leave Type:    </Text>
+          <Text>{leave.leaveType}</Text>
+        </View>
+        <View style={styles.inline}>
+          <Text style={styles.title}>Start Date:    </Text>
+          <Text>{leave.startDate}</Text>
+        </View>
+        <View style={styles.inline}>
+          <Text style={styles.title}>End Date:    </Text>
+          <Text>{leave.endDate}</Text>
         </View>
         <View style={styles.inline}>
           <Text style={styles.title}>Remarks:    </Text>
-          <Text>{claim.remarks}</Text>
+          <Text>{leave.applicationRemarks}</Text>
         </View>
         <View style={styles.inline}>
-          <Text style={styles.title}>Claim Amount:    $ </Text>
-          <Text>{claim.claimAmount}</Text>
-        </View>
+          <Text style={styles.title}>Application Date:    </Text>
+          <Text>{leave.applicationDate}</Text>
+        </View>        
         <View style={styles.inline}>
-          <Text style={styles.title}>Claim Date:    </Text>
-          <Text>{claim.claimDate}</Text>
-        </View>
-        <View style={styles.inline}>
-          <Text style={styles.title}>Incident Date:    </Text>
-          <Text>{claim.incidentDate}</Text>
-        </View>
-        <View style={styles.inline}>
-          <Text style={styles.title}>Claim Status:    </Text>
-          <Text>{claim.claimStatus}</Text>
+          <Text style={styles.title}>Application Status:    </Text>
+          <Text>{leave.status}</Text>
         </View>
 
         <View style={styles.button}>
           <Button
             mode="contained"
             color="#1e90ff"
-            onPress={() => navigation.navigate('Claims')}>
+            onPress={() => navigation.navigate('Leave')}>
             Back
           </Button>
-          {claim.claimStatus === "PENDING" && <Button
+          {leave.status === "PENDING" && <Button
             mode="contained"
             color="#0000cd"
-            onPress={() => withdraw()}>
-            Withdraw
+            onPress={()=>cancel()}>
+            Cancel
           </Button>}
         </View>
       </View>
@@ -120,4 +121,4 @@ const ClaimDetailScreen = ({ navigation}) => {
   )
 };
 
-export default ClaimDetailScreen;
+export default LeaveDetailScreen;

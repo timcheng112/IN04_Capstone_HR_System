@@ -98,13 +98,13 @@ const PlanDetailScreen = ({ navigation}) => {
         <View style={styles.button}>
           <Button
             mode="contained"
-            color="#daa520"
+            color="#1e90ff"
             onPress={() => navigation.navigate('Benefits')}>
             Back
           </Button>
           {plan.isActive === true &&<Button
             mode="contained"
-            color="#ffd700"
+            color="#0000cd"
             onPress={() => navigation.navigate('NewClaim', { userId, plan })}>
             Claim
           </Button>}
