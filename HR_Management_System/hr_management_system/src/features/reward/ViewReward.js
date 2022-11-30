@@ -18,9 +18,16 @@ export default function ViewReward({ open, setOpen, reward }) {
   const [expiryDate, setExpiryDate] = useState(new Date());
   const [userId, setUserId] = useState(getUserId());
   const [error, setError] = useState();
+  const [rewardImg, setRewardImg] = useState(null);
 
   useEffect(() => {
     setExpiryDate(new Date(reward.expiryDate));
+    if (reward.img !== null) {
+        api.getDocById(reward.image.docId).then((response) => {
+            const url = window.URL.createObjectURL(response.data);
+            setRewardImg(url);
+        })
+    }
   }, [open]);
 
   function save(){
@@ -64,7 +71,7 @@ export default function ViewReward({ open, setOpen, reward }) {
                     <div className="h-0 flex-1 overflow-y-auto">
                       <div className="bg-indigo-700 py-6 px-4 sm:px-6">
                         <div className="flex items-center justify-between">
-                          <Dialog.Title className="text-lg font-medium text-white">Benefit Plan</Dialog.Title>
+                          <Dialog.Title className="text-lg font-medium text-white">Reward Details</Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
                               type="button"
@@ -137,6 +144,12 @@ export default function ViewReward({ open, setOpen, reward }) {
                                   className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                               </div>
                             </div>
+                            {rewardImg !== null && <div className="flex justify-center mt-24">
+                                <img
+                                  src={rewardImg}
+                                  alt=""
+                                />
+                              </div>}
                           </div>
 
                         </div>

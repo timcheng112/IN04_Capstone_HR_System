@@ -1268,10 +1268,10 @@ const api = {
       `http://localhost:9191/api/rewards/getReward?rewardId=${rewardId}`
     );
   },
-  addNewReward(name, description, pointsRequired, expiryDate, rewardTrackId) {
+  addNewReward(name, description, pointsRequired, expiryDate, rewardTrackId,file) {
     return axios.post(
       `http://localhost:9191/api/rewards/addNewReward?name=${name}&description=${description}&pointsRequired=${pointsRequired}&expiryDate=${expiryDate}&rewardTrackId=${rewardTrackId}`
-      );
+      , file);
   },
   editReward(name, description, pointsRequired, expiryDate, rewardId) {
     return axios.put(

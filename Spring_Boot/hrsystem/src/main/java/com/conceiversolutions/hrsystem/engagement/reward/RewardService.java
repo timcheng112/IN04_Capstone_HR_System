@@ -8,12 +8,15 @@ import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrackReposit
 import com.conceiversolutions.hrsystem.engagement.rewardtrack.RewardTrackService;
 import com.conceiversolutions.hrsystem.organizationstructure.team.Team;
 import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.docdata.DocDataService;
 import com.conceiversolutions.hrsystem.user.user.User;
 import com.conceiversolutions.hrsystem.user.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +33,7 @@ public class RewardService {
     private final RTRewardInstanceRepository rtRewardInstanceRepository;
     private final LeaveQuotaRepository leaveQuotaRepository;
     private final EmailSender emailSender;
+    private final DocDataService docDataService;
 
     public List<Reward> getRewardTrackRewards(Long rewardTrackId) {
         System.out.println("RewardService.getRewardTrackRewards");
@@ -45,7 +49,7 @@ public class RewardService {
         return rewards;
     }
 
-    public Long addNewReward(String name, String description, Integer pointsRequired, LocalDate expiryDate, Long rewardTrackId) {
+    public Long addNewReward(String name, String description, Integer pointsRequired, LocalDate expiryDate, Long rewardTrackId, MultipartFile file) throws IOException {
         System.out.println("RewardService.addNewReward");
         System.out.println("name = " + name + ", description = " + description + ", pointsRequired = " + pointsRequired + ", expiryyDate = " + expiryDate + ", rewardTrackId = " + rewardTrackId);
         RewardTrack rt = rewardTrackService.getRewardTrack(rewardTrackId);
@@ -60,7 +64,15 @@ public class RewardService {
             }
         }
 
-        Reward newReward = new Reward(name, description, pointsRequired, expiryDate, rt);
+        DocData rewardImg = null;
+        if (null != file) { // if file is uploaded, will set.
+            if (!file.isEmpty()) {
+                System.out.println("File is being uploaded");
+                rewardImg = docDataService.uploadDoc(file);
+            }
+        }
+
+        Reward newReward = new Reward(name, description, pointsRequired, expiryDate, rt, rewardImg);
         Reward savedReward = rewardRepository.saveAndFlush(newReward);
 
         return savedReward.getRewardId();
