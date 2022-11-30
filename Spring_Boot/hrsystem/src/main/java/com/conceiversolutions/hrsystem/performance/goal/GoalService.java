@@ -125,7 +125,7 @@ public class GoalService {
                 }
                 userGoals.add(g);
                 g.setEmployee(null);
-                System.out.println(g.getAchievements());
+                //System.out.println(g.getAchievements());
             }
         }
 

@@ -11,7 +11,10 @@ import {
   ChevronRightIcon,
   CurrencyDollarIcon,
   EnvelopeIcon,
+  PlayCircleIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
+import CurrentPerformancePeriod from "./current";
 
 // const people = [
 //   {
@@ -110,6 +113,7 @@ export default function Performance() {
   const [myAppraisals, setMyAppraisals] = useState([]);
   const [organizationHead, setOrganizationHead] = useState(false);
   const [allAppraisals, setAllAppraisals] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
   //goals
 
@@ -206,6 +210,13 @@ export default function Performance() {
         });
       }
     });
+
+    api
+      .getEmployeeReviewsByYear(now.getFullYear(), getUserId())
+      .then((response) => {
+        console.log(response.data);
+        setReviews(response.data);
+      });
   }, []);
 
   useEffect(() => {
@@ -473,6 +484,50 @@ export default function Performance() {
     );
   }
 
+  function renderAppraisalStatus(item) {
+    if (item.status === "Incomplete") {
+      return (
+        <div className="flex row">
+          <XCircleIcon
+            className="mr-1.5 h-5 w-5 font-sans flex-shrink-0 text-gray-400"
+            aria-hidden="true"
+          />
+          Incomplete
+        </div>
+      );
+    } else if (item.status === "In Progress") {
+      return (
+        <div className="flex row">
+          <PlayCircleIcon
+            className="mr-1.5 h-5 w-5 font-sans flex-shrink-0 text-amber-400"
+            aria-hidden="true"
+          />
+          In Progress
+        </div>
+      );
+    } else if (item.status === "Completed") {
+      return (
+        <div className="flex row">
+          <CheckCircleIcon
+            className="mr-1.5 h-5 w-5 font-sans flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+          Completed
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex row">
+          <XCircleIcon
+            className="mr-1.5 h-5 w-5 font-sans flex-shrink-0 text-red-400"
+            aria-hidden="true"
+          />
+          Overdue
+        </div>
+      );
+    }
+  }
+
   if (error) return `Error`;
 
   return (
@@ -485,9 +540,7 @@ export default function Performance() {
               name: "Current",
               href: "/myperformance",
               current: true,
-            
-            }
-          }
+            }}
           />
         </div>
       </div>
@@ -495,9 +548,10 @@ export default function Performance() {
         <main className="flex-1">
           <div className="sm:flex-auto">
             <h1 className="text-2xl font-bold text-indigo-600 mb-10">
-              Current Performance Period ({goalPeriodYear})
+              Current Performance Period
             </h1>
           </div>
+          <CurrentPerformancePeriod />
           <div>
             <div className="px-4 sm:px-6 lg:px-8 mb-5">
               <div className="sm:flex sm:items-center">
@@ -709,7 +763,74 @@ export default function Performance() {
             </div>
           </div>
 
-          {/* {user.userRole === "MANAGER"?"" : ""} */}
+          <div>
+            <div className="px-4 sm:px-6 lg:px-8 mt-10">
+              <div className="px-4 sm:px-6 lg:px-8 mt-10 mx-8">
+                <div className="sm:flex sm:items-center">
+                  <div className="sm:flex-auto">
+                    <h1 className="text-xl font-semibold text-center">
+                      Reviews
+                    </h1>
+                  </div>
+                </div>
+                <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 mx-10">
+                  <ul role="list" className="divide-y divide-gray-200">
+                    {reviews.map((review) => (
+                      <li key={review.reviewId}>
+                        <a
+                          href={`/performance/review/${review.reviewId}`}
+                          className="block hover:bg-gray-50"
+                        >
+                          <div className="flex items-center px-4 py-4 sm:px-6">
+                            <div className="flex min-w-0 flex-1 items-center">
+                              <div className="flex-shrink-0">
+                                <img
+                                  className="h-12 w-12 rounded-full"
+                                  src=""
+                                  alt=""
+                                />
+                              </div>
+                              <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                                <div>
+                                  <p className="truncate text-sm text-left font-medium text-indigo-600">
+                                    {review.employeeReviewing.firstName}{" "}
+                                    {review.employeeReviewing.lastName}
+                                  </p>
+                                  <span className="mt-2 flex items-center text-sm text-gray-500">
+                                    <EnvelopeIcon
+                                      className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                      aria-hidden="true"
+                                    />
+                                    <span className="truncate">
+                                      {review.employeeReviewing.workEmail}
+                                    </span>
+                                  </span>
+                                </div>
+                                <div className="hidden md:block">
+                                  <div>
+                                    <p className="text-sm text-gray-900 text-left"></p>
+                                    <div className="mt-2 flex items-center text-sm text-gray-500">
+                                      {renderAppraisalStatus(review)}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                              <ChevronRightIcon
+                                className="h-5 w-5 text-gray-400"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
           <div>
             <div className="px-4 sm:px-6 lg:px-8 mt-10 mx-8">
               <div className="sm:flex sm:items-center">
@@ -730,89 +851,10 @@ export default function Performance() {
               </div>
               <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 mx-20">
                 <ul role="list" className="divide-y divide-gray-200">
-                  {/* take out everyone except yourself */}
-                  {team.length > 0
-                    ? team
-                        .filter((t) => t.userId !== user.userId)
-                        .map((u) => (
-                          <li>
-                            <a
-                              href="/performance/appraisals"
-                              className="block hover:bg-gray-50"
-                            >
-                              <div className="flex items-center px-4 py-4 sm:px-6">
-                                <div className="flex min-w-0 flex-1 items-center">
-                                  <div className="flex-shrink-0">
-                                    {/* <img
-                                className="h-12 w-12 rounded-full"
-                                // src={application.applicant.imageUrl}
-                                alt=""
-                              /> */}
-                                  </div>
-                                  <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                                    <div>
-                                      <p className="truncate text-sm text-left font-medium text-indigo-600">
-                                        {u.firstName}
-                                      </p>
-                                      <p className="mt-2 flex items-center text-sm text-gray-500">
-                                        <EnvelopeIcon
-                                          className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                                          aria-hidden="true"
-                                        />
-                                        <span className="truncate">
-                                          {u.workEmail}
-                                        </span>
-                                      </p>
-                                    </div>
-                                    <div className="hidden md:block">
-                                      <div>
-                                        <p className="text-sm text-gray-900 text-left">
-                                          {/* <time dateTime={a.date}>
-                                      {a.dateFull}
-                                    </time> */}
-                                        </p>
-                                        <p className="mt-2 flex items-center text-sm text-gray-500">
-                                          {/* <CheckCircleIcon
-                                      className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-                                      aria-hidden="true"
-                                    /> */}
-                                          {/* {u.userRole} */}
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div>
-                                  <ChevronRightIcon
-                                    className="h-5 w-5 text-gray-400"
-                                    aria-hidden="true"
-                                  />
-                                </div>
-                              </div>
-                            </a>
-                          </li>
-                        ))
-                    : "You have no appraisals to appraise currently."}
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div className="px-4 sm:px-6 lg:px-8 mt-10 mx-10">
-              <div className="sm:flex sm:items-center">
-                <div className="sm:flex-auto">
-                  {/* <h1 className="text-xl font-semibold text-center">
-                    Manager Reviews
-                  </h1> */}
-                </div>
-              </div>
-              <div className="overflow-hidden bg-white shadow sm:rounded-md mt-5 mx-20">
-                {/* <ul role="list" className="divide-y divide-gray-200">
-                  {user.managerReviews.map((u) => (
-                    <li key={u}>
+                  {appraisals.map((appraisal) => (
+                    <li key={appraisal.appraisalId}>
                       <a
-                        href="/performance/appraisals"
+                        href={`/performance/appraisal/${appraisal.appraisalId}`}
                         className="block hover:bg-gray-50"
                       >
                         <div className="flex items-center px-4 py-4 sm:px-6">
@@ -820,39 +862,32 @@ export default function Performance() {
                             <div className="flex-shrink-0">
                               <img
                                 className="h-12 w-12 rounded-full"
-                                src={imageUrl}
+                                src=""
                                 alt=""
                               />
                             </div>
                             <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                               <div>
                                 <p className="truncate text-sm text-left font-medium text-indigo-600">
-                                  {u.team.}
+                                  {appraisal.employee.firstName}{" "}
+                                  {appraisal.employee.lastName}
                                 </p>
-                                <p className="mt-2 flex items-center text-sm text-gray-500">
+                                <span className="mt-2 flex items-center text-sm text-gray-500">
                                   <EnvelopeIcon
                                     className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                     aria-hidden="true"
                                   />
                                   <span className="truncate">
-                                    {application.applicant.email}
+                                    {appraisal.employee.workEmail}
                                   </span>
-                                </p>
+                                </span>
                               </div>
                               <div className="hidden md:block">
                                 <div>
-                                  <p className="text-sm text-gray-900 text-left">
-                                    <time dateTime={application.date}>
-                                      {application.dateFull}
-                                    </time>
-                                  </p>
-                                  <p className="mt-2 flex items-center text-sm text-gray-500">
-                                    <CheckCircleIcon
-                                      className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-                                      aria-hidden="true"
-                                    />
-                                    {application.stage}
-                                  </p>
+                                  <p className="text-sm text-gray-900 text-left"></p>
+                                  <div className="mt-2 flex items-center text-sm text-gray-500">
+                                    {renderAppraisalStatus(appraisal)}
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -867,7 +902,7 @@ export default function Performance() {
                       </a>
                     </li>
                   ))}
-                </ul> */}
+                </ul>
               </div>
             </div>
           </div>

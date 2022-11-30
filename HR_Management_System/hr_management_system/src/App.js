@@ -245,8 +245,8 @@ function App() {
             path="/career/transfer"
             component={TransferPage}
           />
-          <PrivateRoute exact path="/performance" component={PerformancePage} />
-          <PrivateRoute exact path="/myperformance" component={CurrentPerformancePeriodPage} />
+          <PrivateRoute exact path="/myperformance" component={PerformancePage} />
+          
           <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
           <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
           <PrivateRoute exact path="/performance/appraisal/:appraisalId" component={AppraisalPage} />
