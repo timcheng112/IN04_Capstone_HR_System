@@ -481,28 +481,51 @@ const HomeComponent = () => {
         </View>
       </View>
       <View style={{ flex: 1 }}>
-        <Card
+        <TouchableOpacity
           style={{
             elevation: 10,
-            // shadowColor: "#52006A",
+            borderRadius: 20,
             shadowColor: "#000000",
-            borderRadius: 10,
+            // marginBottom: 10,
+            // marginLeft: 5,
+            flex: 1,
           }}
-          onPress={() => signOut()}
+          onPress={() => {
+            navigation.navigate("Admin", { screen: "Leave" });
+          }}
         >
-          <View
+          <Card
             style={{
-              // flexDirection: "row",
-              // justifyContent: "center",
-              // alignItems: "center",
-              flexDirection: "row",
-              alignItems: "center",
+              flex: 1,
+              borderRadius: 20,
             }}
+            onPress={() => signOut()}
           >
-            <Avatar.Icon icon="logout" backgroundColor="white" color="black" />
-            <Card.Title title="Sign out" />
-          </View>
-        </Card>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  flex: 1,
+                  alignItems: "center",
+                  // justifyContent: "center"
+                }}
+              >
+                <Avatar.Icon
+                  icon="logout"
+                  backgroundColor="white"
+                  color="black"
+                  style={{ flex: 1.2, alignItems: "flex-end" }}
+                />
+                <Card.Title title="Sign out" style={{ flex: 2 }} />
+              </View>
+            </View>
+          </Card>
+        </TouchableOpacity>
       </View>
     </View>
   );

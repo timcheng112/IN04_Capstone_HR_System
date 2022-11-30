@@ -19,6 +19,12 @@ public class Deduction {
     @Column(name = "deduction_id", nullable = false)
     private Long deductionId;
 
+    @Column(nullable = false, name ="name")
+    private String deductionName;
+
+    @Column(nullable = false, name="amount")
+    private BigDecimal amount;
+
     @Column(nullable = false)
     private String remarks;
 
@@ -26,6 +32,9 @@ public class Deduction {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Singapore")
     private LocalDate date;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name="deduction_type")
+    private DeductionTypeEnum deductionType;
     @OneToOne(fetch = FetchType.LAZY, optional = true, targetEntity = DeductionTemplate.class)
     private DeductionTemplate template;
 
@@ -35,6 +44,21 @@ public class Deduction {
     public Deduction(String remarks, LocalDate date) {
         this.remarks = remarks;
         this.date = date;
+    }
+
+    public Deduction(String deductionName, BigDecimal amount, String remarks, LocalDate date) {
+        this.deductionName = deductionName;
+        this.amount = amount;
+        this.remarks = remarks;
+        this.date = date;
+    }
+
+    public Deduction(String deductionName, BigDecimal amount, String remarks, LocalDate date, String deductionType) {
+        this.deductionName = deductionName;
+        this.amount = amount;
+        this.remarks = remarks;
+        this.date = date;
+        this.deductionType = DeductionTypeEnum.valueOf(deductionType);
     }
 
     public DeductionTemplate getTemplate() {
@@ -69,12 +93,40 @@ public class Deduction {
         this.date = date;
     }
 
+    public String getDeductionName() {
+        return deductionName;
+    }
+
+    public void setDeductionName(String deductionName) {
+        this.deductionName = deductionName;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public DeductionTypeEnum getDeductionType() {
+        return deductionType;
+    }
+
+    public void setDeductionType(DeductionTypeEnum deductionType) {
+        this.deductionType = deductionType;
+    }
+
     @Override
     public String toString() {
         return "Deduction{" +
                 "deductionId=" + deductionId +
+                ", deductionName='" + deductionName + '\'' +
+                ", amount=" + amount +
                 ", remarks='" + remarks + '\'' +
                 ", date=" + date +
+                ", deductionType=" + deductionType +
+                ", template=" + template +
                 '}';
     }
 }

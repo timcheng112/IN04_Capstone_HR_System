@@ -132,7 +132,6 @@ public class ShiftService {
             throw new IllegalStateException(
                     "Shift with team ID: " + teamId + " date: " + localDate + "does not exist!");
         } else {
-            System.out.println("##### getShiftsByTeamAndTime #####");
             for (Shift shift : shiftList) {
                 shift.getRoster().setShifts(new ArrayList<>());
                 shift.getRoster().setBlocks(new ArrayList<>());

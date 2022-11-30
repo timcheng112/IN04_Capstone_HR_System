@@ -2,11 +2,16 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import api from "../../../utils/api";
 
-export default function MoveUserModal({ open, onClose, user,  params=[], ...props }) {
+export default function MoveUserModal({
+  open,
+  onClose,
+  user,
+  params = [],
+  ...props
+}) {
   //the dept name is passed from prev page?
   const [newTeam, setNewTeam] = useState(-1);
   const [options, setOptions] = useState(null);
-
 
   //MIGHT HAVE ERRORS.
   //we should do 2 methods, 1 to remove, 1 to add. the add method will be called if we detect another team being selected.
@@ -24,13 +29,12 @@ export default function MoveUserModal({ open, onClose, user,  params=[], ...prop
         result.map((team) => {
           // console.log(...params)
           // console.log(props.teamId + "please")
-          if(team.teamId !== props.teamId){
+          if (team.teamId !== props.teamId) {
             return arr.push({
-            value: team.teamId,
-            label: team.teamName,
-          });
+              value: team.teamId,
+              label: team.teamName,
+            });
           }
-          
         });
         setOptions(arr);
         // console.log("fetching options...");
@@ -38,22 +42,27 @@ export default function MoveUserModal({ open, onClose, user,  params=[], ...prop
       });
     };
     otherTeams();
-  });
-  // console.log(newTeam) 
-  function moveEmpToTeam(){
+  }, [newTeam]);
+  // console.log(newTeam)
+  function moveEmpToTeam() {
     // console.log(newTeam)
     // console.log(typeof(newTeam))
     // console.log(props.empInQuestion)
-    api.moveEmpToTeam(parseInt(props.empInQuestion), parseInt(props.teamId), parseInt(newTeam) ).
-    then((response) => {
-      console.log(response.data);
-      // props.setOpenMove(false);
-      props.empInQuestion = "";
-      alert("Successfully moved employee.");
-      window.location.reload();
-      props.setOpen(false);
-    } ).catch(err => console.log(err)) 
-
+    api
+      .moveEmpToTeam(
+        parseInt(props.empInQuestion),
+        parseInt(props.teamId),
+        parseInt(newTeam)
+      )
+      .then((response) => {
+        console.log(response.data);
+        // props.setOpenMove(false);
+        props.empInQuestion = "";
+        alert("Successfully moved employee.");
+        window.location.reload();
+        props.setOpen(false);
+      })
+      .catch((err) => console.log(err));
   }
 
   const handleSubmit = (evt) => {
@@ -126,12 +135,11 @@ export default function MoveUserModal({ open, onClose, user,  params=[], ...prop
                               <div className="mt-2 sm:col-span-2 ">
                                 <select
                                   onChange={(e) => setNewTeam(e.target.value)}
-                                  
                                   // placeholder="Select a Manager (might take a while...)"
                                   id="orgHead"
                                   name="orgHead"
                                   className="block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                                > 
+                                >
                                   <option>Select a team...</option>
                                   {/*<option>1</option>*/}
                                   {options !== null &&

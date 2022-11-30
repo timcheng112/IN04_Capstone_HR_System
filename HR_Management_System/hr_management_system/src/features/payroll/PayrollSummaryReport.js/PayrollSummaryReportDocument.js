@@ -143,7 +143,35 @@ const invoice = {
   ],
 };
 
-const PayrollSummaryReportDocument = () => {
+const getMonthFromNumber = (number) => {
+  if (number === 1) {
+    return "January";
+  } else if (number === 2) {
+    return "February";
+  } else if (number === 3) {
+    return "March";
+  } else if (number === 4) {
+    return "April";
+  } else if (number === 5) {
+    return "May";
+  } else if (number === 6) {
+    return "June";
+  } else if (number === 7) {
+    return "July";
+  } else if (number === 8) {
+    return "August";
+  } else if (number === 9) {
+    return "September";
+  } else if (number === 10) {
+    return "October";
+  } else if (number === 11) {
+    return "November";
+  } else {
+    return "December";
+  }
+};
+
+const PayrollSummaryReportDocument = ({ payslips }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -160,15 +188,31 @@ const PayrollSummaryReportDocument = () => {
           </View>
         </View>
         <View style={styles.subsection}>
-          <Text>Payroll Summary for *Date*</Text>
+          <Text>
+            Payroll Summary for{" "}
+            {payslips &&
+              payslips.length > 0 &&
+              getMonthFromNumber(payslips[0].monthOfPayment) +
+                " " +
+                payslips[0].yearOfPayslip}
+          </Text>
         </View>
-        <SummaryTable invoice={invoice} />
+        <SummaryTable payslips={payslips} />
 
         <View style={styles.footer}>
-          <Text>Number of Employees: </Text>
+          <Text>Number of Employees: {payslips && payslips.length}</Text>
         </View>
         <View style={styles.footer}>
-          <Text>Total Employee Net Pay: </Text>
+          <Text>
+            Total Employee Net Pay:{" "}
+            {payslips &&
+              "$" +
+                payslips
+                  .reduce((accumulator, object) => {
+                    return accumulator + object.grossSalary;
+                  }, 0)
+                  .toLocaleString()}
+          </Text>
         </View>
       </Page>
     </Document>

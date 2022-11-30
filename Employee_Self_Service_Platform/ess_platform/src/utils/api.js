@@ -4,7 +4,6 @@ import axios from "axios";
 //const URL = "10.100.1.104"; // XINYUE
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
-// const URL = "172.31.54.163"
 //const URL = "192.168.1.82"; // TIM
 const URL = "10.249.249.151";
 
@@ -268,6 +267,20 @@ const api = {
       { headers: { "Content-Type": "multipart/form-data" } }
     );
   },
+  getPayslipByUserId(userId) {
+    return axios.get(
+      `http://${URL}:9191/api/pay/payslip/getPayslipByUserId?userId=${userId}`
+    );
+  },
+  downloadDocument(docDataId) {
+    return axios.get(`
+    http://${URL}:9191/api/docData/downloadDocument?id=${docDataId}`);
+  },
+  getDocById(docId) {
+    return axios.get(`http://${URL}:9191/api/docData/getDocById?id=${docId}`, {
+      responseType: "blob",
+    });
+  },
   getRewardTrackByEmployee(employeeId) {
     return axios.get(
       `http://${URL}:9191/api/rewards/getRewardTrackByEmployee?employeeId=${employeeId}`
@@ -277,6 +290,9 @@ const api = {
     return axios.post(
       `http://${URL}:9191/api/rewards/redeemReward?rewardId=${rewardId}&employeeId=${employeeId}`
     );
+  },
+  getUserPayInformation(userId) {
+    return axios.get(`http://${URL}:9191/api/pay/payinfo/user/${userId}`);
   },
 };
 

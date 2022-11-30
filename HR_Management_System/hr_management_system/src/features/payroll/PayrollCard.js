@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import api from "../../utils/api";
 import SendEmailDialog from "./SendEmailDialog";
 
-export default function PayrollCard({ info, openSummaryReport }) {
+export default function PayrollCard({
+  info,
+  openSummaryReport,
+  viewSummaryReportHandler,
+}) {
   const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
 
   const sendPayslipEmailsHandler = (emails, payslipMonth) => {
+    console.log(info.emails)
     api
-      .sendPayslipEmails(
-        ["ongj@libro.com", "matthew@libro.com", "simj@libro.com"],
-        info.date
-      )
+      .sendPayslipEmails(info.emails, info.date)
       .then(() => alert("Emails have been successfully sent!"))
       .catch((error) => alert(error.response.data.message));
   };
@@ -37,7 +39,10 @@ export default function PayrollCard({ info, openSummaryReport }) {
             <button
               type="button"
               className="w-5/6 relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 justify-center"
-              onClick={openSummaryReport}
+              onClick={() => {
+                viewSummaryReportHandler();
+                openSummaryReport();
+              }}
             >
               View Summary Report
             </button>
@@ -52,7 +57,7 @@ export default function PayrollCard({ info, openSummaryReport }) {
         </div>
         <div className="text-start text-gray-900 text-lg pt-3">
           <p>{info.numOfEmployees} Employees</p>
-          <p>{info.gross} Gross</p>
+          <p>${info.gross} Net</p>
         </div>
       </div>
     </div>

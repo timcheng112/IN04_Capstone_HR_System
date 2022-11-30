@@ -73,4 +73,12 @@ public class ShiftListItemController {
     public List<ShiftListItem> getShiftListItemByTeam(@RequestParam("teamId") Long teamId) {
         return shiftListItemService.getShiftListItemByTeam(teamId);
     }
+
+    @GetMapping(path = "getShiftListItemsByMonth")
+    public List<ShiftListItem> getShiftListItemsByMonth(@RequestParam("userId") Long userId,
+            @RequestParam("dateString") String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        System.out.println("date for getShiftListItemByMonth: " + localDate);
+        return shiftListItemService.getShiftListItemsByMonth(userId, localDate);
+    }
 }

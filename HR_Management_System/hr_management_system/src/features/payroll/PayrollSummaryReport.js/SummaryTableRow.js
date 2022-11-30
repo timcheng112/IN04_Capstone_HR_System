@@ -31,17 +31,31 @@ const styles = StyleSheet.create({
   },
 });
 
-const SummaryTableRow = ({ items }) => {
-  const rows = items.map((item) => (
-    <View style={styles.row} key={item.sno.toString()}>
-      <Text style={styles.employee}>{item.desc}</Text>
-      <Text style={styles.basic}>{item.qty}</Text>
-      <Text style={styles.additions}>{item.rate}</Text>
-      <Text style={styles.deductions}>{(item.qty * item.rate).toFixed(2)}</Text>
-      <Text style={styles.gross}>{(item.qty * item.rate).toFixed(2)}</Text>
-      <Text style={styles.net}>{(item.qty * item.rate).toFixed(2)}</Text>
-    </View>
-  ));
+const SummaryTableRow = ({ payslips }) => {
+  const rows =
+    payslips &&
+    payslips.map((item) => (
+      <View style={styles.row} key={item.payslipId}>
+        <Text style={styles.employee}>
+          {item.employee.firstName + " " + item.employee.lastName}
+        </Text>
+        <Text style={styles.basic}>
+          {"$" + item.basicSalary.toLocaleString()}
+        </Text>
+        <Text style={styles.additions}>
+          {"$" + item.allowance.toLocaleString()}
+        </Text>
+        <Text style={styles.deductions}>
+          {"$" + item.deduction.toLocaleString()}
+        </Text>
+        <Text style={styles.gross}>
+          {"$" + (item.basicSalary - item.deduction).toLocaleString()}
+        </Text>
+        <Text style={styles.net}>
+          {"$" + item.grossSalary.toLocaleString()}
+        </Text>
+      </View>
+    ));
   return <Fragment>{rows}</Fragment>;
 };
 

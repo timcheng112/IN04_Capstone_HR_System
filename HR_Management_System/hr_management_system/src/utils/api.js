@@ -739,6 +739,71 @@ const api = {
       `http://localhost:9191/api/shift_list_item/getShiftListItemByDateAndTeam?date=${date}&teamId=${teamId}`
     );
   },
+  findUserAllowanceByMonth(userId, dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/allowance/findUserAllowanceByMonth?userId=${userId}&dateString=${dateString}`
+    );
+  },
+  findAllowanceByMonth(dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/allowance/findUserAllowanceByMonth?dateString=${dateString}`
+    );
+  },
+  findUserDeductionByMonth(userId, dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/deduction/findUserDeductionByMonth?userId=${userId}&dateString=${dateString}`
+    );
+  },
+  findDeductionByMonth(dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/deduction/findDeductionByMonth?dateString=${dateString}`
+    );
+  },
+  findUserPayslipByMonth(userId, dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/payslip/findUserPayslipByMonth?userId=${userId}&dateString=${dateString}`
+    );
+  },
+  findUserPayslip(userId) {
+    return axios.get(
+      `http://localhost:9191/api/pay/payslip/findUserPayslip?userId=${userId}`
+    );
+  },
+  findPayslipByMonth(dateString) {
+    return axios.get(
+      `http://localhost:9191/api/pay/payslip/findPayslipByMonth?dateString=${dateString}`
+    );
+  },
+  deleteAllowanceList(idList) {
+    return axios.delete(
+      `http://localhost:9191/api/pay/allowance/deleteAllowanceList?idList=${idList}`
+    );
+  },
+  createAllowances(userId, allowances) {
+    return axios.post(
+      `http://localhost:9191/api/pay/allowance/createAllowances?userId=${userId}`,
+      allowances
+    );
+  },
+  deleteDeductionList(idList) {
+    return axios.delete(
+      `http://localhost:9191/api/pay/deduction/deleteDeductionList?idList=${idList}`
+    );
+  },
+  createDeductions(userId, deductions) {
+    return axios.post(
+      `http://localhost:9191/api/pay/deduction/createDeductions?userId=${userId}`,
+      deductions
+    );
+  },
+  updateUserBankInfo(userId, bankName, bankAccNo) {
+    return axios.put(
+      `http://localhost:9191/api/user/updateUserBankInfo?userId=${userId}&bankName=${bankName}&bankAccNo=${bankAccNo}`
+    );
+  },
+  getAllPayslips() {
+    return axios.get(`http://localhost:9191/api/pay/payslip/getPayslips`);
+  },
   setUserStatus(email) {
     return axios.get(
       `http://localhost:9191/api/user/setUserStatus?workEmail=${email}`
@@ -1084,6 +1149,11 @@ const api = {
       temp
     );
   },
+  removeFromPayroll(userId) {
+    return axios.put(
+      `http://localhost:9191/api/pay/payinfo/removeFromPayroll?userId=${userId}`
+    );
+  },
   broadcastMessage(title, description) {
     return axios.post(
       `http://localhost:9191/api/notification/broadcastMessage?title=${title}&description=${description}`
@@ -1148,22 +1218,25 @@ const api = {
       `http://localhost:9191/api/preferred_date/getPreferredDatesByUserId?userId=${userId}`
     );
   },
-  
+
   // Welfare Claims
   getAllBenefitTypes() {
-    return axios.get(
-      `http://localhost:9191/api/claims/getAllBenefitTypes`
-    );
+    return axios.get(`http://localhost:9191/api/claims/getAllBenefitTypes`);
   },
-  addBenefitPlan(description, planName, planAmount, startDate, endDate, planType) {
+  addBenefitPlan(
+    description,
+    planName,
+    planAmount,
+    startDate,
+    endDate,
+    planType
+  ) {
     return axios.post(
       `http://localhost:9191/api/claims/addBenefitPlan?description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}&planType=${planType}`
     );
   },
   getAllBenefitPlans() {
-    return axios.get(
-      `http://localhost:9191/api/claims/getAllBenefitPlans`
-    );
+    return axios.get(`http://localhost:9191/api/claims/getAllBenefitPlans`);
   },
   getAllBenefitPlansByType(benefitType) {
     return axios.get(
@@ -1175,7 +1248,14 @@ const api = {
       `http://localhost:9191/api/claims/getBenefitPlanById?benefitPlanId=${benefitPlanId}`
     );
   },
-  editBenefitPlan(planId, description, planName, planAmount, startDate, endDate) {
+  editBenefitPlan(
+    planId,
+    description,
+    planName,
+    planAmount,
+    startDate,
+    endDate
+  ) {
     return axios.put(
       `http://localhost:9191/api/claims/editBenefitPlan?planId=${planId}&description=${description}&planName=${planName}&planAmount=${planAmount}&startDate=${startDate}&endDate=${endDate}`
     );
@@ -1205,15 +1285,21 @@ const api = {
       `http://localhost:9191/api/claims/getEmployeeClaims?employeeId=${employeeId}`
     );
   },
-  makeNewClaim(claimDate, incidentDate, remarks, claimAmount, benefitPlanInstanceId, file) {
+  makeNewClaim(
+    claimDate,
+    incidentDate,
+    remarks,
+    claimAmount,
+    benefitPlanInstanceId,
+    file
+  ) {
     return axios.post(
       `http://localhost:9191/api/claims/makeNewClaim?file=&claimDate=${claimDate}&incidentDate=${incidentDate}&remarks=${remarks}&claimAmount=${claimAmount}&benefitPlanInstanceId=${benefitPlanInstanceId}`,
-    file);
+      file
+    );
   },
   getAllClaims() {
-    return axios.get(
-      `http://localhost:9191/api/claims/getAllClaims`
-    );
+    return axios.get(`http://localhost:9191/api/claims/getAllClaims`);
   },
   getClaim(claimId) {
     return axios.get(
@@ -1243,6 +1329,45 @@ const api = {
   getEmployeesUnassignedToPlan(planId) {
     return axios.get(
       `http://localhost:9191/api/claims/getEmployeesUnassignedToPlan?planId=${planId}`
+    );
+  },
+  // addPayslipToUser(userId, payslip) {
+  //   return axios.post(
+  //     `http://localhost:9191/api/pay/payslip/addPayslipToUser?userId=${userId}`,
+  //     payslip
+  //   );
+  // },
+  addPayslipToUser(
+    userId,
+    monthOfPayment,
+    yearOfPayslip,
+    dateOfPayment,
+    grossSalary,
+    basicSalary,
+    allowance,
+    deduction,
+    dateGenerated
+  ) {
+    return axios.post(
+      `http://localhost:9191/api/pay/payslip/addPayslipToUser?userId=${userId}&monthOfPayment=${monthOfPayment}&yearOfPayslip=${yearOfPayslip}&dateOfPayment=${dateOfPayment}&grossSalary=${grossSalary}&basicSalary=${basicSalary}&allowance=${allowance}&deduction=${deduction}&dateGenerated=${dateGenerated}`
+    );
+  },
+  uploadPayslipPdf(file, payslipId) {
+    console.log(" FILE FILE " + file);
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    return axios.post(
+      `http://localhost:9191/api/pay/payslip/uploadPayslipPdf?file=&payslipId=${payslipId}`,
+      file,
+      config
+    );
+  },
+  getShiftListItemsByMonth(userId, date) {
+    return axios.get(
+      `http://localhost:9191/api/shift_list_item/getShiftListItemsByMonth?userId=${userId}&dateString=${date}`
     );
   },
   // Welfare Rewards

@@ -153,7 +153,7 @@ public class SwapRequestService {
                                                 "Swap Request with ID: " + swapRequestId + " does not exist!"));
 
                 swapRequest.setStatus(StatusEnum.APPROVED);
-                swapRequest.setResponseReason(responseReason);
+                swapRequest.setReviewerResponseReason(responseReason);
                 swapRequestRepository.save(swapRequest);
                 User receiver = swapRequest.getReceiver();
                 User requestor = swapRequest.getRequestor();
@@ -179,9 +179,12 @@ public class SwapRequestService {
                 SwapRequest swapRequest = swapRequestRepository.findById(swapRequestId).orElseThrow(
                                 () -> new IllegalStateException(
                                                 "Swap Request with ID: " + swapRequestId + " does not exist!"));
-
+                if (swapRequest.getStatus() == StatusEnum.PENDING) {
+                        swapRequest.setResponseReason(responseReason);
+                } else if (swapRequest.getStatus() == StatusEnum.REVIEWING) {
+                        swapRequest.setReviewerResponseReason(responseReason);
+                }
                 swapRequest.setStatus(StatusEnum.REJECTED);
-                swapRequest.setResponseReason(responseReason);
                 swapRequestRepository.save(swapRequest);
         }
 

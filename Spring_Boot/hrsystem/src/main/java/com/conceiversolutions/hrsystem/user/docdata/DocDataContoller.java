@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-@CrossOrigin(value = "*", exposedHeaders = {"Content-Disposition"})
+@CrossOrigin(value = "*", exposedHeaders = { "Content-Disposition" })
 @RestController
 @RequestMapping(path = "api/docData")
 @AllArgsConstructor
@@ -20,11 +20,11 @@ public class DocDataContoller {
     @PostMapping(path = "/uploadDocument")
     public ResponseEntity<?> uploadDocument(@RequestParam("document") MultipartFile file) throws IOException {
         DocData s = docDataService.uploadDoc(file);
-        if(s != null){
-             return ResponseEntity.status(HttpStatus.OK)
+        if (s != null) {
+            return ResponseEntity.status(HttpStatus.OK)
                     .body(s);
 
-        }else{
+        } else {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("unable to upload document");
@@ -62,10 +62,11 @@ public class DocDataContoller {
         header.setContentLength(doc.getDocData().length);
         header.set("Content-Disposition", "attachment; filename=" + doc.getName());
 
-//        return new ResponseEntity<>(doc.getDocData(), header, HttpStatus.OK);
+        // return new ResponseEntity<>(doc.getDocData(), header, HttpStatus.OK);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf(doc.getType()))
                 .headers(header)
                 .body(doc.getDocData());
     }
+
 }

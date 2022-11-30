@@ -1,20 +1,30 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ClipboardDocumentCheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import {
+  ClipboardDocumentCheckIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 import { CirclesWithBar } from "react-loader-spinner";
 
-export default function RunPayRollDialog({ open, onClose, onChangeHandler }) {
+export default function RunPayRollDialog({
+  open,
+  onClose,
+  onChangeHandler,
+  onSubmitHandler,
+  isRunning,
+  showSuccess,
+  progressCounter,
+  totalAmountEmployees,
+}) {
   const cancelButtonRef = useRef(null);
-  const [isRunning, setIsRunning] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsRunning(false);
-      setShowSuccess(true);
-    }, 3000);
-    // setTimeout(() => onClose(), 3000);
-  }, [isRunning]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsRunning(false);
+  //     setShowSuccess(true);
+  //   }, 3000);
+  //   // setTimeout(() => onClose(), 3000);
+  // }, [isRunning]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -82,7 +92,13 @@ export default function RunPayRollDialog({ open, onClose, onChangeHandler }) {
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      Running payroll...
+                      Running Payroll...
+                    </Dialog.Title>
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
+                    >
+                      {progressCounter + "/" + totalAmountEmployees}
                     </Dialog.Title>
                     <div className="flex items-center justify-center p-10">
                       <CirclesWithBar
@@ -106,7 +122,8 @@ export default function RunPayRollDialog({ open, onClose, onChangeHandler }) {
                       type="button"
                       className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                       onClick={() => {
-                        setIsRunning(true);
+                        onSubmitHandler();
+                        // setIsRunning(true);
                       }}
                     >
                       Run payroll
@@ -122,7 +139,7 @@ export default function RunPayRollDialog({ open, onClose, onChangeHandler }) {
                   </div>
                 )}
                 {showSuccess && (
-                    <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
                         <ClipboardDocumentCheckIcon

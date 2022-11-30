@@ -2,11 +2,15 @@ package com.conceiversolutions.hrsystem.pay.payslip;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/pay/payslip")
+@CrossOrigin("*")
 public class PayslipController {
     private final PayslipService payslipService;
 
@@ -24,7 +28,7 @@ public class PayslipController {
     // ));
     // }
 
-    @GetMapping
+    @GetMapping(path = "/getPayslips")
     public List<Payslip> getPayslips() {
         return payslipService.getPayslips();
     }
@@ -95,6 +99,61 @@ public class PayslipController {
 
     // @GetMapping(path = "/getPayslipsByMonth")
     // public List<Payslip> getPayslipsByMonth(Integer monthIndex) {
-    //     return payslipService.getPayslipsByMonth(monthIndex);
+    // return payslipService.getPayslipsByMonth(monthIndex);
     // }
+
+    @GetMapping(path = "/findUserPayslipByMonth")
+    public Payslip findUserPayslipByMonth(@RequestParam("userId") Long userId,
+            @RequestParam("dateString") String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        System.out.println("date for findUserPayslipByMonth: " + localDate);
+        return payslipService.findUserPayslipByMonth(userId, localDate);
+    }
+
+    @GetMapping(path = "/findPayslipByMonth")
+    public List<Payslip> findPayslipByMonth(@RequestParam("dateString") String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        System.out.println("date for findPayslipByMonth: " + localDate);
+        return payslipService.findPayslipByMonth(localDate);
+    }
+
+    @GetMapping(path = "/getPayslipByUserId")
+    public List<Payslip> getPayslipByUserId(@RequestParam("userId") Long userId) {
+        return payslipService.getPayslipByUserId(userId);
+    }
+
+    // @PostMapping(path = "/addPayslipToUser")
+    // public Long addPayslipToUser(@RequestParam("userId") Long userId,
+    // @RequestBody Payslip payslip) {
+    // return payslipService.addPayslipToUser(userId, payslip);
+    // }
+    @PostMapping(path = "/addPayslipToUser")
+    public Long addPayslipToUser(@RequestParam("userId") Long userId,
+            @RequestParam("monthOfPayment") Integer monthOfPayment,
+            @RequestParam("yearOfPayslip") Integer yearOfPayslip,
+            @RequestParam("dateOfPayment") String dateOfPayment, @RequestParam("grossSalary") Float grossSalary,
+            @RequestParam("basicSalary") Float basicSalary, @RequestParam("allowance") Float allowance,
+            @RequestParam("deduction") Float deduction, @RequestParam("dateGenerated") String dateGenerated) {
+                
+        LocalDate localDateOfPayment = LocalDate.parse(dateOfPayment);
+        LocalDate localDateGenerated = LocalDate.parse(dateGenerated);
+        Payslip payslip = new Payslip(monthOfPayment, yearOfPayslip, localDateOfPayment,
+                BigDecimal.valueOf(grossSalary), BigDecimal.valueOf(basicSalary),
+                BigDecimal.valueOf(allowance), BigDecimal.valueOf(deduction), localDateGenerated);
+        return payslipService.addPayslipToUser(userId, payslip);
+    }
+
+    @PostMapping(path = "/uploadPayslipPdf")
+    public Long uploadPayslipPdf(
+            @RequestParam("payslipId") Long payslipId,
+            @RequestParam(value = "file", required = false) MultipartFile file)
+            throws Exception {
+        System.out.println("*********** CONTROLLER FILE: " + file + " *****************");
+        return payslipService.uploadPayslipPdf(file, payslipId);
+    }
+
+    @GetMapping(path = "/findUserPayslip")
+    public List<Payslip> findUserPayslip(@RequestParam("userId") Long userId) {
+        return payslipService.findUserPayslip(userId);
+    }
 }

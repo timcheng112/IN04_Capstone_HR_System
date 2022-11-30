@@ -9,39 +9,46 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="payslip")
+@Table(name = "payslip")
 public class Payslip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="payslip_id")
+    @Column(name = "payslip_id")
     private Long payslipId;
-    @Column(name="month_of_payment")
+    @Column(name = "month_of_payment")
     private Integer monthOfPayment;
-    @Column(name="year_of_payslip")
+    @Column(name = "year_of_payslip")
     private Integer yearOfPayslip;
-    @Column(name="date_of_payment")
+    @Column(name = "date_of_payment")
     private LocalDate dateOfPayment;
-    @Column(name="gross_salary")
+    @Column(name = "gross_salary")
     private BigDecimal grossSalary;
-    @Column(name="date_generated")
+
+    @Column(name = "basic_salary")
+    private BigDecimal basicSalary;
+    @Column(name = "allowance")
+    private BigDecimal allowance;
+    @Column(name = "deduction")
+    private BigDecimal deduction;
+
+    @Column(name = "date_generated")
     private LocalDate dateGenerated;
-    //we cant handle blob yet, null - true
+    // we cant handle blob yet, null - true
     @OneToOne(targetEntity = DocData.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "payslip_pdf", nullable = true)
     private DocData payslipPDF;
     @OneToOne(cascade = CascadeType.ALL, targetEntity = PayInformation.class)
-    //@JoinColumn(name="payInformationId")
+    // @JoinColumn(name="payInformationId")
     private PayInformation payInformation;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     private User employee;
-
 
     public Payslip() {
     }
 
     public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment,
-                   BigDecimal grossSalary, LocalDate dateGenerated) {
+            BigDecimal grossSalary, LocalDate dateGenerated) {
         this.monthOfPayment = monthOfPayment;
         this.yearOfPayslip = yearOfPayslip;
         this.dateOfPayment = dateOfPayment;
@@ -49,8 +56,9 @@ public class Payslip {
         this.dateGenerated = dateGenerated;
     }
 
-    //without id to test db identity id generation #1
-    public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary, LocalDate dateGenerated, DocData payslipPDF, PayInformation payInformation, User employee) {
+    // without id to test db identity id generation #1
+    public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary,
+            LocalDate dateGenerated, DocData payslipPDF, PayInformation payInformation, User employee) {
         this.monthOfPayment = monthOfPayment;
         this.yearOfPayslip = yearOfPayslip;
         this.dateOfPayment = dateOfPayment;
@@ -61,8 +69,22 @@ public class Payslip {
         this.employee = employee;
     }
 
-    //with id, static offline testing
-    public Payslip(Long payslipId, Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary, LocalDate dateGenerated, DocData payslipPDF, PayInformation payInformation, User employee) {
+    public Payslip(LocalDate dateOfPayment, BigDecimal grossSalary, BigDecimal basicSalary, BigDecimal allowance,
+            BigDecimal deduction, LocalDate dateGenerated) {
+        monthOfPayment = dateOfPayment.getMonthValue();
+        yearOfPayslip = dateOfPayment.getYear();
+        this.dateOfPayment = dateOfPayment;
+        this.grossSalary = grossSalary;
+        this.basicSalary = basicSalary;
+        this.allowance = allowance;
+        this.deduction = deduction;
+        this.dateGenerated = dateGenerated;
+    }
+
+    // with id, static offline testing
+    public Payslip(Long payslipId, Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment,
+            BigDecimal grossSalary, LocalDate dateGenerated, DocData payslipPDF, PayInformation payInformation,
+            User employee) {
         this.payslipId = payslipId;
         this.monthOfPayment = monthOfPayment;
         this.yearOfPayslip = yearOfPayslip;
@@ -73,9 +95,10 @@ public class Payslip {
         this.payInformation = payInformation;
         this.employee = employee;
     }
-    //test payslip -> payInfo ->  Allowance // payslip -> payInfo -> Deduction #3
+
+    // test payslip -> payInfo -> Allowance // payslip -> payInfo -> Deduction #3
     public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary,
-                   LocalDate dateGenerated, DocData payslipPDF, PayInformation payInformation) {
+            LocalDate dateGenerated, DocData payslipPDF, PayInformation payInformation) {
         this.monthOfPayment = monthOfPayment;
         this.yearOfPayslip = yearOfPayslip;
         this.dateOfPayment = dateOfPayment;
@@ -85,8 +108,9 @@ public class Payslip {
         this.payInformation = payInformation;
     }
 
-    //just payslip. no info yet. check user #2 -- later
-    public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary, LocalDate dateGenerated, User employee) {
+    // just payslip. no info yet. check user #2 -- later
+    public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary,
+            LocalDate dateGenerated, User employee) {
         this.monthOfPayment = monthOfPayment;
         this.yearOfPayslip = yearOfPayslip;
         this.dateOfPayment = dateOfPayment;
@@ -95,6 +119,17 @@ public class Payslip {
         this.employee = employee;
     }
 
+    public Payslip(Integer monthOfPayment, Integer yearOfPayslip, LocalDate dateOfPayment, BigDecimal grossSalary,
+            BigDecimal basicSalary, BigDecimal allowance, BigDecimal deduction, LocalDate dateGenerated) {
+        this.monthOfPayment = monthOfPayment;
+        this.yearOfPayslip = yearOfPayslip;
+        this.dateOfPayment = dateOfPayment;
+        this.grossSalary = grossSalary;
+        this.basicSalary = basicSalary;
+        this.allowance = allowance;
+        this.deduction = deduction;
+        this.dateGenerated = dateGenerated;
+    }
 
     public Long getPayslipId() {
         return payslipId;
@@ -168,6 +203,30 @@ public class Payslip {
         this.employee = employee;
     }
 
+    public BigDecimal getBasicSalary() {
+        return basicSalary;
+    }
+
+    public void setBasicSalary(BigDecimal basicSalary) {
+        this.basicSalary = basicSalary;
+    }
+
+    public BigDecimal getAllowance() {
+        return allowance;
+    }
+
+    public void setAllowance(BigDecimal allowance) {
+        this.allowance = allowance;
+    }
+
+    public BigDecimal getDeduction() {
+        return deduction;
+    }
+
+    public void setDeduction(BigDecimal deduction) {
+        this.deduction = deduction;
+    }
+
     @Override
     public String toString() {
         return "Payslip{" +
@@ -176,7 +235,13 @@ public class Payslip {
                 ", yearOfPayslip=" + yearOfPayslip +
                 ", dateOfPayment=" + dateOfPayment +
                 ", grossSalary=" + grossSalary +
+                ", basicSalary=" + basicSalary +
+                ", allowance=" + allowance +
+                ", deduction=" + deduction +
                 ", dateGenerated=" + dateGenerated +
+                ", payslipPDF=" + payslipPDF +
+                ", payInformation=" + payInformation +
+                ", employee=" + employee +
                 '}';
     }
 }
