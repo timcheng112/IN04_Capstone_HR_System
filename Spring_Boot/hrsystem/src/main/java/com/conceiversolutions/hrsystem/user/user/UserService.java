@@ -1351,6 +1351,73 @@ public class UserService implements UserDetailsService {
         return employees;
     }
 
+    public List<User> getAllHREmployees() {
+        List<User> employees = userRepository.findAllHREmployees();
+        // employees.addAll(userRepository.findAllByRole(RoleEnum.MANAGER));
+        System.out.println("size of employees list is " + employees.size());
+        for (User u : employees) {
+            List<Team> teams = u.getTeams();
+            for (Team t : teams) {
+                t.setTeamHead(null);
+                t.setUsers(new ArrayList<>());
+                // t.setDepartment(null);
+                t.setRoster(null);
+                t.setTeamHead(null);
+                t.getDepartment().setTeams(new ArrayList<>());
+                t.getDepartment().setOrganization(null);
+                t.getDepartment().setDepartmentHead(null);
+            }
+
+            List<TaskListItem> taskListItems = u.getTaskListItems();
+            // u.setTaskListItems(null);
+            for (TaskListItem taskListItem : taskListItems) {
+                taskListItem.setUser(null);
+                taskListItem.getTask().setTaskListItems(new ArrayList<>());
+                taskListItem.getTask().setCategory(null);
+            }
+
+            // nullify other side for pay information, allowance & deduction
+            PayInformation tempPayInformation = null;
+            if (u.getCurrentPayInformation() != null) {
+                tempPayInformation = u.getCurrentPayInformation();
+                tempPayInformation.setUser(null);
+            }
+
+            Position tempPosition = null;
+            if (u.getCurrentPosition() != null) {
+                tempPosition = u.getCurrentPosition();
+            }
+
+            List<Payslip> tempPayslips = new ArrayList<>();
+            if (u.getPayslips() != null) {
+                tempPayslips = u.getPayslips();
+                for (Payslip payslip : tempPayslips) {
+                    payslip.setPayInformation(null);
+                    payslip.setEmployee(null);
+                }
+            }
+
+            List<ShiftListItem> tempShiftListItems = new ArrayList<>();
+            if (u.getShiftListItems() != null) {
+                tempShiftListItems = u.getShiftListItems();
+                for (ShiftListItem shiftListItem : tempShiftListItems) {
+                    shiftListItem.setUser(null);
+                    shiftListItem.getShift().setRoster(null);
+                    shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+                }
+            }
+
+            u.nullify();
+            u.setTeams(teams);
+            u.setTaskListItems(taskListItems);
+            u.setCurrentPayInformation(tempPayInformation);
+            u.setCurrentPosition(tempPosition);
+            u.setPayslips(tempPayslips);
+            u.setShiftListItems(tempShiftListItems);
+        }
+        return employees;
+    }
+
     public List<User> getAllEmployeesInclLeaveQuotas() {
         System.out.println("UserService.getAllEmployeesInclLeaveQuotas");
         List<User> employees = userRepository.findAllByRole(RoleEnum.EMPLOYEE);
@@ -1564,7 +1631,10 @@ public class UserService implements UserDetailsService {
         List<Team> allTeams = teamRepository.findAll();
         List<Long> teamHeadIds = new ArrayList<>();
         for (Team t : allTeams) {
-            teamHeadIds.add(t.getTeamHead().getUserId());
+            if (t.getTeamHead() != null) {
+                teamHeadIds.add(t.getTeamHead().getUserId());
+            }
+
         }
 
         List<User> managers = userRepository.findAllByRole(RoleEnum.MANAGER);
@@ -2706,4 +2776,16 @@ public class UserService implements UserDetailsService {
         user.getCurrentPayInformation().setInPayroll(true);
         userRepository.save(user);
     }
+
+    public String setNfcUUID(String hexString, Long userId) {
+        User u1 = getUser(userId);
+
+        if (u1.getCardId() == null) {
+            u1.setCardId(hexString);
+        }
+
+        userRepository.saveAndFlush(u1);
+        return "NFC is assigned to user Id";
+    }
+
 }

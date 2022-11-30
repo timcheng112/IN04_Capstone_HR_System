@@ -321,6 +321,11 @@ public class UserController {
         return userService.getAllStaff();
     }
 
+    @GetMapping(path ="/getAllHREmployees")
+    public List<User> getAllHREmployees() {
+        return userService.getAllHREmployees();
+    }
+
     @GetMapping(path = "/getEmployeesNotInGivenTeam")
     public List<User> getEmployeesNotInGivenTeam(@RequestParam(name = "teamId") Integer teamId) {
         return userService.getEmployeesNotInGivenTeam(teamId);

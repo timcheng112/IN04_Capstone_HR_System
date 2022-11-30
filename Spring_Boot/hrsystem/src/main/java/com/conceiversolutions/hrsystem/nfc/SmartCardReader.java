@@ -23,6 +23,7 @@
 //
 //            Card card = null;
 //            while(true){
+//
 //                try{
 //
 //                    card = terminal.connect("*");
