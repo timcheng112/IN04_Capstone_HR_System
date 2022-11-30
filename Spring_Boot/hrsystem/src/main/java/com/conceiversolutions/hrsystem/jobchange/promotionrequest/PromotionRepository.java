@@ -26,4 +26,8 @@ public interface PromotionRepository extends JpaRepository<PromotionRequest, Lon
 
     @Query("SELECT p FROM PromotionRequest p WHERE p.status = 'Withdrawn' OR p.status = 'Failed' OR p.status = 'Rejected' OR p.status = 'Approved' AND p.manager.userId = ?1 OR p.processedBy.userId = ?1 OR p.interviewer.userId = ?1")
     public List<PromotionRequest> findUserRequestHistory(Long userId);
+
+    @Query("SELECT p FROM PromotionRequest p WHERE p.employee.userId = ?1")
+    public Optional<PromotionRequest> findRequestByEmployee(Long userId);
+
 }

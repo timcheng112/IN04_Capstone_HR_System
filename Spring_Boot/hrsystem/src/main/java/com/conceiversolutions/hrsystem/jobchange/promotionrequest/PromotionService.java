@@ -688,6 +688,51 @@ public class PromotionService {
         return teams;
     }
 
+    public PromotionRequest getPromotionRequestByEmployee(Long employeeId) throws Exception {
+        Optional<PromotionRequest> optionalPr = promotionRepository.findRequestByEmployee(employeeId);
+
+        if (optionalPr.isPresent()) {
+            PromotionRequest promotionRequest = optionalPr.get();
+
+            promotionRequest.getAppraisal()
+                    .setEmployee(breakRelationships(promotionRequest.getAppraisal().getEmployee()));
+            promotionRequest.getAppraisal()
+                    .setManagerAppraising(breakRelationships(promotionRequest.getAppraisal().getManagerAppraising()));
+
+            promotionRequest.setEmployee(breakRelationships(promotionRequest.getEmployee()));
+            promotionRequest.setManager(breakRelationships(promotionRequest.getManager()));
+
+            if (promotionRequest.getInterviewer() != null) {
+                promotionRequest.setInterviewer(breakRelationships(promotionRequest.getInterviewer()));
+                // promotionRequest.getInterviewer().nullify();
+            }
+
+            if (promotionRequest.getProcessedBy() != null) {
+                promotionRequest.setProcessedBy(breakRelationships(promotionRequest.getProcessedBy()));
+            }
+
+            if (promotionRequest.getNewDepartment() != null) {
+                Department d = new Department();
+                d.setDepartmentId(promotionRequest.getNewDepartment().getDepartmentId());
+                d.setDepartmentName(promotionRequest.getNewDepartment().getDepartmentName());
+                promotionRequest.setNewDepartment(d);
+
+            }
+
+            if (promotionRequest.getNewTeam() != null) {
+                Team t = new Team();
+                t.setTeamId(promotionRequest.getNewTeam().getTeamId());
+                t.setTeamName(promotionRequest.getNewTeam().getTeamName());
+                promotionRequest.setNewTeam(t);
+            }
+
+            return promotionRequest;
+
+        } else {
+            throw new IllegalStateException("Unable to find promotion request");
+        }
+    }
+
     // public String addAPromotionRequest(Long employeeId, Long managerId, Long
     // departmentId, Long processedBy, String interviewComments ){
 

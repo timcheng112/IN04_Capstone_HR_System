@@ -1242,20 +1242,31 @@ const api = {
     return axios.get(`http://localhost:9191/api/transfer/history/${userId}`);
   },
   getPossibleTeams(departmentId) {
-    return axios.get(`http://localhost:9191/api/transfer/team/department/${departmentId}`)
+    return axios.get(
+      `http://localhost:9191/api/transfer/team/department/${departmentId}`
+    );
   },
   getTeamEmptyHead(departmentId) {
-    return axios.get(`http://localhost:9191/api/promotion/team/department/${departmentId}`)
+    return axios.get(
+      `http://localhost:9191/api/promotion/team/department/${departmentId}`
+    );
   },
   getManagerReviewsByManager(managerId) {
-    return axios.get(`http://localhost:9191/api/review/manager/${managerId}`)
+    return axios.get(`http://localhost:9191/api/review/manager/${managerId}`);
   },
   deleteAchievement(achievementId) {
-    return axios.delete(`http://localhost:9191/api/achievement/${achievementId}`)
+    return axios.delete(
+      `http://localhost:9191/api/achievement/${achievementId}`
+    );
   },
   editAchievement(achievementId, description) {
-    return axios.put(`http://localhost:9191/api/achievement/${achievementId}?description=${description}`)
-  }
+    return axios.put(
+      `http://localhost:9191/api/achievement/${achievementId}?description=${description}`
+    );
+  },
+  getPromotionRequestByEmployee(employeeId) {
+    return axios.get(`http://localhost:9191/api/promotion/user/${employeeId}`);
+  },
 };
 
 export default api;

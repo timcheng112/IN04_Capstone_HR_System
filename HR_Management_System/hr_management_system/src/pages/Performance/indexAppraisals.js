@@ -283,7 +283,7 @@ export default function Appraisals() {
       return (
         <div className="flex row">
           <XCircleIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+            className="mr-1.5 h-5 w-5 font-sans flex-shrink-0 text-gray-400"
             aria-hidden="true"
           />
           Incomplete
@@ -293,7 +293,7 @@ export default function Appraisals() {
       return (
         <div className="flex row">
           <PlayCircleIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-amber-400"
+            className="mr-1.5 h-5 w-5 font-sans flex-shrink-0 text-amber-400"
             aria-hidden="true"
           />
           In Progress
@@ -303,7 +303,7 @@ export default function Appraisals() {
       return (
         <div className="flex row">
           <CheckCircleIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            className="mr-1.5 h-5 w-5 font-sans flex-shrink-0 text-green-400"
             aria-hidden="true"
           />
           Completed
@@ -313,7 +313,7 @@ export default function Appraisals() {
       return (
         <div className="flex row">
           <XCircleIcon
-            className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+            className="mr-1.5 h-5 w-5 font-sans flex-shrink-0 text-red-400"
             aria-hidden="true"
           />
           Overdue
@@ -477,6 +477,14 @@ export default function Appraisals() {
     console.log("selected period " + year);
     setCurrentPeriod(year);
     setRefresh(!refresh);
+  }
+
+  function handleViewPromotion(appraisal) {
+    //console.log(appraisal.employee.userId)
+    api.getPromotionRequestByEmployee(appraisal.employee.userId).then(response => {
+      //console.log(response.data.promotionId)
+      history.push(`/promotion/${response.data.promotionId}`)
+    })
   }
 
   return (
@@ -752,12 +760,13 @@ export default function Appraisals() {
                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-left text-gray-500">
                                           {appraisal.promotion ? (
                                             <>
-                                              <a
-                                                href="#"
+                                              <button
+                                                type="button"
                                                 className="text-indigo-600"
+                                                onClick={() => handleViewPromotion(appraisal)}
                                               >
                                                 View
-                                              </a>
+                                              </button>
                                             </>
                                           ) : (
                                             <>NA</>

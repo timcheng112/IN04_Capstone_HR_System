@@ -73,7 +73,10 @@ export default function Appraisal() {
         });
 
       api
-        .getManagerReviewsByYear(response.data.appraisalYear, response.data.employee.userId)
+        .getManagerReviewsByYear(
+          response.data.appraisalYear,
+          response.data.employee.userId
+        )
         .then((response) => {
           console.log(response.data);
           setReviews(response.data);
@@ -208,6 +211,14 @@ export default function Appraisal() {
       now >= new Date(startDate).setHours(0, 0, 0, 0) &&
       now <= new Date(endDate).setHours(0, 0, 0, 0)
     );
+  }
+
+  function handleViewPromotion(appraisal) {
+    //console.log(appraisal.employee.userId)
+    api.getPromotionRequestByEmployee(appraisal.employee.userId).then(response => {
+      //console.log(response.data.promotionId)
+      history.push(`/promotion/${response.data.promotionId}`)
+    })
   }
 
   const handleDelete = (e) => {
@@ -370,7 +381,19 @@ export default function Appraisal() {
                             </dt>
                             <dd className="mt-1 text-md text-gray-900 font-sans sm:col-span-2 sm:mt-0">
                               {appraisal.promotion ? (
-                                <>Yes (View more)</>
+                                <>
+                                  Yes{" "}(
+                                  <button
+                                    type="button"
+                                    className="text-indigo-600"
+                                    onClick={() =>
+                                      handleViewPromotion(appraisal)
+                                    }
+                                  >
+                                    View more
+                                  </button>
+                                  )
+                                </>
                               ) : (
                                 <>No</>
                               )}

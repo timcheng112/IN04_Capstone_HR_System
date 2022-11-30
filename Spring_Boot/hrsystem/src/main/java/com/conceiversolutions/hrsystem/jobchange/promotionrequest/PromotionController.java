@@ -130,4 +130,10 @@ public class PromotionController {
         return promotionService.getTeamEmptyHead(departmentId);
     }
 
+    @GetMapping(path = "/user/{employeeId}")
+    public PromotionRequest getPromotionRequestByEmployee(@PathVariable("employeeId") Long employeeId) throws Exception {
+        return promotionService.getPromotionRequestByEmployee(employeeId);
+    }
+
+
 }
