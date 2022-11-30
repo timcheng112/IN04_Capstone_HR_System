@@ -111,7 +111,7 @@ export default function RewardTrack({ navigation, userId }) {
               mode="outlined"
               color="rgba(0, 0, 0, 8)"
               onPress={() => navigation.navigate('RewardDetail', { userId, item})}>
-              Learn More
+              More Info
           </Button>
         </View>
       );
