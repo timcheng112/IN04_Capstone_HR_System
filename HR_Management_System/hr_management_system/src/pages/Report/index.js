@@ -87,14 +87,19 @@ export default function Report() {
     });
     console.log(helpList);
     setDepartmentCount(helpList);
+    setTimeout(() => {  setter(helpList); }, 1000);
+    ;
+  }
+
+  function setter(list) {
     setOption1({
       series: [
         {
           type: 'pie',
-          data: helpList,
+          data: list,
         }
       ]
-    });  
+    });
   }
   // const option1 = {
   //   series: [
