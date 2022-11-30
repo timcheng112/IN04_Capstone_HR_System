@@ -1,12 +1,12 @@
 import axios from "axios";
 
- const URL = "192.168.10.128"; // MATT
+//  const URL = "192.168.10.128"; // MATT
 //const URL = "10.100.1.104"; // XINYUE
 //const URL = "192.168.1.35"; //XUEQI
 // const URL = "192.168.1.102"; //ALI
 // const URL = "172.31.54.163"
 //const URL = "192.168.1.82"; // TIM
-// const URL = "172.17.93.172";
+const URL = "10.249.249.151";
 
 const api = {
   login(workEmail, password) {
@@ -18,8 +18,9 @@ const api = {
     return axios.get(`http://${URL}:9191/api/user/${userId}`);
   },
   getDocById(docId) {
-    return axios.get(`http://${URL}:9191/api/docData/getDocById?id=${docId}`
-    , {responseType: 'blob'});
+    return axios.get(`http://${URL}:9191/api/docData/getDocById?id=${docId}`, {
+      responseType: "blob",
+    });
   },
   getEmployeesByTeam(teamId) {
     return axios.get(
@@ -247,13 +248,25 @@ const api = {
       `http://${URL}:9191/api/claims/withdrawClaim?claimId=${claimId}`
     );
   },
-  makeNewClaim(claimDate, incidentDate, remarks, claimAmount, benefitPlanInstanceId, file) {
+  makeNewClaim(
+    claimDate,
+    incidentDate,
+    remarks,
+    claimAmount,
+    benefitPlanInstanceId,
+    file
+  ) {
     return axios.post(
       `http://${URL}:9191/api/claims/makeNewClaim?file=&claimDate=${claimDate}&incidentDate=${incidentDate}&remarks=${remarks}&claimAmount=${claimAmount}&benefitPlanInstanceId=${benefitPlanInstanceId}`,
-    file);
+      file
+    );
   },
   createClaim(formDataPayload) {
-    return axios.post(`http://${URL}:9191/api/claims/makeNewClaim`, formDataPayload, {headers: {'Content-Type': 'multipart/form-data'}});
+    return axios.post(
+      `http://${URL}:9191/api/claims/makeNewClaim`,
+      formDataPayload,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
   },
   getRewardTrackByEmployee(employeeId) {
     return axios.get(

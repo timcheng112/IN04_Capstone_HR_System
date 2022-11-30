@@ -1,12 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Card } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
+import api from "../../utils/api";
 
 const PayInformationComponent = ({ user }) => {
+  const [img, setImg] = useState("");
+
+  useEffect(() => {
+    if (user !== null && user.profilePic !== null) {
+      api
+        .getDocById(user.profilePic.docId)
+        .then((response) => {
+          console.log("TEST 1");
+          const fr = new FileReader();
+          console.log("TEST 2");
+          fr.onload = async () => {
+            console.log("TEST 3");
+            const fileUri = `${FileSystem.documentDirectory}_ProfilePic.png`;
+            console.log("TEST 4");
+            await FileSystem.writeAsStringAsync(
+              fileUri,
+              fr.result.split(",")[1],
+              {
+                encoding: FileSystem.EncodingType.Base64,
+              }
+            );
+            console.log("TEST 5");
+            setImg(fileUri);
+            console.log(fileUri);
+            // return fileUri;
+          };
+          console.log("TEST 6");
+          fr.readAsDataURL(response.data);
+        })
+        .catch((err) => console.log("Error in downloading"));
+    }
+  }, [user]);
+
   return (
     <View style={{ marginTop: "4%" }}>
       <Card
@@ -19,7 +54,9 @@ const PayInformationComponent = ({ user }) => {
       >
         <Card.Cover
           source={{
-            uri: "https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+            uri: img
+              ? img
+              : "https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
           }}
           style={{
             borderRadius: 20,

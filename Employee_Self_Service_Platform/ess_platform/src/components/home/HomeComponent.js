@@ -47,6 +47,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { format, subDays } from "date-fns";
 import LottieView from "lottie-react-native";
+import * as FileSystem from "expo-file-system";
 
 const HomeComponent = () => {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -56,6 +57,7 @@ const HomeComponent = () => {
   const { signOut } = React.useContext(AuthContext);
   const [leaves, setLeaves] = useState(null);
   const [tasks, setTasks] = useState(null);
+  const [img, setImg] = useState("");
 
   const leftContent = (props) => (
     <Avatar.Icon
@@ -150,6 +152,37 @@ const HomeComponent = () => {
         .catch((error) => console.log("Error retrieving tasks!"));
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (user !== null && user.profilePic !== null) {
+      api
+        .getDocById(user.profilePic.docId)
+        .then((response) => {
+          console.log("TEST 1");
+          const fr = new FileReader();
+          console.log("TEST 2");
+          fr.onload = async () => {
+            console.log("TEST 3");
+            const fileUri = `${FileSystem.documentDirectory}_ProfilePic.png`;
+            console.log("TEST 4");
+            await FileSystem.writeAsStringAsync(
+              fileUri,
+              fr.result.split(",")[1],
+              {
+                encoding: FileSystem.EncodingType.Base64,
+              }
+            );
+            console.log("TEST 5");
+            setImg(fileUri);
+            console.log(fileUri);
+            // return fileUri;
+          };
+          console.log("TEST 6");
+          fr.readAsDataURL(response.data);
+        })
+        .catch((err) => console.log("Error in downloading"));
+    }
+  }, [user]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
@@ -266,7 +299,8 @@ const HomeComponent = () => {
           <Avatar.Image
             size={56}
             source={{
-              uri: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+              uri: img ? img : "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+              // uri: img,
             }}
           />
         </View>
