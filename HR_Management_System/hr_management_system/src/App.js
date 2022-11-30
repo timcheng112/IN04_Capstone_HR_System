@@ -74,6 +74,12 @@ import MyBenefitsPage from "./pages/Benefit/index";
 import BenefitsPage from "./pages/Benefit/indexHR";
 import ClaimsPage from "./pages/Benefit/claim";
 import ToggleNFC from "./pages/NFC/ToggleNFC";
+import RewardTrackPage from "./pages/Reward/index"
+import RewardTrackDetailPage from "./pages/Reward/TrackDetail"
+import ReviewFormPage from "./pages/Reward/review"
+import AddReviewFormPage from "./pages/Reward/AddReviewForm"
+import EmployeeRewardPage from "./pages/Reward/EmployeeReward";
+
 
 function App() {
   return (
@@ -265,6 +271,13 @@ function App() {
           <PrivateRoute exact path="/welfare/benefits" component={BenefitsPage} />
           <PrivateRoute exact path="/welfare/claims" component={ClaimsPage} />
           <PrivateRoute exact path="/attendance/NFC" component={ToggleNFC}/>
+
+          <PrivateRoute exact path="/welfare/rewardtrack" component={RewardTrackPage} />
+          <PrivateRoute exact path="/welfare/rewardtrackdetail" component={RewardTrackDetailPage} />
+          <PrivateRoute exact path="/welfare/reviewform" component={ReviewFormPage} />
+          <PrivateRoute exact path="/welfare/myrewardtrack" component={EmployeeRewardPage} />
+          <PublicRoute exact path="/reviewform" component={AddReviewFormPage} />
+
         </Switch>
       </div>
     </BrowserRouter>

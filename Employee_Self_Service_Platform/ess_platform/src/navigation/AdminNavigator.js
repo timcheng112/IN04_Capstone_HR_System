@@ -5,6 +5,7 @@ import OnboardingScreen from "../screens/OnboardingScreen";
 import OffboardingScreen from "../screens/OffboardingScreen";
 import LeaveScreen from "../screens/LeaveScreen";
 import LeaveApplicationScreen from "../screens/LeaveApplicationScreen";
+import LeaveDetailScreen from "../screens/LeaveDetailScreen";
 import Header from "../components/general/Header";
 import { Appbar, Button } from "react-native-paper";
 import { StatusBar } from "react-native";
@@ -56,6 +57,7 @@ const AdminNavigator = () => {
         options={{
           title: "Apply for leaves",
           headerTitle: "Leave",
+          unmountOnBlur: true,
         }}
       />
       <AdminStack.Screen
@@ -64,6 +66,15 @@ const AdminNavigator = () => {
         options={{
           title: "Apply for leaves",
           headerTitle: "Leave",
+        }}
+      />
+      <AdminStack.Screen
+        name="LeaveDetail"
+        component={LeaveDetailScreen}
+        options={{
+          title: "Leave Detail",
+          headerTitle: "Leave Detail",
+          unmountOnBlur: true,
         }}
       />
     </AdminStack.Navigator>

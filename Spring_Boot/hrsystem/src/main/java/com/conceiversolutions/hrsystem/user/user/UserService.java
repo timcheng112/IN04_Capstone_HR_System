@@ -39,6 +39,8 @@ import com.conceiversolutions.hrsystem.rostering.swaprequest.SwapRequest;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemRepository;
 import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItemService;
+import com.conceiversolutions.hrsystem.user.docdata.DocData;
+import com.conceiversolutions.hrsystem.user.docdata.DocDataService;
 import com.conceiversolutions.hrsystem.user.position.Position;
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
 import com.conceiversolutions.hrsystem.user.qualificationinformation.QualificationService;
@@ -57,10 +59,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Transient;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.time.*;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -91,6 +99,7 @@ public class UserService implements UserDetailsService {
     private final TaskRepository taskRepository;
     private final TaskListItemService taskListItemService;
     private final TaskListItemRepository taskListItemRepository;
+    private final DocDataService docDataService;
 
     private final ShiftListItemRepository shiftListItemRepository;
 
@@ -1185,19 +1194,34 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public String updateUserESS(Long userId, String email, Integer phone, String bankAccNo) {
-        System.out.println("UserService.updateUser");
+    public String updateUserESS(Long userId, String email, String phone, String bankName, String bankAccNo) {
+        System.out.println("UserService.updateUserESS");
         // System.out.println(.getUserRole());
 
-        User user = getUser(userId);
+        User user = userRepository.findById(userId).get();
 
-        user.setPhone(phone);
+        user.setPhone(Integer.valueOf(phone));
         user.setEmail(email);
+        user.setBankName(bankName);
         user.setBankAccNo(bankAccNo);
-//        userRepository.saveAndFlush(user);
-        user.nullify();
-//        userRepository.saveAndFlush(user);
+        userRepository.save(user);
         return "Update of user was successful";
+    }
+    public String updateProfilePic(Long userId, MultipartFile file) throws IOException {
+        System.out.println("UserService.updateProfilePic");
+        User employee = userRepository.findById(userId).get();
+
+        DocData profilePic = null;
+        if (null != file) { // if file is uploaded, will set.
+            if (!file.isEmpty()) {
+                System.out.println("Profile Pic is being uploaded");
+                profilePic = docDataService.uploadDoc(file);
+            }
+        }
+        employee.setProfilePic(profilePic);
+        userRepository.save(employee);
+
+        return "Profile pic updated for " + userId + " with " + profilePic.getName();
     }
 
     public Long getUserFromEmail(String email) {

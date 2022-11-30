@@ -3,6 +3,10 @@ import { useHistory } from "react-router-dom";
 import { setUserSession } from "../../utils/Common";
 import logo from "../../assets/libro-transparent-logo.png";
 import api from "../../utils/api";
+import {
+  EyeIcon,
+  PlusIcon,
+} from "@heroicons/react/20/solid";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -35,7 +39,7 @@ export default function Login() {
 
           console.log("unactivated account " + getWorkEmail());
           api.getEmployeeIdByEmail(getWorkEmail()).then((response) => {
-          sessionStorage.setItem("userEmail", getWorkEmail())
+            sessionStorage.setItem("userEmail", getWorkEmail())
           }).then(() => history.push("/verify"));
 
         } else if (
@@ -171,6 +175,18 @@ export default function Login() {
               </div>
             </form>
           </div>
+          <div className="py-4"></div>
+          <button
+            type="button"
+            onClick={() => history.push("/reviewform")}
+            className="inline-flex items-center justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:w-auto"
+          >
+            <PlusIcon
+              className="md:-ml-0.5 md:mr-2 h-4 w-4"
+              aria-hidden="true"
+            />
+            Submit Review Form
+          </button>
         </div>
       </div>
     </>

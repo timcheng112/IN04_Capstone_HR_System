@@ -17,7 +17,9 @@ import com.conceiversolutions.hrsystem.user.qualificationinformation.Qualificati
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -288,10 +290,16 @@ public class UserController {
     @GetMapping(path="/updateProfileESS")
     public String updateProfileESS(@RequestParam("userId") Long userId,
                                 @RequestParam("email") String email,
-                                @RequestParam("phoneNo") String phone, @RequestParam("bankAccNo") String bankAccNo) {
+                                @RequestParam("phone") String phone, @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo) {
         // System.out.println(user.getUserRole());
-        return userService.updateUserESS(userId, email, Integer.valueOf(phone), bankAccNo);
+        return userService.updateUserESS(userId, email, phone, bankName, bankAccNo);
 
+    }
+
+    @PostMapping(path = "updateProfilePic")
+    public String updateProfilePic(@RequestParam("userId") Long userId,
+                                   @RequestParam("file") MultipartFile file) throws IOException {
+        return userService.updateProfilePic(userId, file);
     }
 
     @GetMapping(path = "/getAllManagers")

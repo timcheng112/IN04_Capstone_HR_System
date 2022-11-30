@@ -28,6 +28,10 @@ public class RewardTrack {
     private LocalDate startDate;
     @Column(name="end_date")
     private LocalDate endDate;
+    @Column(name = "points_ratio")
+    private Double pointsRatio;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     //relationships
     @OneToMany(mappedBy ="rewardTrack", fetch = FetchType.LAZY, targetEntity = Reward.class)
@@ -38,23 +42,27 @@ public class RewardTrack {
     //constructors
     public RewardTrack() {
         this.rewards = new ArrayList<>();
+        this.isActive = false;
     }
 
-    public RewardTrack(String name, LocalDate startDate, LocalDate endDate, Department department) {
+    public RewardTrack(String name, LocalDate startDate, LocalDate endDate, Department department, Double pointsRatio) {
         this();
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.department = department;
+        this.pointsRatio = pointsRatio;
     }
 
     @Override
     public String toString() {
         return "RewardTrack{" +
                 "rewardTrackId=" + rewardTrackId +
-                ", name=" + name +
+                ", name='" + name + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", pointsRatio=" + pointsRatio +
+                ", isActive=" + isActive +
                 '}';
     }
 }
