@@ -763,6 +763,33 @@ const api = {
       `http://localhost:9191/api/pay/payslip/findPayslipByMonth?dateString=${dateString}`
     );
   },
+  deleteAllowanceList(idList) {
+    return axios.delete(
+      `http://localhost:9191/api/pay/allowance/deleteAllowanceList?idList=${idList}`
+    );
+  },
+  createAllowances(userId, allowances) {
+    return axios.post(
+      `http://localhost:9191/api/pay/allowance/createAllowances?userId=${userId}`,
+      allowances
+    );
+  },
+  deleteDeductionList(idList) {
+    return axios.delete(
+      `http://localhost:9191/api/pay/deduction/deleteDeductionList?idList=${idList}`
+    );
+  },
+  createDeductions(userId, deductions) {
+    return axios.post(
+      `http://localhost:9191/api/pay/deduction/createDeductions?userId=${userId}`,
+      deductions
+    );
+  },
+  updateUserBankInfo(userId, bankName, bankAccNo) {
+    return axios.put(
+      `http://localhost:9191/api/user/updateUserBankInfo?userId=${userId}&bankName=${bankName}&bankAccNo=${bankAccNo}`
+    );
+  },
   getAllPayslips() {
     return axios.get(`http://localhost:9191/api/pay/payslip/getPayslips`);
   },

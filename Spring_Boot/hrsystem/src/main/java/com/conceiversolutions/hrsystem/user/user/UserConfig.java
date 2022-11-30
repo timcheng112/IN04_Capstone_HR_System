@@ -65,9 +65,9 @@ public class UserConfig {
                                 admin1.setCurrentPayInformation(
                                                 new PayInformation(new BigDecimal(2000), true, false, admin1));
                                 List<Allowance> allowanceTemp = admin1.getCurrentPayInformation().getAllowance();
-                                allowanceTemp.add(new Allowance("allowance1", new BigDecimal(100),"this is a test allowance!", LocalDate.of(2022, 11, 27)));
+                                allowanceTemp.add(new Allowance("allowance1", new BigDecimal(100),"this is a test allowance!", LocalDate.of(2022, 11, 27), "BONUS"));
                                 List<Deduction> deductionTemp = admin1.getCurrentPayInformation().getDeduction();
-                                deductionTemp.add(new Deduction("deduction1", new BigDecimal(50),"this is a test deduction!", LocalDate.of(2022, 11, 1)));
+                                deductionTemp.add(new Deduction("deduction1", new BigDecimal(50),"this is a test deduction!", LocalDate.of(2022, 11, 1), "OTHERS"));
                                 admin1.getCurrentPayInformation().setAllowance(allowanceTemp);
                                 admin1.getCurrentPayInformation().setDeduction(deductionTemp);
                                 admin1.setWorkEmail("simj@libro.com");
@@ -165,9 +165,9 @@ public class UserConfig {
                                 ceo.setCurrentPayInformation(
                                                 new PayInformation(new BigDecimal(10000), true, false, ceo));
                                 List<Allowance> allowanceCeo = ceo.getCurrentPayInformation().getAllowance();
-                                allowanceCeo.add(new Allowance("allowanceCeo", new BigDecimal(100),"Travel Allowance", LocalDate.of(2022, 11, 27)));
+                                allowanceCeo.add(new Allowance("allowanceCeo", new BigDecimal(100),"Travel Allowance", LocalDate.of(2022, 11, 27), "LIFESTYLE"));
                                 List<Deduction> deductionCeo = ceo.getCurrentPayInformation().getDeduction();
-                                deductionCeo.add(new Deduction("deductionCeo", new BigDecimal(50),"Housing Costs", LocalDate.of(2022, 11, 1)));
+                                deductionCeo.add(new Deduction("deductionCeo", new BigDecimal(50),"Housing Costs", LocalDate.of(2022, 11, 1), "DAMAGES"));
                                 ceo.getCurrentPayInformation().setAllowance(allowanceCeo);
                                 ceo.getCurrentPayInformation().setDeduction(deductionCeo);
                                 ceo.setWorkEmail("ongj@libro.com");

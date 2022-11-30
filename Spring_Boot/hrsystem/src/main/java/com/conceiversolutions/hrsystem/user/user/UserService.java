@@ -2547,6 +2547,15 @@ public class UserService implements UserDetailsService {
         return "User details updated successfully";
     }
 
+    public Boolean updateUserBankInfo(Long userId, String bankName, String bankAccNo) {
+        User user = userRepository.findById(userId).get();
+        user.setBankName(bankName);
+        user.setBankAccNo(bankAccNo);
+        userRepository.save(user);
+
+        return true;
+    }
+
     private EducationEnum getEduEnum(String educationLevel) {
         System.out.println("UserService.getEduEnum");
         System.out.println("educationLevel = " + educationLevel);

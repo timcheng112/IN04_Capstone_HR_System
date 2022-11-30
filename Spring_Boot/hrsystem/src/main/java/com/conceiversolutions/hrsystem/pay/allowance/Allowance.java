@@ -31,6 +31,9 @@ public class Allowance {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Singapore")
     private LocalDate date;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name="allowance_type")
+    private AllowanceTypeEnum allowanceType;
 
     @OneToOne(fetch = FetchType.LAZY, optional = true, targetEntity = AllowanceTemplate.class)
     private AllowanceTemplate template;
@@ -48,6 +51,14 @@ public class Allowance {
         this.amount = amount;
         this.remarks = remarks;
         this.date = date;
+    }
+
+    public Allowance(String allowanceName, BigDecimal amount, String remarks, LocalDate date, String allowanceType) {
+        this.allowanceName = allowanceName;
+        this.amount = amount;
+        this.remarks = remarks;
+        this.date = date;
+        this.allowanceType = AllowanceTypeEnum.valueOf(allowanceType);
     }
 
     public Long getAllowanceId() {
@@ -98,6 +109,14 @@ public class Allowance {
         this.allowanceName = allowanceName;
     }
 
+    public AllowanceTypeEnum getAllowanceType() {
+        return allowanceType;
+    }
+
+    public void setAllowanceType(AllowanceTypeEnum allowanceType) {
+        this.allowanceType = allowanceType;
+    }
+
     @Override
     public String toString() {
         return "Allowance{" +
@@ -106,6 +125,7 @@ public class Allowance {
                 ", amount=" + amount +
                 ", remarks='" + remarks + '\'' +
                 ", date=" + date +
+                ", allowanceType=" + allowanceType +
                 ", template=" + template +
                 '}';
     }

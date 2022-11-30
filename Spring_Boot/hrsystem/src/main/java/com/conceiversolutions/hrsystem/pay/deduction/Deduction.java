@@ -32,6 +32,9 @@ public class Deduction {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Singapore")
     private LocalDate date;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name="deduction_type")
+    private DeductionTypeEnum deductionType;
     @OneToOne(fetch = FetchType.LAZY, optional = true, targetEntity = DeductionTemplate.class)
     private DeductionTemplate template;
 
@@ -48,6 +51,14 @@ public class Deduction {
         this.amount = amount;
         this.remarks = remarks;
         this.date = date;
+    }
+
+    public Deduction(String deductionName, BigDecimal amount, String remarks, LocalDate date, String deductionType) {
+        this.deductionName = deductionName;
+        this.amount = amount;
+        this.remarks = remarks;
+        this.date = date;
+        this.deductionType = DeductionTypeEnum.valueOf(deductionType);
     }
 
     public DeductionTemplate getTemplate() {
@@ -98,6 +109,14 @@ public class Deduction {
         this.amount = amount;
     }
 
+    public DeductionTypeEnum getDeductionType() {
+        return deductionType;
+    }
+
+    public void setDeductionType(DeductionTypeEnum deductionType) {
+        this.deductionType = deductionType;
+    }
+
     @Override
     public String toString() {
         return "Deduction{" +
@@ -106,6 +125,7 @@ public class Deduction {
                 ", amount=" + amount +
                 ", remarks='" + remarks + '\'' +
                 ", date=" + date +
+                ", deductionType=" + deductionType +
                 ", template=" + template +
                 '}';
     }
