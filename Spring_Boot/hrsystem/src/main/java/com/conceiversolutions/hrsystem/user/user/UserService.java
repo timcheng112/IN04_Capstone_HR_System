@@ -58,9 +58,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.Transient;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.time.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -97,6 +100,9 @@ public class UserService implements UserDetailsService {
     private final TaskListItemService taskListItemService;
     private final TaskListItemRepository taskListItemRepository;
     private final DocDataService docDataService;
+
+    private final ShiftListItemRepository shiftListItemRepository;
+
 
     // @Autowired
     // public UserService(UserRepository userRepository, EmailValidator
@@ -1193,6 +1199,20 @@ public class UserService implements UserDetailsService {
         return "Update of user was successful";
     }
 
+
+    public String updateUserESS(Long userId, String email, String phone, String bankName, String bankAccNo) {
+        System.out.println("UserService.updateUserESS");
+        // System.out.println(.getUserRole());
+
+        User user = userRepository.findById(userId).get();
+
+        user.setPhone(Integer.valueOf(phone));
+        user.setEmail(email);
+        user.setBankName(bankName);
+        user.setBankAccNo(bankAccNo);
+        userRepository.save(user);
+        return "Update of user was successful";
+    }
     public String updateProfilePic(Long userId, MultipartFile file) throws IOException {
         System.out.println("UserService.updateProfilePic");
         User employee = userRepository.findById(userId).get();
@@ -1843,7 +1863,9 @@ public class UserService implements UserDetailsService {
         int clockedMonth = attendance.get("clockedMonth");
 
         User u1 = getUser(userId);
-        List<ShiftListItem> sli = u1.getShiftListItems();
+//        List<ShiftListItem> sli = u1.getShiftListItems();
+        List<ShiftListItem> sli = shiftListItemService.getUserShiftsListItemsMonth(userId);
+
         Integer absent = 0;
         if (!sli.isEmpty()) {
 
@@ -1852,27 +1874,39 @@ public class UserService implements UserDetailsService {
                 int totalHours = 0;
                 // tim said even if they are absent, they will still have sli...
                 // so i have to check if check in time is there
-                if (!i.getCheckInTiming().equals(null)) {
+                if (i.getCheckInTiming() !=null ) {
                     shiftAttended += 1;
                     LocalDateTime dt1 = i.getCheckInTiming();
-                    LocalDateTime dt2 = i.getCheckOutTiming();
+//                    Long h = ChronoUnit.HOURS.between (i.getCheckInTiming(), LocalDateTime.now());
+                    if (i.getCheckOutTiming() == null || i.getCheckInTiming().toLocalDate().isBefore(LocalDate.now())) {
+                        LocalDateTime start = i.getShift().getStartTime();
+                        LocalDateTime end = i.getShift().getEndTime();
+                        Long hours = ChronoUnit.HOURS.between(start, end);
+                        totalHours += hours.intValue();
+                    } else {
+                        //if it is not null, get the checkout timing
+                        LocalDateTime dt2 = i.getCheckOutTiming();
+//                        LocalDateTime start = i.getShift().getStartTime();
+//                        LocalDateTime end = i.getShift().getEndTime();
+                        Long hours = ChronoUnit.HOURS.between(dt1, dt2);
+                        totalHours += hours.intValue();
+                    }
+                    System.out.println("hours:" + totalHours);
+//                }
 
-                    // LocalDateTime timeWorked = dt2 - dt1;
-                    // Chronos hours return Long
-                    // lunch break included
-                    // https://stackoverflow.com/questions/25747499/java-8-difference-between-two-localdatetime-in-multiple-units
-                    // https://docs.oracle.com/javase/tutorial/datetime/iso/period.html
-                    // dont use minus(). gives u back 1 LDT and u have to translate again :(
+//                    LocalDateTime start = i.getShift().getStartTime();
+//                    LocalDateTime end = i.getShift().getEndTime();
+//                    Long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), dt2);
 
-                    Long hours = ChronoUnit.HOURS.between(dt1, dt2);
+
+
+//                    if(dt1 != null) if not null, add the shifts hours
+//                    Long hours = ChronoUnit.HOURS.between(dt1, dt2);
+
+
                     // Integer clocked = hours.intValue() - 1;
-                    totalHours = hours.intValue();
-                    // need to check with shift which kind of shift is it. event or normal for
-                    // payroll.
-                    // normal employee so monthly. no need to care.
-                    // if (totalHours > 8) {
-                    // ot = totalHours - 8;
-                    // }
+//                    totalHours = hours.intValue();
+
 
                     // count for days in month
                     String monthOfName = "";
@@ -1900,12 +1934,12 @@ public class UserService implements UserDetailsService {
                     // clockedMonth += forOneMonth;
                     clockedMonth += totalHours;
 
-                    // attendance.put("OT", ot);
+                    // attendance.put("OT", ot)vr;
                     // attendance.put("totalHours", totalHours);
 
                 } else {
                     // absent so total hours =0
-                    absent += 1;
+//                    absent += 1; =-------- maybe it is cos it is not time yet?
                     // Integer totalHoursinInteger = totalHours;
                     // attendance.put("totalHours", totalHoursinInteger);
 
@@ -1969,6 +2003,7 @@ public class UserService implements UserDetailsService {
                     shiftAttended += 1;
                     LocalDateTime dt1 = i.getCheckInTiming();
                     LocalDateTime dt2 = i.getCheckOutTiming();
+
 
                     // LocalDateTime timeWorked = dt2 - dt1;
                     // Chronos hours return Long
@@ -2587,6 +2622,90 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
+
+    public ShiftListItem checkInEmployee(Long userId){
+        System.out.println("userService.checkInEmployee");
+        LocalDateTime checkInTime = LocalDateTime.now();
+        LocalDate ld = checkInTime.toLocalDate();
+
+        LocalDateTime start = LocalDateTime.of(ld, LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(ld, LocalTime.of(23, 59, 59));
+        ShiftListItem shiftListItem = null;
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByDateAndUserId(start, end,
+                userId);
+        if (shiftListItems.size() == 0) {
+            // failtofind
+            throw new IllegalStateException("No shiftListItems found for specified date and userId");
+        } else if (shiftListItems.size() > 1) {
+            // unexpected found more than 1 shiftListItem for user on specified date.
+            throw new IllegalStateException("Found more than 1 shiftListItem for specified date and userId");
+        } else {
+            // default
+            shiftListItem = shiftListItems.get(0);
+        }
+
+
+
+//        ShiftListItem shiftListItem = shiftListItemService.getShiftListItemByDateAndUserId(ld, userId);
+        if(shiftListItem.getCheckInTiming() == null){
+            shiftListItem.setCheckInTiming(checkInTime);
+        }
+
+        shiftListItemRepository.saveAndFlush(shiftListItem);
+        System.out.println(shiftListItem.getCheckInTiming());
+
+
+        if (shiftListItem != null) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().nullify();
+        }
+        return shiftListItem;
+
+    }
+
+    public ShiftListItem checkOutEmployee(Long userId){
+        System.out.println("userService.checkOutEmployee");
+        LocalDateTime checkOutTime = LocalDateTime.now();
+        LocalDate ld = checkOutTime.toLocalDate();
+//        ShiftListItem s = shiftListItemService.getShiftListItemByDateAndUserId(ld, userId);
+
+        LocalDateTime start = LocalDateTime.of(ld, LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(ld, LocalTime.of(23, 59, 59));
+        ShiftListItem shiftListItem = null;
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByDateAndUserId(start, end,
+                userId);
+        if (shiftListItems.size() == 0) {
+            // failtofind
+            throw new IllegalStateException("No shiftListItems found for specified date and userId");
+        } else if (shiftListItems.size() > 1) {
+            // unexpected found more than 1 shiftListItem for user on specified date.
+            throw new IllegalStateException("Found more than 1 shiftListItem for specified date and userId");
+        } else {
+            // default
+            shiftListItem = shiftListItems.get(0);
+        }
+
+//        if(s.getCheckOutTiming() == null & s.getCheckInTiming() != null){
+//        if(shiftListItem.getCheckOutTiming() == null){
+        if(shiftListItem.getCheckInTiming() != null){
+            shiftListItem.setCheckOutTiming(checkOutTime);
+        }
+        shiftListItemRepository.saveAndFlush(shiftListItem);
+        System.out.println(shiftListItem.getCheckOutTiming());
+
+        if (shiftListItem != null) {
+            shiftListItem.getShift().setRoster(null);
+            shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+            shiftListItem.getUser().nullify();
+        }
+
+        return shiftListItem;
+
+    }
+
     public List<User> getEmployeesByRosterAndDate(Long rosterId, LocalDate localDate) {
         Roster roster = rosterRepository.findById(rosterId)
                 .orElseThrow(() -> new IllegalStateException("Roster with ID: " + rosterId + " does not exist!"));
@@ -2691,6 +2810,7 @@ public class UserService implements UserDetailsService {
                     "Libro Payslip Available for View!");
         }
     }
+
 
     public String buildPayslipEmail(String name, String payslipMonth) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -2819,15 +2939,70 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public String setNfcUUID(String hexString, Long userId) {
+//    public String setNfcUUID(String hexString, Long userId) {
+//        User u1 = getUser(userId);
+//
+//        if (u1.getCardId() == null) {
+//            u1.setCardId(hexString);
+//        }
+//
+//        userRepository.saveAndFlush(u1);
+//        return "NFC is assigned to user Id";
+//    }
+
+
+
+    public HashMap<String, Integer> attendanceTest() {
+        // int totalHours = 0;
+        // cumulative
+        Integer ot = 0;
+        int shiftAttended = 0;
+
+        // Basic Monthly Rate, Overtime Hourly Pay
+        HashMap<String, Integer> attendance = new HashMap<String, Integer>();
+
+        attendance.put("attendance", Integer.valueOf(0));
+        return attendance;
+    }
+
+    public HashMap<String, Integer> attendanceUser(Long userId) {
+        // int totalHours = 0;
+        // cumulative
+        Integer ot = 0;
+        int shiftAttended = 0;
+
+        // Basic Monthly Rate, Overtime Hourly Pay
+        HashMap<String, Integer> attendance = new HashMap<String, Integer>();
+
+        if (attendance.get("clockedMonth") == null) {
+            // means never had it before
+            // int clockedMonth = 0;
+            attendance.put("clockedMonth", 0);
+        }
+        int clockedMonth = attendance.get("clockedMonth");
+
+        User u1 = getUser(userId);
+        List<ShiftListItem> sli = u1.getShiftListItems();
+        System.out.println("size: " + sli.size());
+        Integer absent = 0;
+
+        attendance.put("attendance", Integer.valueOf(0));
+        System.out.println(attendance.size());
+        return attendance;
+    }
+
+    public User assignCard(Long userId, String cardUUID){
         User u1 = getUser(userId);
 
-        if (u1.getCardId() == null) {
-            u1.setCardId(hexString);
-        }
+//        u1.setCardUUID(cardUUID);
+//        userRepository.saveAndFlush(u1);
+//        u1.nullify();
 
-        userRepository.saveAndFlush(u1);
-        return "NFC is assigned to user Id";
+        return u1;
     }
+
+//    public List<ShiftListItem> userSLI(Long userId){
+//
+//    }
 
 }

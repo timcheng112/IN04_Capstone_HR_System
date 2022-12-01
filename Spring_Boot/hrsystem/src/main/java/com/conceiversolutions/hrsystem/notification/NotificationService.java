@@ -1,10 +1,14 @@
 package com.conceiversolutions.hrsystem.notification;
 
+import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.conceiversolutions.hrsystem.enums.RoleEnum;
+import com.conceiversolutions.hrsystem.user.user.UserService;
 import org.springframework.stereotype.Service;
 
 import com.conceiversolutions.hrsystem.user.user.User;
@@ -19,6 +23,8 @@ public class NotificationService {
         private final NotificationRepository notificationRepository;
 
         private final UserRepository userRepository;
+
+        private final UserService userService;
 
         public List<Notification> getAllNotifications() {
                 System.out.println("NotificationService.getAllNotifications");
@@ -91,6 +97,44 @@ public class NotificationService {
                 System.out.println(u1.getNotificationsUnread());
                 System.out.println("read");
                 System.out.println(u1.getNotificationsRead());
+                return "Notification added successfully.";
+        }
+
+        public String addANotificationII(String notificationTitle, String notificationDescription, Long userId, Long senderId){
+
+                User sender = userRepository.findById(senderId)
+                        .orElseThrow(() -> new IllegalStateException(
+                                "User with id" + userId + "does not exist"));
+                String str1 = sender.getFirstName();
+                String str2 = sender.getLastName();
+                String senderName = str1 + " " + str2;
+
+                Notification n = new Notification(LocalDateTime.now(), notificationTitle, notificationDescription, senderName);
+
+                if(userId == -1){
+                        //broadcast
+                        List<User> staff = userRepository.findAllStaff(RoleEnum.EMPLOYEE, RoleEnum.MANAGER);
+                        for(User s : staff){
+                                List<Notification> lst = s.getNotificationsUnread();
+                                lst.add(n);
+                                System.out.println(s.getNotificationsUnread());
+                                notificationRepository.saveAndFlush(n);
+                                userRepository.saveAndFlush(s);
+                        }
+
+                }else{
+                        //notifications targetted to userId
+                        User u1 = userRepository.findById(userId)
+                                .orElseThrow(() -> new IllegalStateException(
+                                        "User with id" + userId + "does not exist"));
+                        u1.getNotificationsUnread().add(n);
+                        System.out.println(u1.getNotificationsUnread());
+                        notificationRepository.saveAndFlush(n);
+                        userRepository.saveAndFlush(u1);
+
+
+                }
+
                 return "Notification added successfully.";
         }
 
@@ -170,5 +214,51 @@ public class NotificationService {
                                                 "User with ID: " + userId + " does not exist!"));
                 return user.getNotificationsRead();
         }
+
+//        @Transient
+        public String broadcastMessage(String notificationTitle, String notificationDescription){
+                Notification n = new Notification(LocalDateTime.now(), notificationTitle, notificationDescription);
+                System.out.println(n.description);
+                List<User> lst = userRepository.findAll();
+                if( lst.size() > 0){
+                        for( User u : lst){
+                                User newUser = breakRelationships(u);
+                                newUser.getNotificationsUnread().add(n);
+                                System.out.println("notif added for user");
+                                System.out.println(newUser.getNotificationsUnread());
+                                notificationRepository.saveAndFlush(n);
+                                userRepository.saveAndFlush(newUser);
+                                System.out.println("notif added for user after flush");
+                                System.out.println(newUser.getNotificationsUnread());
+                        }
+                        return "Notification broadcast is successful.";
+
+                }else{
+                        return "No one to broadcast to.";
+                }
+
+        }
+
+
+        public User breakRelationships(User user) {
+                User newUser = user;
+                user.nullify();
+                user.setNotificationsRead(newUser.getNotificationsRead());
+                user.setNotificationsUnread(newUser.getNotificationsUnread());
+
+
+//                u.setUserId(user.getUserId());
+//                u.setFirstName(user.getFirstName());
+//                u.setLastName(user.getLastName());
+//                u.setWorkEmail(user.getWorkEmail());
+//                u.setUserRole(user.getUserRole());
+//                u.setProfilePic(user.getProfilePic());
+//                u.setIsBlackListed(user.getIsBlackListed());
+//                u.setNotificationsUnread(user.getNotificationsUnread());
+//                u.setNotificationsRead(user.getNotificationsRead());
+
+                return user;
+        }
+
 
 }

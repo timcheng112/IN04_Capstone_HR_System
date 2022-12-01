@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import { IconButton } from "react-native-paper";
 import NotificationScreen from "../screens/NotificationScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import UpdateProfile from "../components/profile/updateProfile";
 
 const HomeStack = createNativeStackNavigator();
 
@@ -30,6 +32,26 @@ const HomeNavigator = () => {
           tabBarLabel: "Notifications",
           headerRight: () => {
             <IconButton icon="bell" size={25} />;
+          },
+        }}
+      />
+      <HomeStack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: "Profile",
+          headerRight: () => {
+            <IconButton icon="human" size={25} />;
+          },
+        }}
+      />
+      <HomeStack.Screen
+        name="Update Profile"
+        component={UpdateProfile}
+        options={{
+          tabBarLabel: "Update Profile",
+          headerRight: () => {
+            // <IconButton icon="human" size={25} />;
           },
         }}
       />

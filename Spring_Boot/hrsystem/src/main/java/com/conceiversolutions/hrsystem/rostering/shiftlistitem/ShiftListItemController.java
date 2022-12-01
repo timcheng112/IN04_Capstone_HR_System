@@ -3,6 +3,7 @@ package com.conceiversolutions.hrsystem.rostering.shiftlistitem;
 import java.util.List;
 import java.time.*;
 
+import net.bytebuddy.asm.Advice;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,26 @@ public class ShiftListItemController {
     @GetMapping(path = "/getShiftListItemByTeam")
     public List<ShiftListItem> getShiftListItemByTeam(@RequestParam("teamId") Long teamId) {
         return shiftListItemService.getShiftListItemByTeam(teamId);
+    }
+
+    @GetMapping(path="/getUserShiftItemsMonthly")
+    public int getUserShiftItemsMonthly(@RequestParam("userId") Long userId){
+        return shiftListItemService.getUserShiftsListItemsMonth(userId).size();
+    }
+
+    @GetMapping(path="/getUserAttendedShiftsMonthly")
+    public int getUserAttendedShiftsMonthly(@RequestParam("userId")Long userId){
+        return shiftListItemService.getUserAttendedShiftsMonthly(userId);
+    }
+
+    @GetMapping(path="/getShiftsListItemsToday")
+    public List<ShiftListItem> getShiftsListItemsToday(){
+        return shiftListItemService.getShiftsListItemsToday();
+    }
+
+    @GetMapping(path = "/getShiftListsItemsTeamMonthly")
+    public List<ShiftListItem> getShiftListsItemsTeamMonthly(String ld1, String ld2,Long teamId){
+        return shiftListItemService.getShiftListItemsTeamMonthly(LocalDate.parse(ld1), LocalDate.parse(ld2),  teamId );
     }
 
     @GetMapping(path = "getShiftListItemsByMonth")

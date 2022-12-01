@@ -35,6 +35,12 @@ public interface ShiftListItemRepository extends JpaRepository<ShiftListItem, Lo
 
     @Query("SELECT s FROM ShiftListItem s JOIN s.user u JOIN u.teams t WHERE t.teamId = ?1")
     List<ShiftListItem> findShiftListItemByTeam(Long teamId);
+    @Query("SELECT s FROM ShiftListItem s WHERE s.user.userId =?1 ")
+    List<ShiftListItem> findShiftListItemByUserId(Long userId);
+
+    @Query("SELECT s FROM ShiftListItem s JOIN s.user WHERE DATE(s.shift.startTime) BETWEEN DATE(?1) AND DATE(?2)")
+    List<ShiftListItem> findShiftListItemByDate(LocalDateTime start, LocalDateTime end);
+
 
     @Query("SELECT s FROM ShiftListItem s WHERE s.user.userId =:userId AND s.shift.startTime BETWEEN :start AND :end")
     List<ShiftListItem> getShiftListItemsByMonth(@Param("userId") Long userId, @Param("start") LocalDateTime start,

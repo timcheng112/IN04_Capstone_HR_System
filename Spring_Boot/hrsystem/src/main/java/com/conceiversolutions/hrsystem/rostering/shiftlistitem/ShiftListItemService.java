@@ -160,6 +160,7 @@ public class ShiftListItemService {
         for (ShiftListItem shiftListItem : shiftListItems) {
             if (shiftListItem != null) {
                 shiftListItem.getShift().setRoster(null);
+
                 shiftListItem.getShift().setShiftListItems(new ArrayList<>());
                 shiftListItem.getUser().nullify();
                 // shiftListItem.getUser().setTeams(new ArrayList<>());
@@ -209,4 +210,140 @@ public class ShiftListItemService {
 
         return shiftListItems;
     }
+
+    public List<ShiftListItem> getUserShiftsListItemsMonth(Long userId ){
+
+        //get current month and year
+        YearMonth ym = YearMonth.now();
+        int year = ym.getYear();
+        int month = ym.getMonthValue();
+        Month monthName = Month.of(month);
+        System.out.println(ym);
+        int daysInMonth = YearMonth.of(year,month).lengthOfMonth();
+
+        LocalDate date1 = LocalDate.of(year, monthName, 1);
+        LocalDate date2 = LocalDate.of(year, monthName, daysInMonth);
+
+        LocalDateTime start = LocalDateTime.of(date1, LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(date2, LocalTime.of(23, 59, 59));
+        ShiftListItem shiftListItem = null;
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByDateAndUserId(start, end,
+                userId);
+
+        for (ShiftListItem s : shiftListItems) {
+            if (s != null) {
+                s.getShift().setRoster(null);
+                s.getShift().setShiftListItems(new ArrayList<>());
+                s.getUser().nullify();
+            }
+        }
+        return shiftListItems;
+
+    }
+
+    public int getUserAttendedShiftsMonthly(Long userId ){
+        List<ShiftListItem> shiftListItems = getUserShiftsListItemsMonth(userId);
+
+        int count =0;
+        for(ShiftListItem s: shiftListItems){
+            if(s.getCheckInTiming() != null){
+                count++;
+            }
+        }
+        for (ShiftListItem s : shiftListItems) {
+            if (s != null) {
+                s.getShift().setRoster(null);
+                s.getShift().setShiftListItems(new ArrayList<>());
+                s.getUser().nullify();
+            }
+        }
+        System.out.println(count);
+        return count;
+
+    }
+
+    public List<ShiftListItem> getUserShiftListItems(Long userId){
+        return shiftListItemRepository.findShiftListItemByUserId(userId);
+    }
+
+    public List<ShiftListItem> getShiftsListItemsToday(){
+        LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
+        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
+        ShiftListItem shiftListItem = null;
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemByDate(start, end);
+
+        for (ShiftListItem s : shiftListItems) {
+            if (s != null) {
+                s.getShift().setRoster(null);
+                s.getShift().setShiftListItems(new ArrayList<>());
+                s.getUser().nullify();
+            }
+        }
+        return shiftListItems;
+    }
+
+    public List<ShiftListItem> getShiftListItemsTeamMonthly(LocalDate ldt1, LocalDate ldt2, Long teamId)
+    {
+//        LocalDate checkMonthYear = LocalDate.now();
+
+        //get current month and year
+        YearMonth ym = YearMonth.now();
+        int year = ym.getYear();
+        int month = ym.getMonthValue();
+        Month monthName = Month.of(month);
+        System.out.println(ym);
+        int daysInMonth = YearMonth.of(year,month).lengthOfMonth();
+
+        LocalDate date1 = LocalDate.of(year, monthName, 1);
+        LocalDate date2 = LocalDate.of(year, monthName, daysInMonth);
+
+
+        LocalDateTime start = LocalDateTime.of(date1, LocalTime.of(0, 0, 0));
+        LocalDateTime end = LocalDateTime.of(date2,  LocalTime.of(23, 59, 59));
+//        Team t = teamRepository.findById(teamId).get();
+
+        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemsByDateAndTeam(start, end, teamId);
+
+        for (ShiftListItem shiftListItem : shiftListItems) {
+            if (shiftListItem != null) {
+                shiftListItem.getShift().setRoster(null);
+
+                shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+                shiftListItem.getUser().nullify();
+                // shiftListItem.getUser().setTeams(new ArrayList<>());
+                // shiftListItem.getUser().setQualificationInformation(null);
+                // shiftListItem.getUser().setPositions(new ArrayList<>());
+                // shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+                // shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+            }
+        }
+
+        return shiftListItems;
+    }
+
+//    public List<ShiftListItem> getShiftListItemByDatesAndTeam(LocalDate date, Long teamId) {
+//        LocalDateTime start = LocalDateTime.of(date, LocalTime.of(0, 0, 0));
+//        LocalDateTime end = LocalDateTime.of(date, LocalTime.of(23, 59, 59));
+//
+//        List<ShiftListItem> shiftListItems = shiftListItemRepository.findShiftListItemsByDateAndTeam(start, end,
+//                teamId);
+//
+//        for (ShiftListItem shiftListItem : shiftListItems) {
+//            if (shiftListItem != null) {
+//                shiftListItem.getShift().setRoster(null);
+//
+//                shiftListItem.getShift().setShiftListItems(new ArrayList<>());
+//                shiftListItem.getUser().nullify();
+//                // shiftListItem.getUser().setTeams(new ArrayList<>());
+//                // shiftListItem.getUser().setQualificationInformation(null);
+//                // shiftListItem.getUser().setPositions(new ArrayList<>());
+//                // shiftListItem.getUser().setTaskListItems(new ArrayList<>());
+//                // shiftListItem.getUser().setShiftListItems(new ArrayList<>());
+//            }
+//        }
+//
+//        return shiftListItems;
+//    }
 }

@@ -8,14 +8,22 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <IconButton
+        <><IconButton
           icon="bell-outline"
           size={25}
           color="white"
           onPress={() => {
             navigation.navigate("Notifications");
-          }}
-        />
+          } } />
+
+          <IconButton
+            icon="account-outline"
+            size={25}
+            color="white"
+            onPress={() => {
+              navigation.navigate("Profile");
+            } } />
+            </>
       ),
     });
   }, [navigation]);

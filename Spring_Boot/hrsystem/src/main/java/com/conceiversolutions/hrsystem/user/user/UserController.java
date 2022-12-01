@@ -9,6 +9,7 @@ import com.conceiversolutions.hrsystem.enums.RoleEnum;
 import com.conceiversolutions.hrsystem.pay.allowanceTemplate.AllowanceTemplate;
 import com.conceiversolutions.hrsystem.pay.deductionTemplate.DeductionTemplate;
 import com.conceiversolutions.hrsystem.pay.payinformation.PayInformation;
+import com.conceiversolutions.hrsystem.rostering.shiftlistitem.ShiftListItem;
 import com.conceiversolutions.hrsystem.user.position.Position;
 
 import com.conceiversolutions.hrsystem.user.position.PositionRepository;
@@ -20,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -284,6 +287,14 @@ public class UserController {
         return userService.updateUser(userId, gender, email, phone);
 
     }
+    @GetMapping(path="/updateProfileESS")
+    public String updateProfileESS(@RequestParam("userId") Long userId,
+                                @RequestParam("email") String email,
+                                @RequestParam("phone") String phone, @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo) {
+        // System.out.println(user.getUserRole());
+        return userService.updateUserESS(userId, email, phone, bankName, bankAccNo);
+
+    }
 
     @PostMapping(path = "updateProfilePic")
     public String updateProfilePic(@RequestParam("userId") Long userId,
@@ -431,4 +442,49 @@ public class UserController {
     public Boolean updateUserBankInfo(@RequestParam("userId") Long userId, @RequestParam("bankName") String bankName, @RequestParam("bankAccNo") String bankAccNo){
         return userService.updateUserBankInfo(userId, bankName, bankAccNo);
     }
+
+
+    @PostMapping(path="/attendance/checkIn")
+    public ShiftListItem checkInEmployees(@RequestParam("userId") Long userId){
+
+//        return userService.checkInEmployee(LocalDateTime.parse(checkintime),userId);
+        return userService.checkInEmployee(userId);
+
+    }
+
+    @PostMapping(path="/attendance/checkOut")
+    public ShiftListItem checkOutEmployees(@RequestParam("userId") Long userId){
+
+        return userService.checkOutEmployee(userId);
+
+    }
+
+    @GetMapping(path="/attendance/allAttendance")
+    public HashMap<String, Integer> attendanceTest(){
+
+        return userService.attendanceTest();
+
+    }
+
+    @GetMapping(path="/attendance/userAttendance")
+    public HashMap<String, Integer> attendanceUser(@RequestParam("userId") Long userId){
+        return userService.attendanceUser(userId);
+    }
+
+    @PostMapping(path="/attendance/assignCard")
+    public User assignCard(@RequestParam("userId") Long userId,@RequestParam("cardUUID") String cardUUID){
+        return userService.assignCard(userId,cardUUID);
+    }
+
+    @GetMapping(path="/attendance/myShiftList")
+    public List<ShiftListItem> getMyShiftList(@RequestParam("userId") Long userId){
+        return userService.getMyShiftList(userId);
+    }
+
+    @GetMapping(path ="/attendance/attendanceFullTime")
+    public HashMap<String, Integer> attendanceFullTimeMonthly(@RequestParam("userId") Long userId){
+        return userService.attendanceFullTimeMonthly(userId);
+    }
+
+
 }

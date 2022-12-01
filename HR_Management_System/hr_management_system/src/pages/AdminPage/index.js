@@ -34,6 +34,8 @@ export default function AdminPage(userId) {
   const history = useHistory();
   const [openDeactivate, setOpenDeactivate] = useState(false);
   const [activated, setActivated] = useState(false);
+  const [userInfo, setUserInfo] = useState([]);
+
   useLayoutEffect(() => {
     const isIndeterminate =
       selectedPeople.length > 0 && selectedPeople.length < people.length;
@@ -63,6 +65,27 @@ export default function AdminPage(userId) {
         alert("Unable to get all employees right now");
       });
   }, [userId]);
+
+  // useEffect(() => {
+
+  //   api.getUserInfo(userId).then((response) => {
+  //     setUserInfo(response.data);
+  //     // console.log(userInfo);
+  //   });
+  //   // getUserInfo();
+  // }, []);
+
+  function timeout(number) {
+    return new Promise( res => setTimeout(res, number) );
+}
+
+  function assignCardtoUser(userId){
+    const yes = window.confirm("Instructions: Place assigned card on NFC reader for the card to be assigned. Click Confirm? ");
+    if(yes){
+      api.assignCardtoUser(userId).then((response) =>{ console.log(response.data); alert("Card configured successfully. Take card off the holder and wait about 5 seconds to complete assignment."); window.location.reload();})
+      .catch((error) =>{console.log(error);})
+    }
+  }
 
   function Activate(email) {
     const yes = window.confirm("Are you sure you want to activate user?");
@@ -190,6 +213,7 @@ export default function AdminPage(userId) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
+                    {/* people.filter((u) => u.userId !== userInfo.userId) */}
                     {people.map((person) => (
                       <tr
                         key={person.email}
@@ -236,13 +260,29 @@ export default function AdminPage(userId) {
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {person.isEnabled ? "ACTIVE" : "INACTIVE"}
                         </td>
+
                         <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <a
+                          {/* <a
                             href="#"
                             className="text-indigo-600 hover:text-indigo-900"
                           >
                             Edit<span className="sr-only">, {person.name}</span>
-                          </a>
+                          </a> */}
+                          {/* if not null then can assign */}
+                          {person.cardUUID === null ? (
+                            <button
+                              onClick={() => assignCardtoUser(person.userId)}
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              Assign Company Card
+                              <span className="sr-only">
+                                , {person.userId}
+                              </span>
+                            </button>
+                          ) : (
+                            // not null
+                            "Card assigned"
+                          )}
                         </td>
 
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

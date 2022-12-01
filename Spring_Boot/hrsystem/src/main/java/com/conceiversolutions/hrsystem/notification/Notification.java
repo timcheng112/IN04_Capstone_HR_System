@@ -24,7 +24,8 @@ public class Notification {
     public String title;
     @Column(name = "description", nullable = false)
     public String description;
-    //read?
+    @Column(name = "sender_name", nullable = false)
+    public String senderName;
 
     public Notification() {
     }
@@ -35,7 +36,14 @@ public class Notification {
         this.description = description;
     }
 
-//    public Notification(LocalDateTime notifTime, String title, String description, User employee) {
+    public Notification(LocalDateTime notifTime, String title, String description, String senderName) {
+        this.notifTime = notifTime;
+        this.title = title;
+        this.description = description;
+        this.senderName = senderName;
+    }
+
+    //    public Notification(LocalDateTime notifTime, String title, String description, User employee) {
 //        this.notifTime = notifTime;
 //        this.title = title;
 //        this.description = description;

@@ -68,7 +68,7 @@ export default function Attendance() {
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">Users</h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the users
+            Today's attendance
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -76,7 +76,7 @@ export default function Attendance() {
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
           >
-            Add user
+            Add attendance
           </button>
         </div>
       </div>
@@ -112,16 +112,16 @@ export default function Attendance() {
                         onChange={toggleAll}
                       />
                     </th>
-                    <th scope="col" className="min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="min-w-[12rem] py-3.5 pr-3 text-center text-sm font-semibold text-gray-900">
                       Name
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
                       Title
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
                       Email
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
                       Role
                     </th>
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -136,7 +136,7 @@ export default function Attendance() {
                         {selectedPeople.includes(person) && (
                           <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />
                         )}
-                        <input
+                        {/* <input
                           type="checkbox"
                           className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
                           value={person.email}
@@ -148,7 +148,7 @@ export default function Attendance() {
                                 : selectedPeople.filter((p) => p !== person)
                             )
                           }
-                        />
+                        /> */}
                       </td>
                       <td
                         className={classNames(
@@ -156,11 +156,11 @@ export default function Attendance() {
                           selectedPeople.includes(person) ? 'text-indigo-600' : 'text-gray-900'
                         )}
                       >
-                        {person.name}
+                        {person.firstName}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.title}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.email}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.role}</td>
+                      <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500">{person.email}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.userRole}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.attendance}</td>
                       <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <a href="#" className="text-indigo-600 hover:text-indigo-900">
                           Edit<span className="sr-only">, {person.name}</span>

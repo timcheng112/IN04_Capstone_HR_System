@@ -90,9 +90,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.userRole = ?1")
     List<User> findAllApplicants(RoleEnum role);
 
+    @Query("SELECT u FROM User u WHERE u.cardUUID = ?1")
+    Optional<User> findUserByCardUUID(String card);
+
+//    @Query("SELECT u FROM User u JOIN ShiftListItems sli JOIN Shift s WHERE s.startTime = 1? ")
+//    List<User> findAllUsersShiftsToday(LocalDateTime = )
     @Query("SELECT u FROM User u WHERE u.isHrEmployee = 1")
     List<User> findAllHREmployees();
-    
+
     @Query("SELECT u FROM User u WHERE u.currentPosition.positionId = ?1")
     List<User> findUsersWithPosition(Long positionId);
 

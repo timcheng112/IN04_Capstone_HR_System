@@ -1689,6 +1689,22 @@ const api = {
       `http://localhost:9191/api/pay/payinfo/getEmployeesAverageSalary`
     );
   },
+  assignCardtoUser(userId){
+    return axios.put(`http://localhost:9191/api/card/assignCardtoUser/?userId=${userId}`);
+  },
+  toggleAttendance(toggle){
+    //toggle is a boolean - false to not run and true to not run
+    console.log(toggle + "in api")
+    return axios.put(`http://localhost:9191/api/card/toggleAttendance?toggle=${toggle}`);
+  },
+  NFC(){
+    //polling
+    return axios.get(`http://localhost:9191/api/card/nfc`);
+  },
+  getShiftListItemsToday(){
+    return axios.get(`http://localhost:9191/api/shift_list_item/getShiftsListItemsToday`);
+  },
+
 };
 
 export default api;

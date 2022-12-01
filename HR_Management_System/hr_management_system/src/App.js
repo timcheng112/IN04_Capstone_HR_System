@@ -78,6 +78,7 @@ import TransferRequestPage from "./pages/Progression/transferRequest";
 import MyBenefitsPage from "./pages/Benefit/index";
 import BenefitsPage from "./pages/Benefit/indexHR";
 import ClaimsPage from "./pages/Benefit/claim";
+import ToggleNFC from "./pages/NFC/ToggleNFC";
 import RewardTrackPage from "./pages/Reward/index"
 import RewardTrackDetailPage from "./pages/Reward/TrackDetail"
 import ReviewFormPage from "./pages/Reward/review"
@@ -86,6 +87,7 @@ import EmployeeRewardPage from "./pages/Reward/EmployeeReward";
 
 import ReportPage from "./pages/Report/index"
 import CareerReportPage from "./pages/Report/career"
+
 
 function App() {
   return (
@@ -118,7 +120,7 @@ function App() {
           <PrivateRoute exact path="/viewOrgChart" component={EmployeeChart} />
           <PrivateRoute exact path="/viewTeam/:teamId" component={ViewTeam} />
           <PrivateRoute exact path="/mytraining" component={TrainingPage} />
-
+          <PrivateRoute exact path="/attendance" component={Attendance} />
           <PrivateRoute
             exact
             path="/viewDept/:deptId"
@@ -258,7 +260,7 @@ function App() {
             component={TransferPage}
           />
           <PrivateRoute exact path="/myperformance" component={PerformancePage} />
-          
+
           <PrivateRoute exact path="/performance/goals" component={GoalsPage} />
           <PrivateRoute exact path="/performance/appraisals" component={AppraisalsPage} />
           <PrivateRoute exact path="/performance/appraisal/:appraisalId" component={AppraisalPage} />
@@ -273,10 +275,10 @@ function App() {
             path="/attendance/"
             component={NFC}
           />
-          
+
           <PrivateRoute exact path="/performance/reviews" component={ReviewsPage} />
           <PrivateRoute exact path="/performance/review/:reviewId" component={ReviewPage} />
-          
+
           <PrivateRoute exact path="/promotion" component={PromotionPage} />
           <PrivateRoute exact path="/promotion/:requestId" component={PromotionRequestPage} />
 
@@ -288,6 +290,8 @@ function App() {
           <PrivateRoute exact path="/welfare/mybenefits" component={MyBenefitsPage} />
           <PrivateRoute exact path="/welfare/benefits" component={BenefitsPage} />
           <PrivateRoute exact path="/welfare/claims" component={ClaimsPage} />
+          <PrivateRoute exact path="/attendance/NFC" component={ToggleNFC}/>
+
           <PrivateRoute exact path="/welfare/rewardtrack" component={RewardTrackPage} />
           <PrivateRoute exact path="/welfare/rewardtrackdetail" component={RewardTrackDetailPage} />
           <PrivateRoute exact path="/welfare/reviewform" component={ReviewFormPage} />
@@ -296,6 +300,7 @@ function App() {
 
           <PrivateRoute exact path="/report" component={ReportPage} />
           <PrivateRoute exact path="/creport" component={CareerReportPage} />
+
         </Switch>
       </div>
     </BrowserRouter>

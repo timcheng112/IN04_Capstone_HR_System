@@ -185,8 +185,8 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = BenefitPlanInstance.class, mappedBy = "planOwner")
     private List<BenefitPlanInstance> benefitPlanInstances;
 
-    private String cardId;
-
+    @Column(name="card_UUID")
+    private String cardUUID;
     // TODO add on other relationships to other classes
 
     public User() {
@@ -263,8 +263,10 @@ public class User implements UserDetails {
         this.bankName = bankName;
         this.notificationsUnread = notificationsUnread;
         this.notificationsRead = notificationsRead;
-        this.cardId = cardId;
+//        this.cardId = cardId;
     }
+
+
 
     // this should be for making a new applicant's account
     // public User(String firstName, String lastName, String password, Integer
@@ -344,30 +346,28 @@ public class User implements UserDetails {
         this.currentPayInformation = currentPayInformation;
     }
 
-    // this should be for making an employee's account
-    // public User(String firstName, String lastName, Integer phone, String email,
-    // String workEmail,
-    // LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer,
-    // Boolean isHrEmployee,
-    // LocalDate dateJoined, PayInformation currentPayInformation) {
-    // this();
-    // this.firstName = firstName;
-    // this.lastName = lastName;
-    // this.phone = phone;
-    // this.email = email;
-    // this.workEmail = workEmail;
-    // this.dob = dob;
-    // this.gender = gender;
-    // this.userRole = userRole;
-    // this.isPartTimer = isPartTimer;
-    // this.isHrEmployee = isHrEmployee;
-    // this.dateJoined = dateJoined;
-    // this.currentPayInformation = currentPayInformation;
-    // this.isBlackListed = false;
-    // this.isEnabled = false; // only change to true after email is confirmed
-    // this.profilePic = null;
-    // this.currentPosition = null;
-    // this.qualificationInformation = null;
+    //this should be for making an employee's account
+    // public User(String firstName, String lastName, Integer phone, String email, String workEmail,
+    //         LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+    //         LocalDate dateJoined, PayInformation currentPayInformation) {
+    //     this();
+    //     this.firstName = firstName;
+    //     this.lastName = lastName;
+    //     this.phone = phone;
+    //     this.email = email;
+    //     this.workEmail = workEmail;
+    //     this.dob = dob;
+    //     this.gender = gender;
+    //     this.userRole = userRole;
+    //     this.isPartTimer = isPartTimer;
+    //     this.isHrEmployee = isHrEmployee;
+    //     this.dateJoined = dateJoined;
+    //     this.currentPayInformation = currentPayInformation;
+    //     this.isBlackListed = false;
+    //     this.isEnabled = false; // only change to true after email is confirmed
+    //     this.profilePic = null;
+    //     this.currentPosition = null;
+    //     this.qualificationInformation = null;
     // }
 
     // this should be for making an employee's account (duplicate with race +
@@ -489,31 +489,28 @@ public class User implements UserDetails {
     }
 
     // this should be for making an employee's account
-    // public User(String firstName, String lastName, Integer phone, String email,
-    // String workEmail,
-    // LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer,
-    // Boolean isHrEmployee,
-    // LocalDate dateJoined, PayInformation currentPayInformation, Position
-    // currentPosition) {
-    // this();
-    // this.firstName = firstName;
-    // this.lastName = lastName;
-    // this.phone = phone;
-    // this.email = email;
-    // this.workEmail = workEmail;
-    // this.dob = dob;
-    // this.gender = gender;
-    // this.userRole = userRole;
-    // this.isPartTimer = isPartTimer;
-    // this.isHrEmployee = isHrEmployee;
-    // this.dateJoined = dateJoined;
-    // this.currentPayInformation = currentPayInformation;
-    // this.isBlackListed = false;
-    // this.isEnabled = false; // only change to true after email is confirmed
-    // this.profilePic = null;
-    // this.qualificationInformation = null;
-    // this.currentPosition = currentPosition;
-    // this.positions.add(currentPosition);
+    // public User(String firstName, String lastName, Integer phone, String email, String workEmail,
+    //         LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+    //         LocalDate dateJoined, PayInformation currentPayInformation, Position currentPosition) {
+    //     this();
+    //     this.firstName = firstName;
+    //     this.lastName = lastName;
+    //     this.phone = phone;
+    //     this.email = email;
+    //     this.workEmail = workEmail;
+    //     this.dob = dob;
+    //     this.gender = gender;
+    //     this.userRole = userRole;
+    //     this.isPartTimer = isPartTimer;
+    //     this.isHrEmployee = isHrEmployee;
+    //     this.dateJoined = dateJoined;
+    //     this.currentPayInformation = currentPayInformation;
+    //     this.isBlackListed = false;
+    //     this.isEnabled = false; // only change to true after email is confirmed
+    //     this.profilePic = null;
+    //     this.qualificationInformation = null;
+    //     this.currentPosition = currentPosition;
+    //     this.positions.add(currentPosition);
     // }
 
     // this should be for making an employee's account (duplicate with race +
@@ -545,71 +542,60 @@ public class User implements UserDetails {
         this.positions.add(currentPosition);
     }
 
-    // public User(String firstName, String lastName, String password, Integer
-    // phone, String email, String workEmail,
-    // LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer,
-    // Boolean isHrEmployee,
-    // Boolean isBlackListed, Boolean isEnabled, LocalDate dateJoined, DocData
-    // profilePic,
-    // List<Position> positions, Position currentPosition, QualificationInformation
-    // qualificationInformation,
-    // List<JobApplication> applications, List<JobRequest> jobRequests,
-    // List<Payslip> payslips,
-    // List<Attendance> attendances, List<Appraisal> employeeAppraisals,
-    // List<Appraisal> managerAppraisals,
-    // List<ManagerReview> managerReviews, List<ManagerReview> employeeReviews,
-    // List<Module> modules,
-    // List<Goal> goals, List<TaskListItem> taskListItems, List<Team> teams,
-    // PayInformation currentPayInformation,
-    // ReactivationRequest reactivationRequest, PreferredDates preferredDates,
-    // List<Block> blocks,
-    // List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested,
-    // List<SwapRequest> swapRequestsReceived, LeaveQuota currentLeaveQuota,
-    // List<LeaveQuota> leaveQuotas,
-    // List<Leave> leaves, List<Notification> notificationsUnread,
-    // List<Notification> notificationsRead) {
-    // this();
-    // this.firstName = firstName;
-    // this.lastName = lastName;
-    // this.password = password;
-    // this.phone = phone;
-    // this.email = email;
-    // this.workEmail = workEmail;
-    // this.dob = dob;
-    // this.gender = gender;
-    // this.userRole = userRole;
-    // this.isPartTimer = isPartTimer;
-    // this.isHrEmployee = isHrEmployee;
-    // this.isBlackListed = isBlackListed;
-    // this.isEnabled = isEnabled;
-    // this.dateJoined = dateJoined;
-    // this.profilePic = profilePic;
-    // this.positions = positions;
-    // this.currentPosition = currentPosition;
-    // this.qualificationInformation = qualificationInformation;
-    // this.applications = applications;
-    // this.jobRequests = jobRequests;
-    // this.payslips = payslips;
-    // this.attendances = attendances;
-    // this.employeeAppraisals = employeeAppraisals;
-    // this.managerAppraisals = managerAppraisals;
-    // this.managerReviews = managerReviews;
-    // this.employeeReviews = employeeReviews;
-    // this.goals = goals;
-    // this.taskListItems = taskListItems;
-    // this.teams = teams;
-    // this.currentPayInformation = currentPayInformation;
-    // this.reactivationRequest = reactivationRequest;
-    // this.preferredDates = preferredDates;
-    // this.blocks = blocks;
-    // this.shiftListItems = shiftListItems;
-    // this.swapRequestsRequested = swapRequestsRequested;
-    // this.swapRequestsReceived = swapRequestsReceived;
-    // this.currentLeaveQuota = currentLeaveQuota;
-    // this.leaveQuotas = leaveQuotas;
-    // this.leaves = leaves;
-    // this.notificationsUnread = new ArrayList<>();
-    // this.notificationsRead = new ArrayList<>();
+    // public User(String firstName, String lastName, String password, Integer phone, String email, String workEmail,
+    //         LocalDate dob, GenderEnum gender, RoleEnum userRole, Boolean isPartTimer, Boolean isHrEmployee,
+    //         Boolean isBlackListed, Boolean isEnabled, LocalDate dateJoined, DocData profilePic,
+    //         List<Position> positions, Position currentPosition, QualificationInformation qualificationInformation,
+    //         List<JobApplication> applications, List<JobRequest> jobRequests, List<Payslip> payslips,
+    //         List<Attendance> attendances, List<Appraisal> employeeAppraisals, List<Appraisal> managerAppraisals,
+    //         List<ManagerReview> managerReviews, List<ManagerReview> employeeReviews, List<Module> modules,
+    //         List<Goal> goals, List<TaskListItem> taskListItems, List<Team> teams, PayInformation currentPayInformation,
+    //         ReactivationRequest reactivationRequest, PreferredDates preferredDates, List<Block> blocks,
+    //         List<ShiftListItem> shiftListItems, List<SwapRequest> swapRequestsRequested,
+    //         List<SwapRequest> swapRequestsReceived, LeaveQuota currentLeaveQuota, List<LeaveQuota> leaveQuotas,
+    //         List<Leave> leaves, List<Notification> notificationsUnread, List<Notification> notificationsRead) {
+    //     this();
+    //     this.firstName = firstName;
+    //     this.lastName = lastName;
+    //     this.password = password;
+    //     this.phone = phone;
+    //     this.email = email;
+    //     this.workEmail = workEmail;
+    //     this.dob = dob;
+    //     this.gender = gender;
+    //     this.userRole = userRole;
+    //     this.isPartTimer = isPartTimer;
+    //     this.isHrEmployee = isHrEmployee;
+    //     this.isBlackListed = isBlackListed;
+    //     this.isEnabled = isEnabled;
+    //     this.dateJoined = dateJoined;
+    //     this.profilePic = profilePic;
+    //     this.positions = positions;
+    //     this.currentPosition = currentPosition;
+    //     this.qualificationInformation = qualificationInformation;
+    //     this.applications = applications;
+    //     this.jobRequests = jobRequests;
+    //     this.payslips = payslips;
+    //     this.attendances = attendances;
+    //     this.employeeAppraisals = employeeAppraisals;
+    //     this.managerAppraisals = managerAppraisals;
+    //     this.managerReviews = managerReviews;
+    //     this.employeeReviews = employeeReviews;
+    //     this.goals = goals;
+    //     this.taskListItems = taskListItems;
+    //     this.teams = teams;
+    //     this.currentPayInformation = currentPayInformation;
+    //     this.reactivationRequest = reactivationRequest;
+    //     this.preferredDates = preferredDates;
+    //     this.blocks = blocks;
+    //     this.shiftListItems = shiftListItems;
+    //     this.swapRequestsRequested = swapRequestsRequested;
+    //     this.swapRequestsReceived = swapRequestsReceived;
+    //     this.currentLeaveQuota = currentLeaveQuota;
+    //     this.leaveQuotas = leaveQuotas;
+    //     this.leaves = leaves;
+    //     this.notificationsUnread = new ArrayList<>();
+    //     this.notificationsRead = new ArrayList<>();
     // }
 
     // duplicate with race + citizenship
@@ -863,14 +849,6 @@ public class User implements UserDetails {
 
     public void setDisabled(Boolean disabled) {
         isDisabled = disabled;
-    }
-
-    public String getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(String cardId) {
-        this.cardId = cardId;
     }
 
     public User nullify() {
