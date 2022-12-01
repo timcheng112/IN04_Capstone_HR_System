@@ -305,6 +305,11 @@ const api = {
         `http://${URL}:9191/api/rewards/redeemReward?rewardId=${rewardId}&employeeId=${employeeId}`
       );
    },
+   getRewardTrackByEmployee(employeeId) {
+    return axios.get(
+      `http://${URL}:9191/api/rewards/getRewardTrackByEmployee?employeeId=${employeeId}`
+    );
+  },
   getUserShiftItemsMonthly(userId){
     return axios.get(`http://${URL}:9191/api/shift_list_item/getUserShiftItemsMonthly?userId=${userId}`);
   },
