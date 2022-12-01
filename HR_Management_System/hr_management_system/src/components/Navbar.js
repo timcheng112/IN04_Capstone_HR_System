@@ -31,6 +31,7 @@ export default function Navbar() {
     { name: "Hiring", path: "/hiring/jobrequest" },
     { name: "Rostering", path: "/rostering" },
     { name: "Payroll", path: "/payroll" },
+    { name: "NFC ", path: "/attendance/NFC" },
   ];
   const navigationHR = [
     { name: "Administrative", path: "/admin/onboarding" },
@@ -42,6 +43,7 @@ export default function Navbar() {
     { name: "Reports", path: "/report" },
     { name: "Rostering", path: "/rostering" },
     { name: "Payroll", path: "/payroll" },
+    { name: "NFC", path: "/attendance/nfc" },
   ];
   const { url } = useRouteMatch();
   const [user, setUser] = useState(null);
