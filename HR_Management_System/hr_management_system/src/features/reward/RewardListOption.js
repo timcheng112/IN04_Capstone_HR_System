@@ -28,7 +28,7 @@ export default function RewardListOption({ reward, refreshKeyHandler }) {
             <EyeIcon className="h-4 w-4 text-indigo-400" aria-hidden="true" />
             <span className="ml-3"></span>
           </button>
-          <ViewReward open={open} setOpen={setOpen} reward={reward} />
+          <ViewReward open={open} setOpen={setOpen} reward={reward} refreshKeyHandler={refreshKeyHandler} />
         </div>
         <div className="-ml-px flex w-0 flex-1">
           <button

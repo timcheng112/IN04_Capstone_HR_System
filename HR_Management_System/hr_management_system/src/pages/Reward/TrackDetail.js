@@ -158,7 +158,7 @@ export default function TrackDetail() {
                       id="title"
                       required
                       placeholder="0.00"
-                      value={ratio.toFixed(2)}
+                      value={ratio}
                       className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       onChange={(e) => setRatio(e.target.value)}
                     />
@@ -220,13 +220,13 @@ export default function TrackDetail() {
             >
               Save
             </button>
-            <button
+            {track.isActive === false && <button
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               onClick={() => (useState.button = 2)}
             >
               Publish
-            </button>
+            </button>}
           </div>
         </div>
 

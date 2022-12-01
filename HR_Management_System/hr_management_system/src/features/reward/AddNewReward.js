@@ -119,7 +119,7 @@ export default function AddNewReward({ open, setOpen, track, refreshKeyHandler }
                             </div>
                             <div>
                               <label htmlFor="description" className="block text-sm font-medium text-gray-900">
-                                Decription
+                                Description
                               </label>
                               <div className="mt-1">
                                 <textarea

@@ -10,7 +10,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function ViewReward({ open, setOpen, reward }) {
+export default function ViewReward({ open, setOpen, reward, refreshKeyHandler }) {
 
   const [name, setName] = useState(reward.name)
   const [points, setPoints] = useState(reward.pointsRequired)
@@ -22,7 +22,7 @@ export default function ViewReward({ open, setOpen, reward }) {
 
   useEffect(() => {
     setExpiryDate(new Date(reward.expiryDate));
-    if (reward.img !== null) {
+    if (reward.image !== null) {
         api.getDocById(reward.image.docId).then((response) => {
             const url = window.URL.createObjectURL(response.data);
             setRewardImg(url);
@@ -42,7 +42,10 @@ export default function ViewReward({ open, setOpen, reward }) {
     var helpexpiryDate = (expiryDate.getYear() + 1900) + "-" + month + "-" + date;
 
     api.editReward(name, description, points, helpexpiryDate.trim(), reward.rewardId)
-    .then(() => { alert("Successfully saved."); })
+    .then(() => {
+        alert("Successfully saved.");
+        refreshKeyHandler();
+    })
     .catch((error) => setError(error));
 
     setOpen(false);

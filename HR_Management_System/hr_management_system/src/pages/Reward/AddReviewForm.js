@@ -22,10 +22,14 @@ export default function NewReviewForm() {
   const [team, setTeam] = useState("");
 
   function submit(){
-    console.log(department)
+    console.log(department);
+    if (department === null) {
+        alert("Please input the department");
+        return;
+    }
     api.submitReviewForm(name, rate, justification, department.departmentId, team) 
-    .then(() => {alert("Thank you, Employee Review Form has been Successfully Submitted!");})
-    .catch((error) => setError(error));
+        .then(() => {alert("Thank you, Employee Review Form has been Successfully Submitted!");})
+        .catch((error) => setError(error));
     history.push("/")
   }
 
