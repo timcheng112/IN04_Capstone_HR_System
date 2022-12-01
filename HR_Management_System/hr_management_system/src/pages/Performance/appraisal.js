@@ -339,6 +339,7 @@ export default function Appraisal() {
                     </button>
                   )}
                 </div>
+                
                 {submitted ? (
                   <>
                     <div className="overflow-hidden bg-white shadow sm:rounded-lg mx-32 my-10">
@@ -486,7 +487,7 @@ export default function Appraisal() {
                             </label>
                             <GoalList userId={employee.userId} />
                           </div>
-                          {/* <div className="col-span-3">
+                          <div className="col-span-3">
                             <label
                               htmlFor="goals"
                               className="block text-md text-left font-sans font-medium text-gray-900"
@@ -574,7 +575,7 @@ export default function Appraisal() {
                                 </div>
                               </div>
                             </div>
-                          </div> */}
+                          </div>
                         </div>
                         <div className="">
                           <label
