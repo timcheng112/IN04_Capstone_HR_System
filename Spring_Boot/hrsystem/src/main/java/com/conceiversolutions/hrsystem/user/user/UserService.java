@@ -2587,6 +2587,7 @@ public class UserService implements UserDetailsService {
             user.setLeaveQuotas(new ArrayList<>());
             user.setCurrentLeaveQuota(null);
             user.setTaskListItems(new ArrayList<>());
+            user.setBenefitPlanInstances(new ArrayList<>());
         }
         return users;
     }

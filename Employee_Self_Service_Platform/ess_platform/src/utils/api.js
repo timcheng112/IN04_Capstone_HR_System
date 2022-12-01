@@ -12,7 +12,10 @@ import axios from "axios";
 //const URL = "10.249.106.71" //ALI
 
 //const URL = "192.168.1.82"; // TIM
-const URL = "172.25.108.168";
+
+//const URL = "172.25.108.168";
+const URL = "172.20.10.13";
+
 
 const api = {
   login(workEmail, password) {
@@ -305,6 +308,11 @@ const api = {
         `http://${URL}:9191/api/rewards/redeemReward?rewardId=${rewardId}&employeeId=${employeeId}`
       );
    },
+   getRewardTrackByEmployee(employeeId) {
+    return axios.get(
+      `http://${URL}:9191/api/rewards/getRewardTrackByEmployee?employeeId=${employeeId}`
+    );
+  },
   getUserShiftItemsMonthly(userId){
     return axios.get(`http://${URL}:9191/api/shift_list_item/getUserShiftItemsMonthly?userId=${userId}`);
   },
