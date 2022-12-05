@@ -12,7 +12,7 @@ import axios from "axios";
 //const URL = "10.249.106.71" //ALI
 
 //const URL = "192.168.1.82"; // TIM
-const URL = "10.249.249.151";
+const URL = "172.25.108.168";
 
 const api = {
   login(workEmail, password) {

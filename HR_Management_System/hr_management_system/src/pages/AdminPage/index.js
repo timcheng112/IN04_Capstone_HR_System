@@ -55,7 +55,9 @@ export default function AdminPage(userId) {
     api
       .getAllEmployees()
       .then((response) => {
-        const filtered = response.data.filter(e => e.userId + "" !== getUserId())
+        const filtered = response.data.filter(
+          (e) => e.userId + "" !== getUserId()
+        );
         console.log(filtered);
         setEmployees(filtered);
       })
@@ -76,43 +78,55 @@ export default function AdminPage(userId) {
   // }, []);
 
   function timeout(number) {
-    return new Promise( res => setTimeout(res, number) );
-}
+    return new Promise((res) => setTimeout(res, number));
+  }
 
-  function assignCardtoUser(userId){
-    const yes = window.confirm("Instructions: Place assigned card on NFC reader for the card to be assigned. Click Confirm? ");
-    if(yes){
-      api.assignCardtoUser(userId).then((response) =>{ console.log(response.data); alert("Card configured successfully. Take card off the holder and wait about 5 seconds to complete assignment."); window.location.reload();})
-      .catch((error) =>{console.log(error);})
+  function assignCardtoUser(userId) {
+    const yes = window.confirm(
+      "Instructions: Place assigned card on NFC reader for the card to be assigned. Click Confirm? "
+    );
+    if (yes) {
+      api
+        .assignCardtoUser(userId)
+        .then((response) => {
+          console.log(response.data);
+          alert(
+            "Card configured successfully. Take card off the holder and wait about 5 seconds to complete assignment."
+          );
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }
 
   function Activate(email) {
     const yes = window.confirm("Are you sure you want to activate user?");
-    if(yes){
+    if (yes) {
       api
-      .setUserStatus(email)
-      .then((response) => {
-        console.log(response.data);
-        setActivated(true);
-      })
-      .then((response) => window.location.reload())
-      .catch((error) => console.log(error));
+        .setUserStatus(email)
+        .then((response) => {
+          console.log(response.data);
+          setActivated(true);
+        })
+        .then((response) => window.location.reload())
+        .catch((error) => console.log(error));
     }
   }
 
   function Deactivate(email) {
     const yes = window.confirm("Are you sure you want to deactivate user?");
-    if(yes){
-    api
-      .setUserStatus(email)
-      .then((response) => {
-        console.log(response.data);
-        setActivated(false);
-        console.log(response.data.isEnabled);
-      })
-      .then((response) => window.location.reload())
-      .catch((error) => console.log(error));
+    if (yes) {
+      api
+        .setUserStatus(email)
+        .then((response) => {
+          console.log(response.data);
+          setActivated(false);
+          console.log(response.data.isEnabled);
+        })
+        .then((response) => window.location.reload())
+        .catch((error) => console.log(error));
     }
   }
 
@@ -136,6 +150,14 @@ export default function AdminPage(userId) {
               A list of all the users
             </p>
           </div>
+
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            onClick={() => history.push("/attendance/NFC")}
+          >
+            NFC
+          </button>
           {/* <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <button
               type="button"
@@ -275,9 +297,7 @@ export default function AdminPage(userId) {
                               className="text-indigo-600 hover:text-indigo-900"
                             >
                               Assign Company Card
-                              <span className="sr-only">
-                                , {person.userId}
-                              </span>
+                              <span className="sr-only">, {person.userId}</span>
                             </button>
                           ) : (
                             // not null
